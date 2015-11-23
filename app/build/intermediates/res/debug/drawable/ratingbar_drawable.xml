@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+android:id/background"
+        android:drawable="@drawable/star_o">
+    </item>
+    <item
+        android:id="@+android:id/secondaryProgress"
+        android:drawable="@drawable/star_o">
+    </item>
+    <item
+        android:id="@+android:id/progress"
+        android:drawable="@drawable/star">
+    </item>
+
+</layer-list> <!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/ratingbar_drawable.xml -->

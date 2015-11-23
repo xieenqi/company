@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <include layout="@layout/include_common_title" />
+
+    <com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView
+        xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/listView_attachment"
+        android:listSelector="#00000000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        swipe:swipeFrontView="@+id/front"
+        swipe:swipeBackView="@+id/back"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeMode="left"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeOpenOnLongPress="false"
+        swipe:swipeAnimationTime="200"
+        swipe:swipeOffsetLeft="240dp"
+        swipe:swipeOffsetRight="0dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/layout_scroll"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/tv_upload"
+        android:background="@color/activity_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:text="附件上传"
+        android:gravity="center" />
+
+</LinearLayout>

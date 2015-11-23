@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/task_agree" />
+            <!--android:background="#92d754"-->
+            <corners android:radius="7dp" />
+        </shape>
+    </item>
+</layer-list><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/btn_rectangle_agree.xml -->

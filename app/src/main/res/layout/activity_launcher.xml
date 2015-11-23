@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/layout_launcher_main"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:background="@color/white"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layerType="software"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_launcher_bg"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/layout_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_110"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_gravity="center"
+                android:layerType="software"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_launcher_logo"/>
+
+            <ImageView
+                android:id="@+id/iv_launcher_adv"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dimen_20"
+                android:layerType="software"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_launcher_adver"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:visibility="invisible"
+            android:id="@+id/iv_launcher_fade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_launcher_bg_bottom"
+            android:layerType="software"
+            android:scaleType="fitXY"
+            />
+
+        <ScrollView
+            android:clipChildren="false"
+            android:layerType="software"
+            android:id="@+id/layout_launcher_fade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_center"
+            android:layout_marginTop="@dimen/dimen_10">
+
+            <LinearLayout
+                android:clipChildren="false"
+                android:layerType="software"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_launcher_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_launcher_bg_bottom"
+                    android:layerType="software"
+                    android:scaleType="fitXY"
+                    />
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</LinearLayout>

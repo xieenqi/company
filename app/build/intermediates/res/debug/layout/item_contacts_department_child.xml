@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/dimen_70"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/des_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_5"
+        android:paddingTop="@dimen/dimen_5">
+
+        <com.loyo.oa.v2.tool.customview.RoundImageView
+            android:id="@+id/img"
+            android:layout_width="@dimen/dimen_50"
+            android:layout_height="@dimen/dimen_50"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:src="@drawable/icon_department_avatar"
+            imagecontrol:border_inside_color="#a8d4e9"
+            imagecontrol:border_outside_color="#a8d4e9"
+            imagecontrol:border_thickness="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_toRightOf="@+id/img"
+            android:text=""
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/devider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1"
+        android:layout_marginLeft="@dimen/dimen_66"
+        android:layout_marginRight="@dimen/dimen_8"
+        android:scaleType="fitXY"
+        android:src="#e1e1e1"/>
+
+</LinearLayout>
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_contacts_department_child.xml -->

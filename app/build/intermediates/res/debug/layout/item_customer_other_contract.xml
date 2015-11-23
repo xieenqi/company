@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginRight="@dimen/margin_side_edge"
+        style="@style/view_split" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/view_h_title">
+
+        <ImageView
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            style="@style/image_label"
+            android:src="@drawable/img_sign_customer" />
+
+        <TextView
+            android:id="@+id/tv_contract"
+            android:text="联系人"
+            android:gravity="center_vertical"
+            android:layout_width="70dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:text="联系人"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:text="联系人电话"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow" />
+
+    </LinearLayout>
+
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_customer_other_contract.xml -->

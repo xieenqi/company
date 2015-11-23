@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/black"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="bottom"
+    >
+
+<LinearLayout
+    android:id="@+id/layout_edit_"
+    android:layout_marginLeft="@dimen/dimen_16"
+    android:layout_marginRight="@dimen/dimen_16"
+    android:layout_marginBottom="@dimen/dimen_3"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:layout_marginLeft="@dimen/dimen_1"
+        android:layout_marginRight="@dimen/dimen_1"
+        android:layout_marginTop="@dimen/dimen_1"
+        android:background="@drawable/round_bg_shpe2"
+        android:id="@+id/btn_child_add_update"
+        android:text="修改"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:background="@drawable/round_bg_shpe2"
+        android:id="@+id/btn_child_delete_task"
+        android:layout_marginLeft="@dimen/dimen_1"
+        android:layout_marginRight="@dimen/dimen_1"
+        android:layout_marginTop="@dimen/dimen_2"
+        android:text="删除"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_marginLeft="@dimen/dimen_1"
+        android:layout_marginRight="@dimen/dimen_1"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:background="@drawable/round_bg_shpe2"
+        android:id="@+id/btn_cancel_edit"
+        android:text="取消"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
+</LinearLayout>
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/popu_child_task_edit_layout.xml -->

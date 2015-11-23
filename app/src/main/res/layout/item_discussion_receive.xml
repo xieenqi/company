@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/dimen_15"
+              android:paddingTop="@dimen/dimen_15">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.loyo.oa.v2.tool.customview.RoundImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/dimen_50"
+            android:layout_height="@dimen/dimen_50"
+            android:layout_below="@+id/tv_discuss_sender"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_3"
+            android:src="@drawable/img_default_user"
+            imagecontrol:border_inside_color="#a8d4e9"
+            imagecontrol:border_outside_color="#a8d4e9"
+            imagecontrol:border_thickness="0dp"/>
+
+
+        <TextView
+            android:id="@+id/tv_discuss_sender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:textColor="#999999"
+            android:textSize="13sp"/>
+
+
+        <TextView
+            android:id="@+id/tv_discuss_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_toRightOf="@+id/tv_discuss_sender"
+            android:gravity="center_horizontal"
+            android:textColor="#999999"
+            android:textSize="13sp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_discuss_sender"
+            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginBottom="@dimen/dimen_8"
+                android:layout_weight="1"
+                android:id="@+id/tv_discuss_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_3"
+                android:background="@drawable/icon_notice_item_bg"
+                android:gravity="left|center"
+                android:maxWidth="257dp"
+                android:minHeight="@dimen/dimen_50"
+                android:textColor="#383838"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg">
+
+    <include layout="@layout/include_item_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    style="@style/view_split" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/view_h_title">
+
+                    <ImageView
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_side_edge"
+                        style="@style/image_label"
+                        android:src="@drawable/img_sign_creator" />
+
+                    <TextView
+                        android:text="客户名称"
+                        android:gravity="center_vertical"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/edt_name"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        style="@style/edtText_normal"
+                        android:hint="客户名称" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"
+                    style="@style/view_split" />
+
+                <LinearLayout
+                    android:id="@+id/layout_address"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/view_h_title">
+
+                    <ImageView
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_side_edge"
+                        style="@style/image_label"
+                        android:src="@drawable/img_sign_position" />
+
+                    <TextView
+                        android:text="地址"
+                        android:gravity="center_vertical"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/et_address"
+                        android:layout_width="0px"
+                        android:gravity="center_vertical"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        style="@style/edtText_normal"
+                        android:hint="地址获取中..."/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"
+                    style="@style/view_split" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/view_h_title">
+
+                    <ImageView
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_side_edge"
+                        style="@style/image_label"
+                        android:src="@drawable/img_sign_customer" />
+
+                    <TextView
+                        android:text="联系人"
+                        android:gravity="center_vertical"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/edt_contract"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:inputType="textPersonName"
+                        style="@style/edtText_normal"
+                        android:hint="联系人" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"
+                    style="@style/view_split" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/view_h_title">
+
+                    <ImageView
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_side_edge"
+                        style="@style/image_label"
+                        android:src="@drawable/img_customer_tel" />
+
+                    <TextView
+                        android:text="电话"
+                        android:gravity="center_vertical"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/edt_contract_tel"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:inputType="phone"
+                        style="@style/edtText_normal"
+                        android:hint="电话" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"
+                    style="@style/view_split" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_newContract"
+                android:visibility="gone"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/view_first_margin_top"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    style="@style/view_split" />
+
+                <Button
+                    android:id="@+id/btn_add_new_contract"
+                    android:text="增加联系人"
+                    android:background="#00000000"
+                    android:textColor="@color/title_bg1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title" />
+
+                <View
+                    android:layout_width="match_parent"
+                    style="@style/view_split" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout_customer_label"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/view_h_title">
+
+                    <ImageView
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_other_view"
+                        style="@style/image_label"
+                        android:src="@drawable/img_customer_label"/>
+
+                    <TextView
+                        android:layout_width="80dp"
+                        style="@style/text_item1"
+                        android:layout_height="fill_parent"
+                        android:text="标签"/>
+
+                    <TextView
+                        android:id="@+id/tv_labels"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="fill_parent"
+                        android:hint=""
+                        style="@style/text_item2"
+                        android:gravity="right|center_vertical"/>
+
+                    <ImageView
+                        android:id="@+id/img_title_right_toUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/layout_photo"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/layout_bg1"
+                    android:layout_height="wrap_content">
+
+                   <!-- <LinearLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_height="@dimen/view_h_title"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_marginLeft="@dimen/margin_side_edge"
+                            android:layout_marginRight="@dimen/margin_other_view"
+                            style="@style/image_label"
+                            android:src="@drawable/img_sign_pic"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            style="@style/text_item1"
+                            android:layout_height="fill_parent"
+                            android:text="添加照片"/>
+                    </LinearLayout>-->
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_side_edge"
+                        style="@style/view_split"/>
+
+                    <GridView
+                        android:id="@+id/gridView_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:gravity="center"
+                        android:horizontalSpacing="@dimen/activity_horizontal_margin"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="3"
+                        android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        style="@style/view_split"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_customer_add.xml -->

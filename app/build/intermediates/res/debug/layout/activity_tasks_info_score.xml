@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg">
+
+    <include layout="@layout/include_common_title" />
+
+    <View
+        android:layout_width="match_parent"
+        style="@style/view_split" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            style="@style/view_split" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_height="@dimen/view_h_title">
+
+            <TextView
+                android:layout_width="120dp"
+                style="@style/text_item1"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_height="match_parent"
+                android:text="任务评分" />
+
+            <RatingBar
+                android:id="@+id/ratingBar_Task"
+                android:layout_width="wrap_content"
+                android:layout_height="29dp"
+                style="@style/roomRatingBar"
+                android:gravity="right|center_vertical"
+                android:numStars="5"
+                android:isIndicator="false"
+                android:stepSize="1"
+                android:max="100" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            style="@style/view_split" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="10dp">
+
+        <View
+            android:layout_width="match_parent"
+            style="@style/view_split" />
+
+        <EditText
+            android:id="@+id/edt_content"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:minHeight="80dp"
+            android:gravity="left|top"
+            android:paddingTop="24px"
+            android:hint="请输入审核内容"
+            style="@style/edtText_normal" />
+
+        <View
+            android:layout_width="match_parent"
+            style="@style/view_split" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_btn"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/view_first_margin_top"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <Button
+            android:id="@+id/btn_task_agree"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:textColor="@color/white"
+            android:text="通过"
+            android:background="@drawable/btn_rectangle_agree" />
+
+        <Button
+            android:id="@+id/btn_task_notagree"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/white"
+            android:text="不通过"
+            android:background="@drawable/btn_rectangle_not_agree" />
+
+    </LinearLayout>
+
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_tasks_info_score.xml -->

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <include layout="@layout/include_common_title" />
+
+    <RelativeLayout
+        android:id="@+id/layout_type1"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <CheckBox
+            android:id="@+id/cb1"
+            android:layout_width="30dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            style="@style/checkbox2"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false" />
+
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:textColor="@color/text1"
+            android:textSize="@dimen/textsize_content_label"
+            android:layout_toRightOf="@+id/cb1"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:text="全部可见" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        style="@style/view_split" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_user"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/activity_split"
+        android:dividerHeight="0.5dp" />
+
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_attachment_right_setting.xml -->

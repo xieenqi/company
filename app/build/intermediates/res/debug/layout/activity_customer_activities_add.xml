@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_item_title"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                >
+
+                <EditText
+                    android:id="@+id/edt"
+                    style="@style/edtText_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:gravity="left|top"
+                    android:hint="请输入内容"
+                    android:minHeight="100dp"
+                    android:padding="5dp"/>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@color/white"
+                android:id="@+id/layout_sale_action"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:gravity="center_vertical"
+                    android:minWidth="@dimen/dimen_110"
+                    android:text="跟进方式"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_sale_action"
+                        style="@style/text_item1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/img_right_arrow1"
+                        android:background="@null"
+                        android:gravity="center_vertical|right"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="@color/title_bg1"/>
+
+                    <ImageView
+                        android:id="@+id/img_right_arrow1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/right_arrow"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <View
+                style="@style/view_split"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+               />
+
+            <LinearLayout
+                android:background="@color/white"
+                android:id="@+id/layout_remain_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:gravity="center_vertical"
+                    android:minWidth="@dimen/dimen_110"
+                    android:text="下次跟进提醒"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_remain_time"
+                        style="@style/text_item1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/img_right_arrow"
+                        android:background="@null"
+                        android:gravity="center_vertical|right"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="@color/title_bg1"/>
+
+                    <ImageView
+                        android:id="@+id/img_right_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/right_arrow"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_customer_activities_add.xml -->

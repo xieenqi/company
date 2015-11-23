@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_submit">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="app_search_results">搜索结果</string>
+    <string name="app_no_search_results">没有搜索结果</string>
+    <string name="app_updating">正在升级&#8230;</string>
+    <string name="app_succeed">成功！</string>
+    <string name="app_failure">失败！</string>
+    <string name="app_back">返回</string>
+    <string name="app_dialog_hint">提示</string>
+    <string name="app_loading">请稍候，正在拉取数据&#8230;</string>
+    <string name="app_loading_none">未找到数据.</string>
+    <string name="app_loading_fail">数据加载失败，请稍后再试.</string>
+    <string name="app_loading_fail_web">网页加载失败，请稍后再试.</string>
+    <string name="app_refresh">刷新</string>
+    <string name="app_share">分享</string>
+    <string name="app_exit_title">退出</string>
+    <string name="app_exit_message">确定退出应用?</string>
+    <string name="app_list_header_refresh_down">下拉刷新</string>
+    <string name="app_list_header_refreshing">正在刷新</string>
+    <string name="app_list_header_refresh_up">松开刷新</string>
+    <string name="app_list_header_refresh_last_update">上次更新于:%s</string>
+    <string name="app_list_footer_more">更多</string>
+    <string name="app_list_footer_loading">正在加载</string>
+    <string name="app_list_noloadData">不能再加载更多数据！</string>
+    <string name="app_list_noMoreData">没有更多数据了</string>
+    <string name="app_no_newest_data">没有最新数据</string>
+    <string name="app_footer_loading_wait">正在加载数据,请稍等！</string>
+    <string name="app_get_data_wait">正在获取数据,请稍等！</string>
+    <string name="app_loading_data_wait">正在装载数据,请稍等！</string>
+    <string name="app_loading_img">正在加载图片！</string>
+    <string name="app_upload_img">正在上传图片！</string>
+    <string name="app_uploading_img_this">正在上传该图片</string>
+    <string name="app_upload_img_failure">上传图片失败，点击重新上传！</string>
+    <string name="app_dialog_progress_default">加载中&#8230;</string>
+    <string name="app_dialog_progress_loading">请稍候，正在获取数据&#8230;</string>
+    <string name="app_dialog_progress_commit">请稍候，正在处理&#8230;</string>
+    <string name="app_dialog_progress_commit_fail">数据加载失败，请稍后再试.</string>
+    <string name="app_dialog_progress_loading_none">未找到数据.</string>
+    <string name="app_dialog_progress_loading_fail">数据加载失败，请稍后再试.</string>
+    <string name="app_dialog_progress_loading_fail_web">网页加载失败，请稍后再试.</string>
+    <string name="app_init_await">相关数据未初始化完成，请稍等再试！</string>
+    <string name="app_time">时间</string>
+    <string name="app_timeout">超时</string>
+    <string name="app_no_null">不能为空！</string>
+    <string name="app_please_select">请选择</string>
+    <string name="app_please_input">请输入</string>
+    <string name="app_add">添加</string>
+    <string name="app_update">修改</string>
+    <string name="app_delete">删除</string>
+    <string name="app_getServerDataException">服务器返回数据异常，请再试一次！</string>
+    <string name="app_connectServerDataException">服务器连接异常，请再试一次！</string>
+    <string name="app_getServerDataError">服务器返回数据错误，请再试一次！</string>
+    <string name="app_Session_invalidation">您当前登录状态已失效！</string>
+    <string name="app_ReLogin">是否重新登录?</string>
+    <string name="app_collection">收藏</string>
+    <string name="app_subscribe">预约</string>
+    <string name="app_comment_succeed">已评论！</string>
+    <string name="app_comment_failure">评论失败！</string>
+    <string name="app_hour">小时</string>
+    <string name="app_minute">分</string>
+    <string name="app_content">内容</string>
+    <string name="app_captcha">验证码</string>
+    <string name="app_select_age">请选择年龄</string>
+    <string name="app_annum">岁</string>
+    <string name="app_men">男</string>
+    <string name="app_women">女</string>
+    <string name="app_phone_number">手机号码</string>
+    <string name="app_tel">电话</string>
+    <string name="app_delete_remind">你确定要删除吗？</string>
+
+    <string name="app_title">标题</string>
+
+    <string name="login_username">用户名</string>
+    <string name="login_password">密码</string>
+    <string name="login_password_confirm">确认密码</string>
+    <string name="login_forget_password">忘记密码？</string>
+    <string name="login_new_user">新用户</string>
+    <string name="login_login">登录</string>
+
+    <string name="login_send_messagesend">发送验证码</string>
+    <string name="login_login_YZ">验证用户名密码</string>
+    <string name="login_login_YZ_succeed">登录成功</string>
+    <string name="login_login_YZ_failure">用户名/密码错误</string>
+    <string name="login_getToken_Failure">获取Token失败</string>
+    <string name="login_getToken">登录获取token</string>
+    <string name="login_schedule">登录进度</string>
+    <string name="login_input_userName">请输入您的账号</string>
+    <string name="login_input_userPassword">请输入您的密码</string>
+    <string name="login_userPassword_confirm_inconformity">密码与确认密码输入不一致</string>
+
+    <string name="input_name">请输入姓名</string>
+
+    <string name="sign">签到</string>
+    <string name="longitude">经纬度</string>
+    <string name="customer">客户</string>
+    <string name="cc_user">抄送人</string>
+    <string name="visit">拜访</string>
+    <string name="start">开始</string>
+    <string name="end">结束</string>
+    <string name="track_log_user">轨迹追踪人员</string>
+    <string name="customer_activities">客户动态</string>
+    <string name="products_name">产品名称</string>
+    <string name="select_products">请选择产品</string>
+    <string name="salestages">销售阶段</string>
+    <string name="tasks_status_all">全部</string>
+    <string name="tasks_status_ing">正在进行</string>
+    <string name="tasks_status_review">审批中</string>
+    <string name="tasks_status_end">已完成</string>
+    <string name="responsiblePerson">负责人</string>
+    <string name="joined">参与人</string>
+    <string name="tasksInfoSeting_done">完成</string>
+    <string name="tasksInfoSeting_examine">审查</string>
+    <string name="tasksInfoSeting_mark">审查标识</string>
+    <string name="tasksInfoSeting_priority">优先级</string>
+    <string name="score">分数</string>
+    <string name="reviewed_type1">未点评</string>
+    <string name="reviewed_type2">已点评</string>
+    <string name="reportType1">日报</string>
+    <string name="reportType2">周报</string>
+    <string name="reportType3">月报</string>
+    <string name="review_user">点评人</string>
+    <string name="wfinstance_status0">全部</string>
+    <string name="wfinstance_status1">待审批</string>
+    <string name="wfinstance_status2">审批中</string>
+    <string name="wfinstance_status4">已审批</string>
+    <string name="wfinstance_status3">已否决</string>
+    <string name="wfinstance_status5">已经办</string>
+    <string name="WorkflowNodes_status0">待处理</string>
+    <string name="WorkflowNodes_status1">同意</string>
+    <string name="WorkflowNodes_status2">不同意</string>
+    <string name="visit_info">拜访详情</string>
+    <string name="visit_time">拜访时间</string>
+    <string name="visit_location">拜访位置</string>
+    <string name="title_activity_image_view_pager">ImageViewPagerActivity</string>
+    <string name="title_activity_sign_in_manager_from_customer">SignInManagerFromCustomer</string>
+
+    <!--pulltorefresh-->
+    <string name="pull_to_refresh_from_bottom_pull_label">@string/pull_to_refresh_pull_label</string>
+    <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
+    <string name="pull_to_refresh_pull_label">下拉刷新…</string>
+    <string name="pull_to_refresh_release_label">放开以刷新…</string>
+    <string name="pull_to_refresh_refreshing_label">正在载入…</string>
+
+    <string name="child_task_content_default">暂无任务内容</string>
+
+    <!-- imageselector -->
+    <string name="folder_all">所有照片</string>
+    <string name="preview">预览</string>
+    <string name="msg_no_camera">没有系统相机</string>
+    <string name="msg_amount_limit">已经达到最高选择数量</string>
+    <string name="title_activity_project_add">ProjectAddActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="select_entry"></string>
+
+
+
+</resources>

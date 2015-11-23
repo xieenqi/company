@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/white"
+    >
+
+    <include layout="@layout/include_common_title1" />
+
+    <LinearLayout
+        android:id="@+id/customer_basename_layout"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/view_h_title">
+
+        <ImageView
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            style="@style/image_label"
+            android:src="@drawable/img_sign_creator" />
+
+        <TextView
+            android:text="客户名称"
+            android:gravity="center_vertical"
+            android:layout_width="70dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/edt_basename"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            style="@style/edtText_normal"
+            android:hint="输入客户名称" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginRight="@dimen/margin_side_edge"
+        style="@style/view_split" />
+
+    <EditText
+        android:id="@+id/edt_customer_basesummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dimen_70"
+        style="@style/edtText_normal"
+        android:hint="输入企业简介" />
+
+</LinearLayout>

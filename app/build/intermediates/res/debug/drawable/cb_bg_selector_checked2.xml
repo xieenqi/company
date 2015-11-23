@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item android:drawable="@drawable/cb_bg_checked2" android:state_checked="true"/>-->
+    <item android:drawable="@drawable/img_check1" android:state_checked="true" />
+    <item android:drawable="@drawable/radio_cancel1" android:state_checked="false" />
+    <item android:drawable="@drawable/radio_cancel1" />
+
+    <!--<item android:drawable="@drawable/img_task_filter" android:state_checked="true"/>-->
+    <!--<item android:drawable="@color/white" android:state_checked="false"/>-->
+    <!--<item android:drawable="@color/white"/>-->
+
+    <!--<item android:drawable="@drawable/img_task_filter" android:state_checked="true"/>-->
+    <!--<item android:drawable="@android:color/white" android:state_checked="false"/>-->
+    <!--<item android:drawable="@android:color/white"/>-->
+
+</selector><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/cb_bg_selector_checked2.xml -->

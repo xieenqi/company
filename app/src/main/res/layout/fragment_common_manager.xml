@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:ptr="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include android:id="@+id/include_common" layout="@layout/include_header_search_filter"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView
+                android:id="@+id/expandableListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                android:cacheColorHint="#00000000"
+                android:divider="@color/activity_split"
+                android:dividerHeight="0.5dp"
+                android:drawSelectorOnTop="false"
+                android:fadingEdge="none"
+                android:fastScrollEnabled="false"
+                android:footerDividersEnabled="true"
+                android:groupIndicator="@null"
+                android:headerDividersEnabled="true"
+                android:smoothScrollbar="true"
+                ptr:ptrMode="both"/>
+
+            <ViewStub
+                android:id="@+id/vs_nodata"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inflatedId="@+id/layout_nodata"
+                android:layout="@layout/item_layout_nodata"/>
+
+            <FrameLayout
+                android:id="@+id/layout_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-2dp"
+                android:background="@android:color/transparent"
+                android:paddingLeft="@dimen/dimen_70"
+                android:paddingRight="@dimen/dimen_70"
+                android:visibility="gone">
+                <ListView
+                    android:id="@+id/lv_wftype_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/round_bg_shpe"
+                    android:cacheColorHint="#00000000"
+                    android:choiceMode="singleChoice"
+                    android:divider="@color/activity_split"
+                    android:dividerHeight="@dimen/dimen_0.5"
+                    android:padding="@dimen/dimen_0.5">
+                </ListView>
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_alignParentBottom="true"
+                android:id="@+id/layout_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:id="@+id/layout_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/activity_bg"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/view_h_title"
+                        android:layout_centerInParent="true"
+                        android:drawableLeft="@drawable/icon_common_add"
+                        android:gravity="center"
+                        android:text="添加文件"
+                        android:textColor="@color/title_bg1"/>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/btn_add"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="3dp"
+                    android:background="@drawable/bg_btn_circle"
+                    android:textColor="@color/white"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

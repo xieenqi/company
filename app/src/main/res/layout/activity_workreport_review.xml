@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/activity_bg"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_common_title"/>
+
+    <LinearLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RatingBar
+            android:layout_marginTop="@dimen/dimen_10"
+            android:id="@+id/ratingBar_workReport"
+            style="@style/roomRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_marginLeft="@dimen/dimen_16"
+            android:gravity="right|center_vertical"
+            android:isIndicator="false"
+            android:max="100"
+            android:numStars="5"
+            android:stepSize="1"/>
+
+        <View
+            android:layout_margin="@dimen/dimen_10"
+            android:layerType="software"
+            android:background="@drawable/view_dashed_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_3" />
+
+        <EditText
+            android:hint="请输入点评内容"
+            android:id="@+id/edt_content"
+            style="@style/edtText_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|top"
+            android:minHeight="@dimen/dimen_110"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_workreport_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:background="@color/title_bg1"
+        android:text="确定"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

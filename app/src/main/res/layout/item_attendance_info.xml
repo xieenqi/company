@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dimen_5"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#383838"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/iv_extra"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_25"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.5"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_recordin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layout_morning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5"
+                        android:gravity="center"
+                        android:text="未打卡"
+                        android:textColor="@color/red"
+                        android:textSize="14sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5"
+                        android:gravity="center"
+                        android:text="--:--"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/iv_record_in_type"
+                    android:layout_width="@dimen/dimen_25"
+                    android:layout_height="@dimen/dimen_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/dimen_5"
+                    android:layout_marginRight="@dimen/dimen_16"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_field_work_confirm"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_recordout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layout_afternoon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5"
+                        android:gravity="center"
+                        android:text="未打卡"
+                        android:textColor="@color/red"
+                        android:textSize="14sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_time1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5"
+                        android:gravity="center"
+                        android:text="--:--"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+                <ImageView
+                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/dimen_5"
+                    android:id="@+id/iv_record_out_type"
+                    android:layout_width="@dimen/dimen_25"
+                    android:layout_height="@dimen/dimen_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="@dimen/dimen_16"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_field_work_confirm"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/devider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="#e1e1e1"
+        />
+</LinearLayout>

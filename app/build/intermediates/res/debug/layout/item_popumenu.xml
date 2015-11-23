@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/layout_popu_menu_main"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_menu_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:scaleType="fitCenter"
+            android:layout_margin="@dimen/dimen_16"
+            android:src="@drawable/icon_home_menu_customer"
+            android:id="@+id/iv_popu_menu_icon"
+            android:layout_width="@dimen/dimen_25"
+            android:layout_height="@dimen/dimen_25"/>
+
+        <TextView
+            android:gravity="center"
+            android:text="添加客戶"
+            android:layout_margin="@dimen/dimen_10"
+            android:id="@+id/tv_popu_menu_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_popu_menu_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_0.5"
+        android:src="@color/activity_bg"/>
+
+</LinearLayout>
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_popumenu.xml -->

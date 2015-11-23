@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:scaleType="fitXY"
+        android:src="@color/black"/>
+
+     <LinearLayout
+         android:id="@+id/filter_list_container"
+         android:background="@color/whitesmoke"
+         android:orientation="vertical"
+         android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+     </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/include_filter_container.xml -->

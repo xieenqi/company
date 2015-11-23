@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="77dp">
+
+        <ImageView
+            android:id="@+id/img_task_status"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/task_status_1" />
+
+        <RelativeLayout
+            android:id="@+id/layout_title"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/img_task_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:singleLine="true"
+                android:text="标题" />
+
+            <View
+                android:id="@+id/view_ack"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@+id/tv_title"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_view_red_circle" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_creator_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#8a8a8a"
+            android:layout_below="@id/layout_title"
+            android:layout_toRightOf="@+id/img_task_status"
+            android:text="创建者" />
+
+        <TextView
+            android:id="@+id/tv_creator_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#8a8a8a"
+            android:layout_below="@id/layout_title"
+            android:layout_toRightOf="@id/tv_creator_name"
+            android:singleLine="true"
+            android:text=" 分配 " />
+
+        <TextView
+            android:id="@+id/tv_responsiblePerson_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#8a8a8a"
+            android:layout_below="@id/layout_title"
+            android:layout_toRightOf="@id/tv_creator_to"
+            android:singleLine="true"
+            android:text="负责人" />
+
+        <TextView
+            android:id="@+id/tv_responsiblePerson_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#8a8a8a"
+            android:layout_below="@id/layout_title"
+            android:layout_toRightOf="@id/tv_responsiblePerson_name"
+            android:singleLine="true"
+            android:text=" 负责 " />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#8a8a8a"
+            android:layout_below="@id/tv_creator_name"
+            android:layout_toRightOf="@+id/img_task_status"
+            android:text="时间" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_listview_tasks_manage.xml -->

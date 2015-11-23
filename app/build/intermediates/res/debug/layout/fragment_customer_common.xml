@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu
+        android:id="@+id/droplist_menu"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55"
+        android:layout_gravity="top"
+        android:background="@color/white"
+        android:visibility="gone"/>
+
+    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+        android:id="@+id/listView_customers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_add"
+        android:layout_below="@+id/droplist_menu"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:drawSelectorOnTop="true"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:smoothScrollbar="true"/>
+
+    <ViewStub
+        android:id="@+id/vs_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/layout_nodata"
+        android:layout="@layout/item_layout_nodata"/>
+
+    <FrameLayout
+        android:id="@+id/layout_near_customers"
+        android:layout_width="@dimen/dimen_120"
+        android:layout_height="@dimen/dimen_35"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/droplist_menu"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_near_customer_count_bg"/>
+
+        <TextView
+            android:id="@+id/tv_near_customers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/title_bg1"
+            />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/bg_btn_circle"
+        android:textColor="@color/white"/>
+
+</RelativeLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/fragment_customer_common.xml -->

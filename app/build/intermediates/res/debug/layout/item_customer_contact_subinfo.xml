@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+    <View
+        android:id="@+id/divider"
+        style="@style/view_split"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginRight="@dimen/margin_side_edge"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:gravity="center_vertical"
+            android:text="姓名"/>
+
+        <TextView
+            android:textColor="#999999"
+            android:text="内容"
+            android:id="@+id/et_content"
+            style="@style/edtText_normal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            />
+
+    </LinearLayout>
+</LinearLayout>
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_customer_contact_subinfo.xml -->

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/dimen_15"
+              android:paddingTop="@dimen/dimen_15">
+
+    <TextView
+        android:id="@+id/tv_notice_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text=""
+        android:textColor="#999999"
+        android:textSize="13sp"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:orientation="horizontal">
+
+        <com.loyo.oa.v2.tool.customview.RoundImageView
+            android:id="@+id/iv_notice_publisher_avatar"
+            android:layout_width="@dimen/dimen_50"
+            android:layout_height="@dimen/dimen_50"
+            android:layout_below="@+id/tv_notice_publisher"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_3"
+            android:src="@drawable/img_default_user"
+            imagecontrol:border_inside_color="#a8d4e9"
+            imagecontrol:border_outside_color="#a8d4e9"
+            imagecontrol:border_thickness="0dp"/>
+
+        <TextView
+            android:id="@+id/tv_notice_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_toRightOf="@id/iv_notice_publisher_avatar"
+            android:text=""
+            android:textColor="#999999"
+            android:textSize="15sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_notice_publisher"
+            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_toRightOf="@id/iv_notice_publisher_avatar"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_8"
+                    android:layout_marginTop="@dimen/dimen_3"
+                    android:background="@drawable/icon_notice_item_bg"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_notice_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="#383838"
+                        android:textSize="18sp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_3"
+                        android:layout_marginTop="@dimen/dimen_5"
+                        android:background="@drawable/view_dashed_line"
+                        android:layerType="software"
+                        android:padding="@dimen/dimen_15"/>
+
+                    <TextView
+                        android:id="@+id/tv_notice_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_3"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="#383838"
+                        android:textSize="14sp"/>
+
+                    <com.loyo.oa.v2.tool.customview.MyGridView
+                        android:id="@+id/gv_notice_attachemnts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:gravity="center"
+                        android:horizontalSpacing="@dimen/activity_horizontal_margin"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="3"
+                        android:verticalSpacing="@dimen/activity_horizontal_margin">
+                    </com.loyo.oa.v2.tool.customview.MyGridView>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

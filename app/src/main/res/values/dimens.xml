@@ -1,0 +1,84 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">10dp</dimen>
+    <dimen name="activity_vertical_margin">10dp</dimen>
+
+    <!--<dimen name="view_h_title">50dp</dimen>-->
+
+    <dimen name="view_h_title">48dp</dimen>
+
+    <dimen name="view_h_title_sum">51dp</dimen>
+    <dimen name="view_h_item_title">34dp</dimen>
+    <dimen name="view_h_item1">42dp</dimen>
+    <dimen name="view_h_item2">46dp</dimen>
+    <dimen name="view_img_h1">54dp</dimen>
+
+    <dimen name="text_margin_horizontal">10dp</dimen>
+    <dimen name="text_margin_vertical">4dp</dimen>
+
+    <dimen name="textsize_wheelView">16sp</dimen>
+
+    <!--每页的标题-->
+    <!--<dimen name="textsize_title1">22sp</dimen>-->
+    <dimen name="textsize_title1">20sp</dimen>
+
+    <dimen name="textsize_content_label">18sp</dimen>
+    <dimen name="textsize_content1">16sp</dimen>
+    <dimen name="textsize_content2">14sp</dimen>
+    <dimen name="textsize_content3">12sp</dimen>
+    <dimen name="textsize_title2">20sp</dimen>
+
+    <!--新版标注-->
+    <dimen name="view_first_margin_top">20dp</dimen>
+    <dimen name="margin_side_edge">16dp</dimen>
+    <dimen name="margin_other_view">12dp</dimen>
+    <dimen name="layout_row_margin_top">17dp</dimen>
+
+    <!--pulltorefresh-->
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+
+    <!-- imageselector -->
+    <dimen name="image_size">120dp</dimen>
+    <dimen name="space_size">2dp</dimen>
+    <dimen name="folder_cover_size">72dp</dimen>
+
+    <dimen name="dimen_0.5">0.5dp</dimen>
+    <dimen name="dimen_1">1dp</dimen>
+    <dimen name="dimen_1.5">1.5dp</dimen>
+    <dimen name="dimen_4">4dp</dimen>
+    <dimen name="dimen_120">120dp</dimen>
+    <dimen name="dimen_110">110dp</dimen>
+    <dimen name="dimen_80">80dp</dimen>
+    <dimen name="dimen_75">75dp</dimen>
+    <dimen name="dimen_70">70dp</dimen>
+    <dimen name="dimen_48">48dp</dimen>
+    <dimen name="dimen_23">23dp</dimen>
+    <dimen name="dimen_2">2dp</dimen>
+    <dimen name="dimen_3">3dp</dimen>
+    <dimen name="dimen_5">5dp</dimen>
+    <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_10">10dp</dimen>
+    <dimen name="dimen_15">15dp</dimen>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_18">18dp</dimen>
+    <dimen name="dimen_20">20dp</dimen>
+    <dimen name="dimen_25">25dp</dimen>
+    <dimen name="dimen_30">30dp</dimen>
+    <dimen name="dimen_35">35dp</dimen>
+    <dimen name="dimen_36">36dp</dimen>
+    <dimen name="dimen_40">40dp</dimen>
+    <dimen name="dimen_45">45dp</dimen>
+    <dimen name="dimen_50">50dp</dimen>
+    <dimen name="dimen_55">55dp</dimen>
+    <dimen name="dimen_58">58dp</dimen>
+    <dimen name="dimen_65">65dp</dimen>
+    <dimen name="dimen_66">66dp</dimen>
+    <dimen name="dimen_150">150dp</dimen>
+    <dimen name="dimen_160">160dp</dimen>
+    <dimen name="dimen_200">200dp</dimen>
+
+</resources>

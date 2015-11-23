@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_bg"
+             >
+
+
+    <include android:id="@+id/layout_include" layout="@layout/include_common_title"/>
+
+    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+        android:layout_below="@+id/layout_include"
+        android:layout_above="@+id/layout_add"
+        android:id="@+id/lv_saleActivity"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="#00000000"
+        android:divider="@color/activity_split"
+        android:dividerHeight="0.5dp"/>
+
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/layout_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/whitesmoke"
+        >
+
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/view_h_title"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/icon_common_add"
+            android:gravity="center"
+            android:text="新增跟进动态"
+            android:textColor="@color/title_bg1"/>
+    </RelativeLayout>
+
+</RelativeLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_sale_activities_manage.xml -->

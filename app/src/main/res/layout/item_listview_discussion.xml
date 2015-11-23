@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="84dp">
+
+        <com.loyo.oa.v2.tool.customview.RoundImageView
+            android:id="@+id/img_disscution_creator"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_width="35dp"
+            android:layout_height="84dp" />
+
+        <TextView
+            android:id="@+id/tv_creator"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="#262626"
+            android:layout_toRightOf="@+id/img_disscution_creator"
+            android:text="姓名" />
+
+        <TextView
+            android:id="@+id/tv_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="13dp"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_alignParentRight="true"
+            android:textColor="#999999"
+            android:text="时间" />
+
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_creator"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/img_disscution_creator"
+            android:text="safafd" />
+
+    </RelativeLayout>
+
+</LinearLayout>

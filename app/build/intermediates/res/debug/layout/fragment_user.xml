@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ExpandableListView
+        android:divider="@color/activity_split"
+        android:dividerHeight="0.5dp"
+        android:groupIndicator="@null"
+        android:id="@+id/expandableListView_user"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:drawSelectorOnTop="false" />
+
+    <RelativeLayout
+        android:id="@+id/layout_toast"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_toast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text=""
+            android:textSize="40sp" />
+
+    </RelativeLayout>
+
+    <com.loyo.oa.v2.tool.customview.MyLetterListView
+        android:id="@+id/letter_View"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/fragment_user.xml -->

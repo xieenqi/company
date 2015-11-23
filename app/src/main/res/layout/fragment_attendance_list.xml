@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_30">
+
+        <LinearLayout
+            android:layout_marginLeft="@dimen/dimen_80"
+            android:id="@+id/img_time_left"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="@dimen/dimen_55"
+            android:layout_height="@dimen/dimen_55">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_select_time_left"
+            />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="2015年8月"
+            android:textColor="#383838"
+            android:textSize="16sp"
+            />
+
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dimen_80"
+            android:id="@+id/img_time_right"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="@dimen/dimen_55"
+            android:layout_height="@dimen/dimen_55">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_select_time_right"
+            />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_30"
+        android:background="@drawable/icon_attendance_rusult"
+        android:minHeight="@dimen/dimen_45"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tv_count_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="left|center"
+            android:text="本月总计:"
+            android:textColor="#999999"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:text="迟到:"
+                android:textColor="#999999"
+                />
+
+            <TextView
+                android:id="@+id/tv_later"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:textColor="@color/red"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:text="早退:"
+                android:textColor="#999999"
+                />
+
+            <TextView
+                android:id="@+id/tv_leave_early"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:textColor="@color/red"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:text="未打卡:"
+                android:textColor="#999999"
+                />
+
+            <TextView
+                android:id="@+id/tv_un_attendance"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:textColor="@color/red"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:text="外勤:"
+                android:textColor="#999999"
+                />
+
+            <TextView
+                android:id="@+id/tv_field_work"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:textColor="@color/green"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ListView
+        android:clickable="false"
+        android:background="@color/white"
+        android:id="@+id/listView_attendance"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null">
+    </ListView>
+
+
+</LinearLayout>

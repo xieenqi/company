@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical"
+    android:background="@color/whitesmoke"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_time_point"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="21dp"
+        android:src="@drawable/task_time_point" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_marginLeft="10dp"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:textColor="#7f7f7f"
+        android:layout_height="34dp"
+        android:text="今天" />
+
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_sign_show_group.xml -->

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#e2e2e2" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+    <!-- 主体背景颜色值 -->
+    <item
+        android:bottom="0.8dp"
+        android:right="0.8dp"
+        android:top="0.8dp"
+        android:left="0.8dp">
+
+        <shape android:shape="rectangle">
+            <solid android:color="#fbfbfb" />
+            <corners android:radius="5dp" />
+
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+        </shape>
+    </item>
+</layer-list><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/bg_viewgroup_wfinstance_nodes.xml -->

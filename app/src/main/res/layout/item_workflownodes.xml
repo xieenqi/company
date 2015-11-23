@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_viewgroup_wfinstance_nodes"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginRight="@dimen/margin_side_edge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_creator_title"
+                android:textSize="14sp"
+                android:textColor="#9C9C9C"
+                android:text="sf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:textColor="#9C9C9C"
+                android:textSize="14sp"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="姓名" />
+
+            <TextView
+                android:id="@+id/tv_deal_time"
+                android:textSize="@dimen/textsize_content2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="#9c9c9c"
+                android:text="处理时间" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_dashed_line"
+            android:layerType="software"
+            android:background="@drawable/view_dashed_line"
+            android:padding="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_width="match_parent"
+            android:layout_height="3dp" />
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge">
+
+            <ImageView
+                android:id="@+id/img_left"
+                style="@style/image_label"
+                android:src="@drawable/img_wfinstance_agree" />
+
+            <TextView
+                android:id="@+id/tv_result"
+                android:textColor="#34D434"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="同意" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_comment"
+            android:textSize="@dimen/textsize_content2"
+            android:textColor="#626262"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="处理意见:" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

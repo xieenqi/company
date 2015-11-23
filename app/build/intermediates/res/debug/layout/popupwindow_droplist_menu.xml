@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ListView
+                android:id="@+id/lv_menu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:scrollbarStyle="outsideOverlay"/>
+
+            <ListView
+                android:id="@+id/lv_menu_sub"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/lightgray"
+                android:scrollbarStyle="outsideOverlay"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_confirm"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_55"
+            android:gravity="center_vertical">
+
+            <Button
+                android:minWidth="@dimen/dimen_110"
+                android:padding="@dimen/dimen_5"
+                android:textColor="@color/gray"
+                android:background="@drawable/round_bg_shpe3"
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_45"
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:text="全部取消"/>
+
+            <Button
+                android:minWidth="@dimen/dimen_110"
+                android:padding="@dimen/dimen_5"
+                android:textColor="@color/title_bg1"
+                android:background="@drawable/round_bg_shpe3"
+                android:id="@+id/btn_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_45"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:text="确定"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_menu_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_menu"
+        android:background="#70000000"/>
+
+</RelativeLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/popupwindow_droplist_menu.xml -->

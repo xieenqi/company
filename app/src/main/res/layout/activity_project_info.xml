@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_split"
+              android:orientation="vertical"
+    >
+    <include layout="@layout/include_common_title_edit"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_project_des"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_75"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_marginRight="@dimen/dimen_45"
+            android:layout_toLeftOf="@+id/iv_arrow"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_project_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="#383838"
+                    android:textSize="18sp"
+                    />
+
+                <ImageView
+                    android:id="@+id/img_project_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_side_edge"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_project_processing"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_project_extra"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="#999999"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="@dimen/dimen_35"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/dimen_8"
+            android:scaleType="fitCenter"
+            android:src="@drawable/right_arrow"
+            />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@android:color/white"
+            app:pstsIndicatorColor="@color/title_bg1"
+            app:pstsIndicatorHeight="3dp"
+            app:pstsShouldExpand="true"
+            app:pstsTabPaddingLeftRight="1dp"
+            app:pstsUnderlineHeight="0.5dp"/>
+
+        <com.loyo.oa.v2.tool.customview.NoScrollViewpager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tabs">
+
+        </com.loyo.oa.v2.tool.customview.NoScrollViewpager>
+
+    </LinearLayout>
+</LinearLayout>

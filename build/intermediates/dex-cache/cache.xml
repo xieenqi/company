@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.0.14/898f9ab61e2a23afd615f0b0389478bec86f49f9/rxjava-1.0.14.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="898f9ab61e2a23afd615f0b0389478bec86f49f9">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/rxjava-1.0.14-72827ef063e17ab881550eb325cacf69333e1b56.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-eba8c7b8177cd528361c4a6b6c84650e2b6db41e.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/MapApiLocation_1.3.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="71e7604372d8a66689ff8df047e9a748e19a5169">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/MapApiLocation_1.3.3-85abca7925860731789ebfb890cfcf5872e0019e.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.squareup.leakcanary/leakcanary-android/1.3/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f4e7adebf49e683db82fb6efac2caaf3d768b8d4">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-b367718fba9a88242834dcfae51f03ff89e2a130.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/retrofit-1.9.0-f7f7b344e91d0469d1c8edc33e8046ddeea18040.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/ormlite-core-4.49-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9a8b276da6dada8141f614d3feba25a0e8589db7">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/ormlite-core-4.49-SNAPSHOT-a4fa14945732a56c878101c4f7fe19d63f1c64c8.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/jg_filter_sdk_1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ebfc3cde0309ff27e9568757784eefefc71407a2">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/jg_filter_sdk_1.1-3246a0d1d26eeb5ba86092799ddcd8e0a65d3d86.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/Xg_sdk_v2.38_20150616_1057.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b7d6cf9e40b44971cb043f30979ad6869295ae4c">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/Xg_sdk_v2.38_20150616_1057-c81569c5aa7d3c9187cca8461ab690cab532e2cb.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/libs/internal_impl-22.1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-9894e17b2984dc56db13a5391c81477beb03c5cd.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.yalantis/contextmenu/1.0.4/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4812670dcffa70f6e3b2dc5f191837a2db7d4cd9">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-c0d59ae9bc1aa7fc75e9a0ffe3669ffd79e7e8c2.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e0b0c35d02308b270015a74cada4887e2e49b889">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-058358216adf2bc32efb374df603543484fa3114.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/MiPush_SDK_Client_2_2_16.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7846cb483c99b39587202fec5fed26a08afc76ee">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/MiPush_SDK_Client_2_2_16-c3200ba59f35859b1ac75bd4867aa264c41e6bdd.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/bugly_1.2.3.6_release.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="17e11ddb24891a1233cc6acc1131fac604b307b1">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/bugly_1.2.3.6_release-fe5d1ff597bffd8ebcdbe3cb1422f1ac7bc3dbd5.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-61966a3de9977004d47f58f3e835b70d23ef090d.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/MapApiServices.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e84628aa8eea7b9892768f19c41dbe02abc7f666">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/MapApiServices-286667f84908dccbc137327e6d12d56e4a676844.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/org.androidannotations/androidannotations-api/3.3.2/7d6149d856b880bbd676047aacb8446a758fbbdb/androidannotations-api-3.3.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7d6149d856b880bbd676047aacb8446a758fbbdb">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/androidannotations-api-3.3.2-077eca24deeb95bc3006ab3da521e24c8f2e5ee2.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.github.chrisbanes.photoview/library/1.2.3/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81aa0e8e77d948204aa6754019c6f3c04dd922e3">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-1128076e658995a5d21c8a67a05ed09382b0b2e9.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/libammsdk.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="47f4993168154fa73377d7470b9f6887d48a8023">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/libammsdk-a85dcbd88c56b5ab689471d0a2ff48152cd54e2d.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/Android_Map_V2.5.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="61c0fb7dbd0cffd2682dd10c5b589902345cfa25">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/Android_Map_V2.5.0-1b3bdd49485e0fadecb9d5ca2c7978122dcc79f4.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/BaiduLBS_Android.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1e366e13f15d7256c59b37eaffadab1df049c745">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/BaiduLBS_Android-d0fea8e5fbd6fb8532fd19699499149c42b375cd.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="aa81bfe8c5cc88c2472ca936ae71f0c3dd1766df">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/classes-c8c915f5f30b145debcb2aeee9caee408a5b89fa.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-watcher/1.3/632482a61ad24b7ec864072945d221369f9a606/leakcanary-watcher-1.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0632482a61ad24b7ec864072945d221369f9a606">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/leakcanary-watcher-1.3-208693ba5ea7632f7fc2bcc29de28d2919cf3da4.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/gson-2.3.1-337e0a3af6038d9282563dd97cacff10b9f79901.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/wup-1.0.0-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a0845068801a0b9a3a144b7cf57cb650b3d467e5">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/wup-1.0.0-SNAPSHOT-00e90ad995f373a248d37a9d76ddf766f72856bd.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Library/Android/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/support-annotations-22.1.1-f08e6b3f4d585a6a4f1a73a8022546174af47aa9.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/ormlite-android-4.49-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecfae85e17f2472852fa8298952f9d52f6a6bfa4">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/ormlite-android-4.49-SNAPSHOT-8f56e6cd0305aba2df9c1a3b5a96bc5755111968.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-analyzer/1.3/c5399b18a672f7973c8a9b9d6b731a3a36e590cc/leakcanary-analyzer-1.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c5399b18a672f7973c8a9b9d6b731a3a36e590cc">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/leakcanary-analyzer-1.3-0cdc05d677a7e0ee71b25243e712999b67c5e838.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/picasso-2.5.2-58750fb2792a109f71c8a0189c39ecd8373ecb4f.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/library-2.4.0-b0d1568d211735ef43cb4d33f569d679ff9adc3e.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/mid-sdk-2.20.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0822bf00661a83ba2fab32214c70cc50a244a0a3">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/mid-sdk-2.20-34dd6013bdf5905c813ae37bb6d0b2b941f55191.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.3/56498efd17752898cfcc3868c1b6211a07b12b8f/joda-time-2.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="56498efd17752898cfcc3868c1b6211a07b12b8f">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/joda-time-2.3-b8064584ae3a10bb6d9a1695486d1d4e6b83b54a.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/android-viewbadger.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f1303b50d535716ca7601c5014357b8435658313">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/android-viewbadger-bdde6e7c918cf49ac5acbaf481e94d3ea165b81d.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/android-async-http-1.4.6.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a845a88238be0b5be9d238652c1bc0605ef91f52">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/android-async-http-1.4.6-d5d273aef72db799fbe54971e8739918cc4d76b1.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/jpush-android-2.0.5.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f2c821a0d13219a2e70490085c390bab03fb5953">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/jpush-android-2.0.5-6ba33e472eda9bde395b043e71d7482cc659977b.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/.gradle/caches/modules-2/files-2.1/com.squareup.haha/haha/1.1/b7b2e61ee1ad2d1ac6ae3122de9c940fb0d0e635/haha-1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b7b2e61ee1ad2d1ac6ae3122de9c940fb0d0e635">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/haha-1.1-8e7f7b6280580a4095f45ce4d69153a15538f788.jar" />
+    </item>
+    <item
+        jar="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/libs/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-8b7eb905185bd21e5c591aecadecfe6f40b7df60.jar" />
+    </item>
+
+</items>

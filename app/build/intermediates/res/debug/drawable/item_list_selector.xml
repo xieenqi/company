@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/pressed" android:state_focused="true"></item>
+    <!--<item android:drawable="@color/white" android:state_focused="false"></item>-->
+    <!--<item android:drawable="@color/pressed" android:state_pressed="true"></item>-->
+
+</selector><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/item_list_selector.xml -->

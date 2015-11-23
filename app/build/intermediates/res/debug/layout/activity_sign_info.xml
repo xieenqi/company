@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_common_title"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/layout_customer_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textSize="16sp"
+                        android:singleLine="false"
+                        android:textColor="#383838"
+                        android:id="@+id/tv_customer_name"
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint=""/>
+
+                    <TextView
+                        android:textSize="14sp"
+                        android:singleLine="false"
+                        android:textColor="#999999"
+                        android:id="@+id/tv_address"
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text=""/>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:src="@drawable/right_arrow"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                style="@style/view_split"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_marginRight="@dimen/margin_side_edge"/>
+
+            <LinearLayout
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_memo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/view_h_title"
+                android:singleLine="false"
+                android:textSize="18sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:minHeight="@dimen/view_h_title"
+                android:orientation="vertical">
+
+                <GridView
+                    android:layout_marginTop="@dimen/dimen_30"
+                    android:id="@+id/gridView_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"
+                    android:gravity="center"
+                    android:horizontalSpacing="@dimen/activity_horizontal_margin"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="3"
+                    android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_sign_info.xml -->

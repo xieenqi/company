@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:orientation="horizontal"
+              android:layout_height="match_parent"
+              >
+    <TextView
+        android:textSize="@dimen/dimen_18"
+        android:padding="@dimen/dimen_1.5"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/item_wf_category_tv"
+        android:layout_width="match_parent"
+        style="@style/text_item1"
+        android:layout_height="@dimen/view_h_title"
+        android:text="姓名" />
+
+</LinearLayout>

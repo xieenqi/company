@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:gravity="center_vertical"
+        android:background="@color/title_bg1">
+
+        <RelativeLayout
+            android:id="@+id/img_title_left"
+            android:layout_width="39dp"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back_left1" />
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/edt_search"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="35dp"
+            android:textCursorDrawable="@null"
+            android:hint="请输入搜索关键字"
+            android:textColorHint="#c9c9c9"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:inputType="text"
+            android:singleLine="false"
+            android:paddingLeft="12dp"
+            android:textColor="#6f6f6f"
+            android:imeOptions="actionSearch"
+            android:background="@drawable/bg_et_search" />
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:text="取消"
+            android:gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+            android:id="@+id/expandableListView_search"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:drawSelectorOnTop="false"
+            android:divider="@color/activity_split"
+            android:dividerHeight="0.5dp"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:smoothScrollbar="true" />
+
+        <ViewStub
+            android:id="@+id/vs_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/item_layout_nodata" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

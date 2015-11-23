@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.loyo.oa.v2.tool.customview.HackyViewPager
+    android:id="@+id/view_pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+    <TextView
+        android:visibility="gone"
+        android:text="删除"
+        android:gravity="center"
+        android:layout_width="@dimen/dimen_65"
+        android:layout_height="@dimen/dimen_65"
+        android:layout_marginBottom="@dimen/dimen_3"
+        android:layout_gravity="bottom|center_horizontal"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_del_img_shanpe"
+        android:id="@+id/delete_image"/>
+</FrameLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_image_preview.xml -->

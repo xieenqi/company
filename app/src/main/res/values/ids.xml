@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item type="id" name="gridview" />
+    <item type="id" name="webview" />
+    <item type="id" name="scrollview" />
+    <item type="id" name="layout_item" />
+    <item type="id" name="layout_drag" />
+    <item type="id" name="bulletin_bg_bmp" />
+
+
+
+</resources>

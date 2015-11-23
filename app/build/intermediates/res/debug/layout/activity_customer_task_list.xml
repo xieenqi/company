@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ptr="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/title_bg1"
+        android:orientation="vertical">
+        <include layout="@layout/include_common_title_2"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView
+            android:paddingBottom="@dimen/dimen_45"
+            android:layout_above="@+id/layout_add"
+            android:id="@+id/listView_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:cacheColorHint="#00000000"
+            android:divider="@color/activity_split"
+            android:dividerHeight="0.5dp"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="true"
+            android:groupIndicator="@null"
+            android:headerDividersEnabled="true"
+            android:orientation="vertical"
+            android:smoothScrollbar="true"
+            ptr:ptrMode="both"/>
+
+        <RelativeLayout
+            android:layout_alignParentBottom="true"
+            android:id="@+id/layout_add"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_45"
+            android:background="@color/whitesmoke">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/view_h_title"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/icon_common_add"
+                android:gravity="center"
+                android:text="新建任务"
+                android:textColor="@color/title_bg1"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/activity_customer_task_list.xml -->

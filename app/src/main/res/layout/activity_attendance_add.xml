@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_item_title"/>
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_45"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_25"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:src="@drawable/icon_attendance_time"
+                    />
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_8"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="#383838"
+                    android:textSize="16sp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_count_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="#383838"
+                    android:textSize="16sp"
+                    />
+
+            </LinearLayout>
+
+            <View
+                style="@style/view_split"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_marginTop="@dimen/dimen_1"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:minHeight="@dimen/dimen_55"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:gravity="left|center"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="#383838"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_result"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginTop="@dimen/dimen_5"
+                        android:gravity="left|center"
+                        android:text=""
+                        android:textColor="#ff5959"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_refresh_address"
+                    android:layout_width="@dimen/dimen_30"
+                    android:layout_height="@dimen/dimen_30"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/dimen_8"
+                    android:src="@drawable/icon_refresh"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/layout_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginTop="@dimen/dimen_1"
+                    />
+
+
+                <EditText
+                    android:id="@+id/et_reason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:background="@null"
+                    android:minHeight="@dimen/dimen_75"
+                    android:textSize="16sp"
+                    />
+
+            </LinearLayout>
+
+            <View
+                style="@style/view_split"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                />
+
+            <GridView
+                android:id="@+id/gridView_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:horizontalSpacing="@dimen/activity_horizontal_margin"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="3"
+                android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

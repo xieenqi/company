@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle" android:useLevel="false">
+            <solid android:color="@color/white" />
+            <corners android:radius="2dp" />
+            <stroke android:color="@color/gray" android:width="@dimen/dimen_0.5"/>
+        </shape>
+    </item>
+</layer-list><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/edt_rectangle_bg.xml -->

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ptr="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_common_title_search"/>
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+        <ImageView
+            android:alpha="0.3"
+            android:layout_marginTop="@dimen/dimen_55"
+            android:layout_marginBottom="@dimen/dimen_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1"
+            android:src="@color/lightgray"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="56dp">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView
+                    android:id="@+id/expandableListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="true"
+                    android:cacheColorHint="#00000000"
+                    android:divider="@color/activity_split"
+                    android:dividerHeight="0.5dp"
+                    android:drawSelectorOnTop="false"
+                    android:fadingEdge="none"
+                    android:fastScrollEnabled="false"
+                    android:footerDividersEnabled="true"
+                    android:groupIndicator="@null"
+                    android:headerDividersEnabled="true"
+                    android:orientation="vertical"
+                    android:smoothScrollbar="true" ptr:ptrMode="both"/>
+
+                <ViewStub
+                    android:id="@+id/vs_nodata"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inflatedId="@+id/layout_nodata"
+                    android:layout="@layout/item_layout_nodata"/>
+
+                <FrameLayout
+                    android:id="@+id/layout_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:background="@android:color/transparent"
+                    android:paddingLeft="@dimen/dimen_70"
+                    android:paddingRight="@dimen/dimen_70"
+                    android:visibility="gone">
+                    <ListView
+                        android:id="@+id/lv_wftype_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/round_bg_shpe"
+                        android:cacheColorHint="#00000000"
+                        android:choiceMode="singleChoice"
+                        android:divider="@color/activity_split"
+                        android:dividerHeight="@dimen/dimen_0.5"
+                        android:padding="@dimen/dimen_0.5">
+                    </ListView>
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/btn_add"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="3dp"
+                    android:background="@drawable/bg_btn_circle"
+                    android:textColor="@color/white"/>
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+
+        <com.loyo.oa.v2.tool.customview.filterview.DropDownMenu
+            android:visibility="invisible"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:id="@+id/drop_menu"
+            android:background="@color/white"
+            android:layout_height="@dimen/dimen_55"/>
+
+    </FrameLayout>
+
+</LinearLayout>

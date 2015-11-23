@@ -1,0 +1,334 @@
+package com.loyo.oa.v2.tool;
+
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.LoginActivity;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
+import com.tencent.android.tpush.XGPushManager;
+
+import java.util.ArrayList;
+
+
+public class BaseActivity extends Activity implements GestureDetector.OnGestureListener {
+    protected MainApp app;
+    public CustomProgressDialog customProgressDialog;
+
+    protected boolean isNeedLogin = true;
+    protected Context mContext;
+
+    protected static final int NO_SCROLL = -1;
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        app = (MainApp) getApplicationContext();
+        mContext = this;
+        mDetector = new GestureDetector(this, this);
+        registerBaseReceiver();
+        ExitActivity.getInstance().addActivity(this);
+        if (customProgressDialog == null) {
+            customProgressDialog = new CustomProgressDialog(this);
+            customProgressDialog.setCancelable(false);
+        }
+    }
+
+    protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (null == intent) {
+                return;
+            }
+            String action = intent.getAction();
+            if (TextUtils.equals(action, ConnectivityManager.CONNECTIVITY_ACTION)) {
+                ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo info = manager.getActiveNetworkInfo();
+                if (null != info && info.isAvailable() && info.isConnected()) {
+                    onNetworkChanged(true);
+                } else {
+                    onNetworkChanged(false);
+                }
+            }
+        }
+    };
+
+    /**
+     * 网络状态变化回调方法
+     *
+     * @param available
+     */
+    protected void onNetworkChanged(boolean available) {
+
+    }
+
+    /**
+     * 注册基类广播
+     */
+    protected void registerBaseReceiver() {
+    }
+
+    /**
+     * 解除注册基类广播
+     */
+    protected void unRegisterBaseReceiver() {
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():begin");
+
+        super.onSaveInstanceState(outState);
+        outState.putString("token", MainApp.getToken());
+        outState.putSerializable("user", MainApp.user);
+        outState.putSerializable("subUsers", MainApp.subUsers);
+
+        app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:begin");
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (StringUtil.isEmpty(MainApp.getToken())) {
+            MainApp.setToken(savedInstanceState.getString("token"));
+        }
+
+        if (MainApp.user == null && savedInstanceState.containsKey("user")) {
+            MainApp.user = (User) savedInstanceState.getSerializable("user");
+        }
+
+        if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
+            MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
+        }
+
+        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
+    }
+
+    @Override
+    protected void onResume() {
+        XGPushManager.onActivityStarted(this);
+        getWindow().getDecorView().setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
+
+        if (MainApp.user == null) {
+            MainApp.user = DBManager.Instance().getUser();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        XGPushManager.onActivityStoped(this);
+        super.onPause();
+    }
+
+    protected void setTitle(String title) {
+        ((TextView) findViewById(R.id.tv_title_1)).setText(title);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unRegisterBaseReceiver();
+        //关闭键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+
+        ExitActivity.getInstance().removeActivity(this);
+        if (customProgressDialog != null && customProgressDialog.isShowing()) {
+            customProgressDialog.dismiss();
+            app.logUtil.d("onDestroy");
+        }
+        customProgressDialog = null;
+        super.onDestroy();
+    }
+
+    private Toast mCurrentToast;
+
+    protected void Toast(String msg) {
+        if (null != mCurrentToast) {
+            mCurrentToast.cancel();
+        }
+
+        mCurrentToast = Toast.makeText(app.getBaseContext(), msg, Toast.LENGTH_SHORT);
+        mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
+        mCurrentToast.show();
+    }
+
+    protected void Toast(int resId) {
+        Toast(app.getString(resId));
+    }
+
+    public abstract class BaseActivityAsyncHttpResponseHandler extends BaseAsyncHttpResponseHandler {
+
+        @Override
+        public Activity getActivity() {
+            return (Activity) mContext;
+        }
+
+    }
+
+    public static class BaseHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            MainApp app = MainApp.getMainApp();
+            app.logUtil.d("handleMessage msg.what:" + msg.what);
+            switch (msg.what) {
+                case FinalVariables.APP_RELOGIN:
+                    Global.Toast(R.string.app_Session_invalidation);
+                    app.toActivity(LoginActivity.class);
+                    break;
+                //                case FinalVariables.APP_CONNECT_SERVER_EXCEPTION:
+                ////                    toast = Toast.makeText(MainApp.getMainApp().getBaseContext(), MainApp.getMainApp().getString(R.string.app_connectServerDataException), Toast.LENGTH_LONG);
+                ////                    toast.setGravity(Gravity.CENTER, 0, 0);
+                ////                    toast.show();
+                //                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(message);
+        builder.setTitle(title);
+        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+                confirm.Confirm();
+            }
+        });
+        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+    }
+
+    protected interface ConfirmDialogInterface {
+        void Confirm();
+    }
+
+    //当控件Id>0的时候，是指定ViewGroup的ID
+    // = 0的时候是Activity使用手势。
+    // = -1的时候是Activity不使用手势。
+    int mTouchViewGroupId;
+
+    protected void setTouchView(int _touchViewGroupId) {
+        if (_touchViewGroupId <= 0) {
+            mTouchViewGroupId = _touchViewGroupId;
+            return;
+        }
+
+        mTouchViewGroupId = _touchViewGroupId;
+
+        ViewGroup vg = (ViewGroup) findViewById(mTouchViewGroupId);
+        vg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mDetector.onTouchEvent(event);
+            }
+        });
+    }
+
+    GestureDetector mDetector;
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        //        int i = app.diptoPx(200);
+        if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
+            onBackPressed();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (!isNeedLogin || mTouchViewGroupId == -1) {
+            return super.onTouchEvent(event);
+        }
+
+        return mDetector.onTouchEvent(event);
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+
+        if (!isNeedLogin || mTouchViewGroupId == -1) {
+            return super.dispatchTouchEvent(event);
+        } else if (mDetector != null) {
+            if (mDetector.onTouchEvent(event))
+            //If the gestureDetector handles the event, a swipe has been executed and no more needs to be done.
+            {
+                return true;
+            }
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+}

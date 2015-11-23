@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:fromYDelta="0"
+        android:toYDelta="-100%"
+        android:duration="@integer/animator_activity"
+        android:interpolator="@android:anim/decelerate_interpolator"
+
+        />
+</set><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/anim/exit_buttomtotop.xml -->

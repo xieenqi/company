@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:minHeight="80dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="客户名"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:textColor="#383838"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/img_customer_status"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@id/tv_name"
+        android:src="@drawable/img_customer_status" />
+
+    <TextView
+        android:id="@+id/tv_customer_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/img_customer_status"
+        android:layout_below="@id/tv_name"
+        android:layout_marginTop="2dp"
+        android:text="新建客户"
+        android:textColor="@color/text2"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/img_sign_list_creator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@id/tv_customer_status"
+        android:src="@drawable/img_sign_list_creator" />
+
+    <TextView
+        android:id="@+id/tv_customer_contract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/img_sign_list_creator"
+        android:layout_below="@id/tv_customer_status"
+        android:layout_marginTop="1dp"
+        android:layout_marginLeft="10dp"
+        android:text="123"
+        android:textColor="@color/text2"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/img_sign_list_visitnum"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@id/img_sign_list_creator"
+        android:src="@drawable/img_sign_list_position" />
+
+    <TextView
+        android:id="@+id/tv_customer_visitnum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/img_sign_list_creator"
+        android:layout_below="@id/img_sign_list_creator"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="10dp"
+        android:text="暂无签到"
+        android:textColor="@color/text2"
+        android:textSize="12sp" />
+
+
+</RelativeLayout>
+
+<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_customer_manage.xml -->

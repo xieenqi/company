@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_project_member_delete"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:src="@drawable/img_delete"/>
+
+    <TextView
+        android:id="@+id/tv_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/img_project_member_delete"
+        android:text="姓名"
+        android:textColor="#262626"
+        android:textSize="17sp"/>
+
+    <Switch
+        android:id="@+id/switch_member"
+        android:layout_width="wrap_content"
+        android:layout_height="54dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_side_edge"
+        android:textSize="15sp"
+        android:checked="false"
+        android:textOff="仅看自己"
+        android:textOn="可看全部"/>
+
+</RelativeLayout>
+
