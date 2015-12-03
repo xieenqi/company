@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.wfinstance.DepartmentChoose;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -62,10 +63,12 @@ import retrofit.client.Response;
 public class WfInstanceAddActivity extends BaseActivity {
 
     public static final int RESULT_WFINSTANCT_TYPE = 3;
+    public static final int RESULT_DEPT_CHOOSE = 5;
 
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_wfinstance_data;
+    @ViewById ViewGroup ll_dept;
 
     @ViewById Button btn_add;
 
@@ -292,7 +295,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.btn_add, R.id.layout_WfTemplate, R.id.layout_wfinstance})
+    @Click({R.id.img_title_left, R.id.btn_add, R.id.layout_WfTemplate, R.id.layout_wfinstance,R.id.ll_dept})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -312,6 +315,10 @@ public class WfInstanceAddActivity extends BaseActivity {
 
             case R.id.layout_wfinstance:
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
+                break;
+            case R.id.ll_dept:
+                //Toast("客户选择呢");
+                app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;
         }
     }
@@ -390,19 +397,19 @@ public class WfInstanceAddActivity extends BaseActivity {
         HashMap<String, Object> jsonObject = new HashMap<>();
 
         app.logUtil.e(" 审批 : " + projectId);
-        jsonObject.put("projectId", projectId);//项目Id
         jsonObject.put("bizformId", mBizForm.getId());//表单Id
         jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
-        jsonObject.put("wftemplateId", mTemplateId);//流程模板Id
-
-
-        //        jsonObject_workflowValues.put("wfInstanceValuesDatas", jsonObject_wfInstanceValuesDatas);
+        //jsonObject.put("deptId", "");//部门 id
         jsonObject.put("workflowValues", workflowValues);//流程 内容
-        jsonObject.put("memo", edt_memo.getText().toString().trim()); //备注
-
+        jsonObject.put("wftemplateId", mTemplateId);//流程模板Id
+        if(!TextUtils.isEmpty(projectId)){
+            jsonObject.put("projectId", projectId);//项目Id
+        }
+        //        jsonObject_workflowValues.put("wfInstanceValuesDatas", jsonObject_wfInstanceValuesDatas);
         if (uuid != null && lstData_Attachment.size() > 0) {
             jsonObject.put("attachmentUUId", uuid);
         }
+        jsonObject.put("memo", edt_memo.getText().toString().trim()); //备注
 
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(jsonObject, new RCallback<WfInstance>() {
