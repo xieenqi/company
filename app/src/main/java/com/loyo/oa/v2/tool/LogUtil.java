@@ -195,4 +195,9 @@ public class LogUtil {
                     + "[" + mClassName + line + ":] " + log + "\n", tr);
         }
     }
+
+    public static void dll(String str){
+        Log.d("LOG",str);
+    }
+
 }

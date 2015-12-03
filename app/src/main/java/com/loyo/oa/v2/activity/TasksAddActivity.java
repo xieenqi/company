@@ -157,6 +157,7 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setChecked(mTask.isReviewFlag());
 
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
+
             User u = new User();
             u.setId(mTask.getResponsiblePersonId());
             u.setRealname(mTask.getResponsiblePersonName());

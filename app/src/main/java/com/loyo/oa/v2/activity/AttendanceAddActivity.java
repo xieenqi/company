@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -48,6 +49,7 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -386,6 +388,23 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
                 onBackPressed();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                     Toast("请检查您的网络连接");
+                }
+                else if(error.getKind() == RetrofitError.Kind.HTTP){
+                    if(error.getResponse().getStatus() == 500){
+                        Toast("网络异常500，请稍候再试");
+                        try {
+                            LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         });
     }

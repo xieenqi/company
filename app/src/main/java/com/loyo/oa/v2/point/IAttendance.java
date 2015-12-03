@@ -42,7 +42,7 @@ public interface IAttendance {
      * @param map
      * @param callback
      */
-    @POST("/attendance/")
+    @POST("/attendance/save")
     void confirmAttendance(@Body HashMap<String,Object> map, Callback<AttendanceRecord> callback);
 
     /**

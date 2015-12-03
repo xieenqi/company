@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById ImageView img_home_head, img_fast_add;
     @ViewById TextView tv_attendance_out_time, tv_attendance_in_time;
 
+
     private Intent mIntentCheckUpdate;
     private ArrayList<HomeNumber> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
