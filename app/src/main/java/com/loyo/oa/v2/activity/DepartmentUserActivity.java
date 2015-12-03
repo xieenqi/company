@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * 通讯录页面，包含部门，员工两个Fragment
+ * */
+
 public class DepartmentUserActivity extends FragmentActivity implements View.OnClickListener {
     public static final int request_Code = 100;
 
@@ -51,8 +56,8 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     ViewGroup img_title_left;
     Button btn_title_right;
 
-    DepartmentFragment departmentFragment;
-    UserFragment userFragment;
+    DepartmentFragment departmentFragment; //部门fragment
+    UserFragment userFragment;             //员工fragment
 
     public int show_type;   //页面类型（0=部门+人员,1=仅人员）
     public int select_type; //选择类型 (0=多选，1=单选)
@@ -99,7 +104,6 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_user);
-
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {

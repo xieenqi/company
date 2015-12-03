@@ -2,11 +2,12 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
+import com.j256.ormlite.table.DatabaseTable;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+@DatabaseTable
 public class User implements Serializable {
 
     private String avatar;
@@ -272,9 +273,9 @@ public class User implements Serializable {
 
     public NewUser toShortUser() {
         NewUser user = new NewUser();
-        user.setId(id);
-        user.setName(realname);
-        user.setAvatar(avatar);
+        user.setId(this.getId());
+        user.setName(this.getRealname());
+        user.setAvatar(this.getAvatar());
 //        if (null != depts) {
 //            String deptId = "";
 //            for (int i = 0; i < depts.size(); i++) {

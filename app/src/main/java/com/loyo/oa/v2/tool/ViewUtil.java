@@ -9,7 +9,7 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
 public class ViewUtil {
-    private static String TAG = "ViewUtil";
+    private static String TAG = "ViewUtil 视图工具";
     public static final int DATE_NULL = 0;
 
 //    public class OnTouchListener_button_drawableTop implements View.OnTouchListener {
@@ -183,7 +183,7 @@ public class ViewUtil {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            Log.d(TAG, "onTouch OnTouchListener_view_transparency event.getAction():" + event.getAction());
+            Log.d(TAG, "onTouch 触摸监听 OnTouchListener_view_transparency event.getAction():" + event.getAction());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.setAlpha(0.25f);
             } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {

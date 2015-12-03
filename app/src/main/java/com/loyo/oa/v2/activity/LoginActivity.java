@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
@@ -25,30 +26,43 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WXUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
+import com.nostra13.universalimageloader.utils.L;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 
 import org.apache.http.Header;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
+/**
+ * 登陆界面
+ */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, WaveView.OnWaveCompleteListener {
     EditText edt_username, edt_password;
     WaveView layout_login;
     ViewGroup tv_bqq_login;
     ViewGroup tv_bwx_login;
-    ViewGroup layout_third_login,layout_reset_password;
+    ViewGroup layout_third_login, layout_reset_password;
     IWXAPI iwxapi;
     HashMap<String, String> wxUnionIds = new HashMap<>();
+
+    private JSONObject jsObj;
+    private int codes;
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -113,12 +127,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_third_login = (ViewGroup) findViewById(R.id.layout_third_login);
 
         tv_bqq_login = (ViewGroup) findViewById(R.id.tv_bqq_login);
-        tv_bwx_login = (ViewGroup) findViewById(R.id.tv_bwx_login);
+        //tv_bwx_login = (ViewGroup) findViewById(R.id.tv_bwx_login);
         layout_reset_password = (ViewGroup) findViewById(R.id.layout_reset_password);
         tv_bqq_login.setOnClickListener(this);
-        tv_bwx_login.setOnClickListener(this);
+        //tv_bwx_login.setOnClickListener(this);
         tv_bqq_login.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
-        tv_bwx_login.setOnTouchListener(Global.GetTouch());
+        //tv_bwx_login.setOnTouchListener(Global.GetTouch());
         layout_reset_password.setOnTouchListener(Global.GetTouch());
         layout_reset_password.setOnClickListener(this);
 
@@ -188,6 +202,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 HashMap<String, Object> body = new HashMap<String, Object>();
                 body.put("username", username);
                 body.put("password", password);
+
                 if (!wxUnionIds.isEmpty()) {
                     String wxUninoId = wxUnionIds.get(username);
                     if (TextUtils.isEmpty(wxUninoId))
@@ -195,18 +210,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if (!TextUtils.isEmpty(wxUninoId))
                         body.put("wxUnionId", wxUninoId);
                 }
+
                 login(body, 2);
                 break;
+            //企业qq登陆
             case R.id.tv_bqq_login:
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
                 break;
-            case R.id.tv_bwx_login:
+           /* case R.id.tv_bwx_login:
                 if (regToWx()) {
                     requestWeixinInfo();
                 }
-                break;
+
+                break;*/
+
+            //忘记密码
+
             case R.id.layout_reset_password:
-                app.startActivity(this,VerifyAccountActivity_.class,MainApp.ENTER_TYPE_RIGHT,false,null);
+                app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
         }
     }
@@ -247,17 +268,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      *
      * @param body 表单
      * @param type 1，微信登录；2，普通登录
+     *             <p/>
+     *             成功 getStatus 状态码
+     *             失败 getKind 状态码
      */
     private void login(HashMap<String, Object> body, final int type) {
         RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(FinalVariables.GET_TOKEN)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(FinalVariables.GET_TOKEN) //URL
+                .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
                 .build();
+
 
         adapter.create(ILogin.class).login(body, new RCallback<Token>() {
             @Override
             public void success(Token token, Response response) {
                 if (null == token || TextUtils.isEmpty(token.access_token)) {
+
                     Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
                     if (type == 2) {
                         layout_login.setText("登录失败");
@@ -267,20 +293,55 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 if (2 == type)
                     layout_login.setText("登录成功");
+
                 //登录成功
                 MainApp.setToken(token.getAccess_token());
                 SharedUtil.put(mContext, FinalVariables.TOKEN, token.getAccess_token());
                 app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+
             }
 
             @Override
             public void failure(RetrofitError error) {
-//                super.failure(error);
-                Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
-                if (type == 2) {
-                    layout_login.setText("登录失败");
-                    changeColor(R.color.title_bg1, R.color.red);
+
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+
+                    switch (type) {
+
+                        case 1:
+                          //Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
+                            Toast("微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号");
+                            break;
+
+                        case 2:
+                            try {
+                                String errorStr = Utils.convertStreamToString(error.getResponse().getBody().in());
+                                codes = error.getResponse().getStatus();
+                                jsObj = new JSONObject(errorStr);
+                                Log.d("LOG", "服务器返回信息：" + errorStr);
+                                Log.d("LOG", "ERROR信息：" + jsObj.getString("error"));
+                                Log.d("LOG","code:"+codes);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (codes == 500) {
+                                Toast("手机号码或密码错误");
+                            } else if (codes == 401) {
+                                Toast("登录失败，请稍后再试");
+                            }
+
+                            break;
+                    }
                 }
+
+                layout_login.setText("登录失败");
+                changeColor(R.color.title_bg1, R.color.red);
+
             }
         });
     }
@@ -307,7 +368,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         return true;
     }
 
+
     public class Token {
+
+        private String access_token;
+
+        private String error;
 
         public String getAccess_token() {
             return access_token;
@@ -324,10 +390,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         public void setError(String error) {
             this.error = error;
         }
-
-        private String access_token;
-
-        private String error;
     }
 
     @Override

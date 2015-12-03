@@ -82,29 +82,29 @@ public final class CustomerDetailInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_sale_activity_date = ((TextView) hasViews.findViewById(id.tv_sale_activity_date));
-        layout_task = ((ViewGroup) hasViews.findViewById(id.layout_task));
-        tv_task_count = ((TextView) hasViews.findViewById(id.tv_task_count));
-        tv_visit_times = ((TextView) hasViews.findViewById(id.tv_visit_times));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        tv_tags = ((TextView) hasViews.findViewById(id.tv_tags));
         tv_contact_tel = ((TextView) hasViews.findViewById(id.tv_contact_tel));
-        layout_call = ((ViewGroup) hasViews.findViewById(id.layout_call));
-        tv_purchase_count = ((TextView) hasViews.findViewById(id.tv_purchase_count));
-        tv_customer_name = ((TextView) hasViews.findViewById(id.tv_customer_name));
-        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
-        layout_contact = ((ViewGroup) hasViews.findViewById(id.layout_contact));
-        layout_visit = ((ViewGroup) hasViews.findViewById(id.layout_visit));
-        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
         layout_attachment = ((ViewGroup) hasViews.findViewById(id.layout_attachment));
-        img_public = ((ImageView) hasViews.findViewById(id.img_public));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_contact_name = ((TextView) hasViews.findViewById(id.tv_contact_name));
+        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
         img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        layout_purchase = ((ViewGroup) hasViews.findViewById(id.layout_purchase));
         layout_send_sms = ((ViewGroup) hasViews.findViewById(id.layout_send_sms));
+        tv_customer_name = ((TextView) hasViews.findViewById(id.tv_customer_name));
+        tv_contact_name = ((TextView) hasViews.findViewById(id.tv_contact_name));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
+        tv_task_count = ((TextView) hasViews.findViewById(id.tv_task_count));
+        img_public = ((ImageView) hasViews.findViewById(id.img_public));
+        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
+        layout_purchase = ((ViewGroup) hasViews.findViewById(id.layout_purchase));
+        tv_purchase_count = ((TextView) hasViews.findViewById(id.tv_purchase_count));
+        layout_call = ((ViewGroup) hasViews.findViewById(id.layout_call));
+        tv_sale_activity_date = ((TextView) hasViews.findViewById(id.tv_sale_activity_date));
         layout_customer_info = ((ViewGroup) hasViews.findViewById(id.layout_customer_info));
+        layout_visit = ((ViewGroup) hasViews.findViewById(id.layout_visit));
+        layout_task = ((ViewGroup) hasViews.findViewById(id.layout_task));
+        tv_visit_times = ((TextView) hasViews.findViewById(id.tv_visit_times));
+        tv_tags = ((TextView) hasViews.findViewById(id.tv_tags));
+        layout_contact = ((ViewGroup) hasViews.findViewById(id.layout_contact));
         layout_sale_activity = ((ViewGroup) hasViews.findViewById(id.layout_sale_activity));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

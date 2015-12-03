@@ -35,7 +35,11 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
-public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener, View.OnTouchListener, Callback<PaginationX<T>> {
+public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends BaseFragment implements
+        PullToRefreshBase.OnRefreshListener2,
+        AbsListView.OnScrollListener,
+        View.OnTouchListener,
+        Callback<PaginationX<T>> {
     protected View mView;
     protected Button btn_add;
     protected ViewGroup img_title_left;
@@ -108,11 +112,11 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             mView = inflater.inflate(R.layout.fragment_base_new, container, false);
             mMenu = (DropDownMenu) mView.findViewById(R.id.drop_menu);
 
-            emptyView=(ViewStub)mView.findViewById(R.id.vs_nodata);
+            emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
 
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);
             tv_title_1.setText(GetTitle());
-
+            //底部创建按钮
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             btn_add.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
             btn_add.setOnClickListener(new View.OnClickListener() {
@@ -224,6 +228,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         if (null == tPaginationX) {
             return;
         }
+
         pagination = tPaginationX;
         ArrayList<T> lstDataTemp = tPaginationX.getRecords();
         //下接获取最新时，清空
@@ -234,6 +239,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
         changeAdapter();
         expand();
+
+
     }
 
     @Override

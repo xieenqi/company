@@ -92,10 +92,10 @@ public final class TaskListActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
-        layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         lv = ((PullToRefreshExpandableListView) hasViews.findViewById(id.listView_tasks));
+        layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
         if (layout_add!= null) {
             layout_add.setOnClickListener(new OnClickListener() {
 

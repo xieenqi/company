@@ -7,4 +7,4 @@
         android:duration="200"
         android:fromYDelta="0"
         android:toYDelta="50%p" />
-</set><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/anim/push_bottom_out.xml -->
+</set><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/anim/push_bottom_out.xml -->

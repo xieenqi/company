@@ -14,11 +14,8 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/** 客户拜访列表 的adapter  xnq
  * com.loyo.oa.v2.adapter
- * 描述 :
- * 作者 : ykb
- * 时间 : 15/9/14.
  */
 public class CommonCategoryAdapter extends BaseAdapter {
 

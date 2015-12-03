@@ -22,8 +22,6 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 
-import java.util.ArrayList;
-
 public class BaseFragmentActivity extends FragmentActivity {
     protected MainApp app;
     protected Context mContext;
@@ -98,7 +96,8 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
-        outState.putSerializable("subUsers", MainApp.subUsers);
+
+        //outState.putSerializable("subUsers", MainApp.subUsers);
 
         app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
     }
@@ -116,9 +115,9 @@ public class BaseFragmentActivity extends FragmentActivity {
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
 
-        if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
+        /*if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
             MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
-        }
+        }*/
 
         app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
     }
@@ -147,11 +146,11 @@ public class BaseFragmentActivity extends FragmentActivity {
             MainApp.user = DBManager.Instance().getUser();
         }
 
-        if (MainApp.subUsers == null) {
+        /*if (MainApp.subUsers == null) {
             Log.d(Tag, "subUsers is null");
             MainApp.subUsers = DBManager.Instance().getSubordinates();
             Log.d(Tag, "subUsers size" + MainApp.subUsers.size());
-        }
+        }*/
 
         super.onResume();
     }

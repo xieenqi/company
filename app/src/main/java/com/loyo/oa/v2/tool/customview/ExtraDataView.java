@@ -85,7 +85,6 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setTextSize(valueSize);
             }
             tv_content.setTextColor(valueColor);
-
             tv_tag.setText(properties.getLabel());
             tv_content.setText(customerExtra.getVal());
 

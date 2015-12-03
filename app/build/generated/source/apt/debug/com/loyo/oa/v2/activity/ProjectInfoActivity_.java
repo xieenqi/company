@@ -94,15 +94,15 @@ public final class ProjectInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_project_des = ((ViewGroup) hasViews.findViewById(id.layout_project_des));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        pager = ((ViewPager) hasViews.findViewById(id.pager));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         tabs = ((PagerSlidingTabStrip) hasViews.findViewById(id.tabs));
-        tv_project_extra = ((TextView) hasViews.findViewById(id.tv_project_extra));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         img_project_status = ((ImageView) hasViews.findViewById(id.img_project_status));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         tv_project_title = ((TextView) hasViews.findViewById(id.tv_project_title));
+        tv_project_extra = ((TextView) hasViews.findViewById(id.tv_project_extra));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        layout_project_des = ((ViewGroup) hasViews.findViewById(id.layout_project_des));
+        pager = ((ViewPager) hasViews.findViewById(id.pager));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

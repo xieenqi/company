@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +55,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 【新建 审批】 界面
+ */
 @EActivity(R.layout.activity_wfinstance_add)
 public class WfInstanceAddActivity extends BaseActivity {
 
@@ -352,27 +354,6 @@ public class WfInstanceAddActivity extends BaseActivity {
             Toast("请输入审批内容");
             return;
         }
-
-        Log.e(getClass().getSimpleName(), "commit wfinstance ,size : " + submitData.size());
-        for (int k = 0; k < submitData.size(); k++) {
-            HashMap<String, Object> map_Values = submitData.get(k);
-            for (BizFormFields field : mBizForm.getFields()) {
-                String value = (String) map_Values.get(field.getId());
-                if (field.isRequired() && (!map_Values.keySet().contains(field.getId()) || TextUtils.isEmpty(value))) {
-                    Toast("请填写\"必填项\"");
-                    return;
-                }
-            }
-        }
-
-        HashMap<String, Object> jsonObject = new HashMap<>();
-
-        app.logUtil.e(" 审批 : " + projectId);
-        jsonObject.put("projectId", projectId);
-        jsonObject.put("bizformId", mBizForm.getId());
-        jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());
-        jsonObject.put("wftemplateId", mTemplateId);
-
         ArrayList<HashMap<String, String>> workflowValues = new ArrayList<>();
         wfInstanceAdd.getWorkflowValuesAdd().getWfInstanceValuesDatas().clear();
         for (int k = 0; k < submitData.size(); k++) {
@@ -389,9 +370,35 @@ public class WfInstanceAddActivity extends BaseActivity {
             }
             workflowValues.add(jsonMapValues);
         }
+        System.out.print(" 审批必填项： "+workflowValues.get(0).toString());
+        if(!(workflowValues.size()>0)){
+            Toast("请填写审批内容\"必填项\"");
+            return;
+        }
+        /*for (int k = 0; k < submitData.size(); k++) {
+            HashMap<String, Object> map_Values = submitData.get(k);
+            for (BizFormFields field : mBizForm.getFields()) {
+                String value = (String) map_Values.get(field.getId());
+                System.out.print(" 审批必填项： "+field.isRequired()+"  value: "+TextUtils.isEmpty(value)+"  后面的 "+(!map_Values.keySet().contains(field.getId())));
+                if ( !TextUtils.isEmpty(value)) {
+                    Toast("请填写\"必填项\"");
+                    return;
+                }
+            }
+        }*/
+
+        HashMap<String, Object> jsonObject = new HashMap<>();
+
+        app.logUtil.e(" 审批 : " + projectId);
+        jsonObject.put("projectId", projectId);//项目Id
+        jsonObject.put("bizformId", mBizForm.getId());//表单Id
+        jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
+        jsonObject.put("wftemplateId", mTemplateId);//流程模板Id
+
+
         //        jsonObject_workflowValues.put("wfInstanceValuesDatas", jsonObject_wfInstanceValuesDatas);
-        jsonObject.put("workflowValues", workflowValues);
-        jsonObject.put("memo", edt_memo.getText().toString().trim());
+        jsonObject.put("workflowValues", workflowValues);//流程 内容
+        jsonObject.put("memo", edt_memo.getText().toString().trim()); //备注
 
         if (uuid != null && lstData_Attachment.size() > 0) {
             jsonObject.put("attachmentUUId", uuid);

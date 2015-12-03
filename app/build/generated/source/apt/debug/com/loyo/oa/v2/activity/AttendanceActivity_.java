@@ -88,12 +88,12 @@ public final class AttendanceActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
         layout_category = ((ViewGroup) hasViews.findViewById(id.layout_category));
-        categoryListView = ((ListView) hasViews.findViewById(id.lv_attendance_category));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         imageArrow = ((ImageView) hasViews.findViewById(id.img_title_arrow));
+        categoryListView = ((ListView) hasViews.findViewById(id.lv_attendance_category));
+        layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

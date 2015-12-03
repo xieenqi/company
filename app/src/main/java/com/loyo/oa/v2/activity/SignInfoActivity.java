@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
+/**
+ * 【签到详情】 页面  xnq
+ */
 public class SignInfoActivity extends BaseActivity {
     private static final int REQUEST_PREVIEW_CUSTOMER_INFO = 320;
 
@@ -83,6 +85,7 @@ public class SignInfoActivity extends BaseActivity {
             public void onClick(View view) {
                 Bundle b = new Bundle();
                 b.putString("CustomerId", legWork.getCustomerId());
+                b.putString("CustomerAddress",legWork.getAddress());
                 app.startActivityForResult(SignInfoActivity.this, CustomerInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
             }
         });

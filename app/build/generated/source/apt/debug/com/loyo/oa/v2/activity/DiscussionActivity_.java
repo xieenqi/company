@@ -89,8 +89,8 @@ public final class DiscussionActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        listView_discussion = ((PullToRefreshListView) hasViews.findViewById(id.listView_discussion));
         et_comment = ((TextView) hasViews.findViewById(id.et_comment));
+        listView_discussion = ((PullToRefreshListView) hasViews.findViewById(id.listView_discussion));
         {
             View view = hasViews.findViewById(id.tv_send);
             if (view!= null) {

@@ -338,6 +338,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
+    /**
+     * 标题左右监听
+     * */
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_workreport_review})
     void onClick(View v) {
         switch (v.getId()) {

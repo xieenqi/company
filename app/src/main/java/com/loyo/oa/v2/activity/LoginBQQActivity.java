@@ -13,7 +13,9 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SharedUtil;
 
-
+/**
+ * 企业qq网页登陆
+ */
 public class LoginBQQActivity extends BaseActivity {
     private WebView webView;
 
@@ -23,7 +25,6 @@ public class LoginBQQActivity extends BaseActivity {
 
         setContentView(R.layout.activity_bqq_login);
         super.isNeedLogin = false;
-
         initUI();
     }
 
@@ -40,11 +41,12 @@ public class LoginBQQActivity extends BaseActivity {
 
     void initUI() {
         webView = (WebView) findViewById(R.id.webView);
-
+        webView.getSettings().setBlockNetworkImage(true);
         webView.getSettings().setJavaScriptEnabled(true);
+
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
+                final boolean blockLoadingNetworkImage=true;
                 if (url.indexOf(FinalVariables.GetLogin_success_prefix()) >= 0) {
                     String token = url.substring(FinalVariables.GetLogin_success_prefix().length(), url.length());
                     MainApp.setToken(token);
@@ -53,9 +55,13 @@ public class LoginBQQActivity extends BaseActivity {
                 } else {
                     view.loadUrl(url);
                 }
-
+                if(blockLoadingNetworkImage){
+                    webView.getSettings().setBlockNetworkImage(false);
+                }
                 return true;
             }
+
+
         });
 
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式

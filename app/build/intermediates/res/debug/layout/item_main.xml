@@ -16,24 +16,39 @@
             android:id="@id/layout_drag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/img_item"
-                    android:layout_width="@dimen/dimen_25"
-                    android:layout_height="@dimen/dimen_30"
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img_item_all"
                     android:layout_marginLeft="18dp"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/icon_launcher_bg"
-                    android:layout_centerVertical="true"
-                    />
+                    android:layout_marginTop="18dp">
+                    <ImageView
+                        android:id="@+id/img_item"
+                        android:layout_width="@dimen/dimen_25"
+                        android:layout_height="@dimen/dimen_30"
+                        android:src="@drawable/icon_launcher_bg"
+                        android:layout_centerVertical="true"
+                        />
+                    <TextView
+                        android:id="@+id/tv_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="4dp"
+                        android:text="23"
+                        android:textColor="#2c9dfc"
+                        android:visibility="gone"
+                        />
+                </FrameLayout>
+
 
 
 
             <RelativeLayout
                 android:id="@+id/layout_text_task"
                 android:layout_width="wrap_content"
-                android:layout_height="55dp"
-                android:layout_toRightOf="@+id/img_item"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@+id/img_item_all"
                 android:gravity="bottom">
 
                 <TextView
@@ -79,4 +94,4 @@
         </RelativeLayout>
     </com.loyo.oa.v2.tool.customview.RippleView>
 </RelativeLayout>
-<!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_main.xml -->
+<!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/layout/item_main.xml -->

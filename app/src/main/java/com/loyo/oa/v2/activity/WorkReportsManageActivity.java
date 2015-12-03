@@ -9,7 +9,9 @@ import com.loyo.oa.v2.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 
-
+/**
+ * 工作报告  页面
+ */
 public class WorkReportsManageActivity extends BaseFragmentActivity {
 
     WorkReportsManageFragment workReportsManageFragment = new WorkReportsManageFragment();

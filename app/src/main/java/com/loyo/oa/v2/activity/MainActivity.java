@@ -67,6 +67,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -77,8 +78,10 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuDismissListener, PopupMenu.OnPopupMenuItemClickListener, LocationUtil.AfterLocation {
 
-    @ViewById(R.id.tv_title_1) TextView tv_user_name;
-    @ViewById(R.id.img_title_left) ImageView img_user;
+    @ViewById(R.id.tv_title_1)
+    TextView tv_user_name;
+    @ViewById(R.id.img_title_left)
+    ImageView img_user;
     @ViewById DragSortListView lv_main;
     @ViewById SwipeRefreshLayout swipe_container;
     @ViewById ViewGroup layout_network, layout_attendance, layout_avatar;
@@ -114,6 +117,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         img_fast_add.setImageResource(R.drawable.icon_home_add);
     }
 
+    /**
+     * 主界面弹窗  新建任务  提交报告 审批申请 添加客户 拜访签到
+     *
+     * @param position
+     * @param item
+     */
     @Override
     public void onPopupMenuItemClick(int position, PopupMenuItem item) {
         Class<?> _class = null;
@@ -201,13 +210,22 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @AfterViews
     void init() {
         setTouchView(-1);
-        Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin), findViewById(R.id.img_setting), findViewById(R.id.img_fast_add));
+
+        Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
+                findViewById(R.id.img_setting),
+                findViewById(R.id.img_fast_add));
         if (StringUtil.isEmpty(MainApp.getToken())) {
             app.toActivity(LoginActivity.class);
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class), new ClickItem(R.drawable.icon_home_signin, "客戶拜访", SignInManagerActivity_.class), new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class), new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class), new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class), new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class), new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
+                new ClickItem(R.drawable.icon_home_signin, "客戶拜访", SignInManagerActivity_.class),
+                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
+                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
+                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
         initPopupMenu();
 
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
@@ -295,7 +313,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("服务器连接失败,请检查网络");
+                Toast("服务器连接失败,请检查网络" + error.getMessage());
                 super.failure(error);
             }
         });
@@ -342,7 +360,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("获取考勤信息失败");
+                Toast("获取考勤信息失败" + error.getMessage());
+                System.out.println(" 考勤： "+error.getUrl());
                 super.failure(error);
             }
         });
@@ -411,12 +430,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         //为什么参数必须为小数才可以？
         //解决翻转过后文本也被翻转
-        ViewHelper.setPivotX(layout_attendance, layout_attendance.getWidth()/2);
-        ViewHelper.setPivotY(layout_attendance, layout_attendance.getHeight()/2);
+        ViewHelper.setPivotX(layout_attendance, layout_attendance.getWidth() / 2);
+        ViewHelper.setPivotY(layout_attendance, layout_attendance.getHeight() / 2);
         ViewHelper.setRotationY(layout_attendance, 180f);
 
-        layout_avatar.setPivotX(layout_avatar.getWidth()/2);
-        layout_avatar.setPivotY(layout_avatar.getHeight()/2);
+        layout_avatar.setPivotX(layout_avatar.getWidth() / 2);
+        layout_avatar.setPivotY(layout_avatar.getHeight() / 2);
 
         ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(img_user, "rotationY", 0f, 180f).setDuration(500);
         objectAnimator.setInterpolator(new LinearInterpolator());
@@ -425,7 +444,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
                 layout_avatar.setRotationY(value);
-                app.logUtil.e("CurrentPlayTime = " + valueAnimator.getCurrentPlayTime()+" value : "+value);
+                app.logUtil.e("CurrentPlayTime = " + valueAnimator.getCurrentPlayTime() + " value : " + value);
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
                     layout_attendance.setVisibility(View.VISIBLE);
@@ -442,8 +461,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void run() {
             //为什么参数必须为小数才可以？
-            layout_avatar.setPivotX(layout_avatar.getWidth()/2);
-            layout_avatar.setPivotY(layout_avatar.getHeight()/2);
+            layout_avatar.setPivotX(layout_avatar.getWidth() / 2);
+            layout_avatar.setPivotY(layout_avatar.getHeight() / 2);
 
             ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(500);
             objectAnimator.setInterpolator(new LinearInterpolator());
@@ -462,22 +481,34 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     };
 
+    /**
+     * 到 【通讯录】  页面
+     */
     @Click(R.id.img_contact)
     void onClickContact() {
         app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
     }
 
+    /**
+     * 到 【公告通知】 页面
+     */
     @Click(R.id.img_bulletin)
     void onClickBulletin() {
         app.startActivity(this, BulletinManagerActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
     }
 
+    /**
+     * 添加 【popu弹窗】窗口i
+     */
     @Click(R.id.img_fast_add)
     void onClickAdd() {
         popupMenu.showAt(findViewById(R.id.img_fast_add));
         img_fast_add.setImageResource(R.drawable.icon_home_menu_close);
     }
 
+    /**
+     * 到 【设置】 页面
+     */
     @Click(R.id.img_setting)
     void onClickSetting() {
         app.startActivity(this, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
@@ -496,6 +527,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         TextView tv_item;
         TextView tv_extra;
         ImageView view_number;
+        TextView tv_num;
     }
 
     public class ClickItemAdapter extends BaseAdapter {
@@ -536,6 +568,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 holder.tv_extra = (TextView) convertView.findViewById(R.id.tv_extra);
                 holder.layout_item = (RippleView) convertView.findViewById(R.id.layout_item);
                 holder.view_number = (ImageView) convertView.findViewById(R.id.view_number);
+                holder.tv_num=(TextView)convertView.findViewById(R.id.tv_num);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -566,6 +599,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 } else {
                     holder.view_number.setVisibility(View.GONE);
                 }
+            }
+
+            if(item.title.equals("工作报告")){
+                holder.tv_num.setVisibility(View.VISIBLE);
+                SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String date=sDateFormat.format(new java.util.Date());
+                String dayNum=date.substring(8,10);
+                holder.tv_num.setText(dayNum);
             }
 
             holder.layout_item.setRippleDuration(100);
@@ -675,8 +716,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                Bitmap blur = Utils.blurBitmap(bitmap);
-                img_home_head.setImageBitmap(blur);
+                /*if (bitmap != null) {
+                    Bitmap blur = Utils.blurBitmap(bitmap);
+                    img_home_head.setImageBitmap(blur);
+                }*/
+
             }
 
             @Override

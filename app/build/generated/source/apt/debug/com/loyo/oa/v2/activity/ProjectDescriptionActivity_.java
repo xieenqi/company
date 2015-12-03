@@ -81,13 +81,13 @@ public final class ProjectDescriptionActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_content = ((TextView) hasViews.findViewById(id.tv_content));
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         tv_members = ((TextView) hasViews.findViewById(id.tv_members));
         tv_extra = ((TextView) hasViews.findViewById(id.tv_extra));
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         tv_managers = ((TextView) hasViews.findViewById(id.tv_managers));
-        tv_content = ((TextView) hasViews.findViewById(id.tv_content));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

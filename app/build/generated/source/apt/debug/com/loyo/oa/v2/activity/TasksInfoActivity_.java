@@ -94,54 +94,27 @@ public final class TasksInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_remind = ((TextView) hasViews.findViewById(id.tv_remind));
-        layout_child_add_action = ((ViewGroup) hasViews.findViewById(id.layout_child_add_action));
-        tv_children_info = ((TextView) hasViews.findViewById(id.tv_children_info));
-        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
-        tv_responsiblePerson = ((TextView) hasViews.findViewById(id.tv_responsiblePerson));
-        tv_comment = ((TextView) hasViews.findViewById(id.tv_comment));
-        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
-        ratingBar_Task = ((RatingBar) hasViews.findViewById(id.ratingBar_Task));
+        tv_task_audit = ((TextView) hasViews.findViewById(id.tv_task_audit));
         tv_sub_title = ((TextView) hasViews.findViewById(id.tv_sub_title));
         tv_content = ((TextView) hasViews.findViewById(id.tv_content));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        btn_complete = ((Button) hasViews.findViewById(id.btn_complete));
-        tv_task_audit = ((TextView) hasViews.findViewById(id.tv_task_audit));
-        tv_discussion_count = ((TextView) hasViews.findViewById(id.tv_discussion_count));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_comment = ((TextView) hasViews.findViewById(id.tv_comment));
         tv_task_project = ((TextView) hasViews.findViewById(id.tv_task_project));
+        layout_score = ((ViewGroup) hasViews.findViewById(id.layout_score));
+        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
+        ratingBar_Task = ((RatingBar) hasViews.findViewById(id.ratingBar_Task));
+        tv_children_info = ((TextView) hasViews.findViewById(id.tv_children_info));
+        layout_child_add_action = ((ViewGroup) hasViews.findViewById(id.layout_child_add_action));
+        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
+        tv_toUsers = ((TextView) hasViews.findViewById(id.tv_toUsers));
+        tv_responsiblePerson = ((TextView) hasViews.findViewById(id.tv_responsiblePerson));
+        btn_complete = ((Button) hasViews.findViewById(id.btn_complete));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_remind = ((TextView) hasViews.findViewById(id.tv_remind));
+        tv_discussion_count = ((TextView) hasViews.findViewById(id.tv_discussion_count));
         tv_task_title = ((TextView) hasViews.findViewById(id.tv_task_title));
         layout_child_Add_area = ((ViewGroup) hasViews.findViewById(id.layout_child_Add_area));
-        layout_score = ((ViewGroup) hasViews.findViewById(id.layout_score));
-        tv_toUsers = ((TextView) hasViews.findViewById(id.tv_toUsers));
         layout_responsiblePerson = ((ViewGroup) hasViews.findViewById(id.layout_responsiblePerson));
-        if (layout_child_add_action!= null) {
-            layout_child_add_action.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    TasksInfoActivity_.this.openNewSubTask();
-                }
-
-            }
-            );
-        }
-        {
-            View view = hasViews.findViewById(id.layout_attachment);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        TasksInfoActivity_.this.clickAttachment();
-                    }
-
-                }
-                );
-            }
-        }
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -177,6 +150,33 @@ public final class TasksInfoActivity_
 
             }
             );
+        }
+        if (layout_child_add_action!= null) {
+            layout_child_add_action.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    TasksInfoActivity_.this.openNewSubTask();
+                }
+
+            }
+            );
+        }
+        {
+            View view = hasViews.findViewById(id.layout_attachment);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        TasksInfoActivity_.this.clickAttachment();
+                    }
+
+                }
+                );
+            }
         }
         {
             View view = hasViews.findViewById(id.tv_upload);
@@ -240,14 +240,14 @@ public final class TasksInfoActivity_
     }
 
     @Override
-    public void getTask() {
+    public void getDiscussion() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    TasksInfoActivity_.super.getTask();
+                    TasksInfoActivity_.super.getDiscussion();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -258,14 +258,14 @@ public final class TasksInfoActivity_
     }
 
     @Override
-    public void getDiscussion() {
+    public void getTask() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    TasksInfoActivity_.super.getDiscussion();
+                    TasksInfoActivity_.super.getTask();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }

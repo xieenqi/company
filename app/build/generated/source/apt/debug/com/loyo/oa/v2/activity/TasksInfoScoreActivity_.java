@@ -83,11 +83,11 @@ public final class TasksInfoScoreActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        ratingBar_Task = ((RatingBar) hasViews.findViewById(id.ratingBar_Task));
         btn_task_agree = ((Button) hasViews.findViewById(id.btn_task_agree));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        ratingBar_Task = ((RatingBar) hasViews.findViewById(id.ratingBar_Task));
         btn_task_notagree = ((Button) hasViews.findViewById(id.btn_task_notagree));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

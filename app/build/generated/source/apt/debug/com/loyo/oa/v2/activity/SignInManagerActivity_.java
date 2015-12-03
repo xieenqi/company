@@ -88,12 +88,12 @@ public final class SignInManagerActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        layout_category = ((ViewGroup) hasViews.findViewById(id.layout_category));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         imageArrow = ((ImageView) hasViews.findViewById(id.img_title_arrow));
         layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         categoryListView = ((ListView) hasViews.findViewById(id.lv_signin_category));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        layout_category = ((ViewGroup) hasViews.findViewById(id.layout_category));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

@@ -170,7 +170,7 @@ public final class Common {
         return MainApp.lstDepartment == null ? new ArrayList<Department>() : MainApp.lstDepartment;
     }
 
-    public static ArrayList<User> getSubUsers() {
+    /*public static ArrayList<User> getSubUsers() {
         if (MainApp.subUsers == null) {
             MainApp.subUsers = DBManager.Instance().getSubordinates();
         }
@@ -180,7 +180,8 @@ public final class Common {
         }
 
         return MainApp.subUsers == null ? new ArrayList<User>() : MainApp.subUsers;
-    }
+    }*/
+
 
 //    public static void setSubUsers(ArrayList<User> subUsers) {
 //        MainApp.subUsers = subUsers;

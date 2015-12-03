@@ -39,6 +39,7 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -56,64 +57,95 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 【创建任务】 页面
+ */
 @EActivity(R.layout.activity_tasks_add)
 public class TasksAddActivity extends BaseActivity {
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
-    @ViewById ViewGroup layout_del;
-    @ViewById ViewGroup layout_responsiblePerson;
-    @ViewById ViewGroup layout_deadline;
-    @ViewById ViewGroup layout_remind;
-    @ViewById ViewGroup layout_project;
 
-    @ViewById ImageView img_title_right_toUsers;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
+    @ViewById
+    ViewGroup layout_del;
+    @ViewById
+    ViewGroup layout_responsiblePerson;
+    @ViewById
+    ViewGroup layout_deadline;
+    @ViewById
+    ViewGroup layout_remind;
+    @ViewById
+    ViewGroup layout_project;
+    @ViewById
+    ImageView img_title_right_toUsers;
+    @ViewById
+    TextView tv_responsiblePerson;
+    @ViewById
+    TextView tv_toUsers;
+    @ViewById
+    TextView tv_deadline;
+    @ViewById
+    TextView tv_remind;
+    @ViewById
+    TextView tv_Project;
+    @ViewById
+    Switch switch_approve;
+    @ViewById
+    EditText edt_content;
+    @ViewById
+    EditText edt_title;
+    @ViewById
+    GridView gridView_photo;
+    @Extra
+    Project project;
 
-    @ViewById TextView tv_responsiblePerson;
-    @ViewById TextView tv_toUsers;
-    @ViewById TextView tv_deadline;
-    @ViewById TextView tv_remind;
-    @ViewById TextView tv_Project;
-
-    @ViewById Switch switch_approve;
-
-    @ViewById EditText edt_content;
-    @ViewById EditText edt_title;
-
-    @ViewById GridView gridView_photo;
-
-    @Extra Project project;
-
-    SignInGridViewAdapter signInGridViewAdapter;
-
-    NewUser responsiblePerson;
-    ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    ArrayList<Reviewer> members = new ArrayList<>();
-    String uuid=StringUtil.getUUID();
-    long mDeadline;
-    int mRemind;
-    AlertDialog dialog_Product;
+    private AlertDialog dialog_Product;
+    private SignInGridViewAdapter signInGridViewAdapter;
+    private NewUser newUser;
+    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
+    private ArrayList<Reviewer> members = new ArrayList<>();
+    private String uuid = StringUtil.getUUID();
+    private long mDeadline;
+    private int mRemind;
+    private boolean isCopy;
 
     @AfterViews
     void initUI() {
         super.setTitle("创建任务");
-
         Global.SetTouchView(img_title_left,
                 img_title_right,
                 layout_responsiblePerson,
                 layout_deadline,
                 layout_del,
-                layout_remind,layout_project);
+                layout_remind, layout_project);
 
         init_gridView_photo();
         setTouchView(-1);
         getTempTask();
+    }
+
+    /**
+     * 复制任务，接受到的数据绑定
+     * 暂时只处理了"任务名，内容"复制
+     */
+    void getBundle() {
+
+        Intent intent = getIntent();
+        edt_title.setText(intent.getStringExtra("title"));
+        edt_content.setText(intent.getStringExtra("content"));
+/*      tv_responsiblePerson.setText(intent.getStringExtra("real"));
+        tv_toUsers.setText(intent.getStringExtra("join"));
+        tv_Project.setText(intent.getStringExtra("bepro"));
+        switch_approve.setChecked(true);*/
+        isCopy = intent.getStringExtra("title")!=null?true:false;
+
     }
 
     void getTempTask() {
@@ -122,8 +154,6 @@ public class TasksAddActivity extends BaseActivity {
             return;
         }
 
-        edt_title.setText(mTask.getTitle());
-        edt_content.setText(mTask.getContent());
         switch_approve.setChecked(mTask.isReviewFlag());
 
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
@@ -131,15 +161,19 @@ public class TasksAddActivity extends BaseActivity {
             u.setId(mTask.getResponsiblePersonId());
             u.setRealname(mTask.getResponsiblePersonName());
             setResponsiblePersion(u);
+
         }
 
-        if (mTask.getPlanEndAt() > 0) {
+        //截至日期设置,需求没要求默认时间，暂注释
+        /*  if (mTask.getPlanEndAt() > 0) {
             mDeadline = mTask.getPlanEndAt();
             tv_deadline.setText(app.df3.format(new Date(mDeadline * 1000)));
-        }
-        if(null!=project){
+        }*/
+
+        if (null != project) {
             tv_Project.setText(project.getTitle());
         }
+        getBundle();
     }
 
     void init_gridView_photo() {
@@ -147,12 +181,68 @@ public class TasksAddActivity extends BaseActivity {
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del,R.id.layout_project})
+    /**
+     * 新建任务 POST提交
+     */
+
+    void requestCommitTask(String title, String content) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("title", title);
+        map.put("content", content);
+        map.put("responsiblePersons", Arrays.asList(new Reviewer(newUser)));
+        map.put("members", members);
+        // 已经 修改待测
+        map.put("planendAt", mDeadline);
+        map.put("remindflag", mRemind > 0);
+        map.put("remindtime", mRemind);
+        map.put("reworkflag", switch_approve.isChecked());
+
+        if (uuid != null && lstData_Attachment.size() > 0) {
+            map.put("attachmentUUId", uuid);
+        }
+
+        if (null != project) {
+            map.put("projectId", project.getId());
+        }
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
+            @Override
+            public void success(Task task, Response response) {
+                task.setAck(true);
+                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+
+                //不需要保存
+                isSave = false;
+
+                Intent intent = new Intent();
+                intent.putExtra("data", task);
+                setResult(Activity.RESULT_OK, intent);
+                onBackPressed();
+                if(isCopy)
+                TasksInfoActivity.instance.finish();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    if (error.getResponse().getStatus() == 500) {
+                        Toast("网络异常，请稍候再试");
+                    }
+                }
+            }
+        });
+    }
+
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
                 break;
+
             case R.id.img_title_right:
                 String title = edt_title.getText().toString().trim();
                 if (TextUtils.isEmpty(title)) {
@@ -171,52 +261,15 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
 
-                if (responsiblePerson == null || TextUtils.isEmpty(responsiblePerson.getId())) {
+                if (newUser == null || TextUtils.isEmpty(newUser.getId())) {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
 
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("title", title);
-                map.put("content", content);
-                map.put("responsiblePersons", Arrays.asList(new Reviewer(responsiblePerson)));
-                map.put("members", members);
-                map.put("actualendAt", mDeadline);
-                map.put("remindflag", mRemind > 0);
-                map.put("remindtime", mRemind);
-                map.put("reworkflag", switch_approve.isChecked());
-
-                if (uuid != null && lstData_Attachment.size() > 0) {
-                    map.put("attachmentUUId", uuid);
-                }
-
-                if (null!=project) {
-                    map.put("projectId", project.getId());
-                }
-
-                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
-                    @Override
-                    public void success(Task task, Response response) {
-                        task.setAck(true);
-                        Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-
-                        //不需要保存
-                        isSave = false;
-
-                        Intent intent = new Intent();
-                        intent.putExtra("data", task);
-                        setResult(Activity.RESULT_OK, intent);
-                        onBackPressed();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        Log.e("TaskAddActivity", "onError", error);
-                    }
-                });
+                requestCommitTask(title, content);
 
                 break;
+            //负责人选项
             case R.id.layout_responsiblePerson:
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
@@ -228,12 +281,13 @@ public class TasksAddActivity extends BaseActivity {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
                         String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-
                         tv_deadline.setText(str);
                         mDeadline = DateTool.getDateToTimestamp(str, app.df3);
+
                     }
                 });
                 break;
+            //参与人选项
             case R.id.tv_toUsers:
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
@@ -278,18 +332,23 @@ public class TasksAddActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 负责人值设置,这里User为老版本bean,NewUser为新版本bean,做了一个数据转移
+     * RealName字段，改为Name
+     */
     void setResponsiblePersion(User user) {
-        responsiblePerson = user.toShortUser();
-        tv_responsiblePerson.setText(responsiblePerson.getRealname());
+        newUser = user.toShortUser();
+        tv_responsiblePerson.setText(newUser.getName());
     }
 
-    void getAttachments(){
+    void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
                 lstData_Attachment = _attachments;
                 init_gridView_photo();
             }
+
             @Override
             public void failure(RetrofitError error) {
                 Toast("获取附件失败");
@@ -297,6 +356,7 @@ public class TasksAddActivity extends BaseActivity {
             }
         });
     }
+
     void setJoinUsers(String joinedUserIds, String joinedUserName) {
         members.clear();
 
@@ -323,23 +383,33 @@ public class TasksAddActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                project=_project;
+                project = _project;
                 if (null != project) {
                     tv_Project.setText(project.getTitle());
-                }else {
+                } else {
                     tv_Project.setText("无");
                 }
                 break;
+
             case DepartmentUserActivity.request_Code:
                 User user = (User) data.getSerializableExtra(User.class.getName());
+                //负责人回调
                 if (user != null) {
+
                     setResponsiblePersion(user);
-                } else {
+                }
+                //参与人回调
+                else {
                     String cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-                    setJoinUsers(cc_user_id, cc_user_name);
+                    if(cc_user_id != null || cc_user_name != null){
+                        setJoinUsers(cc_user_id, cc_user_name);
+                    }else{
+                        Toast("未选择相关人员");
+                    }
                 }
                 break;
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
@@ -349,7 +419,7 @@ public class TasksAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
@@ -385,6 +455,9 @@ public class TasksAddActivity extends BaseActivity {
 
     Task mTask;
 
+    /**
+     * 没明白，这里销毁后，为什么要保存数据
+     * */
     //isSave=true时保存临时Task,=false时删除Task临时Task
     boolean isSave = true;
 
@@ -400,10 +473,10 @@ public class TasksAddActivity extends BaseActivity {
             mTask.setContent(edt_content.getText().toString().trim());
             mTask.setReviewFlag(switch_approve.isChecked());
 
-            if (responsiblePerson != null) {
+            if (newUser != null) {
                 //直接保存responsiblePerson会出错
-                mTask.setResponsiblePersonId(responsiblePerson.getId());
-                mTask.setResponsiblePersonName(responsiblePerson.getRealname());
+                mTask.setResponsiblePersonId(newUser.getId());
+                mTask.setResponsiblePersonName(newUser.getRealname());
             }
 
             if (!members.isEmpty()) {

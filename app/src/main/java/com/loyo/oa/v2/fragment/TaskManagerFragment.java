@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ *【  任务管理】 界面
+  */
+
 public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
 
     private int mJoinType = 0, mStatus = 0;
@@ -54,6 +58,9 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 任务管理 底部添加 创建任务 button
+     */
     @Override
     public void addNewItem() {
         Intent intent = new Intent();

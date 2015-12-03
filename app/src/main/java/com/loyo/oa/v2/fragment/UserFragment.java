@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,10 @@ import com.loyo.oa.v2.tool.customview.MyLetterListView;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import java.util.ArrayList;
+
+/**
+ * 员工通讯录Fragment
+ * */
 
 @SuppressLint("ValidFragment")
 public class UserFragment extends BaseFragment {
@@ -420,11 +425,14 @@ public class UserFragment extends BaseFragment {
                 item_info.cBox.toggle();
 
                 switch (departmentUserActivity.select_type) {
+                    //单选
                     case DepartmentUserActivity.TYPE_SELECT_SINGLE:
+
                         Intent data = new Intent();
                         data.putExtra(User.class.getName(), (User) userGroupExpandableListAdapter.getChild(groupPosition, childPosition));
                         app.finishActivity((Activity) v.getContext(), MainApp.ENTER_TYPE_LEFT, Activity.RESULT_OK, data);
                         break;
+                    //多选
                     case DepartmentUserActivity.TYPE_SELECT_MULTUI:
                         if (item_info.cBox.isChecked()) {
                             userGroupExpandableListAdapter.isSelected_radio_group = groupPosition;

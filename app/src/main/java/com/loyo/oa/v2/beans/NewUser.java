@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import android.util.Log;
+
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
@@ -12,7 +14,7 @@ import java.util.List;
  * 时间 : 15/9/30.
  */
 public class NewUser implements Serializable {
-    private String id;// "5600ff1f54418940bf233261",
+    private String id;  // "5600ff1f54418940bf233261",
     private String name;// "测试负责人",
     private String avatar;
 //    private String deptId;
@@ -80,7 +82,7 @@ public class NewUser implements Serializable {
             return true;
         }
         if (o instanceof User) {
-            return id.equals(((User) o).getId());
+                return id.equals(((User) o).getId());
         }
 
         if (!(o instanceof NewUser)) {
@@ -98,10 +100,10 @@ public class NewUser implements Serializable {
 
     public User toUser() {
         User user = new User();
-        user.setAvatar(avatar);
-        user.setId(id);
-        user.setRealname(name);
-        user.setName(name);
+        user.setAvatar(this.getAvatar());
+        user.setId(this.getId());
+        user.setRealname(this.getName());
+        user.setName(this.getName());
 
         return user;
     }

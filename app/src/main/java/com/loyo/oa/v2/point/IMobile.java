@@ -18,7 +18,7 @@ public interface IMobile
     @GET("/")
     void getVerifyCode(@Query("tel") String tel, Callback<Object> callback);
 
-    @GET("/users/code/verify")
+    @GET("/oapi/sms/code/verify")
     void modifyMobile(@QueryMap HashMap<String ,Object> map, Callback<Object> callback);
 
     @GET("/")

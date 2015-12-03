@@ -82,8 +82,8 @@ public final class ChildTaskResponserSelectActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         usersListeView = ((ListView) hasViews.findViewById(id.usersListeView));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

@@ -14,7 +14,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
 
-
+/**
+ * 任务详情编辑
+ * */
 public class SelectEditDeleteActivity extends BaseActivity implements OnClickListener {
     Button btn_delete, btn_edit, btn_cancel, btn_extra;
     LinearLayout layout;
@@ -80,12 +82,16 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
     public void onClick(View v) {
         switch (v.getId()) {
+
+            //编辑
             case R.id.btn_edit:
                 Intent intent = new Intent();
                 intent.putExtra("edit", true);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
+
+            //删除
             case R.id.btn_delete:
                 super.ConfirmDialog("提示", "确认删除?", new ConfirmDialogInterface() {
                     @Override
@@ -96,14 +102,16 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                         finish();
                     }
                 });
-
                 break;
+
             case R.id.btn_extra:
                 Intent intent1 = new Intent();
                 intent1.putExtra("extra", true);
                 setResult(RESULT_OK, intent1);
                 finish();
                 break;
+
+            //取消
             case R.id.btn_cancel:
                 finish();
                 break;

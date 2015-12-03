@@ -1,24 +1,14 @@
 package com.loyo.oa.v2.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2014/12/11 0011.
@@ -33,10 +23,10 @@ public class SignInFilterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (view == null) {
+       if (view == null) {
             view = inflater.inflate(R.layout.fragment_signin_manager_filter, container, false);
 
-            if (Common.getSubUsers().size() > 0) {
+           /* if (Common.getSubUsers().size() > 0) {
                 lv_subordinates = (ListView) view.findViewById(R.id.lv_subordinates);
 
                 final List<Map<String, Object>> userList = new ArrayList<>();
@@ -66,7 +56,7 @@ public class SignInFilterFragment extends Fragment {
                         }
                     }
                 });
-            }
+            }*/
             lv_subordinates.setFocusable(false);
             //重要,这句是保证事件不透传到底层视图
             view.findViewById(R.id.layout_body).setOnClickListener(new View.OnClickListener() {

@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * com.loyo.oa.v2.adapter
- * 描述 :项目下子内容适配器（排序需要）
+ * 描述 :项目下子内容适配器（排序需要），任务计划Listview，X个任务进行中，适配器
  * 作者 : ykb
  * 时间 : 15/9/10.
  */
@@ -87,10 +87,13 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
         PagingGroupData_ data = pagingGroupDatas.get(groupPosition);
         if (data != null && data.getOrderStr() != null) {
             if(data.getOrderStr().contains("已")){
-                tv_title.setTextColor(mContext.getResources().getColor(R.color.green));
+                tv_title.setTextColor(mContext.getResources().getColor(R.color.isfinish));
                 img_status.setImageResource(R.drawable.bg_view_green_circle);
-            }else {
-                tv_title.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
+            }else if(data.getOrderStr().contains("进")){
+                tv_title.setTextColor(mContext.getResources().getColor(R.color.isteston));
+                img_status.setImageResource(R.drawable.bg_view_blue_circle);
+            }else{
+                tv_title.setTextColor(mContext.getResources().getColor(R.color.iswrite));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
             }
             tv_title.setText(pagingGroupDatas.get(groupPosition).getRecords().size()+data.getOrderStr());

@@ -8,6 +8,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -28,6 +29,7 @@ public interface ITask {
     @POST("/discussions")
     void createDiscussion(@Body HashMap<String, Object> body, retrofit.Callback<Discussion> cb);
 
+    /*获取任务信息*/
     @GET("/task/{Id}")
     void getTask(@Path("Id") String Id, retrofit.Callback<Task> cb);
 
@@ -43,23 +45,30 @@ public interface ITask {
     @GET("/task/query")
     Observable<PaginationX<Task>> getList(@QueryMap HashMap<String, Object> body);
 
+    /*获取任务列表数据*/
     @GET("/task/query")
     void  getTasks(@QueryMap HashMap<String, Object> body,Callback<PaginationX<Task>> callback);
 
-//    @POST("/task")
-//    Observable<Task> create(@Body HashMap<String, Object> body);
-
+    /*创建任务*/
     @POST("/task")
     void create(@Body HashMap<String, Object> body, retrofit.Callback<Task> cb);
 
+    /*更新任务*/
     @PUT("/task/{Id}")
     Observable<Task> update(@Path("Id") String Id,@Body HashMap<String, Object> body);
 
+    /*任务完成*/
     @PUT("/task/{id}/finished")
     void commitTask(@Path("id") String id ,Callback<Task> callback);
 
+    /*任务审核*/
     @PUT("/task/{id}/review")
     void verifyTask(@Path("id") String id,@Body HashMap<String ,Object> map,RCallback<Task> callback);
+
+    /*更新子任务状态*/
+    @PUT("/task/{id}/checkitemstatus/{cid}")
+    void updatesTask(@Path("id") String id,@Path("cid") String cid,@Body HashMap<String, Object> map,RCallback<Task> callback);
+
 
 //       @Param bizId query int true "业务 Id"
 //      @Param bizType query int true "业务类型，1:工作报告, 2:任务, 3:日程, 4:外勤, 5: 项目"

@@ -9,4 +9,4 @@
         android:dashGap="2dp"/>
     <!-- 虚线的高度 -->
     <size android:height="1dp" />
-</shape><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/view_dashed_line.xml -->
+</shape><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/drawable/view_dashed_line.xml -->

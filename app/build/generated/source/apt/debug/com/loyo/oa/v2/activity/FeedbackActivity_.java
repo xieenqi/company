@@ -79,11 +79,11 @@ public final class FeedbackActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
         tv_title = ((TextView) hasViews.findViewById(id.tv_title));
-        et_content = ((EditText) hasViews.findViewById(id.et_content));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
         iv_submit = ((ImageView) hasViews.findViewById(id.iv_submit));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        et_content = ((EditText) hasViews.findViewById(id.et_content));
         if (iv_submit!= null) {
             iv_submit.setOnClickListener(new OnClickListener() {
 

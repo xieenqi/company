@@ -95,9 +95,9 @@ public final class AttachmentRightActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        layout_type1 = ((ViewGroup) hasViews.findViewById(id.layout_type1));
         cb1 = ((CheckBox) hasViews.findViewById(id.cb1));
         rv_user = ((RecyclerView) hasViews.findViewById(id.rv_user));
-        layout_type1 = ((ViewGroup) hasViews.findViewById(id.layout_type1));
         if (layout_type1 != null) {
             layout_type1 .setOnClickListener(new OnClickListener() {
 

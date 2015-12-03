@@ -76,8 +76,8 @@ public final class TaskModelSelectManageActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        listView = ((PullToRefreshListView) hasViews.findViewById(id.listView));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        listView = ((PullToRefreshListView) hasViews.findViewById(id.listView));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

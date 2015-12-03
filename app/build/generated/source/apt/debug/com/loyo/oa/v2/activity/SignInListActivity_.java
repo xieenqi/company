@@ -92,22 +92,10 @@ public final class SignInListActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        lv = ((PullToRefreshListView) hasViews.findViewById(id.listView_legworks));
-        layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
         tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
-        if (layout_back!= null) {
-            layout_back.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    SignInListActivity_.this.back();
-                }
-
-            }
-            );
-        }
+        lv = ((PullToRefreshListView) hasViews.findViewById(id.listView_legworks));
         if (layout_add!= null) {
             layout_add.setOnClickListener(new OnClickListener() {
 
@@ -115,6 +103,18 @@ public final class SignInListActivity_
                 @Override
                 public void onClick(View view) {
                     SignInListActivity_.this.createNewSignIn();
+                }
+
+            }
+            );
+        }
+        if (layout_back!= null) {
+            layout_back.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    SignInListActivity_.this.back();
                 }
 
             }

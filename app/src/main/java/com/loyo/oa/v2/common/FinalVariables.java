@@ -69,7 +69,7 @@ public final class FinalVariables {
     }
 
     public static String GetBQQLogin() {
-        return Config_project.SERVER_URL() + "/oauth2/bqq/authorize" ;
+        return Config_project.URL() + "/oauth2/bqq/authorize" ;
     }
 
     public static String GetLogin_success_prefix() {
@@ -102,6 +102,8 @@ public final class FinalVariables {
     public static final String URL_UPDATE_PASSWORD =Config_project.SERVER_URL_LOGIN().concat("/api/v2/user/changepwd/");
     //获取验证码
     public static final String URL_GET_CODE =Config_project.SERVER_URL_LOGIN().concat("/oapi/sms/code/");
+    //忘记密码时候，获取验证码
+    public static final String URL_GET_PWDCODE = Config_project.SERVER_URL_LOGIN().concat("/oapi/sms/forgetpwd");
     //修改手机号
     public static final String URL_VERIFY_PHONE =Config_project.SERVER_URL_LOGIN().concat("/oapi/sms/");
     //重置密码

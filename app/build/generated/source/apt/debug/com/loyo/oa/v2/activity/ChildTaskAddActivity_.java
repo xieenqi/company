@@ -36,8 +36,8 @@ public final class ChildTaskAddActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_TASK_EXTRA = "Task";
     public final static String CHID_TASK_EXTRA = "childTask";
+    public final static String M_TASK_EXTRA = "Task";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,12 +86,12 @@ public final class ChildTaskAddActivity_
     @Override
     public void onViewChanged(HasViews hasViews) {
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        layout_child_add_responser = ((ViewGroup) hasViews.findViewById(id.layout_child_add_responser));
-        btn_child_add_complete = ((Button) hasViews.findViewById(id.btn_child_add_complete));
         btn_child_add_cancel_complete = ((Button) hasViews.findViewById(id.btn_child_add_cancel_complete));
-        tv_child_add_responser_name = ((TextView) hasViews.findViewById(id.tv_child_add_responser_name));
+        layout_child_add_responser = ((ViewGroup) hasViews.findViewById(id.layout_child_add_responser));
         et_child_add_content = ((EditText) hasViews.findViewById(id.et_child_add_content));
+        btn_child_add_complete = ((Button) hasViews.findViewById(id.btn_child_add_complete));
+        tv_child_add_responser_name = ((TextView) hasViews.findViewById(id.tv_child_add_responser_name));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
         if (layout_child_add_responser!= null) {
             layout_child_add_responser.setOnClickListener(new OnClickListener() {
 
@@ -158,11 +158,11 @@ public final class ChildTaskAddActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(M_TASK_EXTRA)) {
-                mTask = ((Task) extras_.getSerializable(M_TASK_EXTRA));
-            }
             if (extras_.containsKey(CHID_TASK_EXTRA)) {
                 chidTask = ((TaskCheckPoint) extras_.getSerializable(CHID_TASK_EXTRA));
+            }
+            if (extras_.containsKey(M_TASK_EXTRA)) {
+                mTask = ((Task) extras_.getSerializable(M_TASK_EXTRA));
             }
         }
     }
@@ -220,12 +220,12 @@ public final class ChildTaskAddActivity_
             }
         }
 
-        public ChildTaskAddActivity_.IntentBuilder_ mTask(Task mTask) {
-            return super.extra(M_TASK_EXTRA, ((Serializable) mTask));
-        }
-
         public ChildTaskAddActivity_.IntentBuilder_ chidTask(TaskCheckPoint chidTask) {
             return super.extra(CHID_TASK_EXTRA, ((Serializable) chidTask));
+        }
+
+        public ChildTaskAddActivity_.IntentBuilder_ mTask(Task mTask) {
+            return super.extra(M_TASK_EXTRA, ((Serializable) mTask));
         }
 
     }

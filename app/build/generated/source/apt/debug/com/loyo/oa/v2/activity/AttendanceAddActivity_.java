@@ -84,17 +84,17 @@ public final class AttendanceAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        iv_refresh_address = ((ImageView) hasViews.findViewById(id.iv_refresh_address));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
-        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
-        et_reason = ((EditText) hasViews.findViewById(id.et_reason));
-        tv_result = ((TextView) hasViews.findViewById(id.tv_result));
         tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
+        et_reason = ((EditText) hasViews.findViewById(id.et_reason));
+        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
+        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
         img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_count_time = ((TextView) hasViews.findViewById(id.tv_count_time));
+        tv_result = ((TextView) hasViews.findViewById(id.tv_result));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         layout_reason = ((ViewGroup) hasViews.findViewById(id.layout_reason));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        iv_refresh_address = ((ImageView) hasViews.findViewById(id.iv_refresh_address));
+        tv_count_time = ((TextView) hasViews.findViewById(id.tv_count_time));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -153,11 +153,11 @@ public final class AttendanceAddActivity_
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case  10 :
-                AttendanceAddActivity_.this.onGetImageResult(data);
-                break;
             case  300 :
                 AttendanceAddActivity_.this.onDealImageResult(data);
+                break;
+            case  10 :
+                AttendanceAddActivity_.this.onGetImageResult(data);
                 break;
         }
     }

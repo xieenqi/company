@@ -93,9 +93,9 @@ public final class NearByCustomersMapActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
         mapview = ((MapView) hasViews.findViewById(id.mapview));
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         if (layout_back!= null) {
             layout_back.setOnClickListener(new OnClickListener() {
 

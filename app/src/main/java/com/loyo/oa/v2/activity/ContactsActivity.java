@@ -23,7 +23,7 @@ import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 
-/**
+/**通讯录 联系人 页面
  * com.loyo.oa.v2.activity
  * 描述 :
  * 作者 : ykb

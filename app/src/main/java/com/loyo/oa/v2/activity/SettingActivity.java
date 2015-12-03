@@ -25,6 +25,9 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.tencent.android.tpush.XGPushManager;
 
+/**
+ * 设置 页面
+ */
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     TextView tv_title_1,tv_version,tv_new_version;
@@ -118,7 +121,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                onBackPressed();
+                //onBackPressed();
+                finish();
                 break;
             case R.id.btn_setting_exit:
                 exit();

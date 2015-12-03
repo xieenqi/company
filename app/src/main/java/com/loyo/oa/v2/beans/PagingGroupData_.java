@@ -119,7 +119,6 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
             for (PagingGroupData_ group : groupData) {
                 if (group.getOrderStr().equals(order)) {
                     isExist = true;
-
                     group.getRecords().add(item);
                 }
             }

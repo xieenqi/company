@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/res/values-large-v4/values.xml -->
+    <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/res/values-large-v4/values.xml -->
     <eat-comment/>
     <bool name="abc_action_bar_embed_tabs_pre_jb">true</bool>
     <bool name="abc_config_allowActionMenuItemTextWithIcon">true</bool>

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :子任务详情页
+ * 描述 :子页
  * 作者 : ykb
  * 时间 : 15/7/20.
  */

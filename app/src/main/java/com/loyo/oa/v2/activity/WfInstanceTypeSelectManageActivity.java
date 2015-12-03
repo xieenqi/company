@@ -26,7 +26,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
+/**
+ * 【审批类型选择】 页面
+ */
 public class WfInstanceTypeSelectManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     ViewGroup img_title_left;
@@ -99,6 +101,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(bizForm.getId(), new RCallback<BizForm>() {
                             @Override
                             public void success(BizForm bizForm, Response response) {
+                                System.out.print("类型选择呢  ！！！！"+ bizForm.toString());
                                 if (bizForm != null) {
                                     Intent intent = new Intent();
                                     intent.putExtra(BizForm.class.getName(), bizForm);

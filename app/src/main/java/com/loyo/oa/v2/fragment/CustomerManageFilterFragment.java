@@ -10,14 +10,12 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -25,18 +23,12 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Item_info_Group;
 import com.loyo.oa.v2.beans.Tag;
 import com.loyo.oa.v2.beans.TagItem;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.point.ITag;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.customview.ExpandableListView_inScrollView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import retrofit.client.Response;
 
@@ -69,7 +61,7 @@ public class CustomerManageFilterFragment extends Fragment {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_signin_manager_filter, container, false);
 
-            if (Common.getSubUsers().size() > 0) {
+          /*  if (Common.getSubUsers().size() > 0) {
                 lv_subordinates = (ListView) view.findViewById(R.id.lv_subordinates);
 
                 final List<Map<String, String>> userList = new ArrayList<>();
@@ -100,7 +92,8 @@ public class CustomerManageFilterFragment extends Fragment {
                     }
                 });
                 lv_subordinates.setFocusable(false);
-            }
+            }*/
+
             init();
             //重要,这句是保证事件不透传到底层视图
             view.findViewById(R.id.layout_body).setOnClickListener(new View.OnClickListener() {

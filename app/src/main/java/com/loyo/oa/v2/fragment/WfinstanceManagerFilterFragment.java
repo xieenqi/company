@@ -7,22 +7,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.Global;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class WfinstanceManagerFilterFragment extends Fragment implements View.OnClickListener {
     View view;
@@ -71,7 +61,7 @@ public class WfinstanceManagerFilterFragment extends Fragment implements View.On
             cb6 = (CheckBox) view.findViewById(R.id.cb6);
             cb7 = (CheckBox) view.findViewById(R.id.cb7);
             cb8 = (CheckBox) view.findViewById(R.id.cb8);
-
+/*
             if (Common.getSubUsers().size() > 0) {
                 lv_subordinates = (ListView) view.findViewById(R.id.lv_subordinates);
 
@@ -104,7 +94,7 @@ public class WfinstanceManagerFilterFragment extends Fragment implements View.On
                 lv_subordinates.setFocusable(false);
 
                 Global.setListViewHeightBasedOnChildren(lv_subordinates);
-            }
+            }*/
 
             btn_task_filter_confirm = (Button) view.findViewById(R.id.btn_task_filter_confirm);
             btn_task_filter_confirm.setOnClickListener(new View.OnClickListener() {

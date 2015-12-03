@@ -91,7 +91,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
             tv_child_add_responser_name.setText(chidTask.getResponsiblePerson().getRealname());
             et_child_add_content.setText(chidTask.getTitle());
-            ((TextView) findViewById(R.id.tv_title_1)).setText("子任务详情");
+            ((TextView) findViewById(R.id.tv_title_1)).setText("子");
             /**
              * 只要已完成，删除、编辑都不允许，只允许改变为未完成
              */

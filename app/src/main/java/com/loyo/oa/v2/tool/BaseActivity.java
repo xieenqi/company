@@ -32,8 +32,10 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.tencent.android.tpush.XGPushManager;
 
-import java.util.ArrayList;
 
+/**
+ * activity 基类
+ */
 
 public class BaseActivity extends Activity implements GestureDetector.OnGestureListener {
     protected MainApp app;
@@ -104,7 +106,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
-        outState.putSerializable("subUsers", MainApp.subUsers);
 
         app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
     }
@@ -122,9 +123,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
 
-        if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
-            MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
-        }
 
         app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
     }

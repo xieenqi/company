@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -23,12 +24,15 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -37,6 +41,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
@@ -48,8 +53,11 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.apache.http.Header;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +113,10 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-
+    private String uuid=null;
+    private int mobile_phone=1;
+    private String path=null;
+    ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private static class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
 
@@ -294,6 +305,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
     }
 
+
     /**
      * 更新个人信息
      */
@@ -301,12 +313,13 @@ public class ContactInfoEditActivity extends BaseActivity {
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();
-
         HashMap<String, Object> map = new HashMap<>();
+
         map.put("mobile", tel);
         map.put("gender", sex);
         map.put("birthDay", birthDay);
         map.put("weixinId", weixinId);
+        map.put("avatar",path);
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
@@ -434,7 +447,9 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast(error.getResponse().getReason());
+                if(error.getMessage().substring(0,3).equals("500")){
+                    Toast("该手机号已被录入本系统,请勿重复使用!");
+                }
             }
         });
     }
@@ -459,18 +474,22 @@ public class ContactInfoEditActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("tel", mobile);
         map.put("code", code);
-        app.getRestAdapter().create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
+        app.getRestAdapter(mobile_phone).create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
             @Override
             public void success(Object o, Response response) {
                 dialog.dismiss();
+                Toast("修改手机号码成功");
                 tv_mobile.setText(mobile);
+                response.getUrl();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
                 dialog.dismiss();
-                Toast("修改手机号码失败");
+                Toast("修改手机号码失败"+error.getMessage());
+
+
             }
         });
     }
@@ -558,7 +577,8 @@ public class ContactInfoEditActivity extends BaseActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_get_code:
-                    getVerifyCode();
+                        getVerifyCode();
+
                     break;
                 case R.id.btn_confirm:
                     modifyMobile(mDialog);
@@ -603,7 +623,53 @@ public class ContactInfoEditActivity extends BaseActivity {
                 sb.append(p);
             }
             ImageLoader.getInstance().displayImage("file://" + sb.toString(), img_title_user);
+
+
+
+            try {
+                Uri uri = Uri.parse("file://" + sb.toString());
+                File newFile = Global.scal(this, uri);
+
+                if (newFile != null && newFile.length() > 0) {
+                    RequestParams params = new RequestParams();
+                    if (uuid == null) {
+                        uuid = StringUtil.getUUID();
+                    }
+                    params.put("uuid", uuid);
+
+                    if (newFile.exists()) {
+                        params.put("attachments", newFile, "image/*");
+                    }
+
+                    ArrayList<ServerAPI.ParamInfo> lstParamInfo = new ArrayList<ServerAPI.ParamInfo>();
+                    ServerAPI.ParamInfo paramInfo = new ServerAPI.ParamInfo("bitmap", newFile);
+                    lstParamInfo.add(paramInfo);
+                    ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null, params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+    public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
+        File file;
+
+        public void setBitmap(File imageFile) {
+            file = imageFile;
+        }
+
+        @Override
+        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+            try {
+                Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
+                path=attachment.getUrl();
+
+            } catch (Exception e) {
+                Global.ProcException(e);
+            }
         }
     }
-
 }

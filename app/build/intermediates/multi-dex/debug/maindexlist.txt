@@ -267,6 +267,7 @@ org/joda/time/chrono/AssembledChronology$Fields.class
 android/support/v4/widget/MaterialProgressDrawable$2.class
 com/xiaomi/channel/commonutils/network/a.class
 android/support/annotation/AnimatorRes.class
+android/support/v7/widget/LinearLayoutManager$1.class
 org/eclipse/mat/snapshot/model/ObjectReference.class
 com/xiaomi/push/service/PacketSync.class
 retrofit/RestAdapter$Log.class
@@ -381,6 +382,7 @@ com/squareup/leakcanary/Preconditions.class
 com/loyo/oa/v2/activity/TasksInfoActivity$4.class
 com/loyo/oa/v2/activity/WfinstanceInfoActivity_$1.class
 com/tencent/android/tpush/rpc/b.class
+android/support/v4/view/accessibility/AccessibilityNodeInfoCompat$CollectionItemInfoCompat.class
 com/loyo/oa/v2/point/ICheckPoint.class
 org/joda/time/MutablePeriod.class
 org/joda/time/format/DateTimeFormatterBuilder$UnpaddedNumber.class
@@ -399,8 +401,8 @@ com/google/gson/annotations/Since.class
 com/loyo/oa/v2/fragment/WfInstanceManageFragment.class
 com/xiaomi/network/HostManager$HostManagerFactory.class
 com/loyo/oa/v2/activity/ProjectAddActivity$2.class
-com/j256/ormlite/stmt/StatementBuilder.class
 org/joda/time/MonthDay.class
+com/j256/ormlite/stmt/StatementBuilder.class
 com/amap/api/maps/AMapUtils.class
 com/loyo/oa/v2/service/AMapService.class
 org/androidannotations/annotations/rest/Options.class
@@ -534,6 +536,7 @@ android/support/v4/widget/MaterialProgressDrawable$ProgressDrawableSize.class
 com/loyo/oa/v2/activity/WfinstanceInfoActivity_$6.class
 android/support/annotation/InterpolatorRes.class
 com/loyo/oa/v2/beans/Product.class
+com/loyo/oa/v2/activity/ContactInfoEditActivity$AsyncHandler_Upload_New_Attachments.class
 com/loyo/oa/v2/activity/TasksEditActivity_$5.class
 com/loyo/oa/v2/beans/Customer.class
 com/loyo/oa/v2/service/CheckUpdateService$CompleteReceiver.class
@@ -659,6 +662,7 @@ org/androidannotations/annotations/SystemService.class
 com/loyo/oa/v2/activity/WorkReportAddActivity$8.class
 com/loyo/oa/v2/activity/TasksInfoActivity_$5.class
 org/joda/time/base/BaseLocal.class
+android/support/v7/widget/OrientationHelper.class
 com/loyo/oa/v2/activity/WfInstanceAddActivity$2.class
 com/loyo/oa/v2/adapter/CommonExpandableListAdapter.class
 org/joda/time/base/BaseInterval.class
@@ -858,6 +862,7 @@ cn/jpush/proto/common/imcommands/d.class
 com/xiaomi/push/service/j.class
 org/joda/time/chrono/ISOYearOfEraDateTimeField.class
 android/support/v4/app/Fragment.class
+android/support/v7/widget/LinearLayoutManager$AnchorInfo.class
 com/loyo/oa/v2/activity/FeedbackActivity$4.class
 com/loyo/oa/v2/activity/ContactInfoEditActivity_$4.class
 com/loyo/oa/v2/fragment/DepartmentFragment.class
@@ -895,6 +900,7 @@ org/joda/time/DateTimeFieldType.class
 org/joda/time/base/AbstractPartial.class
 com/loyo/oa/v2/tool/customview/dragSortListView/DragSortListView$HeightCache.class
 com/loyo/oa/v2/activity/ContactInfoEditActivity_$5.class
+android/support/v7/widget/LinearLayoutManager$LayoutChunkResult.class
 com/loyo/oa/v2/activity/AttachmentRightActivity_$IntentBuilder_.class
 com/loyo/oa/v2/activity/DepartmentUserSearchActivity$1.class
 com/loyo/oa/v2/activity/SaleActivitiesAddActivity$1.class
@@ -990,6 +996,7 @@ com/loyo/oa/v2/service/XmPushReceiver.class
 com/loyo/oa/v2/activity/LoginActivity$Token.class
 com/loyo/oa/v2/activity/ContactInfoActivity_$2.class
 com/loyo/oa/v2/point/IAttendance.class
+com/loyo/oa/v2/tool/MyLayoutUtils.class
 org/joda/time/ReadableInstant.class
 com/loyo/oa/v2/activity/MainActivity_$4.class
 cn/jpush/proto/common/commands/f.class
@@ -1098,6 +1105,7 @@ org/joda/time/format/DateTimeFormatterBuilder.class
 com/loyo/oa/v2/beans/DayofAttendance.class
 com/loyo/oa/v2/application/MainApp$3.class
 android/support/v4/content/LocalBroadcastManager.class
+android/support/v7/widget/LinearLayoutManager$SavedState.class
 android/support/annotation/AnyRes.class
 com/loyo/oa/v2/activity/SignInManagerActivity$1.class
 com/baidu/mapapi/a.class
@@ -1200,6 +1208,7 @@ com/loyo/oa/v2/activity/TasksInfoScoreActivity$1.class
 com/loyo/oa/v2/activity/TaskModelSelectManageActivity$Item_info.class
 com/loyo/oa/v2/tool/customview/ListView_inScrollView.class
 org/androidannotations/annotations/ReceiverAction$Extra.class
+com/loyo/oa/v2/activity/TasksInfoActivity$6.class
 com/loyo/oa/v2/activity/WorkReportModelSelectManageActivity_$IntentBuilder_.class
 com/loyo/oa/v2/activity/CustomerContactManageActivity$1.class
 org/androidannotations/api/builder/ActivityStarter.class
@@ -1319,6 +1328,7 @@ com/xiaomi/push/service/XMPushService$g.class
 com/loyo/oa/v2/activity/LauncherActivity_.class
 org/androidannotations/annotations/OnActivityResult.class
 com/loyo/oa/v2/activity/TasksEditActivity_$6.class
+android/support/v7/widget/LinearSmoothScroller.class
 retrofit/Utils.class
 com/loyo/oa/v2/activity/WfinstanceInfoActivity_$3.class
 org/joda/time/format/DateTimeFormatterBuilder$Fraction.class
@@ -1490,6 +1500,7 @@ com/amap/api/location/AMapLocation.class
 com/loyo/oa/v2/tool/customview/pullToRefresh/PullToRefreshBase.class
 com/loyo/oa/v2/tool/customview/pullToRefresh/Slide/SlideView.class
 com/xiaomi/smack/util/g.class
+com/loyo/oa/v2/application/MainApp$5.class
 com/xiaomi/smack/o.class
 com/xiaomi/smack/a.class
 org/androidannotations/annotations/AfterPreferences.class
@@ -1587,8 +1598,8 @@ com/loyo/oa/v2/activity/WorkReportAddActivity_$1.class
 org/androidannotations/annotations/NoTitle.class
 com/amap/api/location/LocationManagerProxy.class
 com/loyo/oa/v2/point/ITrackLog.class
-com/j256/ormlite/android/DatabaseTableConfigUtil$DatabaseFieldSample.class
 android/support/v4/view/ViewCompat$ResolvedLayoutDirectionMode.class
+com/j256/ormlite/android/DatabaseTableConfigUtil$DatabaseFieldSample.class
 com/xiaomi/smack/u.class
 org/joda/time/field/AbstractReadableInstantFieldProperty.class
 android/support/v4/app/Fragment$InstantiationException.class
@@ -1607,6 +1618,7 @@ org/joda/time/DateTimeUtils$FixedMillisProvider.class
 android/support/v7/widget/AdapterHelper.class
 org/joda/time/Seconds.class
 android/support/v4/view/ViewCompat$LayerType.class
+android/support/v4/view/accessibility/AccessibilityNodeInfoCompat$CollectionInfoCompat.class
 com/loyo/oa/v2/activity/CustomerInfoActivity_$10.class
 com/loyo/oa/v2/activity/CustomerAddActivity_.class
 com/loyo/oa/v2/tool/customview/pullToRefresh/PullToRefreshExpandableListView.class
@@ -1686,6 +1698,7 @@ android/support/v7/app/ActionBar$Tab.class
 com/loyo/oa/v2/common/Global.class
 cn/jpush/android/api/JPushInterface.class
 com/loyo/oa/v2/activity/PreviewImageActivity$1.class
+android/support/v7/widget/ScrollbarHelper.class
 com/loyo/oa/v2/activity/TasksEditActivity$3.class
 org/joda/time/base/AbstractInterval.class
 com/loyo/oa/v2/activity/TasksAddActivity_$6.class
@@ -1784,6 +1797,7 @@ com/loyo/oa/v2/activity/MainActivity_$6.class
 org/joda/time/tz/DateTimeZoneBuilder$Rule.class
 com/loyo/oa/v2/activity/TasksAddActivity_$4.class
 com/xiaomi/push/service/ab.class
+android/support/v4/view/accessibility/AccessibilityRecordCompat.class
 org/eclipse/mat/util/VoidProgressListener.class
 com/loyo/oa/v2/beans/WfTemplate.class
 com/loyo/oa/v2/fragment/WfInstanceManageFragment$1.class
@@ -1803,6 +1817,7 @@ android/support/v7/app/ActionBar$DisplayOptions.class
 com/loyo/oa/v2/activity/TaskListActivity_$2.class
 com/loyo/oa/v2/activity/MainActivity_$5.class
 retrofit/Callback.class
+android/support/v4/view/accessibility/AccessibilityNodeInfoCompat.class
 com/xiaomi/push/service/ag.class
 com/loyo/oa/v2/activity/MainActivity_$2.class
 org/eclipse/mat/inspections/CommonNameResolver$FieldResolver.class
@@ -1840,6 +1855,7 @@ com/loyo/oa/v2/activity/ContactsDepartmentActivity_$IntentBuilder_.class
 org/joda/time/tz/DateTimeZoneBuilder$Recurrence.class
 com/xiaomi/smack/filter/a.class
 cn/jpush/android/service/e.class
+android/support/v7/widget/LinearLayoutManager$LayoutState.class
 com/loyo/oa/v2/activity/ChildTaskResponserSelectActivity$1.class
 com/xiaomi/push/service/ac.class
 com/xiaomi/network/b.class

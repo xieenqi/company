@@ -34,8 +34,8 @@ public final class CustomerLabelActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_TAG_ITEMS_EXTRA = "tagitems";
     public final static String M_CUSTOMER_ID_EXTRA = "customerId";
+    public final static String M_TAG_ITEMS_EXTRA = "tagitems";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,11 +119,11 @@ public final class CustomerLabelActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(M_TAG_ITEMS_EXTRA)) {
-                mTagItems = ((ArrayList<TagItem> ) extras_.getSerializable(M_TAG_ITEMS_EXTRA));
-            }
             if (extras_.containsKey(M_CUSTOMER_ID_EXTRA)) {
                 mCustomerId = extras_.getString(M_CUSTOMER_ID_EXTRA);
+            }
+            if (extras_.containsKey(M_TAG_ITEMS_EXTRA)) {
+                mTagItems = ((ArrayList<TagItem> ) extras_.getSerializable(M_TAG_ITEMS_EXTRA));
             }
         }
     }
@@ -181,12 +181,12 @@ public final class CustomerLabelActivity_
             }
         }
 
-        public CustomerLabelActivity_.IntentBuilder_ mTagItems(ArrayList<TagItem> mTagItems) {
-            return super.extra(M_TAG_ITEMS_EXTRA, ((Serializable) mTagItems));
-        }
-
         public CustomerLabelActivity_.IntentBuilder_ mCustomerId(String mCustomerId) {
             return super.extra(M_CUSTOMER_ID_EXTRA, mCustomerId);
+        }
+
+        public CustomerLabelActivity_.IntentBuilder_ mTagItems(ArrayList<TagItem> mTagItems) {
+            return super.extra(M_TAG_ITEMS_EXTRA, ((Serializable) mTagItems));
         }
 
     }

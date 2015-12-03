@@ -31,7 +31,9 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * 【客户拜访】界面  activity xnq
+ */
 @EActivity(R.layout.activity_sign_list_my)
 public class SignInManagerActivity extends FragmentActivity {
 

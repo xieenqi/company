@@ -4,15 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -29,8 +30,8 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -38,13 +39,17 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.HashMap;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-//仅显示信息或提交，修改操作在TaskEditActivity
+/**
+ * 任务详情
+ * 仅显示信息或提交，修改操作在TaskEditActivity
+ */
 @EActivity(R.layout.activity_tasks_info)
 public class TasksInfoActivity extends BaseActivity {
 
@@ -55,7 +60,18 @@ public class TasksInfoActivity extends BaseActivity {
 
     final int MSG_ATTACHMENT = 700;
     final int MSG_DISCUSSION = 800;
-//    final int MSG_CHILD_TASK = 800;
+    final int MSG_CHILD_TASK = 900;
+
+    String vTitle;
+    String vContent;
+    String realName;
+    String joinName;
+    String isTest;
+    String beProjects;
+    String time;
+
+
+
 
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
@@ -78,6 +94,7 @@ public class TasksInfoActivity extends BaseActivity {
     @ViewById TextView tv_attachment_count;
     @ViewById TextView tv_children_info;
 
+
     @ViewById Button btn_complete;
     @ViewById RatingBar ratingBar_Task;
 
@@ -86,11 +103,14 @@ public class TasksInfoActivity extends BaseActivity {
     //信鸽透传过来的id
     @Extra("id") String mId;
 
-//    User responseUser;      //负责人
-    PaginationX<Discussion> mPageDiscussion;
+//  User responseUser;      //负责人
+    private PaginationX<Discussion> mPageDiscussion;
+    private String taskId;  //任务ID
+    public static TasksInfoActivity instance = null;
 
     @AfterViews
     void init() {
+        instance = this;
         initUI();
         getTask();
     }
@@ -100,11 +120,10 @@ public class TasksInfoActivity extends BaseActivity {
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
-
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
-//        layout_children_task.setOnTouchListener(Global.GetTouch());
+//      layout_children_task.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
     }
 
@@ -117,9 +136,20 @@ public class TasksInfoActivity extends BaseActivity {
             updateUI_task_base();
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
+
+            Log.d("LOG", "realName:" + realName);
+            Log.d("LOG", "joinName:" + joinName);
+            Log.d("LOG", "istest:" + isTest);
+            Log.d("LOG", "project:" + beProjects);
+            Log.d("LOG", "title:" + vTitle);
+            Log.d("LOG", "content:" + vContent);
+
         }
     }
 
+    /**
+     * 任务属性设置
+     * */
     void updateUI_task_responsiblePerson() {
         //进行中,分派人登陆可修改负责人和参与人
         if ((IsCreator() || IsResponsiblePerson()) && mTask.getStatus() == Task.STATUS_PROCESSING) {
@@ -129,13 +159,14 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         if (mTask.getResponsiblePerson() != null) {
-            tv_responsiblePerson.setText("负责人:" + mTask.getResponsiblePerson().getRealname());
+            realName = mTask.getResponsiblePerson().getRealname();
+            tv_responsiblePerson.setText("负责人:" + realName);
         }
 
         ArrayList<NewUser> users = mTask.getJoinedUsers();
         if (users != null && users.size() > 0) {
             String userNames = NewUser.GetNewUserNames(users);
-
+            joinName = userNames;
             if (!TextUtils.isEmpty(userNames)) {
                 tv_toUsers.setText("参与人:" + userNames);
             } else {
@@ -143,11 +174,16 @@ public class TasksInfoActivity extends BaseActivity {
             }
         }
         if(null!=mTask.getProject()){
-            tv_task_project.setText("所属项目："+mTask.getProject().getTitle());
+            beProjects = mTask.getProject().getTitle();
+            tv_task_project.setText("所属项目：" + beProjects);
         }
     }
 
+    /**
+     * 底部按钮内容控制
+     * */
     void updateUI_task_base() {
+
         if (mTask.getCreator() != null) {
             if (mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
                 //负责人提交
@@ -156,7 +192,6 @@ public class TasksInfoActivity extends BaseActivity {
                 btn_complete.setText("审 核");
             } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
                 btn_complete.setVisibility(View.GONE);
-
                 //显示分数
                 layout_score.setVisibility(mTask.isReviewFlag() ? View.VISIBLE : View.GONE);
                 ratingBar_Task.setProgress(mTask.getScore() / 20);
@@ -172,7 +207,11 @@ public class TasksInfoActivity extends BaseActivity {
 
         tv_task_title.setText(mTask.getTitle());
         tv_content.setText(mTask.getContent());
-        tv_task_audit.setText("是否审核:" + (mTask.isReviewFlag() ? "是" : "否"));
+        isTest = mTask.isRemindFlag()?"是":"否";
+        tv_task_audit.setText("是否审核:" + isTest);
+
+        vTitle = mTask.getTitle();
+        vContent = mTask.getContent();
 
         if (mTask.getCreator() != null && mTask.getCreatedAt() > 0) {
             tv_sub_title.setText(String.format("%s %s 修改", mTask.getCreator().getRealname(),
@@ -189,6 +228,11 @@ public class TasksInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 子任务View,内容设置
+     * TaskCheckPoint为Bean
+     * mTask.getchecklists()是子任务数据集
+     * */
     void updateUI_task_sub_task() {
         if (ListUtil.IsEmpty(mTask.getchecklists())) {
             return;
@@ -196,58 +240,110 @@ public class TasksInfoActivity extends BaseActivity {
 
         layout_child_Add_area.removeAllViews();
 
-        int finished = 0;
+        int statusSize = 0;
 
-        for (TaskCheckPoint subTask : mTask.getchecklists()) {
+        //子任务列表内容，遍历
+        for (final TaskCheckPoint subTask : mTask.getchecklists()) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
 
+            //子任务标题
             TextView viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
             if (subTask.getResponsiblePerson() != null) {
                 viewName.setText(subTask.getResponsiblePerson().getName());
             }
 
+            //子任务内容
             TextView viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
             if (!TextUtils.isEmpty(subTask.getcontent())) {
                 viewContent.setText(subTask.getcontent());
             }
 
+            //Checkbox勾选,赋值
             final CheckBox cb = (CheckBox)view.findViewById(R.id.cb);
+            boolean isStatus = subTask.getStatus()=="1"?true:false;
+            if(isStatus)
+                statusSize++;
+            cb.setChecked(isStatus);
 
-            ViewGroup layout_cb = (ViewGroup)view.findViewById(R.id.layout_cb);
-            if (layout_cb != null && cb != null){
-                layout_cb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        cb.toggle();
-                    }
-                });
-            }
-
-            if (subTask.isAchieved()) {
-                finished++;
-            }
+               cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                   @Override
+                   public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
+                       if (isCheck) {
+                           requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
+                       } else {
+                           requestTaskupdates(taskId, subTask.getId(), 0);
+                       }
+                   }
+               });
 
             layout_child_Add_area.addView(view);
         }
-
-        tv_children_info.setText(String.format("(%d/%d)", finished, mTask.getchecklists().size()));
+        //子任务完成度(3/5)设置
+        tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
     }
 
+    /**
+     * 更新子任务状态（完成／未完成)
+     * */
+    void requestTaskupdates(String id,String cid,int sts){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("status",sts);
+
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
+            @Override
+            public void success(Task task, Response response) {
+                if (task != null) {
+                    if (response.getStatus() == 200) {
+                        Toast("更新成功");
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    if (error.getResponse().getStatus() == 500) {
+                        Toast("网络异常500，请稍候再试");
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取任务信息
+     * */
     @Background
     void getTask() {
         app.getRestAdapter().create(ITask.class).getTask(getId(), new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
                 if (task != null) {
+
                     mTask = task;
                     updateUI();
                     getDiscussion();
                     showAttachment();
+
+                    try {
+                        String result = Utils.convertStreamToString(response.getBody().in());
+                        Log.d("LOG", "返回数据：" + result);
+                        taskId = task.getId(); //任务ID获取
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
     }
 
+    /**
+     * 标题左右监听
+     * */
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete})
     void onClick(View v) {
 
@@ -265,6 +361,7 @@ public class TasksInfoActivity extends BaseActivity {
                 if (IsCreator() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
                     intent.putExtra("delete", true);
+                    intent.putExtra("extra", "复制任务");
                 } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
                 }
@@ -336,8 +433,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (ListUtil.IsEmpty(mTask.getAttachments())) {
             return;
         }
-
-        tv_attachment_count.setText("("+(mTask.getAttachments() == null ? 0 : mTask.getAttachments().size())+")");
+        tv_attachment_count.setText("(" + (mTask.getAttachments() == null ? 0 : mTask.getAttachments().size()) + ")");
     }
 
     @Override
@@ -382,14 +478,16 @@ public class TasksInfoActivity extends BaseActivity {
                 getTask();
                 getDiscussion();
                 break;
+
             case REQUEST_EDIT_DELETE:
+                /*编辑回调*/
                 if (data.getBooleanExtra("edit", false)) {
-                    //跳转到编辑界面
+
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mTask", mTask);
 
                     app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
-
+                /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
 
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
@@ -400,6 +498,17 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
                         }
                     });
+                    /*复制回调*/
+                } else if(data.getBooleanExtra("extra",false)){
+
+                    Intent intent = new Intent(TasksInfoActivity.this,TasksAddActivity_.class);
+                    intent.putExtra("title", vTitle);
+                    intent.putExtra("content", vContent);
+                    intent.putExtra("real", realName);
+                    intent.putExtra("join", joinName);
+                    intent.putExtra("istest", isTest);
+                    intent.putExtra("bepro",beProjects);
+                    startActivity(intent);
                 }
                 break;
 

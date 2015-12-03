@@ -63,7 +63,7 @@ import retrofit.client.Response;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
-@EActivity(R.layout.activity_tasks_edit)
+@EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
@@ -93,7 +93,7 @@ public class TasksEditActivity extends BaseActivity {
     SignInGridViewAdapter signInGridViewAdapter;
     AlertDialog dialog_Product;
 
-    @AfterViews
+    @AfterViews //类似onCreate方法执行入口
     void initUI() {
         super.setTitle("编辑任务");
 
@@ -326,7 +326,11 @@ public class TasksEditActivity extends BaseActivity {
                 } else {
                     String cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-                    setJoinUsers(cc_user_id, cc_user_name);
+                    if(cc_user_id != null && cc_user_name !=null){
+                        setJoinUsers(cc_user_id, cc_user_name);
+                    }else{
+                        Toast("未选择相关人员");
+                    }
                 }
                 break;
             case SelectPicPopupWindow.GET_IMG:

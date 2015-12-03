@@ -45,7 +45,7 @@ public class LauncherActivity extends BaseActivity {
                 public void onAnimationStart(Animator animator) {
 
                 }
-
+                //动画加载完成
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     Intent intent = new Intent(LauncherActivity.this, MainActivity_.class);
@@ -106,7 +106,7 @@ public class LauncherActivity extends BaseActivity {
         public void run() {
             iv_launcher_fade.setY(layout_launcher_fade.getTop());
             ObjectAnimator animator = ObjectAnimator.ofFloat(layout_launcher_fade, "translationY", (float)getResources().getDisplayMetrics().heightPixels-layout_launcher_fade.getHeight(),0f);
-            animator.setDuration(500);
+            animator.setDuration(300);
             animator.setInterpolator(new AccelerateInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override

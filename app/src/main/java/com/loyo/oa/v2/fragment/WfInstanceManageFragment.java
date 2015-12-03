@@ -27,6 +27,9 @@ import java.util.List;
 
 import retrofit.client.Response;
 
+/**
+ * 【审批流程】界面的 fragment
+ */
 public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstance> {
 
     private static final String FILTER_CATEGORY[] = new String[]{"全部类别", "我申请", "我审批", "我经办"};
@@ -51,6 +54,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 到 审批流程 add 添加页面
+     */
     @Override
     public void addNewItem() {
         Intent intent = new Intent();
@@ -58,6 +64,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
+    /**
+     * 到审批流程  的搜索页面
+     */
     @Override
     public void openSearch() {
         Intent intent = new Intent();

@@ -87,12 +87,12 @@ public final class CustomerManageActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        imageArrow = ((ImageView) hasViews.findViewById(id.img_title_arrow));
-        layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
-        lv_customer_category = ((ListView) hasViews.findViewById(id.lv_customer_category));
-        img_title_search_right = ((ViewGroup) hasViews.findViewById(id.img_title_search_right));
         layout_category = ((ViewGroup) hasViews.findViewById(id.layout_category));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
+        img_title_search_right = ((ViewGroup) hasViews.findViewById(id.img_title_search_right));
+        lv_customer_category = ((ListView) hasViews.findViewById(id.lv_customer_category));
+        imageArrow = ((ImageView) hasViews.findViewById(id.img_title_arrow));
         if (layout_title_action!= null) {
             layout_title_action.setOnClickListener(new OnClickListener() {
 
@@ -105,18 +105,6 @@ public final class CustomerManageActivity_
             }
             );
         }
-        if (img_title_search_right!= null) {
-            img_title_search_right.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    CustomerManageActivity_.this.jumpToSearch();
-                }
-
-            }
-            );
-        }
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -124,6 +112,18 @@ public final class CustomerManageActivity_
                 @Override
                 public void onClick(View view) {
                     CustomerManageActivity_.this.back();
+                }
+
+            }
+            );
+        }
+        if (img_title_search_right!= null) {
+            img_title_search_right.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    CustomerManageActivity_.this.jumpToSearch();
                 }
 
             }

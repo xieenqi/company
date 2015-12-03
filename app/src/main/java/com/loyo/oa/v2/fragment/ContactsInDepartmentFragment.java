@@ -9,6 +9,7 @@ import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,8 @@ public class ContactsInDepartmentFragment extends BaseFragment
     TextView tv_toast;
     String mIndex;
     String depId;
+    boolean isMyDept;
+
     //必须大于adapter的viewType
     private int itemCount=2;
 
@@ -67,15 +70,19 @@ public class ContactsInDepartmentFragment extends BaseFragment
     {
         depId = (null == getArguments() ||!getArguments().containsKey("depId"))? "": getArguments().getString("depId");
 
-        if (TextUtils.isEmpty(depId)) {
+        if (TextUtils.isEmpty(depId) && depId.length() != 0) {
             depId = MainApp.user.getDepts().get(0).getShortDept().getId();
         }
-        boolean isMyDept=TextUtils.equals(depId, MainApp.user.getDepts().get(0).getShortDept().getId());
+
+        if(MainApp.user.getDepts().size() != 0){
+            isMyDept=TextUtils.equals(depId, MainApp.user.getDepts().get(0).getShortDept().getId());
+        }
 
         app.logUtil.e(" depId : " + depId);
 
         List<Department> departments =isMyDept?null: Common.getLstDepartment(depId);
         List<User> users = isMyDept?Common.getUsersByDeptId(depId,new ArrayList<User>()):Common.getListUser(depId);
+
         CommonItem tempItem=new CommonItem();
         tempItem.tag="";
 

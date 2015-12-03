@@ -82,22 +82,10 @@ public final class CustomerContactManageActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
         tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
         layout_container = ((LinearLayout) hasViews.findViewById(id.layout_container));
-        if (layout_add!= null) {
-            layout_add.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    CustomerContactManageActivity_.this.addNewContact();
-                }
-
-            }
-            );
-        }
         if (layout_back!= null) {
             layout_back.setOnClickListener(new OnClickListener() {
 
@@ -105,6 +93,18 @@ public final class CustomerContactManageActivity_
                 @Override
                 public void onClick(View view) {
                     CustomerContactManageActivity_.this.back();
+                }
+
+            }
+            );
+        }
+        if (layout_add!= null) {
+            layout_add.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    CustomerContactManageActivity_.this.addNewContact();
                 }
 
             }

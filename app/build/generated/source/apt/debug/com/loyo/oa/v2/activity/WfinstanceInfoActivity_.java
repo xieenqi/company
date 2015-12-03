@@ -95,25 +95,25 @@ public final class WfinstanceInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_memo = ((ViewGroup) hasViews.findViewById(id.layout_memo));
-        img_wfinstance_status = ((ImageView) hasViews.findViewById(id.img_wfinstance_status));
-        layout_pass = ((ViewGroup) hasViews.findViewById(id.layout_pass));
-        tv_title_creator = ((TextView) hasViews.findViewById(id.tv_title_creator));
-        tv_wfnodes_title = ((TextView) hasViews.findViewById(id.tv_wfnodes_title));
-        layout_AttachFile = ((ViewGroup) hasViews.findViewById(id.layout_AttachFile));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_title_role = ((TextView) hasViews.findViewById(id.tv_title_role));
-        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        layout_nopass = ((ViewGroup) hasViews.findViewById(id.layout_nopass));
-        tv_lastowrk = ((TextView) hasViews.findViewById(id.tv_lastowrk));
-        layout_lastwork = ((ViewGroup) hasViews.findViewById(id.layout_lastwork));
-        layout_bottom = ((ViewGroup) hasViews.findViewById(id.layout_bottom));
-        tv_memo = ((TextView) hasViews.findViewById(id.tv_memo));
-        layout_wfinstance_content = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_content));
-        listView_wfinstance = ((ListView) hasViews.findViewById(id.listView_wfinstance));
-        tv_time_creator = ((TextView) hasViews.findViewById(id.tv_time_creator));
         listView_workflowNodes = ((ListView_inScrollView) hasViews.findViewById(id.listView_workflowNodes));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        layout_memo = ((ViewGroup) hasViews.findViewById(id.layout_memo));
+        tv_title_role = ((TextView) hasViews.findViewById(id.tv_title_role));
+        tv_wfnodes_title = ((TextView) hasViews.findViewById(id.tv_wfnodes_title));
+        layout_bottom = ((ViewGroup) hasViews.findViewById(id.layout_bottom));
+        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
+        tv_time_creator = ((TextView) hasViews.findViewById(id.tv_time_creator));
+        layout_lastwork = ((ViewGroup) hasViews.findViewById(id.layout_lastwork));
+        tv_lastowrk = ((TextView) hasViews.findViewById(id.tv_lastowrk));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        img_wfinstance_status = ((ImageView) hasViews.findViewById(id.img_wfinstance_status));
+        tv_title_creator = ((TextView) hasViews.findViewById(id.tv_title_creator));
+        tv_memo = ((TextView) hasViews.findViewById(id.tv_memo));
+        layout_nopass = ((ViewGroup) hasViews.findViewById(id.layout_nopass));
+        layout_AttachFile = ((ViewGroup) hasViews.findViewById(id.layout_AttachFile));
+        layout_wfinstance_content = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_content));
+        layout_pass = ((ViewGroup) hasViews.findViewById(id.layout_pass));
+        listView_wfinstance = ((ListView) hasViews.findViewById(id.listView_wfinstance));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

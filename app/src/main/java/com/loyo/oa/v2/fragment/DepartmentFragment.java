@@ -3,6 +3,7 @@ package com.loyo.oa.v2.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,10 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.adapter.DepartmentListViewAdapter;
 import com.loyo.oa.v2.common.Common;
+
+/**
+ * 部门通讯录Fragment
+ * */
 
 @SuppressLint("ValidFragment")
 public class DepartmentFragment extends Fragment {

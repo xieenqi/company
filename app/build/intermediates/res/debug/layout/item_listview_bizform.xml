@@ -20,4 +20,4 @@
         android:layout_height="@dimen/view_h_title"
         android:scaleType="center"
         android:src="@drawable/right_arrow" />
-</LinearLayout><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/layout/item_listview_bizform.xml -->
+</LinearLayout><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/layout/item_listview_bizform.xml -->

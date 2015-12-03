@@ -23,6 +23,17 @@ public class TaskCheckPoint extends BaseBeans {
     String title;
     String updatedAt;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    String status;
+
+
     public boolean isAchieved() {
         return achieved;
     }

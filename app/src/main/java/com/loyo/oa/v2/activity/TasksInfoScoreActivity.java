@@ -27,6 +27,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 @EActivity(R.layout.activity_tasks_info_score)
@@ -76,7 +77,6 @@ public class TasksInfoScoreActivity extends BaseActivity {
                 final int grade = ratingBar_Task.getProgress() * 20;
                 final String comment1 = edt_content.getText().toString().trim();
 
-
                 HashMap<String,Object> map=new HashMap<>();
                 map.put("score", grade);
                 map.put("comment", comment1);
@@ -114,6 +114,18 @@ public class TasksInfoScoreActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.putExtra("review", task);
                     app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                    Toast("请检查您的网络连接");
+                }else if(error.getKind() == RetrofitError.Kind.HTTP){
+                    if(error.getResponse().getStatus() == 500){
+                        Toast("网络异常500，请稍候再试");
+                    }
                 }
             }
         });

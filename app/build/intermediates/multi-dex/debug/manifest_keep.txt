@@ -111,6 +111,7 @@
 -keep class com.loyo.oa.v2.service.JushService { <init>(); }
 -keep class com.loyo.oa.v2.service.JpushService { <init>(); }
 -keep class com.loyo.oa.v2.service.JPushService { <init>(); }
+-keep class com.loyo.oa.v2.tool.MyLayoutUtils { <init>(); }
 -keep class android.support.v7.widget.TestActivity { <init>(); }
 -keep class com.squareup.leakcanary.internal.HeapAnalyzerService { <init>(); }
 -keep class com.squareup.leakcanary.DisplayLeakService { <init>(); }

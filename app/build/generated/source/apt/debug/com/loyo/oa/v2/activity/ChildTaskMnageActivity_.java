@@ -92,9 +92,9 @@ public final class ChildTaskMnageActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         iv_child_task_add = ((ImageView) hasViews.findViewById(id.iv_child_task_add));
         lv_child_task = ((PullToRefreshListView) hasViews.findViewById(id.lv_child_task));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

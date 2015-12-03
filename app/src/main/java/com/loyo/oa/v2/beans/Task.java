@@ -284,7 +284,6 @@ public class Task extends BaseBeans {
         if (responsiblePersons != null && responsiblePersons.size() > 0) {
             return responsiblePersons.get(0).getUser();
         }
-
         return null;
     }
 

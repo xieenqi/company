@@ -762,6 +762,10 @@
         </service>
 
         <activity
+            android:name="com.loyo.oa.v2.tool.MyLayoutUtils"
+            android:label="@string/title_activity_my_layout_utils" >
+        </activity>
+        <activity
             android:name="android.support.v7.widget.TestActivity"
             android:label="RecyclerViewTestActivity" />
 

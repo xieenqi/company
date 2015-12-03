@@ -38,9 +38,9 @@ public final class CommonTagSelectActivity_
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
     public final static String TITLE_EXTRA = "title";
+    public final static String RESULTS_EXTRA = "data";
     public final static String TYPE_EXTRA = "type";
     public final static String MODE_EXTRA = "mode";
-    public final static String RESULTS_EXTRA = "data";
     private Handler handler_ = new Handler(Looper.getMainLooper());
 
     @Override
@@ -91,8 +91,8 @@ public final class CommonTagSelectActivity_
     public void onViewChanged(HasViews hasViews) {
         rv_reason = ((RecyclerView) hasViews.findViewById(id.rv_reason));
         tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
         if (img_title_right!= null) {
             img_title_right.setOnClickListener(new OnClickListener() {
 
@@ -127,14 +127,14 @@ public final class CommonTagSelectActivity_
             if (extras_.containsKey(TITLE_EXTRA)) {
                 title = extras_.getString(TITLE_EXTRA);
             }
+            if (extras_.containsKey(RESULTS_EXTRA)) {
+                results = ((ArrayList<CommonTag> ) extras_.getSerializable(RESULTS_EXTRA));
+            }
             if (extras_.containsKey(TYPE_EXTRA)) {
                 type = extras_.getInt(TYPE_EXTRA);
             }
             if (extras_.containsKey(MODE_EXTRA)) {
                 mode = extras_.getInt(MODE_EXTRA);
-            }
-            if (extras_.containsKey(RESULTS_EXTRA)) {
-                results = ((ArrayList<CommonTag> ) extras_.getSerializable(RESULTS_EXTRA));
             }
         }
     }
@@ -210,16 +210,16 @@ public final class CommonTagSelectActivity_
             return super.extra(TITLE_EXTRA, title);
         }
 
+        public CommonTagSelectActivity_.IntentBuilder_ results(ArrayList<CommonTag> results) {
+            return super.extra(RESULTS_EXTRA, ((Serializable) results));
+        }
+
         public CommonTagSelectActivity_.IntentBuilder_ type(int type) {
             return super.extra(TYPE_EXTRA, type);
         }
 
         public CommonTagSelectActivity_.IntentBuilder_ mode(int mode) {
             return super.extra(MODE_EXTRA, mode);
-        }
-
-        public CommonTagSelectActivity_.IntentBuilder_ results(ArrayList<CommonTag> results) {
-            return super.extra(RESULTS_EXTRA, ((Serializable) results));
         }
 
     }

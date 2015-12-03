@@ -9,7 +9,9 @@ import com.loyo.oa.v2.fragment.WfInstanceManageFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 
-
+/**
+ * 【审批流程】 页面 xnq
+ */
 public class WfInstanceManageActivity extends BaseFragmentActivity {
 
     WfInstanceManageFragment fragment = new WfInstanceManageFragment();

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,30 +79,24 @@ public class VerifyAccountActivity extends BaseActivity {
                 et_account.post(countRunner);
                 btn_get_code.setEnabled(false);
                 et_account.setEnabled(false);
+                Toast("发送验证码成功");
 
-                RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
-                    @Override
-                    public void success(Object o, Response response) {
-                        Toast("发送验证码成功");
-                    }
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        Toast("发送验证码失败");
-                        btn_get_code.setEnabled(true);
-                    }
-                });
             }
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast(error.getResponse().getReason());
                 btn_get_code.setEnabled(true);
+                Log.d("LOG",error.getResponse().getStatus()+"m:"+error.getResponse().getReason());
+                if(error.getResponse().getStatus() == 500){
+                    Toast("您的手机号尚未登记到本系统,请联系统管理员!");
+                }
             }
         });
     }
 
-
+    /**
+     * 密码找回确定请求
+     */
     @Click(R.id.btn_confirm)
     void doNext(){
         final String mobile = et_account.getText().toString().trim();

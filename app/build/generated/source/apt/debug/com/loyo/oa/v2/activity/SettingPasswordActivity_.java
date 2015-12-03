@@ -88,24 +88,12 @@ public final class SettingPasswordActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        et_new_password = ((EditText) hasViews.findViewById(id.et_new_password));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        et_old_password = ((EditText) hasViews.findViewById(id.et_old_password));
         et_confirm_new_password = ((EditText) hasViews.findViewById(id.et_confirm_new_password));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         btn_submit = ((Button) hasViews.findViewById(id.btn_submit));
-        if (btn_submit!= null) {
-            btn_submit.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    SettingPasswordActivity_.this.submit();
-                }
-
-            }
-            );
-        }
+        et_new_password = ((EditText) hasViews.findViewById(id.et_new_password));
+        et_old_password = ((EditText) hasViews.findViewById(id.et_old_password));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -113,6 +101,18 @@ public final class SettingPasswordActivity_
                 @Override
                 public void onClick(View view) {
                     SettingPasswordActivity_.this.back();
+                }
+
+            }
+            );
+        }
+        if (btn_submit!= null) {
+            btn_submit.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    SettingPasswordActivity_.this.submit();
                 }
 
             }

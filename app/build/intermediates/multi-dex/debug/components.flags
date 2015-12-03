@@ -1,14 +1,14 @@
--injars /Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/multi-dex/debug/allclasses.jar
--outjars /Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/multi-dex/debug/componentClasses.jar
+-injars '/Users/loyo_dev1/Desktop/workspace/android Project/develop-bug-fix2/app/build/intermediates/multi-dex/debug/allclasses.jar'
+-outjars '/Users/loyo_dev1/Desktop/workspace/android Project/develop-bug-fix2/app/build/intermediates/multi-dex/debug/componentClasses.jar'
 
--libraryjars /Users/ykb/Library/Android/android-sdk-macosx/build-tools/21.1.2/lib/shrinkedAndroid.jar
+-libraryjars /Users/loyo_dev1/codes/sdkmanager/android-sdk-macosx/build-tools/22.0.0/lib/shrinkedAndroid.jar
 
 -forceprocessing
 -dontoptimize
 -dontobfuscate
 -dontpreverify
 -dontwarn
--printconfiguration /Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/intermediates/multi-dex/debug/components.flags
+-printconfiguration '/Users/loyo_dev1/Desktop/workspace/android Project/develop-bug-fix2/app/build/intermediates/multi-dex/debug/components.flags'
 
 
 -keep class com.loyo.oa.v2.application.MainApp {
@@ -449,6 +449,10 @@
 }
 
 -keep class com.loyo.oa.v2.service.JPushService {
+    <init>();
+}
+
+-keep class com.loyo.oa.v2.tool.MyLayoutUtils {
     <init>();
 }
 

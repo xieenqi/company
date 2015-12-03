@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -51,6 +50,9 @@ import java.util.HashMap;
 
 import retrofit.client.Response;
 
+/**
+ * 【客户信息】 页面
+ */
 @EActivity(R.layout.activity_customer_info)
 public class CustomerInfoActivity extends BaseFragmentActivity implements LocationUtil.AfterLocation {
 
@@ -177,13 +179,22 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         tv_customer_name.setText(mCustomer.getName());
-        Log.i("Address",mCustomer.getLoc().getAddr());
-        tv_address.setText(mCustomer.getLoc().getAddr());
+
+        if (mCustomer.getLoc().getAddr() != "") {
+            tv_address.setText(mCustomer.getLoc().getAddr());
+        } else {
+            Intent intent = new Intent();
+            Bundle bundle = intent.getExtras();
+            tv_address.setText(bundle.getString("CustomerAddress"));
+        }
+
         tv_customer_creator.setText(mCustomer.getCreator().getName());
         String responser = null == mCustomer.getOwner() || null == mCustomer.getOwner().getUser() ? "" : mCustomer.getOwner().getUser().getName();
         tv_customer_responser.setText(responser);
         tv_customer_join_users.setText(Utils.getMembers(members));
-        tv_district.setText(regional.getProvince() + "省" + regional.getCity() + "市" + regional.getCounty() + "区");
+        if (regional.getProvince() != null) {
+            tv_district.setText(regional.getProvince() + "省" + regional.getCity() + "市" + regional.getCounty() + "区");
+        }
         tv_industry.setText(industry.getName());
         edt_customer_memo.setText(mCustomer.getSummary());
         tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.getCreatedAt() * 1000)));
@@ -292,7 +303,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         mLocate.setAddr(customerAddress);
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id",null == mCustomer ? mCustomerId : mCustomer.getId());
+        map.put("id", null == mCustomer ? mCustomerId : mCustomer.getId());
         map.put("name", customerName);
         map.put("summary", summary);
         map.put("owner", owner);
@@ -304,14 +315,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("industry", industry);
 
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).updateCustomer(null == mCustomer ? mCustomerId : mCustomer.getId(), map, new RCallback<Customer>() {
-            @Override
-            public void success(Customer customer, Response response) {
-                Intent intent = new Intent();
-                intent.putExtra(Customer.class.getName(), customer);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-            }
-        });
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                updateCustomer(null == mCustomer ? mCustomerId : mCustomer.getId(), map, new RCallback<Customer>() {
+                    @Override
+                    public void success(Customer customer, Response response) {
+                        Intent intent = new Intent();
+                        intent.putExtra(Customer.class.getName(), customer);
+                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                    }
+                });
     }
 
 

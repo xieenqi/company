@@ -83,15 +83,27 @@ public final class WfInstanceAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_WfTemplate = ((TextView) hasViews.findViewById(id.tv_WfTemplate));
-        btn_add = ((Button) hasViews.findViewById(id.btn_add));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        edt_memo = ((EditText) hasViews.findViewById(id.edt_memo));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_bizform = ((TextView) hasViews.findViewById(id.tv_bizform));
         layout_wfinstance_data = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_data));
         gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        edt_memo = ((EditText) hasViews.findViewById(id.edt_memo));
+        btn_add = ((Button) hasViews.findViewById(id.btn_add));
         wfinstance_data_container = ((LinearLayout) hasViews.findViewById(id.wfinstance_data_container));
-        tv_bizform = ((TextView) hasViews.findViewById(id.tv_bizform));
+        tv_WfTemplate = ((TextView) hasViews.findViewById(id.tv_WfTemplate));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        if (img_title_right!= null) {
+            img_title_right.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    WfInstanceAddActivity_.this.submit();
+                }
+
+            }
+            );
+        }
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -145,18 +157,6 @@ public final class WfInstanceAddActivity_
                 }
                 );
             }
-        }
-        if (img_title_right!= null) {
-            img_title_right.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    WfInstanceAddActivity_.this.submit();
-                }
-
-            }
-            );
         }
         init();
     }

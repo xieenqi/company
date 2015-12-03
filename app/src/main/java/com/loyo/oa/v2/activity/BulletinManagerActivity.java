@@ -42,8 +42,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * com.loyo.oa.v2.activity
  * 描述 :通知公告页
+ * com.loyo.oa.v2.activity
  * 作者 : ykb
  * 时间 : 15/8/28.
  */
@@ -54,7 +54,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     @ViewById PullToRefreshRecycleView lv_notice;
     @ViewById Button btn_notice_add;
-
     private ArrayList<Bulletin> bulletins = new ArrayList<>();
     protected PaginationX<Bulletin> mPagination = new PaginationX(20);
     private int mIndex = 1;
@@ -113,7 +112,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             public void failure(RetrofitError error) {
                 super.failure(error);
                 lv_notice.onRefreshComplete();
-                Toast("获取通知失败");
+                Toast("获取通知失败" + error.getMessage());
             }
         });
     }
@@ -125,6 +124,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         if (null == adapter) {
             adapter = new NoticeAdapter(bulletins);
             lv_notice.getRefreshableView().setAdapter(adapter);
+            
         } else {
             adapter.setmDatas(bulletins);
         }

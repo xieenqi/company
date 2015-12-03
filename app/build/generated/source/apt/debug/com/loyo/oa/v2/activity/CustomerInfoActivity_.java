@@ -40,8 +40,8 @@ public final class CustomerInfoActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_CUSTOMER_ID_EXTRA = "CustomerId";
     public final static String M_CUSTOMER_EXTRA = "Customer";
+    public final static String M_CUSTOMER_ID_EXTRA = "CustomerId";
     private Handler handler_ = new Handler(Looper.getMainLooper());
 
     @Override
@@ -98,27 +98,27 @@ public final class CustomerInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_customer_label = ((ViewGroup) hasViews.findViewById(id.layout_customer_label));
-        img_go_where = ((ImageView) hasViews.findViewById(id.img_go_where));
-        layout_customer_responser = ((ViewGroup) hasViews.findViewById(id.layout_customer_responser));
-        container = ((LinearLayout) hasViews.findViewById(id.layout_customer_extra_info));
-        img_del_join_users = ((ImageView) hasViews.findViewById(id.img_del_join_users));
-        layout_customer_industry = ((ViewGroup) hasViews.findViewById(id.layout_customer_industry));
-        edt_customer_memo = ((EditText) hasViews.findViewById(id.edt_customer_memo));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_district = ((TextView) hasViews.findViewById(id.tv_district));
-        tv_customer_responser = ((TextView) hasViews.findViewById(id.tv_customer_responser));
-        tv_labels = ((TextView) hasViews.findViewById(id.tv_labels));
         tv_industry = ((TextView) hasViews.findViewById(id.tv_industry));
-        img_refresh_address = ((ImageView) hasViews.findViewById(id.img_refresh_address));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        img_del_join_users = ((ImageView) hasViews.findViewById(id.img_del_join_users));
         layout_customer_join_users = ((ViewGroup) hasViews.findViewById(id.layout_customer_join_users));
         tv_address = ((EditText) hasViews.findViewById(id.tv_address));
-        tv_customer_creator = ((TextView) hasViews.findViewById(id.tv_customer_creator));
-        layout_customer_district = ((ViewGroup) hasViews.findViewById(id.layout_customer_district));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
         tv_customer_join_users = ((TextView) hasViews.findViewById(id.tv_customer_join_users));
-        tv_customer_create_at = ((TextView) hasViews.findViewById(id.tv_customer_create_at));
+        tv_customer_creator = ((TextView) hasViews.findViewById(id.tv_customer_creator));
+        layout_customer_responser = ((ViewGroup) hasViews.findViewById(id.layout_customer_responser));
+        tv_labels = ((TextView) hasViews.findViewById(id.tv_labels));
+        tv_district = ((TextView) hasViews.findViewById(id.tv_district));
+        layout_customer_industry = ((ViewGroup) hasViews.findViewById(id.layout_customer_industry));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_customer_responser = ((TextView) hasViews.findViewById(id.tv_customer_responser));
+        layout_customer_label = ((ViewGroup) hasViews.findViewById(id.layout_customer_label));
+        edt_customer_memo = ((EditText) hasViews.findViewById(id.edt_customer_memo));
+        container = ((LinearLayout) hasViews.findViewById(id.layout_customer_extra_info));
+        img_refresh_address = ((ImageView) hasViews.findViewById(id.img_refresh_address));
         tv_customer_name = ((EditText) hasViews.findViewById(id.tv_customer_name));
+        tv_customer_create_at = ((TextView) hasViews.findViewById(id.tv_customer_create_at));
+        img_go_where = ((ImageView) hasViews.findViewById(id.img_go_where));
+        layout_customer_district = ((ViewGroup) hasViews.findViewById(id.layout_customer_district));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -245,11 +245,11 @@ public final class CustomerInfoActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(M_CUSTOMER_ID_EXTRA)) {
-                mCustomerId = extras_.getString(M_CUSTOMER_ID_EXTRA);
-            }
             if (extras_.containsKey(M_CUSTOMER_EXTRA)) {
                 mCustomer = ((Customer) extras_.getSerializable(M_CUSTOMER_EXTRA));
+            }
+            if (extras_.containsKey(M_CUSTOMER_ID_EXTRA)) {
+                mCustomerId = extras_.getString(M_CUSTOMER_ID_EXTRA);
             }
         }
     }
@@ -321,12 +321,12 @@ public final class CustomerInfoActivity_
             }
         }
 
-        public CustomerInfoActivity_.IntentBuilder_ mCustomerId(String mCustomerId) {
-            return super.extra(M_CUSTOMER_ID_EXTRA, mCustomerId);
-        }
-
         public CustomerInfoActivity_.IntentBuilder_ mCustomer(Customer mCustomer) {
             return super.extra(M_CUSTOMER_EXTRA, ((Serializable) mCustomer));
+        }
+
+        public CustomerInfoActivity_.IntentBuilder_ mCustomerId(String mCustomerId) {
+            return super.extra(M_CUSTOMER_ID_EXTRA, mCustomerId);
         }
 
     }

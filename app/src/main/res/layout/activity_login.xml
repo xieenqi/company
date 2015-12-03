@@ -200,34 +200,7 @@
         </RelativeLayout>
 
 
-        <RelativeLayout
-            android:id="@+id/tv_bwx_login"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:background="@drawable/btn_login_qq">
 
-            <!--<ImageView-->
-            <!--android:id="@+id/img_arrowwx"-->
-            <!--android:layout_width="7dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/img_login_qq_arrow"/>-->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="微信账号登录"
-                android:textColor="@color/title_bg1"
-                android:textSize="16sp"/>
-
-        </RelativeLayout>
 
     </LinearLayout>
 

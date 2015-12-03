@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**
+/**数据库帮助类
  * Created by pj on 15/4/2.
  */
 public class DBHelper extends OrmLiteSqliteOpenHelper {
@@ -68,8 +68,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, SomeConfig.class);
             TableUtils.createTable(connectionSource, Attachment.class);
 
+
         } catch (SQLException e) {
-            Log.e(DBHelper.class.getName(), "Can't create database", e);
+            Log.e(DBHelper.class.getName(), "不能创建 database", e);
             throw new RuntimeException(e);
         }
     }
@@ -87,9 +88,10 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 //        db.execSQL("DROP TABLE IF EXISTS organization;");
 
         try {
-            Log.d(DBHelper.class.getName(), "onUpgrade");
+            Log.d(DBHelper.class.getName(), " 更新DB onUpgrade");
             TableUtils.dropTable(connectionSource, SomeConfig.class, true);
             TableUtils.dropTable(connectionSource, Attachment.class, true);
+
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
         } catch (SQLException e) {
@@ -225,8 +227,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public ArrayList<User> getSubordinates() {
-        Type type = new TypeToken<ArrayList<User>>() {
-        }.getType();
+
+       Type type = new TypeToken<ArrayList<User>>(){}.getType();
         String str = getStr("Subordinates");
 
         if (!StringUtil.isEmpty(str)) {

@@ -81,17 +81,17 @@ public final class CustomerAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        edt_name = ((EditText) hasViews.findViewById(id.edt_name));
         btn_add_new_contract = ((Button) hasViews.findViewById(id.btn_add_new_contract));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        layout_newContract = ((LinearLayout) hasViews.findViewById(id.layout_newContract));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        et_address = ((EditText) hasViews.findViewById(id.et_address));
-        edt_contract = ((EditText) hasViews.findViewById(id.edt_contract));
-        tv_labels = ((TextView) hasViews.findViewById(id.tv_labels));
         edt_contract_tel = ((EditText) hasViews.findViewById(id.edt_contract_tel));
+        et_address = ((EditText) hasViews.findViewById(id.et_address));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        edt_contract = ((EditText) hasViews.findViewById(id.edt_contract));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_labels = ((TextView) hasViews.findViewById(id.tv_labels));
+        edt_name = ((EditText) hasViews.findViewById(id.edt_name));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
         layout_address = ((LinearLayout) hasViews.findViewById(id.layout_address));
+        layout_newContract = ((LinearLayout) hasViews.findViewById(id.layout_newContract));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

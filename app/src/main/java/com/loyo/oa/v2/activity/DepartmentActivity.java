@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -69,6 +70,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
     @Override
     protected void onResume() {
+        
         super.onResume();
         syncButton();
     }
@@ -135,8 +137,10 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
                     if (user == null) {
                         return;
                     }
-                    //发送广播
+
+                    //发送广播,返回负责人姓名
                     if (select_type == DepartmentUserActivity.TYPE_SELECT_SINGLE) {
+
                         Intent intent = new Intent();
                         intent.putExtra(User.class.getName(), user);
                         app.finishActivity(DepartmentActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -149,6 +153,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
                         else
                             count--;
                         syncButton();
+
                     }
                 }
             });

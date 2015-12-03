@@ -2,6 +2,9 @@ package com.loyo.oa.v2.tool;
 
 import com.loyo.oa.v2.BuildConfig;
 
+/**
+ * http 配置文件
+ */
 public class Config_project {
 
     //    public static final Boolean is_developer_mode = false; //生产模式
@@ -68,7 +71,13 @@ public class Config_project {
 
             return "http://192.168.31.131:8070";
         }
-        return "http://app.361loyo.com:8090";
+        return "http://app.361loyo.com";
+        //        return "http://app.361loyo.com";
+    }
+
+    public static String URL() {
+
+        return "http://app.361loyo.com";
         //        return "http://app.361loyo.com";
     }
 }

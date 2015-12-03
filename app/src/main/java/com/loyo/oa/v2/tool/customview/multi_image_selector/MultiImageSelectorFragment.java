@@ -170,7 +170,7 @@ public class MultiImageSelectorFragment extends Fragment {
         });
 
         mPreviewBtn = (Button) view.findViewById(R.id.preview);
-        // 初始化，按钮状态初始化
+        // 初始化，按钮状态初始化˚˚
         if(resultList == null || resultList.size()<=0){
             mPreviewBtn.setText(R.string.preview);
             mPreviewBtn.setEnabled(false);

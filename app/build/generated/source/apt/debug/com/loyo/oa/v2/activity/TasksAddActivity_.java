@@ -85,35 +85,23 @@ public final class TasksAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_toUsers = ((TextView) hasViews.findViewById(id.tv_toUsers));
-        tv_deadline = ((TextView) hasViews.findViewById(id.tv_deadline));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        layout_remind = ((ViewGroup) hasViews.findViewById(id.layout_remind));
-        layout_project = ((ViewGroup) hasViews.findViewById(id.layout_project));
-        tv_Project = ((TextView) hasViews.findViewById(id.tv_Project));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        switch_approve = ((Switch) hasViews.findViewById(id.switch_approve));
-        layout_responsiblePerson = ((ViewGroup) hasViews.findViewById(id.layout_responsiblePerson));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
-        img_title_right_toUsers = ((ImageView) hasViews.findViewById(id.img_title_right_toUsers));
-        tv_responsiblePerson = ((TextView) hasViews.findViewById(id.tv_responsiblePerson));
-        layout_deadline = ((ViewGroup) hasViews.findViewById(id.layout_deadline));
-        tv_remind = ((TextView) hasViews.findViewById(id.tv_remind));
-        layout_del = ((ViewGroup) hasViews.findViewById(id.layout_del));
         edt_title = ((EditText) hasViews.findViewById(id.edt_title));
-        if (layout_remind!= null) {
-            layout_remind.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    TasksAddActivity_.this.remindonClick();
-                }
-
-            }
-            );
-        }
+        layout_deadline = ((ViewGroup) hasViews.findViewById(id.layout_deadline));
+        img_title_right_toUsers = ((ImageView) hasViews.findViewById(id.img_title_right_toUsers));
+        switch_approve = ((Switch) hasViews.findViewById(id.switch_approve));
+        tv_Project = ((TextView) hasViews.findViewById(id.tv_Project));
+        tv_responsiblePerson = ((TextView) hasViews.findViewById(id.tv_responsiblePerson));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        tv_deadline = ((TextView) hasViews.findViewById(id.tv_deadline));
+        layout_remind = ((ViewGroup) hasViews.findViewById(id.layout_remind));
+        tv_remind = ((TextView) hasViews.findViewById(id.tv_remind));
+        layout_responsiblePerson = ((ViewGroup) hasViews.findViewById(id.layout_responsiblePerson));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        layout_del = ((ViewGroup) hasViews.findViewById(id.layout_del));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_toUsers = ((TextView) hasViews.findViewById(id.tv_toUsers));
+        layout_project = ((ViewGroup) hasViews.findViewById(id.layout_project));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -193,6 +181,18 @@ public final class TasksAddActivity_
                 @Override
                 public void onClick(View view) {
                     TasksAddActivity_.this.onClick(view);
+                }
+
+            }
+            );
+        }
+        if (layout_remind!= null) {
+            layout_remind.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    TasksAddActivity_.this.remindonClick();
                 }
 
             }

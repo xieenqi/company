@@ -97,22 +97,22 @@ public final class ContactInfoEditActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_set_avartar = ((ViewGroup) hasViews.findViewById(id.layout_set_avartar));
-        img_title_user = ((RoundImageView) hasViews.findViewById(id.img_title_user));
-        layout_mobile = ((ViewGroup) hasViews.findViewById(id.layout_mobile));
-        tv_positions = ((TextView) hasViews.findViewById(id.tv_positions));
-        sex_male = ((RadioButton) hasViews.findViewById(id.sex_male));
-        et_qq = ((TextView) hasViews.findViewById(id.et_qq));
         iv_submit = ((ImageView) hasViews.findViewById(id.iv_submit));
-        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
-        layout_birthday = ((ViewGroup) hasViews.findViewById(id.layout_birthday));
-        tv_age = ((TextView) hasViews.findViewById(id.tv_age));
-        sex_famale = ((RadioButton) hasViews.findViewById(id.sex_famale));
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
-        tv_mobile = ((TextView) hasViews.findViewById(id.tv_mobile));
-        tv_departments = ((TextView) hasViews.findViewById(id.tv_departments));
-        tv_birthday = ((TextView) hasViews.findViewById(id.tv_birthday));
         et_weixin = ((EditText) hasViews.findViewById(id.et_weixin));
+        layout_mobile = ((ViewGroup) hasViews.findViewById(id.layout_mobile));
+        layout_birthday = ((ViewGroup) hasViews.findViewById(id.layout_birthday));
+        sex_male = ((RadioButton) hasViews.findViewById(id.sex_male));
+        tv_mobile = ((TextView) hasViews.findViewById(id.tv_mobile));
+        sex_famale = ((RadioButton) hasViews.findViewById(id.sex_famale));
+        tv_birthday = ((TextView) hasViews.findViewById(id.tv_birthday));
+        layout_set_avartar = ((ViewGroup) hasViews.findViewById(id.layout_set_avartar));
+        et_qq = ((TextView) hasViews.findViewById(id.et_qq));
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        tv_departments = ((TextView) hasViews.findViewById(id.tv_departments));
+        img_title_user = ((RoundImageView) hasViews.findViewById(id.img_title_user));
+        tv_age = ((TextView) hasViews.findViewById(id.tv_age));
+        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
+        tv_positions = ((TextView) hasViews.findViewById(id.tv_positions));
         if (layout_back!= null) {
             layout_back.setOnClickListener(new OnClickListener() {
 

@@ -52,7 +52,7 @@
                 android:gravity="center"
                 android:text="新建任务"
                 android:textColor="@color/title_bg1"/>
-        </RelativeLayout>
 
+        </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

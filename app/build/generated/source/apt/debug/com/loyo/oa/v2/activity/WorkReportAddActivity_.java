@@ -42,8 +42,8 @@ public final class WorkReportAddActivity_
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
     public final static String PROJECT_EXTRA = "project";
-    public final static String TYPE_EXTRA = "type";
     public final static String M_WORK_REPORT_EXTRA = "mWorkReport";
+    public final static String TYPE_EXTRA = "type";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,27 +91,27 @@ public final class WorkReportAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
-        tv_new_visit_num = ((TextView) hasViews.findViewById(id.tv_new_visit_num));
-        tv_resignin = ((TextView) hasViews.findViewById(id.tv_resignin));
-        layout_type = ((ViewGroup) hasViews.findViewById(id.layout_type));
-        tv_crm = ((TextView) hasViews.findViewById(id.tv_crm));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        tv_visit_customers_num = ((TextView) hasViews.findViewById(id.tv_visit_customers_num));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
         layout_mproject = ((ViewGroup) hasViews.findViewById(id.layout_mproject));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
+        tv_crm = ((TextView) hasViews.findViewById(id.tv_crm));
+        crm_toggle = ((ToggleButton) hasViews.findViewById(id.crm_toggle));
+        layout_type = ((ViewGroup) hasViews.findViewById(id.layout_type));
         layout_reviewer = ((ViewGroup) hasViews.findViewById(id.layout_reviewer));
         tv_new_customers_num = ((TextView) hasViews.findViewById(id.tv_new_customers_num));
-        tv_project = ((TextView) hasViews.findViewById(id.tv_project));
-        rg = ((RadioGroup) hasViews.findViewById(id.rg));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
         layout_crm = ((ViewGroup) hasViews.findViewById(id.layout_crm));
-        img_title_toUser = ((ImageView) hasViews.findViewById(id.img_title_toUser));
-        crm_toggle = ((ToggleButton) hasViews.findViewById(id.crm_toggle));
-        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
+        rg = ((RadioGroup) hasViews.findViewById(id.rg));
+        tv_new_visit_num = ((TextView) hasViews.findViewById(id.tv_new_visit_num));
+        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_visit_customers_num = ((TextView) hasViews.findViewById(id.tv_visit_customers_num));
         layout_del = ((ViewGroup) hasViews.findViewById(id.layout_del));
+        img_title_toUser = ((ImageView) hasViews.findViewById(id.img_title_toUser));
+        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_project = ((TextView) hasViews.findViewById(id.tv_project));
+        tv_resignin = ((TextView) hasViews.findViewById(id.tv_resignin));
         if (tv_resignin!= null) {
             tv_resignin.setOnClickListener(new OnClickListener() {
 
@@ -253,11 +253,11 @@ public final class WorkReportAddActivity_
             if (extras_.containsKey(PROJECT_EXTRA)) {
                 project = ((Project) extras_.getSerializable(PROJECT_EXTRA));
             }
-            if (extras_.containsKey(TYPE_EXTRA)) {
-                type = extras_.getInt(TYPE_EXTRA);
-            }
             if (extras_.containsKey(M_WORK_REPORT_EXTRA)) {
                 mWorkReport = ((WorkReport) extras_.getSerializable(M_WORK_REPORT_EXTRA));
+            }
+            if (extras_.containsKey(TYPE_EXTRA)) {
+                type = extras_.getInt(TYPE_EXTRA);
             }
         }
     }
@@ -319,12 +319,12 @@ public final class WorkReportAddActivity_
             return super.extra(PROJECT_EXTRA, ((Serializable) project));
         }
 
-        public WorkReportAddActivity_.IntentBuilder_ type(int type) {
-            return super.extra(TYPE_EXTRA, type);
-        }
-
         public WorkReportAddActivity_.IntentBuilder_ mWorkReport(WorkReport mWorkReport) {
             return super.extra(M_WORK_REPORT_EXTRA, ((Serializable) mWorkReport));
+        }
+
+        public WorkReportAddActivity_.IntentBuilder_ type(int type) {
+            return super.extra(TYPE_EXTRA, type);
         }
 
     }

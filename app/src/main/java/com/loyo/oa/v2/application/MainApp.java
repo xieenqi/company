@@ -48,6 +48,7 @@ import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -132,6 +133,11 @@ public class MainApp extends Application {
                 @Override
                 public void success(ArrayList<Province> provinces, Response response) {
                     mProvinces=provinces;
+                    try {
+                        Log.d("LOG","districts:"+Utils.convertStreamToString(response.getBody().in()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
     }
@@ -142,8 +148,14 @@ public class MainApp extends Application {
                 @Override
                 public void success(ArrayList<Industry> industries, Response response) {
                     mIndustries=industries;
+                    try {
+                        Log.d("LOG","industry:"+Utils.convertStreamToString(response.getBody().in()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
+
     }
     //-------这些数据需要保存在本地-------------
 
@@ -182,6 +194,30 @@ public class MainApp extends Application {
 
             restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
         }
+
+        return restAdapter;
+    }
+
+    public RestAdapter getRestAdapter(int mode) {
+
+            if (restAdapter != null) {
+                if (cellInfo == null) {
+                    cellInfo = Utils.getCellInfo();
+                }
+                RequestInterceptor requestInterceptor = new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+                        request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+                        request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+                        request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+                        request.addHeader("LoyoVersionName", Global.getVersionName());
+                        request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+                    }
+                };
+
+                restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+            }
 
         return restAdapter;
     }
@@ -268,9 +304,10 @@ public class MainApp extends Application {
 
         try {
             user = DBManager.Instance().getUser();
-            subUsers = DBManager.Instance().getSubordinates();
+           // subUsers = DBManager.Instance().getSubordinates();
         } catch (Exception ex) {
             Global.ProcDebugException(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -488,7 +525,7 @@ public class MainApp extends Application {
         }
     }
 
-    /**
+    /**页面跳转的方式  动画
      * @param activity
      * @param cls
      * @param enterType

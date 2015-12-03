@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/build/generated/res/generated/androidTest/debug/values/generated.xml -->
+    <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/build/generated/res/generated/androidTest/debug/values/generated.xml -->
     <eat-comment/>
     <string name="amaps_api_key">8a9215e7133b2e9923bdef127bbf17b1</string>
     <string name="app_name">乐享云(测试)</string>

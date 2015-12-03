@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by pj on 15/10/10.
+ * 任务管理列表的adapter
+ *
+ * xnq
  */
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
@@ -49,6 +51,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         TextView title = ViewHolder.get(convertView, R.id.tv_title);
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
         TextView time = ViewHolder.get(convertView, R.id.tv_time);
+        TextView timeOut = ViewHolder.get(convertView, R.id.tv_timeOut);
         View ack = ViewHolder.get(convertView, R.id.view_ack);
         ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
         TextView tv_discuss_num = ViewHolder.get(convertView, R.id.tv_disscuss_num);
@@ -65,7 +68,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             if (wfInstance.getCreator() != null) {
                 content.setText(String.format("申请人 %s", wfInstance.getCreator().getRealname()));
             }
-            //                ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
+            ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
             switch (wfInstance.getStatus()) {
                 case WfInstance.STATUS_NEW:
@@ -93,14 +96,20 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             } else if (task.getStatus() == Task.STATUS_FINISHED) {
                 status.setImageResource(R.drawable.task_status_3);
             }
-
+          //  Log.d("Volley", " 任务管理啊返回: " + task.);
             try {
+                if(System.currentTimeMillis()>task.getActualEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
+                    timeOut.setVisibility(View.VISIBLE);
+                }else{
+                    timeOut.setVisibility(View.GONE);
+                }
                 //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
                 time.setText("任务截止时间: " + app.df3.format(new Date(task.getCreatedAt())));
+
             } catch (Exception e) {
                 Global.ProcException(e);
             }
-            //                ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
+                           ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
             if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
                 content.setText("负责: " + task.getResponsiblePerson().getRealname());
             }

@@ -43,6 +43,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 拜访签到 页面
+ */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tv_customer_name;

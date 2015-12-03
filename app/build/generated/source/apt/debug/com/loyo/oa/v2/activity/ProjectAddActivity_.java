@@ -85,13 +85,13 @@ public final class ProjectAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        edt_title = ((EditText) hasViews.findViewById(id.edt_title));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
         tv_managers = ((TextView) hasViews.findViewById(id.tv_managers));
-        layout_members = ((ViewGroup) hasViews.findViewById(id.layout_members));
         layout_managers = ((ViewGroup) hasViews.findViewById(id.layout_managers));
-        tv_members = ((TextView) hasViews.findViewById(id.tv_members));
+        layout_members = ((ViewGroup) hasViews.findViewById(id.layout_members));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        edt_title = ((EditText) hasViews.findViewById(id.edt_title));
         lv_project_members = ((ListView) hasViews.findViewById(id.lv_project_members));
+        tv_members = ((TextView) hasViews.findViewById(id.tv_members));
         if (layout_members!= null) {
             layout_members.setOnClickListener(new OnClickListener() {
 
@@ -168,11 +168,11 @@ public final class ProjectAddActivity_
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case  200 :
-                ProjectAddActivity_.this.OnResultMembers(resultCode, data);
-                break;
             case  100 :
                 ProjectAddActivity_.this.OnResultManagers(resultCode, data);
+                break;
+            case  200 :
+                ProjectAddActivity_.this.OnResultMembers(resultCode, data);
                 break;
         }
     }
