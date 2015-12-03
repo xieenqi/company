@@ -89,7 +89,7 @@ public final class FinalVariables {
     public static final String salestages = "/salestages/";// GET /salestages/ 获取所有销售阶段,返回数组
     public static final String tasks = "/tasks/";// GET /tasks/ 根据条件和分页信息获取任务列表数据
     public static final String workreports = "/workreports/";// DELETE /workreports/{id} 根据 Id 删除工作报告
-    public static final String wfinstance = "wfinstance/";//GET /wfinstance/ 获取当前登录人提交的审批申请
+    public static final String wfinstance = "/wfinstance/";//GET /wfinstance/ 获取当前登录人提交的审批申请
     public static final String bizform = "/bizform/";// GET /bizform/ 查询业务表单
     public static final String wftpl_bizformId = "/wftpl/bizformId/";//get  /wftpl/bizformId/{id}   根据业务表单获取多个预设的工作流模版(供提交审批选择使用),比如请假单可以设置多个流程模板(事假，年假，病假)，
     public static final String password = "/users/setpasswd";
