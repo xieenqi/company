@@ -9,12 +9,13 @@ import java.util.ArrayList;
 
 
 public class Department implements Serializable {
-    private long createdAt;
-    private String fullPinyin;
     private String id;
+    private String xpath;
     private String name;
-    private String simplePinyin;
+    private long createdAt;
     private String superiorId;
+    private String fullPinyin;
+    private String simplePinyin;
     private long updatedAt;
     private ArrayList<User> users = new ArrayList<>();
 
@@ -26,7 +27,7 @@ public class Department implements Serializable {
         this.xpath = xpath;
     }
 
-    private String xpath;
+
 
     public long getCreatedAt() {
         return createdAt;

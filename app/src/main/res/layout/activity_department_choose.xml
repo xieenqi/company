@@ -9,5 +9,6 @@
     <ListView
         android:id="@+id/lv_deptList"
         android:layout_width="match_parent"
+        android:background="@color/black"
         android:layout_height="match_parent"/>
 </LinearLayout>
