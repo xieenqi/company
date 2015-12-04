@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +23,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -32,6 +34,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.IOException;
 import java.util.Date;
 
 import retrofit.RetrofitError;
@@ -76,17 +79,20 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById TextView tv_task_count;
     @ViewById TextView tv_attachment_count;
 
-    @Extra("Customer") Customer mCustomer; //获取intent传递信息
+    /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
+    Customer mCustomer;
+    @Extra("Id") String id;
 
     @AfterViews
     void initViews() {
+
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
 
         img_public.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                app.getRestAdapter().create(ICustomer.class).pickedIn(mCustomer.getId(), new RCallback<Customer>() {
+                app.getRestAdapter().create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(Customer newCustomer, Response response) {
                         onBackPressed();
@@ -101,17 +107,34 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(mCustomer.getId(), new RCallback<Customer>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
+                try {
+                    LogUtil.dll("success:"+Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 mCustomer = customer;
                 initData();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("获取客户详情失败");
-                super.failure(error);
+
+                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                    Toast("请检查您的网络连接");
+                }
+
+                else if(error.getKind() == RetrofitError.Kind.HTTP){
+                    if(error.getResponse().getStatus() == 500){
+                        Toast("网络异常500，请稍候再试");
+                    }
+                }else{
+                    Toast("没有客户详情信息");
+                }
+                finish();
             }
         });
     }

@@ -22,6 +22,9 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
+import org.androidannotations.annotations.Extra;
+
 import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -54,14 +57,13 @@ public class SignInfoActivity extends BaseActivity {
             if (bundle != null) {
                 if (bundle.containsKey("mCustomer")) {
                     mCustomer = (Customer) bundle.getSerializable("mCustomer");
+
                 }
                 if (bundle.containsKey(LegWork.class.getName())) {
                     legWork = (LegWork) bundle.getSerializable(LegWork.class.getName());
                 }
             }
         }
-
-        LogUtil.dll("mCustomer:"+mCustomer.getId());
 
         super.setTitle("签到详情");
         initUI();
@@ -84,8 +86,7 @@ public class SignInfoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Bundle b = new Bundle();
-                b.putString("CustomerId", legWork.getCustomerId());
-                //app.startActivityForResult(SignInfoActivity.this, CustomerInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
+                b.putString("Id", legWork.getCustomerId());
                 app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
             }
         });

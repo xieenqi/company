@@ -49,6 +49,7 @@ import com.loyo.oa.v2.tool.customview.DropListMenu.OnDropItemSelectedListener;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -513,6 +514,13 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (isTopAdd && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
                             getNearCustomersInfo();
                         }
+
+                        try {
+                            LogUtil.dll("客户管理，我的客户返回数据:"+ Utils.convertStreamToString(response.getBody().in()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -543,7 +551,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("Customer", mCustomers.get((int) l));
+                intent.putExtra("Id", mCustomers.get((int) l).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
             }
