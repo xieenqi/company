@@ -23,7 +23,6 @@ public class DepartmentChooseAdapter extends BaseAdapter {
     DepartmentChooseAdapter(Context context,List<UserInfo> data) {
         this.context = context;
         this.data = data;
-        System.err.print("牡丹园法国人：" + data.size());
     }
 
     @Override
@@ -36,10 +35,9 @@ public class DepartmentChooseAdapter extends BaseAdapter {
         return position;
     }
 
-//    public void setData(List<UserInfo> data) {
-//        this.data = data;
-//        notifyDataSetChanged();
-//    }
+    public List<UserInfo> getData( ) {
+        return  data;
+    }
 
     @Override
     public long getItemId(int position) {

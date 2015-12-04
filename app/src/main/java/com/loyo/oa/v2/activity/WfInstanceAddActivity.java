@@ -23,6 +23,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.Parameters.WfInstanceAdd;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfTemplate;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -63,12 +64,16 @@ import retrofit.client.Response;
 public class WfInstanceAddActivity extends BaseActivity {
 
     public static final int RESULT_WFINSTANCT_TYPE = 3;
+    /**
+     * 部门选择 请求码
+     */
     public static final int RESULT_DEPT_CHOOSE = 5;
 
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_wfinstance_data;
     @ViewById ViewGroup ll_dept;
+    @ViewById TextView tv_dept;
 
     @ViewById Button btn_add;
 
@@ -78,7 +83,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById GridView gridView_photo;
     @ViewById EditText edt_memo;
 
-    @Extra String projectId;
+    @Extra String projectId,deptId;
 
     //要提交的数据的展示容器
     @ViewById LinearLayout wfinstance_data_container;
@@ -264,6 +269,12 @@ public class WfInstanceAddActivity extends BaseActivity {
                     Global.ProcException(e);
                 }
                 break;
+
+            case RESULT_DEPT_CHOOSE:
+                UserInfo userInfo=(UserInfo)data.getSerializableExtra(DepartmentChoose.class.getName());
+                tv_dept.setText(userInfo.getShortDept().getName());
+                deptId=userInfo.getShortDept().getId();
+                break;
         }
     }
 
@@ -317,7 +328,6 @@ public class WfInstanceAddActivity extends BaseActivity {
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
             case R.id.ll_dept:
-                //Toast("客户选择呢");
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;
         }
@@ -377,7 +387,6 @@ public class WfInstanceAddActivity extends BaseActivity {
             }
             workflowValues.add(jsonMapValues);
         }
-        System.out.print(" 审批必填项： "+workflowValues.get(0).toString());
         if(!(workflowValues.size()>0)){
             Toast("请填写审批内容\"必填项\"");
             return;
@@ -399,7 +408,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         app.logUtil.e(" 审批 : " + projectId);
         jsonObject.put("bizformId", mBizForm.getId());//表单Id
         jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
-        //jsonObject.put("deptId", "");//部门 id
+        jsonObject.put("deptId",deptId);//部门 id
         jsonObject.put("workflowValues", workflowValues);//流程 内容
         jsonObject.put("wftemplateId", mTemplateId);//流程模板Id
         if(!TextUtils.isEmpty(projectId)){
