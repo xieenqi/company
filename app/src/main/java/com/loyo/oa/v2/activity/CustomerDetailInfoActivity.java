@@ -81,6 +81,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
+
     @Extra("Id") String id;
 
     @AfterViews
