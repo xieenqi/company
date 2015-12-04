@@ -5,7 +5,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,76 +29,72 @@ import java.util.HashMap;
  * 描述 审批内容节点 审批内容列表
  * 作者 : xnq
  */
-public class WfinstanceViewGroup extends LinearLayout
-{
+public class WfinstanceViewGroup extends LinearLayout {
     private Context context;
     private ArrayList<BizFormFields> lstData;
     private HashMap<String, Object> map_Values;
-    private ArrayList<HashMap<String,Object>> submitData=new ArrayList<>();
+    private ArrayList<HashMap<String, Object>> submitData = new ArrayList<>();
 
-    private WfinstanceViewGroup(Context c)
-    {
+    private WfinstanceViewGroup(Context c) {
         super(c);
-        context=c;
+        context = c;
     }
 
-    public WfinstanceViewGroup(Context _context, ArrayList<BizFormFields> lstData,ArrayList<HashMap<String,Object>> data) {
+    public WfinstanceViewGroup(Context _context, ArrayList<BizFormFields> lstData, ArrayList<HashMap<String, Object>> data) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         this.lstData = lstData;
-        submitData=data;
-        setLayoutParams(new ViewGroup.LayoutParams(-1,-1));
+        submitData = data;
+        setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setOrientation(LinearLayout.VERTICAL);
     }
 
     /**
      * 绑定视图
-     * @param index 视图item 数量
+     *
+     * @param index  视图item 数量
      * @param parent 视图父容器
      */
-    public void bindView(int index,final ViewGroup parent)
-    {
-        if(null==lstData||lstData.isEmpty()||null==submitData||submitData.isEmpty())
+    public void bindView(int index, final ViewGroup parent) {
+        if (null == lstData || lstData.isEmpty() || null == submitData || submitData.isEmpty())
             return;
         setId(index);
         map_Values = submitData.get(getId());
-        LayoutInflater inflater=LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
         //加载删除条目
-        if(getId()>0){
-           inflater.inflate(R.layout.item_wfinstance_delete_layout, this,true);
-           final TextView title=(TextView)findViewById(R.id.tv_title);
-           title.setText("新增内容"+getId());
-           findViewById(R.id.layout_delete).setOnClickListener(new OnClickListener()
-            {
+        if (getId() > 0) {
+            inflater.inflate(R.layout.item_wfinstance_delete_layout, this, true);
+            final TextView title = (TextView) findViewById(R.id.tv_title);
+            title.setText("新增内容" + getId());
+            findViewById(R.id.layout_delete).setOnClickListener(new OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     submitData.remove(getId());
                     parent.removeView(WfinstanceViewGroup.this);
-                    for(int i=1;i<parent.getChildCount();i++){
-                        View child=parent.getChildAt(i);
-                        int id=child.getId();
-                        if(id>getId())
+                    for (int i = 1; i < parent.getChildCount(); i++) {
+                        View child = parent.getChildAt(i);
+                        int id = child.getId();
+                        if (id > getId())
                             id--;
                         child.setId(id);
-                        TextView tv=(TextView)child.findViewById(R.id.tv_title);
-                        if(null!=tv)
+                        TextView tv = (TextView) child.findViewById(R.id.tv_title);
+                        if (null != tv)
                             tv.setText("新增内容" + child.getId());
                     }
                 }
             });
         }
         //加载子条目
-        for(int i=0;i<lstData.size();i++) {
-            View view=new View(context);
+        for (int i = 0; i < lstData.size(); i++) {
+            View view = new View(context);
             view.setBackgroundColor(getResources().getColor(R.color.activity_split));
-            view.setLayoutParams(new ViewGroup.LayoutParams(-1,1));
+            view.setLayoutParams(new ViewGroup.LayoutParams(-1, 1));
             addView(view);
             BizFormFields bizFormFields = lstData.get(i);
-            View convertView=inflater.inflate(R.layout.item_bizform_string, this, false);
-            TextView label=(TextView)convertView.findViewById(R.id.tv_label);
-            EditText value=(EditText)convertView.findViewById(R.id.edt_value);
-            AlertDialog dialog_follow=null;
+            View convertView = inflater.inflate(R.layout.item_bizform_string, this, false);
+            TextView label = (TextView) convertView.findViewById(R.id.tv_label);
+            EditText value = (EditText) convertView.findViewById(R.id.edt_value);
+            AlertDialog dialog_follow = null;
 
             if (bizFormFields != null) {
                 if (bizFormFields.isList()) {
@@ -136,10 +132,10 @@ public class WfinstanceViewGroup extends LinearLayout
                     value.requestFocus();
                     value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 }
-                if(!bizFormFields.isRequired())
+                if (!bizFormFields.isRequired())
                     value.setHint("");
 
-                value.setText((String)map_Values.get(bizFormFields.getId()));
+                value.setText((String) map_Values.get(bizFormFields.getId()));
 
                 label.setText(bizFormFields.getName() + "：");
             }
@@ -147,9 +143,8 @@ public class WfinstanceViewGroup extends LinearLayout
         }
         parent.addView(this);
     }
-        
-    private class BizFiedTextWatcher implements TextWatcher
-    {
+
+    private class BizFiedTextWatcher implements TextWatcher {
         private int position;
 
         private BizFiedTextWatcher(int position) {
@@ -158,7 +153,7 @@ public class WfinstanceViewGroup extends LinearLayout
 
         @Override
         public void afterTextChanged(Editable s) {
-            Log.e(getClass().getSimpleName(), "afterTextChanged, s : " + s.toString());
+            LogUtil.d(getClass().getSimpleName(), "after输入过后TextChanged, s : " + s.toString());
             if (s.toString().length() > 0) {
                 map_Values.put(lstData.get(position).getId(), s.toString());
             } else {
@@ -224,14 +219,13 @@ public class WfinstanceViewGroup extends LinearLayout
                     }
                 });
 
-                DateTimePickDialog dateTimePickDialog=new DateTimePickDialog(context,null);
+                DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(context, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
-                    public void onDateTimeChanged(int year, int month, int day, int hour, int min)
-                    {
+                    public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
 
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-"
-                                + String.format("%02d", day)+String.format(" %02d",hour)+String.format(":%02d",min);
+                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
                         map_Values.put(lstData.get(position).getId(), str);
 
@@ -281,7 +275,7 @@ public class WfinstanceViewGroup extends LinearLayout
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(context).inflate(R.layout.item_listview_product_select, parent,false);
+                    convertView = LayoutInflater.from(context).inflate(R.layout.item_listview_product_select, parent, false);
                 }
 
                 TextView tv = (TextView) convertView.findViewById(R.id.tv);

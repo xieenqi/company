@@ -53,6 +53,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -96,6 +97,8 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 要提交的数据  xnq
      */
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
+    //审批内容 新建一个的对象 集合
+    private List<WfinstanceViewGroup>  WfinObj=new ArrayList<WfinstanceViewGroup>();
     BizForm mBizForm;
     ArrayList<WfTemplate> wfTemplateArrayList;
     ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
@@ -354,6 +357,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
+        WfinObj.add(viewGroup);//新增一个内容 就存起来
     }
     //    @Click(R.id.layout_delete2)
     //    void delete() {

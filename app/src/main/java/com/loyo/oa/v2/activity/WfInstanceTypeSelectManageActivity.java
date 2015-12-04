@@ -67,13 +67,13 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
             listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast(position+" item ");
                     bizForm = lstData_BizForm.get((int) id);
                     //bizForm = wfInstanceTypeSelectListViewAdapter.getData().get(position-1);
                     if (bizForm != null) {
 RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(bizForm.getId(), new RCallback<BizForm>() {
                             @Override
                             public void success(BizForm bizForm, Response response) {
+                                LogUtil.d(MainApp.gson.toJson(bizForm));//获得查询的数据
                                 if (bizForm != null) {
                                     Intent intent = new Intent();
                                     intent.putExtra(BizForm.class.getName(), bizForm);
