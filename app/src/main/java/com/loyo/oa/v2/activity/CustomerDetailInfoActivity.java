@@ -76,7 +76,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById TextView tv_task_count;
     @ViewById TextView tv_attachment_count;
 
-    @Extra("Customer") Customer mCustomer;
+    @Extra("Customer") Customer mCustomer; //获取intent传递信息
 
     @AfterViews
     void initViews() {

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -18,13 +17,12 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import java.util.ArrayList;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -63,6 +61,8 @@ public class SignInfoActivity extends BaseActivity {
             }
         }
 
+        LogUtil.dll("mCustomer:"+mCustomer.getId());
+
         super.setTitle("签到详情");
         initUI();
     }
@@ -85,8 +85,8 @@ public class SignInfoActivity extends BaseActivity {
             public void onClick(View view) {
                 Bundle b = new Bundle();
                 b.putString("CustomerId", legWork.getCustomerId());
-                b.putString("CustomerAddress",legWork.getAddress());
-                app.startActivityForResult(SignInfoActivity.this, CustomerInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
+                //app.startActivityForResult(SignInfoActivity.this, CustomerInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
+                app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
             }
         });
 

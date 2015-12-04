@@ -39,6 +39,11 @@ import java.util.Locale;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+
+/**
+ * 客户拜访－我的拜访列表
+ * */
+
 @SuppressLint("ValidFragment")
 public class SignInOfUserFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 

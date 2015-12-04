@@ -29,6 +29,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -62,37 +64,60 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     public static final int REQUEST_CUSTOMER_FOLLOW = 8;
     public static final int REQUEST_CUSTOMER_EDIT_BASEINFO = 9;
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
 
-    @ViewById ViewGroup layout_customer_district;
-    @ViewById ViewGroup layout_customer_industry;
-    @ViewById ViewGroup layout_customer_label;
-    @ViewById ViewGroup layout_customer_responser;
-    @ViewById ViewGroup layout_customer_join_users;
+    @ViewById
+    ViewGroup layout_customer_district;
+    @ViewById
+    ViewGroup layout_customer_industry;
+    @ViewById
+    ViewGroup layout_customer_label;
+    @ViewById
+    ViewGroup layout_customer_responser;
+    @ViewById
+    ViewGroup layout_customer_join_users;
 
-    @ViewById(R.id.layout_customer_extra_info) LinearLayout container;
+    @ViewById(R.id.layout_customer_extra_info)
+    LinearLayout container;
 
-    @ViewById EditText tv_address;
+    @ViewById
+    EditText tv_address;
 
-    @ViewById EditText tv_customer_name;
-    @ViewById TextView tv_customer_creator;
-    @ViewById TextView tv_customer_responser;
-    @ViewById TextView tv_customer_join_users;
-    @ViewById TextView tv_customer_create_at;
-    @ViewById EditText edt_customer_memo;
+    @ViewById
+    EditText tv_customer_name;
+    @ViewById
+    TextView tv_customer_creator;
+    @ViewById
+    TextView tv_customer_responser;
+    @ViewById
+    TextView tv_customer_join_users;
+    @ViewById
+    TextView tv_customer_create_at;
+    @ViewById
+    EditText edt_customer_memo;
 
-    @ViewById TextView tv_labels;
-    @ViewById TextView tv_industry;
-    @ViewById TextView tv_district;
+    @ViewById
+    TextView tv_labels;
+    @ViewById
+    TextView tv_industry;
+    @ViewById
+    TextView tv_district;
 
-    @ViewById ImageView img_go_where;
-    @ViewById ImageView img_refresh_address;
-    @ViewById ImageView img_del_join_users;
+    @ViewById
+    ImageView img_go_where;
+    @ViewById
+    ImageView img_refresh_address;
+    @ViewById
+    ImageView img_del_join_users;
 
-    @Extra("Customer") Customer mCustomer;
+    @Extra("Customer")
+    Customer mCustomer;
 
-    @Extra("CustomerId") String mCustomerId;
+    @Extra("CustomerId")
+    String mCustomerId;
 
     private double lat, lng;
 
@@ -300,6 +325,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             Toast.makeText(this, "客户地址不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        LogUtil.dll("customerInfoActivity:" + customerAddress);
         mLocate.setAddr(customerAddress);
 
         HashMap<String, Object> map = new HashMap<>();
@@ -320,11 +347,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     @Override
                     public void success(Customer customer, Response response) {
                         Intent intent = new Intent();
+                        customer.setLoc(mLocate);
                         intent.putExtra(Customer.class.getName(), customer);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                            Toast.makeText(CustomerInfoActivity.this,"请检查您的网络连接",Toast.LENGTH_SHORT).show();
+                        } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                            if(error.getResponse().getStatus() == 500){
+                                Toast.makeText(CustomerInfoActivity.this,"网络异常500，请稍候再试",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
                 });
-    }
+             }
 
 
     @Override
@@ -333,6 +372,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         animation.reset();
         lat = latitude;
         lng = longitude;
+        LogUtil.dll("onlocationSucessed:" + address);
         mLocate.setAddr(address);
         mLocate.getLoc()[0] = longitude;
         mLocate.getLoc()[1] = latitude;

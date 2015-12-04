@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * 作者 : ykb
  * 时间 : 15/9/30.
  */
-public class Customer extends BaseBeans {
+public class Customer extends BaseBeans{
     /**我的客户**/
     public static final int CUSTOMER_TYPE_MINE=1;
     /**团队客户**/
