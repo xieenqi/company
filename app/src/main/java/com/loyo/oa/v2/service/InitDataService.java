@@ -14,6 +14,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -48,13 +49,16 @@ public class InitDataService extends IntentService {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 sendDataChangeBroad(user);
-                Log.e(getClass().getSimpleName(), json);
+
+                LogUtil.d(MainApp.TAG, json);
+
             }
         });
     }
 
     void getOrganization() {
-        ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION).create(IUser.class).getOrganization();
+        ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
+                .create(IUser.class).getOrganization();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB

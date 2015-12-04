@@ -61,7 +61,7 @@ import retrofit.client.Response;
 
 
 public class MainApp extends Application {
-    public static final String TAG = "com.loyo.oa.v2";
+    public static final String TAG = "com.loyo.oa.v2app";
     public static final int ENTER_TYPE_TOP = 1;
     public static final int ENTER_TYPE_BUTTOM = 2;
     public static final int ENTER_TYPE_LEFT = 3;

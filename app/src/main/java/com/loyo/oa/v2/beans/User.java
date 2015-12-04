@@ -10,21 +10,24 @@ import java.util.ArrayList;
 @DatabaseTable
 public class User implements Serializable {
 
-    private String avatar;
+    private String id;
     private String company_id;
+    private String username;
+    private int gender;
+    private String mobile;
+    private boolean avaactivatedtar;
+    private String simplePinyin;
+    private ArrayList<UserInfo> depts = new ArrayList<>();
+
+    private String avatar;
     private String birthDay;
     private long createdAt;
     private String email;
     private String fullPinyin;
-    private int gender;
-    private String id;
-    private String mobile;
     private String realname;
-    private String simplePinyin;
     private String tel;
     private String title;
     private long updatedAt;
-    private String username;
     private String departmentsName;
     private String superiorId;
     private boolean isBQQ;
@@ -35,7 +38,7 @@ public class User implements Serializable {
 
     private Role role;
     private Position shortPosition;
-    private ArrayList<UserInfo> depts = new ArrayList<>();
+
     private Department shortDept;
 
     public Department getShortDept() {
