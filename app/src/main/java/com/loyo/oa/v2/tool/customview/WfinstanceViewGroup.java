@@ -26,10 +26,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- * com.loyo.oa.v2.tool.customview
- * 描述 审批内容节点
- * 作者 : ykb
- * 时间 : 15/7/29.
+ * 描述 审批内容节点 审批内容列表
+ * 作者 : xnq
  */
 public class WfinstanceViewGroup extends LinearLayout
 {
@@ -55,14 +53,14 @@ public class WfinstanceViewGroup extends LinearLayout
 
     /**
      * 绑定视图
-     * @param id 视图id
+     * @param index 视图item 数量
      * @param parent 视图父容器
      */
-    public void bindView(int id,final ViewGroup parent)
+    public void bindView(int index,final ViewGroup parent)
     {
         if(null==lstData||lstData.isEmpty()||null==submitData||submitData.isEmpty())
             return;
-        setId(id);
+        setId(index);
         map_Values = submitData.get(getId());
         LayoutInflater inflater=LayoutInflater.from(context);
         //加载删除条目
