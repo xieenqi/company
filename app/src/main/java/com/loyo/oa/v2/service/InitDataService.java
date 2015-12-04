@@ -24,6 +24,9 @@ import java.util.ArrayList;
 
 import retrofit.client.Response;
 
+/**App  一启动 就开启服务 调用户的数据
+ * xnq
+ */
 @EIntentService
 public class InitDataService extends IntentService {
 

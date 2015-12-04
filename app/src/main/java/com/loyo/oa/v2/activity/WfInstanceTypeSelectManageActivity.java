@@ -101,7 +101,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(bizForm.getId(), new RCallback<BizForm>() {
                             @Override
                             public void success(BizForm bizForm, Response response) {
-                                System.out.print("类型选择呢  ！！！！"+ bizForm.toString());
                                 if (bizForm != null) {
                                     Intent intent = new Intent();
                                     intent.putExtra(BizForm.class.getName(), bizForm);

@@ -303,7 +303,7 @@ public class MainApp extends Application {
         DBManager.init(this);
 
         try {
-            user = DBManager.Instance().getUser();
+            //user = DBManager.Instance().getUser();
            // subUsers = DBManager.Instance().getSubordinates();
         } catch (Exception ex) {
             Global.ProcDebugException(ex);
