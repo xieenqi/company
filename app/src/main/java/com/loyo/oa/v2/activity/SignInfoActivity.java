@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -18,13 +17,15 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
-import java.util.ArrayList;
+import org.androidannotations.annotations.Extra;
 
+import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -56,6 +57,7 @@ public class SignInfoActivity extends BaseActivity {
             if (bundle != null) {
                 if (bundle.containsKey("mCustomer")) {
                     mCustomer = (Customer) bundle.getSerializable("mCustomer");
+
                 }
                 if (bundle.containsKey(LegWork.class.getName())) {
                     legWork = (LegWork) bundle.getSerializable(LegWork.class.getName());
@@ -84,9 +86,8 @@ public class SignInfoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Bundle b = new Bundle();
-                b.putString("CustomerId", legWork.getCustomerId());
-                b.putString("CustomerAddress",legWork.getAddress());
-                app.startActivityForResult(SignInfoActivity.this, CustomerInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
+                b.putString("Id", legWork.getCustomerId());
+                app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
             }
         });
 

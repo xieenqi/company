@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,14 @@ import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +42,11 @@ import java.util.Locale;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+
+/**
+ * 客户拜访－我的拜访列表
+ * */
 
 @SuppressLint("ValidFragment")
 public class SignInOfUserFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
@@ -230,6 +239,13 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 }
                 legWorks.addAll(paginationX.getRecords());
                 bindData();
+
+                try {
+                    LogUtil.dll("我的拜访:"+Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override
@@ -246,10 +262,13 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      * @param legWork
      */
     private void previewLegwork(LegWork legWork) {
+
         Intent intent = new Intent(mActivity, SignInfoActivity.class);
         intent.putExtra(LegWork.class.getName(), legWork);
         intent.putExtra("mCustomer", legWork.getCustomer());
+        intent.putExtra("Id", legWork.getCustomerId());
         startActivity(intent);
+
     }
 
     @Override
