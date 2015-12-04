@@ -62,7 +62,9 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_wfinstance_add)
 public class WfInstanceAddActivity extends BaseActivity {
-
+    /**
+     * 审批类型选择 请求码
+     */
     public static final int RESULT_WFINSTANCT_TYPE = 3;
     /**
      * 部门选择 请求码
@@ -90,7 +92,9 @@ public class WfInstanceAddActivity extends BaseActivity {
 
     WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
 
-    //要提交的数据
+    /** 审批 内容 数据
+     * 要提交的数据  xnq
+     */
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     BizForm mBizForm;
     ArrayList<WfTemplate> wfTemplateArrayList;
@@ -106,12 +110,9 @@ public class WfInstanceAddActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("新建审批");
-
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-
         btn_add.setOnTouchListener(Global.GetTouch());
-
         init_gridView_photo();
         getTempWfintance();
     }
@@ -151,7 +152,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         if (wfInstance.getBizform() != null) {
             mBizForm = wfInstance.getBizform();
-            setBizForm();
+            intBizForm();
         }
 
         edt_memo.setText(wfInstance.getMemo());
@@ -210,19 +211,16 @@ public class WfInstanceAddActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
-
         switch (requestCode) {
+            //类型选择返回
             case RESULT_WFINSTANCT_TYPE:
-                if (data.getExtras() != null && data.getSerializableExtra(BizForm.class.getName()) != null) {
                     mBizForm = (BizForm) data.getSerializableExtra(BizForm.class.getName());
                     if (mBizForm != null) {
-                        setBizForm();
+                        intBizForm();
                     }
-                }
                 break;
             case SelectPicPopupWindow.GET_IMG:
                 try {
@@ -278,7 +276,10 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
     }
 
-    void setBizForm() {
+    /**
+     * 审批 类型 选择 初始化 流程列表
+     */
+    private void intBizForm() {
         tv_bizform.setText(mBizForm.getName());
         wfInstanceAdd.setBizformId(mBizForm.getId());
         if(null==mBizForm.getFields()){
@@ -289,7 +290,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         submitData.clear();
         wfinstance_data_container.removeAllViews();
-        addData();
+        addTypeData();
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(mBizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
             @Override
@@ -313,7 +314,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
             case R.id.btn_add:
-                addData();
+                addTypeData();
                 break;
             case R.id.layout_WfTemplate:
                 if (mBizForm == null) {
@@ -333,15 +334,14 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 新增数据
+    /**xnq
+     * 界面上 新增加审批内容 栏目
      */
-    void addData() {
+    void addTypeData() {
         if (mBizForm == null) {
             Toast("请选择类型");
             return;
         }
-
         if(null==mBizForm.getFields()){
             return;
         }
