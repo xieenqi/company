@@ -32,6 +32,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HomeNumber;
 import com.loyo.oa.v2.beans.TrackRule;
+import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -44,6 +45,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -87,7 +89,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById ViewGroup layout_network, layout_attendance, layout_avatar;
     @ViewById ImageView img_home_head, img_fast_add;
     @ViewById TextView tv_attendance_out_time, tv_attendance_in_time;
-
 
     private Intent mIntentCheckUpdate;
     private ArrayList<HomeNumber> mItemNumbers = new ArrayList<>();
@@ -210,6 +211,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
+
         setTouchView(-1);
 
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
@@ -237,6 +239,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 MainActivity.this.onRefresh();
             }
         });
+
         lv_main.setDropListener(onDrag);
         adapter = new ClickItemAdapter();
         lv_main.setAdapter(adapter);
@@ -780,6 +783,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             cls = _cls;
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageLoader.getInstance().displayImage(User.getImageUrl(),img_user);
     }
 
     @Override

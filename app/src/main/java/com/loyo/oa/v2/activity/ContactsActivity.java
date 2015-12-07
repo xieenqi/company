@@ -33,8 +33,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     ViewGroup img_title_left;
     ViewGroup img_title_right;
 
-    ContactsDepartmentFragment departmentFragment;
-    ContactsInDepartmentFragment userFragment;
+    ContactsDepartmentFragment departmentFragment; //部门frag
+    ContactsInDepartmentFragment userFragment;     //人员frag
 
     PagerSlidingTabStrip tabs;
     ViewPager pager;
@@ -80,10 +80,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         adapter.setTitles(new String[]{"本部门(" + myDepartmentContactsSize + ")", "全公司(" + departmentsSize + ")"});
 
         pager.setAdapter(adapter);
-
         int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         pager.setPageMargin(pageMargin);
-
         tabs.setViewPager(pager);
     }
 

@@ -81,14 +81,10 @@ public class ContactInfoEditActivity extends BaseActivity {
     @ViewById ViewGroup layout_back;
     @ViewById ImageView iv_submit;
     @ViewById TextView tv_title;
-
     @ViewById ViewGroup layout_set_avartar;
-
     @ViewById RoundImageView img_title_user;
-
     @ViewById ViewGroup layout_birthday;
     @ViewById ViewGroup layout_mobile;
-
     @ViewById TextView tv_mobile;
     @ViewById TextView et_qq;
     @ViewById EditText et_weixin;
@@ -617,15 +613,15 @@ public class ContactInfoEditActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
+
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
             StringBuilder sb = new StringBuilder();
             for (String p : mSelectPath) {
                 sb.append(p);
             }
+
             ImageLoader.getInstance().displayImage("file://" + sb.toString(), img_title_user);
-
-
-
+            User.setImageUrl("file://" + sb.toString());
             try {
                 Uri uri = Uri.parse("file://" + sb.toString());
                 File newFile = Global.scal(this, uri);

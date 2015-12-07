@@ -420,7 +420,6 @@ public final class Common {
                 return userGroup.getLstUser().get(index);
             }
         }
-
         return new User();
     }
 }

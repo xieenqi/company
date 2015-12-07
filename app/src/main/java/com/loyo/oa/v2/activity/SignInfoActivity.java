@@ -17,14 +17,10 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-
-import org.androidannotations.annotations.Extra;
-
 import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -94,9 +90,7 @@ public class SignInfoActivity extends BaseActivity {
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
         tv_memo = (TextView) findViewById(R.id.tv_memo);
-
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
-
         getLegwork();
     }
 

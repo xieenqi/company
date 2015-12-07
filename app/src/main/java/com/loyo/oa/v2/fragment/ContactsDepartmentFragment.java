@@ -36,6 +36,7 @@ import java.util.ArrayList;
  * 时间 : 15/8/24.
  */
 public class ContactsDepartmentFragment extends BaseFragment {
+
     View view;
     ExpandableListView expandableListView_user;
     ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
@@ -54,6 +55,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         StringBuffer sb = null;
 
         for (int i = 0; i < lstUserGroupData.size(); i++) {
+
             if (sb == null) {
                 sb = new StringBuffer();
             }

@@ -7,6 +7,9 @@ import com.loyo.oa.v2.application.MainApp;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * 通讯录部门bean
+ * */
 
 public class Department implements Serializable {
     private String id;
