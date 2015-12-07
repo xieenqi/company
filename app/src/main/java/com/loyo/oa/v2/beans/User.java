@@ -35,11 +35,19 @@ public class User implements Serializable {
     private String weixinUnionId;
     private String name;
 
+    public static String getImageUrl() {
+        return imageUrl;
+    }
 
+    public static void setImageUrl(String imageUrl) {
+        User.imageUrl = imageUrl;
+    }
+
+    private static String imageUrl;
     private Role role;
     private Position shortPosition;
-
     private Department shortDept;
+
 
     public Department getShortDept() {
         return shortDept;
