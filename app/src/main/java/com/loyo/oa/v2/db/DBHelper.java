@@ -256,6 +256,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public void putOrganization(String json) {
         putStr("organization", json);
+
     }
 
     public void saveAttachment(final Attachment attachment) {
