@@ -214,6 +214,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @AfterViews
     void init() {
 
+
+
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
@@ -463,7 +465,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(500);
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();
