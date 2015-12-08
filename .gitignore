@@ -48,7 +48,7 @@ out
 
 build.xml
 
-.app/build
+app/build/
 
 proguard-project.txt
 

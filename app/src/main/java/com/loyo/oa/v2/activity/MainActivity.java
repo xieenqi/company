@@ -68,6 +68,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,19 +85,22 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     TextView tv_user_name;
     @ViewById(R.id.img_title_left)
     ImageView img_user;
-    @ViewById DragSortListView lv_main;
-    @ViewById SwipeRefreshLayout swipe_container;
-    @ViewById ViewGroup layout_network, layout_attendance, layout_avatar;
-    @ViewById ImageView img_home_head, img_fast_add;
-    @ViewById TextView tv_attendance_out_time, tv_attendance_in_time;
+    @ViewById
+    DragSortListView lv_main;
+    @ViewById
+    SwipeRefreshLayout swipe_container;
+    @ViewById
+    ViewGroup layout_network, layout_attendance, layout_avatar;
+    @ViewById
+    ImageView img_home_head, img_fast_add;
 
     private Intent mIntentCheckUpdate;
     private ArrayList<HomeNumber> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
     private boolean mInitData;
+    private boolean isSign;
     private ArrayList<ClickItem> items = new ArrayList<>();
     private ClickItemAdapter adapter;
-
     private PopupMenu popupMenu;
     private ValidateInfo validateInfo;
     private HashMap<String, Object> map = new HashMap<>();
@@ -213,7 +217,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     void init() {
 
         setTouchView(-1);
-
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
                 findViewById(R.id.img_fast_add));
@@ -330,42 +333,37 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(ValidateInfo _validateInfo, Response response) {
+
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
                 }
+
                 validateInfo = _validateInfo;
 
-                ValidateItem validateItem = availableValidateItem();
-                if (null != validateItem) {
-                    int type = validateItem.getType();
-                    switch (type) {
-                        case ValidateItem.ATTENDANCE_STATE_IN:
-                            tv_attendance_in_time.setText("上班打卡");
-                            tv_attendance_out_time.setText("");
-                            break;
-
-                        case ValidateItem.ATTENDANCE_STATE_OUT:
-                            tv_attendance_out_time.setText("下班打卡");
-                            tv_attendance_in_time.setText(validateItem.getReason());
-                            break;
-                    }
-                } else {
-                    if (null == validateInfo.getValids() || validateInfo.getValids().isEmpty()) {
-                        tv_attendance_out_time.setText("");
-                        tv_attendance_in_time.setText("");
-                    } else {
-                        tv_attendance_out_time.setText(validateInfo.getValids().get(1).getReason());
-                        tv_attendance_in_time.setText(validateInfo.getValids().get(0).getReason());
-                    }
+                for (int i = 0; i < validateInfo.getValids().size(); i++) {
+                    isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
                 }
-                onClickAvatar();
+
+                if (isSign) {
+                    rotateInt();
+                } else {
+                    Intent intent = new Intent(MainActivity.this,AttendanceActivity_.class);
+                    startActivity(intent);
+                    Toast("您今天已经打卡完毕");
+                }
+
+                try {
+                    LogUtil.dll("能否打卡:" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Toast("获取考勤信息失败" + error.getMessage());
-                System.out.println(" 考勤： "+error.getUrl());
+                System.out.println(" 考勤： " + error.getUrl());
                 super.failure(error);
             }
         });
@@ -425,13 +423,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @Click(R.id.img_title_left)
     void onClickAvatar() {
-        //如果未获取考勤信息或考勤信息不是今天的，重新获取考勤信息
-        //        || validateInfo.getSetting().getCheckInTime() < (int)DateTool.getBeginAt_ofDay()/1000
-        if (null == validateInfo) {
-            getValidateInfo();
-            return;
-        }
+        getValidateInfo();
+    }
 
+    /**
+     * 头像翻转
+     */
+    private void rotateInt() {
         //为什么参数必须为小数才可以？
         //解决翻转过后文本也被翻转
         ViewHelper.setPivotX(layout_attendance, layout_attendance.getWidth() / 2);
@@ -471,6 +469,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(500);
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();
@@ -572,7 +571,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 holder.tv_extra = (TextView) convertView.findViewById(R.id.tv_extra);
                 holder.layout_item = (RippleView) convertView.findViewById(R.id.layout_item);
                 holder.view_number = (ImageView) convertView.findViewById(R.id.view_number);
-                holder.tv_num=(TextView)convertView.findViewById(R.id.tv_num);
+                holder.tv_num = (TextView) convertView.findViewById(R.id.tv_num);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -605,11 +604,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
             }
 
-            if(item.title.equals("工作报告")){
+            if (item.title.equals("工作报告")) {
                 holder.tv_num.setVisibility(View.VISIBLE);
-                SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String date=sDateFormat.format(new java.util.Date());
-                String dayNum=date.substring(8,10);
+                SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String date = sDateFormat.format(new java.util.Date());
+                String dayNum = date.substring(8, 10);
                 holder.tv_num.setText(dayNum);
             }
 
@@ -639,7 +638,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
                 //android 5.0以后不能隐式启动或关闭服务
                 if (mIntentCheckUpdate != null) {
                     try {
@@ -782,13 +780,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             title = _title;
             cls = _cls;
         }
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ImageLoader.getInstance().displayImage(User.getImageUrl(),img_user);
+        if (User.getImageUrl() != null)
+            ImageLoader.getInstance().displayImage(User.getImageUrl(), img_user);
     }
 
     @Override

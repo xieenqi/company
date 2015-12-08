@@ -40,7 +40,6 @@ public class ProjectDescriptionActivity extends BaseActivity {
     @ViewById TextView tv_title_1;
     @ViewById ViewGroup img_title_left;
 
-
     @Extra Project project;
 
     @AfterViews
