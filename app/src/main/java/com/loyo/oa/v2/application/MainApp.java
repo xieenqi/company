@@ -108,7 +108,7 @@ public class MainApp extends Application {
     public static ArrayList<UserGroupData> lstUserGroupData;
     public static ArrayList<Department> lstDepartment;
     static String token;
-    public static User user;
+    public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;
 
     public static String getToken() {

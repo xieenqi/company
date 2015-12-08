@@ -66,7 +66,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
             time.setText("提交时间: " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)));
             if (wfInstance.getCreator() != null) {
-                content.setText(String.format("申请人 %s", wfInstance.getCreator().getRealname()));
+                content.setText(String.format("审批人 %s", wfInstance.getNextExecutor().getRealname()));
             }
             ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
@@ -111,7 +111,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
                            ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
             if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
-                content.setText("负责: " + task.getResponsiblePerson().getRealname());
+                content.setText("负责人: " + task.getResponsiblePerson().getRealname());
             }
             if (!TextUtils.isEmpty(task.getTitle())) {
                 title.setText(task.getTitle());

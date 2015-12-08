@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
@@ -30,19 +29,14 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WXUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
-import com.nostra13.universalimageloader.utils.L;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 
 import org.apache.http.Header;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import retrofit.RestAdapter;
@@ -146,7 +140,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_login.setOnClickListener(this);
 
         if (Config_project.is_developer_mode) {
-            edt_username.setText("mjf");
+            edt_username.setText("GTF");
             edt_password.setText("123456");
         }
     }

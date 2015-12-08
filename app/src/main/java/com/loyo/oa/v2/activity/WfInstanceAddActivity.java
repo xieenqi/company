@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
 import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -54,6 +55,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -332,9 +334,22 @@ public class WfInstanceAddActivity extends BaseActivity {
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
             case R.id.ll_dept:
+//                Toast(" 点击成功？？？");
+//                info();
+
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;
         }
+    }
+
+    public void info (){
+        if(WfinObj==null)
+            return;
+        HashMap<String, Object> mapInfo = WfinObj.get(0).getInfoData();
+        for (Map.Entry<String, Object> entry:mapInfo.entrySet()){
+            LogUtil.d(entry.getKey() + "--3453->" + entry.getValue());
+        }
+
     }
 
     /**xnq
@@ -359,11 +374,11 @@ public class WfInstanceAddActivity extends BaseActivity {
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
     }
-    //    @Click(R.id.layout_delete2)
-    //    void delete() {
-    //        bizFormFieldsListViewAdapter.setEmpty();
-    //        layout_edit.setVisibility(View.GONE);
-    //    }
+//        @Click(R.id.layout_delete2)
+//        void delete() {
+//            bizFormFieldsListViewAdapter.setEmpty();
+//            layout_edit.setVisibility(View.GONE);
+//        }
 
     @Click(R.id.img_title_right)
     void submit() {
@@ -410,6 +425,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         HashMap<String, Object> jsonObject = new HashMap<>();
 
         app.logUtil.e(" 审批 : " + projectId);
+
         jsonObject.put("bizformId", mBizForm.getId());//表单Id
         jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
         jsonObject.put("deptId",deptId);//部门 id

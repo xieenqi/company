@@ -3,7 +3,6 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
@@ -66,10 +65,12 @@ public class InitDataService extends IntentService {
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
-
+            //Toast.makeText(MainApp.getMainApp(),"   getOrganization  获取 ",Toast.LENGTH_LONG).show();
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
+
         }
+
     }
 
     /**
