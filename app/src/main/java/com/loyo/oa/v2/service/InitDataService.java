@@ -51,9 +51,7 @@ public class InitDataService extends IntentService {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 sendDataChangeBroad(user);
-
-                LogUtil.d(MainApp.TAG, json);
-
+                LogUtil.dll(json);
             }
         });
     }
@@ -68,9 +66,7 @@ public class InitDataService extends IntentService {
             //Toast.makeText(MainApp.getMainApp(),"   getOrganization  获取 ",Toast.LENGTH_LONG).show();
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
-
         }
-
     }
 
     /**

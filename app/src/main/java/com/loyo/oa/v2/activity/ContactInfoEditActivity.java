@@ -38,6 +38,7 @@ import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -54,6 +55,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -78,24 +80,41 @@ public class ContactInfoEditActivity extends BaseActivity {
 
     private final int REQUEST_IMAGE = 100;
 
-    @ViewById ViewGroup layout_back;
-    @ViewById ImageView iv_submit;
-    @ViewById TextView tv_title;
-    @ViewById ViewGroup layout_set_avartar;
-    @ViewById RoundImageView img_title_user;
-    @ViewById ViewGroup layout_birthday;
-    @ViewById ViewGroup layout_mobile;
-    @ViewById TextView tv_mobile;
-    @ViewById TextView et_qq;
-    @ViewById EditText et_weixin;
-    @ViewById RadioButton sex_famale;
-    @ViewById RadioButton sex_male;
-    @ViewById TextView tv_birthday;
-    @ViewById TextView tv_age;
-    @ViewById TextView tv_departments;
-    @ViewById TextView tv_positions;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    ImageView iv_submit;
+    @ViewById
+    TextView tv_title;
+    @ViewById
+    ViewGroup layout_set_avartar;
+    @ViewById
+    RoundImageView img_title_user;
+    @ViewById
+    ViewGroup layout_birthday;
+    @ViewById
+    ViewGroup layout_mobile;
+    @ViewById
+    TextView tv_mobile;
+    @ViewById
+    TextView et_qq;
+    @ViewById
+    EditText et_weixin;
+    @ViewById
+    RadioButton sex_famale;
+    @ViewById
+    RadioButton sex_male;
+    @ViewById
+    TextView tv_birthday;
+    @ViewById
+    TextView tv_age;
+    @ViewById
+    TextView tv_departments;
+    @ViewById
+    TextView tv_positions;
 
-    @Extra User user;
+    @Extra
+    User user;
 
     private int sex;
     private String birthday;
@@ -109,10 +128,11 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private String uuid=null;
-    private int mobile_phone=1;
-    private String path=null;
+    private String uuid = null;
+    private int mobile_phone = 1;
+    private String path = null;
     ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
+
     private static class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
 
@@ -151,17 +171,24 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_birthday.setOnTouchListener(Global.GetTouch());
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
         layout_mobile.setOnTouchListener(Global.GetTouch());
-        //        et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
+        et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
     }
+
+
+    void testRequest() {
+
+    }
+
 
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                if (isDataChange()) {
+                if (isDataChange() == false) {
                     showLeaveDialog();
-                } else {
+                }
+                else if(isDataChange()){
                     app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
                 }
                 break;
@@ -214,19 +241,40 @@ public class ContactInfoEditActivity extends BaseActivity {
     }
 
     /**
-     * 数据是否变化
+     * 判断数据是否被编辑过
      *
      * @return
      */
     private boolean isDataChange() {
-        String tel = tv_mobile.getText().toString();
-        String birthDay = tv_birthday.getText().toString();
-        String weixinId = et_weixin.getText().toString();
 
-        if (!TextUtils.equals(tel, user.getMobile()) || (!TextUtils.isEmpty(user.getBirthDay()) && !TextUtils.equals(birthDay,user.getBirthDay())) || !TextUtils.equals(weixinId, user.getWeixinId()) || sex != user.getGender()) {
-            return true;
+        String tel = TextUtils.isEmpty(tv_mobile.getText().toString())?null:tv_mobile.getText().toString();
+        String birthDay = TextUtils.isEmpty(tv_birthday.getText().toString())?null:tv_birthday.getText().toString();
+        String weixinId = TextUtils.isEmpty(et_weixin.getText().toString())?null:et_weixin.getText().toString();
+
+        if(tel != null){
+            if(!tel.equals(user.getMobile())){
+                return false;
+            }
         }
-        return false;
+
+        if(birthDay != null){
+            if(!birthDay.equals(user.getBirthDay())){
+                return false;
+            }
+        }
+
+        if(weixinId != null){
+            if(!weixinId.equals(user.getWeixinId())){
+                return false;
+            }
+        }
+        if(sex+"" != null) {
+            if (sex != user.getGender()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
@@ -278,19 +326,19 @@ public class ContactInfoEditActivity extends BaseActivity {
             Utils.setContent(tv_birthday, user.getBirthDay());
             Utils.setContent(tv_age, Utils.getAge(user.getBirthDay().substring(0, 4)) + "");
         }
-        if(null!=user.getDepts()&&!user.getDepts().isEmpty()){
-            StringBuilder departments=new StringBuilder();
-            StringBuilder positions=new StringBuilder();
+        if (null != user.getDepts() && !user.getDepts().isEmpty()) {
+            StringBuilder departments = new StringBuilder();
+            StringBuilder positions = new StringBuilder();
             for (int i = 0; i < user.getDepts().size(); i++) {
-                UserInfo info=user.getDepts().get(i);
-                if(null!=info.getShortDept()&&!TextUtils.isEmpty(info.getShortDept().getName())) {
-                    if(!TextUtils.isEmpty(departments)){
+                UserInfo info = user.getDepts().get(i);
+                if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
+                    if (!TextUtils.isEmpty(departments)) {
                         departments.append("|");
                     }
                     departments.append(info.getShortDept().getName());
                 }
-                if(null!=info.getShortPosition()&&!TextUtils.isEmpty(info.getShortPosition().getName())){
-                    if(!TextUtils.isEmpty(positions)){
+                if (null != info.getShortPosition() && !TextUtils.isEmpty(info.getShortPosition().getName())) {
+                    if (!TextUtils.isEmpty(positions)) {
                         positions.append("|");
                     }
                     positions.append(info.getShortPosition().getName());
@@ -315,7 +363,10 @@ public class ContactInfoEditActivity extends BaseActivity {
         map.put("gender", sex);
         map.put("birthDay", birthDay);
         map.put("weixinId", weixinId);
-        map.put("avatar",path);
+        map.put("avatar", path);
+
+        LogUtil.dll("wx:"+weixinId);
+
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
@@ -419,9 +470,10 @@ public class ContactInfoEditActivity extends BaseActivity {
 
     /**
      * 验证手机号
+     *
      * @param tel
      */
-    private void verifyPhone(final String tel){
+    private void verifyPhone(final String tel) {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
             public void success(Object o, Response response) {
@@ -440,10 +492,11 @@ public class ContactInfoEditActivity extends BaseActivity {
                     }
                 });
             }
+
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                if(error.getMessage().substring(0,3).equals("500")){
+                if (error.getMessage().substring(0, 3).equals("500")) {
                     Toast("该手机号已被录入本系统,请勿重复使用!");
                 }
             }
@@ -483,7 +536,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             public void failure(RetrofitError error) {
                 super.failure(error);
                 dialog.dismiss();
-                Toast("修改手机号码失败"+error.getMessage());
+                Toast("修改手机号码失败" + error.getMessage());
 
 
             }
@@ -573,7 +626,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_get_code:
-                        getVerifyCode();
+                    getVerifyCode();
 
                     break;
                 case R.id.btn_confirm:
@@ -602,9 +655,10 @@ public class ContactInfoEditActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (isDataChange()) {
+        if (isDataChange() == false) {
             showLeaveDialog();
-        } else {
+        }
+        else if(isDataChange()){
             super.onBackPressed();
         }
     }
@@ -643,13 +697,14 @@ public class ContactInfoEditActivity extends BaseActivity {
                     ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null, params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
                 }
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
 
     }
+
     public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
         File file;
 
@@ -661,7 +716,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
             try {
                 Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
-                path=attachment.getUrl();
+                path = attachment.getUrl();
 
             } catch (Exception e) {
                 Global.ProcException(e);
