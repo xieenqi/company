@@ -40,6 +40,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.tencent.android.tpush.horse.Tools;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -74,18 +75,14 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById TextView tv_title_1;
-
     @ViewById TextView tv_time;
     @ViewById TextView tv_count_time;
     @ViewById TextView tv_address;
     @ViewById TextView tv_result;
     @ViewById ImageView iv_refresh_address;
-
     @ViewById EditText et_reason;
     @ViewById ViewGroup layout_reason;
-
     @ViewById GridView gridView_photo;
-
     @Extra AttendanceRecord mAttendanceRecord;
 
     //附件相关
@@ -388,6 +385,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
                 onBackPressed();
+                try {
+                    LogUtil.dll("result:"+Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
