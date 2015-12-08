@@ -82,10 +82,10 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="23dp"
                     android:layout_marginTop="2dp"
-
                     android:text="时间"
                     android:textColor="#8a8a8a"
                     android:textSize="12sp"/>
+
                 <TextView
                     android:id="@+id/tv_timeOut"
                     android:layout_width="wrap_content"
@@ -95,8 +95,8 @@
                     android:layout_marginTop="2dp"
                     android:text="(已超时)"
                     android:textColor="@color/tomato"
-                    android:visibility="gone"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
 

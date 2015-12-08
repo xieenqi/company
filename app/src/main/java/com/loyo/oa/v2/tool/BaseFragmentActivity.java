@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -94,7 +93,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void onSaveInstanceState(Bundle outState) {
-        app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():begin");
+        LogUtil.d(this.getClass().getName() + "-onSaveInstanceState():开始");
 
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
@@ -102,12 +101,12 @@ public class BaseFragmentActivity extends FragmentActivity {
 
         //outState.putSerializable("subUsers", MainApp.subUsers);
 
-        app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
+        LogUtil.d(this.getClass().getName() + "-onSaveInstanceState():完成");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:begin");
+        LogUtil.d(this.getClass().getName() + "-恢复实例状态: 开始");
         super.onRestoreInstanceState(savedInstanceState);
 
         if (StringUtil.isEmpty(MainApp.getToken())) {
@@ -122,7 +121,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
         }*/
 
-        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
+        LogUtil.d(this.getClass().getName() + "-恢复实例状态: 完成");
     }
 
     DrawerLayout main_layout;
@@ -145,7 +144,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         getWindow().getDecorView().setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
         if (MainApp.user == null) {
-            Log.d(Tag, "user is null");
+            LogUtil.d(" 用户为空 ");
             MainApp.user = DBManager.Instance().getUser();
         }
 

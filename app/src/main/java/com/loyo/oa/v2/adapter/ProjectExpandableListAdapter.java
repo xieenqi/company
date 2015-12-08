@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
@@ -48,14 +47,15 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
 //            status.setImageResource(R.drawable.img_project_complete);
 //        }
 
-        try {
-            time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
+//        try {
+//            time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
+//        } catch (Exception e) {
+//            Global.ProcException(e);
+//        }
 
-        content.setText(project.getContent());
+        content.setText(TextUtils.isEmpty(project.getContent())?"(无简介)":project.getContent());
         ack.setVisibility(View.GONE);
+        time.setVisibility(View.GONE);
         title.setText(project.getTitle());
 
         return convertView;
