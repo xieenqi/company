@@ -204,7 +204,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public void drop(int from, int to) {
             if (from != to) {
                 ClickItem item = adapter.getItem(from);
-                app.logUtil.e("name : " + item.title + " from : " + from + " to : " + to);
+                //app.logUtil.e("name : " + item.title + " from : " + from + " to : " + to);
                 adapter.remove(from);
                 adapter.insert(item, to);
             }

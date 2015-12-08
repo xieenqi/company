@@ -21,9 +21,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 工作报告 界面  的 fragment
+ */
 public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkReport> {
 
-    private static final String FILTER_SEND_TYPE[] = new String[]{"全部类别", "提交给我的", "我提交的", "与我相关的"};
+    private static final String FILTER_SEND_TYPE[] = new String[]{"全部类别", "提交给我的", "我提交的", "抄送给我的"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待点评", "已点评"};
     private static final String FILTER_TYPE[] = new String[]{"全部类型", "日报", "周报", "月报"};
 

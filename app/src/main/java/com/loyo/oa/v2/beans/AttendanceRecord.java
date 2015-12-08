@@ -41,6 +41,16 @@ public class AttendanceRecord implements Serializable {
     private long updatetime;// (int64, optional):
     private int remainTime;
 
+    private User user;// (&{organization User}, optional):
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public int getRemainTime() {
         return remainTime;
     }

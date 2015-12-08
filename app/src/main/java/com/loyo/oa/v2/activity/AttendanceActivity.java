@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.AttendanceListFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -55,13 +56,14 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
-    private int mIndex = -1;
+    private int mIndex = -1,Identity;
+
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
         tv_title_1.setText("我的考勤");
-        layout_title_action.setOnTouchListener(Global.GetTouch());
+        imageArrow.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
         findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
         findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
@@ -74,13 +76,20 @@ public class AttendanceActivity extends BaseFragmentActivity {
         }
         initCategoryUI();
         initChildren();
+
+        //获得权限
+        Identity = MainApp.user.getRole().getDataRange();
+        if(Identity==3){
+            imageArrow.setVisibility(View.GONE);
+            layout_title_action.setEnabled(false);
+        }
     }
 
     @Click({R.id.img_title_left, R.id.layout_title_action})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                changeCategoryView();
+                    changeCategoryView();
                 break;
             case R.id.img_title_left:
                 onBackPressed();
@@ -101,7 +110,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
             //                b.putInt("type", i);
             //                fragment = (BaseFragment) Fragment.instantiate(this, AttendanceListFragment.class.getName(), b);
             //            }
-
+            //初始化 fragment 列表
             Bundle b = new Bundle();
             b.putInt("type", i + 1);
             BaseFragment fragment = (BaseFragment) Fragment.instantiate(this, AttendanceListFragment.class.getName(), b);
@@ -160,10 +169,11 @@ public class AttendanceActivity extends BaseFragmentActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                changeCategoryView();
-                String content = ATTENDANCE_FILTER_STRS[position];
-                tv_title_1.setText(content);
-                changeChild(position);
+
+                    changeCategoryView();
+                    String content = ATTENDANCE_FILTER_STRS[position];
+                    tv_title_1.setText(content);
+                    changeChild(position);
             }
         });
     }

@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.AttendanceList;
+import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.ValidateInfo;
 
@@ -59,7 +59,7 @@ public interface IAttendance {
      * @param callback
      */
     @GET("/attendance/list")
-    void getAttendances(@QueryMap HashMap<String,Object> map, Callback<AttendanceList> callback);
+    void getAttendances(@QueryMap HashMap<String,Object> map, Callback<HttpAttendanceList> callback);
 
     /**
      * 确认外勤

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
@@ -29,6 +32,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,11 +60,13 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     private int type;
     private AttendanceList attendanceList;
+    private ArrayList<DayofAttendance> attendances=new ArrayList<DayofAttendance>();
     private AttendanceListAdapter adapter;
-    private int qtime;
+    private int qtime,page=1;
     private Calendar cal;
 
     private View mView;
+    ProgressDialog dg;
 
 
     @Nullable
@@ -78,7 +84,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
 
-
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
             imgTimeLeft.setOnClickListener(this);
@@ -90,13 +95,39 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             if (null != getArguments()) {
                 if (getArguments().containsKey("type")) {
                     type = getArguments().getInt("type");
-                    app.logUtil.e("type : " + type);
+                    //app.logUtil.e("type : " + type);
                 }
             }
             initTimeStr(System.currentTimeMillis());
             qtime = type == 1 ? DateTool.getBeginAt_ofMonth() : (int) (System.currentTimeMillis() / 1000);
-            getData();
 
+            dg = new ProgressDialog(getActivity());
+            dg.setMessage("加载中");
+            getData(page);
+
+            lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                        // 判断是否滚动到底部
+                        if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                            //加载更多功能的代码
+                           // Toast("到底部啦");
+                            if(type==2){
+                                loadMore();
+                            }
+                        }
+                        if(view.getLastVisiblePosition()==0){
+                            //Toast("到 顶部 啦");
+                        }
+                    }
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                }
+            });
         }
         return mView;
     }
@@ -145,6 +176,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onClick(View view) {
+        page=1;
         switch (view.getId()) {
             case R.id.img_time_left:
                 switch (type) {
@@ -238,9 +270,18 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private void refreshData() {
         qtime = (int) (cal.getTime().getTime() / 1000);
         initTimeStr(cal.getTime().getTime());
-        getData();
+        getData(page);
     }
 
+    /**
+     * 加载跟多 xnq
+     */
+    public void loadMore(){
+        page++;
+        qtime = (int) (cal.getTime().getTime() / 1000);
+        initTimeStr(cal.getTime().getTime());
+        getData(page);
+    }
     /**
      * 绑定数据
      */
@@ -263,16 +304,27 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     /**
      * 获取列表
      */
-    private void getData() {
+    private void getData(final int page) {
+        dg.show();
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
-        app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<AttendanceList>() {
+        map.put("pageIndex",page);
+        map.put("pageSize", 50);
+
+        app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
-            public void success(AttendanceList _attendanceRecords, Response response) {
-                attendanceList = _attendanceRecords;
+            public void success(HttpAttendanceList result, Response response) {
+                System.out.print(MainApp.gson.toJson(result) + " 请求<<<<<<.....>>>>>>的URL：  " + response.getUrl());
+                dg.dismiss();
+                attendanceList=result.records;
+                attendances.addAll(result.records.getAttendances());
                 initStatistics();
                 bindData();
+                if(page!=1){
+                    adapter.notifyDataSetChanged();
+
+                }
             }
         });
     }
@@ -300,7 +352,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             return;
         }
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
-            getData();
+            getData(page);
         }
     }
 
@@ -308,12 +360,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
         @Override
         public int getCount() {
-            return attendanceList.getAttendances().size();
+            return attendances.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return attendanceList.getAttendances().isEmpty() ? null : attendanceList.getAttendances().get(i);
+            return attendances.isEmpty() ? null : attendances.get(i);
         }
 
         @Override
