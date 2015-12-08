@@ -45,7 +45,6 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -202,7 +201,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public void drop(int from, int to) {
             if (from != to) {
                 ClickItem item = adapter.getItem(from);
-                app.logUtil.e("name : " + item.title + " from : " + from + " to : " + to);
+                //app.logUtil.e("name : " + item.title + " from : " + from + " to : " + to);
                 adapter.remove(from);
                 adapter.insert(item, to);
             }

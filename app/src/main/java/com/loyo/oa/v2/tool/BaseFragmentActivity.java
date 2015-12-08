@@ -10,11 +10,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -25,6 +27,7 @@ import com.loyo.oa.v2.db.DBManager;
 public class BaseFragmentActivity extends FragmentActivity {
     protected MainApp app;
     protected Context mContext;
+    private Toast mCurrentToast;
 
     final String Tag = "BaseFragmentActivity";
 
@@ -247,5 +250,16 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    protected void Toast(String msg) {
+        if (null != mCurrentToast) {
+            mCurrentToast.cancel();
+        }
+
+        mCurrentToast = Toast.makeText(app.getBaseContext(), msg, Toast.LENGTH_SHORT);
+        mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
+        mCurrentToast.show();
     }
 }
