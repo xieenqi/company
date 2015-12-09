@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.loyo.oa.v2"
-    android:installLocation="internalOnly" >
+    android:installLocation="internalOnly">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -75,13 +75,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/noTitle"
-        android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        android:windowSoftInputMode="adjustUnspecified|stateHidden">
 
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
             android:name="com.tencent.android.tpush.XGPushReceiver"
-            android:process=":xg_service_v2" >
-            <intent-filter android:priority="0x7fffffff" >
+            android:process=":xg_service_v2">
+            <intent-filter android:priority="0x7fffffff">
 
                 <!-- 【必须】 信鸽SDK的内部广播 -->
                 <action android:name="com.tencent.android.tpush.action.SDK" />
@@ -101,7 +101,7 @@
         <!-- 【注意】 如果被打开的activity是启动模式为SingleTop，SingleTask或SingleInstance，请根据通知的异常自查列表第8点处理 -->
         <activity
             android:name="com.tencent.android.tpush.XGPushActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action" />
             </intent-filter>
@@ -117,7 +117,7 @@
         <!-- 【必须】 通知service，此选项有助于提高抵达率 -->
         <service
             android:name="com.tencent.android.tpush.rpc.XGRemoteService"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.loyo.oa.v2.debug.PUSH_ACTION" />
             </intent-filter>
@@ -139,7 +139,7 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
+            android:process=":remote">
             <intent-filter>
                 <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
@@ -156,7 +156,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:theme="@style/AppStartLoadTranslucent"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -168,22 +168,19 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
             android:name=".activity.VerifyAccountActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
             android:name=".activity.MainActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
             android:name=".tool.customview.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize"
@@ -570,6 +567,10 @@
             android:name=".activity.ProjectSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.customer.CustomerRepeat"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <service
             android:name=".service.InitDataService_"
@@ -579,7 +580,7 @@
             android:enabled="true" />
 
         <receiver android:name=".service.TrackLogRecevier" />
-        <receiver android:name=".service.TrackRuleReceiver" >
+        <receiver android:name=".service.TrackRuleReceiver">
             <intent-filter>
                 <action android:name="com.tencent.android.tpush.action.SDK" />
                 <action android:name="com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE" />
@@ -592,7 +593,7 @@
         </receiver>
 
         <!-- APP实现的Receiver，用于接收消息和结果反馈 -->
-        <receiver android:name=".service.XgMessageReceiver" >
+        <receiver android:name=".service.XgMessageReceiver">
             <intent-filter>
 
                 <!-- 接收消息透传 -->
@@ -610,7 +611,7 @@
         <!-- 小米推送 -->
         <receiver
             android:name=".service.XmPushReceiver"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
             </intent-filter>
@@ -636,7 +637,7 @@
         <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
         <receiver
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
@@ -646,7 +647,7 @@
         <receiver
             android:name="com.xiaomi.push.service.receivers.PingReceiver"
             android:exported="false"
-            android:process=":pushservice" >
+            android:process=":pushservice">
             <intent-filter>
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
@@ -659,7 +660,7 @@
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -670,7 +671,7 @@
         <service
             android:name="cn.jpush.android.service.DaemonService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
 
@@ -680,8 +681,8 @@
 
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true" >
-            <intent-filter android:priority="1000" >
+            android:enabled="true">
+            <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
 
                 <category android:name="com.loyo.oa.v2" />
@@ -702,7 +703,7 @@
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
@@ -714,13 +715,12 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
 
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <receiver
             android:name=".service.JPushService"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
 
                 <!-- Required 用户注册SDK的intent -->
@@ -752,24 +752,20 @@
         <service
             android:name=".service.JushService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true"></service>
 
         <service
             android:name=".service.JpushService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true"></service>
         <service
             android:name=".service.JPushService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true"></service>
 
         <activity
             android:name=".tool.MyLayoutUtils"
-            android:label="@string/title_activity_my_layout_utils" >
-        </activity>
+            android:label="@string/title_activity_my_layout_utils"></activity>
     </application>
 
 </manifest>

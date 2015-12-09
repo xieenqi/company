@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,12 @@ import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.CustomerRepeat;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.BaseBeans;
+import com.loyo.oa.v2.beans.City;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewTag;
@@ -28,11 +32,16 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -45,8 +54,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -56,29 +69,40 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
 
-    @ViewById EditText edt_name;
-    @ViewById EditText edt_contract;
-    @ViewById EditText edt_contract_tel;
-    @ViewById EditText et_address;
+    @ViewById
+    EditText edt_name;
+    @ViewById
+    EditText edt_contract;
+    @ViewById
+    EditText edt_contract_tel;
+    @ViewById
+    EditText et_address;
 
-    @ViewById TextView tv_labels;
+    @ViewById
+    TextView tv_labels;
 
-    @ViewById LinearLayout layout_newContract;
-    @ViewById LinearLayout layout_address;
+    @ViewById
+    LinearLayout layout_newContract;
+    @ViewById
+    LinearLayout layout_address;
 
-    @ViewById Button btn_add_new_contract;
+    @ViewById
+    Button btn_add_new_contract;
 
-    @ViewById GridView gridView_photo;
+    @ViewById
+    GridView gridView_photo;
 
     SignInGridViewAdapter signInGridViewAdapter;
     String uuid = null;
     ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
 
     ArrayList<Contact> mContacts = new ArrayList<>();
-    ArrayList<TagItem> items=new ArrayList<>();
+    ArrayList<TagItem> items = new ArrayList<>();
     ArrayList<NewTag> tags;
     String tagItemIds;
     String mGpsAddress;
@@ -140,13 +164,22 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right,
+    @Click({R.id.img_title_left, R.id.img_title_right,R.id.tv_search,
             R.id.layout_customer_label})
     public void onClick(View v) {
         switch (v.getId()) {
+
+            case R.id.tv_search:
+                serachRepate();
+                Intent intent = new Intent(CustomerAddActivity.this, CustomerRepeat.class);
+                startActivity(intent);
+                break;
+
+
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
+
             case R.id.img_title_right:
                 String customer_name = edt_name.getText().toString().trim();
                 String customerAddress = et_address.getText().toString().trim();
@@ -156,13 +189,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称");
                     break;
-                }else if(customerAddress.isEmpty()){
+                } else if (customerAddress.isEmpty()) {
                     Toast("请输入的客户地址");
                     break;
-                }else if(customerContract.isEmpty()){
+                } else if (customerContract.isEmpty()) {
                     Toast("请输入联系人");
                     break;
-                }else if(customerContractTel.isEmpty()){
+                } else if (customerContractTel.isEmpty()) {
                     Toast("请输入联系电话");
                     break;
                 }
@@ -184,22 +217,21 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 StringEntity stringEntity = null;
                 try {
                     jsonObject.put("name", customer_name);
-                   // jsonObject.put("address", customerAddress);
-
+                    // jsonObject.put("address", customerAddress);
 
                     if (uuid != null && lstData_Attachment.size() > 0) {
                         jsonObject.put("uuid", uuid);
                     }
 
-                 JSONObject jsonLoc=new JSONObject();
-                    jsonLoc.put("addr",customerAddress);
-                    JSONArray jsonArray=new JSONArray();
-                        jsonArray.put(app.longitude);
-                        jsonArray.put(app.latitude);
-                    jsonLoc.put("loc",jsonArray);
-                    jsonObject.put("loc",jsonLoc);
-                    jsonObject.put("pname",customerContract);
-                    jsonObject.put("ptel",customerContractTel);
+                    JSONObject jsonLoc = new JSONObject();
+                    jsonLoc.put("addr", customerAddress);
+                    JSONArray jsonArray = new JSONArray();
+                    jsonArray.put(app.longitude);
+                    jsonArray.put(app.latitude);
+                    jsonLoc.put("loc", jsonArray);
+                    jsonObject.put("loc", jsonLoc);
+                    jsonObject.put("pname", customerContract);
+                    jsonObject.put("ptel", customerContractTel);
                    /* JSONArray jsonArrayContacts = new JSONArray();
                     for (Contact contact : mContacts) {
 
@@ -230,17 +262,17 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         for (NewTag tag : tags) {
 
                             JSONObject jo = new JSONObject();
-                            jo.put("tId",tag.gettId());
+                            jo.put("tId", tag.gettId());
                             jo.put("itemId", tag.getItemId());
-                            jo.put("itemName",tag.getItemName());
+                            jo.put("itemName", tag.getItemName());
                             jsonArrayTagItems.put(jo);
                         }
 
                         jsonObject.put("tags", jsonArrayTagItems);
                     }
 
-
                     stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
+
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -276,7 +308,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 tags = (ArrayList<NewTag>) bundle.getSerializable("data");
                 StringBuffer sb = null;
                 StringBuffer sbItemId = null;
-                StringBuffer sbTId=null;
+                StringBuffer sbTId = null;
                 for (NewTag tag : tags) {
                     if (sb == null) {
                         sb = new StringBuffer();
@@ -285,7 +317,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         sbItemId = new StringBuffer();
                         sbItemId.append(String.valueOf(tag.getItemId()));
 
-                        sbTId=new StringBuffer();
+                        sbTId = new StringBuffer();
                         sbTId.append(String.valueOf(tag.gettId()));
 
                     } else {
@@ -303,7 +335,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 if (sbItemId != null) {
                     tagItemIds = sbItemId.toString();
                     tv_labels.setText(sb.toString());
-                }else
+                } else
                     tv_labels.setText("");
                 break;
             case REQUEST_CUSTOMER_NEW_CONTRACT:
@@ -342,19 +374,17 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 break;
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
-                    final Attachment delAttachment=(Attachment)data.getSerializableExtra("delAtm");
-                    MainApp.getMainApp().getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),new RCallback<Attachment>(){
+                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+                    MainApp.getMainApp().getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
                         @Override
-                        public void success(Attachment attachment, Response response)
-                        {
+                        public void success(Attachment attachment, Response response) {
                             Toast("删除附件成功!");
                             lstData_Attachment.remove(delAttachment);
                             signInGridViewAdapter.notifyDataSetChanged();
                         }
 
                         @Override
-                        public void failure(RetrofitError error)
-                        {
+                        public void failure(RetrofitError error) {
                             Toast("删除附件失败!");
                             super.failure(error);
                         }
@@ -365,6 +395,41 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 break;
 
         }
+    }
+
+    /**
+     * 查重功能
+     * */
+    void serachRepate(){
+
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        map.put("pageIndex",1);
+        map.put("pageSize",20);
+        map.put("keyWords","0000");
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSerachRepeat(map,new RCallback<City>(){
+            @Override
+            public void success(City test, Response response) {
+
+                try {
+                    LogUtil.dll("success result:"+ Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    LogUtil.dll("fail result:"+ Utils.convertStreamToString(error.getResponse().getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
     }
 
     void setContract(Contact c) {

@@ -52,6 +52,16 @@
                         style="@style/edtText_normal"
                         android:hint="客户名称" />
 
+                    <TextView
+                        android:layout_marginRight="@dimen/dimen_10"
+                        android:id="@+id/tv_search"
+                        android:gravity="center"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:text="查重"
+                        android:textColor="@color/dodgerblue"
+                        android:background="@drawable/tv_frame_customer"
+                        />
                 </LinearLayout>
 
                 <View
