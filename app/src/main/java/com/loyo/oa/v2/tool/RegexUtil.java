@@ -27,7 +27,7 @@ public class RegexUtil
     ;
     private static final String regexkPostcode = "[1-9]\\d{5}";
     private static final String regexkIp = "\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b";
-    private static final String regexkWx = "^[a-zA-Z\\d_]{5,}$";
+    private static final String regexkWx = "^[a-zA-Z\\d_]{6,}$";
 
     public enum StringType
     {

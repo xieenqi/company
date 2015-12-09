@@ -26,10 +26,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.HomeNumber;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.User;
@@ -37,6 +37,7 @@ import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.AMapService;
@@ -61,20 +62,16 @@ import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 import com.tencent.bugly.crashreport.CrashReport;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -104,6 +101,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private PopupMenu popupMenu;
     private ValidateInfo validateInfo;
     private HashMap<String, Object> map = new HashMap<>();
+    private ArrayList<Department> ad;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -215,6 +213,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
+
+
 
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
@@ -356,11 +356,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     Toast("您今天已经打卡完毕");
                 }
 
-                try {
-                    LogUtil.dll("能否打卡:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    LogUtil.dll("能否打卡:" + MainApp.gson.toJson(_validateInfo));
             }
 
             @Override
@@ -472,7 +468,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(500);
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();

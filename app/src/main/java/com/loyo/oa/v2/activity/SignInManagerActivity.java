@@ -68,7 +68,7 @@ public class SignInManagerActivity extends FragmentActivity {
         rotateAnimation = initAnimation();
 
         if(!Utils.hasRights()){
-            LEGWORK_FILTER_STRS = new String[]{"我的拜访", "团队拜访"};
+            LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
         }
         initCategoryUI();
         initChildren();

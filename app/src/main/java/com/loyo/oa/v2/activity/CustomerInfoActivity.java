@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -249,6 +251,29 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
     }
 
+    /**
+     * 显示对话框
+     */
+    private void showLeaveDialog() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
+                app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
+
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+            }
+        }).create();
+        dialog.show();
+    }
+
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label, R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users, R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district, R.id.layout_customer_industry})
     void onClick(View v) {
@@ -279,9 +304,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 tv_customer_join_users.setText("");
                 break;
             case R.id.layout_customer_responser:
-                Bundle bundle = new Bundle();
-                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
+
+                showLeaveDialog();
+
                 break;
             case R.id.layout_customer_join_users:
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);

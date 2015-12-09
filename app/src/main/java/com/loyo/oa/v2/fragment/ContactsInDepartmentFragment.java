@@ -9,6 +9,7 @@ import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,7 +37,7 @@ import java.util.List;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :部门联系人列表页
+ * 描述 :人员列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
  */
@@ -507,7 +509,7 @@ public class ContactsInDepartmentFragment extends BaseFragment {
         });
     }
 
-    //-------------------------------------------------------适配器---------------------------------------------
+    //--------------------------------------------适配器---------------------------------------------
     private class ContactsExpandableListAdapter extends BaseExpandableListAdapter {
         LayoutInflater layoutInflater;
 
@@ -565,6 +567,7 @@ public class ContactsInDepartmentFragment extends BaseFragment {
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             final Object o = getChild(groupPosition, childPosition);
+
             if (convertView == null) {
                 if (o instanceof User) {
                     convertView = layoutInflater.inflate(R.layout.item_contacts_child, null, false);

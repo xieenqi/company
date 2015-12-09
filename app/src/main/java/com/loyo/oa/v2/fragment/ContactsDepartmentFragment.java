@@ -24,6 +24,7 @@ import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
@@ -457,11 +458,23 @@ public class ContactsDepartmentFragment extends BaseFragment {
             if (null != group.getDepartments() && !group.getDepartments().isEmpty()) {
                 Department department = group.getDepartments().get(childPosition);
                 if (null != department) {
+
                     String departmentName = department.getName();
                     int userSize = Common.getUsersByDeptId(department.getId(), new ArrayList<User>()).size();
                     String members = "(" + userSize + "人)";
                     departmentName = departmentName.concat(members);
                     tv_content.setText(departmentName);
+
+                    LogUtil.dll("department-Name:"+department.getName());
+                    LogUtil.dll("department-GroupName:"+department.getGroupName());
+                    for(int i = 0;i<department.getUsers().size();i++){
+                        LogUtil.dll("department-getUsers-Name:"+department.getUsers().get(i).getName());
+                        LogUtil.dll("department-getUsers-RealName:"+department.getUsers().get(i).getRealname());
+                        LogUtil.dll("department-getUsers-GroupName:"+department.getUsers().get(i).getGroupName());
+                        LogUtil.dll("department-getUsers-DepartmentName:"+department.getUsers().get(i).getDepartmentsName());
+                        LogUtil.dll("department-getUsers-UserName:"+department.getUsers().get(i).getUsername());
+                        LogUtil.dll("department-getUsers-Avatar:"+department.getUsers().get(i).getAvatar());
+                    }
                 }
             }
             if (childPosition == getChildrenCount(groupPosition) - 1)
