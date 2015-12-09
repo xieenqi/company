@@ -1,9 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
-    <include layout="@layout/include_common_title"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:layout_gravity="fill_horizontal"
+        android:background="@color/title_bg1">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/img_title_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dimen_8"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back_left1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="23dp"
+                android:layout_marginRight="@dimen/margin_side_edge"
+                android:gravity="center_vertical"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_title_1"
+            style="@style/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="客户查重"/>
+
+        <!--<ImageView-->
+        <!--android:id="@+id/img_title_right"-->
+        <!--android:layout_width="@dimen/view_h_title"-->
+        <!--android:layout_height="@dimen/view_h_title"-->
+        <!--android:scaleType="center" />-->
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/diseditable"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/edt_serach"
+            android:layout_width="0dip"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.9"
+            android:background="@drawable/edt_customer_frame"
+            android:paddingLeft="5dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_serach"
+            android:layout_width="0dip"
+            android:layout_height="35dp"
+            android:layout_weight="0.15"
+            android:background="@drawable/tv_frame_repeat"
+            android:gravity="center"
+            android:text="搜索" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_showonly"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_customer_onlyname"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="不存在该用户，点击xx,创建该客户" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/wfinstance_notprocess" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
+
 
 </LinearLayout>

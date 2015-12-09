@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +73,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
+    public static final int REQUEST_CUSTOMER_SERACH = 7;
 
     @ViewById
     ViewGroup img_title_left;
@@ -97,7 +103,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     GridView gridView_photo;
 
+    ImageView img_refresh_address;
+
     SignInGridViewAdapter signInGridViewAdapter;
+    Animation animation;
     String uuid = null;
     ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
 
@@ -106,30 +115,54 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     ArrayList<NewTag> tags;
     String tagItemIds;
     String mGpsAddress;
+    String myAddress;
 
     boolean isFocused = false;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            if(msg.what == 0x01){
+                et_address.setText(myAddress);
+                mGpsAddress = myAddress;
+            }
+        }
+    };
+
 
     @AfterViews
     void initUI() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-
+        img_refresh_address = (ImageView)findViewById(R.id.img_refresh_address);
+        animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         super.setTitle("新建客户");
         init_gridView_photo();
         getTempCustomer();
+        startLocation();
+
+
+    }
+
+    /**
+     * 获取定位
+     * */
+    void startLocation() {
+        img_refresh_address.startAnimation(animation);
 
         new LocationUtil(this, new LocationUtil.AfterLocation() {
             @Override
             public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-                if (!isFocused) {
-                    et_address.setText(address);
-                    mGpsAddress = address;
-                }
+                    myAddress = address;
+                    mHandler.sendEmptyMessage(0x01);
+                    img_refresh_address.clearAnimation();
             }
+
 
             @Override
             public void OnLocationFailed() {
                 Toast.makeText(CustomerAddActivity.this, "定位失败,请在网络和GPS信号良好时重试", Toast.LENGTH_LONG).show();
+                img_refresh_address.clearAnimation();
             }
         });
     }
@@ -152,12 +185,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    @FocusChange(R.id.et_address)
-    void addressFocused(View hello, boolean hasFocus) {
-        if (hasFocus) {
-            isFocused = true;
-        }
-    }
 
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true);
@@ -165,16 +192,29 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right,R.id.tv_search,
-            R.id.layout_customer_label})
+            R.id.layout_customer_label,R.id.img_refresh_address})
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.tv_search:
-                serachRepate();
-                Intent intent = new Intent(CustomerAddActivity.this, CustomerRepeat.class);
-                startActivity(intent);
+            /*刷新地址*/
+            case R.id.img_refresh_address:
+                startLocation();
                 break;
 
+            /*查重*/
+            case R.id.tv_search:
+
+                if(!edt_name.getText().toString().isEmpty()) {
+
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("name", edt_name.getText().toString());
+                    app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH,bundle1);
+
+                }else{
+                    Toast("客户名称不能为空");
+                }
+
+                break;
 
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -288,6 +328,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult((Activity) mContext, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
 
                 break;
+
             /*case R.id.btn_add_new_contract:
                 app.startActivityForResult((Activity) mContext, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_NEW_CONTRACT, null);
                 break;*/
@@ -303,6 +344,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
 
         switch (requestCode) {
+            case REQUEST_CUSTOMER_SERACH:
+
+                Bundle bundle1 = data.getExtras();
+                edt_name.setText(bundle1.getString("name"));
+                LogUtil.dll("customer收到数据:" + bundle1.getString("name"));
+
+                break;
+
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
                 tags = (ArrayList<NewTag>) bundle.getSerializable("data");
@@ -397,40 +446,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /**
-     * 查重功能
-     * */
-    void serachRepate(){
 
-        HashMap<String,Object> map = new HashMap<String,Object>();
-        map.put("pageIndex",1);
-        map.put("pageSize",20);
-        map.put("keyWords","0000");
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSerachRepeat(map,new RCallback<City>(){
-            @Override
-            public void success(City test, Response response) {
-
-                try {
-                    LogUtil.dll("success result:"+ Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    LogUtil.dll("fail result:"+ Utils.convertStreamToString(error.getResponse().getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        });
-    }
 
     void setContract(Contact c) {
         if (c == null) return;

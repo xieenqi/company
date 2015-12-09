@@ -98,6 +98,14 @@
                         style="@style/edtText_normal"
                         android:hint="地址获取中..."/>
 
+                    <ImageView
+                        android:layout_marginRight="@dimen/dimen_5"
+                        android:id="@+id/img_refresh_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_refresh"/>
+
                 </LinearLayout>
 
                 <View
