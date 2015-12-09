@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -27,11 +27,13 @@ import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -39,10 +41,12 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -137,12 +141,12 @@ public class TasksInfoActivity extends BaseActivity {
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
 
-            Log.d("LOG", "realName:" + realName);
-            Log.d("LOG", "joinName:" + joinName);
-            Log.d("LOG", "istest:" + isTest);
-            Log.d("LOG", "project:" + beProjects);
-            Log.d("LOG", "title:" + vTitle);
-            Log.d("LOG", "content:" + vContent);
+            LogUtil.d("LOG", "realName:" + realName);
+            LogUtil.d("LOG", "joinName:" + joinName);
+            LogUtil.d("LOG", "istest:" + isTest);
+            LogUtil.d("LOG", "project:" + beProjects);
+            LogUtil.d("LOG", "title:" + vTitle);
+            LogUtil.d("LOG", "content:" + vContent);
 
         }
     }
@@ -331,7 +335,7 @@ public class TasksInfoActivity extends BaseActivity {
 
                     try {
                         String result = Utils.convertStreamToString(response.getBody().in());
-                        Log.d("LOG", "返回数据：" + result);
+                        LogUtil.d("LOG", "获取子任务返回数据：" +MainApp.gson.toJson(task));
                         taskId = task.getId(); //任务ID获取
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -600,6 +604,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     boolean IsResponsiblePerson() {
+
         return null!=mTask.getResponsiblePerson()?mTask.getResponsiblePerson().isCurrentUser():false;
     }
 }

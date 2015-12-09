@@ -1,7 +1,5 @@
 package com.loyo.oa.v2.beans;
 
-import android.util.Log;
-
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
@@ -82,7 +80,7 @@ public class NewUser implements Serializable {
             return true;
         }
         if (o instanceof User) {
-                return id.equals(((User) o).getId());
+                return ((User) o).getId().equals(id);
         }
 
         if (!(o instanceof NewUser)) {
@@ -91,7 +89,7 @@ public class NewUser implements Serializable {
 
         NewUser user = (NewUser) o;
 
-        return id.equals(user.id);
+        return (user.id).equals(id);
     }
 
     public boolean isCurrentUser() {

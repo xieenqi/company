@@ -38,8 +38,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * com.loyo.oa.v2.activity
- * 描述 :新建子任务类
+ * 描述 :【新建子任】页面务类
  * 作者 : ykb
  * 时间 : 15/7/20.
  */
@@ -137,6 +136,7 @@ public class ChildTaskAddActivity extends BaseActivity {
     @Click({R.id.layout_child_add_responser, R.id.btn_child_add_complete, R.id.btn_child_add_cancel_complete, R.id.img_title_left, R.id.img_title_right})
     void onClick(View view) {
         switch (view.getId()) {
+            //选择添加负责人
             case R.id.layout_child_add_responser:
 
                 ArrayList<NewUser> users = new ArrayList<>();
