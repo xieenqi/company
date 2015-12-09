@@ -65,7 +65,7 @@ import retrofit.client.Response;
  */
 public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, OnDropItemSelectedListener {
 
-    private static final String[] TIMES_TAG = new String[]{"按更新时间 倒序", "按更新时间 顺序", "按创建时间 倒序", "按创建时间 顺序"};
+    private static final String[] TIMES_TAG = new String[]{"按跟进时间 倒序", "按跟进时间 顺序", "按创建时间 倒序", "按创建时间 顺序"};
 
     private View mView;
     private PullToRefreshListView listView;

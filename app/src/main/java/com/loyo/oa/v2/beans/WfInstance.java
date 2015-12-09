@@ -18,33 +18,39 @@ public class WfInstance extends BaseBeans {
 //    Approved            //审批通过
 //            Finished            //经办完成
 
-    private String attachmentUUId;//string, optional): ,
-    private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
-    private BizForm bizform;//&{bizform BizForm}, optional): ,
-    private String bizformId;//int64, optional): ,
-    private User creator;//&{organization User}, optional): ,
-    private String id;//int64, optional): ,
-    private int nextExecutorId;//int, optional): ,
-    private String serialNumber;//string, optional): ,
-    private int status;//int, optional): ,
-    private String title;//string, optional): ,
-    private boolean topFlag;//bool, optional): ,
-    private String wftemplateId;//int64, optional): ,
-    private ArrayList<WfNodes> workflowNodes;//array[WfNodes], optional): ,
-    private ArrayList<HashMap<String,String>> workflowValues;//WorkFlowValues, optional):
-    private long createdAt;
-    private boolean ack;
-    private String memo;
+    public String id;//int64, optional): ,
+    public String bizformId;//int64, optional): ,
+    public String bizformName;
+    public String wftemplateId;//int64, optional): ,
+    public String templateName;
+    public String title;//string, optional): ,
+    public String serialNumber;//string, optional): ,
+    public boolean topFlag;//bool, optional): ,
+    public ArrayList<HashMap<String,Object>> workflowValues;//WorkFlowValues, optional):
+    public ArrayList<WfNodes> workflowNodes;//array[WfNodes], optional): ,
     private User nextExecutor;
-    private String deptId;
+    public String attachmentUUId;//string, optional): ,
+    public User creator;//&{organization User}, optional): ,
+    public long createdAt;
+    public int updatedAt;
+    public String deptId;
+    public int status;//int, optional):
+    public String memo;
+    public int nextExecutorId;//int, optional): ,
+    public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
+    public BizForm bizform;//&{bizform BizForm}, optional): ,
 
-    public String getDeptId() {
-        return deptId;
-    }
+    public boolean ack;
+    public boolean candel;
 
-    public void setDeptId(String deptId) {
-        this.deptId = deptId;
-    }
+
+//    public String getDeptId() {
+//        return deptId;
+//    }
+//
+//    public void setDeptId(String deptId) {
+//        this.deptId = deptId;
+//    }
 
     public User getNextExecutor() {
         return nextExecutor;
@@ -187,11 +193,11 @@ public class WfInstance extends BaseBeans {
         this.workflowNodes = workflowNodes;
     }
 
-    public ArrayList<HashMap<String,String>> getWorkflowValues() {
+    public ArrayList<HashMap<String,Object>> getWorkflowValues() {
         return workflowValues;
     }
 
-    public void setWorkflowValues(ArrayList<HashMap<String,String>> workflowValues) {
+    public void setWorkflowValues(ArrayList<HashMap<String,Object>> workflowValues) {
         this.workflowValues = workflowValues;
     }
 

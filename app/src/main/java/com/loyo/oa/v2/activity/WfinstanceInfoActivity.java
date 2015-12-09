@@ -74,7 +74,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
     WfInstanceValuesInfoAdapter wfInstanceValuesListViewAdapter;
 
-    ArrayList<HashMap<String, String>> wfInstanceValuesDatas = new ArrayList<>();
+    ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
     ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
 
     @Extra("data") WfInstance wfInstance;
@@ -161,13 +161,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         if (null != wfInstanceValuesDatas) {
             for (int j = 0; j < wfInstanceValuesDatas.size(); j++) {
-                HashMap<String, String> jsonObject = wfInstanceValuesDatas.get(j);
+                HashMap<String, Object> jsonObject = wfInstanceValuesDatas.get(j);
                 for (int i = 0; i < fields.size(); i++) {
                     BizFormFields field = fields.get(i);
                     View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
                     EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
                     tv_value.setEnabled(false);
-                    tv_value.setText(jsonObject.get(field.getId()));
+                    tv_value.setText(jsonObject.get(field.getId())+"");
 
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
                     tv_key.setText(field.getName());

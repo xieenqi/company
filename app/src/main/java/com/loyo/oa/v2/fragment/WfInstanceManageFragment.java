@@ -16,7 +16,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
@@ -82,11 +81,13 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
         map.put("type", category);
         map.put("status", status);
-        map.put("bizformId", bizFormId);
-        map.put("endTime", System.currentTimeMillis() / 1000);
-        map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+//        map.put("bizformId", bizFormId);
+//        map.put("endTime", System.currentTimeMillis() / 1000);
+//        map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()+ FinalVariables.wfinstance).create(IWfInstance.class).getWfInstances(map, this);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()+
+                FinalVariables.wfinstance).create(IWfInstance.class).
+                getWfInstances(map,WfInstanceManageFragment.this);
     }
 
     @Override
@@ -137,6 +138,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override
             public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+
                 if (null != bizFormPaginationX) {
                     mBizForms = bizFormPaginationX.getRecords();
                     if (null != mBizForms && !mBizForms.isEmpty()) {

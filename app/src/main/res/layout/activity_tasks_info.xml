@@ -14,10 +14,10 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:background="@color/white"
             android:id="@+id/layout_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <TextView
@@ -258,10 +258,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:id="@+id/layout_child_Add_area"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
 
             </LinearLayout>
 

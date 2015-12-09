@@ -251,6 +251,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
+
+
+
     }
 
     /**
@@ -348,7 +351,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 if (isSign) {
                     rotateInt();
                 } else {
-                    Intent intent = new Intent(MainActivity.this,AttendanceActivity_.class);
+                    Intent intent = new Intent(MainActivity.this, AttendanceActivity_.class);
                     startActivity(intent);
                     Toast("您今天已经打卡完毕");
                 }
