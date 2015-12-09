@@ -224,6 +224,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
+        //Toast(" 开始加载数据！！成功 ");
+        LogUtil.d(MainApp.gson.toJson(tPaginationX) + " 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
         mExpandableListView.onRefreshComplete();
         if (null == tPaginationX) {
             return;
@@ -245,7 +247,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
+      // System.out.print(error.getUrl()+" 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
         mExpandableListView.onRefreshComplete();
+        //Toast("URL: "+error.getMessage());
+
     }
 
     /**

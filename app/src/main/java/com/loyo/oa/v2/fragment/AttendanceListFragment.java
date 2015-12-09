@@ -315,7 +315,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
-                System.out.print(MainApp.gson.toJson(result) + " 请求<<<<<<.....>>>>>>的URL：  " + response.getUrl());
+                //System.out.print(MainApp.gson.toJson(result) + " 请求<<<<<<.....>>>>>>的URL：  " + response.getUrl());
                 dg.dismiss();
                 attendanceList=result.records;
                 attendances.addAll(result.records.getAttendances());
