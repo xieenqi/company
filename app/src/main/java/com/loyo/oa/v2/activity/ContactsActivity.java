@@ -33,8 +33,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     ViewGroup img_title_left;
     ViewGroup img_title_right;
 
-    ContactsDepartmentFragment departmentFragment; //部门frag
-    ContactsInDepartmentFragment userFragment;     //人员frag
+    ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
+    ContactsInDepartmentFragment userFragment;     //本部门  人员frag
 
     PagerSlidingTabStrip tabs;
     ViewPager pager;

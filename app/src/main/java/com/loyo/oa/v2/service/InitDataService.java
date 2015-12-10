@@ -51,19 +51,22 @@ public class InitDataService extends IntentService {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 sendDataChangeBroad(user);
-                LogUtil.dll("Server获取个人数据："+json);
+                LogUtil.d("Server获取个人数据：" + json);
             }
         });
     }
 
+    /** 后台 更新 组织架构
+     *
+     */
     void getOrganization() {
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
                 .create(IUser.class).getOrganization();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
+            LogUtil.d("更新 组织 架构 json："+MainApp.gson.toJson(lstDepartment_current));
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
-            //Toast.makeText(MainApp.getMainApp(),"   getOrganization  获取 ",Toast.LENGTH_LONG).show();
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
         }

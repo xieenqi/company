@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :部门列表页
+ * 描述 :【公司 的 部门】   列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
  */
@@ -361,6 +361,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 初始化列表 信息
+     */
     void init_expandableListView_user() {
         if (lstUserGroupData == null) {
             return;

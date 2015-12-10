@@ -66,10 +66,12 @@ public class ContactsInDepartmentFragment extends BaseFragment {
      * 初始化数据
      */
     private int initData() {
-        System.out.print("部门联系人列表" + depId);
+//Toast(" 本部门联系人 ");
         depId = (null == getArguments() || !getArguments().containsKey("depId")) ? "" : getArguments().getString("depId");
 
-        if (TextUtils.isEmpty(depId) && depId.length() != 0) {
+        //Toast(" 部门id " + !getArguments().containsKey("depId"));
+
+        if (TextUtils.isEmpty(depId) && depId.length() == 0) {
             depId = MainApp.user.getDepts().get(0).getShortDept().getId();
         }
 
