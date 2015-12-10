@@ -26,12 +26,12 @@ public class LogUtil {
     }
 
     /** 用于 输出 日志 方便
-     *
+     *xnq
      * @param text
      */
     public static void d(String text) {
         if (LogoStatus) {
-            Log.d(tag, text);
+            Log.d("LogoServerV2", text);
         }
     }
 

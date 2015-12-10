@@ -1,12 +1,14 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
+
 /**
  * com.loyo.oa.v2.beans
  * 描述 :子任务封装类
  * 作者 : ykb
  * 时间 : 15/7/20.
  */
-public class TaskCheckPoint extends BaseBeans {
+public class TaskCheckPoint extends BaseBeans implements Serializable{
     public static final int STATUS_PROCESSING = 1;  //进行中
     public static final int STATUS_REVIEWING = 2;   //审核中
     public static final int STATUS_FINISHED = 3;    //已完成

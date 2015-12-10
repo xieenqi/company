@@ -6,10 +6,10 @@
 
     <LinearLayout
         android:id="@+id/layout_cb"
-        android:clickable="false"
-        android:gravity="center"
         android:layout_width="@dimen/view_h_title"
-        android:layout_height="@dimen/view_h_title">
+        android:layout_height="@dimen/view_h_title"
+        android:clickable="false"
+        android:gravity="center">
 
         <CheckBox
             android:id="@+id/cb"
@@ -69,5 +69,6 @@
         android:layout_below="@+id/view_splite"
         android:scaleType="center"
         android:src="@drawable/right_arrow"/>
+
 
 </RelativeLayout>

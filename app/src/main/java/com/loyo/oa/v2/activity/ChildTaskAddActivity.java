@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -62,9 +64,11 @@ public class ChildTaskAddActivity extends BaseActivity {
     TaskCheckPoint mChildTask = new TaskCheckPoint();
 
     NewUser newUser;
+    ProgressDialog pd;
 
     @AfterViews
     void intUi() {
+        pd=new ProgressDialog(this);
         setTouchView(-1);
         layout_child_add_responser.setOnTouchListener(Global.GetTouch());
         btn_child_add_complete.setOnTouchListener(Global.GetTouch());
@@ -259,7 +263,7 @@ public class ChildTaskAddActivity extends BaseActivity {
      * 创建子任务
      */
     private synchronized void create() {
-
+pd.show();
         if (null == newUser) {
             Toast("请选择负责人");
             return;
@@ -268,7 +272,6 @@ public class ChildTaskAddActivity extends BaseActivity {
             Toast("请填写内容");
             return;
         }
-//        showDialog();
         mChildTask.setTitle(et_child_add_content.getText().toString());
         mChildTask.setResponsiblePerson(newUser);
 
@@ -279,7 +282,7 @@ public class ChildTaskAddActivity extends BaseActivity {
         MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), datas, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(TaskCheckPoint taskCheckPoint, Response response) {
-//                dismissDialog();
+                pd.dismiss();
                 Toast("创建子任务成功");
                 mChildTask = taskCheckPoint;
                 Intent intent = new Intent();
@@ -289,8 +292,9 @@ public class ChildTaskAddActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-//                dismissDialog();
+                pd.dismiss();
                 Toast("创建子任务失败");
+                LogUtil.d("LOG","创建子任务失败"+error.getMessage());
                 super.failure(error);
             }
         });

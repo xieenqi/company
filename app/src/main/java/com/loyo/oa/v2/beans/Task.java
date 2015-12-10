@@ -48,7 +48,7 @@ public class Task extends BaseBeans {
     private ArrayList<TaskCheckPoint> checklists;
     private ArrayList<TaskReviewComment> reviewComments;
     private ArrayList<Reviewer> members = new ArrayList<>();
-    private ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
+    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
 
     //    <!--保存本地使用-->
     private String responsiblePersonId;

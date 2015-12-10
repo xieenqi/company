@@ -10,12 +10,12 @@ import java.io.Serializable;
  */
 public class Reviewer implements Serializable {
     private NewUser user;
-    private boolean viewed;
-    private boolean reviewed;
-    private long viewAt;
-    private long reviewAt;
-    private int score;
-    private String comment;
+    private boolean viewed;//k看过吗
+    private boolean reviewed;//点评过吗
+    private long viewAt;//看的时间
+    private long reviewAt;//点评时间
+    private int score;//点评分数
+    private String comment;//点评内容
 
     public Reviewer() {
     }
