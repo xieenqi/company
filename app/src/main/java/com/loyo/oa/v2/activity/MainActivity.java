@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 主界面弹窗  新建任务  提交报告 审批申请 添加客户 拜访签到
-     *
+     *xnq
      * @param position
      * @param item
      */
@@ -508,7 +508,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     /**
-     * 到 【设置】 页面
+     * 到 【设置】 页面8
      */
     @Click(R.id.img_setting)
     void onClickSetting() {

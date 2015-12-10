@@ -198,7 +198,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-
+    /**更新 组织架构
+     *
+     */
     void initService() {
         InitDataService_.intent(mContext).start();
     }

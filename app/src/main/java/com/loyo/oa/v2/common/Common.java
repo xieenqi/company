@@ -122,6 +122,11 @@ public final class Common {
         return result;
     }
 
+    /**
+     * 获取 本部门 的人员信息  xnq
+     * @param deptId
+     * @return
+     */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
         List<Department> departmentList = getLstDepartment(deptId);
         if (departmentList == null || departmentList.isEmpty()) {

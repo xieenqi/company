@@ -106,7 +106,7 @@ public class MainApp extends Application {
     //下属
     public static ArrayList<User> subUsers = new ArrayList<>();
     public static ArrayList<UserGroupData> lstUserGroupData;
-    public static ArrayList<Department> lstDepartment;
+    public static ArrayList<Department> lstDepartment;//组织架构 的缓存
     static String token;
     public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;

@@ -361,6 +361,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 初始化列表 信息
+     */
     void init_expandableListView_user() {
         if (lstUserGroupData == null) {
             return;
