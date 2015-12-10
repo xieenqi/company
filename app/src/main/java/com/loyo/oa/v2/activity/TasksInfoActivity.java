@@ -15,11 +15,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.tasks.TaskChildEdit;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
@@ -31,7 +33,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -42,7 +43,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,6 +61,7 @@ public class TasksInfoActivity extends BaseActivity {
     static final int REQUEST_EDIT = 300;
     static final int REQUEST_EDIT_DELETE = 500;
     static final int REQUEST_CREATE_SUB = 600;
+    static final int REQUEST_EDIT_TASK = 740;
 
     final int MSG_ATTACHMENT = 700;
     final int MSG_DISCUSSION = 800;
@@ -279,7 +280,28 @@ public class TasksInfoActivity extends BaseActivity {
                        }
                    }
                });
+//到编辑子任务
+            view.setTag(subTask);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //组装 负责人 于 参与人
+                    ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
+                    reponserData.addAll(mTask.getMembers());
+                    reponserData.addAll(mTask.responsiblePersons);
+                    ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
+                    for (Reviewer element : reponserData) {
+                        reponserDataUser.add(element.getUser());
+                    }
 
+                    Intent intent = new Intent(TasksInfoActivity.this, TaskChildEdit.class);
+                    intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
+                    intent.putExtra("TaskId", mTask.getId());
+                    intent.putExtra("reponserData", reponserDataUser);
+                    TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
+                    TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
+                }
+            });
             layout_child_Add_area.addView(view);
         }
         //子任务完成度(3/5)设置
@@ -319,7 +341,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     /**
-     * 获取任务信息
+     * 获取任务信息【子任务等】
      * */
     @Background
     void getTask() {
@@ -327,19 +349,12 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void success(Task task, Response response) {
                 if (task != null) {
-
                     mTask = task;
                     updateUI();
                     getDiscussion();
                     showAttachment();
-
-                    try {
-                        String result = Utils.convertStreamToString(response.getBody().in());
-                        LogUtil.d("LOG", "获取子任务返回数据：" +MainApp.gson.toJson(task));
-                        taskId = task.getId(); //任务ID获取
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    taskId = task.getId(); //任务ID获取
+                    LogUtil.d("获取子任务返回数据：" + MainApp.gson.toJson(task));
                 }
             }
         });
@@ -353,7 +368,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         switch (v.getId()) {
             case R.id.img_title_left:
-                onBackPressed();
+                finish();
                 break;
             case R.id.img_title_right:
                 if (null == mTask) {
@@ -454,21 +469,11 @@ public class TasksInfoActivity extends BaseActivity {
 //                    checkChildStatus();
 //                }
 //                break;
-//            case DepartmentUserActivity.request_Code:
-//
-//                User user = (User) data.getSerializableExtra(User.class.getName());
-//                if (user != null) {
-//                    responseUser = user;
-//                    updateUI_task_responsiblePerson();
-//                } else {
-//                    String cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-//                    String cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-//                    if (cc_user_name != null) {
-//                        tv_toUsers.setText(cc_user_name);
-//                    }
-//                }
-//
-//                break;
+
+            case REQUEST_EDIT_TASK://编辑 子任务 返回
+                layout_child_Add_area.removeAllViews();
+                getTask();
+                break;
             case REQUEST_SCORE:
 //                mTask = (Task) data.getSerializableExtra("review");
 //                updateUI();

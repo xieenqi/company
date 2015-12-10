@@ -387,11 +387,18 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 子任务的添加-->
         <activity
             android:name=".activity.ChildTaskAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 子任务的 编辑 -->
+        <activity
+            android:name=".activity.tasks.TaskChildEdit"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <activity
             android:name=".activity.TasksEditActivity_"
             android:launchMode="singleTop"

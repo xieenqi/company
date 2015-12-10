@@ -62,6 +62,7 @@
     <color name="magenta">#FF00FF</color>
     <!-- 红紫色 -->
     <color name="red">#FF0000</color>
+    <color name="red1">#f5625a</color>
     <!-- 红色 -->
     <color name="oldlace">#FDF5E6</color>
     <!-- 老花色 -->

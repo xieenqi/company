@@ -25,4 +25,23 @@ public interface ICheckPoint {
 
     @POST("/task/{id}/checkitem")
     void createChildTask(@Path("id") String id, @Body HashMap<String, Object> body, retrofit.Callback<TaskCheckPoint> cb);
+
+    /**
+     * xnq 跟新 编辑 子任务
+     * @param id
+     * @param checkPointId
+     * @param body
+     * @param cb
+     */
+    @PUT("/task/{id}/checkitem/{cid}")
+    void updateChildTaskInfo(@Path("id") String id, @Path("cid") String checkPointId, @Body HashMap<String, Object> body, retrofit.Callback<TaskCheckPoint> cb);
+
+    /**
+     * 删除 子任务 xnq
+     * @param id
+     * @param checkPointId
+     * @param cb
+     */
+    @DELETE("/task/{id}/checkitem/{cid}")
+    void deleteChildTaskInfo(@Path("id") String id, @Path("cid") String checkPointId, retrofit.Callback<TaskCheckPoint> cb);
 }

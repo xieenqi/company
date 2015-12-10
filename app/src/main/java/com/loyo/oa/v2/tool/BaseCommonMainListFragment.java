@@ -247,7 +247,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
-      // System.out.print(error.getUrl()+" 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
+        LogUtil.d(error.getUrl() + " 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
         mExpandableListView.onRefreshComplete();
         //Toast("URL: "+error.getMessage());
 
