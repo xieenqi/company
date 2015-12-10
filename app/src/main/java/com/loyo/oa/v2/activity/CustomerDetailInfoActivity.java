@@ -48,41 +48,69 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_customer_detail_info)
 public class CustomerDetailInfoActivity extends BaseActivity {
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
-    @ViewById TextView tv_title_1;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
+    @ViewById
+    TextView tv_title_1;
 
-    @ViewById ImageView img_public;
+    @ViewById
+    ImageView img_public;
 
-    @ViewById ViewGroup layout_customer_info;
-    @ViewById TextView tv_customer_name;
-    @ViewById TextView tv_address;
-    @ViewById TextView tv_tags;
+    @ViewById
+    ViewGroup layout_customer_info;
+    @ViewById
+    TextView tv_customer_name;
+    @ViewById
+    TextView tv_address;
+    @ViewById
+    TextView tv_tags;
 
-    @ViewById ViewGroup layout_contact;
-    @ViewById TextView tv_contact_name;
-    @ViewById TextView tv_contact_tel;
-    @ViewById ViewGroup layout_send_sms;
-    @ViewById ViewGroup layout_call;
+    @ViewById
+    ViewGroup layout_contact;
+    @ViewById
+    TextView tv_contact_name;
+    @ViewById
+    TextView tv_contact_tel;
+    @ViewById
+    ViewGroup layout_send_sms;
+    @ViewById
+    ViewGroup layout_call;
 
 
-    @ViewById ViewGroup layout_sale_activity;
-    @ViewById ViewGroup layout_visit;
-    @ViewById ViewGroup layout_purchase;
-    @ViewById ViewGroup layout_task;
-    @ViewById ViewGroup layout_attachment;
+    @ViewById
+    ViewGroup layout_sale_activity;
+    @ViewById
+    ViewGroup layout_visit;
+    @ViewById
+    ViewGroup layout_purchase;
+    @ViewById
+    ViewGroup layout_task;
+    @ViewById
+    ViewGroup layout_attachment;
 
 
-    @ViewById TextView tv_sale_activity_date;
-    @ViewById TextView tv_visit_times;
-    @ViewById TextView tv_purchase_count;
-    @ViewById TextView tv_task_count;
-    @ViewById TextView tv_attachment_count;
+    @ViewById
+    TextView tv_sale_activity_date;
+    @ViewById
+    TextView tv_visit_times;
+    @ViewById
+    TextView tv_purchase_count;
+    @ViewById
+    TextView tv_task_count;
+    @ViewById
+    TextView tv_attachment_count;
 
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
+    @Extra("Id")
+    String id;
 
-    @Extra("Id") String id;
+    String aId;
+    String bId;
+    boolean isLock;
+
 
     @AfterViews
     void initViews() {
@@ -111,12 +139,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
-                try {
-                    LogUtil.dll("success:"+Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
+                LogUtil.dll("success:" + MainApp.gson.toJson(customer));
+                aId = customer.getCreator().getId();
+                bId = customer.getOwner().getUser().getId();
+                isLock = customer.isLock();
                 mCustomer = customer;
                 initData();
             }
@@ -124,15 +151,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
 
-                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
-                }
-
-                else if(error.getKind() == RetrofitError.Kind.HTTP){
-                    if(error.getResponse().getStatus() == 500){
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    if (error.getResponse().getStatus() == 500) {
                         Toast("网络异常500，请稍候再试");
                     }
-                }else{
+                } else {
                     Toast("没有客户详情信息");
                 }
                 finish();
@@ -151,7 +176,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (!mCustomer.isLock()) {
             img_public.setVisibility(View.VISIBLE);
         }
-        if (mCustomer.isLock()) {
+        /*如果不是自己的客户，则不显示右上角菜单按钮*/
+        if (mCustomer.isLock() && aId.equals(bId)) {
             img_title_right.setOnTouchListener(Global.GetTouch());
             img_title_left.setOnTouchListener(Global.GetTouch());
             layout_customer_info.setOnTouchListener(Global.GetTouch());
@@ -208,8 +234,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         Button btn_child_delete_task = (Button) menuView.findViewById(R.id.btn_child_delete_task);
         Button btnCancel = (Button) menuView.findViewById(R.id.btn_cancel_edit);
         Button btnUpdate = (Button) menuView.findViewById(R.id.btn_child_add_update);
+
         btnUpdate.setText("投入公海");
         btn_child_delete_task.setText("删除");
+        btn_child_delete_task.setVisibility(View.GONE); //暂时注释掉删除
+
         btn_child_delete_task.setOnTouchListener(Global.GetTouch());
         btnCancel.setOnTouchListener(Global.GetTouch());
         btnUpdate.setOnTouchListener(Global.GetTouch());
