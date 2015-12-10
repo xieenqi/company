@@ -68,7 +68,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         if (sb == null) {
             mIndex = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         } else {
-            mIndex = "#".concat(sb.toString());
+            mIndex = "".concat(sb.toString());
         }
     }
 
