@@ -121,30 +121,41 @@ public final class Common {
 
         return result;
     }
-
+    public static String companyId;
     /**
      * 获取 本部门 的人员信息  xnq
+     *
      * @param deptId
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
-        List<Department> departmentList = getLstDepartment(deptId);
+
+
+        List<Department> departmentList = getLstDepartment(deptId);//全部 组织 架构
         if (departmentList == null || departmentList.isEmpty()) {
             return new ArrayList<>();
         }
 
-        SparseArray<ArrayList<Department>> maps = new SparseArray<>();
+        SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
         for (char index = 'A'; index <= 'Z'; index += (char) 1) {
-            ArrayList<Department> departments = new ArrayList<>();
-            for (Department department : departmentList) {
+            ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
+            for (Department department : departmentList) {//遍历组织架构
                 if (department == null) {
                     continue;
                 }
-                String groupName_current = department.getGroupName();
-                if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
-                    departments.add(department);
+                if (department.getId().equals(department.getSuperiorId())) {
+                    companyId = department.getId();
+                    continue;
                 }
+
+                if (companyId.equals(department.getSuperiorId())) {
+                    String groupName_current = department.getGroupName();
+                    if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
+                        departments.add(department);
+                    }
+                }
+
             }
             if (!departments.isEmpty()) {
                 maps.put(index, departments);
@@ -202,6 +213,9 @@ public final class Common {
         setLstDepartment(DBManager.Instance().getOrganization());
     }
 
+    /**
+     * @param departmentList
+     */
     static void setOrganization(ArrayList<Department> departmentList) {
         if (departmentList == null) {
             return;
@@ -275,6 +289,11 @@ public final class Common {
         Common.setLstUserGroupData(lstUserGroupData_current);
     }
 
+    /**
+     * 缓存  组织 架构 信息 xnq
+     *
+     * @param _lstDepartment
+     */
     public static void setLstDepartment(ArrayList<Department> _lstDepartment) {
         if (_lstDepartment == null) {
             return;

@@ -119,6 +119,7 @@ public class Department implements Serializable {
      * @return
      */
     public String getGroupName() {
+
         if (!TextUtils.isEmpty(getFullPinyin())) {
             return getFullPinyin().substring(0, 1).toUpperCase();
         } else if (!TextUtils.isEmpty(getSimplePinyin())) {
