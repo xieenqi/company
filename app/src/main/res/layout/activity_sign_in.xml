@@ -139,12 +139,9 @@
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

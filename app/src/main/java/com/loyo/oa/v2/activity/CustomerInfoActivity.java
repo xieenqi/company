@@ -218,7 +218,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         tv_customer_creator.setText(mCustomer.getCreator().getName());
         String responser = null == mCustomer.getOwner() || null == mCustomer.getOwner().getUser() ? "" : mCustomer.getOwner().getUser().getName();
         tv_customer_responser.setText(responser);
-        tv_customer_join_users.setText(Utils.getMembers(members));
+
+        if(members.size() != 0) {
+            img_del_join_users.setVisibility(View.VISIBLE);
+            tv_customer_join_users.setText(Utils.getMembers(members));
+        }
+
         if (regional.getProvince() != null) {
             tv_district.setText(regional.getProvince() + "省" + regional.getCity() + "市" + regional.getCounty() + "区");
         }
@@ -230,6 +235,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             mTagItems = mCustomer.getTags();
             setTag();
         }
+
+
     }
 
     @UiThread
@@ -302,11 +309,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             case R.id.img_del_join_users:
                 members.clear();
                 tv_customer_join_users.setText("");
+                img_del_join_users.setVisibility(View.GONE);
                 break;
             case R.id.layout_customer_responser:
-
                 showLeaveDialog();
-
                 break;
             case R.id.layout_customer_join_users:
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
@@ -441,7 +447,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
                     members = Utils.convert2Members(userIds, userNames);
-                    tv_customer_join_users.setText(userNames);
+                    if(members.size() != 0){
+                        img_del_join_users.setVisibility(View.VISIBLE);
+                        tv_customer_join_users.setText(userNames);
+                    }
                 }
                 break;
 

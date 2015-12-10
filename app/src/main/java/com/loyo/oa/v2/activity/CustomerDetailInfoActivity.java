@@ -192,7 +192,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             layout_task.setOnTouchListener(Global.GetTouch());
             layout_attachment.setOnTouchListener(Global.GetTouch());
         } else {
-            layout_customer_info.setEnabled(false);
             //            img_public.setEnabled(false);
             layout_contact.setEnabled(false);
             layout_send_sms.setEnabled(false);
@@ -326,20 +325,20 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         int requestCode = -1;
         switch (view.getId()) {
             case R.id.img_title_left:
-                //onBackPressed();
-
-                Intent intent = new Intent();
+                onBackPressed();
+/*                Intent intent = new Intent();
                 this.setResult(RESULT_OK,intent);
-                finish();
-
+                finish();*/
                 break;
             case R.id.img_title_right:
                 showEditPopu();
                 break;
             case R.id.layout_customer_info:
+
                 bundle.putSerializable("Customer", mCustomer);
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
+
                 break;
             case R.id.img_public:
 

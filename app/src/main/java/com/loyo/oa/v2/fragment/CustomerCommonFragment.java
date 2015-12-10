@@ -50,9 +50,6 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import javax.xml.transform.Result;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -215,7 +212,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
         source.add(time);
         initTagsMenu();
-        Utils.dialogShow(getActivity());//progress
     }
 
     /**
@@ -568,7 +564,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (isTopAdd && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
                             getNearCustomersInfo();
                         }
-                        Utils.dialogDismiss();
                     }
 
                     @Override
@@ -586,7 +581,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             Toast("数据获取失败，请重试");
                         }
                         listView.onRefreshComplete();
-                        Utils.dialogDismiss();
                     }
                 }
         );
@@ -642,13 +636,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                 }
                 break;
-        }
-
-        LogUtil.dll("requestCode:"+requestCode);
-        LogUtil.dll("resultCode:"+resultCode);
-
-        if(requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == -1){
-            LogUtil.dll("来自投入公海后的信息");
         }
 
         bindData();

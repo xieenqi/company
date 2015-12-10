@@ -1,8 +1,11 @@
 package com.loyo.oa.v2.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -24,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class SignInGridViewAdapter extends BaseAdapter {
+
     private LayoutInflater layoutInflater;
     private ArrayList<Attachment> mListData;
     private Activity mActivity;
@@ -31,6 +36,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
     ArrayList<File> mBitmaps = new ArrayList<>();
     //是否选择本地图片
     private boolean localpic = false;
+    private Uri fileUri;
 
     public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd) {
         if (lstData == null) {
@@ -183,6 +189,20 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
+
+/*            try {
+                //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
+                //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                fileUri = Global.getOutputMediaFileUri();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                mActivity.startActivityForResult(intent, 1);
+
+            } catch (Exception e) {
+                Global.ProcException(e);
+            }*/
+
             Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
             intent.putExtra("localpic", localpic);
             mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);

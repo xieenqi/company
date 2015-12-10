@@ -53,9 +53,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     EditText edt_memo;
 
     ViewGroup img_title_left, img_title_right;
-
     private GridView gridView_photo;
-
     ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
 
     private String uuid = StringUtil.getUUID();
