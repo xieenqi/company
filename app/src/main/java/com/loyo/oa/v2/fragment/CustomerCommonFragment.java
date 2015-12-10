@@ -514,13 +514,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (isTopAdd && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
                             getNearCustomersInfo();
                         }
-
-                        try {
-                            LogUtil.dll("客户管理，我的客户返回数据:"+ Utils.convertStreamToString(response.getBody().in()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
                     }
 
                     @Override

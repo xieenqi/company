@@ -1,8 +1,10 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.beans.City;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.LegWork;
@@ -267,5 +269,12 @@ public interface ICustomer {
 
     @GET("/customer/regional")
     void getDistricts(Callback<ArrayList<Province>> callback);
+
+
+
+    /**新建客户，查重*/
+    @GET("/customer/search")
+    void getSerachRepeat(@QueryMap Map<String, Object> params,Callback<PaginationX<CustomerRepeatList>> callback);
+
 
 }
