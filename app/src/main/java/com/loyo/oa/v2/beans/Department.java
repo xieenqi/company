@@ -124,6 +124,9 @@ public class Department implements Serializable {
             return getFullPinyin().substring(0, 1).toUpperCase();
         } else if (!TextUtils.isEmpty(getSimplePinyin())) {
             return getSimplePinyin().substring(0, 1).toUpperCase();
+        }else if(TextUtils.isEmpty(getFullPinyin())||TextUtils.isEmpty(getSimplePinyin())){
+            //LogUtil.d(" #ddd  "+getName());
+           return "# ";
         }
 
         return "";

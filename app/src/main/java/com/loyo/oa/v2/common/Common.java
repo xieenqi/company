@@ -138,7 +138,7 @@ public final class Common {
 
         SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
-        for (char index = 'A'; index <= 'Z'; index += (char) 1) {
+        for (char index = '#'; index <= 'Z'; index += (char) 1) {
             ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
             for (Department department : departmentList) {//遍历组织架构
                 if (department == null) {
@@ -153,6 +153,8 @@ public final class Common {
                     String groupName_current = department.getGroupName();
                     if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                         departments.add(department);
+                    }else if(TextUtils.isEmpty(groupName_current)){
+                        departments.add(0,department);
                     }
                 }
 

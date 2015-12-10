@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :人员列表页
+ * 描述 :【本部门】人员列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
  */
