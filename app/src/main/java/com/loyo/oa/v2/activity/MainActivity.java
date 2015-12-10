@@ -214,8 +214,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @AfterViews
     void init() {
 
-
-
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
@@ -355,8 +353,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     startActivity(intent);
                     Toast("您今天已经打卡完毕");
                 }
-
-                    LogUtil.dll("能否打卡:" + MainApp.gson.toJson(_validateInfo));
             }
 
             @Override
@@ -766,6 +762,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
 
         CrashReport.setUserId(info);
+
     }
 
     public class ClickItem {

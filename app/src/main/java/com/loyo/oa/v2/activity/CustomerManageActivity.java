@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -69,6 +70,9 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
     @AfterViews
     void initUI() {
+
+
+
         setTitle("我的客户");
         setTouchView(-1);
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());

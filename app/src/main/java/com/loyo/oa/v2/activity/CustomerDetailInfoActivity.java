@@ -326,7 +326,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         int requestCode = -1;
         switch (view.getId()) {
             case R.id.img_title_left:
-                onBackPressed();
+                //onBackPressed();
+
+                Intent intent = new Intent();
+                this.setResult(RESULT_OK,intent);
+                finish();
+
                 break;
             case R.id.img_title_right:
                 showEditPopu();
