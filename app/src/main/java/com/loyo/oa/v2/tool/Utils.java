@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -57,6 +58,10 @@ import rx.Observable;
  * 时间 : 15/8/6.
  */
 public class Utils {
+
+     static ProgressDialog  progressDialog;
+
+
     /**
      * 高斯模糊图片
      *
@@ -231,6 +236,22 @@ public class Utils {
         }
         return contacts.get(0);
     }
+
+    /**
+     * 等待进度条
+     * */
+    public static void dialogShow(Context ct){
+        progressDialog = new ProgressDialog(ct);
+        progressDialog.setMessage("请稍候");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public static void dialogDismiss(){
+        progressDialog.dismiss();
+    }
+
 
     /**
      * 发送短信

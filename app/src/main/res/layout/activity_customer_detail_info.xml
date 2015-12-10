@@ -23,6 +23,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 >
+
                 <LinearLayout
                     android:layout_toLeftOf="@+id/layout_right"
                     android:layout_width="match_parent"

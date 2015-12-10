@@ -17,7 +17,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
@@ -48,11 +47,11 @@ import com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu;
 import com.loyo.oa.v2.tool.customview.DropListMenu.OnDropItemSelectedListener;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import javax.xml.transform.Result;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -79,6 +78,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isTopAdd = true;
+    private boolean isFrist  = false;
     private String position;
     private NearCount nearCount;
 
@@ -89,6 +89,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String tagItemIds = "";
     private String departmentId = "";
     private String userId = "";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 mCustomers = (ArrayList) getArguments().getSerializable("data");
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Nullable
@@ -144,6 +151,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     break;
             }
         }
+        order = "desc";
+        filed = "lastActAt";
+
         initMenu();
         return mView;
     }
@@ -190,10 +200,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     }
 
     /**
-     * 初始化筛选menu
+     * 初始化时间筛选menu
      */
     void initMenu() {
         source.clear();
+        isFrist = true;
         if (customer_type == Customer.CUSTOMER_TYPE_TEAM) {
             initOrganizationMenu();
         }
@@ -204,6 +215,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
         source.add(time);
         initTagsMenu();
+        Utils.dialogShow(getActivity());//progress
     }
 
     /**
@@ -233,7 +245,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 }
                 source.add(dropItemTag);
                 mDropMenu.setmMenuItems(source);
-
                 mDropMenu.setMenuSelectedListener(CustomerCommonFragment.this);
             }
         });
@@ -290,26 +301,26 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
         if (items != null && items.size() > 0) {
             switch (customer_type) {
+                /*我的客户*/
                 case Customer.CUSTOMER_TYPE_MINE:
-                case Customer.CUSTOMER_TYPE_PUBLIC:
                     //时间
                     if (ColumnIndex == 0) {
                         switch (items.get(items.keyAt(0)).getValue()) {
                             case 0:
                                 filed = "lastActAt";
-                                order = "asc";
+                                order = "desc";
                                 break;
                             case 1:
                                 filed = "lastActAt";
-                                order = "desc";
+                                order = "asc";
                                 break;
                             case 2:
                                 filed = "createdAt";
-                                order = "asc";
+                                order = "desc";
                                 break;
                             case 3:
                                 filed = "createdAt";
-                                order = "desc";
+                                order = "asc";
                                 break;
                         }
                     }
@@ -323,6 +334,42 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         }
                     }
                     break;
+
+                /*公海客户*/
+                case Customer.CUSTOMER_TYPE_PUBLIC:
+                    //时间
+                    if (ColumnIndex == 0) {
+                        switch (items.get(items.keyAt(0)).getValue()) {
+                            case 0:
+                                filed = "lastActAt";
+                                order = "desc";
+                                break;
+                            case 1:
+                                filed = "lastActAt";
+                                order = "asc";
+                                break;
+                            case 2:
+                                filed = "createdAt";
+                                order = "desc";
+                                break;
+                            case 3:
+                                filed = "createdAt";
+                                order = "asc";
+                                break;
+                        }
+                    }
+                    //客户标签
+                    else if (ColumnIndex == 1) {
+                        for (int i = 0; i < items.size(); i++) {
+                            tagItemIds += items.get(items.keyAt(i)).getmData();
+                            if (i != items.size() - 1) {
+                                tagItemIds += ",";
+                            }
+                        }
+                    }
+                    break;
+
+                /*团队客户*/
                 case Customer.CUSTOMER_TYPE_TEAM:
                     //部门
                     if (ColumnIndex == 0) {
@@ -337,19 +384,19 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         switch (items.get(items.keyAt(0)).getValue()) {
                             case 0:
                                 filed = "lastActAt";
-                                order = "asc";
+                                order = "desc";
                                 break;
                             case 1:
                                 filed = "lastActAt";
-                                order = "desc";
+                                order = "asc";
                                 break;
                             case 2:
                                 filed = "createdAt";
-                                order = "asc";
+                                order = "desc";
                                 break;
                             case 3:
                                 filed = "createdAt";
-                                order = "desc";
+                                order = "asc";
                                 break;
                         }
                     }
@@ -447,9 +494,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     }
 
     /**
-     * 获取数据
+     * 获取数据,默认设置倒序
      */
     private void getData() {
+
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", mPagination.getPageIndex());
         params.put("pageSize", isTopAdd ? mCustomers.size() >= 20 ? mCustomers.size() : 20 : 20);
@@ -458,6 +506,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         params.put("tafItemIds", tagItemIds);
         params.put("deptId", departmentId);
         params.put("userId", userId);
+
+        LogUtil.dll("pageIndex:"+mPagination.getPageIndex());
+        LogUtil.dll("order:"+order);
+        LogUtil.dll("field:"+filed);
+        LogUtil.dll("tafItemIds:"+tagItemIds);
 
         String url = "";
         switch (customer_type) {
@@ -491,6 +544,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
+                        LogUtil.dll("success code:"+response.getStatus());
                         listView.onRefreshComplete();
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
@@ -514,15 +568,27 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (isTopAdd && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
                             getNearCustomersInfo();
                         }
+                        Utils.dialogDismiss();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+
+                        LogUtil.dll("error code:" + error.getResponse().getStatus());
+
+                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                            Toast("请检查您的网络连接");
+                        } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                            if(error.getResponse().getStatus() == 500){
+                                Toast("网络异常500，请稍候再试");
+                            }
+                        }else{
+                            Toast("数据获取失败，请重试");
+                        }
                         listView.onRefreshComplete();
-                        super.failure(error);
+                        Utils.dialogDismiss();
                     }
                 }
-
         );
     }
 
@@ -577,6 +643,14 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 }
                 break;
         }
+
+        LogUtil.dll("requestCode:"+requestCode);
+        LogUtil.dll("resultCode:"+resultCode);
+
+        if(requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == -1){
+            LogUtil.dll("来自投入公海后的信息");
+        }
+
         bindData();
     }
 
@@ -740,8 +814,5 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             }
             return convertView;
         }
-
     }
-
-
 }
