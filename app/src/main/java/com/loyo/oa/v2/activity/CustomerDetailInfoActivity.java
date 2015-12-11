@@ -54,7 +54,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     ViewGroup img_title_right;
     @ViewById
     TextView tv_title_1;
-
     @ViewById
     ImageView img_public;
 
@@ -117,18 +116,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
-
-        img_public.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                app.getRestAdapter().create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
-                    @Override
-                    public void success(Customer newCustomer, Response response) {
-                        onBackPressed();
-                    }
-                });
-            }
-        });
         getData();
     }
 
@@ -192,7 +179,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             layout_task.setOnTouchListener(Global.GetTouch());
             layout_attachment.setOnTouchListener(Global.GetTouch());
         } else {
-            //            img_public.setEnabled(false);
+            //img_public.setEnabled(false);
             layout_contact.setEnabled(false);
             layout_send_sms.setEnabled(false);
             layout_call.setEnabled(false);
@@ -340,9 +327,39 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
 
                 break;
+
+            /*挑入*/
             case R.id.img_public:
 
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
+                    @Override
+                    public void success(Customer newCustomer, Response response) {
+                            finish();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                        if(error.getKind() == RetrofitError.Kind.NETWORK){
+                            Toast("请检查您的网络连接");
+                        }
+
+                        else if(error.getKind() == RetrofitError.Kind.HTTP){
+                            if(error.getResponse().getStatus() == 500){
+                                Toast("网络异常500，请稍候再试");
+                            }
+                        }
+                        else{
+                            Toast("操作失败");
+                        }
+                        finish();
+                    }
+                });
+
+
                 break;
+
+
             case R.id.layout_contact:
                 bundle.putSerializable("Customer", mCustomer);
                 _class = CustomerContactManageActivity_.class;
