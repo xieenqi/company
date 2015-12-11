@@ -54,6 +54,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     @ViewById ViewGroup layout_add;
 
     @Extra Customer mCustomer;
+    @Extra boolean isMyUser;
 
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
     private ArrayList<LegWork> legWorks = new ArrayList<>();
@@ -67,8 +68,12 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());
-        layout_add.setOnTouchListener(Global.GetTouch());
 
+        if(!isMyUser){
+            layout_add.setVisibility(View.GONE);
+        }
+
+        layout_add.setOnTouchListener(Global.GetTouch());
         getData();
     }
 

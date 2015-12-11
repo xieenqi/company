@@ -3,6 +3,8 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
@@ -39,8 +41,11 @@ public class AttachmentActivity extends BaseActivity {
 
     @Extra("users") ArrayList<User> mUserList;
     @Extra("uuid") String uuid;
+    @Extra("isMyUser") boolean isMyUser;
 
     @ViewById(R.id.listView_attachment) SwipeListView mListViewAttachment;
+    @ViewById(R.id.tv_upload)
+    TextView tv_upload;
 
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
@@ -50,6 +55,11 @@ public class AttachmentActivity extends BaseActivity {
         super.setTitle("附件");
         setTouchView(NO_SCROLL);
         getAttachments();
+
+        if(!isMyUser){
+            tv_upload.setVisibility(View.GONE);
+        }
+
     }
 
     @UiThread

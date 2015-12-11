@@ -19,6 +19,9 @@ public class CellInfo
     /**设备硬件版本**/
     private String loyoHVersion;
 
+    public CellInfo() {
+    }
+
     public String getLoyoImei()
     {
         return loyoImei;

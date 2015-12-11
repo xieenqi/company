@@ -272,7 +272,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     Global.ProcException(e);
                 }
                 break;
-
+            //选择部门 返回
             case RESULT_DEPT_CHOOSE:
                 UserInfo userInfo=(UserInfo)data.getSerializableExtra(DepartmentChoose.class.getName());
                 tv_dept.setText(userInfo.getShortDept().getName());
@@ -330,7 +330,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 }
                 break;
 
-            case R.id.layout_wfinstance:
+            case R.id.layout_wfinstance://到选择类型页面
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
             case R.id.ll_dept:

@@ -45,9 +45,15 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @ViewById ViewGroup layout_add;
 
     @Extra("Customer") Customer mCustomer;
+    @Extra("isMyUser") boolean isMyUser;
 
     @AfterViews
     void initViews() {
+
+        if(!isMyUser){
+            layout_add.setVisibility(View.GONE);
+        }
+
         setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("联系人详情");
@@ -82,7 +88,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
             ContactViewGroup contactViewGroup = new ContactViewGroup(this,mCustomer, contact,this);
-            contactViewGroup.bindView(i + 1, layout_container);
+            contactViewGroup.bindView(i + 1, layout_container,isMyUser);
         }
     }
 

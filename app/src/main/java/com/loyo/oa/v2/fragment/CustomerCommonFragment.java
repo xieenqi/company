@@ -503,11 +503,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         params.put("deptId", departmentId);
         params.put("userId", userId);
 
-        LogUtil.dll("pageIndex:"+mPagination.getPageIndex());
-        LogUtil.dll("order:"+order);
-        LogUtil.dll("field:"+filed);
-        LogUtil.dll("tafItemIds:"+tagItemIds);
-
         String url = "";
         switch (customer_type) {
             case Customer.CUSTOMER_TYPE_MINE:
@@ -540,7 +535,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        LogUtil.dll("success code:"+response.getStatus());
                         listView.onRefreshComplete();
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
@@ -568,8 +562,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                     @Override
                     public void failure(RetrofitError error) {
-
-                        LogUtil.dll("error code:" + error.getResponse().getStatus());
 
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast("请检查您的网络连接");
@@ -599,14 +591,16 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             adapter.notifyDataSetChanged();
         }
 
-        /*列表监听*/
+        /**
+         * 列表监听 进入客户详情页面
+         * */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                startActivityForResult(intent, 999);
             }
         });
     }
@@ -614,6 +608,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        LogUtil.dll("requestCode:" + requestCode);
+        LogUtil.dll("resultCode:" + resultCode);
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
             return;
@@ -628,7 +625,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 mCustomers.add(0, customer);
                 break;
             case BaseMainListFragment.REQUEST_REVIEW:
-
                 for (int i = 0; i < mCustomers.size(); i++) {
                     if (TextUtils.equals(mCustomers.get(i).getId(), customer.getId())) {
                         mCustomers.set(i, customer);
@@ -636,6 +632,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                 }
                 break;
+        }
+
+        if(requestCode == 999 && resultCode == Activity.RESULT_OK){
+            LogUtil.dll("进入回调！！！！！！！！！！！！！！！！！！");
         }
 
         bindData();

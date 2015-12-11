@@ -70,6 +70,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ViewGroup img_title_left;
     @ViewById
     ViewGroup img_title_right;
+    @ViewById
+    ImageView imgview_title_right;
 
     @ViewById
     ViewGroup layout_customer_district;
@@ -118,6 +120,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @Extra("Customer")
     Customer mCustomer;
 
+    @Extra("isMyUser")
+    boolean isMyUser;
+
     @Extra("CustomerId")
     String mCustomerId;
 
@@ -145,6 +150,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_district.setOnTouchListener(Global.GetTouch());
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
+
+        LogUtil.dll("isMyUser:"+isMyUser);
+
+        if(isMyUser == false){
+            imgview_title_right.setVisibility(View.GONE);
+        }
 
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
 
@@ -175,6 +186,22 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     void initData() {
+
+        /*如果不是自己的客户，不允许操作*/
+        if(!isMyUser){
+            tv_customer_name.setEnabled(false);
+            tv_address.setEnabled(false);
+            edt_customer_memo.setEnabled(false);
+            layout_customer_industry.setEnabled(false);
+            layout_customer_district.setEnabled(false);
+            layout_customer_label.setEnabled(false);
+            layout_customer_responser.setEnabled(false);
+            layout_customer_join_users.setEnabled(false);
+            img_refresh_address.setEnabled(false);
+            img_go_where.setEnabled(false);
+        }
+
+
         if (mCustomer == null) {
             return;
         }

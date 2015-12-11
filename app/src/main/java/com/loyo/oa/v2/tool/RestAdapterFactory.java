@@ -44,25 +44,29 @@ public class RestAdapterFactory {
         return maker;
     }
 
+
+
     /**
      * 创建RestAdapter
      *
      * @param url
      * @return
      */
-    public synchronized RestAdapter build(final String url) {
+    CellInfo cellInfo;
+    public  RestAdapter build(final String url) {
 
-        RestAdapter adapter = null==adapters.get(url)?null:adapters.get(url).get();
-        if (null == adapter) {
+            RestAdapter adapter = null == adapters.get(url) ? null : adapters.get(url).get();
+            if (null == adapter) {
 
-            //final CellInfo cellInfo = Utils.getCellInfo();
-            final CellInfo cellInfo = new CellInfo();
+               // final CellInfo cellInfo = Utils.getCellInfo();
+                 cellInfo = new CellInfo();
 
-            cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
+                cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
 
-            cellInfo.setLoyoOSVersion(cellInfo.getLoyoPlatform() + Build.VERSION.RELEASE);
+                cellInfo.setLoyoOSVersion(cellInfo.getLoyoPlatform() + Build.VERSION.RELEASE);
 
-            cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
+                cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
+
 
             RequestInterceptor requestInterceptor = new RequestInterceptor() {
                 @Override
@@ -75,12 +79,6 @@ public class RestAdapterFactory {
                     request.addHeader("LoyoVersionName", Global.getVersionName());
                     request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
 
-                    LogUtil.dll("Authorization:" + String.format("Bearer %s", MainApp.getToken()));
-                    LogUtil.dll("LoyoPlatform:" + cellInfo.getLoyoPlatform());
-                    LogUtil.dll("LoyoAgent:" +  cellInfo.getLoyoAgent());
-                    LogUtil.dll("LoyoOSVersion:" +  cellInfo.getLoyoOSVersion());
-                    LogUtil.dll("LoyoVersionName:" + Global.getVersionName());
-                    LogUtil.dll("LoyoVersionCode:" + String.valueOf(Global.getVersion()));
 
                 }
             };
