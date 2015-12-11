@@ -226,6 +226,8 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+
+                LogUtil.dll("error URL:"+error.getUrl());
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
                 } else if (error.getKind() == RetrofitError.Kind.HTTP) {
@@ -233,6 +235,7 @@ public class TasksAddActivity extends BaseActivity {
                         Toast("网络异常，请稍候再试");
                     }
                 }
+
             }
         });
     }

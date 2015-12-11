@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,7 +12,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
@@ -22,18 +20,17 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import java.util.Date;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -74,7 +71,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_call;
 
-
     @ViewById
     ViewGroup layout_sale_activity;
     @ViewById
@@ -85,7 +81,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     ViewGroup layout_task;
     @ViewById
     ViewGroup layout_attachment;
-
 
     @ViewById
     TextView tv_sale_activity_date;
@@ -113,6 +108,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         getData();
+
     }
 
     /**
@@ -304,10 +300,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*返回*/
             case R.id.img_title_left:
 
-                //onBackPressed();
                 Intent intent = new Intent();
                 intent.putExtra("cmd","cmd");
-                app.finishActivity(this,999,RESULT_OK,intent);
+                app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW,RESULT_OK,intent);
 
                 break;
             case R.id.img_title_right:
