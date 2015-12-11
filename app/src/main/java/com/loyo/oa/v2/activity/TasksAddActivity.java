@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,20 +218,42 @@ public class TasksAddActivity extends BaseActivity {
                 intent.putExtra("data", task);
                 setResult(Activity.RESULT_OK, intent);
                 onBackPressed();
-                if(isCopy)
-                TasksInfoActivity.instance.finish();
+                if (isCopy)
+                    TasksInfoActivity.instance.finish();
+
+//                try {
+//                    LogUtil.d("success result:" + Utils.convertStreamToString(response.getBody().in()));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常，请稍候再试");
-                    }
-                }
+                Toast(error.getResponse() + "提交任务：" + error.getMessage());
+                LogUtil.d(" 错误信息  "+error.getUrl());
+//                if (error != null) {
+//                    try {
+//                        LogUtil.d("error result:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    LogUtil.d("error is null");
+//                }
+
+
+
+                LogUtil.d("code:" + error.getResponse().getStatus());
+//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                    Toast("请检查您的网络连接");
+//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+//                    if (error.getResponse().getStatus() == 500) {
+//                        Toast("网络异常，请稍候再试");
+//                    }
+//                }
             }
         });
     }

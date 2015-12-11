@@ -20,6 +20,8 @@ public class Task extends BaseBeans {
         return "";
     }
 
+    public int priority;
+
     private long actualendAt;
     private String attachmentUUId;
     private String content;
