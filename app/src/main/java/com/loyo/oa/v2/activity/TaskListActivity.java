@@ -45,6 +45,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
 
     @ViewById(R.id.listView_tasks) PullToRefreshExpandableListView lv;
     @Extra Customer mCustomer;
+    @Extra boolean isMyUser;
 
     private PaginationX<Task> taskPaginationX = new PaginationX<>(20);
     private ArrayList<Task> tasks = new ArrayList<>();
@@ -60,8 +61,11 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("任务管理");
         layout_back.setOnTouchListener(Global.GetTouch());
-        layout_add.setOnTouchListener(Global.GetTouch());
+        if(!isMyUser){
+            layout_add.setVisibility(View.GONE);
+        }
 
+        layout_add.setOnTouchListener(Global.GetTouch());
         getData();
     }
 

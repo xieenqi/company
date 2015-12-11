@@ -23,7 +23,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -33,8 +32,6 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
-import java.io.IOException;
 import java.util.Date;
 
 import retrofit.RetrofitError;
@@ -106,10 +103,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @Extra("Id")
     String id;
 
-    String aId;
-    String bId;
+    String ownErId;
     boolean isLock;
-
+    boolean isMyUser;
 
     @AfterViews
     void initViews() {
@@ -127,9 +123,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(Customer customer, Response response) {
 
-                LogUtil.dll("success:" + MainApp.gson.toJson(customer));
-                aId = customer.getCreator().getId();
-                bId = customer.getOwner().getUser().getId();
+                ownErId = customer.getOwner().getUser().getId();
                 isLock = customer.isLock();
                 mCustomer = customer;
                 initData();
@@ -163,35 +157,32 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (!mCustomer.isLock()) {
             img_public.setVisibility(View.VISIBLE);
         }
-        /*如果不是自己的客户，则不显示右上角菜单按钮*/
-        if (mCustomer.isLock() && aId.equals(bId)) {
+
+        /*判断是否有操作权限，来操作改客户信息
+        * 本地userid与服务器回传ownerId比较，相等则是自己的客户，islock＝true为自己客户，false在公海中
+        * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
+        * */
+
+        isMyUser = ownErId.equals(MainApp.user.getId()) && isLock?true:false;
+
+        if (isMyUser) {
             img_title_right.setOnTouchListener(Global.GetTouch());
-            img_title_left.setOnTouchListener(Global.GetTouch());
-            layout_customer_info.setOnTouchListener(Global.GetTouch());
-            img_public.setOnTouchListener(Global.GetTouch());
-            layout_contact.setOnTouchListener(Global.GetTouch());
-            layout_send_sms.setOnTouchListener(Global.GetTouch());
-            layout_call.setOnTouchListener(Global.GetTouch());
-            tv_sale_activity_date.setOnTouchListener(Global.GetTouch());
-            layout_sale_activity.setOnTouchListener(Global.GetTouch());
-            layout_visit.setOnTouchListener(Global.GetTouch());
-            layout_purchase.setOnTouchListener(Global.GetTouch());
-            layout_task.setOnTouchListener(Global.GetTouch());
-            layout_attachment.setOnTouchListener(Global.GetTouch());
         } else {
-            //img_public.setEnabled(false);
-            layout_contact.setEnabled(false);
-            layout_send_sms.setEnabled(false);
-            layout_call.setEnabled(false);
-            //            tv_sale_activity_date.setEnabled(false);
-            layout_sale_activity.setEnabled(false);
-            layout_visit.setEnabled(false);
-            layout_purchase.setEnabled(false);
-            layout_task.setEnabled(false);
-            layout_attachment.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
         }
 
+        img_title_left.setOnTouchListener(Global.GetTouch());
+        layout_customer_info.setOnTouchListener(Global.GetTouch());
+        img_public.setOnTouchListener(Global.GetTouch());
+        layout_contact.setOnTouchListener(Global.GetTouch());
+        layout_send_sms.setOnTouchListener(Global.GetTouch());
+        layout_call.setOnTouchListener(Global.GetTouch());
+        tv_sale_activity_date.setOnTouchListener(Global.GetTouch());
+        layout_sale_activity.setOnTouchListener(Global.GetTouch());
+        layout_visit.setOnTouchListener(Global.GetTouch());
+        layout_purchase.setOnTouchListener(Global.GetTouch());
+        layout_task.setOnTouchListener(Global.GetTouch());
+        layout_attachment.setOnTouchListener(Global.GetTouch());
 
         tv_sale_activity_date.setText(app.df3.format(new Date(mCustomer.getLastActAt() * 1000)));
         tv_customer_name.setText(mCustomer.getName());
@@ -246,7 +237,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         btn_child_delete_task.setOnClickListener(listener);
         btnCancel.setOnClickListener(listener);
         btnUpdate.setOnClickListener(listener);
-
 
     }
 
@@ -311,11 +301,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         Class<?> _class = null;
         int requestCode = -1;
         switch (view.getId()) {
+            /*返回*/
             case R.id.img_title_left:
-                onBackPressed();
-/*                Intent intent = new Intent();
-                this.setResult(RESULT_OK,intent);
-                finish();*/
+
+                //onBackPressed();
+                Intent intent = new Intent();
+                intent.putExtra("cmd","cmd");
+                app.finishActivity(this,999,RESULT_OK,intent);
+
                 break;
             case R.id.img_title_right:
                 showEditPopu();
@@ -323,6 +316,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_customer_info:
 
                 bundle.putSerializable("Customer", mCustomer);
+                bundle.putBoolean("isMyUser", isMyUser);
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
 
@@ -358,12 +352,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
 
                 break;
-
-
+            /*联系人*/
             case R.id.layout_contact:
+
+                bundle.putBoolean("isMyUser",isMyUser);
                 bundle.putSerializable("Customer", mCustomer);
                 _class = CustomerContactManageActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
+
                 break;
             case R.id.layout_send_sms:
                 Utils.sendSms(this, mCustomer.getContacts().get(0).getTel());
@@ -371,27 +367,37 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_call:
                 Utils.call(this, mCustomer.getContacts().get(0).getTel());
                 break;
+            /*跟进动态*/
             case R.id.layout_sale_activity:
+                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 _class = SaleActivitiesManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS;
                 break;
+            /*拜访签到*/
             case R.id.layout_visit:
+                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = SignInListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_LEGWORKS;
                 break;
+            /*购买意向*/
             case R.id.layout_purchase:
+                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable(Customer.class.getName(), mCustomer);
                 _class = DemandsManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_DEMANDS;
                 break;
+            /*任务计划*/
             case R.id.layout_task:
+                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
                 _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
                 break;
+            /*文件*/
             case R.id.layout_attachment:
+                bundle.putBoolean("isMyUser",isMyUser);
                 bundle.putSerializable("uuid", mCustomer.getUuid());
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;

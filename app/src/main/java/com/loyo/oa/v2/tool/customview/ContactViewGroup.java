@@ -58,9 +58,11 @@ public class ContactViewGroup extends LinearLayout {
      * @param id     视图id
      * @param parent 视图父容器
      */
-    public void bindView(final int id, final ViewGroup parent) {
+    public void bindView(final int id, final ViewGroup parent,boolean isMyUser) {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
+
+
 
         if (getId() > 1) {
             View view = new View(context);
@@ -69,6 +71,7 @@ public class ContactViewGroup extends LinearLayout {
             addView(view);
 
         }
+
         //加载删除条目
         if (getId() > 0) {
             inflater.inflate(R.layout.item_customer_contact_edit, this, true);
@@ -76,6 +79,10 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView del = (ImageView) findViewById(R.id.img_del);
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
+
+            if(!isMyUser){
+                edit.setVisibility(View.GONE);
+            }
 
             ViewGroup call = (ViewGroup) findViewById(R.id.layout_call);
             ViewGroup callwire = (ViewGroup) findViewById(R.id.layout_call_wiretel);

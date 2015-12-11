@@ -180,7 +180,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 app.startActivity(SettingActivity.this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
 
 
-                LogUtil.dll("result:"+json);
             }
 
             @Override

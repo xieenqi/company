@@ -151,11 +151,7 @@ public class MainApp extends Application {
                 @Override
                 public void success(ArrayList<Industry> industries, Response response) {
                     mIndustries=industries;
-                    try {
-                        Log.d("LOG","industry:"+Utils.convertStreamToString(response.getBody().in()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             });
 

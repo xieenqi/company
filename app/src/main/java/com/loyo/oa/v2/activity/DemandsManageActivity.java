@@ -37,6 +37,9 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     private ArrayList<Demand> lstData_Demand = new ArrayList<Demand>();
     private Customer customer;
 
+    private Intent mIntent;
+    private Bundle bundle;
+    private boolean isMyUser;
     private boolean isChanged;
     private boolean isTopAdd = true;
     private PaginationX<Demand> paginationX = new PaginationX<>(20);
@@ -44,6 +47,8 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
 
     public static final int VIEW_DEMANDS = 200;
     public static final int CREATE_DEMANDS = 300;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
+                isMyUser = bundle.getBoolean("isMyUser");
                 customer = (Customer) bundle.getSerializable(Customer.class.getName());
             }
         }
@@ -67,6 +73,9 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
+        if(!isMyUser){
+            layout_add.setVisibility(View.GONE);
+        }
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add.setOnClickListener(this);

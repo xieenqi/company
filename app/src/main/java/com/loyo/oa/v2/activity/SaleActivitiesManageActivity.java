@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,12 +18,15 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+
+import org.androidannotations.annotations.Extra;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +42,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     public static final int ACTIVITIES_ADD = 101;
 
     ViewGroup img_title_left, layout_add;
-
     PullToRefreshListView lv_saleActivity;
     SaleActivitiesAdapter listAdapter;
     ArrayList<SaleActivity> lstData_saleActivity_current = new ArrayList<>();
@@ -47,15 +50,18 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     SaleActivity mSaleActivity;
     private boolean isChanged;
     private boolean isTopAdd = true;
-
+    boolean isMyUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_activities_manage);
 
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            customer = (Customer) getIntent().getExtras().getSerializable(Customer.class.getName());
+
+        if(getIntent() != null){
+            Bundle bundle = getIntent().getExtras();
+            customer = (Customer) bundle.getSerializable(Customer.class.getName());
+            isMyUser = bundle.getBoolean("isMyUser");
         }
 
         setTitle("跟进动态");
@@ -100,10 +106,11 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
+        if(!isMyUser){
+            layout_add.setVisibility(View.GONE);
+        }
         layout_add.setOnTouchListener(Global.GetTouch());
-
         layout_add.setOnClickListener(this);
-
         lv_saleActivity = (PullToRefreshListView) findViewById(R.id.lv_saleActivity);
     }
 

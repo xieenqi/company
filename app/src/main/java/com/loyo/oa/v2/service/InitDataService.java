@@ -51,7 +51,6 @@ public class InitDataService extends IntentService {
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
                 sendDataChangeBroad(user);
-                LogUtil.d("Server获取个人数据：" + json);
             }
         });
     }

@@ -22,6 +22,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -293,6 +294,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 SharedUtil.put(mContext, FinalVariables.TOKEN, token.getAccess_token());
                 app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
 
+                try {
+                    LogUtil.dll("result:"+Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
 
             @Override
@@ -314,9 +322,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                 String errorStr = Utils.convertStreamToString(error.getResponse().getBody().in());
                                 codes = error.getResponse().getStatus();
                                 jsObj = new JSONObject(errorStr);
-                                Log.d("LOG", "服务器返回信息：" + errorStr);
-                                Log.d("LOG", "ERROR信息：" + jsObj.getString("error"));
-                                Log.d("LOG","code:"+codes);
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (JSONException e) {

@@ -46,10 +46,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         onBackPressed();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_search_right;
@@ -70,8 +66,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
     @AfterViews
     void initUI() {
-
-
 
         setTitle("我的客户");
         setTouchView(-1);
@@ -124,7 +118,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
         lv_customer_category.setAdapter(mCategoryAdapter);
         lv_customer_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 changeCategoryView();
@@ -181,5 +174,17 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         Bundle b=new Bundle();
         b.putInt("queryType",type);
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        LogUtil.dll("进入Manager回调，大小为："+fragments.size());
+        for(int i = 0;i<fragments.size();i++){
+            fragments.get(i).onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 }
