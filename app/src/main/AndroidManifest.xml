@@ -578,6 +578,12 @@
             android:name=".activity.customer.CustomerRepeat"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.customer.mytest_"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
+
 
         <service
             android:name=".service.InitDataService_"

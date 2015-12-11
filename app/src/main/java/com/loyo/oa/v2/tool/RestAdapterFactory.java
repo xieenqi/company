@@ -64,16 +64,24 @@ public class RestAdapterFactory {
 
             cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
 
-
             RequestInterceptor requestInterceptor = new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {
+
                     request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
                     request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
                     request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
                     request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
                     request.addHeader("LoyoVersionName", Global.getVersionName());
                     request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+
+                    LogUtil.dll("Authorization:" + String.format("Bearer %s", MainApp.getToken()));
+                    LogUtil.dll("LoyoPlatform:" + cellInfo.getLoyoPlatform());
+                    LogUtil.dll("LoyoAgent:" +  cellInfo.getLoyoAgent());
+                    LogUtil.dll("LoyoOSVersion:" +  cellInfo.getLoyoOSVersion());
+                    LogUtil.dll("LoyoVersionName:" + Global.getVersionName());
+                    LogUtil.dll("LoyoVersionCode:" + String.valueOf(Global.getVersion()));
+
                 }
             };
             adapter = new RestAdapter.Builder().setEndpoint(url).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();

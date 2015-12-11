@@ -133,11 +133,6 @@ public class MainApp extends Application {
                 @Override
                 public void success(ArrayList<Province> provinces, Response response) {
                     mProvinces=provinces;
-                    try {
-                        Log.d("LOG","districts:"+Utils.convertStreamToString(response.getBody().in()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             });
     }
@@ -148,11 +143,7 @@ public class MainApp extends Application {
                 @Override
                 public void success(ArrayList<Industry> industries, Response response) {
                     mIndustries=industries;
-                    try {
-                        Log.d("LOG","industry:"+Utils.convertStreamToString(response.getBody().in()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             });
 

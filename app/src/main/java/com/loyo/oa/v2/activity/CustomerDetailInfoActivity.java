@@ -163,8 +163,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (!mCustomer.isLock()) {
             img_public.setVisibility(View.VISIBLE);
         }
-        /*如果不是自己的客户，则不显示右上角菜单按钮*/
+
+        /*判断是否又操作权限，来操作改客户信息*/
         if (mCustomer.isLock() && aId.equals(bId)) {
+
             img_title_right.setOnTouchListener(Global.GetTouch());
             img_title_left.setOnTouchListener(Global.GetTouch());
             layout_customer_info.setOnTouchListener(Global.GetTouch());
@@ -178,18 +180,19 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             layout_purchase.setOnTouchListener(Global.GetTouch());
             layout_task.setOnTouchListener(Global.GetTouch());
             layout_attachment.setOnTouchListener(Global.GetTouch());
+
         } else {
-            //img_public.setEnabled(false);
+
             layout_contact.setEnabled(false);
             layout_send_sms.setEnabled(false);
             layout_call.setEnabled(false);
-            //            tv_sale_activity_date.setEnabled(false);
             layout_sale_activity.setEnabled(false);
             layout_visit.setEnabled(false);
             layout_purchase.setEnabled(false);
             layout_task.setEnabled(false);
             layout_attachment.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
+
         }
 
 
@@ -246,7 +249,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         btn_child_delete_task.setOnClickListener(listener);
         btnCancel.setOnClickListener(listener);
         btnUpdate.setOnClickListener(listener);
-
 
     }
 
