@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -54,7 +55,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import cn.jpush.android.api.JPushInterface;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
@@ -128,13 +128,16 @@ public class MainApp extends Application {
     public ArrayList<Province> mProvinces=new ArrayList<>();
     public ArrayList<Industry> mIndustries=new ArrayList<>();
 
+    /**xnq
+     * 加载地区编码
+     */
     void loadAreaCodeTable() {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
                 @Override
                 public void success(ArrayList<Province> provinces, Response response) {
                     mProvinces=provinces;
                     try {
-                        Log.d("LOG","districts:"+Utils.convertStreamToString(response.getBody().in()));
+                        LogUtil.d("districts:" + Utils.convertStreamToString(response.getBody().in()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -167,9 +170,9 @@ public class MainApp extends Application {
         initXiaomi();
         loadAreaCodeTable();
         loadIndustryCodeTable();
-        //        getWindowWH();
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
+         //       getWindowWH();
+        //JPushInterface.setDebugMode(true);
+        //JPushInterface.init(this);
     }
 
     static RestAdapter restAdapter = null;
@@ -472,6 +475,12 @@ public class MainApp extends Application {
             //            handler.sendMessageDelayed(msg, getResources().getInteger(R.integer.animator_activity));
             handler.sendMessage(msg);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public void startActivity(Activity activity, Class<?> cls, int enterType, boolean isFinish, Bundle bundle, boolean FLAG_ACTIVITY_FORWARD_RESULT) {

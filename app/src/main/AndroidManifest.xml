@@ -67,6 +67,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
+
     <!-- 信鸽需要的额外的权限 -->
     <application
         android:name=".application.MainApp"

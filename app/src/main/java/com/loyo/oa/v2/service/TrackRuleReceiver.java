@@ -15,7 +15,8 @@ import org.joda.time.Hours;
 import org.joda.time.format.DateTimeFormat;
 
 
-//这个Recevier 主要是用于手机重启后，复活轨迹使用。
+/**这个Recevier 主要是用于手机重启后，复活轨迹使用。
+ */
 public class TrackRuleReceiver extends BroadcastReceiver {
 
     final String format = "yyyy-MM-dd HH:mm:ss";

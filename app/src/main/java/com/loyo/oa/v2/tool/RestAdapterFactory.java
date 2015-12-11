@@ -44,41 +44,44 @@ public class RestAdapterFactory {
         return maker;
     }
 
+
+
     /**
      * 创建RestAdapter
      *
      * @param url
      * @return
      */
-    public synchronized RestAdapter build(final String url) {
+    CellInfo cellInfo;
+    public  RestAdapter build(final String url) {
 
-        RestAdapter adapter = null==adapters.get(url)?null:adapters.get(url).get();
-        if (null == adapter) {
+            RestAdapter adapter = null == adapters.get(url) ? null : adapters.get(url).get();
+            if (null == adapter) {
 
-            //final CellInfo cellInfo = Utils.getCellInfo();
-            final CellInfo cellInfo = new CellInfo();
+               // final CellInfo cellInfo = Utils.getCellInfo();
+                 cellInfo = new CellInfo();
 
-            cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
+                cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
 
-            cellInfo.setLoyoOSVersion(cellInfo.getLoyoPlatform() + Build.VERSION.RELEASE);
+                cellInfo.setLoyoOSVersion(cellInfo.getLoyoPlatform() + Build.VERSION.RELEASE);
 
-            cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
+                cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
 
 
-            RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-                    request.addHeader("LoyoVersionName", Global.getVersionName());
-                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                }
-            };
-            adapter = new RestAdapter.Builder().setEndpoint(url).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
-            adapters.put(url, new SoftReference<>(adapter));
-        }
-        return adapter;
+                RequestInterceptor requestInterceptor = new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+                        request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+                        request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+                        request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+                        request.addHeader("LoyoVersionName", Global.getVersionName());
+                        request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+                    }
+                };
+                adapter = new RestAdapter.Builder().setEndpoint(url).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+                adapters.put(url, new SoftReference<>(adapter));
+            }
+            return adapter;
     }
 }

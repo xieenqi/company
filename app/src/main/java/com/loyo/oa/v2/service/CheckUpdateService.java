@@ -29,7 +29,9 @@ import java.io.Serializable;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
+/**
+ * 版本
+ */
 public class CheckUpdateService extends Service {
 
     public static final int PARAM_STOP_SELF = 2;
