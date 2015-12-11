@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -325,6 +326,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     adapter.notifyDataSetChanged();
 
                 }
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                Toast(" 考勤数据 "+error.getMessage());
+                super.failure(error);
+                dg.dismiss();
             }
         });
     }
