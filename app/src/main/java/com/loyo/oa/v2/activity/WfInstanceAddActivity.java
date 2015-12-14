@@ -390,21 +390,26 @@ public class WfInstanceAddActivity extends BaseActivity {
             Toast("请输入审批内容");
             return;
         }
-        ArrayList<HashMap<String, String>> workflowValues = new ArrayList<>();
-        wfInstanceAdd.getWorkflowValuesAdd().getWfInstanceValuesDatas().clear();
-        for (int k = 0; k < submitData.size(); k++) {
-            HashMap<String, String> jsonMapValues = new HashMap<>();
-            HashMap<String, Object> map_Values = submitData.get(k);
-            for (BizFormFields field : mBizForm.getFields()) {
-                for (String key : map_Values.keySet()) {
-                    if (!TextUtils.equals(field.getId(), key)) {
-                        continue;
-                    }
-                    String value = (String) map_Values.get(key);
-                    jsonMapValues.put(key, value);
-                }
-            }
-            workflowValues.add(jsonMapValues);
+        ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
+
+//        wfInstanceAdd.getWorkflowValuesAdd().getWfInstanceValuesDatas().clear();
+//        for (int k = 0; k < submitData.size(); k++) {
+//            HashMap<String, String> jsonMapValues = new HashMap<>();
+//            HashMap<String, Object> map_Values = submitData.get(k);
+//            for (BizFormFields field : mBizForm.getFields()) {
+//                for (String key : map_Values.keySet()) {
+//                    if (!TextUtils.equals(field.getId(), key)) {
+//                        continue;
+//                    }
+//                    String value = (String) map_Values.get(key);
+//                    jsonMapValues.put(key, value);
+//                }
+//            }
+//            workflowValues.add(jsonMapValues);
+//        }
+
+        for(WfinstanceViewGroup element:WfinObj){
+            workflowValues.add(element.getInfoData());
         }
         if(!(workflowValues.size()>0)){
             Toast("请填写审批内容\"必填项\"");
@@ -424,7 +429,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         HashMap<String, Object> jsonObject = new HashMap<>();
 
-        app.logUtil.e(" 审批 : " + projectId);
+        LogUtil.d(workflowValues.size()+" 审批 创建 : " + projectId);
 
         jsonObject.put("bizformId", mBizForm.getId());//表单Id
         jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名

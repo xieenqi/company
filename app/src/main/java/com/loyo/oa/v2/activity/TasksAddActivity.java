@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,15 +218,15 @@ public class TasksAddActivity extends BaseActivity {
                 intent.putExtra("data", task);
                 setResult(Activity.RESULT_OK, intent);
                 onBackPressed();
-                if(isCopy)
-                TasksInfoActivity.instance.finish();
+                if (isCopy)
+                    TasksInfoActivity.instance.finish();
+
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
 
-                LogUtil.dll("error URL:"+error.getUrl());
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
                 } else if (error.getKind() == RetrofitError.Kind.HTTP) {

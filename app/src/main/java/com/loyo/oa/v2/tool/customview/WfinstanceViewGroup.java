@@ -48,8 +48,8 @@ public class WfinstanceViewGroup extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setOrientation(LinearLayout.VERTICAL);
 
-        for (int i=0;i<lstData.size();i++){
-            LogUtil.d(lstData.get(i).getName()+" ：列表名称 ");
+        for (int i = 0; i < lstData.size(); i++) {
+            LogUtil.d(lstData.get(i).getName() + " ：列表名称 ");
         }
     }
 
@@ -150,9 +150,10 @@ public class WfinstanceViewGroup extends LinearLayout {
 
     /**
      * 外部获取 内部所输入的数据
+     *
      * @return
      */
-    public HashMap<String, Object> getInfoData(){
+    public HashMap<String, Object> getInfoData() {
         return map_Values;
     }
 
@@ -165,12 +166,13 @@ public class WfinstanceViewGroup extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            LogUtil.d(" 审批内容输出完成   ", "after输入过后TextChanged, s : " + s.toString());
+            LogUtil.d( "after输入过后TextChanged, s : " + s.toString());
             if (s.toString().length() > 0) {
                 map_Values.put(lstData.get(position).getId(), s.toString());
             } else {
                 if (map_Values.containsKey(lstData.get(position).getId())
-                        && map_Values.get(lstData.get(position).getId()).toString().length() == 1) {
+                        && map_Values.get(lstData.get(position).getId()).toString().length() == 1)
+                {
                     map_Values.put(lstData.get(position).getId(), "");
                 }
             }
