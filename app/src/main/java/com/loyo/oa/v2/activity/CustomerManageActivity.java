@@ -170,6 +170,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         }
         Bundle b=new Bundle();
         b.putInt("queryType",type);
+        b.putString("from","客户管理");
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
     }
 

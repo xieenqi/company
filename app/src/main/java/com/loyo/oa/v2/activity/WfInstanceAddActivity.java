@@ -409,6 +409,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 //        }
 
         for(WfinstanceViewGroup element:WfinObj){
+            LogUtil.d("   审批dd的内容  "+element.getInfoData());
             workflowValues.add(element.getInfoData());
         }
         if(!(workflowValues.size()>0)){
@@ -463,6 +464,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 Toast("提交审批失败");
+                LogUtil.d(" 失败原因： "+error.getMessage());
                 super.failure(error);
             }
         });

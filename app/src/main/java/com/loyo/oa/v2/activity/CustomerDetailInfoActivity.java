@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
@@ -26,12 +28,15 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.Date;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -103,6 +108,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     String ownErId;
     boolean isLock;
     boolean isMyUser;
+    boolean isPutOcen;
 
     @AfterViews
     void initViews() {
@@ -117,6 +123,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
+        Utils.dialogShow(this);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
@@ -125,27 +132,21 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 isLock = customer.isLock();
                 mCustomer = customer;
                 initData();
+                Utils.dialogDismiss();
 
             }
 
             @Override
             public void failure(RetrofitError error) {
 
-                LogUtil.dll("id:"+id);
-
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常500，请稍候再试");
-                    }
+                } else if (error.getResponse().getStatus() == 500) {
+                    Toast("网络异常500，请稍候再试");
                 } else {
-                    LogUtil.dll("error message:"+error.getUrl());
-                    LogUtil.dll("error code:"+error.getResponse().getStatus());
-
                     Toast("没有客户详情信息");
                 }
-
+                Utils.dialogDismiss();
                 finish();
             }
         });
@@ -168,7 +169,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
 
-        isMyUser = ownErId.equals(MainApp.user.getId()) && isLock?true:false;
+        isMyUser = ownErId.equals(MainApp.user.getId()) && isLock ? true : false;
 
         if (isMyUser) {
             img_title_right.setOnTouchListener(Global.GetTouch());
@@ -298,6 +299,18 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(Customer newCustomer, Response response) {
                 getData();
+                isPutOcen = true;
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getResponse().getStatus() == 500) {
+                    Toast("网络异常500，请稍候再试");
+                } else {
+                    Toast("操作失败");
+                }
             }
         });
     }
@@ -312,8 +325,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.img_title_left:
 
                 Intent intent = new Intent();
-                intent.putExtra("cmd","cmd");
-                app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW,RESULT_OK,intent);
+                if (isPutOcen) {
+                    app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, intent);
+                } else {
+                    finish();
+                }
 
                 break;
             case R.id.img_title_right:
@@ -334,22 +350,19 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(Customer newCustomer, Response response) {
-                            finish();
+                        finish();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
 
-                        if(error.getKind() == RetrofitError.Kind.NETWORK){
+                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast("请检查您的网络连接");
-                        }
-
-                        else if(error.getKind() == RetrofitError.Kind.HTTP){
-                            if(error.getResponse().getStatus() == 500){
+                        } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                            if (error.getResponse().getStatus() == 500) {
                                 Toast("网络异常500，请稍候再试");
                             }
-                        }
-                        else{
+                        } else {
                             Toast("操作失败");
                         }
                         finish();
@@ -361,7 +374,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*联系人*/
             case R.id.layout_contact:
 
-                bundle.putBoolean("isMyUser",isMyUser);
+                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("Customer", mCustomer);
                 _class = CustomerContactManageActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
@@ -403,7 +416,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*文件*/
             case R.id.layout_attachment:
-                bundle.putBoolean("isMyUser",isMyUser);
+                bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("uuid", mCustomer.getUuid());
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
@@ -425,6 +438,22 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, requestCode, b);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            Intent intent = new Intent();
+            if (isPutOcen) {
+                app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, intent);
+            } else {
+                finish();
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
