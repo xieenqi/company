@@ -47,6 +47,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:textColor="@color/white"
+                        android:text="名字"
                         android:textSize="20sp"/>
 
                     <TextView
@@ -57,6 +58,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="11dp"
                         android:textColor="@color/white"
+                        android:text="部门-职位"
                         android:textSize="15sp"/>
                 </RelativeLayout>
 
