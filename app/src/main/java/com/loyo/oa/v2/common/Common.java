@@ -232,6 +232,7 @@ public final class Common {
 
             for (User user : department.getUsers()) {
                 if (TextUtils.isEmpty(user.getDepartmentsName())) {
+
                     user.setDepartmentsName(department.getName());
                 }
 

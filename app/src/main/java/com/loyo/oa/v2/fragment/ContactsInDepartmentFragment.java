@@ -9,7 +9,6 @@ import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -517,6 +516,9 @@ public class ContactsInDepartmentFragment extends BaseFragment {
 
         public ContactsExpandableListAdapter() {
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            for (CommonItem element:listDatas){
+                LogUtil.d(" 部门名字  "+element.datas.get(0));
+            }
         }
 
         @Override
@@ -584,11 +586,15 @@ public class ContactsInDepartmentFragment extends BaseFragment {
                 TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
                 tv_content.setText(user.getRealname());
+
                 String departmentName = ((User) getChild(groupPosition, childPosition)).getDepartmentsName();
+
+                String jobName = ((User) getChild(groupPosition, childPosition)).getRole().name;
                 if (null != user.getShortPosition() && !TextUtils.isEmpty(user.getShortPosition().getName())) {
                     departmentName = departmentName.concat(" | " + user.getShortPosition().getName());
                 }
-                tv_position.setText(departmentName);
+                //jobName=user.getDepts().get(0).getShortPosition().getName();
+                tv_position.setText(departmentName+"  "+jobName);
 
                 if (!TextUtils.isEmpty(user.getAvatar())) {
                     ImageLoader.getInstance().displayImage(user.getAvatar(), img);
