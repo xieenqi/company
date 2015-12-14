@@ -22,6 +22,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -42,6 +43,7 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_customer_detail_info)
 public class CustomerDetailInfoActivity extends BaseActivity {
+
     @ViewById
     ViewGroup img_title_left;
     @ViewById
@@ -123,10 +125,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 isLock = customer.isLock();
                 mCustomer = customer;
                 initData();
+
             }
 
             @Override
             public void failure(RetrofitError error) {
+
+                LogUtil.dll("id:"+id);
 
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
@@ -135,8 +140,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                         Toast("网络异常500，请稍候再试");
                     }
                 } else {
+                    LogUtil.dll("error message:"+error.getUrl());
+                    LogUtil.dll("error code:"+error.getResponse().getStatus());
+
                     Toast("没有客户详情信息");
                 }
+
                 finish();
             }
         });
@@ -195,12 +204,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_purchase_count.setText("(" + mCustomer.getCounter().getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.getCounter().getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.getCounter().getFile() + ")");
+
     }
 
     /**
      * 显示编辑客户弹出框
      */
     private void showEditPopu() {
+
         LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
         View menuView = mLayoutInflater.inflate(R.layout.popu_child_task_edit_layout, null, false);
         menuView.getBackground().setAlpha(100);

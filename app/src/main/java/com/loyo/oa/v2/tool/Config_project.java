@@ -8,10 +8,12 @@ import com.loyo.oa.v2.BuildConfig;
 public class Config_project {
 
     //public static final Boolean is_developer_mode = false; //生产模式
-    public static String IP="http://114.215.83.227";
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
-    //public static String IP = "http://192.168.31.131";//内部服务器
+    public static String IP = "http://192.168.31.131";//内部服务器
+
+    //public static String IP="http://114.215.83.227";    //正式服务器
+
 
 
     public static String API_URL() {
@@ -77,13 +79,11 @@ public class Config_project {
 
         }
         return IP + ":8070";
-        //return "http://app.361loyo.com";
-        //        return "http://app.361loyo.com";
+
     }
 
     public static String URL() {
 
-       // return "http://app.361loyo.com";
-                return IP;
+        return IP;
     }
 }
