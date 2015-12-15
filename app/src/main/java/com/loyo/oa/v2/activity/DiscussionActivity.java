@@ -31,6 +31,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 【讨论 界面】
+ */
 @EActivity(R.layout.activity_discussion)
 public class DiscussionActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     public static final int REQUEST_PREVIEW_DISCUSS=121;

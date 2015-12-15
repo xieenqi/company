@@ -14,15 +14,15 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     LayoutInflater mInflater;
     int mLayoutId;
 
-    public CommonAdapter(Context context, List<T> datas, int layoutId) {
+    public CommonAdapter(Context context, List<T> mDatas, int layoutId) {
         mContext = context;
-        mDatas = datas;
+        this.mDatas = mDatas;
         mLayoutId = layoutId;
         mInflater = LayoutInflater.from(context);
     }
     public void setmDatas(List<T> datas){
         if(null!=datas){
-            mDatas=datas;
+            this.mDatas=datas;
             notifyDataSetChanged();
         }
     }
@@ -53,4 +53,5 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     }
 
     public abstract void convert(ViewHolder holder, T t);
+
 }

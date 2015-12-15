@@ -88,7 +88,7 @@ public class TasksInfoActivity extends BaseActivity {
     @ViewById TextView tv_task_title;
     @ViewById TextView tv_sub_title;
     @ViewById TextView tv_content;
-    @ViewById TextView tv_remind;
+    @ViewById TextView tv_remind;//截至 时间提醒
     @ViewById TextView tv_task_audit;
     @ViewById TextView  tv_task_project;
     @ViewById TextView tv_toUsers;
@@ -130,6 +130,7 @@ public class TasksInfoActivity extends BaseActivity {
         btn_complete.setOnTouchListener(Global.GetTouch());
 //      layout_children_task.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
+        LogUtil.d(" 任务详情的数据： "+MainApp.gson.toJson(mTask));
     }
 
     String getId() {
