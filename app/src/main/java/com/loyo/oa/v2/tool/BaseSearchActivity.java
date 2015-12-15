@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Customer;
@@ -32,10 +32,9 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.TaskManagerFragment;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,6 +52,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected boolean isTopAdd = true;
     protected boolean isSelect;
     protected PaginationX paginationX = new PaginationX(20);
+    protected Intent mIntent;
+    protected String befrompage;
+    Customer customer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         if (null != getIntent() && getIntent().hasExtra("isSelect")) {
             isSelect = getIntent().getBooleanExtra("isSelect", false);
         }
-
         vs_nodata = findViewById(R.id.vs_nodata);
+        mIntent = getIntent();
+        befrompage = mIntent.getStringExtra("from");
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +85,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     doSearch();
                 }
-
                 return false;
             }
         });
@@ -136,7 +139,25 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 }
             }
         });
-        getData();
+
+        /**列表监听器*/
+        expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (befrompage.equals("新建拜访")) {
+
+                    LogUtil.dll("来自新建拜访");
+
+                } else if (befrompage.equals("客户管理")) {
+
+                    LogUtil.dll("来自客户管理");
+                    Intent intent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
+                    intent.putExtra("Id", lstData.get(position - 1).getId());
+                    startActivity(intent);
+
+                }
+            }
+        });
     }
 
 
@@ -199,8 +220,27 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         }
     }
 
+
+
+    protected void returnData(int position) {
+        Intent intent = new Intent();
+        intent.putExtra("data", adapter.getItem(position));
+        setResult(RESULT_OK, intent);
+        onBackPressed();
+    }
+
+
     @Override
     public void success(Object o, Response response) {
+
+        LogUtil.dll("URL:"+response.getUrl());
+
+        try {
+            LogUtil.dll("success result:"+ Utils.convertStreamToString(response.getBody().in()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -232,18 +272,22 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         }
         vs_nodata.setVisibility(View.GONE);
         changeAdapter();
+        Utils.dialogDismiss();
     }
 
-    protected void returnData(int position) {
-        Intent intent = new Intent();
-        intent.putExtra("data", adapter.getItem(position));
-        setResult(RESULT_OK, intent);
-        onBackPressed();
-    }
 
     @Override
     public void failure(RetrofitError error) {
-        Toast("搜索失败");
+        if(error.getKind() == RetrofitError.Kind.NETWORK){
+            Toast("请检查您的网络连接");
+        }
+        else if(error.getResponse().getStatus() == 500){
+            Toast("网络异常500,请稍候再试");
+        }
+        else if(error.getResponse().getStatus() == 200){
+            Toast("搜索失败，请稍候再试");
+        }
+        Utils.dialogDismiss();
     }
 
     protected void changeAdapter() {
@@ -254,7 +298,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     protected abstract void getData();
 
-    protected class CommonSearchAdapter extends BaseAdapter {
+    public class CommonSearchAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -400,7 +444,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             }
             //客户
             else if (o instanceof Customer) {
-                Customer customer = (Customer) o;
+                customer = (Customer) o;
                 time.setVisibility(View.GONE);
                 title.setText(customer.getName());
                 content.setText("距离：" + customer.getDistance());

@@ -29,6 +29,7 @@ import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -59,6 +60,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private String uuid = StringUtil.getUUID();
     private String cc_user_id = null;
     private String cc_department_id = null;
+    private final int SELECT_USERNAME = 0X01;
     String mAddress;
     private String customerId;
     private String customerName;
@@ -171,10 +173,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 addSignIn();
                 break;
             case R.id.layout_customer_name:
+
                 Bundle b=new Bundle();
                 b.putInt("queryType",1);
-                b.putBoolean("isSelect",true);
+                b.putBoolean("isSelect", true);
+                b.putString("from","新建拜访");
                 app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+
                 break;
             case R.id.img_refresh_address:
                 startLocation();
@@ -220,6 +225,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 } else {
                     Toast(getString(R.string.sign) + "异常!");
                 }
+
             }
 
             @Override
@@ -303,6 +309,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
             case BaseSearchActivity.REQUEST_SEARCH:
+                LogUtil.dll("回来");
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.getId();

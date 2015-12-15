@@ -221,39 +221,20 @@ public class TasksAddActivity extends BaseActivity {
                 if (isCopy)
                     TasksInfoActivity.instance.finish();
 
-//                try {
-//                    LogUtil.d("success result:" + Utils.convertStreamToString(response.getBody().in()));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast(error.getResponse() + "提交任务：" + error.getMessage());
-                LogUtil.d(" 错误信息  "+error.getUrl());
-//                if (error != null) {
-//                    try {
-//                        LogUtil.d("error result:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                    LogUtil.d("error is null");
-//                }
 
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    if (error.getResponse().getStatus() == 500) {
+                        Toast("网络异常，请稍候再试");
+                    }
+                }
 
-
-                LogUtil.d("code:" + error.getResponse().getStatus());
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    Toast("请检查您的网络连接");
-//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-//                    if (error.getResponse().getStatus() == 500) {
-//                        Toast("网络异常，请稍候再试");
-//                    }
-//                }
             }
         });
     }

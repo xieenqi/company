@@ -46,7 +46,10 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -151,14 +154,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
 
-        LogUtil.dll("isMyUser:"+isMyUser);
-
-        if(isMyUser == false){
+        if (isMyUser == false) {
             imgview_title_right.setVisibility(View.GONE);
         }
-
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
-
         getCustomer();
     }
 
@@ -188,7 +187,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     void initData() {
 
         /*如果不是自己的客户，不允许操作*/
-        if(!isMyUser){
+        if (!isMyUser) {
             tv_customer_name.setEnabled(false);
             tv_address.setEnabled(false);
             edt_customer_memo.setEnabled(false);
@@ -246,7 +245,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         String responser = null == mCustomer.getOwner() || null == mCustomer.getOwner().getUser() ? "" : mCustomer.getOwner().getUser().getName();
         tv_customer_responser.setText(responser);
 
-        if(members.size() != 0) {
+        if (members.size() != 0) {
             img_del_join_users.setVisibility(View.VISIBLE);
             tv_customer_join_users.setText(Utils.getMembers(members));
         }
@@ -293,7 +292,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
                 app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
@@ -316,8 +314,18 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                updateCustomer();
+
+                if(tv_industry.getText().toString().isEmpty()){
+                    Toast("行业不能为空");
+                }
+                else if(tv_district.getText().toString().isEmpty()){
+                    Toast("地区不能为空");
+                }
+                else{
+                    updateCustomer();
+                }
                 break;
+
             case R.id.layout_customer_label:
                 Bundle bundle2 = new Bundle();
                 if (mTagItems != null) {
@@ -384,11 +392,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             return;
         }
 
-        LogUtil.dll("customerInfoActivity:" + customerAddress);
         mLocate.setAddr(customerAddress);
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("id", null == mCustomer ? mCustomerId : mCustomer.getId());
         map.put("name", customerName);
         map.put("summary", summary);
         map.put("owner", owner);
@@ -399,9 +405,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("regional", regional);
         map.put("industry", industry);
 
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                updateCustomer(null == mCustomer ? mCustomerId : mCustomer.getId(), map, new RCallback<Customer>() {
+                updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(Customer customer, Response response) {
                         Intent intent = new Intent();
@@ -413,15 +418,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     @Override
                     public void failure(RetrofitError error) {
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                            Toast.makeText(CustomerInfoActivity.this,"请检查您的网络连接",Toast.LENGTH_SHORT).show();
-                        } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                            if(error.getResponse().getStatus() == 500){
-                                Toast.makeText(CustomerInfoActivity.this,"网络异常500，请稍候再试",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                        } else if (error.getResponse().getStatus() == 500) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(Utils.convertStreamToString(error.getResponse().getBody().in()));
+                                Toast.makeText(CustomerInfoActivity.this,jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
                 });
-             }
+    }
 
 
     @Override
@@ -474,7 +484,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
                     members = Utils.convert2Members(userIds, userNames);
-                    if(members.size() != 0){
+                    if (members.size() != 0) {
                         img_del_join_users.setVisibility(View.VISIBLE);
                         tv_customer_join_users.setText(userNames);
                     }

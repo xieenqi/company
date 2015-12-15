@@ -104,12 +104,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -600,7 +594,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                startActivityForResult(intent, 999);
+                startActivityForResult(intent,BaseMainListFragment.REQUEST_REVIEW);
             }
         });
     }
@@ -609,8 +603,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        LogUtil.dll("requestCode:" + requestCode);
-        LogUtil.dll("resultCode:" + resultCode);
+        /*详情中有投入公海操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
+        if(requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK){
+            getData();
+            LogUtil.dll("投入公海，刷新");
+        }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
             return;
@@ -632,10 +629,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                 }
                 break;
-        }
-
-        if(requestCode == 999 && resultCode == Activity.RESULT_OK){
-            LogUtil.dll("进入回调！！！！！！！！！！！！！！！！！！");
         }
 
         bindData();

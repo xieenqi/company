@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -22,7 +20,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
@@ -173,18 +170,13 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         }
         Bundle b=new Bundle();
         b.putInt("queryType",type);
+        b.putString("from","客户管理");
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        LogUtil.dll("进入Manager回调，大小为："+fragments.size());
-        for(int i = 0;i<fragments.size();i++){
-            fragments.get(i).onActivityResult(requestCode, resultCode, data);
-        }
-
+        fragments.get(0).onActivityResult(requestCode, resultCode, data);
     }
 }

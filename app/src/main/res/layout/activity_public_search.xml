@@ -15,7 +15,8 @@
             android:id="@+id/img_title_left"
             android:layout_width="39dp"
             android:gravity="center_vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <ImageView
                 android:layout_gravity="center_vertical"
