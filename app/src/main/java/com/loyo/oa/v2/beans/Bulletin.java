@@ -4,10 +4,11 @@ import com.loyo.oa.v2.application.MainApp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * com.loyo.oa.v2.beans
- * 描述 :通知
+ * 描述 :通知  没个item详情
  * 作者 : ykb
  * 时间 : 15/8/28.
  */
@@ -16,7 +17,7 @@ public class Bulletin extends BaseBeans {
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String content;
     private long createdAt;
-//    private String deptName;
+    private String deptName;
     private String id;
     private boolean isPublic;
     private User creator;
@@ -124,6 +125,38 @@ public class Bulletin extends BaseBeans {
 
     @Override
     String getOrderStr() {
-        return MainApp.getMainApp().df3.format(new Date(createdAt*1000));
+        return MainApp.getMainApp().df3.format(new Date(createdAt * 1000));
     }
+
+
+    class Creator {
+//        public String Creator;
+//        public String company_id;
+//        public ArrayList<Depts> depts;
+//        public ShortPosition shortPosition;
+//
+//        public String Creator;
+//        public String Creator;
+//        public String Creator;
+//        public String Creator;
+
+        class Depts {
+            public String id;
+            public String name;
+            public String superiorId;
+            public List<Object> users;
+            public String xpath;
+            public long createdAt;
+            public long updatedAt;
+
+        }
+        class ShortPosition{
+            public String id;
+            public String name;
+            public int companyId;
+            public int sequence;
+        }
+    }
+
+
 }

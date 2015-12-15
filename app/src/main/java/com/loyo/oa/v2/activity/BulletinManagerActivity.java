@@ -19,6 +19,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.GridViewUtils;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.MyGridView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
@@ -106,6 +107,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 }
 
                 lv_notice.onRefreshComplete();
+                LogUtil.d(" 通知的数据： "+MainApp.gson.toJson(pagination));
             }
 
             @Override
@@ -212,8 +214,8 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             holder.tv_time.setText(app.df3.format(new Date(bulletin.getCreatedAt() * 1000)));
             holder.tv_title.setText(bulletin.getTitle());
             holder.tv_content.setText(bulletin.getContent());
-            holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.getDeptName() + " " + bulletin.getPosition());
-            ImageLoader.getInstance().displayImage(bulletin.getCreator().getAvatar(), holder.iv_avatar);
+           holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.getDeptName() + " " + bulletin.getPosition());
+           ImageLoader.getInstance().displayImage(bulletin.getCreator().getAvatar(), holder.iv_avatar);
             ArrayList<Attachment> attachments = bulletin.getAttachments();
             if (null != attachments && !attachments.isEmpty()) {
 

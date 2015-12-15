@@ -389,6 +389,9 @@ public class WfInstanceAddActivity extends BaseActivity {
         if (submitData.isEmpty()) {
             Toast("请输入审批内容");
             return;
+        }else if(TextUtils.isEmpty(deptId)){
+            Toast("请输选择部门");
+            return;
         }
         ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
 
