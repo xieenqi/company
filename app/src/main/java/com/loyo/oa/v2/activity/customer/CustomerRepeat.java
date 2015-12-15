@@ -42,7 +42,7 @@ import retrofit.client.Response;
  */
 public class CustomerRepeat extends BaseActivity {
 
-    private LinearLayout ll_showonly,img_title_left;
+    private LinearLayout ll_showonly, img_title_left;
     private ListView lv_list;
     private TextView tv_customer_onlyname, tv_serach;
     private EditText edt_serach;
@@ -55,7 +55,7 @@ public class CustomerRepeat extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0x01) {
-                tv_customer_onlyname.setText("不存在该用户，点击" + edt_serach.getText().toString() + ",创建该客户");
+                tv_customer_onlyname.setText("不存在该用户,点击“" + edt_serach.getText().toString() + "”,创建该客户");
             }
         }
     };
@@ -96,7 +96,7 @@ public class CustomerRepeat extends BaseActivity {
 
     /**
      * 数据初始化
-     * */
+     */
     void initUi() {
 
         mIntent = getIntent();
@@ -105,7 +105,7 @@ public class CustomerRepeat extends BaseActivity {
         tv_customer_onlyname = (TextView) findViewById(R.id.tv_customer_onlyname);
         edt_serach = (EditText) findViewById(R.id.edt_serach);
         tv_serach = (TextView) findViewById(R.id.tv_serach);
-        img_title_left = (LinearLayout)findViewById(R.id.img_title_left);
+        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
 
         edt_serach.setText(mIntent.getStringExtra("name"));
         serachRepate(mIntent.getStringExtra("name"));
@@ -142,11 +142,10 @@ public class CustomerRepeat extends BaseActivity {
 
                     Toast("请检查您的网络连接");
 
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常500,请稍候再试");
-                    }
+                } else if (error.getResponse().getStatus() == 500) {
+                    Toast("网络异常500,请稍候再试");
                 }
+
                 finish();
             }
         });
@@ -159,7 +158,12 @@ public class CustomerRepeat extends BaseActivity {
 
         if (customerRepeatList.getRecords().size() != 0) {
             for (int i = 0; i < customerRepeatList.getRecords().size(); i++) {
-                isOk = customerRepeatList.getRecords().get(i).getName().equals(edt_serach.getText().toString()) ? true : false;
+                if(customerRepeatList.getRecords().get(i).getName().equals(edt_serach.getText().toString())){
+                    isOk = true;
+                    break;
+                }else{
+                    isOk = false;
+                }
             }
         } else {
             isOk = false;
@@ -167,11 +171,12 @@ public class CustomerRepeat extends BaseActivity {
 
         if (isOk == false) {
             ll_showonly.setVisibility(View.VISIBLE);
-            tv_customer_onlyname.setText("不存在该用户，点击" + edt_serach.getText().toString() + ",创建该客户");
+            tv_customer_onlyname.setText("不存在该用户,点击“" + edt_serach.getText().toString() + "”,创建该客户");
         } else if (isOk) {
             ll_showonly.setVisibility(View.GONE);
         }
 
+        LogUtil.dll("re:"+isOk);
         adapter = new CustomerRepeatAdapter(customerRepeatList, CustomerRepeat.this);
         lv_list.setAdapter(adapter);
 

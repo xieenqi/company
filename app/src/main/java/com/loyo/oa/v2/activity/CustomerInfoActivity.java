@@ -87,6 +87,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @ViewById
     ViewGroup layout_customer_join_users;
 
+
     @ViewById(R.id.layout_customer_extra_info)
     LinearLayout container;
 
@@ -113,6 +114,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @ViewById
     TextView tv_district;
 
+    LinearLayout layout_rushpackger;
+
     @ViewById
     ImageView img_go_where;
     @ViewById
@@ -129,6 +132,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @Extra("CustomerId")
     String mCustomerId;
 
+
     private double lat, lng;
 
     ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -142,6 +146,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @AfterViews
     void initUI() {
+        layout_rushpackger = (LinearLayout)findViewById(R.id.layout_rushpackger);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         img_refresh_address.setOnTouchListener(Global.GetTouch());
@@ -177,10 +182,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     /**
      * 初始化动态字段
      */
-    private void initExtra() {
+    private void initExtra(boolean ismy) {
         if (null != mCustomer.getExtDatas() && !mCustomer.getExtDatas().isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new ExtraDataView(mContext, mCustomer.getExtDatas(), true, R.color.title_bg1, 0));
+            container.addView(new ExtraDataView(mContext, mCustomer.getExtDatas(), ismy, R.color.title_bg1, 0));
         }
     }
 
@@ -188,6 +193,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
         /*如果不是自己的客户，不允许操作*/
         if (!isMyUser) {
+            layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT,0.1f));
+            img_refresh_address.setVisibility(View.GONE);
             tv_customer_name.setEnabled(false);
             tv_address.setEnabled(false);
             edt_customer_memo.setEnabled(false);
@@ -197,9 +204,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             layout_customer_responser.setEnabled(false);
             layout_customer_join_users.setEnabled(false);
             img_refresh_address.setEnabled(false);
-            img_go_where.setEnabled(false);
         }
-
+        initExtra(isMyUser);
 
         if (mCustomer == null) {
             return;
@@ -225,7 +231,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             industry = mCustomer.getIndustry();
         }
 
-        initExtra();
+
         if (null != mCustomer.getLoc() && mCustomer.getLoc().getLoc().length > 1) {
             lat = mCustomer.getLoc().getLoc()[1];
             lng = mCustomer.getLoc().getLoc()[0];
