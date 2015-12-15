@@ -51,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 任务详情
+ * 【任务详情】
  * 仅显示信息或提交，修改操作在TaskEditActivity
  */
 @EActivity(R.layout.activity_tasks_info)
