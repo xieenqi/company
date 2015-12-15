@@ -497,6 +497,14 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         params.put("deptId", departmentId);
         params.put("userId", userId);
 
+        LogUtil.dll("pageindex:" + mPagination.getPageIndex());
+        LogUtil.dll("pageSize:" + "20");
+        LogUtil.dll("field:" + filed);
+        LogUtil.dll("order:" + order);
+        LogUtil.dll("tafItemIds:" + tagItemIds);
+        LogUtil.dll("deptId:" + departmentId);
+        LogUtil.dll("userId:"+userId);
+
         String url = "";
         switch (customer_type) {
             case Customer.CUSTOMER_TYPE_MINE:
@@ -529,7 +537,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        listView.onRefreshComplete();
+                        LogUtil.dll("URL:"+response.getUrl());
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
                                 mPagination.setPageIndex(1);
@@ -552,6 +560,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (isTopAdd && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
                             getNearCustomersInfo();
                         }
+                        listView.onRefreshComplete();
                     }
 
                     @Override
