@@ -126,6 +126,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
         expandableListView_search.setAdapter(adapter);
+
 /*        expandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -148,11 +149,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (befrompage.equals("新建拜访")) {
 
                     LogUtil.dll("来自新建拜访");
-  /*                  Intent intent = new Intent();
-                    setResult(Activity.RESULT_OK,intent);
-                    finish();*/
-
-                    returnData(position);
+                    returnData(position - 1);
 
 
                 } else if (befrompage.equals("客户管理")) {

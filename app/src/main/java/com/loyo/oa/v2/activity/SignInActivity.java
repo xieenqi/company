@@ -206,6 +206,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("address", mAddress.trim());
         map.put("attachmentUUId", uuid);
         map.put("customerid", customerId);
+
+
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
@@ -214,25 +216,36 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void success(LegWork legWork, Response response) {
 
-                if (legWork.getCreator() == null) {
-                    legWork.setCreator(MainApp.user.toShortUser());
-                }
-                Toast(getString(R.string.sign) + getString(R.string.app_succeed));
-                if (!TextUtils.isEmpty(legWork.getId())) {
-                    Intent intent = getIntent();
-                    intent.putExtra("data", legWork);
-                    app.finishActivity(SignInActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-                } else {
-                    Toast(getString(R.string.sign) + "异常!");
-                }
+                LogUtil.dll("success result"+MainApp.gson.toJson(legWork));
+                LogUtil.dll("success code" + response.getStatus());
+                LogUtil.dll("URL" + response.getUrl());
 
+                if (legWork != null) {
+                    Toast(getString(R.string.sign) + getString(R.string.app_succeed));
+                    if (!TextUtils.isEmpty(legWork.getId())) {
+                        Intent intent = getIntent();
+                        intent.putExtra("data", legWork);
+                        app.finishActivity(SignInActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                    } else {
+                        Toast(getString(R.string.sign) + "异常!");
+                    }
+                }else{
+                    Toast("提交失败");
+                    //legWork.setCreator(MainApp.user.toShortUser());
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                super.failure(error);
-                Toast("签到失败");
-                Toast(error.getMessage());
+                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                    LogUtil.dll("请检查您的网络连接");
+                }
+                else if(error.getResponse().getStatus() == 500){
+                    Toast("网络异常500，请稍候再试");
+                }
+                else{
+                    Toast(error.getMessage());
+                }
             }
         });
     }
