@@ -122,6 +122,7 @@ dependencies {
     compile 'com.yalantis:contextmenu:1.0.4'
     //激光推送
     compile files('libs/jpush-android-2.0.5.jar')
+    //compile 'com.android.support:multidex-1.0.1'
 }
 
 repositories {
