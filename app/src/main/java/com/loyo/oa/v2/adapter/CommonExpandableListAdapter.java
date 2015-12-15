@@ -104,7 +104,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     timeOut.setVisibility(View.GONE);
                 }
                 //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
-                time.setText("任务截止时间: " + app.df3.format(new Date(task.getCreatedAt())));
+                time.setText("任务截止时间: " + app.df3.format(new Date(task.getPlanEndAt())));
 
             } catch (Exception e) {
                 Global.ProcException(e);

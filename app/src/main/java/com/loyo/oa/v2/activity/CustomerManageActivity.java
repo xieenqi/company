@@ -55,7 +55,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     CommonCategoryAdapter mCategoryAdapter;
     Animation rotateAnimation;
     FragmentManager fragmentManager = getSupportFragmentManager();
-    List<BaseFragment> fragments = new ArrayList<>();
+    List<BaseFragment> fragments = new ArrayList<>();//fragment 界面列表列表
 
     String[] CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户", "公海客户"};
     float mRotation = 0;
@@ -105,7 +105,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
             Bundle bundle = new Bundle();
             bundle.putInt("type", type);
             CustomerCommonFragment fragment = (CustomerCommonFragment) Fragment.instantiate(this, CustomerCommonFragment.class.getName(), bundle);
-            fragments.add(fragment);
+            fragments.add(fragment);//添加fragment 界面
         }
         changeChild(0);
     }

@@ -42,8 +42,8 @@ import java.util.Locale;
 import retrofit.client.Response;
 
 /**
+ * 描述 :【团队拜访】 列表
  * com.loyo.oa.v2.fragment
- * 描述 :团队拜访列表
  * 作者 : ykb
  * 时间 : 15/9/22.
  */

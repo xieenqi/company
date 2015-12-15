@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.tool;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -33,9 +33,11 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.TaskManagerFragment;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -62,12 +64,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
-        if (null != getIntent() && getIntent().hasExtra("isSelect")) {
-            isSelect = getIntent().getBooleanExtra("isSelect", false);
-        }
+//        if (null != getIntent() && getIntent().hasExtra("isSelect")) {
+//        }
         vs_nodata = findViewById(R.id.vs_nodata);
         mIntent = getIntent();
         befrompage = mIntent.getStringExtra("from");
+        isSelect = mIntent.getBooleanExtra("isSelect", false);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,20 +129,21 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         adapter = new CommonSearchAdapter();
         expandableListView_search.setAdapter(adapter);
 
-/*        expandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    if (isSelect) {
-                        returnData((int) l);
-                    } else {
-                        openDetail((int) l);
-                    }
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
-            }
-        });*/
+//       expandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Toast(" 签到v 搜索 ");
+//                try {
+//                    if (isSelect) {
+//                        returnData((int) l);
+//                    } else {
+//                        openDetail((int) l);
+//                    }
+//                } catch (Exception e) {
+//                    Global.ProcException(e);
+//                }
+//            }
+//        });
 
         /**列表监听器*/
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {

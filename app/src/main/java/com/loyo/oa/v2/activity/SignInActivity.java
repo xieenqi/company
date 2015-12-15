@@ -45,7 +45,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 拜访签到 页面
+ * 【 拜访签到 】 页面
  */
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
@@ -175,7 +175,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case R.id.layout_customer_name:
 
                 Bundle b=new Bundle();
-                b.putInt("queryType",1);
+                b.putInt("queryType", 1);
                 b.putBoolean("isSelect", true);
                 b.putString("from","新建拜访");
                 app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
@@ -215,7 +215,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(LegWork legWork, Response response) {
-
+                //待接口调试
                 LogUtil.dll("success result"+MainApp.gson.toJson(legWork));
                 LogUtil.dll("success code" + response.getStatus());
                 LogUtil.dll("URL" + response.getUrl());
@@ -230,7 +230,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         Toast(getString(R.string.sign) + "异常!");
                     }
                 }else{
-                    Toast("提交失败");
+                    Toast("提交失败"+response.getStatus());
                     //legWork.setCreator(MainApp.user.toShortUser());
                 }
             }
@@ -246,6 +246,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 else{
                     Toast(error.getMessage());
                 }
+                LogUtil.d(" 签到拜访错误: "+error.getMessage());
             }
         });
     }
