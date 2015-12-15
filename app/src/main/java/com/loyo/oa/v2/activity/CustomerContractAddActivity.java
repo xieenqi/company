@@ -19,6 +19,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -29,7 +30,12 @@ import org.apache.http.Header;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+/**
+ * 客户管理联系人列表，修改联系人
+ * */
 
 public class CustomerContractAddActivity extends BaseActivity implements View.OnClickListener {
 
@@ -140,14 +146,42 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                                 mContact = contact;
                                 sendBack();
                             }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+
+                                LogUtil.dll("code:"+error.getResponse().getStatus());
+
+                                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                                    Toast("请检查您的网络连接");
+                                }
+                                else if(error.getResponse().getStatus() == 500){
+                                    Toast("网络异常500,请稍候再试");
+                                }
+                            }
                         });
                     } else {
+                        /*修改联系人*/
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).updateContact(mCustomer.getId(), mContact.getId(), maps, new RCallback<Contact>() {
                             @Override
                             public void success(Contact contact, Response response) {
                                 mContact = contact;
                                 sendBack();
                             }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+
+                                LogUtil.dll("code:"+error.getResponse().getStatus());
+                                LogUtil.dll("URL:"+error.getUrl());
+
+                                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                                    Toast("请检查您的网络连接");
+                                } else if (error.getResponse().getStatus() == 500) {
+                                    Toast("网络异常500,请稍候再试");
+                                }
+                            }
+
                         });
                     }
 

@@ -171,6 +171,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         if (strSearch.length() > 0) {
+            Utils.dialogShow(this);
             isTopAdd = true;
             getData();
         } else {

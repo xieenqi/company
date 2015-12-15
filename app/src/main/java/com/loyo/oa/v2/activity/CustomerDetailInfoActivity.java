@@ -373,12 +373,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*联系人*/
             case R.id.layout_contact:
-
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("Customer", mCustomer);
                 _class = CustomerContactManageActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
-
                 break;
             case R.id.layout_send_sms:
                 Utils.sendSms(this, mCustomer.getContacts().get(0).getTel());

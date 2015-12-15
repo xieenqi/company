@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
@@ -47,9 +48,11 @@ import com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu;
 import com.loyo.oa.v2.tool.customview.DropListMenu.OnDropItemSelectedListener;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -75,7 +78,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isTopAdd = true;
-    private boolean isFrist  = false;
+    private boolean isFrist = false;
     private String position;
     private NearCount nearCount;
 
@@ -215,9 +218,13 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).GetTags(new RCallback<ArrayList<Tag>>() {
             @Override
             public void success(ArrayList<Tag> tags, Response response) {
+
+                LogUtil.dll("标签：" + MainApp.gson.toJson(tags));
+
                 if (null == tags) {
                     return;
                 }
+
                 DropItem dropItemTag = new DropItem("标签");
                 dropItemTag.setSelectType(DropItem.GROUP_SINGLE);
                 int index = 0;
@@ -291,7 +298,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
         if (items != null && items.size() > 0) {
             switch (customer_type) {
-                /*我的客户*/
+                /**我的客户*/
                 case Customer.CUSTOMER_TYPE_MINE:
                     //时间
                     if (ColumnIndex == 0) {
@@ -325,7 +332,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     break;
 
-                /*公海客户*/
+
+                /**公海客户*/
                 case Customer.CUSTOMER_TYPE_PUBLIC:
                     //时间
                     if (ColumnIndex == 0) {
@@ -359,7 +367,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     break;
 
-                /*团队客户*/
+                /**团队客户*/
                 case Customer.CUSTOMER_TYPE_TEAM:
                     //部门
                     if (ColumnIndex == 0) {
@@ -406,7 +414,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             for (int i = 0; i < items.size(); i++) {
                 sb.append(items.get(items.keyAt(i)).getName()).append(" ").append(items.get(items.keyAt(i)).getValue()).append(",");
             }
-            Global.ToastLong(sb.toString());
+            Toast("选择的内容：" + sb.toString());
             getData();
         }
     }
@@ -503,7 +511,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         LogUtil.dll("order:" + order);
         LogUtil.dll("tafItemIds:" + tagItemIds);
         LogUtil.dll("deptId:" + departmentId);
-        LogUtil.dll("userId:"+userId);
+        LogUtil.dll("userId:" + userId);
 
         String url = "";
         switch (customer_type) {
@@ -537,7 +545,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        LogUtil.dll("URL:"+response.getUrl());
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
                                 mPagination.setPageIndex(1);
@@ -547,6 +554,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                                 Toast("没有数据");
                             } else {
                                 Toast("没有更多数据了");
+                                listView.onRefreshComplete();
                                 return;
                             }
                         } else {
@@ -568,14 +576,15 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast("请检查您的网络连接");
-                        } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                            if(error.getResponse().getStatus() == 500){
-                                Toast("网络异常500，请稍候再试");
-                            }
-                        }else{
-                            Toast("数据获取失败，请重试");
+                        } else if (error.getResponse().getStatus() == 500) {
+                            Toast("网络异常500，请稍候再试");
+                        } else if(error.getResponse().getStatus() == 200){ //失败返回200，就再请求一次，知道拉到数据为止
+                            getData();
                         }
-                        listView.onRefreshComplete();
+                        if(error.getResponse().getStatus() != 200) {
+                            listView.onRefreshComplete();
+                        }
+
                     }
                 }
         );
@@ -603,7 +612,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                startActivityForResult(intent,BaseMainListFragment.REQUEST_REVIEW);
+                startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
             }
         });
     }
@@ -613,7 +622,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
 
         /*详情中有投入公海操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
-        if(requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK){
+        if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
             LogUtil.dll("投入公海，刷新");
         }

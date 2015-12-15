@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,6 @@ public class DropListMenu extends LinearLayout {
     private List<PopupWindow> mPopupWindows = new ArrayList<>();
     private List<ListView> mMenuLists = new ArrayList<>();
     private List<ListView> mSubMenuLists = new ArrayList<>();
-
     private List<Button> mButtonConfirm = new ArrayList<>();
 
     //已经选择DropItem
@@ -123,6 +123,7 @@ public class DropListMenu extends LinearLayout {
         mCheckIcon = R.drawable.ico_make;
         mUpArrow = R.drawable.arrow_up;
         mDownArrow = R.drawable.arrow_down;
+
     }
 
     void initPopopWindows() {
@@ -171,7 +172,6 @@ public class DropListMenu extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     popupWindow.dismiss();
-
                     if (mMenuSelectedListener != null) {
                         mMenuSelectedListener.onSelected(v, mColumnSelected, getSelectedItems());
                     }
@@ -185,7 +185,7 @@ public class DropListMenu extends LinearLayout {
                     mSelectedItem.get(mColumnSelected).clear();
                     syncConfirmButton();
                     popupWindow.dismiss();
-                    if ( mSelectedItem.get(mColumnSelected).size()>0&&mMenuSelectedListener != null) {
+                    if (mSelectedItem.get(mColumnSelected).size() > 0 && mMenuSelectedListener != null) {
                         mMenuSelectedListener.onCancelAll(mColumnSelected);
                     }
                 }
@@ -195,9 +195,14 @@ public class DropListMenu extends LinearLayout {
 
             menuList.setBackgroundColor(mMenuListBackColor);
             menuList.setSelector(mMenuListSelectorRes);
+            
+            /**
+             * 左侧Listiew
+             * */
             menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                     mRowSelected = position;
                     if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
@@ -243,7 +248,6 @@ public class DropListMenu extends LinearLayout {
                             }
                         });
                     } else {
-                        popupWindow.dismiss();
 
                         mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                         mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
@@ -251,13 +255,13 @@ public class DropListMenu extends LinearLayout {
 
                         if (mMenuSelectedListener != null) {
                             DropItem selectRowItem = menuItem.getSubDropItem().get(mRowSelected);
-
                             getSelectedItems().clear();
                             getSelectedItems().put(mColumnSelected, selectRowItem);
                             if (mMenuSelectedListener != null) {
                                 mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                             }
                         }
+
                     }
                 }
             });

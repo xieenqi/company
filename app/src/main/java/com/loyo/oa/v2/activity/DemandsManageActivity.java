@@ -28,6 +28,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 购买意向
+ * */
 
 public class DemandsManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
@@ -73,9 +76,11 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
+
         if(!isMyUser){
             layout_add.setVisibility(View.GONE);
         }
+
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add.setOnClickListener(this);
@@ -119,7 +124,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
      */
     private void bindData() {
         if (lstData_Demand != null) {
-            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand);
+            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand,isMyUser);
             listView_demands.setAdapter(demandsRadioListViewAdapter);
             listView_demands.setMode(PullToRefreshBase.Mode.BOTH);
             listView_demands.setOnRefreshListener(this);

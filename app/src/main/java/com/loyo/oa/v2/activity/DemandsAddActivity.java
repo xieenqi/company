@@ -35,6 +35,9 @@ import java.util.HashMap;
 
 import retrofit.client.Response;
 
+/**
+ * 新增购买意向
+ * */
 
 public class DemandsAddActivity extends BaseActivity implements View.OnClickListener {
     ViewGroup img_title_left, img_title_right;
@@ -111,7 +114,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
             public void success(ArrayList<SaleStage> saleStages, Response response) {
                 lstData_SaleStage.addAll(saleStages);
                 if (saleStageDialogFragment == null) {
-                    saleStageDialogFragment = new SaleStageDialogFragment(lstData_SaleStage, tv_salestages,layout_reason);
+                    saleStageDialogFragment = new SaleStageDialogFragment(lstData_SaleStage, tv_salestages, layout_reason);
 
                     if (demand != null && demand.getSaleStage() != null) {
                         saleStageDialogFragment.lSaleStageID_select = demand.getSaleStage();
@@ -245,6 +248,12 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                     Toast("请选择销售阶段");
                     return;
                 }
+
+                if(tv_salestages.getText().toString().equals("输单") && tv_reason.getText().toString().equals("请选择输单原因")){
+                    Toast("请填写输单原因");
+                    return;
+                }
+
                 if (demand == null) {
                     addDemand();
 

@@ -41,7 +41,6 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     protected void getData() {
-        Utils.dialogShow(this);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", paginationX.getPageIndex());

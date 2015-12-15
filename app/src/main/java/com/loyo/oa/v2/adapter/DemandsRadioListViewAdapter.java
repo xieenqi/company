@@ -31,11 +31,13 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
     LayoutInflater mInflater;
     ArrayList<Demand> lstData;
     private Context mContext;
+    private boolean isMyUser;
 
-    public DemandsRadioListViewAdapter(Context context, ArrayList<Demand> lstData) {
+    public DemandsRadioListViewAdapter(Context context, ArrayList<Demand> lstData,boolean isMyUser) {
         mInflater = LayoutInflater.from(context);
         this.lstData = lstData;
         mContext = context;
+        this.isMyUser = isMyUser;
     }
 
     @Override
@@ -91,6 +93,10 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         }
 
         tv_memo.setText("备注：" + demand.getMemo());
+
+        if(!isMyUser){
+            img_edit_damand.setVisibility(View.GONE);
+        }
 
         img_edit_damand.setOnClickListener(new View.OnClickListener() {
             @Override

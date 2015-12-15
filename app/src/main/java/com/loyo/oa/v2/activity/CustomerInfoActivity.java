@@ -146,7 +146,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @AfterViews
     void initUI() {
-        layout_rushpackger = (LinearLayout)findViewById(R.id.layout_rushpackger);
+        layout_rushpackger = (LinearLayout) findViewById(R.id.layout_rushpackger);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         img_refresh_address.setOnTouchListener(Global.GetTouch());
@@ -193,7 +193,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
         /*如果不是自己的客户，不允许操作*/
         if (!isMyUser) {
-            layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT,0.1f));
+            layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
             img_refresh_address.setVisibility(View.GONE);
             tv_customer_name.setEnabled(false);
             tv_address.setEnabled(false);
@@ -321,13 +321,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             case R.id.img_title_right:
 
-                if(tv_industry.getText().toString().isEmpty()){
+                if (tv_industry.getText().toString().isEmpty()) {
                     Toast("行业不能为空");
-                }
-                else if(tv_district.getText().toString().isEmpty()){
+                } else if (tv_district.getText().toString().isEmpty()) {
                     Toast("地区不能为空");
-                }
-                else{
+                } else {
                     updateCustomer();
                 }
                 break;
@@ -340,24 +338,30 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 }
                 app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
                 break;
+
             case R.id.img_refresh_address:
                 new LocationUtil(this, this);
                 img_refresh_address.startAnimation(animation);
                 break;
+
             case R.id.img_go_where:
                 Utils.goWhere(this, lat, lng);
                 break;
+
             case R.id.img_del_join_users:
                 members.clear();
                 tv_customer_join_users.setText("");
                 img_del_join_users.setVisibility(View.GONE);
                 break;
+
             case R.id.layout_customer_responser:
                 showLeaveDialog();
                 break;
+
             case R.id.layout_customer_join_users:
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
                 break;
+
             case R.id.layout_customer_district:
                 new DialogFragmentAreaCast().show(getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
                     @Override
@@ -367,6 +371,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     }
                 });
                 break;
+
             case R.id.layout_customer_industry:
                 new DialogFragmentIndustryCast().show(getSupportFragmentManager(), "行业选择", new OnMenuSelectCallback() {
                     @Override
@@ -376,7 +381,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     }
                 });
                 break;
-
         }
     }
 
@@ -384,6 +388,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 更新客戶
      */
     private void updateCustomer() {
+
         String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
         String summary = edt_customer_memo.getText().toString().trim();
@@ -411,6 +416,17 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("regional", regional);
         map.put("industry", industry);
 
+        LogUtil.dll("id:"+mCustomer.getId());
+        LogUtil.dll("name:" + customerName);
+        LogUtil.dll("summary:" + summary);
+        LogUtil.dll("owner:" + owner);
+        LogUtil.dll("members:" + members);
+        LogUtil.dll("tags:" + mTagItems);
+        LogUtil.dll("loc:" + mLocate);
+        LogUtil.dll("extDatas:"+ mCustomer.getExtDatas());
+        LogUtil.dll("regional:"+regional);
+        LogUtil.dll("industry:"+industry);
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
@@ -423,12 +439,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                     @Override
                     public void failure(RetrofitError error) {
+                            LogUtil.dll("url:"+error.getUrl());
+
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
                         } else if (error.getResponse().getStatus() == 500) {
+
                             try {
                                 JSONObject jsonObject = new JSONObject(Utils.convertStreamToString(error.getResponse().getBody().in()));
-                                Toast.makeText(CustomerInfoActivity.this,jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CustomerInfoActivity.this, jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
+                                LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (JSONException e) {
