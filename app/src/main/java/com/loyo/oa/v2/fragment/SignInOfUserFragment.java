@@ -45,7 +45,7 @@ import retrofit.client.Response;
 
 /**
  * 客户拜访－【我的拜访】  列表
- * */
+ */
 
 @SuppressLint("ValidFragment")
 public class SignInOfUserFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
@@ -68,6 +68,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     private boolean isTopAdd;
     private User mUser;
+    private String currentTime, nextTime;
 
     @Nullable
     @Override
@@ -125,6 +126,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         super.onViewCreated(view, savedInstanceState);
     }
 
+
     /**
      * 初始化时间显示
      *
@@ -143,7 +145,21 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 previousDay();
                 break;
             case R.id.img_time_right:
-                nextDay();
+                java.util.Calendar c1 = java.util.Calendar.getInstance();
+                java.util.Calendar c2 = java.util.Calendar.getInstance();
+                currentTime = app.df12.format(System.currentTimeMillis());
+                nextTime = app.df12.format(endAt);
+                try{
+                    c1.setTime(app.df12.parse(nextTime));//获得的时间
+                    c2.setTime(app.df12.parse(currentTime));//系统当前时间
+                    int resultTime = c1.compareTo(c2);
+                    if (resultTime < 0 ) {
+                        nextDay();
+                    }
+                }catch (Exception e){
+
+                }
+
                 break;
             case R.id.btn_add:
                 create();
@@ -188,7 +204,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 cal.set(Calendar.DAY_OF_MONTH, 1);
             }
         } else {
-            cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
+            int dd = cal.get(Calendar.DAY_OF_MONTH);
+            cal.set(Calendar.DAY_OF_MONTH, ++dd);
         }
 
         refreshData();
@@ -199,8 +216,11 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void refreshData() {
         endAt = cal.getTime().getTime();
+        //nextTime=app.df12.format(new Date(endAt));
+        LogUtil.d(" 获得的时间 " + endAt);
         initTimeStr(cal.getTime().getTime());
         onPullDownToRefresh(lv);
+
     }
 
     /**
@@ -240,7 +260,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 bindData();
 
                 try {
-                    LogUtil.dll("我的拜访:"+Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.dll("我的拜访:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

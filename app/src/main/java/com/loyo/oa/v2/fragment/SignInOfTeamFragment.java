@@ -65,6 +65,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private View mView;
     private PaginationLegWork legworkPaginationX = new PaginationLegWork(20);
     private boolean isTopAdd;
+    private String currentTime, nextTime;
 
 
     @Nullable
@@ -133,7 +134,20 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                 previousDay();
                 break;
             case R.id.img_time_right:
-                nextDay();
+                java.util.Calendar c1 = java.util.Calendar.getInstance();
+                java.util.Calendar c2 = java.util.Calendar.getInstance();
+                currentTime = app.df12.format(System.currentTimeMillis());
+                nextTime = app.df12.format(endAt);
+                try{
+                    c1.setTime(app.df12.parse(nextTime));//获得的时间
+                    c2.setTime(app.df12.parse(currentTime));//系统当前时间
+                    int resultTime = c1.compareTo(c2);
+                    if (resultTime < 0 ) {
+                        nextDay();
+                    }
+                }catch (Exception e){
+
+                }
                 break;
             case R.id.btn_add:
                 create();
