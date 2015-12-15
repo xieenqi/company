@@ -132,6 +132,7 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:textColorHint="#c9c9c9"
+                    android:text="不提醒"
                     android:textSize="17sp"/>
 
                 <ImageView

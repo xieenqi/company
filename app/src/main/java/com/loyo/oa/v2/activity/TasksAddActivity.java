@@ -38,7 +38,6 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -112,7 +111,7 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<Reviewer> members = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
-    private int mRemind;
+    private int mRemind=0;
     private boolean isCopy;
 
     @AfterViews
