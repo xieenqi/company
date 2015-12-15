@@ -72,7 +72,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         tv_customer_name.setText(demand.getProduct().getName());
         tv_phase.setText("阶段：" + demand.getSaleStage().getName());
         tv_content_plan.setText("预估：\t数量\t\t" + demand.getEstimatedNum() + "\t\t\t\t单价\t\t" + demand.getEstimatedPrice());
-        tv_content_act.setText("实际：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice());
+        tv_content_act.setText("成交：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice());
         if (demand.getSaleStage().getProb() == 0) {
             tv_lose_reason.setVisibility(View.VISIBLE);
             StringBuilder reason = new StringBuilder("输单原因：");

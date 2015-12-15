@@ -115,7 +115,7 @@ public class ContactInfoActivity extends BaseActivity
         if(!TextUtils.isEmpty(user.getAvatar()))
             ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         Utils.setContent(tv_realname, user.getRealname());
-        String dept=user.getDepartmentsName()+" | "+user.getRealname();
+        String dept=user.getDepartmentsName()+" - "+user.getRealname();
         Utils.setContent(tv_deptname, dept);
 
         Utils.setContent(tv_phone, user.getMobile());
