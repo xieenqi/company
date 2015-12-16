@@ -2,7 +2,6 @@ package com.loyo.oa.v2.tool;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -13,17 +12,16 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.TasksAddActivity_;
-import com.loyo.oa.v2.activity.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;

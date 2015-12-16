@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,6 +30,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 【任务审核】页面
+ */
 @EActivity(R.layout.activity_tasks_info_score)
 public class TasksInfoScoreActivity extends BaseActivity {
 

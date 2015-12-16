@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +15,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.tasks.TaskChildEdit;
+import com.loyo.oa.v2.activity.AttachmentActivity_;
+import com.loyo.oa.v2.activity.ChildTaskAddActivity_;
+import com.loyo.oa.v2.activity.DiscussionActivity_;
+import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Discussion;
@@ -57,15 +60,15 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_tasks_info)
 public class TasksInfoActivity extends BaseActivity {
 
-    static final int REQUEST_SCORE = 200;
-    static final int REQUEST_EDIT = 300;
-    static final int REQUEST_EDIT_DELETE = 500;
-    static final int REQUEST_CREATE_SUB = 600;
-    static final int REQUEST_EDIT_TASK = 740;
+    public static final int REQUEST_SCORE = 200;
+    public static final int REQUEST_EDIT = 300;
+    public static final int REQUEST_EDIT_DELETE = 500;
+    public static final int REQUEST_CREATE_SUB = 600;
+    public static final int REQUEST_EDIT_TASK = 740;
 
-    final int MSG_ATTACHMENT = 700;
-    final int MSG_DISCUSSION = 800;
-    final int MSG_CHILD_TASK = 900;
+    public static final int MSG_ATTACHMENT = 700;
+    public static final int MSG_DISCUSSION = 800;
+    public static final int MSG_CHILD_TASK = 900;
 
     String vTitle;
     String vContent;
