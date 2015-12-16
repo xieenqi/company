@@ -26,7 +26,6 @@ import java.util.List;
   */
 
 public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
-
     private int mJoinType = 0, mStatus = 0;
     private static final String[] TYPE_TAG = new String[]{"全部类型", "我分派的", "我负责的", "我参与的"};
     private static final String[] STATUS_TAG = new String[]{"全部状态", "进行中", "待审核", "已完成"};
@@ -42,7 +41,6 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         map.put("status", mStatus);
         map.put("endAt", System.currentTimeMillis() / 1000);
         map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(map, this);
     }
 
