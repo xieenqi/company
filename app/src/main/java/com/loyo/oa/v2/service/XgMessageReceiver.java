@@ -9,7 +9,7 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;

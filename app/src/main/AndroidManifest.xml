@@ -347,12 +347,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name=".activity.TasksManageActivity_"
+            android:name=".activity.tasks.TasksManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activity.TasksAddActivity_"
+            android:name=".activity.tasks.TasksAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
@@ -362,7 +362,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name=".activity.TasksInfoActivity_"
+            android:name=".activity.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -397,9 +397,9 @@
             android:name=".activity.tasks.TaskChildEdit"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
+<!-- 任务编辑页面-->
         <activity
-            android:name=".activity.TasksEditActivity_"
+            android:name=".activity.tasks.TasksEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -480,8 +480,9 @@
             android:name=".activity.SignInManagerFromCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <!--任务审核 -->
         <activity
-            android:name=".activity.TasksInfoScoreActivity_"
+            android:name=".activity.tasks.TasksInfoScoreActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
@@ -493,8 +494,9 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible" />
+        <!-- 任务的搜索-->
         <activity
-            android:name=".activity.TasksSearchActivity"
+            android:name=".activity.tasks.TasksSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
