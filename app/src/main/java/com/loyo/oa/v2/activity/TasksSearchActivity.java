@@ -11,7 +11,9 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
 
-
+/**
+ * 【任务 的搜索】 页面
+ */
 public class TasksSearchActivity extends BaseSearchActivity<Task> {
 
     @Override

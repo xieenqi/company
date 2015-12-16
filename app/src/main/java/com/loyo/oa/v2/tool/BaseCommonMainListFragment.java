@@ -242,7 +242,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-
     }
 
     @Override

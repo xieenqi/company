@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_signin, "客戶拜访", SignInManagerActivity_.class),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
-                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
+                new ClickItem(R.drawable.home_task, "任务计划",TasksManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));

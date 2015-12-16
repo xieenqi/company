@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -37,6 +39,8 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,25 +55,20 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private TextView tv_customer_name;
     private TextView tv_address;
-    EditText edt_memo;
-
-    ViewGroup img_title_left, img_title_right;
+    private EditText edt_memo;
+    private ViewGroup img_title_left, img_title_right;
     private GridView gridView_photo;
-    ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-
+    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private String cc_user_id = null;
     private String cc_department_id = null;
     private final int SELECT_USERNAME = 0X01;
-    String mAddress;
+    private String mAddress;
     private String customerId;
     private String customerName;
     private SignInGridViewAdapter signInGridViewAdapter;
-
-    ImageView img_refresh_address;
-
-    double mLat, mLng;
-
+    private ImageView img_refresh_address;
+    private double mLat, mLng;
     boolean mLocationFlag = false;  //是否定位完成的标记
     private Customer mCustomer;
     private Animation animation;
@@ -84,6 +83,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             mCustomer = (Customer) intent.getSerializableExtra("data");
             customerId = mCustomer.getId();
             customerName = mCustomer.getName();
+
+            LogUtil.dll("name:" + mCustomer.getName());
+            LogUtil.dll("id:" + mCustomer.getId());
+
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         initUI();
@@ -174,10 +177,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.layout_customer_name:
 
-                Bundle b=new Bundle();
+                Bundle b = new Bundle();
                 b.putInt("queryType", 1);
                 b.putBoolean("isSelect", true);
-                b.putString("from","新建拜访");
+                b.putString("from", "新建拜访");
                 app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
 
                 break;
@@ -216,7 +219,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void success(LegWork legWork, Response response) {
                 //待接口调试
-                LogUtil.dll("success result"+MainApp.gson.toJson(legWork));
+                LogUtil.dll("success result" + MainApp.gson.toJson(legWork));
                 LogUtil.dll("success code" + response.getStatus());
                 LogUtil.dll("URL" + response.getUrl());
 
@@ -229,24 +232,22 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     } else {
                         Toast(getString(R.string.sign) + "异常!");
                     }
-                }else{
-                    Toast("提交失败"+response.getStatus());
+                } else {
+                    Toast("提交失败" + response.getStatus());
                     //legWork.setCreator(MainApp.user.toShortUser());
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     LogUtil.dll("请检查您的网络连接");
-                }
-                else if(error.getResponse().getStatus() == 500){
+                } else if (error.getResponse().getStatus() == 500) {
                     Toast("网络异常500，请稍候再试");
-                }
-                else{
+                } else {
                     Toast(error.getMessage());
                 }
-                LogUtil.d(" 签到拜访错误: "+error.getMessage());
+                LogUtil.d(" 签到拜访错误: " + error.getMessage());
             }
         });
     }
@@ -258,6 +259,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
+                LogUtil.dll("获取附件成功");
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -278,27 +280,34 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         switch (requestCode) {
             case SelectPicPopupWindow.GET_IMG:
+                LogUtil.dll("回调照片");
 
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
+                        File newFile = null;
+
+                        newFile = Global.scal(this, uri);
+
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
+                                        LogUtil.dll("附件上传");
                                         getAttachments();
                                     }
                                 });
                             }
                         }
                     }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
+                } catch (IOException e) {
+                    LogUtil.dll("IO异常");
+                    e.printStackTrace();
                 }
+
 
                 break;
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
@@ -323,7 +332,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
             case BaseSearchActivity.REQUEST_SEARCH:
-                LogUtil.dll("回来");
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.getId();
@@ -333,4 +341,17 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
 }

@@ -42,6 +42,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 搜索的 基类
+ *
+ * @param <T>
+ */
 public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback {
     public static final int REQUEST_SEARCH = 1100;
 
@@ -149,19 +154,14 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (befrompage.equals("新建拜访")) {
-
+                if ("新建拜访".equals(befrompage)) {
                     LogUtil.dll("来自新建拜访");
                     returnData(position - 1);
-
-
-                } else if (befrompage.equals("客户管理")) {
-
+                } else if ("客户管理".equals(befrompage)) {
                     LogUtil.dll("来自客户管理");
                     Intent intent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
                     intent.putExtra("Id", lstData.get(position - 1).getId());
                     startActivity(intent);
-
                 }
             }
         });
@@ -229,7 +229,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     }
 
 
-
     protected void returnData(int position) {
         Intent intent = new Intent();
         intent.putExtra("data", adapter.getItem(position));
@@ -241,10 +240,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     @Override
     public void success(Object o, Response response) {
 
-        LogUtil.dll("URL:"+response.getUrl());
+        LogUtil.dll("URL:" + response.getUrl());
 
         try {
-            LogUtil.dll("success result:"+ Utils.convertStreamToString(response.getBody().in()));
+            LogUtil.dll("success result:" + Utils.convertStreamToString(response.getBody().in()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -286,13 +285,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     @Override
     public void failure(RetrofitError error) {
-        if(error.getKind() == RetrofitError.Kind.NETWORK){
+        if (error.getKind() == RetrofitError.Kind.NETWORK) {
             Toast("请检查您的网络连接");
-        }
-        else if(error.getResponse().getStatus() == 500){
+        } else if (error.getResponse().getStatus() == 500) {
             Toast("网络异常500,请稍候再试");
-        }
-        else if(error.getResponse().getStatus() == 200){
+        } else if (error.getResponse().getStatus() == 200) {
             Toast("搜索失败，请稍候再试");
         }
         Utils.dialogDismiss();

@@ -15,13 +15,18 @@ public class Config_project {
 
     public static String IP = "http://192.168.31.131";//内部服务器
 
+
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");
     }
 
+    //    public static String API_URL() {
+//        return API_URL_CUSTOMER();
+//    }
     public static String API_URL_CUSTOMER() {
         return SERVER_URL_CUSTOMER().concat("/api/v2");
     }
+
 
     public static String API_URL_ATTACHMENT() {
         return SERVER_URL_ATTACHMENT().concat("/api/v2");

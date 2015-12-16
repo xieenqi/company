@@ -57,7 +57,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         TextView tv_discuss_num = ViewHolder.get(convertView, R.id.tv_disscuss_num);
         ImageView iv_disscuss_status = ViewHolder.get(convertView, R.id.img_discuss_status);
         status.setVisibility(View.GONE);
-        layout_discuss.setVisibility(View.GONE);
         //审批
         if (o instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) o;
@@ -88,6 +87,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     break;
             }
         } else if (o instanceof Task) {
+            layout_discuss.setVisibility(View.VISIBLE);
             Task task = (Task) o;
             if (task.getStatus() == Task.STATUS_PROCESSING) {
                 status.setImageResource(R.drawable.task_status_1);
@@ -105,7 +105,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 }
                 //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
                 time.setText("任务截止时间: " + app.df3.format(new Date(task.getPlanEndAt())));
-
             } catch (Exception e) {
                 Global.ProcException(e);
             }

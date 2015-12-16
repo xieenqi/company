@@ -249,7 +249,9 @@ public class Utils {
     }
 
     public static void dialogDismiss(){
-        progressDialog.dismiss();
+        if(progressDialog!=null&&progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
     }
 
 
