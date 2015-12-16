@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -36,6 +37,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -261,48 +263,56 @@ public final class Global {
     }
 
     //压缩图片,并旋转图片
-    public static File scal(Context context, Uri fileUri) throws Exception {
+    public static File scal(Context context, Uri fileUri) throws IOException {
         String path = Global.getPath(context, fileUri);
 
         int degree = readPictureDegree(path);
 
         File outputFile = new File(path);
+        LogUtil.dll("路径：" + path);
         long fileSize = outputFile.length();
         final long fileMaxSize = 100 * 1024;
-        if (fileSize >= fileMaxSize) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, options);
-            int height = options.outHeight;
-            int width = options.outWidth;
 
-            double scale = Math.sqrt((float) fileSize / fileMaxSize);
-            options.outHeight = (int) (height / scale);
-            options.outWidth = (int) (width / scale);
-            options.inSampleSize = (int) (scale + 0.5);
-            options.inJustDecodeBounds = false;
+            if (fileSize >= fileMaxSize) {
+                LogUtil.dll("文件大小超限");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, options);
+                int height = options.outHeight;
+                int width = options.outWidth;
 
-            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-            outputFile = getTempFile(context);
-            FileOutputStream fos = new FileOutputStream(outputFile);
+                double scale = Math.sqrt((float) fileSize / fileMaxSize);
+                options.outHeight = (int) (height / scale);
+                options.outWidth = (int) (width / scale);
+                options.inSampleSize = (int) (scale + 0.5);
+                options.inJustDecodeBounds = false;
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-            if (degree > 0) {
-                bitmap = rotaingImageView(degree, bitmap);
+                outputFile = getTempFile(context);
+                FileOutputStream fos = null;
+                fos = new FileOutputStream(outputFile);
+
+                if (degree > 0) {
+                    bitmap = rotaingImageView(degree, bitmap);
+                }
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+
+                fos.close();
+
+                if (!bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
+
+            } else {
+                LogUtil.dll("文件大小未超限");
+                File tempFile = outputFile;
+                outputFile = getTempFile(context);
+                copyFileUsingFileChannels(tempFile, outputFile);
             }
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
-            fos.close();
-
-            if (!bitmap.isRecycled()) {
-                bitmap.recycle();
-            }
-        } else {
-            File tempFile = outputFile;
-            outputFile = getTempFile(context);
-            copyFileUsingFileChannels(tempFile, outputFile);
-        }
 
         return outputFile;
+
     }
 
     public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {

@@ -32,6 +32,7 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 @EActivity(R.layout.activity_project_add)
@@ -272,11 +273,20 @@ public class ProjectAddActivity extends BaseActivity {
             @Override
             public void success(Project project, Response response) {
                 Global.ToastLong("新增项目成功");
-
                 Intent intent = new Intent();
                 intent.putExtra("data", project);
-
                 app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            }
+
+
+            @Override
+            public void failure(RetrofitError error) {
+                if(error.getKind() == RetrofitError.Kind.NETWORK){
+                    Toast("请检查您的网络连接");
+                }
+                else if(error.getResponse().getStatus() == 500){
+                    Toast("网络异常500，请稍候再试");
+                }
             }
         });
     }
