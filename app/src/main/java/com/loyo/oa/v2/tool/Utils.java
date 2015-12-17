@@ -387,7 +387,7 @@ public class Utils {
      * @return
      */
     public static boolean hasRights() {
-        Role role = MainApp.user.getRole();
+        Role role = MainApp.user.role;
         if (null != role) {
             if (role.getDataRange() != Role.SELF) {
                 return true;

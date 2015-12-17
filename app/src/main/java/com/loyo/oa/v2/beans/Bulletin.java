@@ -58,8 +58,8 @@ public class Bulletin extends BaseBeans {
     }
 
     public String getPosition() {
-        if (creator != null && creator.getShortPosition() != null) {
-            return creator.getShortPosition().getName();
+        if (creator != null && creator.shortPosition != null) {
+            return creator.shortPosition.getName();
         }
 
         return "";
@@ -78,9 +78,9 @@ public class Bulletin extends BaseBeans {
     }
 
     public String getDeptName() {
-        if (creator != null && creator.getShortDept() != null ) {
+        if (creator != null && creator.shortDept != null ) {
 //            return creator.getDepts().get(0).getName();
-            return creator.getShortDept().getName();
+            return creator.shortDept.getName();
         }
 
         return "";

@@ -397,7 +397,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (null != workReport.getReviewer() && null != workReport.getReviewer().getUser() && !TextUtils.isEmpty(workReport.getReviewer().getUser().getName())) {
                     content.setText("点评: " + workReport.getReviewer().getUser().getName());
                 }
-                StringBuilder reportTitle = new StringBuilder(workReport.getCreator().getName() + "提交 ");
+                StringBuilder reportTitle = new StringBuilder(workReport.getCreator().name + "提交 ");
                 String reportDate = "";
                 String reportType = "";
                 switch (workReport.getType()) {

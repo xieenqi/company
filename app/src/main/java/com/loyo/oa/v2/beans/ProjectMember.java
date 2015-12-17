@@ -83,7 +83,7 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            sb.append(TextUtils.isEmpty(member.getUserId()) ? member.getUserId() : member.getUser().getId());
+            sb.append(TextUtils.isEmpty(member.getUserId()) ? member.getUserId() : member.getUser().id);
         }
 
         return sb == null ? "" : sb.toString();

@@ -16,10 +16,10 @@ public class ComparatorUser implements Comparator {
         User user0 = (User) lhs;
         User user1 = (User) rhs;
 
-        if (TextUtils.isEmpty(user0.getFullPinyin()) || TextUtils.isEmpty(user1.getFullPinyin())) {
+        if (TextUtils.isEmpty(user0.fullPinyin) || TextUtils.isEmpty(user1.fullPinyin)) {
             return 0;
         }
 
-        return user0.getFullPinyin().compareTo(user1.getFullPinyin());
+        return user0.fullPinyin.compareTo(user1.fullPinyin);
     }
 }

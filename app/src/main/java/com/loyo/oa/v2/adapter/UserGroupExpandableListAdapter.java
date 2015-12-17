@@ -115,7 +115,7 @@ public class UserGroupExpandableListAdapter extends BaseExpandableListAdapter {
 
         User user = lstUserGroupData.get(groupPosition).getLstUser().get(childPosition);
         item_info.tv_title.setText(user.getRealname());
-        item_info.tv_content.setText(user.getDepartmentsName());
+        item_info.tv_content.setText(user.departmentsName);
 
         switch (departmentUserActivity.select_type) {
             case DepartmentUserActivity.TYPE_SELECT_SINGLE:

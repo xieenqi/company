@@ -139,7 +139,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
-    private Member owner = new Member();
+    private User owner = new User();
     private ArrayList<Member> members = new ArrayList<>();
     private CustomerRegional regional = new CustomerRegional();
     private Industry industry = new Industry();
@@ -222,7 +222,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         if (null != mCustomer.owner) {
-            //owner = mCustomer.getOwner();
+            owner = mCustomer.owner;
         }
 
         if (null != mCustomer.regional) {
@@ -250,7 +250,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         tv_customer_creator.setText(mCustomer.creator.getName());
-        String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.getName();
+        String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.name;
         tv_customer_responser.setText(responser);
 
         if (members.size() != 0) {
@@ -500,9 +500,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
                     NewUser u = new NewUser();
-                    u.setId(user.getId());
+                    u.setId(user.id);
                     u.setName(user.getRealname());
-                    owner.setUser(u);
+                    owner.id=u.getId();
+                    owner.name=u.getName();
+                    owner.avatar=u.getAvatar();
+
                     tv_customer_responser.setText(u.getName());
                 }
                 //参与人

@@ -260,7 +260,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             DropItem parentItem = new DropItem(departments.get(i).getName(), i, departments.get(i).getId());
             if (!users.isEmpty()) {
                 for (int j = 0; j < users.size(); j++) {
-                    DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).getId());
+                    DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
                     dropItems.add(dropItem);
                 }
             }
@@ -545,8 +545,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        LogUtil.d("客户管理的URL："+response.getUrl());
-                        LogUtil.d("客户管理json数据："+MainApp.gson.toJson(customerPaginationX));
+                        LogUtil.d("客户管理的URL：" + response.getUrl());
+                        LogUtil.d("客户管理json数据：" + MainApp.gson.toJson(customerPaginationX));
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
                                 mPagination.setPageIndex(1);
@@ -575,12 +575,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                     @Override
                     public void failure(RetrofitError error) {
-                        LogUtil.d("客户管理失败："+error.getMessage());
+                        LogUtil.d("客户管理失败：" + error.getMessage());
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast("请检查您的网络连接");
                         } else if (error.getResponse().getStatus() == 500) {
                             Toast("网络异常500，请稍候再试");
-                        } else if(error.getResponse().getStatus() == 200){ //失败返回200，就再请求一次，知道拉到数据为止
+                        } else if (error.getResponse().getStatus() == 200) { //失败返回200，就再请求一次，知道拉到数据为止
                             getData();
                         }
 //                        if(error.getResponse().getStatus() != 200) {
@@ -611,7 +611,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LogUtil.d(" 客户管理每一个item： "+MainApp.gson.toJson(mCustomers.get((int) l)));
+                LogUtil.d(" 客户管理每一个item： " + MainApp.gson.toJson(mCustomers.get((int) l)));
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
 
@@ -729,7 +729,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img2.setImageResource(R.drawable.icon_follow_up_creator);
                 img3.setImageResource(R.drawable.icon_customer_follow_time);
 
-                String responser = null == customer.owner || null == customer.owner ? "" : customer.owner.getName();
+                String responser = null == customer.owner || null == customer.owner ? "" : customer.owner.name;
                 tv_content1.setText("标签：" + tagItems);
                 tv_content2.setText("负责人：" + responser);
                 tv_content3.setText("跟进时间：" + lastActivityAt);

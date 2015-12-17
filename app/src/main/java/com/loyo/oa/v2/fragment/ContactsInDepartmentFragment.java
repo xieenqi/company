@@ -71,11 +71,11 @@ public class ContactsInDepartmentFragment extends BaseFragment {
         //Toast(" 部门id " + !getArguments().containsKey("depId"));
 
         if (TextUtils.isEmpty(depId) && depId.length() == 0) {
-            depId = MainApp.user.getDepts().get(0).getShortDept().getId();
+            depId = MainApp.user.depts.get(0).getShortDept().getId();
         }
 
-        if (MainApp.user.getDepts().size() != 0) {
-            isMyDept = TextUtils.equals(depId, MainApp.user.getDepts().get(0).getShortDept().getId());
+        if (MainApp.user.depts.size() != 0) {
+            isMyDept = TextUtils.equals(depId, MainApp.user.depts.get(0).getShortDept().getId());
         }
 
 
@@ -110,8 +110,8 @@ public class ContactsInDepartmentFragment extends BaseFragment {
                 for (int k = 0; k < users.size(); k++) {
                     User user = users.get(k);
                     if (isMyDept && user.isCurrentUser()) continue;
-                    String names = TextUtils.isEmpty(user.getFullPinyin()) ? "" : user.getFullPinyin();
-                    names = TextUtils.isEmpty(names) ? user.getSimplePinyin() : names;
+                    String names = TextUtils.isEmpty(user.fullPinyin) ? "" : user.fullPinyin;
+                    names = TextUtils.isEmpty(names) ? user.fullPinyin : names;
                     if (!TextUtils.isEmpty(names)) {
                         char name = names.toUpperCase().charAt(0);
                         if (i == name) {
@@ -372,8 +372,8 @@ public class ContactsInDepartmentFragment extends BaseFragment {
                             simplePinyin = d1.getSimplePinyin();
                         } else {
                             User u = (User) o;
-                            fullPinyin = u.getFullPinyin();
-                            simplePinyin = u.getSimplePinyin();
+                            fullPinyin = u.fullPinyin;
+                            simplePinyin = u.fullPinyin;
                         }
                         if (!TextUtils.isEmpty(fullPinyin)) {
                             return fullPinyin.substring(0, 1).toUpperCase();
@@ -587,17 +587,17 @@ public class ContactsInDepartmentFragment extends BaseFragment {
 
                 tv_content.setText(user.getRealname());
 
-                String departmentName = ((User) getChild(groupPosition, childPosition)).getDepartmentsName();
+                String departmentName = ((User) getChild(groupPosition, childPosition)).departmentsName;
 
-                String jobName = ((User) getChild(groupPosition, childPosition)).getRole().name;
-                if (null != user.getShortPosition() && !TextUtils.isEmpty(user.getShortPosition().getName())) {
-                    departmentName = departmentName.concat(" | " + user.getShortPosition().getName());
+                String jobName = ((User) getChild(groupPosition, childPosition)).role.name;
+                if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
+                    departmentName = departmentName.concat(" | " + user.shortPosition.getName());
                 }
                 //jobName=user.getDepts().get(0).getShortPosition().getName();
                 tv_position.setText(departmentName+"  "+jobName);
 
-                if (!TextUtils.isEmpty(user.getAvatar())) {
-                    ImageLoader.getInstance().displayImage(user.getAvatar(), img);
+                if (!TextUtils.isEmpty(user.avatar)) {
+                    ImageLoader.getInstance().displayImage(user.avatar, img);
                 }
             } else {
                 Department d = (Department) o;

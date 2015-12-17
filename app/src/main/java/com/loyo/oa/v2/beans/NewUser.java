@@ -80,7 +80,7 @@ public class NewUser implements Serializable {
             return true;
         }
         if (o instanceof User) {
-                return ((User) o).getId().equals(id);
+                return ((User) o).id.equals(id);
         }
 
         if (!(o instanceof NewUser)) {
@@ -98,10 +98,11 @@ public class NewUser implements Serializable {
 
     public User toUser() {
         User user = new User();
-        user.setAvatar(this.getAvatar());
-        user.setId(this.getId());
-        user.setRealname(this.getName());
-        user.setName(this.getName());
+
+        user.avatar=this.getAvatar();
+        user.id=this.getId();
+        user.realname=this.getName();
+        user.name=this.getName();
 
         return user;
     }

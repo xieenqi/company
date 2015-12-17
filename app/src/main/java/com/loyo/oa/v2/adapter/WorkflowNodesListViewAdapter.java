@@ -76,7 +76,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 item_info.tv_name.setText(wfNodes.getExecutorUser().getRealname());
 
                 try {
-                    item_info.tv_creator_title.setText(wfNodes.getExecutorUser().getShortPosition().getName());
+                    item_info.tv_creator_title.setText(wfNodes.getExecutorUser().shortPosition.getName());
                 } catch (Exception ex) {
                     item_info.tv_creator_title.setText("");
                     Global.ProcException(ex);

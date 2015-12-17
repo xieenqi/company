@@ -90,7 +90,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      * 获取部门数量和本部门人员数量
      */
     void getUserAndDepartmentSize() {
-        String depId = (null != MainApp.user.getDepts() && MainApp.user.getDepts().size() > 0) ? MainApp.user.getDepts().get(0).getShortDept().getId() : "";
+        String depId = (null != MainApp.user.depts && MainApp.user.depts.size() > 0) ? MainApp.user.depts.get(0).getShortDept().getId() : "";
 
         myDepartmentContactsSize = Common.getUsersByDeptId(depId, new ArrayList<User>()).size();
 

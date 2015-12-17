@@ -159,8 +159,8 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
 
             User u = new User();
-            u.setId(mTask.getResponsiblePersonId());
-            u.setRealname(mTask.getResponsiblePersonName());
+            u.id=mTask.getResponsiblePersonId();
+            u.realname=mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
 
         }

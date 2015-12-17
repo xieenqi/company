@@ -55,7 +55,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -252,24 +251,24 @@ public class ContactInfoEditActivity extends BaseActivity {
         String weixinId = TextUtils.isEmpty(et_weixin.getText().toString())?null:et_weixin.getText().toString();
 
         if(tel != null){
-            if(!tel.equals(user.getMobile())){
+            if(!tel.equals(user.mobile)){
                 return false;
             }
         }
 
         if(birthDay != null){
-            if(!birthDay.equals(user.getBirthDay())){
+            if(!birthDay.equals(user.birthDay)){
                 return false;
             }
         }
 
         if(weixinId != null){
-            if(!weixinId.equals(user.getWeixinId())){
+            if(!weixinId.equals(user.weixinId)){
                 return false;
             }
         }
         if(sex+"" != null) {
-            if (sex != user.getGender()) {
+            if (sex != user.gender) {
                 return false;
             }
         }
@@ -305,32 +304,32 @@ public class ContactInfoEditActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.isEmpty(user.getAvatar())) {
-            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+        if (!TextUtils.isEmpty(user.avatar)) {
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         }
 
         //        Utils.setContent(tv_title, user.getRealname());
-        Utils.setContent(tv_mobile, user.getMobile());
-        Utils.setContent(et_weixin, user.getWeixinId());
-        if (user.getGender() == 2) {
+        Utils.setContent(tv_mobile, user.mobile);
+        Utils.setContent(et_weixin, user.weixinId);
+        if (user.gender == 2) {
             sex_male.setChecked(true);
-        } else if (user.getGender() == 1) {
+        } else if (user.gender == 1) {
             sex_famale.setChecked(true);
         }
 
-        if (!TextUtils.isEmpty(user.getBirthDay())) {
-            int age = Utils.getAge(user.getBirthDay().substring(0, 4));
+        if (!TextUtils.isEmpty(user.birthDay)) {
+            int age = Utils.getAge(user.birthDay.substring(0, 4));
             if (age >= 150) {
                 return;
             }
-            Utils.setContent(tv_birthday, user.getBirthDay());
-            Utils.setContent(tv_age, Utils.getAge(user.getBirthDay().substring(0, 4)) + "");
+            Utils.setContent(tv_birthday, user.birthDay);
+            Utils.setContent(tv_age, Utils.getAge(user.birthDay.substring(0, 4)) + "");
         }
-        if (null != user.getDepts() && !user.getDepts().isEmpty()) {
+        if (null != user.depts && !user.depts.isEmpty()) {
             StringBuilder departments = new StringBuilder();
             StringBuilder positions = new StringBuilder();
-            for (int i = 0; i < user.getDepts().size(); i++) {
-                UserInfo info = user.getDepts().get(i);
+            for (int i = 0; i < user.depts.size(); i++) {
+                UserInfo info = user.depts.get(i);
                 if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
                     if (!TextUtils.isEmpty(departments)) {
                         departments.append("|");
@@ -367,7 +366,7 @@ public class ContactInfoEditActivity extends BaseActivity {
 
         LogUtil.dll("wx:"+weixinId);
 
-        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.id, map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
                 if (null != user) {

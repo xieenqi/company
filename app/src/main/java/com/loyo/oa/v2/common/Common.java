@@ -231,9 +231,9 @@ public final class Common {
             }
 
             for (User user : department.getUsers()) {
-                if (TextUtils.isEmpty(user.getDepartmentsName())) {
+                if (TextUtils.isEmpty(user.departmentsName)) {
 
-                    user.setDepartmentsName(department.getName());
+                    user.departmentsName=department.getName();
                 }
 
                 Department deptInUser = new Department();
@@ -244,7 +244,7 @@ public final class Common {
                 UserInfo userInfo = new UserInfo();
                 userInfo.setShortDept(department);
 
-                user.setDepts(new ArrayList<>(Arrays.asList(userInfo)));
+                user.depts=new ArrayList<>(Arrays.asList(userInfo));
 
                 String groupName_current = user.getGroupName();
 
@@ -373,11 +373,11 @@ public final class Common {
             for (User user : groupData.getLstUser()) {
                 boolean isAdd = false;
 
-                if (user.getDepts() == null) {
+                if (user.depts == null) {
                     continue;
                 }
 
-                for (UserInfo d : user.getDepts()) {
+                for (UserInfo d : user.depts) {
                     //如果已经填加过人员，就不能重复添加。主要是因为一个人有多个部门的情况。
                     if (!isAdd && TextUtils.equals(d.getShortDept().getId(), DeptId)) {
                         users.add(user);
@@ -418,7 +418,7 @@ public final class Common {
             for (UserGroupData userGroup : getLstUserGroupData()) {
                 for (User u : userGroup.getLstUser()) {
                     for (String userId : users) {
-                        if (userId.equals(u.getId())) {
+                        if (userId.equals(u.id)) {
                             if (sb == null) {
                                 sb = new StringBuilder();
                                 sb.append(u.getRealname());
@@ -438,7 +438,7 @@ public final class Common {
 
     public static User getSuper() {
         User superior = new User();
-        superior.setId(MainApp.user.getSuperiorId());
+        superior.id=MainApp.user.superiorId;
 
         for (UserGroupData userGroup : getLstUserGroupData()) {
 

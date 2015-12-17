@@ -111,12 +111,12 @@ public class PreviewAttendanceActivity extends BaseActivity {
             return;
         }
         AttendanceRecord record =inOrOut== ValidateItem.ATTENDANCE_STATE_OUT?attendance.getOut():attendance.getIn();
-        ImageLoader.getInstance().displayImage(attendance.getUser().getAvatar(), iv_avartar);
+        ImageLoader.getInstance().displayImage(attendance.getUser().avatar, iv_avartar);
         final User user = attendance.getUser();
 
         tv_name.setText(user.getRealname());
-        String deptName= TextUtils.isEmpty(user.getDepartmentsName())? Common.getDepartment(user.getDepts().get(0).getShortDept().getId()).getName():user.getDepartmentsName();
-        tv_role.setText(deptName + " " + (null == user.getShortPosition() || TextUtils.isEmpty(user.getShortPosition().getName()) ? "" : user.getShortPosition().getName()));
+        String deptName= TextUtils.isEmpty(user.departmentsName)? Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName():user.departmentsName;
+        tv_role.setText(deptName + " " + (null == user.shortPosition || TextUtils.isEmpty(user.shortPosition.getName()) ? "" : user.shortPosition.getName()));
 
         if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
             iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);

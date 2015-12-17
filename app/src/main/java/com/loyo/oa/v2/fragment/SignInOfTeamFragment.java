@@ -231,7 +231,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", "");
-        map.put("deptId", MainApp.user.getDepts().get(0).getShortDept().getId());
+        map.put("deptId", MainApp.user.depts.get(0).getShortDept().getId());
         map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
         map.put("endAt", endAt / 1000);
         map.put("custId", "");

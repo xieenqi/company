@@ -131,7 +131,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             public void success(Customer customer, Response response) {
                 LogUtil.d(" 客户管理详情URL： " + response.getUrl());
                 LogUtil.d(" 客户管理详情： " + MainApp.gson.toJson(customer));
-                ownErId = customer.owner.getId();
+                ownErId = customer.owner.id;
                 isLock = customer.lock;
                 mCustomer = customer;
                 initData();
@@ -172,7 +172,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
 
-        isMyUser = MainApp.user.getId().equals(ownErId) && isLock ? true : false;
+        isMyUser = MainApp.user.id.equals(ownErId) && isLock ? true : false;
 
         if (isMyUser) {
             img_title_right.setOnTouchListener(Global.GetTouch());

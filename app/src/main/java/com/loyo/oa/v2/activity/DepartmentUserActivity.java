@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -320,7 +319,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
                     }
                     if (temuser != null && !temuser.isEmpty()) {
                         for (int i = 0; i < temuser.size(); i++) {
-                            String id = String.valueOf(temuser.get(i).getId());
+                            String id = String.valueOf(temuser.get(i).id);
                             if (ccUserMap.containsKey(id)) {
                                 ccUserMap.remove(id);
                             }

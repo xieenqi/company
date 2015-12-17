@@ -78,7 +78,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
         initChildren();
 
         //获得权限
-        Identity = MainApp.user.getRole().getDataRange();
+        Identity = MainApp.user.role.getDataRange();
         if(Identity==3){
             imageArrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
