@@ -26,6 +26,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -128,9 +129,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
-
-                ownErId = customer.getOwner().getUser().getId();
-                isLock = customer.isLock();
+                LogUtil.d(" 客户管理详情URL： " + response.getUrl());
+                LogUtil.d(" 客户管理详情： " + MainApp.gson.toJson(customer));
+                ownErId = customer.owner.getId();
+                isLock = customer.lock;
                 mCustomer = customer;
                 initData();
                 Utils.dialogDismiss();
@@ -161,7 +163,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-        if (!mCustomer.isLock()) {
+        if (!mCustomer.lock) {
             img_public.setVisibility(View.VISIBLE);
         }
 
@@ -170,7 +172,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
 
-        isMyUser = ownErId.equals(MainApp.user.getId()) && isLock ? true : false;
+        isMyUser = MainApp.user.getId().equals(ownErId) && isLock ? true : false;
 
         if (isMyUser) {
             img_title_right.setOnTouchListener(Global.GetTouch());
@@ -191,10 +193,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
 
-        tv_sale_activity_date.setText(app.df3.format(new Date(mCustomer.getLastActAt() * 1000)));
-        tv_customer_name.setText(mCustomer.getName());
-        if (null != mCustomer.getLoc()) {
-            tv_address.setText(mCustomer.getLoc().getAddr());
+        tv_sale_activity_date.setText(app.df3.format(new Date(mCustomer.lastActAt * 1000)));
+        tv_customer_name.setText(mCustomer.name);
+        if (null != mCustomer.loc) {
+            tv_address.setText(mCustomer.loc.getAddr());
         }
         tv_tags.setText(Utils.getTagItems(mCustomer));
         Contact contact = Utils.findDeault(mCustomer);
@@ -202,10 +204,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_contact_name.setText(contact.getName());
             tv_contact_tel.setText(contact.getTel());
         }
-        tv_visit_times.setText("(" + mCustomer.getCounter().getVisit() + ")");
-        tv_purchase_count.setText("(" + mCustomer.getCounter().getDemand() + ")");
-        tv_task_count.setText("(" + mCustomer.getCounter().getTask() + ")");
-        tv_attachment_count.setText("(" + mCustomer.getCounter().getFile() + ")");
+        tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
+        tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
+        tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
+        tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
 
     }
 
@@ -380,10 +382,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
                 break;
             case R.id.layout_send_sms:
-                Utils.sendSms(this, mCustomer.getContacts().get(0).getTel());
+                Utils.sendSms(this, mCustomer.contacts.get(0).getTel());
                 break;
             case R.id.layout_call:
-                Utils.call(this, mCustomer.getContacts().get(0).getTel());
+                Utils.call(this, mCustomer.contacts.get(0).getTel());
                 break;
             /*跟进动态*/
             case R.id.layout_sale_activity:
@@ -410,13 +412,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_task:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putSerializable("mCustomer", mCustomer);
-                _class =TaskListActivity_.class;
+                _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
                 break;
             /*文件*/
             case R.id.layout_attachment:
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putSerializable("uuid", mCustomer.getUuid());
+                bundle.putSerializable("uuid", mCustomer.uuid);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;

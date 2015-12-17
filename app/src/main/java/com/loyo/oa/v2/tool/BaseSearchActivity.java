@@ -451,8 +451,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             else if (o instanceof Customer) {
                 customer = (Customer) o;
                 time.setVisibility(View.GONE);
-                title.setText(customer.getName());
-                content.setText("距离：" + customer.getDistance());
+                title.setText(customer.name);
+                content.setText("距离：" + customer.distance);
             }
 
             return convertView;

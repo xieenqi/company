@@ -141,7 +141,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_login.setOnClickListener(this);
 
         if (Config_project.is_developer_mode) {
-            edt_username.setText("GTF");
+            edt_username.setText("mjf");
             edt_password.setText("123456");
         }
     }
@@ -305,7 +305,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void failure(RetrofitError error) {
-
+            LogUtil.d("登陆失败："+error.getMessage());
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
                 } else if (error.getKind() == RetrofitError.Kind.HTTP) {

@@ -224,7 +224,7 @@ public class Utils {
      * @return
      */
     public static Contact findDeault(Customer customer) {
-        ArrayList<Contact> contacts = customer.getContacts();
+        ArrayList<Contact> contacts = customer.contacts;
         if (null == contacts || contacts.isEmpty()) {
             return null;
         }
@@ -296,14 +296,14 @@ public class Utils {
      * @return
      */
     public static String getTagItems(Customer customer) {
-        if (null == customer || null == customer.getTags() || customer.getTags().isEmpty()) {
+        if (null == customer || null == customer.tags || customer.tags.isEmpty()) {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < customer.getTags().size(); i++) {
-            String tag = !TextUtils.isEmpty(customer.getTags().get(i).getItemName()) ? customer.getTags().get(i).getItemName() : "";
+        for (int i = 0; i < customer.tags.size(); i++) {
+            String tag = !TextUtils.isEmpty(customer.tags.get(i).getItemName()) ? customer.tags.get(i).getItemName() : "";
             if (!TextUtils.isEmpty(tag)) {
-                if (i != customer.getTags().size() - 1) {
+                if (i != customer.tags.size() - 1) {
                     tag = tag.concat(",");
                 }
                 builder.append(tag);

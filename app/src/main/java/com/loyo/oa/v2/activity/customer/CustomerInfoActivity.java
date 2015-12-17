@@ -185,9 +185,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 初始化动态字段
      */
     private void initExtra(boolean ismy) {
-        if (null != mCustomer.getExtDatas() && !mCustomer.getExtDatas().isEmpty()) {
+        if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new ExtraDataView(mContext, mCustomer.getExtDatas(), ismy, R.color.title_bg1, 0));
+            container.addView(new ExtraDataView(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
         }
     }
 
@@ -213,44 +213,44 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             return;
         }
 
-        if (null != mCustomer.getMembers()) {
-            members = mCustomer.getMembers();
+        if (null != mCustomer.members) {
+            members = mCustomer.members;
         }
 
-        if (null != mCustomer.getLoc()) {
-            mLocate = mCustomer.getLoc();
+        if (null != mCustomer.loc) {
+            mLocate = mCustomer.loc;
         }
 
-        if (null != mCustomer.getOwner()) {
-            owner = mCustomer.getOwner();
+        if (null != mCustomer.owner) {
+            //owner = mCustomer.getOwner();
         }
 
-        if (null != mCustomer.getRegional()) {
-            regional = mCustomer.getRegional();
+        if (null != mCustomer.regional) {
+            regional = mCustomer.regional;
         }
 
-        if (null != mCustomer.getIndustry()) {
-            industry = mCustomer.getIndustry();
+        if (null != mCustomer.industry) {
+            industry = mCustomer.industry;
         }
 
 
-        if (null != mCustomer.getLoc() && mCustomer.getLoc().getLoc().length > 1) {
-            lat = mCustomer.getLoc().getLoc()[1];
-            lng = mCustomer.getLoc().getLoc()[0];
+        if (null != mCustomer.loc && mCustomer.loc.getLoc().length > 1) {
+            lat = mCustomer.loc.getLoc()[1];
+            lng = mCustomer.loc.getLoc()[0];
         }
 
-        tv_customer_name.setText(mCustomer.getName());
+        tv_customer_name.setText(mCustomer.name);
 
-        if (mCustomer.getLoc().getAddr() != "") {
-            tv_address.setText(mCustomer.getLoc().getAddr());
+        if (mCustomer.loc.getAddr() != "") {
+            tv_address.setText(mCustomer.loc.getAddr());
         } else {
             Intent intent = new Intent();
             Bundle bundle = intent.getExtras();
             tv_address.setText(bundle.getString("CustomerAddress"));
         }
 
-        tv_customer_creator.setText(mCustomer.getCreator().getName());
-        String responser = null == mCustomer.getOwner() || null == mCustomer.getOwner().getUser() ? "" : mCustomer.getOwner().getUser().getName();
+        tv_customer_creator.setText(mCustomer.creator.getName());
+        String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.getName();
         tv_customer_responser.setText(responser);
 
         if (members.size() != 0) {
@@ -262,11 +262,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             tv_district.setText(regional.getProvince() + "省" + regional.getCity() + "市" + regional.getCounty() + "区");
         }
         tv_industry.setText(industry.getName());
-        edt_customer_memo.setText(mCustomer.getSummary());
-        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.getCreatedAt() * 1000)));
+        edt_customer_memo.setText(mCustomer.summary);
+        tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
 
-        if (mCustomer.getTags() != null && mCustomer.getTags().size() > 0) {
-            mTagItems = mCustomer.getTags();
+        if (mCustomer.tags != null && mCustomer.tags.size() > 0) {
+            mTagItems = mCustomer.tags;
             setTag();
         }
 
@@ -414,7 +414,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("members", members);
         map.put("tags", mTagItems);
         map.put("loc", mLocate);
-        map.put("extDatas", mCustomer.getExtDatas());
+        map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
         map.put("industry", industry);
 
@@ -425,7 +425,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         LogUtil.dll("members:" + members);
         LogUtil.dll("tags:" + mTagItems);
         LogUtil.dll("loc:" + mLocate);
-        LogUtil.dll("extDatas:"+ mCustomer.getExtDatas());
+        LogUtil.dll("extDatas:"+ mCustomer.extDatas);
         LogUtil.dll("regional:"+regional);
         LogUtil.dll("industry:"+industry);
 
@@ -434,7 +434,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     @Override
                     public void success(Customer customer, Response response) {
                         Intent intent = new Intent();
-                        customer.setLoc(mLocate);
+                        customer.loc=mLocate;
                         intent.putExtra(Customer.class.getName(), customer);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
@@ -519,7 +519,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
             case REQUEST_CUSTOMER_EDIT_BASEINFO:
                 mCustomer = (Customer) data.getSerializableExtra("customer");
-                tv_customer_name.setText(mCustomer.getName());
+                tv_customer_name.setText(mCustomer.name);
                 break;
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
@@ -543,7 +543,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     tv_labels.setText("");
                 }
 
-                mCustomer.setTags(mTagItems);
+                mCustomer.tags=mTagItems;
                 break;
 
         }

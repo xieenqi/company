@@ -108,25 +108,25 @@ public class CustomerExpandableListViewAdapter<T extends BaseBeans> extends Base
         Customer customer = (Customer) getChild(groupPosition, childPosition);
 
         if (customer != null) {
-            if (customer.getName() != null) {
-                item_info.tv_name.setText(customer.getName());
+            if (customer.name != null) {
+                item_info.tv_name.setText(customer.name);
             }
 
             Contact contact=Utils.findDeault(customer);
             if(null!=contact) {
                 item_info.tv_customer_contract.setText(contact.getName());
             }
-            if(null!=customer.getCounter()) {
-                item_info.tv_customer_visitnum.setText(String.format("签到%d次", customer.getCounter().getVisit()));
+            if(null!=customer.counter) {
+                item_info.tv_customer_visitnum.setText(String.format("签到%d次", customer.counter.getVisit()));
             }
 
             StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < customer.getTags().size(); i++) {
+            for (int i = 0; i < customer.tags.size(); i++) {
                 if (i > 0) {
                     sb.append(" / ");
                 }
 
-                sb.append(customer.getTags().get(i).getItemName());
+                sb.append(customer.tags.get(i).getItemName());
             }
 
             item_info.tv_customer_status.setText(sb.toString());
