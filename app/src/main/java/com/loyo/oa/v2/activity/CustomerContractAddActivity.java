@@ -34,7 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 客户管理联系人列表，修改联系人
+ * 客户管理联系人列表，【新增联系人】
  * */
 
 public class CustomerContractAddActivity extends BaseActivity implements View.OnClickListener {
@@ -131,13 +131,13 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 maps.put("wiretel", getEditTextContent(edt_wiretel));
                 String birth = edt_birth.getText().toString().trim();
                 if (!TextUtils.isEmpty(birth)) {
-                    maps.put("birth", DateTool.getDateToTimestamp(birth, app.df4) / 1000);
-                }
+                    maps.put("birth",birth);
+                }// DateTool.getDateToTimestamp(birth, app.df4) / 1000+""
                 maps.put("wx", getEditTextContent(edt_wx));
                 maps.put("qq", getEditTextContent(edt_qq));
                 maps.put("email", getEditTextContent(edt_email));
                 maps.put("memo", getEditTextContent(edt_memo));
-
+                LogUtil.d("添加联系人："+MainApp.gson.toJson(maps));
                 if (mCustomer != null) {
                     if (mContact == null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
@@ -146,11 +146,10 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                                 mContact = contact;
                                 sendBack();
                             }
-
                             @Override
                             public void failure(RetrofitError error) {
-
-                                LogUtil.dll("code:"+error.getResponse().getStatus());
+                                LogUtil.d("客户 新增联系人URL"+error.getUrl());
+                                LogUtil.d("客户 新增联系人"+error.getMessage());
 
                                 if(error.getKind() == RetrofitError.Kind.NETWORK){
                                     Toast("请检查您的网络连接");
@@ -172,8 +171,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             @Override
                             public void failure(RetrofitError error) {
 
-                                LogUtil.dll("code:"+error.getResponse().getStatus());
-                                LogUtil.dll("URL:"+error.getUrl());
+                                LogUtil.d("客户 修改联系人:"+error.getMessage());
+                                LogUtil.d("客户 修改联系人URL:"+error.getUrl());
 
                                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                                     Toast("请检查您的网络连接");

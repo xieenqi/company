@@ -318,7 +318,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public, R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity, R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
+            R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
+            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment})
     void onClick(View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
