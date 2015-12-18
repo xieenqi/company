@@ -79,6 +79,9 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         onBackPressed();
     }
 
+    /**
+     * 点击进入map
+     */
     @Click(R.id.iv_submit)
     void previewOnMap() {
         ArrayList<Customer> customers = fragmentXes.get(pager.getCurrentItem()).getmCustomers();
@@ -106,9 +109,11 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     private void initFragments() {
         for (int i = 0; i < TITLES.length; i++) {
             Bundle bundle = new Bundle();
-            bundle.putInt("type", i == 0 ? (type==Customer.CUSTOMER_TYPE_MINE?Customer.CUSTOMER_TYPE_NEAR_MINE:Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
+            bundle.putInt("type", i == 0 ? (type==Customer.CUSTOMER_TYPE_MINE?
+                    Customer.CUSTOMER_TYPE_NEAR_MINE:Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
             bundle.putString("position", position);
-            CustomerCommonFragment fragment = (CustomerCommonFragment) Fragment.instantiate(this, CustomerCommonFragment.class.getName(), bundle);
+            CustomerCommonFragment fragment = (CustomerCommonFragment) Fragment.instantiate(this,
+                    CustomerCommonFragment.class.getName(), bundle);
             fragmentXes.add(fragment);
         }
     }

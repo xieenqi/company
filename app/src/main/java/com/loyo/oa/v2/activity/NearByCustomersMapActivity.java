@@ -127,7 +127,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
                 textView.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
                 textView.setTextColor(getResources().getColor(R.color.title_bg1));
                 textView.setText(point.customer.name);
-
+                textView.setBackgroundColor(getResources().getColor(R.color.gray));
                 InfoWindow infoWindow=new InfoWindow(textView,point.latLng,-app.diptoPx(30));
                 mBaiduMap.showInfoWindow(infoWindow);
                 return true;

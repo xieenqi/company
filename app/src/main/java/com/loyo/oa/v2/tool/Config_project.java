@@ -13,9 +13,9 @@ public class Config_project {
 
     //public static String IP="http://114.215.83.227";    //正式服务器
 
-     public static String IP = "http://192.168.31.131";  //内部服务器
+   //  public static String IP = "http://192.168.31.131";  //内部服务器
 
-    //public static String IP = "http://192.168.31.136";//马涛地址
+    public static String IP = "http://192.168.31.136";//马涛地址
 
 
     public static String API_URL() {

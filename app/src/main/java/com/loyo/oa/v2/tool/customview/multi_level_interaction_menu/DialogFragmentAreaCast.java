@@ -63,8 +63,8 @@ public class DialogFragmentAreaCast extends DialogFragment {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 int[] selectPosition = multiMenuExpandableListAdapter.getSelectPostion();
                 if (selectPosition[0] != groupPosition || selectPosition[1] != childPosition) {
-                    regional.setProvince(multiMenuExpandableListAdapter.getGroup(groupPosition).getName());
-                    regional.setCity(multiMenuExpandableListAdapter.getChild(groupPosition, childPosition).getName());
+                    regional.province=multiMenuExpandableListAdapter.getGroup(groupPosition).getName();
+                    regional.city=multiMenuExpandableListAdapter.getChild(groupPosition, childPosition).getName();
                     mAreaThreeMenuAdapter.notifyDataSetChanged(multiMenuExpandableListAdapter.getChild(groupPosition, childPosition));
                     multiMenuExpandableListAdapter.setSelectPostion(groupPosition, childPosition);
                 }
@@ -78,7 +78,7 @@ public class DialogFragmentAreaCast extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (null != callback) {
-                    regional.setCounty(mAreaThreeMenuAdapter.getItem(position).getName());
+                    regional.county=mAreaThreeMenuAdapter.getItem(position).getName();
                     callback.onMenuSelected(regional);
                 }
                 dismiss();

@@ -170,8 +170,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 Bundle bundle = new Bundle();
                 bundle.putString("position", position);
                 bundle.putSerializable("nearCount", nearCount);
-                bundle.putInt("type", customer_type);
-               // LogUtil.d(" 穿客户的信息： "+MainApp.gson.toJson(bundle));
+                bundle.putInt("type", customer_type);//团队与个人
                 app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
             case R.id.btn_add:
@@ -457,7 +456,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 RestAdapterFactory.getInstance().build(url).create(ICustomer.class).queryNearCount(position, new RCallback<NearCount>() {
                     @Override
                     public void success(NearCount _nearCount, Response response) {
-                        LogUtil.d(position+" 附近客户个数信息： "+MainApp.gson.toJson(_nearCount));
+                        LogUtil.d(response.getUrl()+" 附近客户个数信息： "+MainApp.gson.toJson(_nearCount));
                         nearCount = _nearCount;
                         if (null != nearCount) {
                             tv_near_customers.setText("发现" + nearCount.total + "个附近客户");

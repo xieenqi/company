@@ -258,8 +258,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             tv_customer_join_users.setText(Utils.getMembers(members));
         }
 
-        if (regional.getProvince() != null) {
-            tv_district.setText(regional.getProvince() + "省" + regional.getCity() + "市" + regional.getCounty() + "区");
+        if (regional.province != null) {
+            tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
         }
         tv_industry.setText(industry.getName());
         edt_customer_memo.setText(mCustomer.summary);
@@ -370,7 +370,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     @Override
                     public void onMenuSelected(Object o) {
                         regional = (CustomerRegional) o;
-                        tv_district.setText(regional.getProvince() + "省" + regional.getCity() + "市" + regional.getCounty() + "区");
+                        tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
                     }
                 });
                 break;
