@@ -29,5 +29,4 @@ public class HttpErrorCheck {
         Toast("失败："+error.getMessage());
     }
 
-
 }

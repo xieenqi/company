@@ -109,8 +109,9 @@ public class TasksEditActivity extends BaseActivity {
     void UpdateUI() {
 
         if(null!=mTask.getResponsiblePerson()) {
-            tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
+            tv_responsiblePerson.setText(mTask.getMembers().getUsers().get(0).getName());
         }
+
         tv_toUsers.setText(NewUser.GetNewUserNames(mTask.getJoinedUsers()));
         tv_deadline.setText(app.df3.format(new Date(mTask.getActualEndAt())));
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));

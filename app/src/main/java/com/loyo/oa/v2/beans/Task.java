@@ -36,17 +36,10 @@ public class Task extends BaseBeans {
     private int status;
     private String title;
     private Project ProjectInfo;
-
     private NewUser creator;
-
-    private int discusscount;
-    private int attachmentcount;
-
     private ArrayList<Attachment> attachments;
     private ArrayList<TaskCheckPoint> checklists;
     private ArrayList<TaskReviewComment> reviewComments;
-
-
     private Members members = new Members();
     public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
 
@@ -69,22 +62,6 @@ public class Task extends BaseBeans {
         this.ProjectInfo = project;
     }
 
-    public int getDiscusscount() {
-        return discusscount;
-    }
-
-    public void setDiscusscount(int discusscount) {
-        this.discusscount = discusscount;
-    }
-
-    public int getAttachmentcount() {
-        return attachmentcount;
-    }
-
-    public void setAttachmentcount(int attachmentcount) {
-        this.attachmentcount = attachmentcount;
-    }
-
     public String getProjectId() {
         return projectId;
     }
@@ -92,8 +69,6 @@ public class Task extends BaseBeans {
     public void setProjectId(String projectId) {
         this.projectId = projectId;
     }
-
-
 
     public String getTaskComment() {
         return TaskComment;
