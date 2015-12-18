@@ -234,15 +234,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
 
-        if (null != mCustomer.loc && mCustomer.loc.getLoc().length > 1) {
-            lat = mCustomer.loc.getLoc()[1];
-            lng = mCustomer.loc.getLoc()[0];
+        if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
+            lat = mCustomer.loc.loc[1];
+            lng = mCustomer.loc.loc[0];
         }
 
         tv_customer_name.setText(mCustomer.name);
 
-        if (mCustomer.loc.getAddr() != "") {
-            tv_address.setText(mCustomer.loc.getAddr());
+        if (mCustomer.loc.addr != "") {
+            tv_address.setText(mCustomer.loc.addr);
         } else {
             Intent intent = new Intent();
             Bundle bundle = intent.getExtras();
@@ -405,7 +405,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             return;
         }
 
-        mLocate.setAddr(customerAddress);
+        mLocate.addr=customerAddress;
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -467,9 +467,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         lat = latitude;
         lng = longitude;
         LogUtil.dll("onlocationSucessed:" + address);
-        mLocate.setAddr(address);
-        mLocate.getLoc()[0] = longitude;
-        mLocate.getLoc()[1] = latitude;
+        mLocate.addr=address;
+        mLocate.loc[0] = longitude;
+        mLocate.loc[1] = latitude;
         tv_address.setText(address);
     }
 

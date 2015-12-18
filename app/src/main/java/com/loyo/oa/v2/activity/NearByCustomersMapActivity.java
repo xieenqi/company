@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity;
 
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -52,15 +52,14 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
 
     private BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark);
 
-
     @AfterViews
     void initViews() {
         setTouchView(NO_SCROLL);
         layout_back.setOnTouchListener(Global.GetTouch());
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
-
         new LocationUtil(this, this);
+        LogUtil.d(" 地图显示的客户数据： "+MainApp.gson.toJson(customers));
     }
 
     @Click(R.id.layout_back)
@@ -149,11 +148,11 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         }
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
-            String gpsInfo = customer.loc.getLoc()[1]+","+customer.loc.getLoc()[0];
-            if (!TextUtils.isEmpty(gpsInfo) && gpsInfo.contains(",")) {
-                String gps[] = gpsInfo.split(",");
-                double lat = Double.parseDouble(gps[1]);
-                double lng = Double.parseDouble(gps[0]);
+           // String gpsInfo = customer.loc.loc[1]+","+customer.loc.loc[0];
+            //if (!TextUtils.isEmpty(gpsInfo) && gpsInfo.contains(",")) {
+               // String gps[] = gpsInfo.split(",");
+                double lat = customer.loc.loc[1];
+                double lng = customer.loc.loc[0];
                 LatLng latLng = LocationUtil.convert(1, lat, lng);
                 OverlayOptions point = new MarkerOptions().position(latLng).icon(bdA).zIndex(i).draggable(false);
                 OverlayItem item=new OverlayItem();
@@ -161,7 +160,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
                 item.options=point;
                 item.customer=customer;
                 points.add(item);
-            }
+           // }
         }
 
         return points;

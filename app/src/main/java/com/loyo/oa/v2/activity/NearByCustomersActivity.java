@@ -18,6 +18,7 @@ import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
 
 import org.androidannotations.annotations.AfterViews;
@@ -64,12 +65,13 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
             TITLES[0] = type==Customer.CUSTOMER_TYPE_MINE?"我的客戶(":"团队客戶(";
-            TITLES[0] +=nearCount.getCount() + ")";
-            TITLES[1] = "公司已赢单客戶(" + nearCount.getWinCount() + ")";
+            TITLES[0] +=nearCount.count + ")";
+            TITLES[1] = "公司已赢单客戶(" + nearCount.winCount + ")";
         }
 
         initFragments();
         initTabs();
+        LogUtil.d(" 附近客户数据： "+MainApp.gson.toJson(nearCount));
     }
 
     @Click(R.id.layout_back)

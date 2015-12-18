@@ -164,6 +164,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            //附近的客户
             case R.id.layout_near_customers:
                 Bundle bundle = new Bundle();
                 bundle.putString("position", position);
@@ -456,7 +457,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     public void success(NearCount _nearCount, Response response) {
                         nearCount = _nearCount;
                         if (null != nearCount) {
-                            tv_near_customers.setText("发现" + nearCount.getTotal() + "个附近客户");
+                            tv_near_customers.setText("发现" + nearCount.total + "个附近客户");
                             showNearCustomersView();
                         }
                     }
@@ -469,7 +470,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 });
             }
-
             @Override
             public void OnLocationFailed() {
                 Toast("获取附近客户信息失败！");
@@ -501,18 +501,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         params.put("pageSize", isTopAdd ? mCustomers.size() >= 20 ? mCustomers.size() : 20 : 20);
         params.put("field", filed);
         params.put("order", order);
-        params.put("tafItemIds", tagItemIds);
-        params.put("deptId", departmentId);
-        params.put("userId", userId);
+        params.put("tagItemIds", tagItemIds);
+//        params.put("deptId", departmentId);
+//        params.put("userId", userId);
 
-        LogUtil.dll("pageindex:" + mPagination.getPageIndex());
-        LogUtil.dll("pageSize:" + "20");
-        LogUtil.dll("field:" + filed);
-        LogUtil.dll("order:" + order);
-        LogUtil.dll("tafItemIds:" + tagItemIds);
-        LogUtil.dll("deptId:" + departmentId);
-        LogUtil.dll("userId:" + userId);
-
+        LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
         String url = "";
         switch (customer_type) {
             case Customer.CUSTOMER_TYPE_MINE:
@@ -590,6 +583,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                 }
         );
+        tagItemIds="";
     }
 
 
@@ -783,7 +777,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img1.setImageResource(R.drawable.img_sign_list_position);
                 img2.setImageResource(R.drawable.icon_customer_demands_plan);
 
-                tv_content1.setText("地址：" + customer.loc.getAddr());
+                tv_content1.setText("地址：" + customer.loc.addr);
                 //                tv_content2.setText("购买产品：");
                 tv_content4.setText("距离：" + customer.distance);
             }
@@ -805,7 +799,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             img_go_where.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.goWhere(mActivity, customer.loc.getLoc()[1], customer.loc.getLoc()[0]);
+                    Utils.goWhere(mActivity, customer.loc.loc[1], customer.loc.loc[0]);
                 }
             });
 

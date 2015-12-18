@@ -163,7 +163,7 @@ public class SignInfoActivity extends BaseActivity {
             return;
         }
         Customer customer = (Customer) data.getSerializableExtra(Customer.class.getName());
-        legWork.setAddress(customer.loc.getAddr());
+        legWork.setAddress(customer.loc.addr);
         legWork.setCustomerName(customer.name);
         updateUI();
     }
