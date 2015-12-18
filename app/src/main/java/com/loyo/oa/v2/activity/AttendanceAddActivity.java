@@ -28,6 +28,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -40,7 +41,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.tencent.android.tpush.horse.Tools;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -394,6 +394,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 if(error.getKind() == RetrofitError.Kind.NETWORK){
                      Toast("请检查您的网络连接");
                 }
@@ -453,7 +454,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("删除附件失败!");
+                HttpErrorCheck.checkError(error);
+                //Toast("删除附件失败!");
                 super.failure(error);
             }
         });

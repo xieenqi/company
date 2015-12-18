@@ -33,6 +33,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -431,7 +432,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     }
 
     /**
-     * 获取附近客户信息
+     * http获取附近客户信息
      */
     private void getNearCustomersInfo() {
         new LocationUtil(mActivity, new LocationUtil.AfterLocation() {
@@ -456,6 +457,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 RestAdapterFactory.getInstance().build(url).create(ICustomer.class).queryNearCount(position, new RCallback<NearCount>() {
                     @Override
                     public void success(NearCount _nearCount, Response response) {
+                        LogUtil.d(position+" 附近客户个数信息： "+MainApp.gson.toJson(_nearCount));
                         nearCount = _nearCount;
                         if (null != nearCount) {
                             tv_near_customers.setText("发现" + nearCount.total + "个附近客户");
@@ -466,7 +468,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
-                        Toast("获取附近客户信息失败！");
+                        HttpErrorCheck.checkError(error);
+                       // Toast("获取附近客户信息失败！");
                     }
 
                 });
@@ -569,14 +572,15 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                     @Override
                     public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
                         LogUtil.d("客户管理失败：" + error.getMessage());
-                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                            Toast("请检查您的网络连接");
-                        } else if (error.getResponse().getStatus() == 500) {
-                            Toast("网络异常500，请稍候再试");
-                        } else if (error.getResponse().getStatus() == 200) { //失败返回200，就再请求一次，知道拉到数据为止
-                            getData();
-                        }
+//                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                            Toast("请检查您的网络连接");
+//                        } else if (error.getResponse().getStatus() == 500) {
+//                            Toast("网络异常500，请稍候再试");
+//                        } else if (error.getResponse().getStatus() == 200) { //失败返回200，就再请求一次，知道拉到数据为止
+//                            getData();
+//                        }
 //                        if(error.getResponse().getStatus() != 200) {
 //                        }
                         listView.onRefreshComplete();
