@@ -215,7 +215,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             holder.tv_title.setText(bulletin.getTitle());
             holder.tv_content.setText(bulletin.getContent());
            holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.getDeptName() + " " + bulletin.getPosition());
-           ImageLoader.getInstance().displayImage(bulletin.getCreator().getAvatar(), holder.iv_avatar);
+           ImageLoader.getInstance().displayImage(bulletin.getCreator().avatar, holder.iv_avatar);
             ArrayList<Attachment> attachments = bulletin.getAttachments();
             if (null != attachments && !attachments.isEmpty()) {
 

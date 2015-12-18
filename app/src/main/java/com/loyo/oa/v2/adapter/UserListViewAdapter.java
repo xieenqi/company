@@ -75,8 +75,8 @@ public class UserListViewAdapter extends BaseAdapter {
         User user = listUser.get(position);
         item_info.tv_title.setText(user.getRealname());
 
-        if (user.getDepartmentsName() != null) {
-            item_info.tv_content.setText(user.getDepartmentsName());
+        if (user.departmentsName != null) {
+            item_info.tv_content.setText(user.departmentsName);
         }
 
         if (!enabled) {

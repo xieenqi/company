@@ -12,19 +12,10 @@ import java.util.List;
  * 时间 : 15/9/30.
  */
 public class NewUser implements Serializable {
+
     private String id;  // "5600ff1f54418940bf233261",
     private String name;// "测试负责人",
     private String avatar;
-//    private String deptId;
-//
-//    public String getDeptId() {
-//        return deptId;
-//    }
-//
-//    public NewUser setDeptId(String deptId) {
-//        this.deptId = deptId;
-//        return this;
-//    }
 
     public static String GetNewUserNames(List<NewUser> users) {
         if (users == null || users.isEmpty()){
@@ -80,7 +71,7 @@ public class NewUser implements Serializable {
             return true;
         }
         if (o instanceof User) {
-                return ((User) o).getId().equals(id);
+                return ((User) o).id.equals(id);
         }
 
         if (!(o instanceof NewUser)) {
@@ -98,10 +89,11 @@ public class NewUser implements Serializable {
 
     public User toUser() {
         User user = new User();
-        user.setAvatar(this.getAvatar());
-        user.setId(this.getId());
-        user.setRealname(this.getName());
-        user.setName(this.getName());
+
+        user.avatar=this.getAvatar();
+        user.id=this.getId();
+        user.realname=this.getName();
+        user.name=this.getName();
 
         return user;
     }

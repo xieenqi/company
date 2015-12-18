@@ -1,0 +1,34 @@
+package com.loyo.oa.v2.beans;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+/**
+ * Created by loyo_dev1 on 15/12/18.
+ */
+public class Members implements Serializable{
+
+    ArrayList<NewUser> users;
+
+    ArrayList<NewUser> depts;
+
+
+    public ArrayList<NewUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<NewUser> users) {
+        this.users = users;
+    }
+
+    public ArrayList<NewUser> getDepts() {
+        return depts;
+    }
+
+    public void setDepts(ArrayList<NewUser> depts) {
+        this.depts = depts;
+    }
+
+
+
+}

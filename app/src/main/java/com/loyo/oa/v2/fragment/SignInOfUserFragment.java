@@ -241,7 +241,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", mUser.getId());
+        map.put("userId", mUser.id);
         map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
         map.put("endAt", endAt / 1000);
         map.put("custId", "");

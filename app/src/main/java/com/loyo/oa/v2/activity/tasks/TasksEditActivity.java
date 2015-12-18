@@ -237,7 +237,8 @@ public class TasksEditActivity extends BaseActivity {
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle1);
                 break;
             case R.id.layout_del:
-                mTask.getMembers().clear();
+                mTask.getMembers().getUsers().clear();
+                mTask.getMembers().getDepts().clear();
                 tv_toUsers.setText("");
                 layout_del.setVisibility(View.GONE);
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
@@ -282,13 +283,14 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     void setJoinUsers(String joinedUserIds, String joinedUserName) {
-        mTask.getMembers().clear();
+        mTask.getMembers().getUsers().clear();
+        mTask.getMembers().getDepts().clear();
 
         String[] userIds = joinedUserIds.split(",");
         String[] userNames = joinedUserName.split(",");
 
         for (int i = 0; i < userIds.length; i++) {
-            mTask.getMembers().add(new Reviewer(userIds[i], userNames[i]));
+            //mTask.getMembers().add(new Reviewer(userIds[i], userNames[i]));
         }
 
         if (!TextUtils.isEmpty(joinedUserName)) {

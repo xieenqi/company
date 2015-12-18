@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -147,7 +146,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
                     } else if (select_type == DepartmentUserActivity.TYPE_SELECT_MULTUI) {
 
                         DepartmentUserActivity.sendMultiSelectUsers(view.getContext(),
-                                user.getId(), user.getRealname(), "", null, item_info.cBox.isChecked());
+                                user.id, user.getRealname(), "", null, item_info.cBox.isChecked());
                         if(item_info.cBox.isChecked())
                             count++;
                         else

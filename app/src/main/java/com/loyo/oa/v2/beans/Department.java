@@ -97,7 +97,7 @@ public class Department implements Serializable {
     }
 
     public boolean isMyDept() {
-        return TextUtils.equals(getId(), MainApp.user.getDepts().get(0).getShortDept().getId());
+        return TextUtils.equals(getId(), MainApp.user.depts.get(0).getShortDept().getId());
     }
 
     @Override

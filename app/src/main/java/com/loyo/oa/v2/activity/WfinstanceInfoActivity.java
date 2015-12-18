@@ -197,12 +197,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (wfInstance == null) {
             return;
         }
-        tv_time_creator.setText(wfInstance.getCreator().getName() + " " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)) + " 提交");
+        tv_time_creator.setText(wfInstance.getCreator().name + " " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)) + " 提交");
         if (wfInstance.getCreator() != null) {
             tv_title_creator.setText(wfInstance.getTitle());
 
-            if (null != wfInstance.getCreator().getShortPosition()) {
-                tv_title_role.setText(wfInstance.getCreator().getShortPosition().getName());
+            if (null != wfInstance.getCreator().shortPosition) {
+                tv_title_role.setText(wfInstance.getCreator().shortPosition.getName());
             }
         }
 

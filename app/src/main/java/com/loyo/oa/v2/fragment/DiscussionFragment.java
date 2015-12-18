@@ -246,9 +246,9 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
             time.setText(app.df9.format(new Date(discussion.getCreatedAt()*1000)));
-            name.setText(discussion.getCreator().getName());
+            name.setText(discussion.getCreator().name);
             content.setText(discussion.getContent());
-            ImageLoader.getInstance().displayImage(discussion.getCreator().getAvatar(), iv);
+            ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, iv);
 
             return view;
         }

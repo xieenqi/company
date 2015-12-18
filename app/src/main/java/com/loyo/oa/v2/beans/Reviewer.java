@@ -23,10 +23,10 @@ public class Reviewer implements Serializable {
     public Reviewer(NewUser user) {
         this.user = user;
     }
+
     public Reviewer(String userId,String userName) {
         NewUser user = new NewUser();
         user.setId(userId).setName(userName);
-
         this.user = user;
     }
 

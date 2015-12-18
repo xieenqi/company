@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.tool.customview.MyLetterListView;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
 import java.util.ArrayList;
 
@@ -315,10 +314,10 @@ public class UserFragment extends BaseFragment {
                 for (User u : d.getLstUser()) {
                     if (count == position) {
 
-                        if (u.getFullPinyin() != null && u.getFullPinyin().length() > 0) {
-                            return u.getFullPinyin().substring(0, 1).toUpperCase();
-                        } else if (u.getSimplePinyin() != null && u.getSimplePinyin().length() > 0) {
-                            return u.getSimplePinyin().substring(0, 1).toUpperCase();
+                        if (u.fullPinyin != null && u.fullPinyin.length() > 0) {
+                            return u.fullPinyin.substring(0, 1).toUpperCase();
+                        } else if (u.simplePinyin != null && u.simplePinyin.length() > 0) {
+                            return u.simplePinyin.substring(0, 1).toUpperCase();
                         } else {
                             return "";
                         }
@@ -448,12 +447,12 @@ public class UserFragment extends BaseFragment {
                         }
 
 //                        if (user.getId() == -1) {
-                        if (user.getId().equals("-1")) {
+                        if ("-1".equals(user.id)) {
                             //选择全体人员,先删除已经选择人员,再全选
                             DepartmentUserActivity.sendCleanUsers(v.getContext());
 
                         } else {
-                            DepartmentUserActivity.sendMultiSelectUsers(v.getContext(), user.getId(), user.getRealname(), "", null, item_info.cBox.isChecked());
+                            DepartmentUserActivity.sendMultiSelectUsers(v.getContext(), user.id, user.getRealname(), "", null, item_info.cBox.isChecked());
                         }
 
                         break;

@@ -470,14 +470,14 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
                     LogUtil.dll("department-Name:"+department.getName());
                     LogUtil.dll("department-GroupName:"+department.getGroupName());
-                    for(int i = 0;i<department.getUsers().size();i++){
-                        LogUtil.dll("department-getUsers-Name:"+department.getUsers().get(i).getName());
-                        LogUtil.dll("department-getUsers-RealName:"+department.getUsers().get(i).getRealname());
-                        LogUtil.dll("department-getUsers-GroupName:"+department.getUsers().get(i).getGroupName());
-                        LogUtil.dll("department-getUsers-DepartmentName:"+department.getUsers().get(i).getDepartmentsName());
-                        LogUtil.dll("department-getUsers-UserName:"+department.getUsers().get(i).getUsername());
-                        LogUtil.dll("department-getUsers-Avatar:"+department.getUsers().get(i).getAvatar());
-                    }
+//                    for(int i = 0;i<department.getUsers().size();i++){
+//                        LogUtil.dll("department-getUsers-Name:"+department.getUsers().get(i).getName());
+//                        LogUtil.dll("department-getUsers-RealName:"+department.getUsers().get(i).getRealname());
+//                        LogUtil.dll("department-getUsers-GroupName:"+department.getUsers().get(i).getGroupName());
+//                        LogUtil.dll("department-getUsers-DepartmentName:"+department.getUsers().get(i).getDepartmentsName());
+//                        LogUtil.dll("department-getUsers-UserName:"+department.getUsers().get(i).getUsername());
+//                        LogUtil.dll("department-getUsers-Avatar:"+department.getUsers().get(i).getAvatar());
+//                    }
                 }
             }
             if (childPosition == getChildrenCount(groupPosition) - 1)

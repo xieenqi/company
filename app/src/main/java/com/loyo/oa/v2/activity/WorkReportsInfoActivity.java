@@ -154,7 +154,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
         }
 
-        StringBuilder title = new StringBuilder(mWorkReport.getCreator().getName() + "提交 ");
+        StringBuilder title = new StringBuilder(mWorkReport.getCreator().name + "提交 ");
         String reportDate = "";
         String date = app.df3.format(new Date(mWorkReport.getCreatedAt() * 1000));
         String reportType = "";

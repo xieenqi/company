@@ -137,7 +137,7 @@ public class MainApp extends Application {
                 public void success(ArrayList<Province> provinces, Response response) {
                     mProvinces=provinces;
                     try {
-                        LogUtil.d("districts:" + Utils.convertStreamToString(response.getBody().in()));
+                        LogUtil.d("districts加载地区编码:" + Utils.convertStreamToString(response.getBody().in()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

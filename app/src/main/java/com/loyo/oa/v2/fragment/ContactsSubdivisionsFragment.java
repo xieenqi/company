@@ -202,14 +202,14 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             tv_content.setText(user.getRealname());
-            String departmentName = user.getDepartmentsName();
-            if (null != user.getShortPosition() && !TextUtils.isEmpty(user.getShortPosition().getName())) {
-                departmentName = departmentName.concat(" | " + user.getShortPosition().getName());
+            String departmentName = user.departmentsName;
+            if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
+                departmentName = departmentName.concat(" | " + user.shortPosition.getName());
             }
             tv_position.setText(departmentName);
 
-            if (!TextUtils.isEmpty(user.getAvatar())) {
-                ImageLoader.getInstance().displayImage(user.getAvatar(), img);
+            if (!TextUtils.isEmpty(user.avatar)) {
+                ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
             if (position == listUser.size() - 1) {

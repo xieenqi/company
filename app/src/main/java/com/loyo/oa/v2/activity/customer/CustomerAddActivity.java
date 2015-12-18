@@ -159,8 +159,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         Customer customer = DBManager.Instance().getCustomer();
         if (customer == null) return;
 
-        edt_name.setText(customer.getName());
-        ArrayList<Contact> contacts = customer.getContacts();
+        edt_name.setText(customer.name);
+        ArrayList<Contact> contacts = customer.contacts;
         if (contacts != null && contacts.size() > 0) {
             for (Contact c : contacts) {
                 if (c.isDefault()) {
@@ -336,7 +336,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                 Bundle bundle1 = data.getExtras();
                 edt_name.setText(bundle1.getString("name"));
-                LogUtil.dll("customer收到数据:" + bundle1.getString("name"));
+                LogUtil.d("customer收到数据:" + bundle1.getString("name"));
 
                 break;
 
@@ -507,7 +507,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         DBManager.Instance().deleteCustomer();
         if (isSave) {
             mCustomer = new Customer();
-            mCustomer.setName(edt_name.getText().toString().trim());
+            mCustomer.name=(edt_name.getText().toString().trim());
 
             ArrayList<Contact> contacts = new ArrayList<>();
 
@@ -520,12 +520,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             defaultContact.setTel(edt_contract_tel.getText().toString());
             defaultContact.setIsDefault(true);
             contacts.add(0, defaultContact);
-            mCustomer.setContacts(contacts);
+            mCustomer.contacts=contacts;
 
-            mCustomer.setOwner(null);
-            mCustomer.setMembers(null);
-            mCustomer.setTags(null);
-            mCustomer.setCreator(null);
+            mCustomer.owner=null;
+            mCustomer.members=null;
+            mCustomer.tags=null;
+            mCustomer.creator=null;
 
             DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
         }

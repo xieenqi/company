@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -661,7 +662,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onStart();
 
         //判断登陆是否失效
-        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.getId())) {
+        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
             if (StringUtil.isEmpty(MainApp.getToken())) {
                 Toast.makeText(this, "您的登陆已经失效,请重新登陆!", Toast.LENGTH_SHORT).show();
                 app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
@@ -701,7 +702,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (MainApp.user == null) {
             return;
         }
-        ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), img_user, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
 
@@ -727,20 +728,20 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             }
         });
-        Global.setHeadImage(img_user, MainApp.user.getAvatar());
+        Global.setHeadImage(img_user, MainApp.user.avatar);
         tv_user_name.setText(MainApp.user.getRealname());
         //注册信鸽,同时绑定帐号,绑号为用户的Id
         XGPushConfig.enableDebug(this, Config_project.is_developer_mode);
-        String uid = String.valueOf(MainApp.user.getId());
+        String uid = String.valueOf(MainApp.user.id);
         XGPushManager.registerPush(getApplicationContext(), uid, new XGIOperateCallback() {
             @Override
             public void onSuccess(Object o, int i) {
-                app.logUtil.e("信鸽绑定成功,绑定ID=" + MainApp.user.getId() + ",Token=" + o);
+                app.logUtil.e("信鸽绑定成功,绑定ID=" + MainApp.user.id + ",Token=" + o);
             }
 
             @Override
             public void onFail(Object o, int i, String s) {
-                app.logUtil.e("信鸽绑定失败,绑定ID=" + MainApp.user.getId() + ",Token=" + o + ",errCode=" + i + ",msg=" + s);
+                app.logUtil.e("信鸽绑定失败,绑定ID=" + MainApp.user.id + ",Token=" + o + ",errCode=" + i + ",msg=" + s);
             }
         });
 
@@ -755,9 +756,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @Background
     void initBugly() {
-        String info = "companyId=" + MainApp.user.getCompany_id();
-        if (MainApp.user.getDepartmentsName() != null) {
-            info = info + "," + MainApp.user.getDepartmentsName();
+        String info = "companyId=" + MainApp.user.company_id;
+        if (MainApp.user.departmentsName != null) {
+            info = info + "," + MainApp.user.departmentsName;
         }
 
         if (MainApp.user.getRealname() != null) {

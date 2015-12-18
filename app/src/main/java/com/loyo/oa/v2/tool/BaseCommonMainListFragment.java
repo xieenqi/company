@@ -23,6 +23,7 @@ import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -40,6 +41,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         AbsListView.OnScrollListener,
         View.OnTouchListener,
         Callback<PaginationX<T>> {
+
     protected View mView;
     protected Button btn_add;
     protected ViewGroup img_title_left;
@@ -224,8 +226,17 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
-        //Toast(" 开始加载数据！！成功 ");
-        LogUtil.d(MainApp.gson.toJson(tPaginationX) + " 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
+
+        LogUtil.dll(MainApp.gson.toJson(tPaginationX) + " 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
+
+        LogUtil.dll("success code:"+response.getStatus());
+
+        try {
+            LogUtil.dll("任务success result:"+Utils.convertStreamToString(response.getBody().in()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         mExpandableListView.onRefreshComplete();
         if (null == tPaginationX) {
             return;
@@ -233,10 +244,12 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
         pagination = tPaginationX;
         ArrayList<T> lstDataTemp = tPaginationX.getRecords();
+
         //下接获取最新时，清空
         if (isTopAdd) {
             lstData.clear();
         }
+
         lstData.addAll(lstDataTemp);
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
         changeAdapter();
@@ -246,10 +259,16 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
-        LogUtil.d(error.getUrl() + " 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
+        LogUtil.dll(error.getUrl() + " 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
         mExpandableListView.onRefreshComplete();
-        //Toast("URL: "+error.getMessage());
 
+        LogUtil.dll("failure code:" + error.getResponse().getStatus());
+
+        try {
+            LogUtil.dll("任务failure result:"+Utils.convertStreamToString(error.getResponse().getBody().in()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

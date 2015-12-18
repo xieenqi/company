@@ -35,7 +35,7 @@ public class DepartmentChoose extends BaseActivity {
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
         img_title_right.setVisibility(View.GONE);
         lv_deptList = (ListView) findViewById(R.id.lv_deptList);
-        final DepartmentChooseAdapter adapter=new DepartmentChooseAdapter(DepartmentChoose.this, MainApp.user.getDepts());
+        final DepartmentChooseAdapter adapter=new DepartmentChooseAdapter(DepartmentChoose.this, MainApp.user.depts);
         lv_deptList.setAdapter(adapter);
         lv_deptList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

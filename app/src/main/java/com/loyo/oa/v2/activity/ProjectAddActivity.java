@@ -193,8 +193,8 @@ public class ProjectAddActivity extends BaseActivity {
                 String uId =memberIds[i];
                 if (!TextUtils.isEmpty(uId)) {
                     User u = new User();
-                    u.setId(uId);
-                    u.setRealname(memberNames[i]);
+                    u.id=uId;
+                    u.realname=memberNames[i];
 
                     ProjectMember member = new ProjectMember(uId, false);
                     member.setUserId(uId);

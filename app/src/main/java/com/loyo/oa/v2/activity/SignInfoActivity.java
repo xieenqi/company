@@ -134,7 +134,7 @@ public class SignInfoActivity extends BaseActivity {
             tv_address.setText(legWork.getAddress());
             tv_memo.setText(legWork.getMemo());
 
-            String name = null == mCustomer ? legWork.getCustomerName() : mCustomer.getName();
+            String name = null == mCustomer ? legWork.getCustomerName() : mCustomer.name;
             tv_customer_name.setText(name);
         }
 
@@ -163,8 +163,8 @@ public class SignInfoActivity extends BaseActivity {
             return;
         }
         Customer customer = (Customer) data.getSerializableExtra(Customer.class.getName());
-        legWork.setAddress(customer.getLoc().getAddr());
-        legWork.setCustomerName(customer.getName());
+        legWork.setAddress(customer.loc.getAddr());
+        legWork.setCustomerName(customer.name);
         updateUI();
     }
 }

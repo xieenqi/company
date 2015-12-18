@@ -32,7 +32,7 @@ import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.CustomerInfoActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerInfoActivity_;
 import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.adapter.CustomerExpandableListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -296,7 +296,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
 //                LatLng p = new LatLng(
 //                        Double.parseDouble(customer.getGpsInfo().split(",")[1]),
 //                        Double.parseDouble(customer.getGpsInfo().split(",")[0]));
-                LatLng p=LocationUtil.convert(1,customer.getLoc().getLoc()[1],customer.getLoc().getLoc()[0]);
+                LatLng p=LocationUtil.convert(1,customer.loc.getLoc()[1],customer.loc.getLoc()[0]);
                 points.add(p);
 
                 OverlayOptions ooA = new MarkerOptions().position(p).icon(bdA)
@@ -313,8 +313,8 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
         ) {
             @Override
             public void convert(ViewHolder holder, Customer customer) {
-                holder.setText(R.id.tv_title, customer.getName())
-                        .setText(R.id.tv_distance, customer.getDistance());
+                holder.setText(R.id.tv_title, customer.name)
+                        .setText(R.id.tv_distance, customer.distance);
             }
         };
 

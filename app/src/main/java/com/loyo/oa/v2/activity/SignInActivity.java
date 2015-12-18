@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -79,9 +77,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (null != intent && intent.hasExtra("data")) {
             mCustomer = (Customer) intent.getSerializableExtra("data");
             customerId = mCustomer.getId();
-            customerName = mCustomer.getName();
+            customerName = mCustomer.name;
 
-            LogUtil.dll("name:" + mCustomer.getName());
+            LogUtil.dll("name:" + mCustomer.name);
             LogUtil.dll("id:" + mCustomer.getId());
 
         }
@@ -111,7 +109,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(this);
         } else {
-            /*uuid = mCustomer.getUuid();*/
+
             findViewById(R.id.divider_customer_name).setVisibility(View.GONE);
             layout_customer_name.setVisibility(View.GONE);
             tv_customer_name.setText(customerName);
@@ -337,7 +335,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
                     customerId = customer.getId();
-                    customerName = customer.getName();
+                    customerName = customer.name;
                 }
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 break;

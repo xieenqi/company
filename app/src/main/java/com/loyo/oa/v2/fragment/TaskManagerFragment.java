@@ -34,6 +34,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
 
     @Override
     public void GetData() {
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
@@ -42,6 +43,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         map.put("endAt", System.currentTimeMillis() / 1000);
         map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(map, this);
+
     }
 
     @Override

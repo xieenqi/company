@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.customer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.User;
@@ -89,7 +90,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      * 获取部门数量和本部门人员数量
      */
     void getUserAndDepartmentSize() {
-        String depId = (null != MainApp.user.getDepts() && MainApp.user.getDepts().size() > 0) ? MainApp.user.getDepts().get(0).getShortDept().getId() : "";
+        String depId = (null != MainApp.user.depts && MainApp.user.depts.size() > 0) ? MainApp.user.depts.get(0).getShortDept().getId() : "";
 
         myDepartmentContactsSize = Common.getUsersByDeptId(depId, new ArrayList<User>()).size();
 

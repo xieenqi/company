@@ -134,10 +134,10 @@ public class DepartmentUserSearchActivity extends Activity {
             } else if (u.getRealname() != null && u.getRealname().contains(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.getFullPinyin() != null && u.getFullPinyin().contains(key)) {
+            } else if (u.fullPinyin != null && u.fullPinyin.contains(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.getSimplePinyin() != null && u.getSimplePinyin().contains(key)) {
+            } else if (u.simplePinyin != null && u.simplePinyin.contains(key)) {
                 resultData.add(u);
                 continue;
             }
@@ -175,12 +175,12 @@ public class DepartmentUserSearchActivity extends Activity {
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             tv_content.setText(user.getRealname());
-            String departmentName = user.getDepartmentsName();
-            if (null != user && null != user.getShortPosition() && !TextUtils.isEmpty(user.getShortPosition().getName())) {
-                tv_position.setText(departmentName + " | " + user.getShortPosition().getName());
+            String departmentName = user.departmentsName;
+            if (null != user && null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
+                tv_position.setText(departmentName + " | " + user.shortPosition.getName());
             }
-            if (!TextUtils.isEmpty(user.getAvatar())) {
-                ImageLoader.getInstance().displayImage(user.getAvatar(), img);
+            if (!TextUtils.isEmpty(user.avatar)) {
+                ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
             if (position == resultData.size() - 1) {

@@ -260,7 +260,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             DropItem parentItem = new DropItem(departments.get(i).getName(), i, departments.get(i).getId());
             if (!users.isEmpty()) {
                 for (int j = 0; j < users.size(); j++) {
-                    DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).getId());
+                    DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
                     dropItems.add(dropItem);
                 }
             }
@@ -545,6 +545,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
+                        LogUtil.d("客户管理的URL：" + response.getUrl());
+                        LogUtil.d("客户管理json数据：" + MainApp.gson.toJson(customerPaginationX));
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
                                 mPagination.setPageIndex(1);
@@ -573,17 +575,17 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                     @Override
                     public void failure(RetrofitError error) {
-
+                        LogUtil.d("客户管理失败：" + error.getMessage());
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast("请检查您的网络连接");
                         } else if (error.getResponse().getStatus() == 500) {
                             Toast("网络异常500，请稍候再试");
-                        } else if(error.getResponse().getStatus() == 200){ //失败返回200，就再请求一次，知道拉到数据为止
+                        } else if (error.getResponse().getStatus() == 200) { //失败返回200，就再请求一次，知道拉到数据为止
                             getData();
                         }
-                        if(error.getResponse().getStatus() != 200) {
-                            listView.onRefreshComplete();
-                        }
+//                        if(error.getResponse().getStatus() != 200) {
+//                        }
+                        listView.onRefreshComplete();
 
                     }
                 }
@@ -609,8 +611,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                LogUtil.d(" 客户管理每一个item： " + MainApp.gson.toJson(mCustomers.get((int) l)));
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
+
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
             }
@@ -696,10 +700,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
             final Customer customer = mCustomers.get(i);
 
-            tv_title.setText(customer.getName());
+            tv_title.setText(customer.name);
 
             String tagItems = Utils.getTagItems(customer);
-            String lastActivityAt = app.df3.format(new Date(customer.getLastActAt() * 1000));
+            String lastActivityAt = app.df3.format(new Date(customer.lastActAt * 1000));
             //我的客户
             if (customer_type == Customer.CUSTOMER_TYPE_MINE) {
                 img_public.setVisibility(View.GONE);
@@ -725,7 +729,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img2.setImageResource(R.drawable.icon_follow_up_creator);
                 img3.setImageResource(R.drawable.icon_customer_follow_time);
 
-                String responser = null == customer.getOwner() || null == customer.getOwner().getUser() ? "" : customer.getOwner().getUser().getName();
+                String responser = null == customer.owner || null == customer.owner ? "" : customer.owner.name;
                 tv_content1.setText("标签：" + tagItems);
                 tv_content2.setText("负责人：" + responser);
                 tv_content3.setText("跟进时间：" + lastActivityAt);
@@ -754,7 +758,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img1.setImageResource(R.drawable.icon_customer_tag);
 
                 tv_content1.setText("标签：" + tagItems);
-                tv_content4.setText("距离：" + customer.getDistance());
+                tv_content4.setText("距离：" + customer.distance);
             }
             //附近-团队
             else if (customer_type == Customer.CUSTOMER_TYPE_NEAR_TEAM) {
@@ -766,7 +770,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img1.setImageResource(R.drawable.icon_customer_tag);
 
                 tv_content1.setText("标签：" + tagItems);
-                tv_content4.setText("距离：" + customer.getDistance());
+                tv_content4.setText("距离：" + customer.distance);
             }
 
             //附近-公司已赢单
@@ -779,9 +783,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img1.setImageResource(R.drawable.img_sign_list_position);
                 img2.setImageResource(R.drawable.icon_customer_demands_plan);
 
-                tv_content1.setText("地址：" + customer.getLoc().getAddr());
+                tv_content1.setText("地址：" + customer.loc.getAddr());
                 //                tv_content2.setText("购买产品：");
-                tv_content4.setText("距离：" + customer.getDistance());
+                tv_content4.setText("距离：" + customer.distance);
             }
 
             img_public.setOnTouchListener(Global.GetTouch());
@@ -801,7 +805,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             img_go_where.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.goWhere(mActivity, customer.getLoc().getLoc()[1], customer.getLoc().getLoc()[0]);
+                    Utils.goWhere(mActivity, customer.loc.getLoc()[1], customer.loc.getLoc()[0]);
                 }
             });
 

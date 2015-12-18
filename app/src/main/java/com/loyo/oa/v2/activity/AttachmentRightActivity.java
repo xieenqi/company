@@ -161,7 +161,7 @@ public class AttachmentRightActivity extends BaseActivity {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (b) {
-                            app.getRestAdapter().create(IAttachment.class).addViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
+                            app.getRestAdapter().create(IAttachment.class).addViewer(mAttachment.getId(), user.id, new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment o, Response response) {
                                     app.logUtil.i("设置" + user.getRealname() + "附件权限成功!");
@@ -175,7 +175,7 @@ public class AttachmentRightActivity extends BaseActivity {
                                 }
                             });
                         } else {
-                            app.getRestAdapter().create(IAttachment.class).removeViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
+                            app.getRestAdapter().create(IAttachment.class).removeViewer(mAttachment.getId(), user.id, new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment o, Response response) {
                                     app.logUtil.i("删除" + user.getRealname() + "附件权限成功!");

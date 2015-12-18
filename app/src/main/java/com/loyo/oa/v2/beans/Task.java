@@ -20,8 +20,6 @@ public class Task extends BaseBeans {
         return "";
     }
 
-    public int priority;
-
     private long actualendAt;
     private String attachmentUUId;
     private String content;
@@ -35,10 +33,8 @@ public class Task extends BaseBeans {
     private boolean reviewFlag;
     private int score;
     private boolean reviewed;
-    private long reviewedAt;
     private int status;
     private String title;
-    private long updatedAt;
     private Project ProjectInfo;
 
     private NewUser creator;
@@ -49,7 +45,9 @@ public class Task extends BaseBeans {
     private ArrayList<Attachment> attachments;
     private ArrayList<TaskCheckPoint> checklists;
     private ArrayList<TaskReviewComment> reviewComments;
-    private ArrayList<Reviewer> members = new ArrayList<>();
+
+
+    private Members members = new Members();
     public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
 
     //    <!--保存本地使用-->
@@ -58,6 +56,10 @@ public class Task extends BaseBeans {
     private String TaskComment;
 //    <!--保存本地使用-->
 
+
+    public Members getMembers() {
+        return members;
+    }
 
     public Project getProject() {
         return ProjectInfo;
@@ -91,16 +93,7 @@ public class Task extends BaseBeans {
         this.projectId = projectId;
     }
 
-    public ArrayList<Reviewer> getMembers() {
-        if (members == null){
-            members = new ArrayList<>();
-        }
-        return members;
-    }
 
-    public void setMembers(ArrayList<Reviewer> members) {
-        this.members = members;
-    }
 
     public String getTaskComment() {
         return TaskComment;
@@ -137,11 +130,11 @@ public class Task extends BaseBeans {
             }
         }
 
-        for (Reviewer member : members) {
+/*        for (Reviewer member : members) {
             if (member.getUser() != null && member.getUser().isCurrentUser()) {
                 return member.isViewed();
             }
-        }
+        }*/
 
         return true;
     }
@@ -155,13 +148,13 @@ public class Task extends BaseBeans {
             }
         }
 
-        for (int i = 0; i < members.size(); i++) {
+/*        for (int i = 0; i < members.size(); i++) {
             NewUser u = members.get(i).getUser();
             if (u != null && u.isCurrentUser()) {
                 members.get(i).setViewed(ack);
                 return;
             }
-        }
+        }*/
     }
 
     public Task() {
@@ -349,8 +342,8 @@ public class Task extends BaseBeans {
     public ArrayList<NewUser> getJoinedUsers() {
         ArrayList<NewUser> user = new ArrayList<>();
 
-        for (Reviewer reviewer : getMembers()) {
-            user.add(reviewer.getUser());
+        for (int i = 0;i<members.getUsers().size();i++) {
+            user.add(members.getUsers().get(i));
         }
 
         return user;

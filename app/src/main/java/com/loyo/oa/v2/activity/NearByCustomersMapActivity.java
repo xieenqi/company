@@ -127,7 +127,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
                 textView.setGravity(Gravity.CENTER);
                 textView.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
                 textView.setTextColor(getResources().getColor(R.color.title_bg1));
-                textView.setText(point.customer.getName());
+                textView.setText(point.customer.name);
 
                 InfoWindow infoWindow=new InfoWindow(textView,point.latLng,-app.diptoPx(30));
                 mBaiduMap.showInfoWindow(infoWindow);
@@ -149,7 +149,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         }
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
-            String gpsInfo = customer.getLoc().getLoc()[1]+","+customer.getLoc().getLoc()[0];
+            String gpsInfo = customer.loc.getLoc()[1]+","+customer.loc.getLoc()[0];
             if (!TextUtils.isEmpty(gpsInfo) && gpsInfo.contains(",")) {
                 String gps[] = gpsInfo.split(",");
                 double lat = Double.parseDouble(gps[1]);

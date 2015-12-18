@@ -137,7 +137,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
                 if (isTopAdd) {
                     legWorks.clear();
                 }
-                legWorks.addAll(paginationX.getRecords());
+               // legWorks.addAll(paginationX.getRecords());
                 bindData();
             }
 

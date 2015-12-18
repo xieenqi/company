@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Member;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
@@ -40,6 +43,7 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -54,9 +58,9 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -110,7 +114,10 @@ public class TasksAddActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private NewUser newUser;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private ArrayList<Reviewer> members = new ArrayList<>();
+    private Members member = new Members();
+    private ArrayList<NewUser> userss = new ArrayList<>();
+    private ArrayList<NewUser> depts = new ArrayList<>();
+
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
     private int mRemind=0;
@@ -149,7 +156,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     void getTempTask() {
-        mTask = DBManager.Instance().getTask();
+        //mTask = DBManager.Instance().getTask();
         if (mTask == null) {
             return;
         }
@@ -159,8 +166,8 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
 
             User u = new User();
-            u.setId(mTask.getResponsiblePersonId());
-            u.setRealname(mTask.getResponsiblePersonName());
+            u.id=mTask.getResponsiblePersonId();
+            u.realname=mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
 
         }
@@ -187,20 +194,19 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask(String title, String content) {
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
-        map.put("responsiblePersons", Arrays.asList(new Reviewer(newUser)));
-        map.put("members", members);
-        // 已经 修改待测
+        map.put("responsiblePerson", newUser);
+        map.put("members",member);
         map.put("planendAt", mDeadline);
         map.put("remindflag", mRemind > 0);
         map.put("remindtime", mRemind);
-        map.put("reworkflag", switch_approve.isChecked());
+        map.put("reviewFlag", switch_approve.isChecked());
+        map.put("attachmentUUId", uuid);
 
-        if (uuid != null && lstData_Attachment.size() > 0) {
-            map.put("attachmentUUId", uuid);
-        }
+        LogUtil.dll("发送参数："+MainApp.gson.toJson(map));
 
         if (null != project) {
             map.put("projectId", project.getId());
@@ -209,18 +215,17 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
+
                 task.setAck(true);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-
                 //不需要保存
                 isSave = false;
-
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
                 setResult(Activity.RESULT_OK, intent);
-                onBackPressed();
-                if (isCopy)
-                    TasksInfoActivity.instance.finish();
+                finish();
+                if(isCopy)
+                TasksInfoActivity.instance.finish();
 
             }
 
@@ -228,14 +233,16 @@ public class TasksAddActivity extends BaseActivity {
             public void failure(RetrofitError error) {
                 super.failure(error);
 
+
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
                 } else if (error.getKind() == RetrofitError.Kind.HTTP) {
                     if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常，请稍候再试");
+                        Toast("网络异常500，请稍候再试");
                     }
-                }
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
 
+                }
             }
         });
     }
@@ -299,7 +306,8 @@ public class TasksAddActivity extends BaseActivity {
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle1);
                 break;
             case R.id.layout_del:
-                members.clear();
+                userss.clear();
+                depts.clear();
                 tv_toUsers.setText("");
                 layout_del.setVisibility(View.GONE);
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
@@ -362,14 +370,21 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     void setJoinUsers(String joinedUserIds, String joinedUserName) {
-        members.clear();
+
+        userss.clear();
+        depts.clear();
 
         String[] userIds = joinedUserIds.split(",");
         String[] userNames = joinedUserName.split(",");
 
         for (int i = 0; i < userIds.length; i++) {
-            members.add(new Reviewer(userIds[i], userNames[i]));
+            NewUser newUser = new NewUser();
+            newUser.setName(userNames[i]);
+            newUser.setId(userIds[i]);
+            userss.add(newUser);
         }
+
+        member.setUsers(userss);
 
         if (!TextUtils.isEmpty(joinedUserName)) {
             tv_toUsers.setText(joinedUserName);
@@ -483,9 +498,9 @@ public class TasksAddActivity extends BaseActivity {
                 mTask.setResponsiblePersonName(newUser.getRealname());
             }
 
-            if (!members.isEmpty()) {
+            /*if (!members.isEmpty()) {
                 mTask.setMembers(members);
-            }
+            }*/
 
             if (mDeadline > 0) {
                 mTask.setPlanEndAt(mDeadline);

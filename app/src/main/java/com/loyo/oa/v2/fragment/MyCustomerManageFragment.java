@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.CustomerInfoActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerInfoActivity_;
 import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.adapter.CustomerExpandableListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;

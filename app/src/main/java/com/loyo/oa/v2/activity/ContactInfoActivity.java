@@ -112,26 +112,26 @@ public class ContactInfoActivity extends BaseActivity
     private void initData(){
         if(null==user)
             return;
-        if(!TextUtils.isEmpty(user.getAvatar()))
-            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+        if(!TextUtils.isEmpty(user.avatar))
+            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
         Utils.setContent(tv_realname, user.getRealname());
-        String dept=user.getDepartmentsName()+" - "+user.getRealname();
+        String dept=user.departmentsName+" - "+user.getRealname();
         Utils.setContent(tv_deptname, dept);
 
-        Utils.setContent(tv_phone, user.getMobile());
+        Utils.setContent(tv_phone, user.mobile);
         String gender="";
-        if(user.getGender()==2)
+        if(user.gender==2)
             gender="女";
-        else if(user.getGender()==1)
+        else if(user.gender==1)
             gender="男";
         Utils.setContent(tv_sex, gender);
-        Utils.setContent(tv_weixin, user.getWeixinId());
-        if(!TextUtils.isEmpty(user.getBirthDay())) {
-            int age= Utils.getAge(user.getBirthDay().substring(0, 4));
+        Utils.setContent(tv_weixin, user.weixinId);
+        if(!TextUtils.isEmpty(user.birthDay)) {
+            int age= Utils.getAge(user.birthDay.substring(0, 4));
             if (age>=150){
                 return;
             }
-            Utils.setContent(tv_birthday,user.getBirthDay());
+            Utils.setContent(tv_birthday,user.birthDay);
             Utils.setContent(tv_age, age + "");
         }
 
@@ -160,11 +160,11 @@ public class ContactInfoActivity extends BaseActivity
      * 发送短信
      */
     private void sendSms(){
-        if(TextUtils.isEmpty(user.getMobile())){
+        if(TextUtils.isEmpty(user.mobile)){
             Toast("联系人电话号码为空");
             return;
         }
-        Uri uri = Uri.parse("smsto:" + user.getMobile());
+        Uri uri = Uri.parse("smsto:" + user.mobile);
         Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
         sendIntent.putExtra("sms_body", "");
         startActivity(sendIntent);
@@ -174,11 +174,11 @@ public class ContactInfoActivity extends BaseActivity
      * 打电话
      */
     private void call(){
-        if(TextUtils.isEmpty(user.getMobile())){
+        if(TextUtils.isEmpty(user.mobile)){
             Toast("联系人电话号码为空");
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.getMobile()));
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.mobile));
         startActivity(intent);
     }
 }

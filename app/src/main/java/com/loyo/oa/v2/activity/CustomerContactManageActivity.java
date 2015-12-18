@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity;
+import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
@@ -80,11 +81,11 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 初始化数据
      */
     private void initData() {
-        if (null == mCustomer || null == mCustomer.getContacts() || mCustomer.getContacts().isEmpty()) {
+        if (null == mCustomer || null == mCustomer.contacts || mCustomer.contacts.isEmpty()) {
             return;
         }
         layout_container.removeAllViews();
-        ArrayList<Contact> contacts = mCustomer.getContacts();
+        ArrayList<Contact> contacts = mCustomer.contacts;
         app.logUtil.e("contacts : " + contacts.size());
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
@@ -117,7 +118,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         switch (requestCode) {
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
-                mCustomer.getContacts().add(contact);
+                mCustomer.contacts.add(contact);
                 initData();
                 break;
             case CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT:
@@ -126,10 +127,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     return;
                 }
 
-                for (int i = 0; i < mCustomer.getContacts().size(); i++) {
-                    if (TextUtils.equals(contactUpdated.getId(), mCustomer.getContacts().get(i).getId())) {
-                        contactUpdated.setIsDefault(mCustomer.getContacts().get(i).isDefault());
-                        mCustomer.getContacts().set(i, contactUpdated);
+                for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                    if (TextUtils.equals(contactUpdated.getId(), mCustomer.contacts.get(i).getId())) {
+                        contactUpdated.setIsDefault(mCustomer.contacts.get(i).isDefault());
+                        mCustomer.contacts.set(i, contactUpdated);
                         break;
                     }
                 }
@@ -143,10 +144,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).deleteContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
             @Override
             public void success(Contact contact, Response response) {
-                for (int i = 0; i < mCustomer.getContacts().size(); i++) {
-                    Contact newContact=mCustomer.getContacts().get(i);
+                for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                    Contact newContact=mCustomer.contacts.get(i);
                     if(newContact.equals(contact)){
-                       mCustomer.getContacts().remove(i);
+                       mCustomer.contacts.remove(i);
                         initData();
                         break;
                     }
@@ -160,18 +161,18 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).setDefaultContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
             @Override
             public void success(Contact _contact, Response response) {
-                for (int i = 0; i < mCustomer.getContacts().size(); i++) {
-                    Contact newContact=mCustomer.getContacts().get(i);
+                for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                    Contact newContact=mCustomer.contacts.get(i);
                     if(newContact.isDefault()){
                         newContact.setIsDefault(false);
                         break;
                     }
                 }
-                for (int i = 0; i < mCustomer.getContacts().size(); i++) {
-                    Contact newContact=mCustomer.getContacts().get(i);
+                for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                    Contact newContact=mCustomer.contacts.get(i);
                     if(newContact.equals(contact)){
                         newContact.setIsDefault(true);
-                        mCustomer.getContacts().set(i,newContact);
+                        mCustomer.contacts.set(i,newContact);
                         initData();
                         break;
                     }

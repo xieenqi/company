@@ -45,10 +45,10 @@ public class CustomerBaseInfoEditActivity extends BaseActivity
      void initUi()
     {
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户基础信息");
-        if(!TextUtils.isEmpty(customer.getSummary()))
-            edt_customer_basesummary.setText(customer.getSummary());
-        if(!TextUtils.isEmpty(customer.getName()))
-            edt_basename.setText(customer.getName());
+        if(!TextUtils.isEmpty(customer.summary))
+            edt_customer_basesummary.setText(customer.summary);
+        if(!TextUtils.isEmpty(customer.name))
+            edt_basename.setText(customer.name);
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right})
