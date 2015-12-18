@@ -5,12 +5,39 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Task extends BaseBeans {
+
     public static final int STATUS_PROCESSING = 1;  //进行中
     public static final int STATUS_REVIEWING = 2;   //审核中
     public static final int STATUS_FINISHED = 3;    //已完成
 
     public static final List<String> RemindList = Arrays.asList("不提醒", "截止前10分钟", "截止前30分钟", "截止前1小时", "截止前3小时", "截止前1天");
     public static final List<Integer> RemindListSource = Arrays.asList(0, 10, 30, 60, 180, 1440);
+    public String attachmentUUId;
+    public String content;
+    public long createdAt;
+    public String id;
+    public long planendAt;
+    public String projectId;
+    public boolean remindflag;
+    public int remindtime;
+    public boolean reviewFlag;
+    public int score;
+    public int status;
+    public String title;
+    public Project ProjectInfo;
+    public ArrayList<Attachment> attachments;
+    public ArrayList<TaskCheckPoint> checklists;
+    public ArrayList<TaskReviewComment> reviewComments;
+    public Members members = new Members();
+    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
+    public NewUser responsiblePerson;
+    public NewUser creator;
+
+    /*保存本地使用*/
+    public String responsiblePersonId;
+    public String responsiblePersonName;
+    public String TaskComment;
+
 
     public static final String GetRemindText(int remind) {
         int index = RemindListSource.indexOf(remind);
@@ -19,35 +46,6 @@ public class Task extends BaseBeans {
         }
         return "";
     }
-
-    private long actualendAt;
-    private String attachmentUUId;
-    private String content;
-    private long createdAt;
-    private String customerIds;
-    private String id;
-    private long planendAt;
-    private String projectId;
-    private boolean remindflag;
-    private int remindtime;
-    private boolean reviewFlag;
-    private int score;
-    private boolean reviewed;
-    private int status;
-    private String title;
-    private Project ProjectInfo;
-    private NewUser creator;
-    private ArrayList<Attachment> attachments;
-    private ArrayList<TaskCheckPoint> checklists;
-    private ArrayList<TaskReviewComment> reviewComments;
-    private Members members = new Members();
-    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
-
-    //    <!--保存本地使用-->
-    private String responsiblePersonId;
-    private String responsiblePersonName;
-    private String TaskComment;
-//    <!--保存本地使用-->
 
 
     public Members getMembers() {
@@ -143,14 +141,6 @@ public class Task extends BaseBeans {
         return String.valueOf(getCreatedAt());
     }
 
-    public long getActualEndAt() {
-        return actualendAt;
-    }
-
-    public void setActualEndAt(long actualEndAt) {
-        this.actualendAt = actualEndAt;
-    }
-
     public String getAttachmentUUId() {
         return attachmentUUId;
     }
@@ -202,20 +192,13 @@ public class Task extends BaseBeans {
         this.createdAt = createdAt;
     }
 
+
     public NewUser getCreator() {
         return creator;
     }
 
     public void setCreator(NewUser creator) {
         this.creator = creator;
-    }
-
-    public String getCustomerIds() {
-        return customerIds;
-    }
-
-    public void setCustomerIds(String customerIds) {
-        this.customerIds = customerIds;
     }
 
     public String getId() {
@@ -238,10 +221,6 @@ public class Task extends BaseBeans {
         return remindflag;
     }
 
-    public void setRemindFlag(boolean remindFlag) {
-        this.remindflag = remindFlag;
-    }
-
     public int getRemindTime() {
         return remindtime;
     }
@@ -251,14 +230,12 @@ public class Task extends BaseBeans {
     }
 
     public NewUser getResponsiblePerson() {
-        if (responsiblePersons != null && responsiblePersons.size() > 0) {
-            return responsiblePersons.get(0).getUser();
-        }
-        return null;
+
+        return responsiblePerson;
     }
 
     public void setResponsiblePerson(NewUser responsiblePerson) {
-        responsiblePersons = new ArrayList<>(Arrays.asList(new Reviewer(responsiblePerson)));
+        this.responsiblePerson = responsiblePerson;
     }
 
     public ArrayList<TaskReviewComment> getReviewComments() {
@@ -285,14 +262,6 @@ public class Task extends BaseBeans {
         this.score = score;
     }
 
-    public boolean isReviewed() {
-        return reviewed;
-    }
-
-    public void setReviewed(boolean reviewed) {
-        this.reviewed = reviewed;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -311,13 +280,13 @@ public class Task extends BaseBeans {
 
     @Override
     public String getOrderStr2() {
-        return status+"";
+        return status + "";
     }
 
     public ArrayList<NewUser> getJoinedUsers() {
         ArrayList<NewUser> user = new ArrayList<>();
 
-        for (int i = 0;i<members.getUsers().size();i++) {
+        for (int i = 0; i < members.getUsers().size(); i++) {
             user.add(members.getUsers().get(i));
         }
 

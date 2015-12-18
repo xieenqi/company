@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class NewUser implements Serializable {
 
-    private String id;  // "5600ff1f54418940bf233261",
-    private String name;// "测试负责人",
+    private String id;
+    private String name;
     private String avatar;
 
     public static String GetNewUserNames(List<NewUser> users) {

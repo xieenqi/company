@@ -98,7 +98,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
           //  Log.d("Volley", " 任务管理啊返回: " + task.);
             try {
-                if(System.currentTimeMillis()>task.getActualEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
+                if(System.currentTimeMillis()>task.getPlanEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
                     timeOut.setVisibility(View.VISIBLE);
                 }else{
                     timeOut.setVisibility(View.GONE);
