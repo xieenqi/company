@@ -63,22 +63,17 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
     @AfterViews
     void initUI() {
-
         setTitle("我的客户");
         setTouchView(-1);
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
-
         if (!Utils.hasRights()) {
             CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
         }
-
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-
         initCategoryUI();
         rotateAnimation = getArrowAnimation();
         imageArrow.setVisibility(View.VISIBLE);
-
         initFragments();
     }
 
@@ -101,7 +96,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
                     type = Customer.CUSTOMER_TYPE_PUBLIC;
                 }
             }
-
             Bundle bundle = new Bundle();
             bundle.putInt("type", type);
             CustomerCommonFragment fragment = (CustomerCommonFragment) Fragment.instantiate(this, CustomerCommonFragment.class.getName(), bundle);

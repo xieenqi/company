@@ -296,7 +296,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
 //                LatLng p = new LatLng(
 //                        Double.parseDouble(customer.getGpsInfo().split(",")[1]),
 //                        Double.parseDouble(customer.getGpsInfo().split(",")[0]));
-                LatLng p=LocationUtil.convert(1,customer.loc.getLoc()[1],customer.loc.getLoc()[0]);
+                LatLng p=LocationUtil.convert(1,customer.loc.loc[1],customer.loc.loc[0]);
                 points.add(p);
 
                 OverlayOptions ooA = new MarkerOptions().position(p).icon(bdA)
