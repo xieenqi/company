@@ -123,7 +123,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
             layout_near_customers = (ViewGroup) mView.findViewById(R.id.layout_near_customers);
 
-            layout_near_customers.setOnTouchListener(Global.GetTouch());
+            //layout_near_customers.setOnTouchListener(Global.GetTouch());
             layout_near_customers.setOnClickListener(this);
 
             btn_add.setOnTouchListener(Global.GetTouch());
@@ -170,6 +170,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 bundle.putString("position", position);
                 bundle.putSerializable("nearCount", nearCount);
                 bundle.putInt("type", customer_type);
+               // LogUtil.d(" 穿客户的信息： "+MainApp.gson.toJson(bundle));
                 app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
             case R.id.btn_add:
