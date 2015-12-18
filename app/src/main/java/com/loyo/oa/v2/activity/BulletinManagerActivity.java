@@ -16,6 +16,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.GridViewUtils;
@@ -112,6 +113,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 lv_notice.onRefreshComplete();
                 Toast("获取通知失败" + error.getMessage());

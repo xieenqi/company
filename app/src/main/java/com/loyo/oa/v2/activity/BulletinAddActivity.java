@@ -18,6 +18,7 @@ import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.BulletinViewer;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -170,6 +171,7 @@ public class BulletinAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
             }
         });
