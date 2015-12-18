@@ -60,9 +60,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private GridView gridView_photo;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
-    private String cc_user_id = null;
-    private String cc_department_id = null;
-    private final int SELECT_USERNAME = 0X01;
     private String mAddress;
     private String customerId;
     private String customerName;
@@ -114,7 +111,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             layout_customer_name.setOnTouchListener(Global.GetTouch());
             layout_customer_name.setOnClickListener(this);
         } else {
-            uuid = mCustomer.getUuid();
+            /*uuid = mCustomer.getUuid();*/
             findViewById(R.id.divider_customer_name).setVisibility(View.GONE);
             layout_customer_name.setVisibility(View.GONE);
             tv_customer_name.setText(customerName);
@@ -161,6 +158,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         });
     }
 
+    /**
+     * 图片适配器绑定
+     * */
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
@@ -236,6 +236,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     Toast("提交失败" + response.getStatus());
                     //legWork.setCreator(MainApp.user.toShortUser());
                 }
+
             }
 
             @Override
@@ -259,7 +260,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
-                LogUtil.dll("获取附件成功");
+                LogUtil.dll("获取附件成功 result:"+MainApp.gson.toJson(attachments));
+                LogUtil.dll("success code:"+response.getStatus());
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -267,7 +269,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void failure(RetrofitError error) {
                 Toast("获取附件失败");
-                super.failure(error);
+                LogUtil.dll("failure code:" + error.getResponse().getStatus());
             }
         });
     }
@@ -278,25 +280,26 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
+        /**
+         * 添加附件流程：拍照回调－流生成file－上传服务器－从服务器下载－展示在View中
+         * 费解
+         * */
         switch (requestCode) {
             case SelectPicPopupWindow.GET_IMG:
-                LogUtil.dll("回调照片");
 
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = null;
-
                         newFile = Global.scal(this, uri);
-
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
+                                /**上传附件*/
                                 Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
-                                        LogUtil.dll("附件上传");
                                         getAttachments();
                                     }
                                 });
@@ -307,7 +310,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     LogUtil.dll("IO异常");
                     e.printStackTrace();
                 }
-
 
                 break;
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
@@ -343,6 +345,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LogUtil.dll("我销毁勒");
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK
@@ -352,6 +360,4 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
 }

@@ -42,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -324,16 +325,29 @@ public class Utils {
         new LocationUtil(context, new LocationUtil.AfterLocation() {
             @Override
             public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+
                 Uri uri;
                 if (hasMapApp(context)) {
                     uri = Uri.parse("geo: " + latitude + "," + longitude);
-
                 } else {
                     uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(from)&to=" + toLat + "," + toLng + "(to)");
                 }
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
+
+
+/*                Intent intent;
+                try {
+                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+                    context.startActivity(intent); //启动调用
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }*/
+
+
+
+
             }
 
             @Override

@@ -557,13 +557,6 @@ public class MainApp extends Application {
                 break;
             case ENTER_TYPE_RIGHT:
                 activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                //                break;
-                //            case ENTER_TYPE_ZOOM_IN:
-                //                activity.overridePendingTransition(R.anim.enter_zoom_in, R.anim.enter_zoom_in);
-                //                break;
-                //            case ENTER_TYPE_ZOOM_OUT:
-                //                activity.overridePendingTransition(R.anim.enter_zoom_out, R.anim.enter_zoom_out);
-                //                break;
             default:
                 break;
         }

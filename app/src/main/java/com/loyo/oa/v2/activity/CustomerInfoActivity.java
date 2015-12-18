@@ -297,6 +297,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
                 dialogInterface.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);

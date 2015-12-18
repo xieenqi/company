@@ -67,6 +67,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
+
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_del;
@@ -74,31 +75,24 @@ public class TasksEditActivity extends BaseActivity {
     @ViewById ViewGroup layout_deadline;
     @ViewById ViewGroup layout_remind;
     @ViewById ViewGroup layout_project;
-
     @ViewById ImageView img_title_right_toUsers;
-
     @ViewById TextView tv_responsiblePerson;
     @ViewById TextView tv_toUsers;
     @ViewById TextView tv_deadline;
     @ViewById TextView tv_remind;
     @ViewById TextView tv_Project;
-
     @ViewById Switch switch_approve;
-
     @ViewById EditText edt_content;
     @ViewById EditText edt_title;
-
     @ViewById GridView gridView_photo;
-
     @Extra Task mTask;
-
     SignInGridViewAdapter signInGridViewAdapter;
     AlertDialog dialog_Product;
 
     @AfterViews //类似onCreate方法执行入口
     void initUI() {
-        super.setTitle("编辑任务");
 
+        super.setTitle("编辑任务");
         Global.SetTouchView(img_title_left,
                 img_title_right,
                 layout_responsiblePerson,
@@ -109,20 +103,21 @@ public class TasksEditActivity extends BaseActivity {
         UpdateUI();
         init_gridView_photo();
         setTouchView(-1);
+
     }
 
     void UpdateUI() {
+
         if(null!=mTask.getResponsiblePerson()) {
             tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
         }
         tv_toUsers.setText(NewUser.GetNewUserNames(mTask.getJoinedUsers()));
         tv_deadline.setText(app.df3.format(new Date(mTask.getActualEndAt())));
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
-
         switch_approve.setChecked(mTask.isReviewFlag());
-
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
+
     }
 
     void getAttachments(){
@@ -230,7 +225,6 @@ public class TasksEditActivity extends BaseActivity {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
                         String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-
                         tv_deadline.setText(str);
                         mTask.setActualEndAt(DateTool.getDateToTimestamp(str, app.df3));
                     }
