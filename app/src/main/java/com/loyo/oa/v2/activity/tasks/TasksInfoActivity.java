@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity.tasks;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -36,9 +38,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -46,12 +46,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -70,7 +67,6 @@ public class TasksInfoActivity extends BaseActivity {
 
     public static final int MSG_ATTACHMENT = 700;
     public static final int MSG_DISCUSSION = 800;
-    public static final int MSG_CHILD_TASK = 900;
 
     String vTitle;
     String vContent;
@@ -78,7 +74,6 @@ public class TasksInfoActivity extends BaseActivity {
     String joinName;
     String isTest;
     String beProjects;
-    String time;
 
     @ViewById
     ViewGroup img_title_left;
@@ -119,23 +114,30 @@ public class TasksInfoActivity extends BaseActivity {
     TextView tv_attachment_count;
     @ViewById
     TextView tv_children_info;
-
-
     @ViewById
     Button btn_complete;
     @ViewById
     RatingBar ratingBar_Task;
-
     @Extra("task") Task mTask;
 
     //信鸽透传过来的id
     @Extra("id")
     String mId;
 
-    //  User responseUser;      //负责人
     private PaginationX<Discussion> mPageDiscussion;
     private String taskId;  //任务ID
     public static TasksInfoActivity instance = null;
+    public int statusSize = 0;
+
+    public android.os.Handler mHandler = new android.os.Handler(){
+
+        public void handleMessage(Message msg){
+
+            if(msg.what == 0x01){
+                tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
+            }
+        }
+    };
 
     @AfterViews
     void init() {
@@ -154,7 +156,6 @@ public class TasksInfoActivity extends BaseActivity {
         btn_complete.setOnTouchListener(Global.GetTouch());
 //      layout_children_task.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
-        //LogUtil.d(" 任务详情的数据： "+MainApp.gson.toJson(mTask));
 
     }
 
@@ -263,10 +264,9 @@ public class TasksInfoActivity extends BaseActivity {
 
         layout_child_Add_area.removeAllViews();
 
-        int statusSize = 0;
-
         //子任务列表内容，遍历
         for (final TaskCheckPoint subTask : mTask.getchecklists()) {
+
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
 
             //子任务标题
@@ -281,14 +281,17 @@ public class TasksInfoActivity extends BaseActivity {
                 viewContent.setText(subTask.getcontent());
             }
 
-            //Checkbox勾选,赋值
-            final CheckBox cb = (CheckBox) view.findViewById(R.id.cb);
-            boolean isStatus = subTask.getStatus() == "1" ? true : false;
-            if (isStatus)
-                statusSize++;
-            cb.setChecked(isStatus);
+            /*Checkbox勾选,赋值*/
+            CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
+            boolean isStatus = subTask.getStatus().equals("1") ? true : false;
 
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /*子任务个数设置*/
+            if (isStatus){
+                statusSize++;
+            }
+
+            childCheckbox.setChecked(isStatus);
+            childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
                     if (isCheck) {
@@ -298,7 +301,8 @@ public class TasksInfoActivity extends BaseActivity {
                     }
                 }
             });
-//到编辑子任务
+
+        //到编辑子任务
             view.setTag(subTask);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -337,23 +341,13 @@ public class TasksInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
-                if (task != null) {
-                    if (response.getStatus() == 200) {
                         Toast("更新成功");
-                    }
-                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常500，请稍候再试");
-                    }
-                }
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -367,34 +361,19 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void success(Task task, Response response) {
 
-                try {
-                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                LogUtil.dll("URL:" + response.getUrl());
-
                 mTask = task;
                 updateUI();
                 getDiscussion();
                 showAttachment();
                 taskId = task.getId(); //任务ID获取
-                LogUtil.d("获取子任务返回数据：" + MainApp.gson.toJson(task));
+                LogUtil.d("任务详情返回数据：" + MainApp.gson.toJson(task));
 
             }
 
             @Override
             public void failure(RetrofitError error) {
-
-                LogUtil.dll("failure:" + error.getUrl());
-
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getResponse().getStatus() == 500) {
-                    Toast("网络异常500,请稍候再试");
-                }
-
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -501,13 +480,6 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         switch (requestCode) {
-//            case MSG_CHILD_TASK:
-//                if (null != data && data.hasExtra("childTasks")) {
-//                    ArrayList<TaskCheckPoint> points = (ArrayList<TaskCheckPoint>) data.getSerializableExtra("childTasks");
-//                    mTask.setchecklists(points);
-//                    checkChildStatus();
-//                }
-//                break;
 
             case REQUEST_EDIT_TASK://编辑 子任务 返回
                 layout_child_Add_area.removeAllViews();
