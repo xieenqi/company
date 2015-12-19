@@ -11,10 +11,10 @@ public class Config_project {
     //public static String IP="http://114.215.83.227";    //正式服务
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
-    public static String IP2 = "http://192.168.31.131";  //内部服务器
+    public static String IP = "http://192.168.31.131";  //内部服务器
 
 
-    public static String IP = "http://192.168.31.136";//马涛地址
+   // public static String IP = "http://192.168.31.136";//马涛地址
 
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");
@@ -38,7 +38,7 @@ public class Config_project {
      * @return
      */
     public static String SERVER_URL_ATTACHMENT() {
-        return IP2 + ":8030";
+        return IP + ":8030";
     }
 
 
@@ -70,7 +70,7 @@ public class Config_project {
      * @return
      */
     public static String SERVER_URL_LOGIN() {
-        return IP + ":8080";
+        return IP + ":88";
     }
     //131服务器 88端口
 
