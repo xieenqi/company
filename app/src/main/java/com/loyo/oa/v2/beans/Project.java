@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.activity.ProjectAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.util.ArrayList;
@@ -100,8 +101,13 @@ public class Project extends BaseBeans {
         return managers;
     }
 
-    public void setManagers(ArrayList<ProjectMember> managers) {
-        this.managers = managers;
+    public void setManagers(ArrayList<ProjectAddActivity.ManagersMembers> data) {
+        ArrayList<ProjectMember> newData = new ArrayList<>();
+        for (ProjectAddActivity.ManagersMembers element:data) {
+            ProjectMember pm=new ProjectMember(element.user.id,element.canreadall);
+            newData.add(pm);
+        }
+        this.managers = newData;
     }
 
     public void setId(String id) {

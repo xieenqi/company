@@ -16,6 +16,7 @@ import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
 
@@ -59,7 +60,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("type", type);
         params.put("endAt", System.currentTimeMillis()/1000);
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01",app.df5)/1000);
-
+        LogUtil.d(" 项目管理列表请求： "+ MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params,this);
     }
 

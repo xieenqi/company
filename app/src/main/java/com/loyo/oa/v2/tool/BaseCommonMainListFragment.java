@@ -19,6 +19,7 @@ import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
@@ -226,11 +227,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
-
-        LogUtil.dll(MainApp.gson.toJson(tPaginationX) + " 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
-
-        LogUtil.dll("success code:"+response.getStatus());
-
+        LogUtil.d(" 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
+        LogUtil.d(" 项目、任务、报告、审批的统一界面 成功 json： " +MainApp.gson.toJson(tPaginationX));
         try {
             LogUtil.dll("任务success result:"+Utils.convertStreamToString(response.getBody().in()));
         } catch (IOException e) {
@@ -259,16 +257,9 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void failure(RetrofitError error) {
-        LogUtil.dll(error.getUrl() + " 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
+        HttpErrorCheck.checkError(error);
+        LogUtil.d(error.getUrl() + " 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
         mExpandableListView.onRefreshComplete();
-
-        LogUtil.dll("failure code:" + error.getResponse().getStatus());
-
-        try {
-            LogUtil.dll("任务failure result:"+Utils.convertStreamToString(error.getResponse().getBody().in()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
