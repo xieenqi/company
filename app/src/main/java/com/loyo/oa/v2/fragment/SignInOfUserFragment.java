@@ -284,8 +284,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
         Intent intent = new Intent(mActivity, SignInfoActivity.class);
         intent.putExtra(LegWork.class.getName(), legWork);
-        intent.putExtra("mCustomer", legWork.getCustomer());
-        intent.putExtra("Id", legWork.getCustomerId());
+        intent.putExtra("mCustomer", legWork.customer);
+        intent.putExtra("Id", legWork.customerId);
         startActivity(intent);
 
     }

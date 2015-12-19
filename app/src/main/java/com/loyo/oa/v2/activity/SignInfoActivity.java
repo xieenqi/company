@@ -82,7 +82,7 @@ public class SignInfoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Bundle b = new Bundle();
-                b.putString("Id", legWork.getCustomerId());
+                b.putString("Id", legWork.customerId);
                 app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
             }
         });
@@ -113,7 +113,7 @@ public class SignInfoActivity extends BaseActivity {
      * 获取附件
      */
     private void getAttachments() {
-        Utils.getAttachments(legWork.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
+        Utils.getAttachments(legWork.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
                 lstData_Attachment = attachments;
@@ -131,15 +131,15 @@ public class SignInfoActivity extends BaseActivity {
 
     void updateUI() {
         if (legWork != null) {
-            tv_address.setText(legWork.getAddress());
-            tv_memo.setText(legWork.getMemo());
+            tv_address.setText(legWork.address);
+            tv_memo.setText(legWork.memo);
 
-            String name = null == mCustomer ? legWork.getCustomerName() : mCustomer.name;
+            String name = null == mCustomer ? legWork.customerName : mCustomer.name;
             tv_customer_name.setText(name);
         }
 
         if (legWork != null) {
-            lstData_Attachment = legWork.getAttachments();
+            lstData_Attachment = legWork.attachments;
             if (null == lstData_Attachment) {
                 getAttachments();
             } else {
@@ -163,8 +163,8 @@ public class SignInfoActivity extends BaseActivity {
             return;
         }
         Customer customer = (Customer) data.getSerializableExtra(Customer.class.getName());
-        legWork.setAddress(customer.loc.addr);
-        legWork.setCustomerName(customer.name);
+        legWork.address=customer.loc.addr;
+        legWork.customerName=customer.name;
         updateUI();
     }
 }

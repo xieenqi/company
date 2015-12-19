@@ -11,7 +11,7 @@ public class Config_project {
     //public static String IP="http://114.215.83.227";    //正式服务
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
-    //public static String IP = "http://192.168.31.131";  //内部服务器
+    public static String IP2 = "http://192.168.31.131";  //内部服务器
 
 
     public static String IP = "http://192.168.31.136";//马涛地址
@@ -38,7 +38,7 @@ public class Config_project {
      * @return
      */
     public static String SERVER_URL_ATTACHMENT() {
-        return IP + ":8030";
+        return IP2 + ":8030";
     }
 
 

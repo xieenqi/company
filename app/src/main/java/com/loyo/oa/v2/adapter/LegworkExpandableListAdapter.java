@@ -67,8 +67,8 @@ public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagin
         LegWork legWork = (LegWork) getChild(groupPosition, childPosition);
 
         if (legWork != null) {
-            if (legWork.getAddress() != null) {
-                item_info_Child.tv_address.setText(legWork.getAddress());
+            if (legWork.address != null) {
+                item_info_Child.tv_address.setText(legWork.address);
             }
 
             if (legWork.getCreatedAt() != 0) {
@@ -78,13 +78,13 @@ public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagin
                     Global.ProcException(e);
                 }
 
-                if (legWork.getCreator() != null && legWork.getCreator().getName() != null) {
-                    item_info_Child.tv_user_name.setText(legWork.getCreator().getName());
+                if (legWork.creator != null && legWork.creator.getName() != null) {
+                    item_info_Child.tv_user_name.setText(legWork.creator.getName());
                 }
             }
 
-            if (legWork.getCustomerName() != null) {
-                item_info_Child.tv_customer_name.setText(legWork.getCustomerName());
+            if (legWork.customerName != null) {
+                item_info_Child.tv_customer_name.setText(legWork.customerName);
             }
         }
 

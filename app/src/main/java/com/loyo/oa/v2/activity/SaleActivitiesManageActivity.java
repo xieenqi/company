@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,6 +13,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.SaleActivity;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -25,8 +25,6 @@ import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
-import org.androidannotations.annotations.Extra;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +78,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<SaleActivity>>() {
                 @Override
                 public void success(PaginationX<SaleActivity> paginationXes, Response response) {
+                    LogUtil.d(" 跟进动态获取Url： "+response.getUrl());
                     lv_saleActivity.onRefreshComplete();
                     if (!PaginationX.isEmpty(paginationXes)) {
                         paginationX = paginationXes;
@@ -93,6 +92,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
                 @Override
                 public void failure(RetrofitError error) {
+                    HttpErrorCheck.checkError(error);
                     lv_saleActivity.onRefreshComplete();
                     super.failure(error);
                 }
