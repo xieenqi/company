@@ -17,58 +17,25 @@ public class Reviewer implements Serializable {
     private int score;//点评分数
     private String comment;//点评内容
 
-    public Reviewer() {
-    }
 
     public Reviewer(NewUser user) {
         this.user = user;
     }
 
-    public Reviewer(String userId,String userName) {
-        NewUser user = new NewUser();
-        user.setId(userId).setName(userName);
-        this.user = user;
-    }
 
     public String getComment() {
         return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public long getReviewAt() {
-        return reviewAt;
-    }
-
-    public void setReviewAt(long reviewAt) {
-        this.reviewAt = reviewAt;
     }
 
     public int getScore() {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public long getViewAt() {
-        return viewAt;
-    }
-
-    public void setViewAt(long viewAt) {
-        this.viewAt = viewAt;
-    }
 
     public boolean isReviewed() {
         return reviewed;
     }
 
-    public void setReviewed(boolean reviewed) {
-        this.reviewed = reviewed;
-    }
 
     public boolean isViewed() {
         return viewed;

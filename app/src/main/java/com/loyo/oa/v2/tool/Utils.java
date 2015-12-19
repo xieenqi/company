@@ -29,6 +29,7 @@ import com.loyo.oa.v2.beans.CellInfo;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Member;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
@@ -218,6 +219,7 @@ public class Utils {
         }
         return members;
     }
+
 
     /**
      * 找出默认联系人

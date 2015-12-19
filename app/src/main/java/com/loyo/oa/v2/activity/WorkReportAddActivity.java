@@ -22,6 +22,7 @@ import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Member;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
@@ -29,12 +30,14 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -61,6 +64,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
+/**
+ * 工作报告新建
+ */
+
 @EActivity(R.layout.activity_workreports_add)
 public class WorkReportAddActivity extends BaseActivity {
 
@@ -68,29 +75,46 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_EDIT = TYPE_CREATE + 1;
     public static final int TYPE_CREATE_FROM_COPY = TYPE_CREATE + 2;
 
-    @ViewById ViewGroup img_title_left, img_title_right;
+    @ViewById
+    ViewGroup img_title_left, img_title_right;
+    @ViewById
+    EditText edt_content;
+    @ViewById
+    RadioGroup rg;
+    @ViewById
+    ToggleButton crm_toggle;
+    @ViewById
+    ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
+    @ViewById
+    TextView tv_crm;
+    @ViewById
+    TextView tv_new_customers_num;
+    @ViewById
+    TextView tv_new_visit_num;
+    @ViewById
+    TextView tv_visit_customers_num;
+    @ViewById
+    TextView tv_project;
 
-    @ViewById EditText edt_content;
-    @ViewById RadioGroup rg;
-    @ViewById ToggleButton crm_toggle;
-    @ViewById ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
-    @ViewById TextView tv_crm;
-    @ViewById TextView tv_new_customers_num;
-    @ViewById TextView tv_new_visit_num;
-    @ViewById TextView tv_visit_customers_num;
-    @ViewById TextView tv_project;
+    @ViewById
+    TextView tv_time, tv_toUser;
+    @ViewById
+    TextView tv_reviewer, tv_resignin;
 
-    @ViewById TextView tv_time, tv_toUser;
-    @ViewById TextView tv_reviewer, tv_resignin;
+    @ViewById
+    ViewGroup layout_del;
+    @ViewById
+    ImageView img_title_toUser;
 
-    @ViewById ViewGroup layout_del;
-    @ViewById ImageView img_title_toUser;
+    @ViewById
+    GridView gridView_photo;
 
-    @ViewById GridView gridView_photo;
-
-    @Extra Project project;
-    @Extra WorkReport mWorkReport;
-    @Extra int type;
+    @Extra
+    Project project;
+    @Extra
+    WorkReport mWorkReport;
+    @Extra
+    int type;
 
     private long beginAt, endAt;
     private int mSelectType = 1;
@@ -99,7 +123,9 @@ public class WorkReportAddActivity extends BaseActivity {
     private ArrayList<Attachment> lstData_Attachment = null;
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
-    private ArrayList<Member> members = new ArrayList<>();
+    private Members members = new Members();
+    private ArrayList<NewUser> users = new ArrayList<>();
+    private ArrayList<NewUser> depts = new ArrayList<>();
 
     @AfterViews
     void initViews() {
@@ -120,6 +146,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (weeksDialog == null) {
             weeksDialog = new WeeksDialog(tv_time);
         }
+
         crm_toggle.setChecked(SharedUtil.getBoolean(this, "showCrmData"));
         layout_crm.setVisibility(crm_toggle.isChecked() ? View.VISIBLE : View.GONE);
         crm_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -135,8 +162,10 @@ public class WorkReportAddActivity extends BaseActivity {
             if (type == TYPE_EDIT) {
                 uuid = mWorkReport.getAttachmentUUId();
             }
+
             mReviewer = mWorkReport.getReviewer();
-            members = mWorkReport.getMembers();
+            //members = mWorkReport.getMembers();
+
             switch (mWorkReport.getType()) {
                 case WorkReport.DAY:
                     rg.check(R.id.rb1);
@@ -156,15 +185,17 @@ public class WorkReportAddActivity extends BaseActivity {
             }
             NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
-            tv_toUser.setText(mWorkReport.getJoinUserNames());
+
+            //tv_toUser.setText(mWorkReport.getJoinUserNames());
             edt_content.setText(mWorkReport.getContent());
-            if(null!=mWorkReport.getProject()){
+
+            if (null != mWorkReport.getProject()) {
                 tv_project.setText(mWorkReport.getProject().getTitle());
             }
             //附件暂时不能做
         } else {
             rg.check(R.id.rb1);
-            if(null!=project){
+            if (null != project) {
                 tv_project.setText(project.getTitle());
             }
         }
@@ -281,32 +312,21 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("projectId", project.getId());
                 }
                 map.put("attachmentUUId", uuid);
-                ArrayList<Reviewer> reviewers = new ArrayList<>();
-                reviewers.add(mReviewer);
-                map.put("reviewers", reviewers);
+                map.put("reviewer", mReviewer);
                 map.put("members", members);
+
                 if (type != TYPE_EDIT) {
                     map.put("isDelayed", tv_time.getText().toString().contains("补签") ? true : false);
                 }
-                if (type == TYPE_EDIT) {
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
-                        @Override
-                        public void success(WorkReport workReport, Response response) {
-                            Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
-                            dealResult(workReport);
-                        }
-                    });
-                } else {
 
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
-                        @Override
-                        public void success(WorkReport workReport, Response response) {
-                            Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                            dealResult(workReport);
-                        }
-                    });
+                if (type == TYPE_EDIT) {
+                    updateReport(map);
+                }
+                else {
+                    creteReport(map);
                 }
                 break;
+
             case R.id.tv_resignin:
                 //选择日期
                 selectDate();
@@ -320,7 +340,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
                 break;
             case R.id.layout_del:
-                members.clear();
+                users.clear();
+                depts.clear();
                 tv_toUser.setText("");
                 layout_del.setVisibility(View.GONE);
                 img_title_toUser.setVisibility(View.VISIBLE);
@@ -332,6 +353,49 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * 编辑报告请求
+     * */
+    public void updateReport(HashMap map){
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
+
+            @Override
+            public void success(WorkReport workReport, Response response) {
+                Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
+                dealResult(workReport);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 新建报告请求
+     * */
+    public void creteReport(HashMap map){
+        LogUtil.dll("手机端发送数据："+MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
+            @Override
+            public void success(WorkReport workReport, Response response) {
+                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+                dealResult(workReport);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+
+
 
     /**
      * 处理服务器返回结果
@@ -357,27 +421,42 @@ public class WorkReportAddActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                project =_project;
+                project = _project;
                 if (null != project) {
                     tv_project.setText(project.getTitle());
-                }else {
+                } else {
                     tv_project.setText("无");
                 }
                 break;
 
             case DepartmentUserActivity.request_Code:
-                /*负责人*/
+
+                /*负责人数据组装*/
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
                     if (null == mReviewer) {
-                        mReviewer = new Reviewer();
+                        mReviewer = new Reviewer(user.toShortUser());
                     }
                     mReviewer.setUser(user.toShortUser());
                     tv_reviewer.setText(user.getRealname());
-                } else {  //参与人
+                }
+
+                /*参与人数据组装*/
+                else {
+
                     String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-                    members = Utils.convert2Members(userIds, userNames);
+
+                    String ids[] = userIds.split(",");
+                    String names[] = userNames.split(",");
+                    for (int i = 0; i < ids.length; i++) {
+                        NewUser newUser = new NewUser();
+                        newUser.setId(ids[i]);
+                        newUser.setName(names[i]);
+                        users.add(newUser);
+                    }
+                    members.setUsers(users);
+
                     tv_toUser.setText(userNames);
                 }
                 break;

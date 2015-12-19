@@ -295,8 +295,12 @@ public class TasksInfoActivity extends BaseActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
                     if (isCheck) {
+                        statusSize++;
+                        mHandler.sendEmptyMessage(0x01);
                         requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
                     } else {
+                        statusSize--;
+                        mHandler.sendEmptyMessage(0x01);
                         requestTaskupdates(taskId, subTask.getId(), 0);
                     }
                 }
