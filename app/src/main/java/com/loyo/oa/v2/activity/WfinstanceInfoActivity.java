@@ -25,12 +25,15 @@ import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.ListView_inScrollView;
 
@@ -47,19 +50,20 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 审批详情
+ * */
+
 @EActivity(R.layout.activity_wfinstance_info)
 public class WfinstanceInfoActivity extends BaseActivity {
-    final int MSG_ATTACHMENT = 200;
 
     @ViewById ListView listView_wfinstance;
     @ViewById ListView_inScrollView listView_workflowNodes;
-
     @ViewById TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
     @ViewById TextView tv_memo;
     @ViewById TextView tv_time_creator;
     @ViewById TextView tv_title_role;
     @ViewById TextView tv_title_creator;
-
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_nopass;
@@ -68,50 +72,27 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById ViewGroup layout_lastwork;
     @ViewById ViewGroup layout_memo;
     @ViewById ViewGroup layout_bottom, layout_wfinstance_content;
-
     @ViewById ImageView img_wfinstance_status;
 
-    WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
-    WfInstanceValuesInfoAdapter wfInstanceValuesListViewAdapter;
+    public final int MSG_DELETE_WFINSTANCE = 100;
+    public final int MSG_ATTACHMENT = 200;
 
-    ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
-    ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
+    public WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
+    public WfInstanceValuesInfoAdapter wfInstanceValuesListViewAdapter;
+    public ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
+    public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
+    public ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
-    @Extra("data") WfInstance wfInstance;
+    @Extra("data")
+    WfInstance wfInstance;
 
-    //信鸽透传过来的id
-    @Extra("id") String mId;
-
-    final int MSG_DELETE_WFINSTANCE = 100;
-    ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
     @AfterViews
     void init() {
         super.setTitle("审批详情");
         initUI();
         updateUI();
-
-        String id = (wfInstance != null) ? wfInstance.getId() : mId;
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(id, new RCallback<WfInstance>() {
-            @Override
-            public void success(WfInstance wfInstance_current, Response response) {
-                if (wfInstance_current != null) {
-                    wfInstance = wfInstance_current;
-                    if (wfInstance_current.getWorkflowNodes() != null) {
-                        lstData_WfNodes.clear();
-                        lstData_WfNodes.addAll(wfInstance_current.getWorkflowNodes());
-                    }
-                    initData_WorkflowValues();
-                    updateUI();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast("获取审批详情失败");
-                super.failure(error);
-            }
-        });
+        requestData_wfinstance();
     }
 
     void initData_WorkflowValues() {
@@ -126,7 +107,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        //fixes bugly1178 空指针异常 v3.1.1 ykb 07-15
         if (wfInstance != null && wfInstance.getWorkflowValues() != null && wfInstance.getWorkflowValues() != null) {
             wfInstance.setAck(true);
             wfInstance.getWorkflowValues().clear();
@@ -146,9 +126,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         layout_nopass.setOnTouchListener(touch);
         layout_pass.setOnTouchListener(touch);
         layout_AttachFile.setOnTouchListener(touch);
-
         img_title_left.setOnTouchListener(touch);
-
         img_title_right.setOnTouchListener(touch);
         img_title_right.setVisibility(View.GONE);
     }
@@ -259,6 +237,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
         return builder.toString();
     }
 
+    /**
+     * 底部同意／驳回 菜单设置
+     * */
+
     void updateUI_layout_bottom() {
         if (wfInstance == null) {
             return;
@@ -288,11 +270,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (node != null && node.getExecutorUser().isCurrentUser() && node.isActive() && !node.isApproveFlag()) {
 
             if (node.isNeedApprove()) {
-                //                layout_noPass.setOnClickListener(this);
                 layout_nopass.setOnTouchListener(touch);
-                //                layout_pass.setOnClickListener(this);
                 layout_pass.setOnTouchListener(touch);
-
                 layout_bottom.setVisibility(View.VISIBLE);
                 layout_lastwork.setVisibility(View.GONE);
             } else {
@@ -300,7 +279,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 layout_nopass.setOnTouchListener(null);
                 layout_pass.setOnClickListener(null);
                 layout_pass.setOnTouchListener(null);
-
                 layout_bottom.setVisibility(View.GONE);
                 layout_lastwork.setVisibility(View.VISIBLE);
             }
@@ -308,12 +286,46 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 获取审批详情
+     * */
+    void requestData_wfinstance(){
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstance.getId(), new RCallback<WfInstance>() {
+            @Override
+            public void success(WfInstance wfInstance_current, Response response) {
+                wfInstance = wfInstance_current;
+                if (wfInstance_current.getWorkflowNodes() != null) {
+                    lstData_WfNodes.clear();
+                    lstData_WfNodes.addAll(wfInstance_current.getWorkflowNodes());
+                }
+                initData_WorkflowValues();
+                updateUI();
+
+                LogUtil.dll("详情解析数据："+MainApp.gson.toJson(wfInstance_current));
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                finish();
+            }
+        });
+    }
+
+    /**
+     * 提交审批请求
+     * */
     void setData_wfinstance_approve(int type, String comment) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", type);
         map.put("comment", comment);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(null == wfInstance ? mId : wfInstance.getId(), map, new RCallback<WfInstance>() {
+        LogUtil.dll("手机端发送数据：" + MainApp.gson.toJson(map));
+        LogUtil.dll("ID1："+ wfInstance.getId());
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance_current, Response response) {
                 Toast("审批" + getString(R.string.app_succeed));
@@ -331,9 +343,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast(error.getMessage());
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
+
         });
     }
 
@@ -353,6 +366,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             case R.id.layout_pass:
                 showApproveDialog(1);
+                LogUtil.dll("点击同意");
                 break;
             case R.id.layout_lastwork:
                 showApproveDialog(1);
@@ -370,6 +384,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * @param type 显示审批对话框
      */
     private void showApproveDialog(final int type) {
+
+
         View container = LayoutInflater.from(mContext).inflate(R.layout.dialog_wfinstance_approve, null, false);
         container.getBackground().setAlpha(70);
         TextView tv_confirm = (TextView) container.findViewById(R.id.tv_confirm);
@@ -427,7 +443,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         switch (requestCode) {
             case MSG_DELETE_WFINSTANCE:
-                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(null == wfInstance ? mId : wfInstance.getId(), new RCallback<WfInstance>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(wfInstance.getId(), new RCallback<WfInstance>() {
                     @Override
                     public void success(WfInstance wfInstance, Response response) {
                         if (null != wfInstance.getWorkflowValues()) {

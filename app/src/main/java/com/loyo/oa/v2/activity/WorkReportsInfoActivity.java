@@ -132,7 +132,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         return (mWorkReport != null) ? mWorkReport.getId() : mId;
     }
 
-
     /**
      * 获取报告详情
      */
@@ -141,7 +140,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).get(getId(), new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
-
                 LogUtil.dll("报告详情解析后：" + MainApp.gson.toJson(_workReport));
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);

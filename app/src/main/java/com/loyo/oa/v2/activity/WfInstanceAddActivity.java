@@ -101,16 +101,16 @@ public class WfInstanceAddActivity extends BaseActivity {
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     //审批内容 新建一个的对象 集合
     private List<WfinstanceViewGroup>  WfinObj=new ArrayList<WfinstanceViewGroup>();
-    BizForm mBizForm;
-    ArrayList<WfTemplate> wfTemplateArrayList;
-    ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
+    private BizForm mBizForm;
+    private ArrayList<WfTemplate> wfTemplateArrayList;
+    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
 
-    SignInGridViewAdapter signInGridViewAdapter;
-    String uuid = StringUtil.getUUID();
+    private SignInGridViewAdapter signInGridViewAdapter;
+    private String uuid = StringUtil.getUUID();
 
     //选择流程
-    AlertDialog dialog_follow;
-    String mTemplateId;
+    private AlertDialog dialog_follow;
+    private String mTemplateId;
 
     @AfterViews
     void init() {
@@ -334,8 +334,6 @@ public class WfInstanceAddActivity extends BaseActivity {
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
             case R.id.ll_dept:
-//                Toast(" 点击成功？？？");
-//                info();
 
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;
@@ -431,26 +429,25 @@ public class WfInstanceAddActivity extends BaseActivity {
             }
         }*/
 
-        HashMap<String, Object> jsonObject = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
 
         LogUtil.d(workflowValues.size()+" 审批 创建 : " + projectId);
 
-        jsonObject.put("bizformId", mBizForm.getId());//表单Id
-        jsonObject.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
-        jsonObject.put("deptId",deptId);//部门 id
-        jsonObject.put("workflowValues", workflowValues);//流程 内容
-        jsonObject.put("wftemplateId", mTemplateId);//流程模板Id
+        map.put("bizformId", mBizForm.getId());//表单Id
+        map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
+        map.put("deptId",deptId);//部门 id
+        map.put("workflowValues", workflowValues);//流程 内容
+        map.put("wftemplateId", mTemplateId);//流程模板Id
         if(!TextUtils.isEmpty(projectId)){
-            jsonObject.put("projectId", projectId);//项目Id
+            map.put("projectId", projectId);//项目Id
         }
-        //        jsonObject_workflowValues.put("wfInstanceValuesDatas", jsonObject_wfInstanceValuesDatas);
         if (uuid != null && lstData_Attachment.size() > 0) {
-            jsonObject.put("attachmentUUId", uuid);
+            map.put("attachmentUUId", uuid);
         }
-        jsonObject.put("memo", edt_memo.getText().toString().trim()); //备注
+        map.put("memo", edt_memo.getText().toString().trim()); //备注
 
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(jsonObject, new RCallback<WfInstance>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance, Response response) {
                 if (wfInstance != null) {

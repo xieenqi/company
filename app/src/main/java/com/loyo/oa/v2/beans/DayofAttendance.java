@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class DayofAttendance implements Serializable {
 
-    private String datename;// (string, optional): ,
+    private String dateName;// (string, optional): ,
     private AttendanceRecord in;// (AttendanceRecord, optional): ,
     private AttendanceRecord out;// (AttendanceRecord, optional): ,
     private User user;// (&{organization User}, optional):
@@ -40,11 +40,11 @@ public class DayofAttendance implements Serializable {
     }
 
     public String getDatename() {
-        return datename;
+        return dateName;
     }
 
     public void setDatename(String datename) {
-        this.datename = datename;
+        this.dateName = datename;
     }
 
 }

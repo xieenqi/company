@@ -170,9 +170,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 tv_count_title.setText("本日总计:");
                 break;
         }
-        tv_later.setText(attendanceList.getLatecount() + "");
-        tv_leave_early.setText(attendanceList.getEarlycount() + "");
-        tv_unattendance.setText(attendanceList.getNoreccount() + "");
+        tv_later.setText(attendanceList.getLateCount() + "");
+        tv_leave_early.setText(attendanceList.getEarlyCount() + "");
+        tv_unattendance.setText(attendanceList.getNoreCcount() + "");
         tv_field_work.setText(attendanceList.getOutsidecount() + "");
     }
 
