@@ -9,11 +9,13 @@ import com.loyo.oa.v2.activity.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportsSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
 
@@ -65,15 +67,18 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void GetData() {
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+        map.put("reportType", type);
         map.put("sendType", sendType);
         map.put("isReviewed", status);
-        map.put("reportType", type);
-        map.put("endAt", System.currentTimeMillis() / 1000);
-        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        //map.put("keyword", "");
+        //map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        //map.put("endAt", System.currentTimeMillis() / 1000);
 
+        LogUtil.dll("客户端发送数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReports(map, this);
     }
 

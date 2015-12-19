@@ -21,13 +21,16 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -38,10 +41,16 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+/**
+ * 报告详情
+ */
 
 @EActivity(R.layout.activity_workreports_info)
 public class WorkReportsInfoActivity extends BaseActivity {
@@ -51,45 +60,69 @@ public class WorkReportsInfoActivity extends BaseActivity {
     final int MSG_DISCUSSION = 300;
     final int MSG_REVIEW = 400;
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
-    @ViewById ViewGroup layout_content;
-    @ViewById ViewGroup layout_score;
-    @ViewById ViewGroup layout_attachment;
-    @ViewById ViewGroup layout_discussion;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
+    @ViewById
+    ViewGroup layout_content;
+    @ViewById
+    ViewGroup layout_score;
+    @ViewById
+    ViewGroup layout_attachment;
+    @ViewById
+    ViewGroup layout_discussion;
 
-    @ViewById ImageView img_workreport_status;
-    @ViewById Button btn_workreport_review;
-    @ViewById TextView tv_reviewer;
-    @ViewById TextView tv_toUser;
-    @ViewById TextView tv_workReport_time;
-    @ViewById TextView tv_attachment_count;
-    @ViewById TextView tv_discussion_count;
-    @ViewById TextView tv_reviewer_;
-    @ViewById TextView tv_ptoject;
+    @ViewById
+    ImageView img_workreport_status;
+    @ViewById
+    Button btn_workreport_review;
+    @ViewById
+    TextView tv_reviewer;
+    @ViewById
+    TextView tv_toUser;
+    @ViewById
+    TextView tv_workReport_time;
+    @ViewById
+    TextView tv_attachment_count;
+    @ViewById
+    TextView tv_discussion_count;
+    @ViewById
+    TextView tv_reviewer_;
+    @ViewById
+    TextView tv_ptoject;
 
-    @ViewById EditText edt_workReport_title;
-    @ViewById EditText edt_content;
-    @ViewById WebView webView_content;
-    @ViewById RatingBar ratingBar_workReport;
+    @ViewById
+    EditText edt_workReport_title;
+    @ViewById
+    EditText edt_content;
+    @ViewById
+    WebView webView_content;
+    @ViewById
+    RatingBar ratingBar_workReport;
 
     //统计数据
-    @ViewById TextView tv_crm;
-    @ViewById TextView tv_new_customers_num;
-    @ViewById TextView tv_new_visit_num;
-    @ViewById TextView tv_visit_customers_num;
+    @ViewById
+    TextView tv_crm;
+    @ViewById
+    TextView tv_new_customers_num;
+    @ViewById
+    TextView tv_new_visit_num;
+    @ViewById
+    TextView tv_visit_customers_num;
 
-    @Extra("workreport") WorkReport mWorkReport;
+    @Extra("workreport")
+    WorkReport mWorkReport;
 
     //信鸽透传过来的id
-    @Extra("id") String mId;
+    @Extra("id")
+    String mId;
 
     PaginationX<Discussion> mPageDiscussion;
 
     @AfterViews
     void init() {
         initUI();
-        updateUI();
         setTouchView(R.id.layout_touch);
         getData_WorkReport();
         getDiscussion();
@@ -99,17 +132,25 @@ public class WorkReportsInfoActivity extends BaseActivity {
         return (mWorkReport != null) ? mWorkReport.getId() : mId;
     }
 
+
+    /**
+     * 获取报告详情
+     */
     @Background
     void getData_WorkReport() {
         app.getRestAdapter().create(IWorkReport.class).get(getId(), new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
-                if (_workReport == null) {
-                    return;
-                }
 
+                LogUtil.dll("报告详情解析后：" + MainApp.gson.toJson(_workReport));
                 mWorkReport = _workReport;
-                updateUI();
+                updateUI(mWorkReport);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -119,12 +160,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).getDiscussions(getId(), new RCallback<PaginationX<Discussion>>() {
             @Override
             public void success(PaginationX<Discussion> discussionPaginationX, Response response) {
-                if (discussionPaginationX == null) {
-                    return;
-                }
-
                 mPageDiscussion = discussionPaginationX;
                 showDiscussion();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -143,7 +186,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     }
 
     @UiThread
-    void updateUI() {
+    void updateUI(WorkReport mWorkReport) {
         if (mWorkReport == null) {
             return;
         }
@@ -153,6 +196,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
             tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
         }
+
 
         StringBuilder title = new StringBuilder(mWorkReport.getCreator().name + "提交 ");
         String reportDate = "";
@@ -191,13 +235,12 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
 
-        if (reviewer != null) {
-            tv_reviewer.setText(reviewer.getName());
-        }
+        tv_reviewer.setText(mWorkReport.getReviewer().getUser().getName());
+        tv_toUser.setText(getJoinUserNames());
 
-        tv_toUser.setText(mWorkReport.getJoinUserNames());
         tv_workReport_time.setText("提交时间：" + date);
-        if(null!=mWorkReport.getProject()){
+
+        if (null != mWorkReport.getProject()) {
             tv_ptoject.setText(mWorkReport.getProject().getTitle());
         }
 
@@ -227,7 +270,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 btn_workreport_review.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
 
                 ratingBar_workReport.setIsIndicator(false);
-            }else {
+            } else {
                 btn_workreport_review.setVisibility(View.GONE);
             }
 
@@ -340,7 +383,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 标题左右监听
-     * */
+     */
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_workreport_review})
     void onClick(View v) {
         switch (v.getId()) {
@@ -367,5 +410,22 @@ public class WorkReportsInfoActivity extends BaseActivity {
         Intent intent = new Intent(this, WorkReportReviewActivity_.class);
         intent.putExtra("mWorkReportId", mWorkReport.getId());
         startActivityForResult(intent, MSG_REVIEW);
+    }
+
+
+    /**
+     * 获取参与人
+     *
+     * @return
+     */
+    public String getJoinUserNames() {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < mWorkReport.getMembers().getUsers().size(); i++) {
+            result.append(mWorkReport.getMembers().getUsers().get(i).getName());
+            if (i < mWorkReport.getMembers().getUsers().size() - 1) {
+                result.append(",");
+            }
+        }
+        return result.toString();
     }
 }

@@ -227,6 +227,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
+
         LogUtil.d(" 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
         LogUtil.d(" 项目、任务、报告、审批的统一界面 成功 json： " +MainApp.gson.toJson(tPaginationX));
         try {
@@ -252,6 +253,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
         changeAdapter();
         expand();
+
+        LogUtil.dll("result:"+MainApp.gson.toJson(tPaginationX));
 
     }
 

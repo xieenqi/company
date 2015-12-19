@@ -122,8 +122,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             layout_discuss.setVisibility(View.VISIBLE);
             final WorkReport workReport = (WorkReport) o;
             DiscussCounter discussCounter = workReport.getDiscuss();
-            iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
-            tv_discuss_num.setText(discussCounter.getTotal() + "");
+            //iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
+            //tv_discuss_num.setText(discussCounter.getTotal() + "");
             layout_discuss.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

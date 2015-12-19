@@ -23,6 +23,7 @@ import retrofit.http.QueryMap;
  * Created by pj on 15/5/11.
  */
 public interface IWorkReport {
+
     @GET("/discussions?bizType=1")
     void getDiscussions(@Query("bizId") String id, retrofit.Callback<PaginationX<Discussion>> cb);
 

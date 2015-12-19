@@ -25,13 +25,16 @@ import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -96,7 +99,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             if (null != getArguments()) {
                 if (getArguments().containsKey("type")) {
                     type = getArguments().getInt("type");
-                    //app.logUtil.e("type : " + type);
                 }
             }
             initTimeStr(System.currentTimeMillis());
@@ -316,7 +318,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
-                //System.out.print(MainApp.gson.toJson(result) + " 请求<<<<<<.....>>>>>>的URL：  " + response.getUrl());
                 dg.dismiss();
                 attendanceList=result.records;
                 attendances.addAll(result.records.getAttendances());
@@ -324,12 +325,18 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 bindData();
                 if(page!=1){
                     adapter.notifyDataSetChanged();
-
                 }
+
+                try {
+                    LogUtil.dll("考勤:"+Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
             @Override
             public void failure(RetrofitError error) {
-                Toast(" 考勤数据 "+error.getMessage());
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 dg.dismiss();
             }
