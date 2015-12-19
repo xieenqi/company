@@ -16,9 +16,11 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -142,7 +144,7 @@ public class ProjectAddActivity extends BaseActivity {
 
         tv_managers.setText(mManagerNames);
 
-        ArrayList<ProjectMember> projectManagers = getProjectManager();
+        ArrayList<ManagersMembers> projectManagers = getProjectManager();
         if (mProject != null && !ListUtil.IsEmpty(projectManagers)) {
             mProject.setManagers(projectManagers);
         }
@@ -190,11 +192,11 @@ public class ProjectAddActivity extends BaseActivity {
                 if (TextUtils.isEmpty(memberIds[i])) {
                     continue;
                 }
-                String uId =memberIds[i];
+                String uId = memberIds[i];
                 if (!TextUtils.isEmpty(uId)) {
                     User u = new User();
-                    u.id=uId;
-                    u.realname=memberNames[i];
+                    u.id = uId;
+                    u.realname = memberNames[i];
 
                     ProjectMember member = new ProjectMember(uId, false);
                     member.setUserId(uId);
@@ -210,7 +212,7 @@ public class ProjectAddActivity extends BaseActivity {
         if (mProject != null && !ListUtil.IsEmpty(mProject.getManagers()) && !ListUtil.IsEmpty(mProject.getMembers())) {
             mProjectMember.removeAll(mProject.getManagers());
         } else {
-            ArrayList<ProjectMember> projectManagers = getProjectManager();
+            ArrayList<ManagersMembers> projectManagers = getProjectManager();
             if (!ListUtil.IsEmpty(projectManagers)) {
                 mProjectMember.removeAll(projectManagers);
             }
@@ -240,7 +242,7 @@ public class ProjectAddActivity extends BaseActivity {
             return;
         }
 
-        String title = edt_title.getText().toString().trim();
+        String title = edt_title.getText().toString().trim();//标题
         if (TextUtils.isEmpty(title)) {
             Global.Toast("项目标题不能为空!");
             return;
@@ -249,7 +251,7 @@ public class ProjectAddActivity extends BaseActivity {
         ProjectTransObj projectTransObj = new ProjectTransObj();
         projectTransObj.title = title;
 
-        String content = edt_content.getText().toString().trim();
+        String content = edt_content.getText().toString().trim();//内容
         if (!TextUtils.isEmpty(content)) {
             projectTransObj.content = content;
         }
@@ -257,7 +259,7 @@ public class ProjectAddActivity extends BaseActivity {
         projectTransObj.managers = getProjectManager();
 
         if (!TextUtils.isEmpty(mMemberIds) && mAdapter != null) {
-            projectTransObj.members = mAdapter.GetProjectMembers();
+            projectTransObj.members = getProjectMenbers();
         }
 
         if (mUpdate) {
@@ -269,6 +271,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     @Background
     void CreateProject(ProjectTransObj obj) {
+        LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
         app.getRestAdapter().create(IProject.class).Create(obj, new RCallback<Project>() {
             @Override
             public void success(Project project, Response response) {
@@ -278,15 +281,15 @@ public class ProjectAddActivity extends BaseActivity {
                 app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
             }
 
-
             @Override
             public void failure(RetrofitError error) {
-                if(error.getKind() == RetrofitError.Kind.NETWORK){
-                    Toast("请检查您的网络连接");
-                }
-                else if(error.getResponse().getStatus() == 500){
-                    Toast("网络异常500，请稍候再试");
-                }
+                HttpErrorCheck.checkError(error);
+//                if(error.getKind() == RetrofitError.Kind.NETWORK){
+//                    Toast("请检查您的网络连接");
+//                }
+//                else if(error.getResponse().getStatus() == 500){
+//                    Toast("网络异常500，请稍候再试");
+//                }
             }
         });
     }
@@ -303,30 +306,66 @@ public class ProjectAddActivity extends BaseActivity {
 
                 app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
             }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
         });
     }
 
-    ArrayList<ProjectMember> getProjectManager() {
+    ArrayList<ManagersMembers> getProjectManager() {
         if (TextUtils.isEmpty(mManagerIds)) {
             return new ArrayList<>();
         }
-
         String[] arr = mManagerIds.split(",");
-        ArrayList<ProjectMember> members = new ArrayList<>();
-
+        ArrayList<ManagersMembers> members = new ArrayList<>();
         for (String a : arr) {
             if (!TextUtils.isEmpty(a)) {
-                members.add(new ProjectMember(a, true));
+                ManagersMembers mm = new ManagersMembers();
+                mm.canreadall = true;
+                mm.user.id = a;
+                members.add(mm);
             }
         }
-
         return members;
+    }
+
+    /**
+     * 组装 参与人
+     *
+     * @return
+     */
+    public List<ManagersMembers> getProjectMenbers() {
+        ArrayList<ProjectMember> data = mAdapter.GetProjectMembers();
+        ArrayList<ManagersMembers> newData = new ArrayList<>();
+        for (ProjectMember element : data) {
+            ManagersMembers menb = new ManagersMembers();
+            menb.canreadall = false;
+            User userOlde = element.getUser();
+            menb.user.id = userOlde.id;
+            menb.user.avatar = userOlde.avatar;
+            menb.user.name = userOlde.name;
+            newData.add(menb);
+        }
+        return newData;
     }
 
     public class ProjectTransObj {
         public String title;
         public String content;
-        public List<ProjectMember> members;
-        public List<ProjectMember> managers;
+        public List<ManagersMembers> members;
+        public List<ManagersMembers> managers;
+    }
+
+    public class ManagersMembers {
+        public boolean canreadall;
+        public NewUser user=new NewUser();
+    }
+
+    public class NewUser {
+        public String avatar;
+        public String id;
+        public String name;
     }
 }

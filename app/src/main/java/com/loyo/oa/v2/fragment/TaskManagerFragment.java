@@ -9,11 +9,13 @@ import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
 
@@ -42,6 +44,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         map.put("status", mStatus);
         map.put("endAt", System.currentTimeMillis() / 1000);
         map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(map, this);
 
     }

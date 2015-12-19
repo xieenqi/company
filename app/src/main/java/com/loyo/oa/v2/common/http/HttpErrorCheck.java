@@ -18,7 +18,6 @@ public class HttpErrorCheck {
         if (null != mCurrentToast) {
             mCurrentToast.cancel();
         }
-
         mCurrentToast = Toast.makeText(MainApp.getMainApp().getBaseContext(), msg, Toast.LENGTH_SHORT);
         mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
         mCurrentToast.show();
