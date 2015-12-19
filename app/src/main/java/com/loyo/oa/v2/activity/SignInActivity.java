@@ -23,6 +23,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -212,15 +213,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
-
+LogUtil.d(" 新增拜访传递数据："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(LegWork legWork, Response response) {
                 //待接口调试
-                LogUtil.dll("success result" + MainApp.gson.toJson(legWork));
-                LogUtil.dll("success code" + response.getStatus());
-                LogUtil.dll("URL" + response.getUrl());
-
+                LogUtil.d(" 新增拜访传result："+MainApp.gson.toJson(legWork));
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
@@ -232,21 +230,22 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else {
                     Toast("提交失败" + response.getStatus());
-                    //legWork.setCreator(MainApp.user.toShortUser());
+                    legWork.creator=MainApp.user.toShortUser();
                 }
 
             }
 
             @Override
             public void failure(RetrofitError error) {
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    LogUtil.dll("请检查您的网络连接");
-                } else if (error.getResponse().getStatus() == 500) {
-                    Toast("网络异常500，请稍候再试");
-                } else {
-                    Toast(error.getMessage());
-                }
-                LogUtil.d(" 签到拜访错误: " + error.getMessage());
+                HttpErrorCheck.checkError(error);
+//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                    LogUtil.dll("请检查您的网络连接");
+//                } else if (error.getResponse().getStatus() == 500) {
+//                    Toast("网络异常500，请稍候再试");
+//                } else {
+//                    Toast(error.getMessage());
+//                }
+//                LogUtil.d(" 签到拜访错误: " + error.getMessage());
             }
         });
     }
@@ -345,7 +344,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.dll("我销毁勒");
     }
 
     @Override

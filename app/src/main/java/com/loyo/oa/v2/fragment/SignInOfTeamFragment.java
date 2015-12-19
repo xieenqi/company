@@ -20,10 +20,12 @@ import com.loyo.oa.v2.beans.TeamLegworkDetail;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -39,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -97,7 +100,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    User user = ((TeamLegworkDetail) adapter.getItem(i - 1)).getUser().toUser();
+                    User user = ((TeamLegworkDetail) adapter.getItem(i - 1)).user.toUser();
                     previewLegWorks(user);
                 }
             });
@@ -217,8 +220,8 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
         } else {
             adapter.notifyDataSetChanged();
         }
-        String visitNum= String.valueOf(legworkPaginationX.getRecords().getVisitNum());
-        String visitCustomerNum=String.valueOf(legworkPaginationX.getRecords().getCustNum());
+        String visitNum= String.valueOf(legworkPaginationX.records.VistNum);
+        String visitCustomerNum=String.valueOf(legworkPaginationX.records.CustNum);
         String teamVisitStr="团队共拜访 "+visitNum+" 次 ";
         String teamVisitCustomerStr="，共拜访 "+visitCustomerNum+" 位客户";
         tv_count_title1.setText(Utils.modifyTextColor(teamVisitStr,getResources().getColor(R.color.title_bg1),"团队共拜访 ".length(),"团队共拜访 ".length()+visitNum.length()));
@@ -235,22 +238,30 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
         map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
         map.put("endAt", endAt / 1000);
         map.put("custId", "");
-        map.put("pageIndex", legworkPaginationX.getPageIndex());
+        map.put("pageIndex", legworkPaginationX.pageIndex);
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getTeamLegworks(map, new RCallback<PaginationLegWork>() {
             @Override
             public void success(PaginationLegWork paginationX, Response response) {
+                LogUtil.d(" 团队客户拜访url： "+response.getUrl());
+                LogUtil.d(" 团队客户拜访json： "+MainApp.gson.toJson(paginationX));
                 legworkPaginationX = paginationX;
                 if (isTopAdd) {
                     legWorks.clear();
                 }
-                if (null != paginationX.getRecords()) {
-                    legWorks.addAll(paginationX.getRecords().getDetail());
+                if (null != paginationX.records) {
+                    legWorks.addAll(paginationX.records.Detail);
                 } else {
                     legWorks.clear();
                 }
                 bindData();
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                lv.onRefreshComplete();
+                super.failure(error);
             }
         });
     }
@@ -268,7 +279,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        legworkPaginationX.setPageIndex(1);
+        legworkPaginationX.pageIndex=1;
         isTopAdd = true;
         getData();
     }
@@ -276,7 +287,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = false;
-        legworkPaginationX.setPageIndex(legworkPaginationX.getPageIndex() + 1);
+        legworkPaginationX.pageIndex=(legworkPaginationX.pageIndex + 1);
         getData();
     }
 
@@ -309,9 +320,9 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             TextView tv_visit_num = ViewHolder.get(view, R.id.tv_visitnum);
             //            TextView tv_customer_num = ViewHolder.get(view, R.id.tv_visitcustomers);
 
-            ImageLoader.getInstance().displayImage(legWork.getUser().getAvatar(), avatar);
-            tv_name.setText(legWork.getUser().getName());
-            tv_visit_num.setText("拜访次数 " + legWork.getVisitCount());
+            ImageLoader.getInstance().displayImage(legWork.user.getAvatar(), avatar);
+            tv_name.setText(legWork.user.getName());
+            tv_visit_num.setText("拜访次数 " + legWork.visitcount);
             //            tv_customer_num.setText("拜访客户数 "+legWork.getTotalCustCount());
             //            tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt() * 1000));
 

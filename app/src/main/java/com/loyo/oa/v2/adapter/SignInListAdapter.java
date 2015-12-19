@@ -65,15 +65,15 @@ public class  SignInListAdapter extends BaseAdapter {
         TextView tv_time = ViewHolder.get(view, R.id.tv_time);
 
         if(mType==TYPE_LIST_OF_CUSTOMER){
-            tv_customer_name.setText("拜访人："+legWork.getCreator().getName());
+            tv_customer_name.setText("拜访人："+legWork.creator.getName());
             view.findViewById(R.id.layout_name).setVisibility(View.GONE);
 
         }else if (mType==TYPE_LIST_OF_USER){
             view.findViewById(R.id.layout_name).setVisibility(View.VISIBLE);
-            tv_customer_name.setText(legWork.getCustomerName());
-            tv_user_name.setText(legWork.getCreator().getName());
+            tv_customer_name.setText(legWork.customerName);
+            tv_user_name.setText(legWork.creator.getName());
         }
-        tv_address.setText("地址："+legWork.getAddress());
+        tv_address.setText("地址："+legWork.address);
         tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt()*1000));
 
         return view;

@@ -16,11 +16,13 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SignInActivity;
 import com.loyo.oa.v2.activity.SignInfoActivity;
 import com.loyo.oa.v2.adapter.SignInListAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -28,11 +30,9 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -251,6 +251,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {
+                LogUtil.d(" 我客户拜访url： "+response.getUrl());
+                LogUtil.d(" 我客户拜访json： "+ MainApp.gson.toJson(paginationX));
                 lv.onRefreshComplete();
                 workPaginationX = paginationX;
                 if (isTopAdd) {
@@ -258,17 +260,11 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 }
                 legWorks.addAll(paginationX.getRecords());
                 bindData();
-
-                try {
-                    LogUtil.dll("我的拜访:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 lv.onRefreshComplete();
                 super.failure(error);
             }
@@ -284,8 +280,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
         Intent intent = new Intent(mActivity, SignInfoActivity.class);
         intent.putExtra(LegWork.class.getName(), legWork);
-        intent.putExtra("mCustomer", legWork.getCustomer());
-        intent.putExtra("Id", legWork.getCustomerId());
+        intent.putExtra("mCustomer", legWork.customer);
+        intent.putExtra("Id", legWork.customerId);
         startActivity(intent);
 
     }

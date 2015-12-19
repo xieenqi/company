@@ -16,10 +16,12 @@ import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -38,8 +40,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
+ * 描述 :【拜访签到列表】
  * com.loyo.oa.v2.activity
- * 描述 :拜访签到列表
  * 作者 : ykb
  * 时间 : 15/9/25.
  */
@@ -87,6 +89,9 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         onBackPressed();
     }
 
+    /**
+     * 新增拜访记录
+     */
     @Click(R.id.layout_add)
     void createNewSignIn() {
         Bundle b = new Bundle();
@@ -132,17 +137,19 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {
+                LogUtil.d(" 拜访签到列表数据： "+MainApp.gson.toJson(paginationX));
                 workPaginationX = paginationX;
                 lv.onRefreshComplete();
                 if (isTopAdd) {
                     legWorks.clear();
                 }
-               // legWorks.addAll(paginationX.getRecords());
+                legWorks.addAll(paginationX.getRecords());
                 bindData();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 lv.onRefreshComplete();
                 super.failure(error);
             }
