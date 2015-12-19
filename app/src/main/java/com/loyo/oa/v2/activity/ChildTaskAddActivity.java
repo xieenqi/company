@@ -64,11 +64,9 @@ public class ChildTaskAddActivity extends BaseActivity {
     TaskCheckPoint mChildTask = new TaskCheckPoint();
 
     NewUser newUser;
-    ProgressDialog pd;
 
     @AfterViews
     void intUi() {
-        pd=new ProgressDialog(this);
         setTouchView(-1);
         layout_child_add_responser.setOnTouchListener(Global.GetTouch());
         btn_child_add_complete.setOnTouchListener(Global.GetTouch());
@@ -263,7 +261,7 @@ public class ChildTaskAddActivity extends BaseActivity {
      * 创建子任务
      */
     private synchronized void create() {
-pd.show();
+
         if (null == newUser) {
             Toast("请选择负责人");
             return;
@@ -275,14 +273,13 @@ pd.show();
         mChildTask.setTitle(et_child_add_content.getText().toString());
         mChildTask.setResponsiblePerson(newUser);
 
-        HashMap<String, Object> datas = new HashMap<String, Object>();
-        datas.put("content", mChildTask.getTitle());
-        datas.put("responsiblePerson", mChildTask.getResponsiblePerson());
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("content", mChildTask.getTitle());
+        map.put("responsiblePerson", mChildTask.getResponsiblePerson());
 
-        MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), datas, new RCallback<TaskCheckPoint>() {
+        MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(TaskCheckPoint taskCheckPoint, Response response) {
-                pd.dismiss();
                 Toast("创建子任务成功");
                 mChildTask = taskCheckPoint;
                 Intent intent = new Intent();
@@ -292,7 +289,6 @@ pd.show();
 
             @Override
             public void failure(RetrofitError error) {
-                pd.dismiss();
                 Toast("创建子任务失败");
                 LogUtil.d("LOG","创建子任务失败"+error.getMessage());
                 super.failure(error);
