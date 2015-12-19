@@ -37,5 +37,4 @@ public class HttpErrorCheck {
         LogUtil.d("失败的错误信息："+error.getMessage());
     }
 
-
 }

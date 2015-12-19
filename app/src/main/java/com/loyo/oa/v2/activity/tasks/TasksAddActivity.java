@@ -34,6 +34,7 @@ import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
@@ -232,8 +233,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-
-
+                HttpErrorCheck.checkError(error);
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
                 } else if (error.getKind() == RetrofitError.Kind.HTTP) {
@@ -414,7 +414,6 @@ public class TasksAddActivity extends BaseActivity {
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 //负责人回调
                 if (user != null) {
-
                     setResponsiblePersion(user);
                 }
                 //参与人回调

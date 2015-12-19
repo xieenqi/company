@@ -111,8 +111,9 @@ public class TasksEditActivity extends BaseActivity {
         if(null!=mTask.getResponsiblePerson()) {
             tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
         }
+
         tv_toUsers.setText(NewUser.GetNewUserNames(mTask.getJoinedUsers()));
-        tv_deadline.setText(app.df3.format(new Date(mTask.getActualEndAt())));
+        tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt())));
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setChecked(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());
@@ -160,7 +161,7 @@ public class TasksEditActivity extends BaseActivity {
                     break;
                 }
 
-                if (mTask.getActualEndAt() <= 0) {
+                if (mTask.getPlanEndAt() <= 0) {
                     Toast("截止日期" + getString(R.string.app_no_null));
                     break;
                 }
@@ -175,7 +176,7 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("content", content);
                 map.put("responsiblePersons", Arrays.asList(new Reviewer(mTask.getResponsiblePerson())));
                 map.put("members", mTask.getMembers());
-                map.put("actualendAt", mTask.getActualEndAt());
+                map.put("planendAt", mTask.getPlanEndAt());
                 map.put("remindflag", mTask.getRemindTime() > 0);
                 map.put("remindtime", mTask.getRemindTime());
                 map.put("reworkflag", switch_approve.isChecked());
@@ -226,7 +227,7 @@ public class TasksEditActivity extends BaseActivity {
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
                         String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mTask.setActualEndAt(DateTool.getDateToTimestamp(str, app.df3));
+                        mTask.setPlanEndAt(DateTool.getDateToTimestamp(str, app.df3));
                     }
                 });
                 break;

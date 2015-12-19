@@ -182,7 +182,7 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         if (mTask.getResponsiblePerson() != null) {
-            realName = mTask.getResponsiblePerson().getRealname();
+            realName = mTask.getResponsiblePerson().getName();
             tv_responsiblePerson.setText("负责人:" + realName);
         }
 
@@ -241,8 +241,8 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-        if (mTask.getActualEndAt() > 0) {
-            String s = app.df3.format(new Date(mTask.getActualEndAt())) + " 截止";
+        if (mTask.getPlanEndAt() > 0) {
+            String s = app.df3.format(new Date(mTask.getPlanEndAt())) + " 截止";
 
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
