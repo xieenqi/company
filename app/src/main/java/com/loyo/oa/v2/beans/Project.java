@@ -13,7 +13,7 @@ import java.util.Date;
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
-public class Project extends BaseBeans implements Serializable{
+public class Project extends BaseBeans {
 
     public static final int STATUS_PROCESSING = 1;  //进行中
     public static final int STATUS_FINISHED = 0;    //已完成
@@ -38,12 +38,12 @@ public class Project extends BaseBeans implements Serializable{
     public BizExtData bizExtData;
     public ArchiveData archiveData;
 
-    public class BizExtData {
+    public class BizExtData implements Serializable{
         public int BizExtData;
         public int attachmentCount;
     }
 
-    public class ArchiveData {
+    public class ArchiveData implements Serializable{
         public int discuss;
         public int approval;
         public int task;

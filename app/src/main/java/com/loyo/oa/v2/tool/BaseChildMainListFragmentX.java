@@ -171,6 +171,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * 新建 一个任务 ，报告，审批
+     */
     @Override
     public void addNewItem() {
         switch (type) {
@@ -193,7 +196,8 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
      */
     private void goToCreatePage(Class<?> _class) {
         Intent intent = new Intent(mActivity, _class);
-        intent.putExtra("project", mProject);
+        intent.putExtra("projectId", mProject.id);
+        intent.putExtra("projectTitle", mProject.title);
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
@@ -208,6 +212,11 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 
+    /**
+     * 相当于 item 监听
+     * @param groupPosition
+     * @param childPosition
+     */
     @Override
     public void openItem(int groupPosition, int childPosition) {
         switch (type) {

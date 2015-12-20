@@ -103,7 +103,9 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     GridView gridView_photo;
     @Extra
-    Project project;
+    String projectId;
+    @Extra
+    String projectTitle;
 
     private AlertDialog dialog_Product;
     private SignInGridViewAdapter signInGridViewAdapter;
@@ -173,8 +175,8 @@ public class TasksAddActivity extends BaseActivity {
             tv_deadline.setText(app.df3.format(new Date(mDeadline * 1000)));
         }*/
 
-        if (null != project) {
-            tv_Project.setText(project.title);
+        if (!TextUtils.isEmpty(projectTitle)) {
+            tv_Project.setText(projectTitle);
         }
         getBundle();
     }
@@ -203,8 +205,8 @@ public class TasksAddActivity extends BaseActivity {
 
         LogUtil.dll("发送参数："+MainApp.gson.toJson(map));
 
-        if (null != project) {
-            map.put("projectId", project.getId());
+        if (!TextUtils.isEmpty(projectId)) {
+            map.put("projectId", projectId);
         }
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
@@ -396,9 +398,9 @@ public class TasksAddActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                project = _project;
-                if (null != project) {
-                    tv_Project.setText(project.title);
+                projectId=_project.id;
+                if (null != _project) {
+                    tv_Project.setText(_project.title);
                 } else {
                     tv_Project.setText("无");
                 }
