@@ -431,7 +431,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //项目
             else if (o instanceof Project) {
                 Project project = (Project) o;
-                if (project.getStatus() == 1) {
+                if (project.status == 1) {
                     status.setImageResource(R.drawable.task_status_1);
                 } else {
                     status.setImageResource(R.drawable.img_project_complete);
@@ -443,9 +443,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     Global.ProcException(e);
                 }
 
-                content.setText(project.getContent());
+                content.setText(project.content);
                 ack.setVisibility(View.GONE);
-                title.setText(project.getTitle());
+                title.setText(project.title);
             }
             //客户
             else if (o instanceof Customer) {

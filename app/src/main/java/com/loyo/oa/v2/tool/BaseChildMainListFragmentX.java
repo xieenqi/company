@@ -68,7 +68,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     @Override
     public void onProjectChange(int status) {
         if (null != mProject) {
-            mProject.setStatus(status);
+            mProject.status=status;
         }
         if (layout_add == null) {
             return;
@@ -90,7 +90,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
             mInflater.inflate(R.layout.item_sign_show_group, indicatorGroup, true);
         }
 
-        if (mProject != null && mProject.getStatus() == Project.STATUS_FINISHED) {
+        if (mProject != null && mProject.status == Project.STATUS_FINISHED) {
             layout_add.setVisibility(View.GONE);
         } else {
             layout_add.setVisibility(View.VISIBLE);

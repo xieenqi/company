@@ -100,13 +100,13 @@ public class ProjectAddActivity extends BaseActivity {
             return;
         }
 
-        edt_title.setText(mProject.getTitle());
-        edt_content.setText(mProject.getContent());
+        edt_title.setText(mProject.title);
+        edt_content.setText(mProject.content);
 
-        mManagerIds = ProjectMember.GetUserIds(mProject.getManagers());
-        mManagerNames = ProjectMember.GetUserNames(mProject.getManagers());
-        mMemberIds = ProjectMember.GetUserIds(mProject.getMembers());
-        mMemberNames = ProjectMember.GetUserNames(mProject.getMembers());
+        mManagerIds = ProjectMember.GetUserIds(mProject.managers);
+        mManagerNames = ProjectMember.GetUserNames(mProject.managers);
+        mMemberIds = ProjectMember.GetUserIds(mProject.managers);
+        mMemberNames = ProjectMember.GetUserNames(mProject.managers);
 
         tv_managers.setText(mManagerNames);
         setMemberOnActivityResult();
@@ -149,8 +149,8 @@ public class ProjectAddActivity extends BaseActivity {
             mProject.setManagers(projectManagers);
         }
 
-        if (mProject != null && !ListUtil.IsEmpty(mProject.getManagers())) {
-            if (mProjectMember.removeAll(mProject.getManagers())) {
+        if (mProject != null && !ListUtil.IsEmpty(mProject.managers)) {
+            if (mProjectMember.removeAll(mProject.managers)) {
                 setMemberOnActivityResult();
             }
         }
@@ -179,8 +179,8 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         if (mUpdate) {
-            if (mProject != null && !ListUtil.IsEmpty(mProject.getMembers())) {
-                mProjectMember = mProject.getMembers();
+            if (mProject != null && !ListUtil.IsEmpty(mProject.members)) {
+                mProjectMember = mProject.members;
             }
         }
 
@@ -209,8 +209,8 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         // 从Members中去掉与Manager重复的用户
-        if (mProject != null && !ListUtil.IsEmpty(mProject.getManagers()) && !ListUtil.IsEmpty(mProject.getMembers())) {
-            mProjectMember.removeAll(mProject.getManagers());
+        if (mProject != null && !ListUtil.IsEmpty(mProject.managers) && !ListUtil.IsEmpty(mProject.managers)) {
+            mProjectMember.removeAll(mProject.managers);
         } else {
             ArrayList<ManagersMembers> projectManagers = getProjectManager();
             if (!ListUtil.IsEmpty(projectManagers)) {
@@ -219,7 +219,7 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         if (mProject != null) {
-            mProject.setMembers(mProjectMember);
+            mProject.members=mProjectMember;
         }
 
         mAdapter = new ProjectMemberListViewAdapter(this, mProjectMember);

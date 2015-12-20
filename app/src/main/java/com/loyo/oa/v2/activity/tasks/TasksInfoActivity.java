@@ -198,7 +198,7 @@ public class TasksInfoActivity extends BaseActivity {
             }
         }
         if (null != mTask.getProject()) {
-            beProjects = mTask.getProject().getTitle();
+            beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
         }
     }

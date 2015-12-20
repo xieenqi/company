@@ -53,10 +53,10 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
 //            Global.ProcException(e);
 //        }
 
-        content.setText(TextUtils.isEmpty(project.getContent())?"(无简介)":project.getContent());
+        content.setText(TextUtils.isEmpty(project.content)?"(无简介)":project.content);
         ack.setVisibility(View.GONE);
         time.setVisibility(View.GONE);
-        title.setText(project.getTitle());
+        title.setText(project.title);
 
         return convertView;
     }

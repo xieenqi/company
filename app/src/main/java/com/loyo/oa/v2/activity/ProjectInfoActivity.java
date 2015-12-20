@@ -79,11 +79,11 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         app.getRestAdapter().create(IProject.class).getProjectById(project.getId(), new RCallback<Project>() {
             @Override
             public void success(Project _project, Response response) {
-                _project.setTotalAttachment(project.getTotalAttachment());
-                _project.setTotalDiscussion(project.getTotalDiscussion());
-                _project.setTotalWfinstance(project.getTotalWfinstance());
-                _project.setTotalWorkReport(project.getTotalWorkReport());
-                _project.setTotalTask(project.getTotalTask());
+                _project.totalAttachment=project.totalAttachment;
+                _project.totalDiscussion=project.totalDiscussion;
+                _project.totalWfinstance=project.totalWfinstance;
+                _project.totalWorkReport=project.totalWorkReport;
+                _project.totalTask=project.totalTask;
 
                 project = _project;
                 img_title_right.setEnabled(true);
@@ -119,7 +119,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 }
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
 
-                if (project.getStatus() == Project.STATUS_PROCESSING) {
+                if (project.status == Project.STATUS_PROCESSING) {
                     if (project.isCreator()) {
                         intent.putExtra("delete", true);
                         intent.putExtra("edit", true);
@@ -159,7 +159,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             return;
         }
         if (adapter == null) {
-            int[] sizes = new int[]{project.getTotalTask(), project.getTotalWorkReport(), project.getTotalWfinstance(), project.getTotalAttachment(), project.getTotalDiscussion()};
+            int[] sizes = new int[]{project.totalTask, project.totalWorkReport, project.totalWfinstance, project.totalAttachment, project.totalDiscussion};
             for (int i = 0; i < TITLES.length; i++) {
                 TITLES[i]+="("+sizes[i]+")";
                 app.logUtil.e(" size : "+sizes[i]);
@@ -194,7 +194,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             adapter.notifyDataSetChanged();
             if (!callbacks.isEmpty()) {
                 for (OnProjectChangeCallback changeCallback : callbacks) {
-                    changeCallback.onProjectChange(project.getStatus());
+                    changeCallback.onProjectChange(project.status);
                 }
             }
         }
@@ -202,11 +202,11 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         pager.setPageMargin(pageMargin);
         tabs.setViewPager(pager);
 
-        User creator = project.getCreator();
-        tv_project_title.setText(project.getTitle());
+        User creator = project.creator;
+        tv_project_title.setText(project.title);
         tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
 
-        if (project.getStatus() == 1) {
+        if (project.status == 1) {
             img_project_status.setImageResource(R.drawable.icon_project_processing);
         } else {
             img_project_status.setImageResource(R.drawable.icon_project_completed);
@@ -280,11 +280,11 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     });
                 } else if (data.getBooleanExtra("extra", false)) {
                     //结束任务或重启任务
-                    app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(),project.getStatus() == 1 ? 2 : 1, new RCallback<Project>() {
+                    app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(),project.status == 1 ? 2 : 1, new RCallback<Project>() {
                                 @Override
                                 public void success(Project o, Response response) {
                                     LogUtil.d(" 结束 和 编辑项目： "+MainApp.gson.toJson(o));
-                                    project.setStatus(project.getStatus() == 1 ? 0 : 1);
+                                    project.status=(project.status == 1 ? 0 : 1);
                                     initViews();
                                 }
 

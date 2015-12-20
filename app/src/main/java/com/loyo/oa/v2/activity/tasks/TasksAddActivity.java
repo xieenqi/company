@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +24,9 @@ import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
-import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -59,7 +56,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,7 +176,7 @@ public class TasksAddActivity extends BaseActivity {
         }*/
 
         if (null != project) {
-            tv_Project.setText(project.getTitle());
+            tv_Project.setText(project.title);
         }
         getBundle();
     }
@@ -404,7 +400,7 @@ public class TasksAddActivity extends BaseActivity {
                 Project _project = (Project) data.getSerializableExtra("data");
                 project = _project;
                 if (null != project) {
-                    tv_Project.setText(project.getTitle());
+                    tv_Project.setText(project.title);
                 } else {
                     tv_Project.setText("无");
                 }

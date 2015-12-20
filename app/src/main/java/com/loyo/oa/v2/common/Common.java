@@ -29,8 +29,8 @@ public final class Common {
         }
 
         ArrayList<User> users = new ArrayList<>();
-        ArrayList<ProjectMember> managers = project.getManagers();
-        ArrayList<ProjectMember> members = project.getMembers();
+        ArrayList<ProjectMember> managers = project.managers;
+        ArrayList<ProjectMember> members = project.members;
 
         if (null == managers) {
             managers = new ArrayList<>();

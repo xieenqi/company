@@ -64,7 +64,7 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
             String order = "";
             if (item instanceof Project) {
                 Project p = (Project) item;
-                switch (p.getStatus()) {
+                switch (p.status) {
                     case 1:
                         order = "个项目进行中";
                         break;
