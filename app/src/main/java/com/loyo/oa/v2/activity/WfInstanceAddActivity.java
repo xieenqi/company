@@ -88,7 +88,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById GridView gridView_photo;
     @ViewById EditText edt_memo;
 
-    @Extra String projectId,deptId;
+    public String projectId,deptId;
 
     //要提交的数据的展示容器
     @ViewById LinearLayout wfinstance_data_container;
@@ -431,21 +431,18 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         HashMap<String, Object> map = new HashMap<>();
 
-        LogUtil.d(workflowValues.size()+" 审批 创建 : " + projectId);
-
         map.put("bizformId", mBizForm.getId());//表单Id
         map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
         map.put("deptId",deptId);//部门 id
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
-        if(!TextUtils.isEmpty(projectId)){
-            map.put("projectId", projectId);//项目Id
-        }
+        map.put("projectId", projectId);//项目Id
         if (uuid != null && lstData_Attachment.size() > 0) {
             map.put("attachmentUUId", uuid);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
 
+        LogUtil.dll("新建审批发送数据:"+MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
