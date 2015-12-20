@@ -15,6 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
@@ -71,6 +72,12 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         }
 
         WfNodes wfNodes = lstData.get(position);
+
+        LogUtil.dll("name:"+wfNodes.getExecutorUser().getRealname());
+        LogUtil.dll("active:"+wfNodes.getActive());
+        LogUtil.dll("approveFlag:"+wfNodes.isApproveFlag());
+
+
         if (wfNodes != null) {
             if (wfNodes.getExecutorUser() != null) {
                 item_info.tv_name.setText(wfNodes.getExecutorUser().getRealname());
@@ -85,8 +92,43 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
             item_info.tv_result.setTextSize(TypedValue.COMPLEX_UNIT_SP, app.pxTosp(app.diptoPx(20)));
 
+            /*已通过*/
+           if(wfInstanceStatus == 4){
+               item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
+               item_info.tv_result.setText("同意");
+           }
+
+           else{
+               if(wfNodes.getActive() == 1){
+                   item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
+                   item_info.tv_deal_time.setText("");
+                   item_info.tv_result.setText("待处理");
+                   item_info.tv_comment.setVisibility(View.GONE);
+                   item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
+               }
+
+               else if(wfNodes.getActive() == 2){
+                   item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
+                   item_info.tv_deal_time.setText("");
+                   item_info.tv_result.setText("正在处理");
+                   item_info.tv_comment.setVisibility(View.GONE);
+                   item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
+               }
+
+               else if(wfNodes.getActive() == 3){
+                   if (wfNodes.isApproveFlag() == false) {
+                       item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
+                       item_info.tv_result.setText("同意");
+                   } else {
+                       item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
+                       item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
+                       item_info.tv_result.setText("驳回");
+                   }
+               }
+           }
+
             //审批通过
-            if (wfNodes.isActive() && wfNodes.isApproveFlag()) {
+/*            if (wfNodes.getActive() == 3 && wfNodes.isApproveFlag()) {
                 item_info.tv_deal_time.setText(app.df3.format(new Date(wfNodes.getUpdateAt()*1000)));
                 if (!StringUtil.isEmpty(wfNodes.getComment())) {
                     item_info.tv_comment.setVisibility(View.VISIBLE);
@@ -96,13 +138,13 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 }
 
                 //已否决
-                if (wfInstanceStatus == WfInstance.STATUS_ABORT) {
+                if (wfInstanceStatus == 3) {
                     for (int i = lstData.size() - 1; i >= 0; i--) {
                         if (lstData.get(i).isActive() &&
                                 lstData.get(i).isNeedApprove() &&
                                 lstData.get(i).isApproveFlag()) {
 
-                            if (TextUtils.equals(lstData.get(i).getId() , wfNodes.getId())) {
+                            if (!wfNodes.isApproveFlag()) {
                                 item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
                                 item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
                                 item_info.tv_result.setText("驳回");
@@ -113,8 +155,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                             break;
                         }
                     }
-                } else if (wfInstanceStatus == WfInstance.STATUS_FINISHED
-                        && TextUtils.equals(lstData.get(lstData.size() - 1).getId() , wfNodes.getId())) {
+                } else if (wfInstanceStatus == 5) {
                     item_info.img_left.setImageResource(R.drawable.img_wfinstance_complete);
                     item_info.tv_result.setText("完成");
                 } else {
@@ -127,7 +168,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 item_info.tv_result.setText("待处理");
                 item_info.tv_comment.setVisibility(View.GONE);
                 item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
-            }
+            }*/
         }
 
         return convertView;

@@ -280,21 +280,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
 
 
-
-/*        WfNodes node = null;
-        for (int i = nodes.size() - 1; i >= 0; i--) {
-            //激活的节点,并且没有审批的就是当前节点
-            if (nodes.get(i).isActive()) {
-                node = nodes.get(i);
-                break;
-            }
-        }*/
-
-
         WfNodes node = null;
         for (int i = 0;i<nodes.size(); i++) {
-            if (nodes.get(i + 1).getExecutorUser().getId().equals(userId)) {
-                node = nodes.get(i + 1);
+            if (nodes.get(i).getExecutorUser().getId().equals(userId)) {
+                node = nodes.get(i);
                 break;
             }
         }
@@ -303,8 +292,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
             LogUtil.dll("当前节点ID：" + node.getExecutorUser().getId());
             LogUtil.dll("本地登录ID：" + userId);
+            LogUtil.dll("当前节点 Activity：" + node.getActive());
 
-            if (node.isActive()) {
+            if (node.getActive() == 2) {
                 if (node.isNeedApprove()) {
                     layout_nopass.setOnTouchListener(touch);
                     layout_pass.setOnTouchListener(touch);
