@@ -124,7 +124,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
 
-        app.logUtil.e("GetData,type : " + type + " projectId : " + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
+      LogUtil.d("获取项目详情的任务，报告，审批：GetData,type : " + type + " projectId : " + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
         app.getRestAdapter().create(IProject.class).getProjectSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {

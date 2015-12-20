@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DiscussionActivity;
 import com.loyo.oa.v2.activity.DiscussionActivity_;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.DiscussCounter;
 import com.loyo.oa.v2.beans.PagingGroupData_;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
         }
 
-        Object o = getChild(groupPosition, childPosition);
+        Object obj = getChild(groupPosition, childPosition);
 
         ImageView status = ViewHolder.get(convertView, R.id.img_status);
         TextView title = ViewHolder.get(convertView, R.id.tv_title);
@@ -58,8 +60,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         ImageView iv_disscuss_status = ViewHolder.get(convertView, R.id.img_discuss_status);
         status.setVisibility(View.GONE);
         //审批
-        if (o instanceof WfInstance) {
-            WfInstance wfInstance = (WfInstance) o;
+        if (obj instanceof WfInstance) {
+            WfInstance wfInstance = (WfInstance) obj;
             if (wfInstance.getTitle() != null) {
                 title.setText(wfInstance.getTitle());
             }
@@ -86,9 +88,12 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     status.setImageResource(R.drawable.img_wfinstance_list_status5);
                     break;
             }
-        } else if (o instanceof Task) {
+        }
+       // 任务
+        else if (obj instanceof Task) {
             layout_discuss.setVisibility(View.VISIBLE);
-            Task task = (Task) o;
+            Task task = (Task) obj;
+            LogUtil.d(" 任务的数据： "+ MainApp.gson.toJson(task));
             if (task.getStatus() == Task.STATUS_PROCESSING) {
                 status.setImageResource(R.drawable.task_status_1);
             } else if (task.getStatus() == Task.STATUS_REVIEWING) {
@@ -118,9 +123,9 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
         }
         //报告
-        else if (o instanceof WorkReport) {
+        else if (obj instanceof WorkReport) {
             layout_discuss.setVisibility(View.VISIBLE);
-            final WorkReport workReport = (WorkReport) o;
+            final WorkReport workReport = (WorkReport) obj;
             DiscussCounter discussCounter = workReport.getDiscuss();
             //iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
             //tv_discuss_num.setText(discussCounter.getTotal() + "");

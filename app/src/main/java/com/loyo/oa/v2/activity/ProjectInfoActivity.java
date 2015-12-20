@@ -65,7 +65,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById TextView tv_project_extra;
     @ViewById ImageView img_project_status;
 
-    @Extra Project project;
+    @Extra String projectId;
+    Project project;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
@@ -76,24 +77,26 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目
      */
     private void getProject() {
-        app.getRestAdapter().create(IProject.class).getProjectById(project.getId(), new RCallback<Project>() {
+        app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<Project>() {
             @Override
             public void success(Project _project, Response response) {
-                _project.totalAttachment=project.totalAttachment;
-                _project.totalDiscussion=project.totalDiscussion;
-                _project.totalWfinstance=project.totalWfinstance;
-                _project.totalWorkReport=project.totalWorkReport;
-                _project.totalTask=project.totalTask;
-
+//                _project.totalAttachment=project.totalAttachment;
+//                _project.totalDiscussion=project.totalDiscussion;
+//                _project.totalWfinstance=project.totalWfinstance;
+//                _project.totalWorkReport=project.totalWorkReport;
+//                _project.totalTask=project.totalTask;pp
+//
                 project = _project;
                 img_title_right.setEnabled(true);
-                initData();
+                initData(project);
+                LogUtil.d(" 获取项目详情的json： "+MainApp.gson.toJson(_project));
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Global.Toast("获取项目失败");
+                HttpErrorCheck.checkError(error);
+                //Global.Toast("获取项目失败");
             }
         });
     }
@@ -154,33 +157,35 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     /**
      * 初始化数据
      */
-    private void initData() {
+    private void initData(Project project) {
         if (null == project) {
             return;
         }
         if (adapter == null) {
-            int[] sizes = new int[]{project.totalTask, project.totalWorkReport, project.totalWfinstance, project.totalAttachment, project.totalDiscussion};
+            int[] sizes = new int[]{project.archiveData.task, project.archiveData.workreport,
+                    project.archiveData.approval, project.archiveData.attachment, project.archiveData.discuss};
             for (int i = 0; i < TITLES.length; i++) {
                 TITLES[i]+="("+sizes[i]+")";
-                app.logUtil.e(" size : "+sizes[i]);
-                Bundle b = new Bundle();
-                b.putSerializable("project", project);
+                LogUtil.d("栏目-> size : "+sizes[i]);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("project", project);
                 BaseFragment fragmentX = null;
                 if (i == 0) {
-                    b.putInt("type", 2);
+                    bundle.putInt("type", 2);
                 } else if (i == 1) {
-                    b.putInt("type", 1);
+                    bundle.putInt("type", 1);
                 } else if (i == 2) {
-                    b.putInt("type", 12);
+                    bundle.putInt("type", 12);
                 }
+
                 if (i <= 2) {
-                    fragmentX = new BaseChildMainListFragmentX();
+                    fragmentX = new BaseChildMainListFragmentX();//任务，报告，审批
                 } else if (i == TITLES.length - 1) {
-                    fragmentX = new DiscussionFragment();
+                    fragmentX = new DiscussionFragment();//文件
                 } else {
-                    fragmentX = new AttachmentFragment();
+                    fragmentX = new AttachmentFragment();//讨论
                 }
-                fragmentX.setArguments(b);
+                fragmentX.setArguments(bundle);
                 fragmentX.setCallback(i, this);
                 callbacks.add(fragmentX);
                 fragmentXes.add(fragmentX);
@@ -213,9 +218,14 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         }
     }
 
+    /**
+     * 【数据加载成功】的 回调
+     * @param id
+     * @param size
+     */
     @Override
     public void onLoadSuccess(int id, int size) {
-        app.logUtil.e("id : " + id + " size : " + size);
+        LogUtil.d("项目 table ->id : " + id + " size : " + size);
         int idexS = TITLES[id].indexOf("(");
         int idexE = TITLES[id].lastIndexOf(")");
         String c = TITLES[id].substring(idexS + 1, idexE);

@@ -60,6 +60,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("type", type);
         params.put("endAt", System.currentTimeMillis()/1000);
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01",app.df5)/1000);
+
         LogUtil.d(" 项目管理列表请求： "+ MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params,this);
     }
@@ -134,11 +135,16 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
+    /**
+     * 点击 item的 操作
+     * @param groupPosition
+     * @param childPosition
+     */
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectInfoActivity_.class);
-        intent.putExtra("project", (Project) adapter.getChild(groupPosition, childPosition));
+        intent.putExtra("projectId", ((Project)adapter.getChild(groupPosition, childPosition)).id);
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 
