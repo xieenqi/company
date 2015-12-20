@@ -21,7 +21,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
-import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
@@ -190,13 +189,13 @@ public class WorkReportAddActivity extends BaseActivity {
             edt_content.setText(mWorkReport.getContent());
 
             if (null != mWorkReport.getProject()) {
-                tv_project.setText(mWorkReport.getProject().getTitle());
+                tv_project.setText(mWorkReport.getProject().title);
             }
             //附件暂时不能做
         } else {
             rg.check(R.id.rb1);
             if (null != project) {
-                tv_project.setText(project.getTitle());
+                tv_project.setText(project.title);
             }
         }
         init_gridView_photo();
@@ -423,7 +422,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 Project _project = (Project) data.getSerializableExtra("data");
                 project = _project;
                 if (null != project) {
-                    tv_project.setText(project.getTitle());
+                    tv_project.setText(project.title);
                 } else {
                     tv_project.setText("无");
                 }

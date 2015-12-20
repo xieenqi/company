@@ -49,11 +49,11 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null == project) {
             return;
         }
-        tv_extra.setText(project.getCreator().getRealname()+" "+MainApp.getMainApp().df2.format(new Date(project.getCreatedAt()))+" 发布");
-        tv_title.setText(project.getTitle());
-        tv_content.setText(project.getContent());
-        ArrayList<ProjectMember> responsers = project.getManagers();
-        ArrayList<ProjectMember> members = project.getMembers();
+        tv_extra.setText(project.creator.getRealname()+" "+MainApp.getMainApp().df2.format(new Date(project.getCreatedAt()))+" 发布");
+        tv_title.setText(project.title);
+        tv_content.setText(project.content);
+        ArrayList<ProjectMember> responsers = project.managers;
+        ArrayList<ProjectMember> members = project.members;
         if (null != responsers && !responsers.isEmpty()) {
             StringBuilder managers = new StringBuilder();
             for (int i = 0; i < responsers.size(); i++) {

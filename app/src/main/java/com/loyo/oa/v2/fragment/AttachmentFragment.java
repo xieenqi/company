@@ -107,10 +107,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      */
     private boolean checkRights() {
         boolean hasRights = false;
-        if (mProject.getCreator().equals(MainApp.user)) {
+        if (mProject.creator.equals(MainApp.user)) {
             hasRights = true;
         } else {
-            ArrayList<ProjectMember> members = mProject.getManagers();
+            ArrayList<ProjectMember> members = mProject.managers;
             if (null != members && !members.isEmpty()) {
                 for (int i = 0; i < members.size(); i++) {
                     if (members.get(i).getUser().equals(MainApp.user)) {
@@ -144,7 +144,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 获取数据
      */
     private void getData() {
-        app.getRestAdapter().create(IAttachment.class).getAttachments(mProject.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
+        app.getRestAdapter().create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
 
@@ -179,7 +179,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (mProject != null && mProject.getStatus() == Project.STATUS_FINISHED) {
+        if (mProject != null && mProject.status == Project.STATUS_FINISHED) {
             layout_upload.setVisibility(View.GONE);
         } else {
             layout_upload.setVisibility(View.VISIBLE);
@@ -189,7 +189,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onProjectChange(int status) {
         if (null != mProject) {
-            mProject.setStatus(status);
+            mProject.status=status;
         }
         if (layout_upload == null) {
             return;
@@ -268,7 +268,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                     try {
                         if (newFile != null && newFile.length() > 0) {
                             RequestParams params = new RequestParams();
-                            params.put("uuid", mProject.getAttachmentUUId());
+                            params.put("uuid", mProject.attachmentUUId);
 
                             if (newFile.exists()) {
                                 params.put("attachments", newFile, "image/jpeg");

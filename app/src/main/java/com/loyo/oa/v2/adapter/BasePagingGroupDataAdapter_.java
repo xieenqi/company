@@ -96,7 +96,6 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
             }
         else{
-                LogUtil.d("这是什么分组： "+data.getOrderStr());
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.iswrite));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
             }

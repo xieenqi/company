@@ -65,7 +65,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     @Override
     public void onProjectChange(int status) {
         if(null!=project){
-            project.setStatus(status);
+            project.status=status;
         }
         if(layout_discuss_action==null){
             return;
@@ -95,7 +95,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("attachmentUUId", project.getAttachmentUUId());
+        map.put("attachmentUUId", project.attachmentUUId);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? discussions.size() >= 20 ? discussions.size() : 20 : 20);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
@@ -164,7 +164,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (project != null && project.getStatus() == Project.STATUS_FINISHED) {
+        if (project != null && project.status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
         } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
@@ -182,7 +182,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         }
 
         HashMap<String, Object> body = new HashMap<>();
-        body.put("attachmentUUId", project.getAttachmentUUId());
+        body.put("attachmentUUId", project.attachmentUUId);
         body.put("content", comment);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {

@@ -30,7 +30,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -41,7 +40,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -239,7 +237,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         tv_workReport_time.setText("提交时间：" + date);
 
         if (null != mWorkReport.getProject()) {
-            tv_ptoject.setText(mWorkReport.getProject().getTitle());
+            tv_ptoject.setText(mWorkReport.getProject().title);
         }
 
         showAttachment();
