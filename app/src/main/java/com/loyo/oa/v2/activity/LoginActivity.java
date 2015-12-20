@@ -294,13 +294,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 SharedUtil.put(mContext, FinalVariables.TOKEN, token.getAccess_token());
                 app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
 
-                try {
-                    LogUtil.dll("result:"+Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
             }
 
             @Override
