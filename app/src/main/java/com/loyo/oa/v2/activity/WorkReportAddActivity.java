@@ -109,7 +109,9 @@ public class WorkReportAddActivity extends BaseActivity {
     GridView gridView_photo;
 
     @Extra
-    Project project;
+    String projectId;
+    @Extra
+    String projectTitle;
     @Extra
     WorkReport mWorkReport;
     @Extra
@@ -194,8 +196,8 @@ public class WorkReportAddActivity extends BaseActivity {
             //附件暂时不能做
         } else {
             rg.check(R.id.rb1);
-            if (null != project) {
-                tv_project.setText(project.title);
+            if (!TextUtils.isEmpty(projectTitle)) {
+                tv_project.setText(projectTitle);
             }
         }
         init_gridView_photo();
@@ -296,7 +298,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
                     break;
                 }
-
                 if (mReviewer.getUser().isCurrentUser()) {
                     Toast("点评人不能是自己");
                     break;
@@ -307,8 +308,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 map.put("type", mSelectType);
                 map.put("beginAt", beginAt / 1000);
                 map.put("endAt", endAt / 1000);
-                if (null != project) {
-                    map.put("projectId", project.getId());
+                if (TextUtils.isEmpty(projectId)) {
+                    map.put("projectId", projectId);
                 }
                 map.put("attachmentUUId", uuid);
                 map.put("reviewer", mReviewer);
@@ -377,10 +378,11 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      * */
     public void creteReport(HashMap map){
-        LogUtil.dll("手机端发送数据："+MainApp.gson.toJson(map));
+        LogUtil.d("手机端发送数据："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
+                LogUtil.d(" 创建报告 json： "+MainApp.gson.toJson(workReport));
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }
@@ -420,9 +422,9 @@ public class WorkReportAddActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                project = _project;
-                if (null != project) {
-                    tv_project.setText(project.title);
+                projectId=_project.id;
+                if (null != _project) {
+                    tv_project.setText(_project.title);
                 } else {
                     tv_project.setText("无");
                 }

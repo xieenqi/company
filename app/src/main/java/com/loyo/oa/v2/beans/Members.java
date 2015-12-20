@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by loyo_dev1 on 15/12/18.
  */
-public class Members implements Serializable{
+public class Members implements Serializable {
 
     ArrayList<NewUser> users;
 
@@ -29,6 +29,15 @@ public class Members implements Serializable{
         this.depts = depts;
     }
 
-
+    public ArrayList<NewUser> getAllData() {
+        ArrayList<NewUser> newData=new ArrayList<NewUser>();
+        if(users!=null){
+            newData.addAll(users);
+        }
+        if(depts!=null){
+            newData.addAll(depts);
+        }
+        return newData;
+    }
 
 }

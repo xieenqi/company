@@ -17,6 +17,9 @@ public class Reviewer implements Serializable {
     private int score;//点评分数
     private String comment;//点评内容
 
+    public String id;
+    public String name;
+    public String avatar;
 
     public Reviewer(NewUser user) {
         this.user = user;

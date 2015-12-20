@@ -147,7 +147,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     void initUI() {
-
+LogUtil.d(" 穿过来的task： "+MainApp.gson.toJson(mTask));
         super.setTitle("任务详情");
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -187,14 +187,19 @@ public class TasksInfoActivity extends BaseActivity {
             tv_responsiblePerson.setText("负责人:" + realName);
         }
 
-        ArrayList<NewUser> users = mTask.getJoinedUsers();
-        if (users != null && users.size() > 0) {
-            String userNames = NewUser.GetNewUserNames(users);
-            joinName = userNames;
-            if (!TextUtils.isEmpty(userNames)) {
+       // ArrayList<NewUser> users = mTask.getJoinedUsers();
+        if (mTask.members!=null) {
+            //String userNames = NewUser.GetNewUserNames(users);
+            //joinName = userNames;
+
+            if (mTask.members.getAllData().size()>0) {
+                String userNames=null;
+                for (NewUser element:mTask.members.getAllData()) {
+                    userNames+=element.getName()+",";
+                }
                 tv_toUsers.setText("参与人:" + userNames);
             } else {
-                tv_toUsers.setText("");
+                tv_toUsers.setText("没有参与人");
             }
         }
         if (null != mTask.getProject()) {
