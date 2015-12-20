@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PagingGroupData_;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.util.ArrayList;
@@ -89,10 +90,13 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
             if(data.getOrderStr().contains("已")){
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isfinish));
                 img_status.setImageResource(R.drawable.bg_view_green_circle);
-            }else if(data.getOrderStr().contains("进")){
+            }
+            else if(data.getOrderStr().contains("进")){
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isteston));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
-            }else{
+            }
+        else{
+                LogUtil.d("这是什么分组： "+data.getOrderStr());
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.iswrite));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
             }

@@ -68,7 +68,7 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                     case 1:
                         order = "个项目进行中";
                         break;
-                    case 0:
+                    case 2:
                         order = "个项目已结束";
                         break;
                 }
