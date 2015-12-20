@@ -15,7 +15,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
 
 /**
- * 任务详情编辑[ 选择【项目 的结束 编辑 删除】 ]
+ * 任务详情编辑[ 选择【项目 的结束 编辑 删除】弹窗 ]
  * */
 public class SelectEditDeleteActivity extends BaseActivity implements OnClickListener {
     Button btn_delete, btn_edit, btn_cancel, btn_extra;
