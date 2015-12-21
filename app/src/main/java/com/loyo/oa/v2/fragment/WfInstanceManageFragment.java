@@ -81,13 +81,13 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
         map.put("type", category);
         map.put("status", status);
-//        map.put("bizformId", bizFormId);
-//        map.put("endTime", System.currentTimeMillis() / 1000);
-//        map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+//      map.put("bizformId", bizFormId);
+//      map.put("endTime", System.currentTimeMillis() / 1000);
+//      map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
-                getWfInstances(map,WfInstanceManageFragment.this);
+                getWfInstances(map, WfInstanceManageFragment.this);
     }
 
     @Override
@@ -142,10 +142,10 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
                 if (null != bizFormPaginationX) {
                     mBizForms = bizFormPaginationX.getRecords();
                     if (null != mBizForms && !mBizForms.isEmpty()) {
-                        String[] FILTER_TYPE = new String[mBizForms.size()+1];
-                        FILTER_TYPE[0]="全部类型";
+                        String[] FILTER_TYPE = new String[mBizForms.size() + 1];
+                        FILTER_TYPE[0] = "全部类型";
                         for (int i = 0; i < mBizForms.size(); i++) {
-                            FILTER_TYPE[i+1] = mBizForms.get(i).getName();
+                            FILTER_TYPE[i + 1] = mBizForms.get(i).getName();
                         }
                         items.add(FILTER_TYPE);
                         mMenu.setmMenuItems(items);
@@ -167,10 +167,10 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
                         status = RowIndex;
                         break;
                     case 2:
-                        if(RowIndex==0){
-                            bizFormId="";
-                        }else {
-                            bizFormId = mBizForms.get(RowIndex-1).getId();
+                        if (RowIndex == 0) {
+                            bizFormId = "";
+                        } else {
+                            bizFormId = mBizForms.get(RowIndex - 1).getId();
                         }
                         break;
                 }

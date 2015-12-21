@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.WfInstanceValuesInfoAdapter;
 import com.loyo.oa.v2.adapter.WorkflowNodesListViewAdapter;
@@ -275,11 +273,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
 
-        for(int i = 0;i<nodes.size();i++){
+/*        for(int i = 0;i<nodes.size();i++){
             LogUtil.dll("id:"+nodes.get(i).getExecutorUser().getId());
             LogUtil.dll("name:"+nodes.get(i).getExecutorUser().getRealname());
-        }
-
+        }*/
 
         WfNodes node = null;
         for (int i = 0;i<nodes.size(); i++) {
@@ -291,9 +288,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         if (node != null) {
 
-            LogUtil.dll("当前节点ID：" + node.getExecutorUser().getId());
+/*            LogUtil.dll("当前节点ID：" + node.getExecutorUser().getId());
             LogUtil.dll("本地登录ID：" + userId);
-            LogUtil.dll("当前节点 Activity：" + node.getActive());
+            LogUtil.dll("当前节点 Activity：" + node.getActive());*/
 
             if (node.getActive() == 2) {
                 if (node.isNeedApprove()) {
@@ -329,7 +326,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 initData_WorkflowValues();
                 updateUI();
 
-
                 try {
                     LogUtil.dll("返回的数据：" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
@@ -358,9 +354,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         map.put("comment", comment);
         map.put("type", type);
 
-        LogUtil.dll("手机端发送数据：" + MainApp.gson.toJson(map));
-        LogUtil.dll("ID1：" + wfInstance.getId());
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance_current, Response response) {
@@ -378,12 +371,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                LogUtil.dll("url:" + error.getUrl());
-                try {
-                    LogUtil.dll("error result:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -400,10 +387,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 intent.putExtra("delete", true);
                 startActivityForResult(intent, MSG_DELETE_WFINSTANCE);
                 break;
+            /*同意*/
             case R.id.layout_nopass:
                 showApproveDialog(2);
                 LogUtil.dll("点击不同意");
                 break;
+            /*驳回*/
             case R.id.layout_pass:
                 showApproveDialog(1);
                 LogUtil.dll("点击同意");

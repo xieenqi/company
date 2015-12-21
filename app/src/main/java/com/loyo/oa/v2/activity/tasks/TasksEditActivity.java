@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
@@ -39,9 +40,11 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 
@@ -54,6 +57,7 @@ import org.apache.http.Header;
 
 import java.io.File;
 import java.io.Serializable;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -68,28 +72,54 @@ import rx.android.schedulers.AndroidSchedulers;
 @EActivity(R.layout.activity_tasks_edit) //本Activity的布局文件
 public class TasksEditActivity extends BaseActivity {
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_right;
-    @ViewById ViewGroup layout_del;
-    @ViewById ViewGroup layout_responsiblePerson;
-    @ViewById ViewGroup layout_deadline;
-    @ViewById ViewGroup layout_remind;
-    @ViewById ViewGroup layout_project;
-    @ViewById ImageView img_title_right_toUsers;
-    @ViewById TextView tv_responsiblePerson;
-    @ViewById TextView tv_toUsers;
-    @ViewById TextView tv_deadline;
-    @ViewById TextView tv_remind;
-    @ViewById TextView tv_Project;
-    @ViewById Switch switch_approve;
-    @ViewById EditText edt_content;
-    @ViewById EditText edt_title;
-    @ViewById GridView gridView_photo;
-    @Extra Task mTask;
-    SignInGridViewAdapter signInGridViewAdapter;
-    AlertDialog dialog_Product;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_right;
+    @ViewById
+    ViewGroup layout_del;
+    @ViewById
+    ViewGroup layout_responsiblePerson;
+    @ViewById
+    ViewGroup layout_deadline;
+    @ViewById
+    ViewGroup layout_remind;
+    @ViewById
+    ViewGroup layout_project;
+    @ViewById
+    ImageView img_title_right_toUsers;
+    @ViewById
+    TextView tv_responsiblePerson;
+    @ViewById
+    TextView tv_toUsers;
+    @ViewById
+    TextView tv_deadline;
+    @ViewById
+    TextView tv_remind;
+    @ViewById
+    TextView tv_Project;
+    @ViewById
+    Switch switch_approve;
+    @ViewById
+    EditText edt_content;
+    @ViewById
+    EditText edt_title;
+    @ViewById
+    GridView gridView_photo;
+    @Extra
+    Task mTask;
 
-    @AfterViews //类似onCreate方法执行入口
+    private SignInGridViewAdapter signInGridViewAdapter;
+    private AlertDialog dialog_Product;
+    private String uuid = StringUtil.getUUID();
+    private ArrayList<NewUser> userss;
+    private ArrayList<NewUser> depts;
+    private Members member;
+    private NewUser newUser;
+    private StringBuffer joinUser = new StringBuffer();
+
+    @AfterViews
+        //类似onCreate方法执行入口
     void initUI() {
 
         super.setTitle("编辑任务");
@@ -98,21 +128,25 @@ public class TasksEditActivity extends BaseActivity {
                 layout_responsiblePerson,
                 layout_deadline,
                 layout_del,
-                layout_remind,layout_project);
+                layout_remind, layout_project);
+
+        userss = new ArrayList<>();
+        depts = new ArrayList<>();
+        member = new Members();
 
         UpdateUI();
         init_gridView_photo();
         setTouchView(-1);
-
     }
 
     void UpdateUI() {
 
-        if(null!=mTask.getResponsiblePerson()) {
+        if (null != mTask.getResponsiblePerson()) {
             tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
         }
 
-        tv_toUsers.setText(NewUser.GetNewUserNames(mTask.getJoinedUsers()));
+        savePostData();
+        tv_toUsers.setText(joinUser.toString());
         tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt())));
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setChecked(mTask.isReviewFlag());
@@ -121,7 +155,7 @@ public class TasksEditActivity extends BaseActivity {
 
     }
 
-    void getAttachments(){
+    void getAttachments() {
         Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
@@ -137,12 +171,31 @@ public class TasksEditActivity extends BaseActivity {
         });
     }
 
+    /*POST数据保存，防止不作任何编辑操作，没有POST数据*/
+    void savePostData() {
+
+        for (int i = 0; i < mTask.getMembers().getAllData().size(); i++) {
+
+            joinUser.append(mTask.getMembers().getAllData().get(i).getName() + ",");
+
+            NewUser newUser = new NewUser();
+            newUser.setName(mTask.members.getAllData().get(i).getName());
+            newUser.setId(mTask.getMembers().getAllData().get(i).getId());
+            userss.add(newUser);
+
+        }
+
+        member.setUsers(userss);
+        newUser = mTask.getResponsiblePerson();
+
+    }
+
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del,R.id.layout_project})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -150,6 +203,7 @@ public class TasksEditActivity extends BaseActivity {
                 break;
             case R.id.img_title_right:
                 String title = edt_title.getText().toString().trim();
+
                 if (TextUtils.isEmpty(title)) {
                     Toast(getString(R.string.app_title) + getString(R.string.app_no_null));
                     break;
@@ -174,16 +228,13 @@ public class TasksEditActivity extends BaseActivity {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("title", title);
                 map.put("content", content);
-                map.put("responsiblePersons", Arrays.asList(new Reviewer(mTask.getResponsiblePerson())));
-                map.put("members", mTask.getMembers());
+                map.put("responsiblePerson", newUser);
+                map.put("members", member);
                 map.put("planendAt", mTask.getPlanEndAt());
                 map.put("remindflag", mTask.getRemindTime() > 0);
                 map.put("remindtime", mTask.getRemindTime());
                 map.put("reworkflag", switch_approve.isChecked());
-
-                if (!TextUtils.isEmpty(mTask.getAttachmentUUId()) && mTask.getAttachments().size() > 0) {
-                    map.put("attachmentUUId", mTask.getAttachmentUUId());
-                }
+                map.put("attachmentUUId", uuid);
 
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
                     map.put("projectId", mTask.getProjectId());
@@ -215,11 +266,13 @@ public class TasksEditActivity extends BaseActivity {
                         });
 
                 break;
+
             case R.id.layout_responsiblePerson:
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
                 break;
+
             case R.id.layout_deadline:
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
@@ -238,8 +291,8 @@ public class TasksEditActivity extends BaseActivity {
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle1);
                 break;
             case R.id.layout_del:
-                mTask.getMembers().getUsers().clear();
-                mTask.getMembers().getDepts().clear();
+                userss.clear();
+                depts.clear();
                 tv_toUsers.setText("");
                 layout_del.setVisibility(View.GONE);
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
@@ -278,21 +331,26 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     void setResponsiblePersion(User user) {
-        NewUser responsiblePerson = user.toShortUser();
-        mTask.setResponsiblePerson(responsiblePerson);
-        tv_responsiblePerson.setText(responsiblePerson.getRealname());
+        newUser = user.toShortUser();
+        tv_responsiblePerson.setText(newUser.getName());
     }
 
     void setJoinUsers(String joinedUserIds, String joinedUserName) {
-        mTask.getMembers().getUsers().clear();
-        mTask.getMembers().getDepts().clear();
+
+        userss.clear();
+        depts.clear();
 
         String[] userIds = joinedUserIds.split(",");
         String[] userNames = joinedUserName.split(",");
 
         for (int i = 0; i < userIds.length; i++) {
-            //mTask.getMembers().add(new Reviewer(userIds[i], userNames[i]));
+            NewUser newUser = new NewUser();
+            newUser.setName(userNames[i]);
+            newUser.setId(userIds[i]);
+            userss.add(newUser);
         }
+
+        member.setUsers(userss);
 
         if (!TextUtils.isEmpty(joinedUserName)) {
             tv_toUsers.setText(joinedUserName);
@@ -313,7 +371,7 @@ public class TasksEditActivity extends BaseActivity {
                 if (null != project) {
                     tv_Project.setText(project.title);
                     mTask.setProjectId(project.getId());
-                }else {
+                } else {
                     tv_Project.setText("无");
                     mTask.setProjectId("");
                 }
@@ -325,9 +383,9 @@ public class TasksEditActivity extends BaseActivity {
                 } else {
                     String cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-                    if(cc_user_id != null && cc_user_name !=null){
+                    if (cc_user_id != null && cc_user_name != null) {
                         setJoinUsers(cc_user_id, cc_user_name);
-                    }else{
+                    } else {
                         Toast("未选择相关人员");
                     }
                 }
@@ -341,7 +399,7 @@ public class TasksEditActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(mTask.getAttachmentUUId(),newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(mTask.getAttachmentUUId(), newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();

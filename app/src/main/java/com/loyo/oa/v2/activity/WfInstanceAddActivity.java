@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -102,7 +103,7 @@ public class WfInstanceAddActivity extends BaseActivity {
      */
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     //审批内容 新建一个的对象 集合
-    private List<WfinstanceViewGroup>  WfinObj=new ArrayList<WfinstanceViewGroup>();
+    private List<WfinstanceViewGroup>  WfinObj = new ArrayList<WfinstanceViewGroup>();
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
@@ -373,6 +374,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
+
     }
 //        @Click(R.id.layout_delete2)
 //        void delete() {
@@ -395,21 +397,21 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
         ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
 
-//        wfInstanceAdd.getWorkflowValuesAdd().getWfInstanceValuesDatas().clear();
-//        for (int k = 0; k < submitData.size(); k++) {
-//            HashMap<String, String> jsonMapValues = new HashMap<>();
-//            HashMap<String, Object> map_Values = submitData.get(k);
-//            for (BizFormFields field : mBizForm.getFields()) {
-//                for (String key : map_Values.keySet()) {
-//                    if (!TextUtils.equals(field.getId(), key)) {
-//                        continue;
-//                    }
-//                    String value = (String) map_Values.get(key);
-//                    jsonMapValues.put(key, value);
-//                }
-//            }
-//            workflowValues.add(jsonMapValues);
-//        }
+        wfInstanceAdd.getWorkflowValuesAdd().getWfInstanceValuesDatas().clear();
+        for (int k = 0; k < submitData.size(); k++) {
+            HashMap<String, Object> jsonMapValues = new HashMap<>();
+            HashMap<String, Object> map_Values = submitData.get(k);
+            for (BizFormFields field : mBizForm.getFields()) {
+               for (String key : map_Values.keySet()) {
+                   if (!TextUtils.equals(field.getId(), key)) {
+                        continue;
+                    }
+                    String value = (String) map_Values.get(key);
+                    jsonMapValues.put(key, value);
+                }
+           }
+            workflowValues.add(jsonMapValues);
+        }
 
         for(WfinstanceViewGroup element:WfinObj){
             LogUtil.d("   审批dd的内容  "+element.getInfoData());
@@ -439,9 +441,11 @@ public class WfInstanceAddActivity extends BaseActivity {
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
         map.put("projectId", projectId);//项目Id
+
         if (uuid != null && lstData_Attachment.size() > 0) {
             map.put("attachmentUUId", uuid);
         }
+
         map.put("memo", edt_memo.getText().toString().trim()); //备注
 
         LogUtil.dll("新建审批发送数据:"+MainApp.gson.toJson(map));

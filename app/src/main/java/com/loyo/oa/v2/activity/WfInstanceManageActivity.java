@@ -20,7 +20,6 @@ public class WfInstanceManageActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wfinstance_manage);
-
         initUI();
     }
 
