@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.adapter;
 
 
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.StringUtil;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Administrator on 2014/12/11 0011.

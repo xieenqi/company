@@ -38,6 +38,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -46,6 +47,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -128,7 +131,7 @@ public class TasksInfoActivity extends BaseActivity {
     private String taskId;  //任务ID
     public static TasksInfoActivity instance = null;
     public int statusSize = 0;
-
+    public ArrayList<NewUser> allUsers;
     public android.os.Handler mHandler = new android.os.Handler(){
 
         public void handleMessage(Message msg){
@@ -147,7 +150,6 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     void initUI() {
-LogUtil.d(" 穿过来的task： "+MainApp.gson.toJson(mTask));
         super.setTitle("任务详情");
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -156,7 +158,7 @@ LogUtil.d(" 穿过来的task： "+MainApp.gson.toJson(mTask));
         btn_complete.setOnTouchListener(Global.GetTouch());
 //      layout_children_task.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
-
+        allUsers = new ArrayList<>();
     }
 
     String getId() {
@@ -185,19 +187,18 @@ LogUtil.d(" 穿过来的task： "+MainApp.gson.toJson(mTask));
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
             tv_responsiblePerson.setText("负责人:" + realName);
+            allUsers.add(mTask.getResponsiblePerson());
         }
 
-       // ArrayList<NewUser> users = mTask.getJoinedUsers();
         if (mTask.members!=null) {
-            //String userNames = NewUser.GetNewUserNames(users);
-            //joinName = userNames;
-
             if (mTask.members.getAllData().size()>0) {
                 String userNames=null;
                 for (NewUser element:mTask.members.getAllData()) {
                     userNames+=element.getName()+",";
                 }
                 tv_toUsers.setText("参与人:" + userNames);
+                allUsers.addAll(mTask.members.getAllData());
+                LogUtil.dll("负责人和参与人:"+MainApp.gson.toJson(allUsers));
             } else {
                 tv_toUsers.setText("没有参与人");
             }
@@ -375,7 +376,13 @@ LogUtil.d(" 穿过来的task： "+MainApp.gson.toJson(mTask));
                 getDiscussion();
                 showAttachment();
                 taskId = task.getId(); //任务ID获取
-                LogUtil.d("任务详情返回数据：" + MainApp.gson.toJson(task));
+                LogUtil.d("任务详情返回 解析数据：" + MainApp.gson.toJson(task));
+
+                try {
+                    LogUtil.d("返回数据：" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -451,10 +458,14 @@ LogUtil.d(" 穿过来的task： "+MainApp.gson.toJson(mTask));
         startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
     }
 
+    /**
+     * 新建子任务
+     * */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("Task", mTask);
+        bundle.putSerializable("allUsers", allUsers);
         app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
     }
 
