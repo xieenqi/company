@@ -27,6 +27,7 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
 
 import java.io.Serializable;
@@ -128,25 +129,28 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         app.getRestAdapter().create(IProject.class).getProjectSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
+                LogUtil.d("获取项目详情的任务，报告，审批json: "+MainApp.gson.toJson(paginationx));
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
                     ArrayList lstDataTemp = GetTData(paginationx);
                     pagination.setPageIndex(paginationx.getPageIndex());
                     pagination.setPageSize(paginationx.getPageSize());
 
-                    if (isTopAdd) {
-                        lstData.clear();
-                    }
+
                     lstData.addAll(lstDataTemp);
                     onLoadSuccess(paginationx.getTotalRecords());
                     pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
                     changeAdapter();
                     expand();
                 }
+                if (isTopAdd) {
+                    lstData.clear();
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 mExpandableListView.onRefreshComplete();
             }

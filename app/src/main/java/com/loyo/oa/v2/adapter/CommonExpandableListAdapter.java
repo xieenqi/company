@@ -62,6 +62,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         //审批
         if (obj instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) obj;
+            LogUtil.d(" 加载审批数据： "+ MainApp.gson.toJson(wfInstance));
             if (wfInstance.getTitle() != null) {
                 title.setText(wfInstance.getTitle());
             }
@@ -93,7 +94,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         else if (obj instanceof Task) {
             layout_discuss.setVisibility(View.VISIBLE);
             Task task = (Task) obj;
-            LogUtil.d(" 任务的数据： "+ MainApp.gson.toJson(task));
+            LogUtil.d(" 加载任务的数据： "+ MainApp.gson.toJson(task));
             if (task.getStatus() == Task.STATUS_PROCESSING) {
                 status.setImageResource(R.drawable.task_status_1);
             } else if (task.getStatus() == Task.STATUS_REVIEWING) {
@@ -126,6 +127,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         else if (obj instanceof WorkReport) {
             layout_discuss.setVisibility(View.VISIBLE);
             final WorkReport workReport = (WorkReport) obj;
+            LogUtil.d(" 加载 报告 的数据： "+ MainApp.gson.toJson(workReport));
             DiscussCounter discussCounter = workReport.getDiscuss();
             //iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
             //tv_discuss_num.setText(discussCounter.getTotal() + "");

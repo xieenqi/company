@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -136,6 +135,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        Toast(" 下啦刷新！！！ ");
         GetData(true, false);
     }
 

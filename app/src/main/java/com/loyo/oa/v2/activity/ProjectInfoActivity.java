@@ -166,7 +166,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     project.archiveData.approval, project.archiveData.attachment, project.archiveData.discuss};
             for (int i = 0; i < TITLES.length; i++) {
                 TITLES[i]+="("+sizes[i]+")";
-                LogUtil.d("栏目-> size : "+sizes[i]);
+               // LogUtil.d("栏目-> size : "+sizes[i]);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("project", project);
                 BaseFragment fragmentX = null;

@@ -87,8 +87,10 @@ public class WfInstanceAddActivity extends BaseActivity {
 
     @ViewById GridView gridView_photo;
     @ViewById EditText edt_memo;
+    @Extra
+    String projectId;
 
-    public String projectId,deptId;
+    public String deptId;
 
     //要提交的数据的展示容器
     @ViewById LinearLayout wfinstance_data_container;

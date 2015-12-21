@@ -308,7 +308,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 map.put("type", mSelectType);
                 map.put("beginAt", beginAt / 1000);
                 map.put("endAt", endAt / 1000);
-                if (TextUtils.isEmpty(projectId)) {
+                if (!TextUtils.isEmpty(projectId)) {
                     map.put("projectId", projectId);
                 }
                 map.put("attachmentUUId", uuid);
