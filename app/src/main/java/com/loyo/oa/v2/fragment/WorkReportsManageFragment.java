@@ -2,9 +2,11 @@ package com.loyo.oa.v2.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportsSearchActivity;
@@ -60,9 +62,11 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void openSearch() {
+
         Intent intent = new Intent();
         intent.setClass(mActivity, WorkReportsSearchActivity.class);
         startActivityForResult(intent, REQUEST_REVIEW);
+
     }
 
     @Override
@@ -74,6 +78,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         map.put("reportType", type);
         map.put("sendType", sendType);
         map.put("isReviewed", status);
+
         //map.put("keyword", "");
         //map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         //map.put("endAt", System.currentTimeMillis() / 1000);

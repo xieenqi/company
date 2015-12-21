@@ -30,6 +30,7 @@ import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.fragment.TaskManagerFragment;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -69,11 +70,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
-//        if (null != getIntent() && getIntent().hasExtra("isSelect")) {
-//        }
+
         vs_nodata = findViewById(R.id.vs_nodata);
         mIntent = getIntent();
         befrompage = mIntent.getStringExtra("from");
+        LogUtil.dll("fromPage:"+befrompage);
         isSelect = mIntent.getBooleanExtra("isSelect", false);
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
@@ -154,15 +155,21 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
                 if ("新建拜访".equals(befrompage)) {
-                    LogUtil.dll("来自新建拜访");
                     returnData(position - 1);
                 } else if ("客户管理".equals(befrompage)) {
-                    LogUtil.dll("来自客户管理");
                     Intent intent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
                     intent.putExtra("Id", lstData.get(position - 1).getId());
                     startActivity(intent);
+                } else if("新建工作报告".equals(befrompage)){
+
+                    Intent intent = new Intent();
+                    intent.putExtra("data",lstData.get(position - 1));
+                    app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,intent);
+
                 }
+
             }
         });
     }
@@ -171,7 +178,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         if (strSearch.length() > 0) {
-            Utils.dialogShow(this);
             isTopAdd = true;
             getData();
         } else {
@@ -279,20 +285,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         }
         vs_nodata.setVisibility(View.GONE);
         changeAdapter();
-        Utils.dialogDismiss();
+
     }
 
 
     @Override
     public void failure(RetrofitError error) {
-        if (error.getKind() == RetrofitError.Kind.NETWORK) {
-            Toast("请检查您的网络连接");
-        } else if (error.getResponse().getStatus() == 500) {
-            Toast("网络异常500,请稍候再试");
-        } else if (error.getResponse().getStatus() == 200) {
-            Toast("搜索失败，请稍候再试");
-        }
-        Utils.dialogDismiss();
+        HttpErrorCheck.checkError(error);
     }
 
     protected void changeAdapter() {

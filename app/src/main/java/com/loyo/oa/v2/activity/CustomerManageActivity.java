@@ -43,12 +43,10 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         onBackPressed();
     }
 
-
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_search_right;
     @ViewById ViewGroup layout_title_action;
     @ViewById ViewGroup layout_category;
-
     @ViewById ListView lv_customer_category;
     @ViewById(R.id.img_title_arrow) ImageView imageArrow;
 

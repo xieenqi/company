@@ -22,8 +22,10 @@ public class TasksManageActivity extends BaseFragmentActivity {
         transaction.add(R.id.main_content, taskManagerFragment);
         transaction.commit();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }

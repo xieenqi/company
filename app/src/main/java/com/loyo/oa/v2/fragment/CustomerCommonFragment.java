@@ -572,16 +572,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
-                        LogUtil.d("客户管理失败：" + error.getMessage());
-//                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                            Toast("请检查您的网络连接");
-//                        } else if (error.getResponse().getStatus() == 500) {
-//                            Toast("网络异常500，请稍候再试");
-//                        } else if (error.getResponse().getStatus() == 200) { //失败返回200，就再请求一次，知道拉到数据为止
-//                            getData();
-//                        }
-//                        if(error.getResponse().getStatus() != 200) {
-//                        }
                         listView.onRefreshComplete();
 
                     }
