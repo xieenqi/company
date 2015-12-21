@@ -121,7 +121,6 @@ public class BulletinAddActivity extends BaseActivity {
                         viewers.add(new BulletinViewer(dept_id, null));
                     }
                 }
-
                 map.put("viewers", viewers);
 
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
@@ -129,8 +128,8 @@ public class BulletinAddActivity extends BaseActivity {
                     public void success(Bulletin bulletin, Response response) {
                         if (bulletin != null) {
                             if (mAttachment != null) {
-                                bulletin.setAttachmentUUId(mUuid);
-                                bulletin.setAttachments(mAttachment);
+                                bulletin.attachmentUUId=mUuid;
+                                bulletin.attachments=mAttachment;
                             }
 
                             Intent intent = new Intent();
@@ -140,7 +139,14 @@ public class BulletinAddActivity extends BaseActivity {
 
                         onBackPressed();
                     }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                    }
                 });
+
+
             }
         });
 
