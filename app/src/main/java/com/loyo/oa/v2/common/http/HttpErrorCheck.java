@@ -30,6 +30,9 @@ public class HttpErrorCheck {
         if(msg.contains("401")){
             Toast("失败："+error.getMessage());
         }
+        if(msg.contains("404")){
+            Toast("失败："+error.getMessage());
+        }
         if (error.getKind() == RetrofitError.Kind.NETWORK) {
             Toast("请检查您的网络连接");
         }

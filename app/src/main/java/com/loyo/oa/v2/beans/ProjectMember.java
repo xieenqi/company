@@ -14,61 +14,65 @@ import java.util.ArrayList;
  */
 public class ProjectMember extends BaseBeans {
 
+    public ProjectMember() {
+
+    }
+
     public ProjectMember(String userId, boolean canreadall) {
         this.userId = userId;
         this.canreadall = canreadall;
     }
 
-    private boolean canreadall;// (bool, optional): ,
-    private String id;// (int64, optional): ,
-    private boolean ismanager; //(bool, optional): ,
-    private long projectId;// (int64, optional): ,
-    private User user;// (&{organization User}, optional): ,
-    private String  userId;// (int, optional):
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
-    }
-
-    public boolean ismanager() {
-        return ismanager;
-    }
-
-    public void setIsmanager(boolean ismanager) {
-        this.ismanager = ismanager;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public boolean isCanreadall() {
-        return canreadall;
-    }
-
-    public void setCanreadall(boolean canreadall) {
-        this.canreadall = canreadall;
-    }
+    public boolean canreadall;// (bool, optional): ,
+    public String id;// (int64, optional): ,
+    public boolean ismanager; //(bool, optional): ,
+    public long projectId;// (int64, optional): ,
+    public User user;// (&{organization User}, optional): ,
+    public String userId;// (int, optional):
+//
+//    public String getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(String userId) {
+//        this.userId = userId;
+//    }
+//
+//    public User getUser() {
+//        return user==null?new User():user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
+//
+//    public long getProjectId() {
+//        return projectId;
+//    }
+//
+//    public void setProjectId(long projectId) {
+//        this.projectId = projectId;
+//    }
+//
+//    public boolean ismanager() {
+//        return ismanager;
+//    }
+//
+//    public void setIsmanager(boolean ismanager) {
+//        this.ismanager = ismanager;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public boolean isCanreadall() {
+//        return canreadall;
+//    }
+//
+//    public void setCanreadall(boolean canreadall) {
+//        this.canreadall = canreadall;
+//    }
 
     public static String GetUserIds(ArrayList<ProjectMember> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
@@ -83,7 +87,7 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            sb.append(TextUtils.isEmpty(member.getUserId()) ? member.getUserId() : member.getUser().id);
+            sb.append(TextUtils.isEmpty(member.userId) ? member.userId : member.user.id);
         }
 
         return sb == null ? "" : sb.toString();
@@ -102,8 +106,8 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            if (member.getUser() != null) {
-                sb.append(member.getUser().getRealname());
+            if (member.user != null) {
+                sb.append(member.user.getRealname());
             }
         }
 
@@ -129,6 +133,6 @@ public class ProjectMember extends BaseBeans {
             return true;
         }
 
-        return this.getUserId() == ((ProjectMember) o).getUserId();
+        return this.userId == ((ProjectMember) o).userId;
     }
 }

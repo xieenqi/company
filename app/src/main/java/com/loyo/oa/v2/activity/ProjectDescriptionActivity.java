@@ -57,11 +57,11 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null != responsers && !responsers.isEmpty()) {
             StringBuilder managers = new StringBuilder();
             for (int i = 0; i < responsers.size(); i++) {
-                User u=responsers.get(i).getUser();
+                User u=responsers.get(i).user;
                 if(null==u){
                     continue;
                 }
-                managers.append(responsers.get(i).getUser().getRealname());
+                managers.append(responsers.get(i).user.getRealname());
                 if (i !=responsers.size() - 1) {
                     managers.append(",");
                 }
@@ -72,11 +72,11 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null != members && !members.isEmpty()) {
             StringBuilder subMembers = new StringBuilder();
             for (int i = 0; i < members.size(); i++) {
-                User u=members.get(i).getUser();
+                User u=members.get(i).user;
                 if(null==u){
                     continue;
                 }
-                subMembers.append(members.get(i).getUser().getRealname());
+                subMembers.append(members.get(i).user.getRealname());
                 if (i !=members.size() - 1) {
                     subMembers.append(",");
                 }

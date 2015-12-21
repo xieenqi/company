@@ -65,7 +65,7 @@ public final class Common {
 //        }
         if (!managers.isEmpty()) {
             for (int i = 0; i < managers.size(); i++) {
-                User member = managers.get(i).getUser();
+                User member = managers.get(i).user;
                 if (null != member) {
                     users.add(member);
                 }

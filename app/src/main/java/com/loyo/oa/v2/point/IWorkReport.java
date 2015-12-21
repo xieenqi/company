@@ -79,7 +79,7 @@ public interface IWorkReport {
      * @param id
      * @param cb
      */
-    @POST("/wreport/{id}")
+    @DELETE("/wreport/{id}")
     void deleteWorkReport(@Path("id") String  id,Callback<WorkReport> cb);
 
     @PUT("/wreport/{id}")

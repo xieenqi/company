@@ -135,7 +135,6 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        Toast(" 下啦刷新！！！ ");
         GetData(true, false);
     }
 
