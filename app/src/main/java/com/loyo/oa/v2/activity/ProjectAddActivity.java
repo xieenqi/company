@@ -55,12 +55,13 @@ public class ProjectAddActivity extends BaseActivity {
     @ViewById ListView lv_project_members;
 
     @Extra("project") Project mProject;
+    @Extra("mUpdate") boolean mUpdate;
 
     ProjectMemberListViewAdapter mAdapter;
     ArrayList<ManagersMembers> mProjectMember=new ArrayList<>();
 
-    String mManagerIds, mManagerNames, mMemberIds = "", mMemberNames = "";
-    boolean mUpdate = false;
+    String mManagerIds="", mManagerNames="", mMemberIds = "", mMemberNames = "";
+   // boolean mUpdate = false;
 
     @AfterViews
     void initViews() {
@@ -85,13 +86,14 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         if (mUpdate) {
-            app.getRestAdapter().create(IProject.class).getProjectById(mProject.getId(), new RCallback<Project>() {
-                @Override
-                public void success(Project project, Response response) {
-                    mProject = project;
-                    setProjectExtra();
-                }
-            });
+//            app.getRestAdapter().create(IProject.class).getProjectById(mProject.getId(), new RCallback<Project>() {
+//                @Override
+//                public void success(Project project, Response response) {
+//                    mProject = project;
+//
+//                }
+//            });
+            setProjectExtra();
         }
     }
 
@@ -103,9 +105,16 @@ public class ProjectAddActivity extends BaseActivity {
         edt_title.setText(mProject.title);
         edt_content.setText(mProject.content);
 
-        mManagerIds = ProjectMember.GetUserIds(mProject.managers);
+        //mManagerIds = ProjectMember.GetUserIds(mProject.managers);
+        for (ProjectMember ele:mProject.managers) {
+            mManagerIds+=ele.user.id+",";
+        }
+        LogUtil.d(mManagerIds+" deao得到的负责人： "+MainApp.gson.toJson(mProject.managers));
+        //mMemberIds = ProjectMember.GetUserIds(mProject.managers);
+        for (ProjectMember ele:mProject.managers) {
+            mMemberIds+=ele.user.id+",";
+        }
         mManagerNames = ProjectMember.GetUserNames(mProject.managers);
-        mMemberIds = ProjectMember.GetUserIds(mProject.managers);
         mMemberNames = ProjectMember.GetUserNames(mProject.managers);
 
         tv_managers.setText(mManagerNames);
@@ -187,9 +196,11 @@ public class ProjectAddActivity extends BaseActivity {
                 for (ProjectMember element : mProject.members) {
                     ManagersMembers member = new ManagersMembers();
                     member.canreadall = element.canreadall;
-                    member.user.id = element.user.id;
-                    member.user.name = element.user.name;
-                    member.user.avatar = element.user.avatar;
+                    NewUser nu=new NewUser();
+                    nu.id= element.user.id;
+                    nu.name = element.user.name;
+                    nu.avatar = element.user.avatar;
+                    member.user=nu;
                     mProjectMember.add(member);
                 }
             }
@@ -334,14 +345,13 @@ public class ProjectAddActivity extends BaseActivity {
 
     @Background
     void UpdateProject(ProjectTransObj obj) {
+        LogUtil.d(" 编辑项目传递数据: "+MainApp.gson.toJson(obj));
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
             public void success(Project project, Response response) {
                 Global.ToastLong("编辑项目成功");
-
                 Intent intent = new Intent();
                 intent.putExtra("data", project);
-
                 app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
             }
 
@@ -352,6 +362,10 @@ public class ProjectAddActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 组装 【负责人】
+     * @return
+     */
     ArrayList<ManagersMembers> getProjectManager() {
         if (TextUtils.isEmpty(mManagerIds)) {
             return new ArrayList<>();
@@ -374,7 +388,7 @@ public class ProjectAddActivity extends BaseActivity {
     }
 
     /**
-     * 组装 参与人
+     * 组装 【参与人】
      *
      * @return
      */

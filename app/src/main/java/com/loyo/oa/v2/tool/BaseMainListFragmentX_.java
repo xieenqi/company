@@ -185,6 +185,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                         break;
                     }
                 }
+                GetData(true, false);
                 break;
         }
 

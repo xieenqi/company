@@ -271,6 +271,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             case TasksInfoActivity.REQUEST_EDIT_DELETE:
                 if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
+                    bundle.putBoolean("mUpdate",true);
                     bundle.putSerializable("project", project);
                     app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
                             TasksInfoActivity.REQUEST_EDIT, bundle);
