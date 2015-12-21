@@ -181,7 +181,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         layout_discussion.setOnTouchListener(Global.GetTouch());
     }
 
-    @UiThread
     void updateUI(WorkReport mWorkReport) {
         if (mWorkReport == null) {
             return;
@@ -416,12 +415,17 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     public String getJoinUserNames() {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < mWorkReport.getMembers().getUsers().size(); i++) {
-            result.append(mWorkReport.getMembers().getUsers().get(i).getName());
-            if (i < mWorkReport.getMembers().getUsers().size() - 1) {
-                result.append(",");
+        if (mWorkReport.getMembers().getUsers() != null && mWorkReport.getMembers().getUsers().size() != 0) {
+            for (int i = 0; i < mWorkReport.getMembers().getUsers().size(); i++) {
+                result.append(mWorkReport.getMembers().getUsers().get(i).getName());
+                if (i < mWorkReport.getMembers().getUsers().size() - 1) {
+                    result.append(",");
+                }
             }
+
+            return result.toString();
+        } else {
+            return result.append("无点评人").toString();
         }
-        return result.toString();
     }
 }

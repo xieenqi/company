@@ -29,6 +29,7 @@ public class Members implements Serializable {
         this.depts = depts;
     }
 
+    /*获取参与人*/
     public ArrayList<NewUser> getAllData() {
         ArrayList<NewUser> newData=new ArrayList<NewUser>();
         if(users!=null){
@@ -39,5 +40,4 @@ public class Members implements Serializable {
         }
         return newData;
     }
-
 }

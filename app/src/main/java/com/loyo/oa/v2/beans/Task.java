@@ -47,10 +47,14 @@ public class Task extends BaseBeans {
         return "";
     }
 
-
     public Members getMembers() {
         return members;
     }
+
+    public void setMembers(Members members) {
+        this.members = members;
+    }
+
 
     public Project getProject() {
         return ProjectInfo;
@@ -103,12 +107,6 @@ public class Task extends BaseBeans {
             }
         }
 
-/*        for (Reviewer member : members) {
-            if (member.getUser() != null && member.getUser().isCurrentUser()) {
-                return member.isViewed();
-            }
-        }*/
-
         return true;
     }
 
@@ -120,14 +118,6 @@ public class Task extends BaseBeans {
                 return;
             }
         }
-
-/*        for (int i = 0; i < members.size(); i++) {
-            NewUser u = members.get(i).getUser();
-            if (u != null && u.isCurrentUser()) {
-                members.get(i).setViewed(ack);
-                return;
-            }
-        }*/
     }
 
     public Task() {
@@ -167,10 +157,6 @@ public class Task extends BaseBeans {
         }
 
         return checklists;
-    }
-
-    public void setchecklists(ArrayList<TaskCheckPoint> checkList) {
-        this.checklists = checkList;
     }
 
     public String getContent() {
@@ -285,11 +271,9 @@ public class Task extends BaseBeans {
 
     public ArrayList<NewUser> getJoinedUsers() {
         ArrayList<NewUser> user = new ArrayList<>();
-
-        for (int i = 0; i < members.getUsers().size(); i++) {
-            user.add(members.getUsers().get(i));
+        for (int i = 0; i < getMembers().getUsers().size(); i++) {
+            user.add(getMembers().getUsers().get(i));
         }
-
         return user;
     }
 

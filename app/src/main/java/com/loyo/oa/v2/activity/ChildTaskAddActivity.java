@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -50,16 +51,14 @@ public class ChildTaskAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_child_add_responser;
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
-
     @ViewById TextView tv_child_add_responser_name;
-
     @ViewById EditText et_child_add_content;
-
     @ViewById Button btn_child_add_complete;
     @ViewById Button btn_child_add_cancel_complete;
 
     @Extra("childTask") TaskCheckPoint chidTask;
     @Extra("Task") Task mTask;
+    @Extra("allUsers") ArrayList<NewUser> allUsers; //负责人与参与人 集合
 
     TaskCheckPoint mChildTask = new TaskCheckPoint();
 
@@ -67,6 +66,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
     @AfterViews
     void intUi() {
+
         setTouchView(-1);
         layout_child_add_responser.setOnTouchListener(Global.GetTouch());
         btn_child_add_complete.setOnTouchListener(Global.GetTouch());
@@ -124,15 +124,6 @@ public class ChildTaskAddActivity extends BaseActivity {
             findViewById(R.id.layout_child_add_action).setVisibility(View.GONE);
         }
 
-        if (null != mTask) {
-            boolean isSameUser = (null != mTask.getJoinedUsers() && mTask.getJoinedUsers().size() == 1 && mTask.getJoinedUsers().get(0).equals(mTask.getResponsiblePerson()));
-            if ((null == mTask.getJoinedUsers() || mTask.getJoinedUsers().isEmpty() || isSameUser)) {
-                newUser = mTask.getResponsiblePerson();
-                if (null != newUser) {
-                    tv_child_add_responser_name.setText(newUser.getRealname());
-                }
-            }
-        }
     }
 
     @Click({R.id.layout_child_add_responser, R.id.btn_child_add_complete, R.id.btn_child_add_cancel_complete, R.id.img_title_left, R.id.img_title_right})
@@ -141,20 +132,10 @@ public class ChildTaskAddActivity extends BaseActivity {
             //选择添加负责人
             case R.id.layout_child_add_responser:
 
-                ArrayList<NewUser> users = new ArrayList<>();
-                if (null != mTask) {
-                    if (null != mTask.getJoinedUsers() && !mTask.getJoinedUsers().isEmpty()) {
-                        users.addAll(mTask.getJoinedUsers());
-                    }
-                    if (null != mTask.getResponsiblePerson()) {
-                        if (!users.contains(mTask.getResponsiblePerson())) {
-                            users.add(mTask.getResponsiblePerson());
-                        }
-                    }
-                }
                 Bundle b1 = new Bundle();
-                b1.putSerializable("users", users);
+                b1.putSerializable("users", allUsers);
                 app.startActivityForResult(this, ChildTaskResponserSelectActivity_.class, MainApp.ENTER_TYPE_RIGHT, 300, b1);
+
                 break;
             case R.id.btn_child_add_complete:
             case R.id.btn_child_add_cancel_complete:
