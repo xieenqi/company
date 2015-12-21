@@ -77,7 +77,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ViewGroup img_title_right;
     @ViewById
     ImageView imgview_title_right;
-
     @ViewById
     ViewGroup layout_customer_district;
     @ViewById
@@ -88,14 +87,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ViewGroup layout_customer_responser;
     @ViewById
     ViewGroup layout_customer_join_users;
-
-
     @ViewById(R.id.layout_customer_extra_info)
     LinearLayout container;
-
     @ViewById
     EditText tv_address;
-
     @ViewById
     EditText tv_customer_name;
     @ViewById
@@ -134,16 +129,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @Extra("CustomerId")
     String mCustomerId;
 
-
     private double lat, lng;
-
-    ArrayList<NewTag> mTagItems = new ArrayList<>();
+    private ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
     private User owner = new User();
     private ArrayList<Member> members = new ArrayList<>();
     private CustomerRegional regional = new CustomerRegional();
     private Industry industry = new Industry();
-
     private Animation animation;
 
     @AfterViews

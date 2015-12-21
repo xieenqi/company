@@ -42,7 +42,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         btn_cancel = (Button) this.findViewById(R.id.btn_cancel);
 
         layout = (LinearLayout) findViewById(R.id.pop_layout);
-
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
         layout.setOnClickListener(new OnClickListener() {
 

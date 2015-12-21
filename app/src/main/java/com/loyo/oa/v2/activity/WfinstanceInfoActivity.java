@@ -25,6 +25,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfNodes;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
@@ -410,10 +411,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
             case R.id.layout_lastwork:
                 showApproveDialog(1);
                 break;
+            /*附件上传*/
             case R.id.layout_AttachFile:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("data", wfInstance.getAttachments());
                 bundle.putSerializable("uuid", wfInstance.getAttachmentUUId());
+                bundle.putBoolean("isMyUser", false);
+                bundle.putInt("fromPage", Common.WFIN_PAGE);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
         }

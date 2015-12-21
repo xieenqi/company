@@ -28,8 +28,10 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -127,8 +129,8 @@ public class TasksInfoActivity extends BaseActivity {
     @Extra("id")
     String mId;
 
-    private PaginationX<Discussion> mPageDiscussion;
-    private String taskId;  //任务ID
+    public PaginationX<Discussion> mPageDiscussion;
+    public String taskId;  //任务ID
     public static TasksInfoActivity instance = null;
     public int statusSize = 0;
     public ArrayList<NewUser> allUsers;
@@ -376,13 +378,6 @@ public class TasksInfoActivity extends BaseActivity {
                 getDiscussion();
                 showAttachment();
                 taskId = task.getId(); //任务ID获取
-                LogUtil.d("任务详情返回 解析数据：" + MainApp.gson.toJson(task));
-
-                try {
-                    LogUtil.d("返回数据：" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
             }
 
@@ -604,13 +599,19 @@ public class TasksInfoActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
+    /**
+     * 附件上传
+     * */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
+        bundle.putBoolean("isMyUser", false);
+        bundle.putInt("fromPage",Common.TASK_PAGE);
 
-        ArrayList<NewUser> users = new ArrayList<>();
+/*        ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getJoinedUsers() != null) {
             users.addAll(mTask.getJoinedUsers());
         }
@@ -623,7 +624,7 @@ public class TasksInfoActivity extends BaseActivity {
             users.add(mTask.getResponsiblePerson());
         }
 
-        bundle.putSerializable("users", users);
+        bundle.putSerializable("users", users);*/
 
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }

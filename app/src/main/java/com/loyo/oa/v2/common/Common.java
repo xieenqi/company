@@ -23,6 +23,12 @@ import java.util.List;
 
 public final class Common {
 
+    public static final int CUSTOMER_PAGE = 0;
+    public static final int TASK_PAGE = 1;
+    public static final int WORK_PAGE = 2;
+    public static final int WFIN_PAGE = 3;
+
+
     public static ArrayList<User> getUsersByProject(Project project) {
         if (null == project) {
             return new ArrayList<>();
