@@ -135,16 +135,18 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                     ArrayList lstDataTemp = GetTData(paginationx);
                     pagination.setPageIndex(paginationx.getPageIndex());
                     pagination.setPageSize(paginationx.getPageSize());
-
-
+                    if (isTopAdd) {
+                        lstData.clear();
+                    }
                     lstData.addAll(lstDataTemp);
                     onLoadSuccess(paginationx.getTotalRecords());
                     pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
                     changeAdapter();
                     expand();
-                }
-                if (isTopAdd) {
-                    lstData.clear();
+                }else{
+                    if (isTopAdd) {
+                        lstData.clear();
+                    }
                 }
             }
 

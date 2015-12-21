@@ -57,7 +57,7 @@ public class ProjectAddActivity extends BaseActivity {
     @Extra("project") Project mProject;
 
     ProjectMemberListViewAdapter mAdapter;
-    ArrayList<ProjectMember> mProjectMember;
+    ArrayList<ManagersMembers> mProjectMember=new ArrayList<>();
 
     String mManagerIds, mManagerNames, mMemberIds = "", mMemberNames = "";
     boolean mUpdate = false;
@@ -117,6 +117,7 @@ public class ProjectAddActivity extends BaseActivity {
         onBackPressed();
     }
 
+    //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
         Bundle bundle1 = new Bundle();
@@ -125,6 +126,7 @@ public class ProjectAddActivity extends BaseActivity {
         app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MANAGERS, bundle1);
     }
 
+    //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
         Bundle bundle1 = new Bundle();
@@ -162,11 +164,11 @@ public class ProjectAddActivity extends BaseActivity {
             return;
         }
 
-        String memberIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-        String memberNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+        mMemberIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
+        mMemberNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
 
-        mMemberIds = TextUtils.isEmpty(memberIds) ? memberIds : mMemberIds + "," + memberIds;
-        mMemberNames = TextUtils.isEmpty(memberNames) ? memberNames : mMemberNames + "," + memberNames;
+//        mMemberIds = TextUtils.isEmpty(memberIds) ? memberIds : mMemberIds + "," + memberIds;
+//        mMemberNames = TextUtils.isEmpty(memberNames) ? memberNames : mMemberNames + "," + memberNames;
 
         setMemberOnActivityResult();
     }
@@ -180,7 +182,16 @@ public class ProjectAddActivity extends BaseActivity {
 
         if (mUpdate) {
             if (mProject != null && !ListUtil.IsEmpty(mProject.members)) {
-                mProjectMember = mProject.members;
+
+                mProjectMember = new ArrayList<>();
+                for (ProjectMember element : mProject.members) {
+                    ManagersMembers member = new ManagersMembers();
+                    member.canreadall = element.canreadall;
+                    member.user.id = element.user.id;
+                    member.user.name = element.user.name;
+                    member.user.avatar = element.user.avatar;
+                    mProjectMember.add(member);
+                }
             }
         }
 
@@ -189,21 +200,20 @@ public class ProjectAddActivity extends BaseActivity {
             String[] memberNames = mMemberNames.split(",");
 
             for (int i = 0; i < memberIds.length; i++) {
-                if (TextUtils.isEmpty(memberIds[i])) {
-                    continue;
-                }
+//                if (TextUtils.isEmpty(memberIds[i])) {
+//                    continue;
+//                }
                 String uId = memberIds[i];
                 if (!TextUtils.isEmpty(uId)) {
-                    User u = new User();
+                    NewUser u = new NewUser();
                     u.id = uId;
-                    u.realname = memberNames[i];
-
-                    ProjectMember member = new ProjectMember(uId, false);
-                    member.setUserId(uId);
-                    member.setUser(u);
+                    u.name = memberNames[i];
+                    ManagersMembers member = new ManagersMembers();
+                    member.user = u;
+                    mProjectMember.add(member);
                     if (!mProjectMember.contains(member)) {
-                        mProjectMember.add(member);
                     }
+
                 }
             }
         }
@@ -219,14 +229,29 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         if (mProject != null) {
-            mProject.members=mProjectMember;
+            for (ManagersMembers element:mProjectMember){
+                ProjectMember pm=new ProjectMember();
+                pm.canreadall=element.canreadall;
+                pm.userId=element.user.id;
+                User uu=new User();
+                uu.id=element.user.id;
+                uu.name=element.user.name;
+                pm.user=uu;
+                mProject.members.add(pm);
+            }
         }
 
-        mAdapter = new ProjectMemberListViewAdapter(this, mProjectMember);
+        mAdapter = new ProjectMemberListViewAdapter(this, createData());//?????mProjectMember
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
-                mProjectMember = mAdapter.GetProjectMembers();
+                for (ProjectMember ele :mAdapter.GetProjectMembers()) {
+                    ManagersMembers mm=new ManagersMembers();
+                    mm.canreadall=ele.canreadall;
+                    mm.user.id=ele.user.id;
+                    mm.user.name=ele.user.realname;
+                    mProjectMember.add(mm);
+                }
                 mAdapter.notifyDataSetInvalidated();
             }
         });
@@ -234,7 +259,20 @@ public class ProjectAddActivity extends BaseActivity {
         lv_project_members.setAdapter(mAdapter);
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
-
+    public ArrayList<ProjectMember> createData(){
+        ArrayList<ProjectMember> obj=new ArrayList<ProjectMember>();
+        for (ManagersMembers ele:mProjectMember){
+            ProjectMember pm=new ProjectMember();
+            pm. canreadall=ele.canreadall;
+            pm.userId=ele.user.id;
+            User uu=new User();
+            uu.id=ele.user.id;
+            uu.name=ele.user.name;
+            pm.user=uu;
+            obj.add(pm);
+        }
+        return obj;
+    }
     @Click(R.id.img_title_right)
     void CreateOrUpdateProject() {
         if (TextUtils.isEmpty(mManagerIds)) {
@@ -328,6 +366,10 @@ public class ProjectAddActivity extends BaseActivity {
                 members.add(mm);
             }
         }
+        String[] arrName = mManagerNames.split(",");
+        for (int i = 0; i < arrName.length; i++) {
+            members.get(i).user.name = arrName[i];
+        }
         return members;
     }
 
@@ -342,7 +384,7 @@ public class ProjectAddActivity extends BaseActivity {
         for (ProjectMember element : data) {
             ManagersMembers menb = new ManagersMembers();
             menb.canreadall = false;
-            User userOlde = element.getUser();
+            User userOlde = element.user;
             menb.user.id = userOlde.id;
             menb.user.avatar = userOlde.avatar;
             menb.user.name = userOlde.name;
@@ -360,7 +402,8 @@ public class ProjectAddActivity extends BaseActivity {
 
     public class ManagersMembers {
         public boolean canreadall;
-        public NewUser user=new NewUser();
+        public NewUser user = new NewUser();
+
     }
 
     public class NewUser {

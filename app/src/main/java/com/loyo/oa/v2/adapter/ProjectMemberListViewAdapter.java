@@ -33,7 +33,7 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectMember> {
 
     @Override
     public void convert(final ViewHolder holder, final ProjectMember projectMember) {
-        holder.setText(R.id.tv_member, projectMember.getUser().getRealname());
+        holder.setText(R.id.tv_member, projectMember.user.getRealname());
 
         ImageView view = holder.getView(R.id.img_project_member_delete);
         view.setOnClickListener(new View.OnClickListener() {
@@ -47,13 +47,13 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectMember> {
         });
 
         Switch sw = holder.getView(R.id.switch_member);
-        sw.setChecked(projectMember.isCanreadall());
+        sw.setChecked(projectMember.canreadall);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ProjectMember p = mProjectMembers.get(holder.getPosition());
                 if (p != null){
-                    p.setCanreadall(isChecked);
+                    p.canreadall=isChecked;
                 }
             }
         });

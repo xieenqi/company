@@ -113,7 +113,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
             ArrayList<ProjectMember> members = mProject.managers;
             if (null != members && !members.isEmpty()) {
                 for (int i = 0; i < members.size(); i++) {
-                    if (members.get(i).getUser().equals(MainApp.user)) {
+                    if (members.get(i).user.equals(MainApp.user)) {
                         hasRights = true;
                         break;
                     }

@@ -76,7 +76,7 @@ public class Project extends BaseBeans {
         ArrayList<ProjectMember> responsers = this.managers;
         if (null != responsers && !responsers.isEmpty()) {
             for (int i = 0; i < responsers.size(); i++) {
-                User u = responsers.get(i).getUser();
+                User u = responsers.get(i).user;
                 if (null == u) {
                     continue;
                 }
