@@ -21,7 +21,6 @@ public class NewUser implements Serializable {
         if (users == null || users.isEmpty()){
             return "";
         }
-
         StringBuffer sb = null;
         for (NewUser user : users) {
             if (sb == null) {

@@ -194,13 +194,12 @@ public class TasksInfoActivity extends BaseActivity {
 
         if (mTask.members!=null) {
             if (mTask.members.getAllData().size()>0) {
-                String userNames=null;
+                StringBuffer userNames = new StringBuffer();
                 for (NewUser element:mTask.members.getAllData()) {
-                    userNames+=element.getName()+",";
+                    userNames.append(element.getName()+",");
                 }
-                tv_toUsers.setText("参与人:" + userNames);
+                tv_toUsers.setText("参与人:" + userNames.toString());
                 allUsers.addAll(mTask.members.getAllData());
-                LogUtil.dll("负责人和参与人:"+MainApp.gson.toJson(allUsers));
             } else {
                 tv_toUsers.setText("没有参与人");
             }

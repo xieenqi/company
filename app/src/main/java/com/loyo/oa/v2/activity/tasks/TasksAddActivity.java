@@ -41,7 +41,6 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -111,9 +110,9 @@ public class TasksAddActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private NewUser newUser;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-    private Members member = new Members();
-    private ArrayList<NewUser> userss = new ArrayList<>();
-    private ArrayList<NewUser> depts = new ArrayList<>();
+    private Members member;
+    private ArrayList<NewUser> userss;
+    private ArrayList<NewUser> depts;
 
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
@@ -129,6 +128,10 @@ public class TasksAddActivity extends BaseActivity {
                 layout_deadline,
                 layout_del,
                 layout_remind, layout_project);
+
+        userss = new ArrayList<>();
+        depts = new ArrayList<>();
+        member = new Members();
 
         init_gridView_photo();
         setTouchView(-1);
@@ -203,8 +206,6 @@ public class TasksAddActivity extends BaseActivity {
         map.put("reviewFlag", switch_approve.isChecked());
         map.put("attachmentUUId", uuid);
 
-        LogUtil.dll("发送参数："+MainApp.gson.toJson(map));
-
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
@@ -276,12 +277,14 @@ public class TasksAddActivity extends BaseActivity {
                 requestCommitTask(title, content);
 
                 break;
+
             //负责人选项
             case R.id.layout_responsiblePerson:
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
                 break;
+
             case R.id.layout_deadline:
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
@@ -290,10 +293,10 @@ public class TasksAddActivity extends BaseActivity {
                         String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
                         mDeadline = DateTool.getDateToTimestamp(str, app.df3);
-
                     }
                 });
                 break;
+
             //参与人选项
             case R.id.tv_toUsers:
                 Bundle bundle1 = new Bundle();
@@ -301,6 +304,7 @@ public class TasksAddActivity extends BaseActivity {
                 bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle1);
                 break;
+
             case R.id.layout_del:
                 userss.clear();
                 depts.clear();
@@ -308,6 +312,7 @@ public class TasksAddActivity extends BaseActivity {
                 layout_del.setVisibility(View.GONE);
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
                 break;
+
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
                 bundle2.putBoolean("isSelect", true);
@@ -492,10 +497,6 @@ public class TasksAddActivity extends BaseActivity {
                 mTask.setResponsiblePersonId(newUser.getId());
                 mTask.setResponsiblePersonName(newUser.getRealname());
             }
-
-            /*if (!members.isEmpty()) {
-                mTask.setMembers(members);
-            }*/
 
             if (mDeadline > 0) {
                 mTask.setPlanEndAt(mDeadline);

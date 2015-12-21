@@ -91,8 +91,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                item_info.tv_result.setText("同意");
            }
-
-           else{
+          else{
                if(wfNodes.getActive() == 1){
                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
                    item_info.tv_deal_time.setText("");
@@ -104,13 +103,13 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                else if(wfNodes.getActive() == 2){
                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
                    item_info.tv_deal_time.setText("");
-                   item_info.tv_result.setText("正在处理");
+                   item_info.tv_result.setText("处理中");
                    item_info.tv_comment.setVisibility(View.GONE);
                    item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
                }
 
                else if(wfNodes.getActive() == 3){
-                   if (wfNodes.isApproveFlag() == false) {
+                   if (wfNodes.isApproveFlag() == true) {
                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                        item_info.tv_result.setText("同意");
                    } else {

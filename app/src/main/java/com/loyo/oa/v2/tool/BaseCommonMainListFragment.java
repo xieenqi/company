@@ -228,14 +228,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
 
-        LogUtil.d(" 项目、任务、报告、审批的统一界面 成功 URL： " + response.getUrl());
-        LogUtil.d(" 项目、任务、报告、审批的统一界面 成功 json： " +MainApp.gson.toJson(tPaginationX));
-        try {
-            LogUtil.dll("任务success result:"+Utils.convertStreamToString(response.getBody().in()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         mExpandableListView.onRefreshComplete();
         if (null == tPaginationX) {
             return;
@@ -254,14 +246,13 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-        LogUtil.dll("result:"+MainApp.gson.toJson(tPaginationX));
+        LogUtil.dll("项目、任务、报告、审批的统一界面 result:" + MainApp.gson.toJson(tPaginationX));
 
     }
 
     @Override
     public void failure(RetrofitError error) {
         HttpErrorCheck.checkError(error);
-        LogUtil.d(error.getUrl() + " 1项目、任务、报告、审批的统一界面  错误 " + error.getMessage());
         mExpandableListView.onRefreshComplete();
     }
 
