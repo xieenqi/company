@@ -340,7 +340,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
 
             case R.id.tv_resignin:
-                //选择日期
+            /*选择日期*/
                 selectDate();
                 break;
             case R.id.layout_reviewer:
@@ -358,9 +358,11 @@ public class WorkReportAddActivity extends BaseActivity {
                 layout_del.setVisibility(View.GONE);
                 img_title_toUser.setVisibility(View.VISIBLE);
                 break;
+            /*选择项目归档*/
             case R.id.layout_mproject:
                 Bundle bundle1 = new Bundle();
                 bundle1.putBoolean("isSelect", true);
+                bundle1.putString("from", "新建工作报告");
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle1);
                 break;
         }
@@ -430,7 +432,9 @@ public class WorkReportAddActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+            /*项目归档回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
+                LogUtil.dll("回来");
                 Project _project = (Project) data.getSerializableExtra("data");
                 projectId = _project.id;
                 if (null != _project) {
