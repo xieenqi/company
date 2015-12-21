@@ -187,7 +187,7 @@ public class WorkReportAddActivity extends BaseActivity {
             NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
 
-            //tv_toUser.setText(mWorkReport.getJoinUserNames());
+            tv_toUser.setText(getMenberText());
             edt_content.setText(mWorkReport.getContent());
 
             if (null != mWorkReport.getProject()) {
@@ -204,6 +204,19 @@ public class WorkReportAddActivity extends BaseActivity {
         if (type == TYPE_EDIT) {
             getAttachments();
         }
+    }
+
+    /**
+     * 获取传过来 的menber信息
+     * @return
+     */
+    private String getMenberText() {
+        String mt = "";
+        for (NewUser ele : mWorkReport.getMembers().getUsers()) {
+            mt += ele.getName();
+        }
+        members=mWorkReport.getMembers();//传过来 的menber
+        return mt;
     }
 
     /**
@@ -321,8 +334,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                 if (type == TYPE_EDIT) {
                     updateReport(map);
-                }
-                else {
+                } else {
                     creteReport(map);
                 }
                 break;
@@ -356,8 +368,8 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 编辑报告请求
-     * */
-    public void updateReport(HashMap map){
+     */
+    public void updateReport(HashMap map) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
 
             @Override
@@ -376,13 +388,13 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 新建报告请求
-     * */
-    public void creteReport(HashMap map){
-        LogUtil.d("手机端发送数据："+MainApp.gson.toJson(map));
+     */
+    public void creteReport(HashMap map) {
+        LogUtil.d("手机端发送数据：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
-                LogUtil.d(" 创建报告 json： "+MainApp.gson.toJson(workReport));
+                LogUtil.d(" 创建报告 json： " + MainApp.gson.toJson(workReport));
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }
@@ -394,8 +406,6 @@ public class WorkReportAddActivity extends BaseActivity {
             }
         });
     }
-
-
 
 
     /**
@@ -422,7 +432,7 @@ public class WorkReportAddActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                projectId=_project.id;
+                projectId = _project.id;
                 if (null != _project) {
                     tv_project.setText(_project.title);
                 } else {
