@@ -34,6 +34,7 @@ public class HttpErrorCheck {
             Toast("请检查您的网络连接");
         }
         LogUtil.d("失败的错误信息："+error.getMessage());
+        LogUtil.d("接口URL："+error.getUrl());
     }
 
 }

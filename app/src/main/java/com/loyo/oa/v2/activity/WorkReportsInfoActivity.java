@@ -20,8 +20,10 @@ import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -116,7 +118,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Extra("id")
     String mId;
 
-    PaginationX<Discussion> mPageDiscussion;
+    public PaginationX<Discussion> mPageDiscussion;
 
     @AfterViews
     void init() {
@@ -138,7 +140,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).get(getId(), new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
-                LogUtil.dll("报告详情解析后：" + MainApp.gson.toJson(_workReport));
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -150,6 +151,27 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
         });
     }
+
+    /**
+     * 报告删除
+     * */
+    void delete_WorkReport(){
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(getId(), new RCallback<WorkReport>() {
+            @Override
+            public void success(WorkReport workReport, Response response) {
+                Intent intent = new Intent();
+                intent.putExtra("delete", mWorkReport);
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
 
     @Background
     void getDiscussion() {
@@ -179,6 +201,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         img_title_right.setVisibility(View.INVISIBLE);
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
+
     }
 
     void updateUI(WorkReport mWorkReport) {
@@ -191,7 +214,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
             tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
         }
-
 
         StringBuilder title = new StringBuilder(mWorkReport.getCreator().name + "提交 ");
         String reportDate = "";
@@ -293,14 +315,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             case MSG_DELETE_WORKREPORT:
                 if (data.getBooleanExtra("delete", false)) {
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(mWorkReport.getId(), new RCallback<WorkReport>() {
-                        @Override
-                        public void success(WorkReport workReport, Response response) {
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", mWorkReport);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-                        }
-                    });
+                    delete_WorkReport();
                 } else if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
@@ -361,14 +376,22 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
+    /**
+     * 附件上传
+     * */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
+        bundle.putBoolean("isMyUser", false);
+        bundle.putInt("fromPage", Common.WORK_PAGE);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
 
+    /**
+     * 讨论
+     * */
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
         Bundle bundle = new Bundle();
