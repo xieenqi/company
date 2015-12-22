@@ -385,7 +385,7 @@ public class TasksAddActivity extends BaseActivity {
             userss.add(newUser);
         }
 
-        member.setUsers(userss);
+        member.users=userss;
 
         if (!TextUtils.isEmpty(joinedUserName)) {
             tv_toUsers.setText(joinedUserName);

@@ -10,13 +10,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.GridViewUtils;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.MyGridView;
@@ -219,17 +222,18 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             holder.tv_content.setText(bulletin.content);
             holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.creator.depts.get(0).getShortDept().getName()
                     + " " + bulletin.creator.depts.get(0).getShortPosition().getName());
+
             ImageLoader.getInstance().displayImage(bulletin.creator.avatar, holder.iv_avatar);
-//            ArrayList<Attachment> attachments = bulletin.attachments;
-//            if (null != attachments && !attachments.isEmpty()) {
-//                holder.gridView.setVisibility(View.VISIBLE);
-//                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
-//                SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
-//                holder.gridView.setAdapter(adapter);
-//                GridViewUtils.updateGridViewLayoutParams(holder.gridView, 3);
-//            } else {
-//                holder.gridView.setVisibility(View.GONE);
-//            }
+            ArrayList<Attachment> attachments = bulletin.attachments;
+            if (null != attachments && !attachments.isEmpty()) {
+                holder.gridView.setVisibility(View.VISIBLE);
+                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
+                SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
+                holder.gridView.setAdapter(adapter);
+                GridViewUtils.updateGridViewLayoutParams(holder.gridView, 3);
+            } else {
+                holder.gridView.setVisibility(View.GONE);
+            }
 
         }
 

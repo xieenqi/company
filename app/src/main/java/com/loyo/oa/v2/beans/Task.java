@@ -271,8 +271,8 @@ public class Task extends BaseBeans {
 
     public ArrayList<NewUser> getJoinedUsers() {
         ArrayList<NewUser> user = new ArrayList<>();
-        for (int i = 0; i < getMembers().getUsers().size(); i++) {
-            user.add(getMembers().getUsers().get(i));
+        for (int i = 0; i < getMembers().users.size(); i++) {
+            user.add(getMembers().users.get(i));
         }
         return user;
     }
