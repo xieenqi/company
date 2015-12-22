@@ -47,11 +47,13 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -116,7 +118,7 @@ public class TasksAddActivity extends BaseActivity {
 
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
-    private int mRemind=0;
+    private int mRemind = 0;
     private boolean isCopy;
 
     @AfterViews
@@ -136,6 +138,19 @@ public class TasksAddActivity extends BaseActivity {
         init_gridView_photo();
         setTouchView(-1);
         getTempTask();
+
+        projectAddTask();
+
+    }
+
+    /**
+     * 项目 过来 创建任务
+     */
+    public void projectAddTask() {
+        if (!TextUtils.isEmpty(projectId)) {
+            layout_project.setEnabled(false);
+            tv_Project.setText(projectTitle);
+        }
     }
 
     /**
@@ -151,7 +166,7 @@ public class TasksAddActivity extends BaseActivity {
         tv_toUsers.setText(intent.getStringExtra("join"));
         tv_Project.setText(intent.getStringExtra("bepro"));
         switch_approve.setChecked(true);*/
-        isCopy = intent.getStringExtra("title")!=null?true:false;
+        isCopy = intent.getStringExtra("title") != null ? true : false;
 
     }
 
@@ -166,8 +181,8 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
 
             User u = new User();
-            u.id=mTask.getResponsiblePersonId();
-            u.realname=mTask.getResponsiblePersonName();
+            u.id = mTask.getResponsiblePersonId();
+            u.realname = mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
 
         }
@@ -199,7 +214,7 @@ public class TasksAddActivity extends BaseActivity {
         map.put("title", title);
         map.put("content", content);
         map.put("responsiblePerson", newUser);
-        map.put("members",member);
+        map.put("members", member);
         map.put("planendAt", mDeadline);
         map.put("remindflag", mRemind > 0);
         map.put("remindtime", mRemind);
@@ -222,8 +237,8 @@ public class TasksAddActivity extends BaseActivity {
                 intent.putExtra("data", task);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
-                if(isCopy)
-                TasksInfoActivity.instance.finish();
+                if (isCopy)
+                    TasksInfoActivity.instance.finish();
 
             }
 
@@ -315,7 +330,7 @@ public class TasksAddActivity extends BaseActivity {
 
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
-                bundle2.putInt("from",TASKS_ADD);
+                bundle2.putInt("from", TASKS_ADD);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                 break;
         }
@@ -385,7 +400,7 @@ public class TasksAddActivity extends BaseActivity {
             userss.add(newUser);
         }
 
-        member.users=userss;
+        member.users = userss;
 
         if (!TextUtils.isEmpty(joinedUserName)) {
             tv_toUsers.setText(joinedUserName);
@@ -403,7 +418,7 @@ public class TasksAddActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                projectId=_project.id;
+                projectId = _project.id;
                 if (null != _project) {
                     tv_Project.setText(_project.title);
                 } else {
@@ -421,9 +436,9 @@ public class TasksAddActivity extends BaseActivity {
                 else {
                     String cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-                    if(cc_user_id != null || cc_user_name != null){
+                    if (cc_user_id != null || cc_user_name != null) {
                         setJoinUsers(cc_user_id, cc_user_name);
-                    }else{
+                    } else {
                         Toast("未选择相关人员");
                     }
                 }
@@ -476,7 +491,7 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 没明白，这里销毁后，为什么要保存数据
-     * */
+     */
     //isSave=true时保存临时Task,=false时删除Task临时Task
     boolean isSave = true;
 
