@@ -69,7 +69,7 @@ public class WorkReportEditActivity extends BaseActivity {
     NewUser user_reviewer;
     WeeksDialog weeksDialog = null;
 
-    @Extra("data")
+    @Extra("mWorkReport")
     WorkReport mWorkReport;
 
     @AfterViews

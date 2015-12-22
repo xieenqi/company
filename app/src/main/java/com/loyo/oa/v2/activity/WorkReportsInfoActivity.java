@@ -120,7 +120,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         initUI();
         setTouchView(R.id.layout_touch);
         getData_WorkReport();
-        getDiscussion();
     }
 
     String getId() {
@@ -167,8 +166,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         });
     }
 
-
-    @Background
+    /**
+     * 获取讨论内容，服务端已启用，暂注释
+     * */
+/*    @Background
     void getDiscussion() {
         app.getRestAdapter().create(IWorkReport.class).getDiscussions(getId(), new RCallback<PaginationX<Discussion>>() {
             @Override
@@ -183,7 +184,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 HttpErrorCheck.checkError(error);
             }
         });
-    }
+    }*/
 
     void initUI() {
         super.setTitle("报告详情");
@@ -193,7 +194,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        img_title_right.setVisibility(View.INVISIBLE);
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
 
@@ -261,7 +261,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
-            img_title_right.setVisibility(View.GONE);
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
@@ -311,14 +310,21 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_DELETE_WORKREPORT:
+
+                //删除回调
                 if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
-                } else if (data.getBooleanExtra("edit", false)) {
+                }
+
+                //编辑回调
+                else if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                } else if ((data.getBooleanExtra("extra", false))) {
+                }
+
+                else if ((data.getBooleanExtra("extra", false))) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
@@ -406,11 +412,20 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                intent.putExtra("delete", true);
-                intent.putExtra("edit", true);
-                intent.putExtra("extra", "复制报告");
-                startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+
+                if(mWorkReport.isReviewed()){
+                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+                    intent.putExtra("delete", true);
+                    intent.putExtra("extra", "复制报告");
+                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+                }else{
+                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+                    intent.putExtra("delete", true);
+                    intent.putExtra("edit", true);
+                    intent.putExtra("extra", "复制报告");
+                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+                }
+
                 break;
             case R.id.btn_workreport_review:
                 reviewWorkreport();
