@@ -125,35 +125,36 @@ public class MainApp extends Application {
     }
 
 
-    public ArrayList<Province> mProvinces=new ArrayList<>();
-    public ArrayList<Industry> mIndustries=new ArrayList<>();
+    public ArrayList<Province> mProvinces = new ArrayList<>();
+    public ArrayList<Industry> mIndustries = new ArrayList<>();
 
-    /**xnq
+    /**
+     * xnq
      * 加载地区编码
      */
     void loadAreaCodeTable() {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
-                @Override
-                public void success(ArrayList<Province> provinces, Response response) {
-                    mProvinces=provinces;
-                    try {
-                        LogUtil.d("districts加载地区编码:" + Utils.convertStreamToString(response.getBody().in()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
+            @Override
+            public void success(ArrayList<Province> provinces, Response response) {
+                mProvinces = provinces;
+                try {
+                    LogUtil.d("districts加载地区编码:" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
     }
 
     void loadIndustryCodeTable() {
 
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getIndustry(new RCallback<ArrayList<Industry>>() {
-                @Override
-                public void success(ArrayList<Industry> industries, Response response) {
-                    mIndustries=industries;
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getIndustry(new RCallback<ArrayList<Industry>>() {
+            @Override
+            public void success(ArrayList<Industry> industries, Response response) {
+                mIndustries = industries;
 
-                }
-            });
+            }
+        });
 
     }
     //-------这些数据需要保存在本地-------------
@@ -166,7 +167,7 @@ public class MainApp extends Application {
         initXiaomi();
         loadAreaCodeTable();
         loadIndustryCodeTable();
-         //       getWindowWH();
+        //       getWindowWH();
         //JPushInterface.setDebugMode(true);
         //JPushInterface.init(this);
     }
@@ -193,32 +194,32 @@ public class MainApp extends Application {
                 }
             };
 
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
+                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
         }
 
         return restAdapter;
     }
 
     public RestAdapter getRestAdapter(int mode) {
-
-            if (restAdapter != null) {
-                if (cellInfo == null) {
-                    cellInfo = Utils.getCellInfo();
-                }
-                RequestInterceptor requestInterceptor = new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
-                        request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
-                        request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
-                        request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
-                        request.addHeader("LoyoVersionName", Global.getVersionName());
-                        request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
-                    }
-                };
-
-                restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+        if (restAdapter != null) {
+            if (cellInfo == null) {
+                cellInfo = Utils.getCellInfo();
             }
+            RequestInterceptor requestInterceptor = new RequestInterceptor() {
+                @Override
+                public void intercept(RequestFacade request) {
+                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+                    request.addHeader("LoyoVersionName", Global.getVersionName());
+                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+                }
+            };
+
+            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+        }
 
         return restAdapter;
     }
@@ -305,7 +306,7 @@ public class MainApp extends Application {
 
         try {
             //user = DBManager.Instance().getUser();
-           // subUsers = DBManager.Instance().getSubordinates();
+            // subUsers = DBManager.Instance().getSubordinates();
         } catch (Exception ex) {
             Global.ProcDebugException(ex);
             ex.printStackTrace();
@@ -324,7 +325,7 @@ public class MainApp extends Application {
                     //                    .detectAll()
                     .detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
                     .penaltyLog()
-                            //                    .penaltyDialog()
+                    //                    .penaltyDialog()
                     .build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                     //                    .detectAll()
@@ -532,7 +533,9 @@ public class MainApp extends Application {
         }
     }
 
-    /**页面跳转的方式  动画
+    /**
+     * 页面跳转的方式  动画
+     *
      * @param activity
      * @param cls
      * @param enterType
