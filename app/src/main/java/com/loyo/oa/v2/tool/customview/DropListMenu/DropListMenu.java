@@ -18,8 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +158,9 @@ public class DropListMenu extends LinearLayout {
             if (layoutConfirm != null) {
                 layoutConfirm.setVisibility(menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS ? View.GONE : View.VISIBLE);
             }
-
+/**
+ * 弹窗 的 列表
+ */
             ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
@@ -213,7 +215,7 @@ public class DropListMenu extends LinearLayout {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
-                                    popupWindow.dismiss();
+                                    //popupWindow.dismiss();
 
                                     mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                                     mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
@@ -244,6 +246,7 @@ public class DropListMenu extends LinearLayout {
                                     syncConfirmButton();
 
                                 }
+                                popupWindow.dismiss();
                             }
                         });
                     } else {
@@ -263,6 +266,7 @@ public class DropListMenu extends LinearLayout {
 
                     }
                 }
+
             });
 
             RelativeLayout shadow = (RelativeLayout) viewPopWindow.findViewById(R.id.rl_menu_shadow);
@@ -386,7 +390,7 @@ public class DropListMenu extends LinearLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mDrawable) {
-            MainApp.getMainApp().logUtil.e("DropListMenu onDraw");
+            LogUtil.d("弹窗：DropListMenu onDraw");
             int width = getWidth();
 
             for (int i = 0; i < mMenuCount; i++) {

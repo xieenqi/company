@@ -75,7 +75,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private ViewStub emptyView;
 
     private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private int customer_type;
+    private int customer_type;//"0,我的客户", "1,团队客户", "2,公海客户"
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isTopAdd = true;
@@ -296,6 +296,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         getData();
     }
 
+    /**
+     * 赛选 选择监听
+     * @param listview
+     * @param ColumnIndex
+     * @param items
+     */
     @Override
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
         if (items != null && items.size() > 0) {
@@ -505,8 +511,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         params.put("field", filed);
         params.put("order", order);
         params.put("tagItemIds", tagItemIds);
-//        params.put("deptId", departmentId);
-//        params.put("userId", userId);
+        params.put("deptId", departmentId);
+        params.put("userId", userId);
 
         LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
         String url = "";

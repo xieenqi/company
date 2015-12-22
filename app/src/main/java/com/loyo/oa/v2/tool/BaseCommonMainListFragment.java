@@ -24,7 +24,6 @@ import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -246,7 +245,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-        LogUtil.dll("项目、任务、报告、审批的统一界面 result:" + MainApp.gson.toJson(tPaginationX));
+        LogUtil.d("项目、任务、报告、审批的统一界面 result:" + MainApp.gson.toJson(tPaginationX));
 
     }
 
