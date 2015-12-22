@@ -412,30 +412,13 @@ public class TasksInfoActivity extends BaseActivity {
 
                 break;
 
+            /**提交完成*/
             case R.id.btn_complete:
-                //信鸽透传时可能task为空 ykb 07-16
-                if (null != mTask && mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
-                            .commitTask(null != mTask ? mTask.getId() : mId, new RCallback<Task>() {
-                                @Override
-                                public void success(Task task, Response response) {
-                                    if (task != null) {
-                                        task.setAck(true);
-                                        Intent intent = new Intent();
-                                        intent.putExtra("review", task);
-                                        app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-                                    }
-                                }
-                            });
-                } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
-
-                    mTask.setAck(true);
-                    //跳转到评分
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putSerializable("mTask", mTask);
-                    app.startActivityForResult(this, TasksInfoScoreActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_SCORE, bundle2);
+                if(statusSize == mTask.getchecklists().size()){
+                    commitFinish();
+                }else{
+                    Toast("子任务尚未完成，不能提交！");
                 }
-
                 break;
         }
     }
@@ -446,6 +429,41 @@ public class TasksInfoActivity extends BaseActivity {
         intent.putExtra("localpic", true);
         startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
     }
+
+    /**
+     * 任务提交完成
+     * */
+    void commitFinish(){
+        //信鸽透传时可能task为空 ykb 07-16
+        if (null != mTask && mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
+                    .commitTask(null != mTask ? mTask.getId() : mId, new RCallback<Task>() {
+                        @Override
+                        public void success(Task task, Response response) {
+                            if (task != null) {
+                                task.setAck(true);
+                                Intent intent = new Intent();
+                                intent.putExtra("review", task);
+                                app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            super.failure(error);
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
+
+            mTask.setAck(true);
+            //跳转到评分
+            Bundle bundle2 = new Bundle();
+            bundle2.putSerializable("mTask", mTask);
+            app.startActivityForResult(this, TasksInfoScoreActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_SCORE, bundle2);
+        }
+    }
+
 
     /**
      * 新建子任务
