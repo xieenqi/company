@@ -105,11 +105,14 @@ public class TasksAddActivity extends BaseActivity {
     String projectId;
     @Extra
     String projectTitle;
+    @Extra("data")
+    Task mTask;
 
     private AlertDialog dialog_Product;
     private SignInGridViewAdapter signInGridViewAdapter;
     private NewUser newUser;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
+    private StringBuffer strBuf;
     private Members member;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
@@ -132,6 +135,7 @@ public class TasksAddActivity extends BaseActivity {
         userss = new ArrayList<>();
         depts = new ArrayList<>();
         member = new Members();
+        strBuf = new StringBuffer();
 
         init_gridView_photo();
         setTouchView(-1);
@@ -144,19 +148,24 @@ public class TasksAddActivity extends BaseActivity {
      */
     void getBundle() {
 
-        Intent intent = getIntent();
-        edt_title.setText(intent.getStringExtra("title"));
-        edt_content.setText(intent.getStringExtra("content"));
-/*      tv_responsiblePerson.setText(intent.getStringExtra("real"));
-        tv_toUsers.setText(intent.getStringExtra("join"));
-        tv_Project.setText(intent.getStringExtra("bepro"));
-        switch_approve.setChecked(true);*/
-        isCopy = intent.getStringExtra("title")!=null?true:false;
+        for(int i = 0;i<mTask.getMembers().getAllData().size();i++){
+            strBuf.append(mTask.getMembers().getAllData().get(i).getName()+",");
+        }
+
+        edt_title.setText(mTask.getTitle());
+        edt_content.setText(mTask.getContent());
+        tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
+        tv_toUsers.setText(strBuf.toString());
+        //tv_Project.setText();
+        switch_approve.setChecked(true);
+        isCopy = mTask!=null?true:false;
+
+        member.users = mTask.getMembers().users;
+        newUser = mTask.getResponsiblePerson();
 
     }
 
     void getTempTask() {
-        //mTask = DBManager.Instance().getTask();
         if (mTask == null) {
             return;
         }
@@ -471,8 +480,6 @@ public class TasksAddActivity extends BaseActivity {
                 break;
         }
     }
-
-    Task mTask;
 
     /**
      * 没明白，这里销毁后，为什么要保存数据

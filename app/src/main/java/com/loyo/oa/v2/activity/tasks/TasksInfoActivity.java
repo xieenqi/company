@@ -42,6 +42,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -123,8 +125,10 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @ViewById
     RatingBar ratingBar_Task;
-    @Extra("task") Task mTask;
-    @Extra("Id") String mId;
+    @Extra("task")
+    Task mTask;
+    @Extra("Id")
+    String mId;
 
     public String taskId;  //任务ID
     public String userId;
@@ -137,10 +141,10 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<NewUser> allUsers;
 
 
-    public android.os.Handler mHandler = new android.os.Handler(){
+    public android.os.Handler mHandler = new android.os.Handler() {
 
-        public void handleMessage(Message msg){
-            if(msg.what == 0x01){
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x01) {
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
             }
         }
@@ -158,8 +162,8 @@ public class TasksInfoActivity extends BaseActivity {
 
         /*是否为参与人判断*/
         userId = DBManager.Instance().getUser().getId();
-        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId())?true:false;
-        isCreator = userId.equals(mTask.getCreator().getId())?true:false;
+        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
+        isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -199,11 +203,11 @@ public class TasksInfoActivity extends BaseActivity {
             allUsers.add(mTask.getResponsiblePerson());
         }
 
-        if (mTask.members!=null) {
-            if (mTask.members.getAllData().size()>0) {
+        if (mTask.members != null) {
+            if (mTask.members.getAllData().size() > 0) {
                 StringBuffer userNames = new StringBuffer();
-                for (NewUser element:mTask.members.getAllData()) {
-                    userNames.append(element.getName()+",");
+                for (NewUser element : mTask.members.getAllData()) {
+                    userNames.append(element.getName() + ",");
                 }
                 tv_toUsers.setText("参与人:" + userNames.toString());
                 allUsers.addAll(mTask.members.getAllData());
@@ -301,7 +305,7 @@ public class TasksInfoActivity extends BaseActivity {
             boolean isStatus = subTask.getStatus().equals("1") ? true : false;
 
             /*子任务个数设置*/
-            if (isStatus){
+            if (isStatus) {
                 statusSize++;
             }
 
@@ -321,7 +325,7 @@ public class TasksInfoActivity extends BaseActivity {
                 }
             });
 
-        //到编辑子任务
+            //到编辑子任务
             view.setTag(subTask);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -380,7 +384,7 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void success(Task task, Response response) {
                 try {
-                    LogUtil.dll("任务详情返回JSON："+Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.dll("任务详情返回JSON：" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -430,9 +434,9 @@ public class TasksInfoActivity extends BaseActivity {
 
             /**提交完成*/
             case R.id.btn_complete:
-                if(statusSize == mTask.getchecklists().size() || mTask.getchecklists().size() == 0){
+                if (statusSize == mTask.getchecklists().size() || mTask.getchecklists().size() == 0) {
                     commitFinish();
-                }else{
+                } else {
                     Toast("子任务尚未完成，不能提交！");
                 }
                 break;
@@ -448,8 +452,8 @@ public class TasksInfoActivity extends BaseActivity {
 
     /**
      * 任务提交完成
-     * */
-    void commitFinish(){
+     */
+    void commitFinish() {
         //信鸽透传时可能task为空 ykb 07-16
         if (null != mTask && mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
@@ -483,12 +487,12 @@ public class TasksInfoActivity extends BaseActivity {
 
     /**
      * 新建子任务
-     * */
+     */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if(isJoin){
+        if (isJoin) {
             Toast("参与人不能创建子任务!");
-        }else{
+        } else {
             Bundle bundle = new Bundle();
             bundle.putSerializable("Task", mTask);
             bundle.putSerializable("allUsers", allUsers);
@@ -498,7 +502,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     /**
      * 获取讨论内容，服务端已启用，暂注释
-     * */
+     */
 /*    @Background
     void getDiscussion() {
         ITask t = app.getRestAdapter().create(ITask.class);
@@ -552,10 +556,13 @@ public class TasksInfoActivity extends BaseActivity {
                 if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mTask", mTask);
-                    bundle.putBoolean("type",isCreator);
+                    bundle.putBoolean("type", isCreator);
                     app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+
+                }
+
                 /*删除回调*/
-                } else if (data.getBooleanExtra("delete", false)) {
+                else if (data.getBooleanExtra("delete", false)) {
 
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
@@ -565,16 +572,20 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
                         }
                     });
-                    /*复制回调*/
-                } else if (data.getBooleanExtra("extra", false)) {
 
+                }
+                /*复制回调*/
+                else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
-                    intent.putExtra("title", vTitle);
+                    /*intent.putExtra("title", vTitle);
                     intent.putExtra("content", vContent);
                     intent.putExtra("real", realName);
                     intent.putExtra("join", joinName);
                     intent.putExtra("istest", isTest);
-                    intent.putExtra("bepro", beProjects);
+                    intent.putExtra("bepro", beProjects);*/
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable("data",mTask);
+                    intent.putExtras(mBundle);
                     startActivity(intent);
                 }
                 break;
@@ -633,7 +644,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     /**
      * 附件上传
-     * */
+     */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
 
@@ -641,7 +652,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", false);
-        bundle.putInt("fromPage",Common.TASK_PAGE);
+        bundle.putInt("fromPage", Common.TASK_PAGE);
 
 /*        ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getJoinedUsers() != null) {
