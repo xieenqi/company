@@ -40,7 +40,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.tool
- * 描述 :项目下子内容共用页
+ * 描述 :项目下子内容共用页【任务 报告 审批】
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
@@ -109,7 +109,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 break;
         }
     }
-
+    int pageIndex;
     @Override
     public void GetData(final Boolean isTopAdd, final Boolean isBottomAdd) {
         if (null == mProject) {
@@ -119,13 +119,14 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         if (lstData == null) {
             lstData = new ArrayList();
         }
-        int pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
+         pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
         int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : pagination.getPageSize();
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
 
-        LogUtil.d("获取项目详情的任务，报告，审批：GetData,type : " + type + " projectId : " + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
+        LogUtil.d("获取项目详情的任务，报告，审批：GetData,type : " + type + " projectId : "
+                + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
         app.getRestAdapter().create(IProject.class).getProjectSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
@@ -144,7 +145,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                     changeAdapter();
                     expand();
                 } else {
-                    if (!(paginationx.getRecords().size() >0)) {
+                    if (!(paginationx.getRecords().size() >0)&&pageIndex==1) {
                         pagingGroupDatas.clear();
                         changeAdapter();
                     }

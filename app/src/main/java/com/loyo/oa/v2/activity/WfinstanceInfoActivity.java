@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.WfInstanceValuesInfoAdapter;
 import com.loyo.oa.v2.adapter.WorkflowNodesListViewAdapter;
@@ -114,20 +114,20 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initData_WorkflowValues() {
-        if (wfInstance == null || wfInstance.getWorkflowValues() == null) {
+        if (wfInstance == null || wfInstance.workflowValues == null) {
             return;
         }
         wfInstanceValuesDatas.clear();
-        for (int i = 0; i < wfInstance.getWorkflowValues().size(); i++) {
-            wfInstanceValuesDatas.add(wfInstance.getWorkflowValues().get(i));
+        for (int i = 0; i < wfInstance.workflowValues.size(); i++) {
+            wfInstanceValuesDatas.add(wfInstance.workflowValues.get(i));
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (wfInstance != null && wfInstance.getWorkflowValues() != null && wfInstance.getWorkflowValues() != null) {
-            wfInstance.setAck(true);
-            wfInstance.getWorkflowValues().clear();
+        if (wfInstance != null && wfInstance.workflowValues != null && wfInstance.workflowValues != null) {
+            wfInstance.ack=true;
+            wfInstance.workflowValues.clear();
             Intent intent = new Intent();
             intent.putExtra("review", wfInstance);
             app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -152,8 +152,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     void initUI_listView_wfinstance() {
         ArrayList<BizFormFields> fields = new ArrayList<>();
-        if (wfInstance != null && wfInstance.getBizform() != null && wfInstance.getBizform().getFields() != null) {
-            fields = wfInstance.getBizform().getFields();
+        if (wfInstance != null && wfInstance.bizform != null && wfInstance.bizform.getFields() != null) {
+            fields = wfInstance.bizform.getFields();
         }
 
         if (null != wfInstanceValuesDatas) {
@@ -174,13 +174,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
 
         //显示删除
-        if (wfInstance.getStatus() == WfInstance.STATUS_NEW && wfInstance.getCreator() != null && wfInstance.getCreator().isCurrentUser()) {
+        if (wfInstance.status == WfInstance.STATUS_NEW && wfInstance.creator != null && wfInstance.creator.isCurrentUser()) {
             img_title_right.setVisibility(View.VISIBLE);
         }
     }
 
     void initUI_listView_workflowNodes() {
-        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.getStatus(), lstData_WfNodes, LayoutInflater.from(this));
+        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this));
         listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
         Global.setListViewHeightBasedOnChildren(listView_workflowNodes);
     }
@@ -189,23 +189,23 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (wfInstance == null) {
             return;
         }
-        tv_time_creator.setText(wfInstance.getCreator().name + " " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)) + " 提交");
-        if (wfInstance.getCreator() != null) {
-            tv_title_creator.setText(wfInstance.getTitle());
+        tv_time_creator.setText(wfInstance.creator.name + " " + app.df3.format(new Date(wfInstance.createdAt * 1000)) + " 提交");
+        if (wfInstance.creator != null) {
+            tv_title_creator.setText(wfInstance.title);
 
-            if (null != wfInstance.getCreator().shortPosition) {
-                tv_title_role.setText(wfInstance.getCreator().shortPosition.getName());
+            if (null != wfInstance.creator.shortPosition) {
+                tv_title_role.setText(wfInstance.creator.shortPosition.getName());
             }
         }
 
-        if (!StringUtil.isEmpty(wfInstance.getMemo())) {
+        if (!StringUtil.isEmpty(wfInstance.memo)) {
             layout_memo.setVisibility(View.VISIBLE);
-            tv_memo.setText(wfInstance.getMemo());
+            tv_memo.setText(wfInstance.memo);
         } else {
             layout_memo.setVisibility(View.GONE);
         }
 
-        switch (wfInstance.getStatus()) {
+        switch (wfInstance.status) {
 
             case 1:
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status1);
@@ -232,15 +232,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
     private String getWfNodesTitle() {
 
         StringBuilder builder = new StringBuilder();
-        if (null != wfInstance.getWorkflowNodes()) {
+        if (null != wfInstance.workflowNodes) {
             int actives = 0;
-            for (int i = wfInstance.getWorkflowNodes().size() - 1; i >= 0; i--) {
-                WfNodes node = wfInstance.getWorkflowNodes().get(i);
+            for (int i = wfInstance.workflowNodes.size() - 1; i >= 0; i--) {
+                WfNodes node = wfInstance.workflowNodes.get(i);
                 if (node.isActive()) {
                     actives++;
                 }
             }
-            builder.append("(" + actives + "/" + wfInstance.getWorkflowNodes().size() + ")");
+            builder.append("(" + actives + "/" + wfInstance.workflowNodes.size() + ")");
         } else {
             builder.append("(0/0)");
         }
@@ -259,11 +259,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         tv_wfnodes_title.setText(getWfNodesTitle());
 
-        if (wfInstance.getStatus() == WfInstance.STATUS_ABORT || wfInstance.getStatus() == WfInstance.STATUS_FINISHED) {
+        if (wfInstance.status == WfInstance.STATUS_ABORT || wfInstance.status == WfInstance.STATUS_FINISHED) {
             return;
         }
 
-        ArrayList<WfNodes> nodes = wfInstance.getWorkflowNodes();
+        ArrayList<WfNodes> nodes = wfInstance.workflowNodes;
         if (nodes == null) {
             return;
         }
@@ -306,9 +306,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
             @Override
             public void success(WfInstance wfInstance_current, Response response) {
                 wfInstance = wfInstance_current;
-                if (wfInstance_current.getWorkflowNodes() != null) {
+                if (wfInstance_current.workflowNodes != null) {
                     lstData_WfNodes.clear();
-                    lstData_WfNodes.addAll(wfInstance_current.getWorkflowNodes());
+                    lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
                 }
                 initData_WorkflowValues();
                 updateUI();
@@ -348,10 +348,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
             public void success(WfInstance wfInstance_current, Response response) {
                 Toast("审批" + getString(R.string.app_succeed));
                 //如果不clear,会提示java.io.NotSerializableException
-                if (null != wfInstance_current.getWorkflowValues()) {
-                    wfInstance_current.getWorkflowValues().clear();
+                if (null != wfInstance_current.workflowValues) {
+                    wfInstance_current.workflowValues.clear();
                 }
-                wfInstance_current.setAck(true);
+                wfInstance_current.ack=true;
                 Intent intent = getIntent();
                 intent.putExtra("review", wfInstance_current);
                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -390,8 +390,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             /*附件上传*/
             case R.id.layout_AttachFile:
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("data", wfInstance.getAttachments());
-                bundle.putSerializable("uuid", wfInstance.getAttachmentUUId());
+                bundle.putSerializable("data", wfInstance.attachments);
+                bundle.putSerializable("uuid", wfInstance.attachmentUUId);
                 bundle.putBoolean("isMyUser", false);
                 bundle.putInt("fromPage", Common.WFIN_PAGE);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
@@ -469,8 +469,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(wfInstance.getId(), new RCallback<WfInstance>() {
                     @Override
                     public void success(WfInstance wfInstance, Response response) {
-                        if (null != wfInstance.getWorkflowValues()) {
-                            wfInstance.getWorkflowValues().clear();
+                        if (null != wfInstance.workflowValues) {
+                            wfInstance.workflowValues.clear();
                         }
                         Intent intent = new Intent();
                         intent.putExtra("delete", wfInstance);
@@ -489,7 +489,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                wfInstance.setAttachments(attachments);
+                wfInstance.attachments=attachments;
                 if (null != attachments) {
                     tv_attachment_count.setText("附件 " + "(" + attachments.size() + ")");
                 }

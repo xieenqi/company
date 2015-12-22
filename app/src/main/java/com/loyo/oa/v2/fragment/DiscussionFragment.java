@@ -14,6 +14,7 @@ import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -117,6 +118,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 lv_discuss.onRefreshComplete();
             }

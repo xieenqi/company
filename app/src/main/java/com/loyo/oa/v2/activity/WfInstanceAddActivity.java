@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -80,7 +80,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_wfinstance_data;
     @ViewById ViewGroup ll_dept;
     @ViewById TextView tv_dept;
-
+    @ViewById ViewGroup ll_project;
+    @ViewById TextView tv_project;
     @ViewById Button btn_add;
 
     @ViewById TextView tv_WfTemplate;
@@ -90,6 +91,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById EditText edt_memo;
     @Extra
     String projectId;
+    @Extra
+    String projectTitle;
 
     public String deptId;
 
@@ -121,8 +124,20 @@ public class WfInstanceAddActivity extends BaseActivity {
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_add.setOnTouchListener(Global.GetTouch());
+        ll_project.setOnClickListener(click);
         init_gridView_photo();
         getTempWfintance();
+        projectAddWfinstance();
+    }
+
+    /**
+     * 项目 过来要 创建 审批
+     */
+    public void projectAddWfinstance(){
+        if(!TextUtils.isEmpty(projectId)){
+            ll_project.setEnabled(false);
+            tv_project.setText(projectTitle);
+        }
     }
 
     /**
@@ -144,6 +159,20 @@ public class WfInstanceAddActivity extends BaseActivity {
         });
     }
 
+    private View.OnClickListener click= new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.ll_project:
+                    Bundle bundle2 = new Bundle();
+                    //bundle2.putInt("from",BaseActivity.WFIN_ADD);
+                    app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                    break;
+            }
+        }
+    };
+
     /**
      * 获取审批模板
      */
@@ -154,16 +183,16 @@ public class WfInstanceAddActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.isEmpty(wfInstance.getWftemplateId())) {
-            mTemplateId = wfInstance.getWftemplateId();
+        if (!TextUtils.isEmpty(wfInstance.wftemplateId)) {
+            mTemplateId = wfInstance.wftemplateId;
         }
 
-        if (wfInstance.getBizform() != null) {
-            mBizForm = wfInstance.getBizform();
+        if (wfInstance.bizform != null) {
+            mBizForm = wfInstance.bizform;
             intBizForm();
         }
 
-        edt_memo.setText(wfInstance.getMemo());
+        edt_memo.setText(wfInstance.memo);
     }
 
     void init_gridView_photo() {
@@ -457,7 +486,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                     isSave = false;
                     //如果不clear,会提示java.io.NotSerializableException
-                    wfInstance.setAck(true);
+                    wfInstance.ack=true;
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
                     app.finishActivity(WfInstanceAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -482,18 +511,18 @@ public class WfInstanceAddActivity extends BaseActivity {
         DBManager.Instance().deleteWfInstance();
 
         WfInstance wfInstance = new WfInstance();
-        wfInstance.setAttachments(null);
-        wfInstance.setCreator(null);
+        wfInstance.attachments=null;
+        wfInstance.creator=null;
 
         if (mBizForm != null) {
-            wfInstance.setBizform(mBizForm);
+            wfInstance.bizform=mBizForm;
         }
 
         if (!TextUtils.isEmpty(mTemplateId)) {
-            wfInstance.setWftemplateId(mTemplateId);
+            wfInstance.wftemplateId=mTemplateId;
         }
 
-        wfInstance.setMemo(edt_memo.getText().toString().trim());
+        wfInstance.memo=edt_memo.getText().toString().trim();
 
         if (isSave) {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));

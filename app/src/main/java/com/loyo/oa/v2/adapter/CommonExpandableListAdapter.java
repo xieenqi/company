@@ -62,16 +62,16 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         //审批
         if (obj instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) obj;
-            if (wfInstance.getTitle() != null) {
-                title.setText(wfInstance.getTitle());
+            if (wfInstance.title != null) {
+                title.setText(wfInstance.title);
             }
-            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)));
-            if (wfInstance.getCreator() != null) {
-                content.setText(String.format("审批人 %s", wfInstance.getNextExecutor().getRealname()));
+            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+            if (wfInstance.creator != null&&!TextUtils.isEmpty(wfInstance.nextExecutor.getRealname())) {
+                content.setText("审批人 "+wfInstance.nextExecutor.getRealname());
             }
-            ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
+            ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);
 
-            switch (wfInstance.getStatus()) {
+            switch (wfInstance.status) {
                 case WfInstance.STATUS_NEW:
                     status.setImageResource(R.drawable.img_wfinstance_list_status1);
                     break;

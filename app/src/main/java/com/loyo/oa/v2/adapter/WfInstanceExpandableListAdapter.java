@@ -45,19 +45,19 @@ public class WfInstanceExpandableListAdapter<T extends BaseBeans> extends BasePa
         WfInstance wfInstance = (WfInstance) getChild(groupPosition, childPosition);
 
         if (wfInstance != null) {
-            if (wfInstance.getTitle() != null) {
-                item_info_Child.tvTitle.setText(wfInstance.getTitle());
+            if (wfInstance.title != null) {
+                item_info_Child.tvTitle.setText(wfInstance.title);
             }
 
-            item_info_Child.tvCreateTime.setText(app.df3.format(new Date(wfInstance.getCreatedAt()*1000)));
+            item_info_Child.tvCreateTime.setText(app.df3.format(new Date(wfInstance.createdAt*1000)));
 
-            if (wfInstance.getCreator() != null) {
-                item_info_Child.tvContent.setText(String.format("申请人 %s", wfInstance.getCreator().getRealname()));
+            if (wfInstance.creator != null) {
+                item_info_Child.tvContent.setText(String.format("申请人 %s", wfInstance.creator.getRealname()));
             }
 
-            item_info_Child.view_ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
+            item_info_Child.view_ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);
 
-            switch (wfInstance.getStatus()) {
+            switch (wfInstance.status) {
                 case WfInstance.STATUS_NEW:
                     item_info_Child.imgType.setImageResource(R.drawable.img_wfinstance_list_status1);
                     break;

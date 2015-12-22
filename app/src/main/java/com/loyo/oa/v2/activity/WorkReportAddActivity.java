@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -83,7 +81,7 @@ public class WorkReportAddActivity extends BaseActivity {
     @ViewById
     EditText edt_content;
     @ViewById
-    RadioGroup rg;
+    RadioGroup rg;//工作 动态
     @ViewById
     ToggleButton crm_toggle;
     @ViewById
@@ -181,9 +179,7 @@ public class WorkReportAddActivity extends BaseActivity {
             if (type == TYPE_EDIT) {
                 uuid = mWorkReport.getAttachmentUUId();
             }
-
             mReviewer = mWorkReport.getReviewer();
-
             switch (mWorkReport.getType()) {
                 case WorkReport.DAY:
                     rg.check(R.id.rb1);
@@ -194,14 +190,14 @@ public class WorkReportAddActivity extends BaseActivity {
                 case WorkReport.MONTH:
                     rg.check(R.id.rb3);
                     break;
-
             }
             if (null != mWorkReport.getCrmDatas() && mWorkReport.getCrmDatas().size() > 2) {
                 tv_new_customers_num.setText(mWorkReport.getCrmDatas().get(0).getContent());
                 tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
                 tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
             }
-            NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
+            NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer()
+                    .getUser() ? mWorkReport.getReviewer().getUser() : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
 
             tv_toUser.setText(getMenberText());
@@ -213,13 +209,21 @@ public class WorkReportAddActivity extends BaseActivity {
             //附件暂时不能做
         } else {
             rg.check(R.id.rb1);
-            if (!TextUtils.isEmpty(projectTitle)) {
-                tv_project.setText(projectTitle);
-            }
         }
         init_gridView_photo();
         if (type == TYPE_EDIT) {
             getAttachments();
+        }
+        projectAddWorkReport();
+    }
+
+    /**
+     * 项目 过来创建 工作报稿
+     */
+    public void projectAddWorkReport() {
+        if (!TextUtils.isEmpty(projectId)) {
+            layout_mproject.setEnabled(false);
+            tv_project.setText(projectTitle);
         }
     }
 
@@ -267,31 +271,35 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
 
-
-    /**日报checkbox*/
+    /**
+     * 日报checkbox
+     */
     @CheckedChange(R.id.rb1)
     void dayClick(CompoundButton button, boolean b) {
         if (!b) {
             return;
         }
-            tv_crm.setText("本日工作动态统计");
-            beginAt = DateTool.getBeginAt_ofDay();
-            endAt = DateTool.getEndAt_ofDay();
-            tv_time.setText(app.df4.format(beginAt));
-            mSelectType = WorkReport.DAY;
+        tv_crm.setText("本日工作动态统计");
+        beginAt = DateTool.getBeginAt_ofDay();
+        endAt = DateTool.getEndAt_ofDay();
+        tv_time.setText(app.df4.format(beginAt));
+        mSelectType = WorkReport.DAY;
 
     }
-    /**周报checkbox*/
+
+    /**
+     * 周报checkbox
+     */
     @CheckedChange(R.id.rb2)
     void weekClick(CompoundButton button, boolean b) {
         if (!b) {
             return;
         }
-            tv_crm.setText("本周工作动态统计");
-            beginAt = DateTool.getBeginAt_ofWeek();
-            endAt = DateTool.getEndAt_ofWeek();
-            tv_time.setText(weeksDialog.GetDefautlText());
-            mSelectType = WorkReport.WEEK;
+        tv_crm.setText("本周工作动态统计");
+        beginAt = DateTool.getBeginAt_ofWeek();
+        endAt = DateTool.getEndAt_ofWeek();
+        tv_time.setText(weeksDialog.GetDefautlText());
+        mSelectType = WorkReport.WEEK;
 
     }
 
@@ -304,14 +312,14 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
-            tv_crm.setText("本月工作动态统计");
-            beginAt = DateTool.getBeginAt_ofMonth();
-            endAt = DateTool.getEndAt_ofMonth();
-            DateTool.calendar = Calendar.getInstance();
-            int year = DateTool.calendar.get(Calendar.YEAR);
-            int month = DateTool.calendar.get(Calendar.MONTH);
-            tv_time.setText(year + "." + String.format("%02d", (month + 1)));
-            mSelectType = WorkReport.MONTH;
+        tv_crm.setText("本月工作动态统计");
+        beginAt = DateTool.getBeginAt_ofMonth();
+        endAt = DateTool.getEndAt_ofMonth();
+        DateTool.calendar = Calendar.getInstance();
+        int year = DateTool.calendar.get(Calendar.YEAR);
+        int month = DateTool.calendar.get(Calendar.MONTH);
+        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
+        mSelectType = WorkReport.MONTH;
 
     }
 
