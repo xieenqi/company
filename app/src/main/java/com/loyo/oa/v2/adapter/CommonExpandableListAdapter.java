@@ -48,7 +48,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         }
 
         Object obj = getChild(groupPosition, childPosition);
-
         ImageView status = ViewHolder.get(convertView, R.id.img_status);
         TextView title = ViewHolder.get(convertView, R.id.tv_title);
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
@@ -59,6 +58,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         TextView tv_discuss_num = ViewHolder.get(convertView, R.id.tv_disscuss_num);
         ImageView iv_disscuss_status = ViewHolder.get(convertView, R.id.img_discuss_status);
         status.setVisibility(View.GONE);
+
         //审批
         if (obj instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) obj;

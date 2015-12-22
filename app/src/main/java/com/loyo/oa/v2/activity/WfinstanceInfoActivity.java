@@ -173,11 +173,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
         }
 
-        //        wfInstanceValuesListViewAdapter = new WfInstanceValuesInfoAdapter(this, wfInstanceValuesDatas, fields);
-        //        listView_wfinstance.setAdapter(wfInstanceValuesListViewAdapter);
-        //
-        //        Global.setListViewHeightBasedOnChildren(listView_wfinstance);
-
         //显示删除
         if (wfInstance.getStatus() == WfInstance.STATUS_NEW && wfInstance.getCreator() != null && wfInstance.getCreator().isCurrentUser()) {
             img_title_right.setVisibility(View.VISIBLE);
@@ -273,10 +268,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
 
-/*        for(int i = 0;i<nodes.size();i++){
-            LogUtil.dll("id:"+nodes.get(i).getExecutorUser().getId());
-            LogUtil.dll("name:"+nodes.get(i).getExecutorUser().getRealname());
-        }*/
 
         WfNodes node = null;
         for (int i = 0;i<nodes.size(); i++) {
@@ -287,10 +278,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
 
         if (node != null) {
-
-/*            LogUtil.dll("当前节点ID：" + node.getExecutorUser().getId());
-            LogUtil.dll("本地登录ID：" + userId);
-            LogUtil.dll("当前节点 Activity：" + node.getActive());*/
 
             if (node.getActive() == 2) {
                 if (node.isNeedApprove()) {
@@ -354,6 +341,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         map.put("comment", comment);
         map.put("type", type);
 
+        LogUtil.dll("请求内容:"+MainApp.gson.toJson(map));
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance_current, Response response) {
@@ -390,12 +379,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
             /*同意*/
             case R.id.layout_nopass:
                 showApproveDialog(2);
-                LogUtil.dll("点击不同意");
                 break;
             /*驳回*/
             case R.id.layout_pass:
                 showApproveDialog(1);
-                LogUtil.dll("点击同意");
                 break;
             case R.id.layout_lastwork:
                 showApproveDialog(1);
@@ -448,8 +435,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 String comment = et_comment.getText().toString().trim();
-                if (TextUtils.isEmpty(comment) && type == 2) {
+                if (comment.isEmpty() && type == 2) {
                     Toast("请输入驳回原因");
+                    return;
+                }
+                else if(comment.isEmpty() && type == 1){
+                    comment = "同意";
                     return;
                 }
                 popupWindow.dismiss();
