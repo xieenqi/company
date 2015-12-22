@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +80,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_wfinstance_data;
     @ViewById ViewGroup ll_dept;
     @ViewById TextView tv_dept;
-
+    @ViewById ViewGroup ll_project;
+    @ViewById TextView tv_project;
     @ViewById Button btn_add;
 
     @ViewById TextView tv_WfTemplate;
@@ -89,6 +91,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById EditText edt_memo;
     @Extra
     String projectId;
+    @Extra
+    String projectTitle;
 
     public String deptId;
 
@@ -120,8 +124,20 @@ public class WfInstanceAddActivity extends BaseActivity {
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_add.setOnTouchListener(Global.GetTouch());
+        ll_project.setOnClickListener(click);
         init_gridView_photo();
         getTempWfintance();
+        projectAddWfinstance();
+    }
+
+    /**
+     * 项目 过来要 创建 审批
+     */
+    public void projectAddWfinstance(){
+        if(!TextUtils.isEmpty(projectId)){
+            ll_project.setEnabled(false);
+            tv_project.setText(projectTitle);
+        }
     }
 
     /**
@@ -142,6 +158,20 @@ public class WfInstanceAddActivity extends BaseActivity {
             }
         });
     }
+
+    private View.OnClickListener click= new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.ll_project:
+                    Bundle bundle2 = new Bundle();
+                    //bundle2.putInt("from",BaseActivity.WFIN_ADD);
+                    app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                    break;
+            }
+        }
+    };
 
     /**
      * 获取审批模板

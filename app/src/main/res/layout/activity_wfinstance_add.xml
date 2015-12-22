@@ -51,9 +51,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginBottom="@dimen/dimen_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -136,15 +136,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="-10dp"
-                android:visibility="gone"
                 android:id="@+id/layout_wfinstance_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
                 android:animateLayoutChanges="true"
                 android:background="@color/white"
                 android:orientation="vertical"
+                android:visibility="gone"
                 >
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -155,9 +156,9 @@
                         style="@style/text_item2"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40"
-                        android:paddingLeft="@dimen/dimen_16"
                         android:background="@color/activity_bg"
                         android:gravity="left|center_vertical"
+                        android:paddingLeft="@dimen/dimen_16"
                         android:text="审批内容"
                         android:textColor="#999999"/>
 
@@ -205,6 +206,7 @@
                     android:layout_marginBottom="@dimen/margin_other_view"
                     android:background="@drawable/layout_bg1"
                     android:orientation="vertical">
+
                     <GridView
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
@@ -218,6 +220,48 @@
 
                 </LinearLayout>
 
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/ll_project"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:text="所属项目"/>
+
+                    <TextView
+                        android:id="@+id/tv_project"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:text=""
+                        android:textColor="@color/title_bg1"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+                </LinearLayout>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    />
             </LinearLayout>
 
         </LinearLayout>
