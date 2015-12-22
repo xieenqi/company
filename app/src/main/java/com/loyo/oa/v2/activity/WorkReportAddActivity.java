@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -112,9 +113,10 @@ public class WorkReportAddActivity extends BaseActivity {
     String projectId;
     @Extra
     String projectTitle;
-    @Extra
+
+    @Extra("mWorkReport")
     WorkReport mWorkReport;
-    @Extra
+    @Extra("type")
     int type;
 
     private long beginAt, endAt;
@@ -165,7 +167,6 @@ public class WorkReportAddActivity extends BaseActivity {
             }
 
             mReviewer = mWorkReport.getReviewer();
-            //members = mWorkReport.getMembers();
 
             switch (mWorkReport.getType()) {
                 case WorkReport.DAY:
@@ -208,15 +209,19 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 获取传过来 的menber信息
+     *
      * @return
      */
     private String getMenberText() {
-        String mt = "";
-        for (NewUser ele : mWorkReport.getMembers().users) {
-            mt += ele.getName();
+
+        StringBuffer joinUser = new StringBuffer();
+
+        for (int i = 0; i < mWorkReport.getMembers().getAllData().size(); i++) {
+            joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName());
         }
-        members=mWorkReport.getMembers();//传过来 的menber
-        return mt;
+
+        return joinUser.toString();
+
     }
 
     /**
@@ -255,6 +260,7 @@ public class WorkReportAddActivity extends BaseActivity {
         endAt = DateTool.getEndAt_ofDay();
         tv_time.setText(app.df4.format(beginAt));
         mSelectType = WorkReport.DAY;
+        LogUtil.dll("类型:"+mSelectType);
     }
 
     @CheckedChange(R.id.rb2)
@@ -267,6 +273,7 @@ public class WorkReportAddActivity extends BaseActivity {
         endAt = DateTool.getEndAt_ofWeek();
         tv_time.setText(weeksDialog.GetDefautlText());
         mSelectType = WorkReport.WEEK;
+        LogUtil.dll("类型:"+mSelectType);
     }
 
     @CheckedChange(R.id.rb3)
@@ -284,6 +291,7 @@ public class WorkReportAddActivity extends BaseActivity {
         tv_time.setText(year + "." + String.format("%02d", (month + 1)));
 
         mSelectType = WorkReport.MONTH;
+        LogUtil.dll("类型:"+mSelectType);
     }
 
     void init_gridView_photo() {
@@ -361,7 +369,7 @@ public class WorkReportAddActivity extends BaseActivity {
             /*选择项目归档*/
             case R.id.layout_mproject:
                 Bundle bundle1 = new Bundle();
-                bundle1.putInt("from",WORK_ADD);
+                bundle1.putInt("from", WORK_ADD);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle1);
                 break;
         }
@@ -375,6 +383,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             @Override
             public void success(WorkReport workReport, Response response) {
+                LogUtil.d("发送的json： " + MainApp.gson.toJson(workReport));
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }
@@ -391,11 +400,9 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(HashMap map) {
-        LogUtil.d("手机端发送数据：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
-                LogUtil.d(" 创建报告 json： " + MainApp.gson.toJson(workReport));
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }
@@ -461,17 +468,21 @@ public class WorkReportAddActivity extends BaseActivity {
                     String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
 
-                    String ids[] = userIds.split(",");
-                    String names[] = userNames.split(",");
-                    for (int i = 0; i < ids.length; i++) {
-                        NewUser newUser = new NewUser();
-                        newUser.setId(ids[i]);
-                        newUser.setName(names[i]);
-                        users.add(newUser);
+                    if (userIds != null || userNames != null) {
+                        String ids[] = userIds.split(",");
+                        String names[] = userNames.split(",");
+                        for (int i = 0; i < ids.length; i++) {
+                            NewUser newUser = new NewUser();
+                            newUser.setId(ids[i]);
+                            newUser.setName(names[i]);
+                            users.add(newUser);
+                        }
+                        members.users = users;
+                        tv_toUser.setText(userNames);
+                    } else {
+                        Toast("操作失败");
                     }
-                    members.users=users;
 
-                    tv_toUser.setText(userNames);
                 }
                 break;
             case SelectPicPopupWindow.GET_IMG:

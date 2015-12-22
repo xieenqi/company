@@ -348,7 +348,7 @@ public class TasksInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
-                        Toast("更新成功");
+                Toast("更新成功");
             }
 
             @Override
@@ -370,7 +370,6 @@ public class TasksInfoActivity extends BaseActivity {
 
                 mTask = task;
                 updateUI();
-                getDiscussion();
                 showAttachment();
                 taskId = task.getId(); //任务ID获取
 
@@ -459,7 +458,10 @@ public class TasksInfoActivity extends BaseActivity {
         app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
     }
 
-    @Background
+    /**
+     * 获取讨论内容，服务端已启用，暂注释
+     * */
+/*    @Background
     void getDiscussion() {
         ITask t = app.getRestAdapter().create(ITask.class);
         t.getDiscussions(String.valueOf(getId()), new RCallback<PaginationX<Discussion>>() {
@@ -474,7 +476,7 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_discussion_count.setText(String.valueOf(discussionPaginationX.getTotalRecords()));
             }
         });
-    }
+    }*/
 
     void showAttachment() {
         if (ListUtil.IsEmpty(mTask.getAttachments())) {
@@ -504,9 +506,7 @@ public class TasksInfoActivity extends BaseActivity {
                 //                mTask = (Task) data.getSerializableExtra("task_return");
                 //                joinedUserName = data.getStringExtra("joinedUserName");
                 //                updateUI();
-
                 getTask();
-                getDiscussion();
                 break;
 
             case REQUEST_EDIT_DELETE:

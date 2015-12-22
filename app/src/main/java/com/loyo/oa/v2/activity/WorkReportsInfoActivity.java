@@ -120,7 +120,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         initUI();
         setTouchView(R.id.layout_touch);
         getData_WorkReport();
-        getDiscussion();
     }
 
     String getId() {
@@ -167,8 +166,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         });
     }
 
-
-    @Background
+    /**
+     * 获取讨论内容，服务端已启用，暂注释
+     * */
+/*    @Background
     void getDiscussion() {
         app.getRestAdapter().create(IWorkReport.class).getDiscussions(getId(), new RCallback<PaginationX<Discussion>>() {
             @Override
@@ -183,7 +184,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 HttpErrorCheck.checkError(error);
             }
         });
-    }
+    }*/
 
     void initUI() {
         super.setTitle("报告详情");
@@ -311,14 +312,21 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_DELETE_WORKREPORT:
+
+                //删除回调
                 if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
-                } else if (data.getBooleanExtra("edit", false)) {
+                }
+
+                //编辑回调
+                else if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                } else if ((data.getBooleanExtra("extra", false))) {
+                }
+
+                else if ((data.getBooleanExtra("extra", false))) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
