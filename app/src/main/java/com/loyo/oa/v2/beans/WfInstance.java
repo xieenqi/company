@@ -53,7 +53,7 @@ public class WfInstance extends BaseBeans {
     }
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     //    public String getDeptId() {
