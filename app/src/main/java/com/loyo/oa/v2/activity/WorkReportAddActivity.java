@@ -212,7 +212,7 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private String getMenberText() {
         String mt = "";
-        for (NewUser ele : mWorkReport.getMembers().getUsers()) {
+        for (NewUser ele : mWorkReport.getMembers().users) {
             mt += ele.getName();
         }
         members=mWorkReport.getMembers();//传过来 的menber
@@ -470,7 +470,7 @@ public class WorkReportAddActivity extends BaseActivity {
                         newUser.setName(names[i]);
                         users.add(newUser);
                     }
-                    members.setUsers(users);
+                    members.users=users;
 
                     tv_toUser.setText(userNames);
                 }

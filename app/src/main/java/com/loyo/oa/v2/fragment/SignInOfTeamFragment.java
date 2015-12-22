@@ -254,7 +254,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                 if (isTopAdd) {
                     legWorks.clear();
                 }
-                if (null != paginationX.records) {
+                if (null != paginationX.records&&null != paginationX.records.Detail) {
                     legWorks.addAll(paginationX.records.Detail);
                 } else {
                     legWorks.clear();

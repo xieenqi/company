@@ -8,26 +8,26 @@ import java.util.ArrayList;
  */
 public class Members implements Serializable {
 
-    ArrayList<NewUser> users;
+    public ArrayList<NewUser> users;
 
-    ArrayList<NewUser> depts;
+    public ArrayList<NewUser> depts;
 
 
-    public ArrayList<NewUser> getUsers() {
-        return users;
-    }
-
-    public void setUsers(ArrayList<NewUser> users) {
-        this.users = users;
-    }
-
-    public ArrayList<NewUser> getDepts() {
-        return depts;
-    }
-
-    public void setDepts(ArrayList<NewUser> depts) {
-        this.depts = depts;
-    }
+//    public ArrayList<NewUser> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(ArrayList<NewUser> users) {
+//        this.users = users;
+//    }
+//
+//    public ArrayList<NewUser> getDepts() {
+//        return depts;
+//    }
+//
+//    public void setDepts(ArrayList<NewUser> depts) {
+//        this.depts = depts;
+//    }
 
     /*获取参与人*/
     public ArrayList<NewUser> getAllData() {

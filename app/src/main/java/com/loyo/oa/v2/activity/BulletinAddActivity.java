@@ -58,7 +58,10 @@ public class BulletinAddActivity extends BaseActivity {
     String mUuid = StringUtil.getUUID();
     String cc_user_id, cc_department_id, cc_user_name, cc_department_name;
     SignInGridViewAdapter mGridViewAdapter;
-    ArrayList<Attachment> mAttachment = new ArrayList<>();
+    ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
+    private ArrayList<NewUser> userss = new ArrayList<>();
+    private ArrayList<NewUser> depts = new ArrayList<>();
+    private Members member = new Members();
 
     @AfterViews
     void init() {
@@ -67,11 +70,17 @@ public class BulletinAddActivity extends BaseActivity {
         init_gridView_photo();
     }
 
+    /**
+     * 添加 图片 附件
+     */
     void init_gridView_photo() {
         mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
     }
 
+    /**
+     * 通知谁看
+     */
     @Click(R.id.layout_recevier)
     void receiverClick() {
         app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
@@ -79,7 +88,8 @@ public class BulletinAddActivity extends BaseActivity {
 
     @Click(R.id.img_title_left)
     void close() {
-        onBackPressed();
+        //onBackPressed();
+        finish();
     }
 
     @Click(R.id.img_title_right)
@@ -123,8 +133,8 @@ public class BulletinAddActivity extends BaseActivity {
 //                }
 
                 map.put("members", member);
-                LogUtil.d(" 通知 发松 传递是数据： "+MainApp.gson.toJson(map));
-                //map.put("attachments", "");
+                map.put("attachments", newData());
+                LogUtil.d(" 通知 发松 传递是数据： " + MainApp.gson.toJson(map));
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
                     @Override
                     public void success(Bulletin bulletin, Response response) {
@@ -133,13 +143,12 @@ public class BulletinAddActivity extends BaseActivity {
                                 bulletin.attachmentUUId = mUuid;
                                 bulletin.attachments = mAttachment;
                             }
-
                             Intent intent = new Intent();
                             intent.putExtra("data", bulletin);
                             setResult(RESULT_OK, intent);
                         }
-
-                        onBackPressed();
+                        finish();
+                        // onBackPressed();
                     }
 
                     @Override
@@ -254,47 +263,54 @@ public class BulletinAddActivity extends BaseActivity {
             tv_recevier.setText(cc);
         }
 
-        setJoinUsers(cc_user_id, cc_user_name,cc_department_id,cc_department_name);
+        setJoinUsers(cc_user_id, cc_user_name, cc_department_id, cc_department_name);
     }
 
-    private ArrayList<NewUser> userss=new ArrayList<>();
-    private ArrayList<NewUser> depts=new ArrayList<>();
-    private Members member;
 
-    private void setJoinUsers(String joinedUserIds, String joinedUserName,String departIds, String departName) {
-
+    private void setJoinUsers(String joinedUserIds, String joinedUserName, String departIds, String departName) {
         userss.clear();
         depts.clear();
-
-        String[] userIds = joinedUserIds.split(",");
-        String[] userNames = joinedUserName.split(",");
-
-        for (int i = 0; i < userIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(userNames[i]);
-            newUser.setId(userIds[i]);
-            userss.add(newUser);
+        if (!TextUtils.isEmpty(joinedUserIds) && !TextUtils.isEmpty(joinedUserName)) {
+            String[] userIds = joinedUserIds.split(",");
+            String[] userNames = joinedUserName.split(",");
+            for (int i = 0; i < userIds.length; i++) {
+                NewUser newUser = new NewUser();
+                newUser.setName(userNames[i]);
+                newUser.setId(userIds[i]);
+                userss.add(newUser);
+            }
+            if (userss != null && userss.size() > 0) {
+                member.users = userss;
+            }
         }
-        if(userss!=null&&userss.size()>0){
-            member.setUsers(userss);
+        if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
+            String[] dpIds = departIds.split(",");
+            String[] dpNames = departName.split(",");
+            for (int i = 0; i < dpIds.length; i++) {
+                NewUser newUser = new NewUser();
+                newUser.setName(dpNames[i]);
+                newUser.setId(dpIds[i]);
+                depts.add(newUser);
+            }
+            if (depts != null && depts.size() > 0) {
+                member.depts = depts;
+            }
         }
-
-
-        String[] dpIds = departIds.split(",");
-        String[] dpNames = departName.split(",");
-
-        for (int i = 0; i < dpIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(dpNames[i]);
-            newUser.setId(dpIds[i]);
-            depts.add(newUser);
-        }
-        if(depts!=null&&depts.size()>0){
-            member.setDepts(depts);
-        }
-
-
     }
 
+    /**
+     * 过滤 图片数据、
+     */
+    private ArrayList<Attachment>  newData( ){
+        ArrayList<Attachment> newAttachment=new ArrayList<Attachment> ();
+        for (Attachment element:mAttachment) {
+            Attachment obj=new Attachment();
+            obj.setMime(element.getMime());
+            obj.setOriginalName(element.getOriginalName());
+            obj.setName(element.getName());
+            newAttachment.add(obj);
+        }
+        return newAttachment;
+    }
 
 }

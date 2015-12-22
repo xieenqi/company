@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.ProjectSearchActivity;
@@ -54,9 +55,7 @@ import org.apache.http.Header;
 
 import java.io.File;
 import java.io.Serializable;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -182,7 +181,7 @@ public class TasksEditActivity extends BaseActivity {
 
         }
 
-        member.setUsers(userss);
+        member.users=userss;
         newUser = mTask.getResponsiblePerson();
 
     }
@@ -347,7 +346,7 @@ public class TasksEditActivity extends BaseActivity {
             userss.add(newUser);
         }
 
-        member.setUsers(userss);
+        member.users=userss;
 
         if (!TextUtils.isEmpty(joinedUserName)) {
             tv_toUsers.setText(joinedUserName);

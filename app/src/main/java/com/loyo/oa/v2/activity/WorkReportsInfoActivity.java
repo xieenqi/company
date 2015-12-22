@@ -436,10 +436,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     public String getJoinUserNames() {
         StringBuilder result = new StringBuilder();
-        if (mWorkReport.getMembers().getUsers() != null && mWorkReport.getMembers().getUsers().size() != 0) {
-            for (int i = 0; i < mWorkReport.getMembers().getUsers().size(); i++) {
-                result.append(mWorkReport.getMembers().getUsers().get(i).getName());
-                if (i < mWorkReport.getMembers().getUsers().size() - 1) {
+        if (mWorkReport.getMembers().users != null && mWorkReport.getMembers().users.size() != 0) {
+            for (int i = 0; i < mWorkReport.getMembers().users.size(); i++) {
+                result.append(mWorkReport.getMembers().users.get(i).getName());
+                if (i < mWorkReport.getMembers().users.size() - 1) {
                     result.append(",");
                 }
             }
