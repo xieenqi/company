@@ -6,7 +6,6 @@
 
 package com.loyo.oa.v2.activity;
 
-import java.io.Serializable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R.id;
 import com.loyo.oa.v2.R.layout;
-import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
 import org.androidannotations.api.SdkVersionHelper;
 import org.androidannotations.api.builder.ActivityIntentBuilder;
@@ -38,7 +36,7 @@ public final class ProjectInfoActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String PROJECT_EXTRA = "project";
+    public final static String PROJECT_ID_EXTRA = "projectId";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,15 +92,15 @@ public final class ProjectInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tabs = ((PagerSlidingTabStrip) hasViews.findViewById(id.tabs));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        pager = ((ViewPager) hasViews.findViewById(id.pager));
         img_project_status = ((ImageView) hasViews.findViewById(id.img_project_status));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         tv_project_title = ((TextView) hasViews.findViewById(id.tv_project_title));
+        layout_project_des = ((ViewGroup) hasViews.findViewById(id.layout_project_des));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
+        tabs = ((PagerSlidingTabStrip) hasViews.findViewById(id.tabs));
         tv_project_extra = ((TextView) hasViews.findViewById(id.tv_project_extra));
         img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        layout_project_des = ((ViewGroup) hasViews.findViewById(id.layout_project_des));
-        pager = ((ViewPager) hasViews.findViewById(id.pager));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -145,8 +143,8 @@ public final class ProjectInfoActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(PROJECT_EXTRA)) {
-                project = ((Project) extras_.getSerializable(PROJECT_EXTRA));
+            if (extras_.containsKey(PROJECT_ID_EXTRA)) {
+                projectId = extras_.getString(PROJECT_ID_EXTRA);
             }
         }
     }
@@ -204,8 +202,8 @@ public final class ProjectInfoActivity_
             }
         }
 
-        public ProjectInfoActivity_.IntentBuilder_ project(Project project) {
-            return super.extra(PROJECT_EXTRA, ((Serializable) project));
+        public ProjectInfoActivity_.IntentBuilder_ projectId(String projectId) {
+            return super.extra(PROJECT_ID_EXTRA, projectId);
         }
 
     }

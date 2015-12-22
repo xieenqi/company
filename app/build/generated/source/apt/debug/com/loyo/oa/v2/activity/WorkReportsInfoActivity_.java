@@ -43,8 +43,8 @@ public final class WorkReportsInfoActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_ID_EXTRA = "id";
     public final static String M_WORK_REPORT_EXTRA = "workreport";
+    public final static String M_ID_EXTRA = "Id";
     private Handler handler_ = new Handler(Looper.getMainLooper());
 
     @Override
@@ -101,41 +101,29 @@ public final class WorkReportsInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_attachment = ((ViewGroup) hasViews.findViewById(id.layout_attachment));
-        img_workreport_status = ((ImageView) hasViews.findViewById(id.img_workreport_status));
-        layout_score = ((ViewGroup) hasViews.findViewById(id.layout_score));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
-        webView_content = ((WebView) hasViews.findViewById(id.webView_content));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_workReport_time = ((TextView) hasViews.findViewById(id.tv_workReport_time));
-        tv_new_customers_num = ((TextView) hasViews.findViewById(id.tv_new_customers_num));
-        btn_workreport_review = ((Button) hasViews.findViewById(id.btn_workreport_review));
-        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
-        tv_ptoject = ((TextView) hasViews.findViewById(id.tv_ptoject));
         edt_workReport_title = ((EditText) hasViews.findViewById(id.edt_workReport_title));
-        layout_content = ((ViewGroup) hasViews.findViewById(id.layout_content));
-        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
         tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_reviewer_ = ((TextView) hasViews.findViewById(id.tv_reviewer_));
-        tv_discussion_count = ((TextView) hasViews.findViewById(id.tv_discussion_count));
-        tv_visit_customers_num = ((TextView) hasViews.findViewById(id.tv_visit_customers_num));
         layout_discussion = ((ViewGroup) hasViews.findViewById(id.layout_discussion));
-        tv_new_visit_num = ((TextView) hasViews.findViewById(id.tv_new_visit_num));
+        layout_attachment = ((ViewGroup) hasViews.findViewById(id.layout_attachment));
+        tv_ptoject = ((TextView) hasViews.findViewById(id.tv_ptoject));
+        webView_content = ((WebView) hasViews.findViewById(id.webView_content));
         ratingBar_workReport = ((RatingBar) hasViews.findViewById(id.ratingBar_workReport));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        layout_content = ((ViewGroup) hasViews.findViewById(id.layout_content));
+        tv_workReport_time = ((TextView) hasViews.findViewById(id.tv_workReport_time));
+        tv_discussion_count = ((TextView) hasViews.findViewById(id.tv_discussion_count));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        img_workreport_status = ((ImageView) hasViews.findViewById(id.img_workreport_status));
+        tv_reviewer_ = ((TextView) hasViews.findViewById(id.tv_reviewer_));
+        btn_workreport_review = ((Button) hasViews.findViewById(id.btn_workreport_review));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
+        tv_visit_customers_num = ((TextView) hasViews.findViewById(id.tv_visit_customers_num));
         tv_crm = ((TextView) hasViews.findViewById(id.tv_crm));
-        if (layout_discussion!= null) {
-            layout_discussion.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    WorkReportsInfoActivity_.this.clickDiscussion();
-                }
-
-            }
-            );
-        }
+        layout_score = ((ViewGroup) hasViews.findViewById(id.layout_score));
+        tv_new_visit_num = ((TextView) hasViews.findViewById(id.tv_new_visit_num));
+        tv_new_customers_num = ((TextView) hasViews.findViewById(id.tv_new_customers_num));
+        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -172,6 +160,18 @@ public final class WorkReportsInfoActivity_
             }
             );
         }
+        if (layout_discussion!= null) {
+            layout_discussion.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    WorkReportsInfoActivity_.this.clickDiscussion();
+                }
+
+            }
+            );
+        }
         if (layout_attachment!= null) {
             layout_attachment.setOnClickListener(new OnClickListener() {
 
@@ -190,11 +190,11 @@ public final class WorkReportsInfoActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(M_ID_EXTRA)) {
-                mId = extras_.getString(M_ID_EXTRA);
-            }
             if (extras_.containsKey(M_WORK_REPORT_EXTRA)) {
                 mWorkReport = ((WorkReport) extras_.getSerializable(M_WORK_REPORT_EXTRA));
+            }
+            if (extras_.containsKey(M_ID_EXTRA)) {
+                mId = extras_.getString(M_ID_EXTRA);
             }
         }
     }
@@ -220,20 +220,6 @@ public final class WorkReportsInfoActivity_
     }
 
     @Override
-    public void updateUI() {
-        handler_.post(new Runnable() {
-
-
-            @Override
-            public void run() {
-                WorkReportsInfoActivity_.super.updateUI();
-            }
-
-        }
-        );
-    }
-
-    @Override
     public void getData_WorkReport() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
@@ -242,24 +228,6 @@ public final class WorkReportsInfoActivity_
             public void execute() {
                 try {
                     WorkReportsInfoActivity_.super.getData_WorkReport();
-                } catch (Throwable e) {
-                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-                }
-            }
-
-        }
-        );
-    }
-
-    @Override
-    public void getDiscussion() {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
-
-
-            @Override
-            public void execute() {
-                try {
-                    WorkReportsInfoActivity_.super.getDiscussion();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -316,12 +284,12 @@ public final class WorkReportsInfoActivity_
             }
         }
 
-        public WorkReportsInfoActivity_.IntentBuilder_ mId(String mId) {
-            return super.extra(M_ID_EXTRA, mId);
-        }
-
         public WorkReportsInfoActivity_.IntentBuilder_ mWorkReport(WorkReport mWorkReport) {
             return super.extra(M_WORK_REPORT_EXTRA, ((Serializable) mWorkReport));
+        }
+
+        public WorkReportsInfoActivity_.IntentBuilder_ mId(String mId) {
+            return super.extra(M_ID_EXTRA, mId);
         }
 
     }

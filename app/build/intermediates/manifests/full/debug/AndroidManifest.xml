@@ -54,7 +54,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -171,22 +170,19 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.loyo.oa.v2.activity.VerifyAccountActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.loyo.oa.v2.activity.MainActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize"
@@ -204,7 +200,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.loyo.oa.v2.activity.CommonTagSelectActivity_"
+            android:name="com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -327,12 +323,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.loyo.oa.v2.activity.CustomerAddActivity_"
+            android:name="com.loyo.oa.v2.activity.customer.CustomerAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.loyo.oa.v2.activity.CustomerInfoActivity_"
+            android:name="com.loyo.oa.v2.activity.customer.CustomerInfoActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
@@ -359,17 +355,17 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.loyo.oa.v2.activity.TasksAddActivity_"
+            android:name="com.loyo.oa.v2.activity.tasks.TasksAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.loyo.oa.v2.activity.ContactsActivity"
+            android:name="com.loyo.oa.v2.activity.customer.ContactsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.loyo.oa.v2.activity.TasksInfoActivity_"
+            android:name="com.loyo.oa.v2.activity.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -393,13 +389,20 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 子任务的添加 -->
         <activity
             android:name="com.loyo.oa.v2.activity.ChildTaskAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 子任务的 编辑 -->
         <activity
-            android:name="com.loyo.oa.v2.activity.TasksEditActivity_"
+            android:name="com.loyo.oa.v2.activity.tasks.TaskChildEdit"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 任务编辑页面 -->
+        <activity
+            android:name="com.loyo.oa.v2.activity.tasks.TasksEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -420,6 +423,12 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name="com.loyo.oa.v2.activity.WfInstanceManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!-- 部门选择页面 -->
+        <activity
+            android:name="com.loyo.oa.v2.activity.wfinstance.DepartmentChoose"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -473,8 +482,9 @@
             android:name="com.loyo.oa.v2.activity.SignInManagerFromCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <!-- 任务审核 -->
         <activity
-            android:name="com.loyo.oa.v2.activity.TasksInfoScoreActivity_"
+            android:name="com.loyo.oa.v2.activity.tasks.TasksInfoScoreActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
@@ -486,8 +496,9 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible" />
+        <!-- 任务的搜索 -->
         <activity
-            android:name="com.loyo.oa.v2.activity.TasksSearchActivity"
+            android:name="com.loyo.oa.v2.activity.tasks.TasksSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
@@ -559,11 +570,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.loyo.oa.v2.activity.TaskListActivity_"
+            android:name="com.loyo.oa.v2.activity.tasks.TaskListActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.loyo.oa.v2.activity.ProjectSearchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.loyo.oa.v2.activity.customer.CustomerRepeat"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
@@ -710,8 +725,7 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false" />
 
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <receiver
@@ -748,23 +762,19 @@
         <service
             android:name="com.loyo.oa.v2.service.JushService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true" />
         <service
             android:name="com.loyo.oa.v2.service.JpushService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true" />
         <service
             android:name="com.loyo.oa.v2.service.JPushService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true" />
 
         <activity
             android:name="com.loyo.oa.v2.tool.MyLayoutUtils"
-            android:label="@string/title_activity_my_layout_utils" >
-        </activity>
+            android:label="@string/title_activity_my_layout_utils" />
         <activity
             android:name="android.support.v7.widget.TestActivity"
             android:label="RecyclerViewTestActivity" />

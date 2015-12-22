@@ -35,6 +35,7 @@ public final class CustomerContactManageActivity_
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
     public final static String M_CUSTOMER_EXTRA = "Customer";
+    public final static String IS_MY_USER_EXTRA = "isMyUser";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,22 +83,10 @@ public final class CustomerContactManageActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         layout_add = ((ViewGroup) hasViews.findViewById(id.layout_add));
+        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
         layout_container = ((LinearLayout) hasViews.findViewById(id.layout_container));
-        if (layout_back!= null) {
-            layout_back.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    CustomerContactManageActivity_.this.back();
-                }
-
-            }
-            );
-        }
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         if (layout_add!= null) {
             layout_add.setOnClickListener(new OnClickListener() {
 
@@ -105,6 +94,18 @@ public final class CustomerContactManageActivity_
                 @Override
                 public void onClick(View view) {
                     CustomerContactManageActivity_.this.addNewContact();
+                }
+
+            }
+            );
+        }
+        if (layout_back!= null) {
+            layout_back.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    CustomerContactManageActivity_.this.back();
                 }
 
             }
@@ -118,6 +119,9 @@ public final class CustomerContactManageActivity_
         if (extras_!= null) {
             if (extras_.containsKey(M_CUSTOMER_EXTRA)) {
                 mCustomer = ((Customer) extras_.getSerializable(M_CUSTOMER_EXTRA));
+            }
+            if (extras_.containsKey(IS_MY_USER_EXTRA)) {
+                isMyUser = extras_.getBoolean(IS_MY_USER_EXTRA);
             }
         }
     }
@@ -177,6 +181,10 @@ public final class CustomerContactManageActivity_
 
         public CustomerContactManageActivity_.IntentBuilder_ mCustomer(Customer mCustomer) {
             return super.extra(M_CUSTOMER_EXTRA, ((Serializable) mCustomer));
+        }
+
+        public CustomerContactManageActivity_.IntentBuilder_ isMyUser(boolean isMyUser) {
+            return super.extra(IS_MY_USER_EXTRA, isMyUser);
         }
 
     }

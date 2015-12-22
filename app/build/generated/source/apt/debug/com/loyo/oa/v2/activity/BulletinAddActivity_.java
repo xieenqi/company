@@ -79,11 +79,11 @@ public final class BulletinAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_recevier = ((ViewGroup) hasViews.findViewById(id.layout_recevier));
         tv_recevier = ((TextView) hasViews.findViewById(id.tv_recevier));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        layout_recevier = ((ViewGroup) hasViews.findViewById(id.layout_recevier));
         edt_title = ((EditText) hasViews.findViewById(id.edt_title));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
         {
             View view = hasViews.findViewById(id.img_title_left);
             if (view!= null) {
@@ -93,21 +93,6 @@ public final class BulletinAddActivity_
                     @Override
                     public void onClick(View view) {
                         BulletinAddActivity_.this.close();
-                    }
-
-                }
-                );
-            }
-        }
-        {
-            View view = hasViews.findViewById(id.img_title_right);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        BulletinAddActivity_.this.submit();
                     }
 
                 }
@@ -126,6 +111,21 @@ public final class BulletinAddActivity_
             }
             );
         }
+        {
+            View view = hasViews.findViewById(id.img_title_right);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        BulletinAddActivity_.this.submit();
+                    }
+
+                }
+                );
+            }
+        }
         init();
     }
 
@@ -133,11 +133,11 @@ public final class BulletinAddActivity_
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case  100 :
-                BulletinAddActivity_.this.onDepartmentUserResult(resultCode, data);
-                break;
             case  10 :
                 BulletinAddActivity_.this.onPhotoResult(data);
+                break;
+            case  100 :
+                BulletinAddActivity_.this.onDepartmentUserResult(resultCode, data);
                 break;
             case  300 :
                 BulletinAddActivity_.this.onDeletePhotoResult(resultCode, data);

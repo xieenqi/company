@@ -6,7 +6,6 @@
 
 package com.loyo.oa.v2.activity;
 
-import java.io.Serializable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +19,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.loyo.oa.v2.R.id;
 import com.loyo.oa.v2.R.layout;
-import com.loyo.oa.v2.beans.Customer;
 import org.androidannotations.api.builder.ActivityIntentBuilder;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
@@ -34,7 +31,7 @@ public final class CustomerDetailInfoActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_CUSTOMER_EXTRA = "Customer";
+    public final static String ID_EXTRA = "Id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,29 +79,29 @@ public final class CustomerDetailInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_contact_tel = ((TextView) hasViews.findViewById(id.tv_contact_tel));
-        layout_attachment = ((ViewGroup) hasViews.findViewById(id.layout_attachment));
-        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        layout_send_sms = ((ViewGroup) hasViews.findViewById(id.layout_send_sms));
-        tv_customer_name = ((TextView) hasViews.findViewById(id.tv_customer_name));
-        tv_contact_name = ((TextView) hasViews.findViewById(id.tv_contact_name));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        tv_task_count = ((TextView) hasViews.findViewById(id.tv_task_count));
-        img_public = ((ImageView) hasViews.findViewById(id.img_public));
-        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
-        layout_purchase = ((ViewGroup) hasViews.findViewById(id.layout_purchase));
-        tv_purchase_count = ((TextView) hasViews.findViewById(id.tv_purchase_count));
-        layout_call = ((ViewGroup) hasViews.findViewById(id.layout_call));
-        tv_sale_activity_date = ((TextView) hasViews.findViewById(id.tv_sale_activity_date));
-        layout_customer_info = ((ViewGroup) hasViews.findViewById(id.layout_customer_info));
-        layout_visit = ((ViewGroup) hasViews.findViewById(id.layout_visit));
-        layout_task = ((ViewGroup) hasViews.findViewById(id.layout_task));
-        tv_visit_times = ((TextView) hasViews.findViewById(id.tv_visit_times));
-        tv_tags = ((TextView) hasViews.findViewById(id.tv_tags));
-        layout_contact = ((ViewGroup) hasViews.findViewById(id.layout_contact));
-        layout_sale_activity = ((ViewGroup) hasViews.findViewById(id.layout_sale_activity));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_task_count = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_task_count));
+        tv_tags = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_tags));
+        tv_customer_name = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_customer_name));
+        tv_visit_times = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_visit_times));
+        img_public = ((ImageView) hasViews.findViewById(com.loyo.oa.v2.R.id.img_public));
+        img_title_right = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.img_title_right));
+        layout_contact = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_contact));
+        tv_title_1 = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_title_1));
+        img_title_left = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.img_title_left));
+        layout_customer_info = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_customer_info));
+        tv_attachment_count = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_attachment_count));
+        layout_purchase = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_purchase));
+        tv_purchase_count = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_purchase_count));
+        tv_contact_tel = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_contact_tel));
+        tv_address = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_address));
+        tv_contact_name = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_contact_name));
+        layout_call = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_call));
+        layout_send_sms = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_send_sms));
+        tv_sale_activity_date = ((TextView) hasViews.findViewById(com.loyo.oa.v2.R.id.tv_sale_activity_date));
+        layout_visit = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_visit));
+        layout_attachment = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_attachment));
+        layout_sale_activity = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_sale_activity));
+        layout_task = ((ViewGroup) hasViews.findViewById(com.loyo.oa.v2.R.id.layout_task));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -255,8 +252,8 @@ public final class CustomerDetailInfoActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(M_CUSTOMER_EXTRA)) {
-                mCustomer = ((Customer) extras_.getSerializable(M_CUSTOMER_EXTRA));
+            if (extras_.containsKey(ID_EXTRA)) {
+                id = extras_.getString(ID_EXTRA);
             }
         }
     }
@@ -314,8 +311,8 @@ public final class CustomerDetailInfoActivity_
             }
         }
 
-        public CustomerDetailInfoActivity_.IntentBuilder_ mCustomer(Customer mCustomer) {
-            return super.extra(M_CUSTOMER_EXTRA, ((Serializable) mCustomer));
+        public CustomerDetailInfoActivity_.IntentBuilder_ id(String id) {
+            return super.extra(ID_EXTRA, id);
         }
 
     }

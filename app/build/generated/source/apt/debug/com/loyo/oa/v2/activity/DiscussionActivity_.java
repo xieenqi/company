@@ -92,21 +92,6 @@ public final class DiscussionActivity_
         et_comment = ((TextView) hasViews.findViewById(id.et_comment));
         listView_discussion = ((PullToRefreshListView) hasViews.findViewById(id.listView_discussion));
         {
-            View view = hasViews.findViewById(id.tv_send);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        DiscussionActivity_.this.sendDiscussion();
-                    }
-
-                }
-                );
-            }
-        }
-        {
             View view = hasViews.findViewById(id.img_title_left);
             if (view!= null) {
                 view.setOnClickListener(new OnClickListener() {
@@ -115,6 +100,21 @@ public final class DiscussionActivity_
                     @Override
                     public void onClick(View view) {
                         DiscussionActivity_.this.click();
+                    }
+
+                }
+                );
+            }
+        }
+        {
+            View view = hasViews.findViewById(id.tv_send);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        DiscussionActivity_.this.sendDiscussion();
                     }
 
                 }

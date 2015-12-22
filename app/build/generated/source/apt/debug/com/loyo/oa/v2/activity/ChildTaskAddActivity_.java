@@ -7,6 +7,7 @@
 package com.loyo.oa.v2.activity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.loyo.oa.v2.R.id;
 import com.loyo.oa.v2.R.layout;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import org.androidannotations.api.builder.ActivityIntentBuilder;
@@ -37,6 +39,7 @@ public final class ChildTaskAddActivity_
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
     public final static String CHID_TASK_EXTRA = "childTask";
+    public final static String ALL_USERS_EXTRA = "allUsers";
     public final static String M_TASK_EXTRA = "Task";
 
     @Override
@@ -85,13 +88,13 @@ public final class ChildTaskAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        btn_child_add_complete = ((Button) hasViews.findViewById(id.btn_child_add_complete));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        layout_child_add_responser = ((ViewGroup) hasViews.findViewById(id.layout_child_add_responser));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         btn_child_add_cancel_complete = ((Button) hasViews.findViewById(id.btn_child_add_cancel_complete));
-        layout_child_add_responser = ((ViewGroup) hasViews.findViewById(id.layout_child_add_responser));
         et_child_add_content = ((EditText) hasViews.findViewById(id.et_child_add_content));
-        btn_child_add_complete = ((Button) hasViews.findViewById(id.btn_child_add_complete));
         tv_child_add_responser_name = ((TextView) hasViews.findViewById(id.tv_child_add_responser_name));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
         if (layout_child_add_responser!= null) {
             layout_child_add_responser.setOnClickListener(new OnClickListener() {
 
@@ -155,11 +158,15 @@ public final class ChildTaskAddActivity_
         intUi();
     }
 
+    @SuppressWarnings("unchecked")
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
             if (extras_.containsKey(CHID_TASK_EXTRA)) {
                 chidTask = ((TaskCheckPoint) extras_.getSerializable(CHID_TASK_EXTRA));
+            }
+            if (extras_.containsKey(ALL_USERS_EXTRA)) {
+                allUsers = ((ArrayList<NewUser> ) extras_.getSerializable(ALL_USERS_EXTRA));
             }
             if (extras_.containsKey(M_TASK_EXTRA)) {
                 mTask = ((Task) extras_.getSerializable(M_TASK_EXTRA));
@@ -222,6 +229,10 @@ public final class ChildTaskAddActivity_
 
         public ChildTaskAddActivity_.IntentBuilder_ chidTask(TaskCheckPoint chidTask) {
             return super.extra(CHID_TASK_EXTRA, ((Serializable) chidTask));
+        }
+
+        public ChildTaskAddActivity_.IntentBuilder_ allUsers(ArrayList<NewUser> allUsers) {
+            return super.extra(ALL_USERS_EXTRA, ((Serializable) allUsers));
         }
 
         public ChildTaskAddActivity_.IntentBuilder_ mTask(Task mTask) {

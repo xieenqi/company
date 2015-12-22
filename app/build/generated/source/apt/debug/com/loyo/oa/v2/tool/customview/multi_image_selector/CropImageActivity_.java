@@ -81,8 +81,8 @@ public final class CropImageActivity_
     @Override
     public void onViewChanged(HasViews hasViews) {
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
-        tv_edit = ((TextView) hasViews.findViewById(id.tv_edit));
         tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        tv_edit = ((TextView) hasViews.findViewById(id.tv_edit));
         clipSquareIV = ((ClipSquareImageView) hasViews.findViewById(id.clipSquareIV));
         if (layout_back!= null) {
             layout_back.setOnClickListener(new OnClickListener() {

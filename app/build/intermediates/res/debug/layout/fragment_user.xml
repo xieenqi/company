@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <ExpandableListView
-        android:divider="@color/activity_split"
-        android:dividerHeight="0.5dp"
-        android:groupIndicator="@null"
         android:id="@+id/expandableListView_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"
-        android:drawSelectorOnTop="false" />
+        android:divider="@color/activity_split"
+        android:dividerHeight="0.5dp"
+        android:drawSelectorOnTop="false"
+        android:groupIndicator="@null"/>
 
     <RelativeLayout
         android:id="@+id/layout_toast"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text=""
-            android:textSize="40sp" />
+            android:textSize="40sp"/>
 
     </RelativeLayout>
 
@@ -35,8 +35,8 @@
         android:id="@+id/letter_View"
         android:layout_width="30dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="30dp"
-        android:layout_alignParentRight="true" />
+        android:layout_marginTop="30dp"/>
 
 </RelativeLayout><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/layout/fragment_user.xml -->

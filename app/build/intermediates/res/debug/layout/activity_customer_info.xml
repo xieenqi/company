@@ -59,11 +59,11 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="left|center"
                         android:hint="地址"
                         android:singleLine="false"/>
 
                     <LinearLayout
+                        android:id="@+id/layout_rushpackger"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.4"
@@ -305,6 +305,7 @@
                         android:hint=""/>
 
                     <ImageView
+                        android:visibility="gone"
                         android:id="@+id/img_del_join_users"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"

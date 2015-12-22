@@ -82,8 +82,8 @@ public final class WorkReportReviewActivity_
     @Override
     public void onViewChanged(HasViews hasViews) {
         ratingBar_workReport = ((RatingBar) hasViews.findViewById(id.ratingBar_workReport));
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         edt_content = ((EditText) hasViews.findViewById(id.edt_content));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {

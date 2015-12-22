@@ -37,8 +37,8 @@ public final class PreviewAttendanceActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String IN_OR_OUT_EXTRA = "inOrOut";
     public final static String ATTENDANCE_EXTRA = "data";
+    public final static String IN_OR_OUT_EXTRA = "inOrOut";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,28 +86,16 @@ public final class PreviewAttendanceActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         tv_name = ((TextView) hasViews.findViewById(id.tv_name));
         tv_info = ((TextView) hasViews.findViewById(id.tv_info));
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         tv_reason = ((TextView) hasViews.findViewById(id.tv_reason));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        btn_confirm = ((Button) hasViews.findViewById(id.btn_confirm));
+        iv_avartar = ((RoundImageView) hasViews.findViewById(id.iv_avartar));
         iv_type = ((ImageView) hasViews.findViewById(id.iv_type));
         tv_role = ((TextView) hasViews.findViewById(id.tv_role));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
-        iv_avartar = ((RoundImageView) hasViews.findViewById(id.iv_avartar));
-        btn_confirm = ((Button) hasViews.findViewById(id.btn_confirm));
-        if (btn_confirm!= null) {
-            btn_confirm.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    PreviewAttendanceActivity_.this.confirmFieldWork();
-                }
-
-            }
-            );
-        }
         if (layout_back!= null) {
             layout_back.setOnClickListener(new OnClickListener() {
 
@@ -120,17 +108,29 @@ public final class PreviewAttendanceActivity_
             }
             );
         }
+        if (btn_confirm!= null) {
+            btn_confirm.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    PreviewAttendanceActivity_.this.confirmFieldWork();
+                }
+
+            }
+            );
+        }
         initViews();
     }
 
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(IN_OR_OUT_EXTRA)) {
-                inOrOut = extras_.getInt(IN_OR_OUT_EXTRA);
-            }
             if (extras_.containsKey(ATTENDANCE_EXTRA)) {
                 attendance = ((DayofAttendance) extras_.getSerializable(ATTENDANCE_EXTRA));
+            }
+            if (extras_.containsKey(IN_OR_OUT_EXTRA)) {
+                inOrOut = extras_.getInt(IN_OR_OUT_EXTRA);
             }
         }
     }
@@ -188,12 +188,12 @@ public final class PreviewAttendanceActivity_
             }
         }
 
-        public PreviewAttendanceActivity_.IntentBuilder_ inOrOut(int inOrOut) {
-            return super.extra(IN_OR_OUT_EXTRA, inOrOut);
-        }
-
         public PreviewAttendanceActivity_.IntentBuilder_ attendance(DayofAttendance attendance) {
             return super.extra(ATTENDANCE_EXTRA, ((Serializable) attendance));
+        }
+
+        public PreviewAttendanceActivity_.IntentBuilder_ inOrOut(int inOrOut) {
+            return super.extra(IN_OR_OUT_EXTRA, inOrOut);
         }
 
     }

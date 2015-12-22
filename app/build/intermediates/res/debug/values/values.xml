@@ -241,6 +241,7 @@
     <eat-comment/>
     <color name="purple">#800080</color>
     <color name="red">#FF0000</color>
+    <color name="red1">#f5625a</color>
     <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/res/values/values.xml -->
     <eat-comment/>
     <color name="ripple_material_dark">#4dffffff</color>
@@ -401,8 +402,8 @@
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
     <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
-    <dimen name="activity_horizontal_margin">10dp</dimen>
-    <dimen name="activity_vertical_margin">10dp</dimen>
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
     <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/res/values/values.xml -->
     <eat-comment/>
     <item name="dialog_fixed_height_major" type="dimen">80%</item>
@@ -471,7 +472,7 @@
     <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="space_size">2dp</dimen>
-    <dimen name="text_margin_horizontal">10dp</dimen>
+    <dimen name="text_margin_horizontal">8dp</dimen>
     <dimen name="text_margin_vertical">4dp</dimen>
     <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/build/intermediates/exploded-aar/com.yalantis/contextmenu/1.0.4/res/values/values.xml -->
     <eat-comment/>
@@ -689,12 +690,12 @@
     <string name="msg_no_camera">没有系统相机</string>
     <string name="preview">预览</string>
     <string name="products_name">产品名称</string>
-    <string name="pull_to_refresh_from_bottom_pull_label">@string/pull_to_refresh_pull_label</string>
-    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
-    <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
-    <string name="pull_to_refresh_pull_label">下拉刷新…</string>
+    <string name="pull_to_refresh_from_bottom_pull_label">下拉刷新</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">正在刷新…</string>
+    <string name="pull_to_refresh_from_bottom_release_label">放开以刷新…</string>
+    <string name="pull_to_refresh_pull_label">上拉加载…</string>
     <string name="pull_to_refresh_refreshing_label">正在载入…</string>
-    <string name="pull_to_refresh_release_label">放开以刷新…</string>
+    <string name="pull_to_refresh_release_label">放开以加载…</string>
     <string name="reportType1">日报</string>
     <string name="reportType2">周报</string>
     <string name="reportType3">月报</string>

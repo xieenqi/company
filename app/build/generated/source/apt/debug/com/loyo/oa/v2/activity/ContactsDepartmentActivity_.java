@@ -33,8 +33,8 @@ public final class ContactsDepartmentActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String DEP_ID_EXTRA = "depId";
     public final static String DEP_NAME_EXTRA = "depName";
+    public final static String DEP_ID_EXTRA = "depId";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,11 +110,11 @@ public final class ContactsDepartmentActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(DEP_ID_EXTRA)) {
-                depId = extras_.getString(DEP_ID_EXTRA);
-            }
             if (extras_.containsKey(DEP_NAME_EXTRA)) {
                 depName = extras_.getString(DEP_NAME_EXTRA);
+            }
+            if (extras_.containsKey(DEP_ID_EXTRA)) {
+                depId = extras_.getString(DEP_ID_EXTRA);
             }
         }
     }
@@ -172,12 +172,12 @@ public final class ContactsDepartmentActivity_
             }
         }
 
-        public ContactsDepartmentActivity_.IntentBuilder_ depId(String depId) {
-            return super.extra(DEP_ID_EXTRA, depId);
-        }
-
         public ContactsDepartmentActivity_.IntentBuilder_ depName(String depName) {
             return super.extra(DEP_NAME_EXTRA, depName);
+        }
+
+        public ContactsDepartmentActivity_.IntentBuilder_ depId(String depId) {
+            return super.extra(DEP_ID_EXTRA, depId);
         }
 
     }

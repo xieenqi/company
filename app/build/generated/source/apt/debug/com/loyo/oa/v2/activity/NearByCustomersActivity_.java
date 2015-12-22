@@ -39,8 +39,8 @@ public final class NearByCustomersActivity_
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
     public final static String TYPE_EXTRA = "type";
-    public final static String NEAR_COUNT_EXTRA = "nearCount";
     public final static String POSITION_EXTRA = "position";
+    public final static String NEAR_COUNT_EXTRA = "nearCount";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,10 +97,10 @@ public final class NearByCustomersActivity_
     @Override
     public void onViewChanged(HasViews hasViews) {
         pager = ((ViewPager) hasViews.findViewById(id.pager));
-        tabs = ((PagerSlidingTabStrip) hasViews.findViewById(id.tabs));
-        iv_submit = ((ImageView) hasViews.findViewById(id.iv_submit));
-        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
         tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        tabs = ((PagerSlidingTabStrip) hasViews.findViewById(id.tabs));
+        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
+        iv_submit = ((ImageView) hasViews.findViewById(id.iv_submit));
         if (iv_submit!= null) {
             iv_submit.setOnClickListener(new OnClickListener() {
 
@@ -134,11 +134,11 @@ public final class NearByCustomersActivity_
             if (extras_.containsKey(TYPE_EXTRA)) {
                 type = extras_.getInt(TYPE_EXTRA);
             }
-            if (extras_.containsKey(NEAR_COUNT_EXTRA)) {
-                nearCount = ((NearCount) extras_.getSerializable(NEAR_COUNT_EXTRA));
-            }
             if (extras_.containsKey(POSITION_EXTRA)) {
                 position = extras_.getString(POSITION_EXTRA);
+            }
+            if (extras_.containsKey(NEAR_COUNT_EXTRA)) {
+                nearCount = ((NearCount) extras_.getSerializable(NEAR_COUNT_EXTRA));
             }
         }
     }
@@ -200,12 +200,12 @@ public final class NearByCustomersActivity_
             return super.extra(TYPE_EXTRA, type);
         }
 
-        public NearByCustomersActivity_.IntentBuilder_ nearCount(NearCount nearCount) {
-            return super.extra(NEAR_COUNT_EXTRA, ((Serializable) nearCount));
-        }
-
         public NearByCustomersActivity_.IntentBuilder_ position(String position) {
             return super.extra(POSITION_EXTRA, position);
+        }
+
+        public NearByCustomersActivity_.IntentBuilder_ nearCount(NearCount nearCount) {
+            return super.extra(NEAR_COUNT_EXTRA, ((Serializable) nearCount));
         }
 
     }

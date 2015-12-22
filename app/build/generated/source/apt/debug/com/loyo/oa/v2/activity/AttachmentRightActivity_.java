@@ -95,21 +95,9 @@ public final class AttachmentRightActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_type1 = ((ViewGroup) hasViews.findViewById(id.layout_type1));
-        cb1 = ((CheckBox) hasViews.findViewById(id.cb1));
         rv_user = ((RecyclerView) hasViews.findViewById(id.rv_user));
-        if (layout_type1 != null) {
-            layout_type1 .setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    AttachmentRightActivity_.this.toggleCbAll();
-                }
-
-            }
-            );
-        }
+        cb1 = ((CheckBox) hasViews.findViewById(id.cb1));
+        layout_type1 = ((ViewGroup) hasViews.findViewById(id.layout_type1));
         {
             View view = hasViews.findViewById(id.img_title_left);
             if (view!= null) {
@@ -124,6 +112,18 @@ public final class AttachmentRightActivity_
                 }
                 );
             }
+        }
+        if (layout_type1 != null) {
+            layout_type1 .setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    AttachmentRightActivity_.this.toggleCbAll();
+                }
+
+            }
+            );
         }
         init();
     }

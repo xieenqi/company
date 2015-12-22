@@ -82,20 +82,20 @@ public final class ContactInfoActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_deptname = ((TextView) hasViews.findViewById(id.tv_deptname));
-        layout_call = ((ViewGroup) hasViews.findViewById(id.layout_call));
-        tv_realname = ((TextView) hasViews.findViewById(id.tv_realname));
         tv_edit = ((TextView) hasViews.findViewById(id.tv_edit));
-        img_title_user = ((RoundImageView) hasViews.findViewById(id.img_title_user));
-        tv_birthday = ((TextView) hasViews.findViewById(id.tv_birthday));
-        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
         tv_sex = ((TextView) hasViews.findViewById(id.tv_sex));
+        layout_call = ((ViewGroup) hasViews.findViewById(id.layout_call));
+        tv_deptname = ((TextView) hasViews.findViewById(id.tv_deptname));
+        layout_action = ((ViewGroup) hasViews.findViewById(id.layout_action));
         tv_phone = ((TextView) hasViews.findViewById(id.tv_phone));
         layout_msg = ((ViewGroup) hasViews.findViewById(id.layout_msg));
-        layout_action = ((ViewGroup) hasViews.findViewById(id.layout_action));
-        tv_weixin = ((TextView) hasViews.findViewById(id.tv_weixin));
-        tv_age = ((TextView) hasViews.findViewById(id.tv_age));
+        tv_birthday = ((TextView) hasViews.findViewById(id.tv_birthday));
         tv_qq = ((TextView) hasViews.findViewById(id.tv_qq));
+        tv_weixin = ((TextView) hasViews.findViewById(id.tv_weixin));
+        img_title_user = ((RoundImageView) hasViews.findViewById(id.img_title_user));
+        tv_age = ((TextView) hasViews.findViewById(id.tv_age));
+        layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
+        tv_realname = ((TextView) hasViews.findViewById(id.tv_realname));
         if (tv_edit!= null) {
             tv_edit.setOnClickListener(new OnClickListener() {
 

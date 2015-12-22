@@ -83,15 +83,17 @@ public final class WfInstanceAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_bizform = ((TextView) hasViews.findViewById(id.tv_bizform));
-        layout_wfinstance_data = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_data));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        edt_memo = ((EditText) hasViews.findViewById(id.edt_memo));
-        btn_add = ((Button) hasViews.findViewById(id.btn_add));
-        wfinstance_data_container = ((LinearLayout) hasViews.findViewById(id.wfinstance_data_container));
-        tv_WfTemplate = ((TextView) hasViews.findViewById(id.tv_WfTemplate));
         img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_bizform = ((TextView) hasViews.findViewById(id.tv_bizform));
+        tv_WfTemplate = ((TextView) hasViews.findViewById(id.tv_WfTemplate));
+        wfinstance_data_container = ((LinearLayout) hasViews.findViewById(id.wfinstance_data_container));
+        btn_add = ((Button) hasViews.findViewById(id.btn_add));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        edt_memo = ((EditText) hasViews.findViewById(id.edt_memo));
+        ll_dept = ((ViewGroup) hasViews.findViewById(id.ll_dept));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        layout_wfinstance_data = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_data));
+        tv_dept = ((TextView) hasViews.findViewById(id.tv_dept));
         if (img_title_right!= null) {
             img_title_right.setOnClickListener(new OnClickListener() {
 
@@ -157,6 +159,18 @@ public final class WfInstanceAddActivity_
                 }
                 );
             }
+        }
+        if (ll_dept!= null) {
+            ll_dept.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    WfInstanceAddActivity_.this.onClick(view);
+                }
+
+            }
+            );
         }
         init();
     }

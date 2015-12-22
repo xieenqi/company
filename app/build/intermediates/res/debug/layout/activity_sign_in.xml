@@ -139,12 +139,9 @@
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/layout/activity_sign_in.xml -->

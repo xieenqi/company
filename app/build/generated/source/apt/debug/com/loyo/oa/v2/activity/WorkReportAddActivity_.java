@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.loyo.oa.v2.R.id;
 import com.loyo.oa.v2.R.layout;
-import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.WorkReport;
 import org.androidannotations.api.builder.ActivityIntentBuilder;
 import org.androidannotations.api.view.HasViews;
@@ -41,9 +40,10 @@ public final class WorkReportAddActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String PROJECT_EXTRA = "project";
+    public final static String PROJECT_ID_EXTRA = "projectId";
     public final static String M_WORK_REPORT_EXTRA = "mWorkReport";
     public final static String TYPE_EXTRA = "type";
+    public final static String PROJECT_TITLE_EXTRA = "projectTitle";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,27 +91,27 @@ public final class WorkReportAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_mproject = ((ViewGroup) hasViews.findViewById(id.layout_mproject));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
-        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
-        tv_crm = ((TextView) hasViews.findViewById(id.tv_crm));
-        crm_toggle = ((ToggleButton) hasViews.findViewById(id.crm_toggle));
-        layout_type = ((ViewGroup) hasViews.findViewById(id.layout_type));
         layout_reviewer = ((ViewGroup) hasViews.findViewById(id.layout_reviewer));
-        tv_new_customers_num = ((TextView) hasViews.findViewById(id.tv_new_customers_num));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_new_visit_num = ((TextView) hasViews.findViewById(id.tv_new_visit_num));
+        layout_mproject = ((ViewGroup) hasViews.findViewById(id.layout_mproject));
+        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
         layout_crm = ((ViewGroup) hasViews.findViewById(id.layout_crm));
         rg = ((RadioGroup) hasViews.findViewById(id.rg));
-        tv_new_visit_num = ((TextView) hasViews.findViewById(id.tv_new_visit_num));
-        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_visit_customers_num = ((TextView) hasViews.findViewById(id.tv_visit_customers_num));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        tv_new_customers_num = ((TextView) hasViews.findViewById(id.tv_new_customers_num));
         layout_del = ((ViewGroup) hasViews.findViewById(id.layout_del));
-        img_title_toUser = ((ImageView) hasViews.findViewById(id.img_title_toUser));
-        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        tv_project = ((TextView) hasViews.findViewById(id.tv_project));
+        tv_visit_customers_num = ((TextView) hasViews.findViewById(id.tv_visit_customers_num));
         tv_resignin = ((TextView) hasViews.findViewById(id.tv_resignin));
+        tv_crm = ((TextView) hasViews.findViewById(id.tv_crm));
+        crm_toggle = ((ToggleButton) hasViews.findViewById(id.crm_toggle));
+        img_title_toUser = ((ImageView) hasViews.findViewById(id.img_title_toUser));
+        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
+        layout_type = ((ViewGroup) hasViews.findViewById(id.layout_type));
+        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
+        tv_project = ((TextView) hasViews.findViewById(id.tv_project));
         if (tv_resignin!= null) {
             tv_resignin.setOnClickListener(new OnClickListener() {
 
@@ -200,14 +200,14 @@ public final class WorkReportAddActivity_
             );
         }
         {
-            CompoundButton view = ((CompoundButton) hasViews.findViewById(id.rb1));
+            CompoundButton view = ((CompoundButton) hasViews.findViewById(id.rb3));
             if (view!= null) {
                 view.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        WorkReportAddActivity_.this.dayClick(buttonView, isChecked);
+                        WorkReportAddActivity_.this.monthClick(buttonView, isChecked);
                     }
 
                 }
@@ -230,14 +230,14 @@ public final class WorkReportAddActivity_
             }
         }
         {
-            CompoundButton view = ((CompoundButton) hasViews.findViewById(id.rb3));
+            CompoundButton view = ((CompoundButton) hasViews.findViewById(id.rb1));
             if (view!= null) {
                 view.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        WorkReportAddActivity_.this.monthClick(buttonView, isChecked);
+                        WorkReportAddActivity_.this.dayClick(buttonView, isChecked);
                     }
 
                 }
@@ -250,14 +250,17 @@ public final class WorkReportAddActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
-            if (extras_.containsKey(PROJECT_EXTRA)) {
-                project = ((Project) extras_.getSerializable(PROJECT_EXTRA));
+            if (extras_.containsKey(PROJECT_ID_EXTRA)) {
+                projectId = extras_.getString(PROJECT_ID_EXTRA);
             }
             if (extras_.containsKey(M_WORK_REPORT_EXTRA)) {
                 mWorkReport = ((WorkReport) extras_.getSerializable(M_WORK_REPORT_EXTRA));
             }
             if (extras_.containsKey(TYPE_EXTRA)) {
                 type = extras_.getInt(TYPE_EXTRA);
+            }
+            if (extras_.containsKey(PROJECT_TITLE_EXTRA)) {
+                projectTitle = extras_.getString(PROJECT_TITLE_EXTRA);
             }
         }
     }
@@ -315,8 +318,8 @@ public final class WorkReportAddActivity_
             }
         }
 
-        public WorkReportAddActivity_.IntentBuilder_ project(Project project) {
-            return super.extra(PROJECT_EXTRA, ((Serializable) project));
+        public WorkReportAddActivity_.IntentBuilder_ projectId(String projectId) {
+            return super.extra(PROJECT_ID_EXTRA, projectId);
         }
 
         public WorkReportAddActivity_.IntentBuilder_ mWorkReport(WorkReport mWorkReport) {
@@ -325,6 +328,10 @@ public final class WorkReportAddActivity_
 
         public WorkReportAddActivity_.IntentBuilder_ type(int type) {
             return super.extra(TYPE_EXTRA, type);
+        }
+
+        public WorkReportAddActivity_.IntentBuilder_ projectTitle(String projectTitle) {
+            return super.extra(PROJECT_TITLE_EXTRA, projectTitle);
         }
 
     }

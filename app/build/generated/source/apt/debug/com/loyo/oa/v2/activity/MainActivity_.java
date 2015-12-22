@@ -91,42 +91,25 @@ public final class MainActivity_
     @Override
     public void onViewChanged(HasViews hasViews) {
         img_user = ((ImageView) hasViews.findViewById(id.img_title_left));
-        lv_main = ((DragSortListView) hasViews.findViewById(id.lv_main));
-        tv_attendance_out_time = ((TextView) hasViews.findViewById(id.tv_attendance_out_time));
         img_home_head = ((ImageView) hasViews.findViewById(id.img_home_head));
-        tv_attendance_in_time = ((TextView) hasViews.findViewById(id.tv_attendance_in_time));
-        layout_avatar = ((ViewGroup) hasViews.findViewById(id.layout_avatar));
         layout_network = ((ViewGroup) hasViews.findViewById(id.layout_network));
-        img_fast_add = ((ImageView) hasViews.findViewById(id.img_fast_add));
-        swipe_container = ((SwipeRefreshLayout) hasViews.findViewById(id.swipe_container));
         tv_user_name = ((TextView) hasViews.findViewById(id.tv_title_1));
+        lv_main = ((DragSortListView) hasViews.findViewById(id.lv_main));
+        img_fast_add = ((ImageView) hasViews.findViewById(id.img_fast_add));
         layout_attendance = ((ViewGroup) hasViews.findViewById(id.layout_attendance));
-        if (layout_attendance!= null) {
-            layout_attendance.setOnClickListener(new OnClickListener() {
+        layout_avatar = ((ViewGroup) hasViews.findViewById(id.layout_avatar));
+        swipe_container = ((SwipeRefreshLayout) hasViews.findViewById(id.swipe_container));
+        if (img_user!= null) {
+            img_user.setOnClickListener(new OnClickListener() {
 
 
                 @Override
                 public void onClick(View view) {
-                    MainActivity_.this.onClickAttendance();
+                    MainActivity_.this.onClickAvatar();
                 }
 
             }
             );
-        }
-        {
-            View view = hasViews.findViewById(id.img_setting);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        MainActivity_.this.onClickSetting();
-                    }
-
-                }
-                );
-            }
         }
         {
             View view = hasViews.findViewById(id.img_bulletin);
@@ -143,13 +126,43 @@ public final class MainActivity_
                 );
             }
         }
-        if (img_user!= null) {
-            img_user.setOnClickListener(new OnClickListener() {
+        {
+            View view = hasViews.findViewById(id.img_contact);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity_.this.onClickContact();
+                    }
+
+                }
+                );
+            }
+        }
+        {
+            View view = hasViews.findViewById(id.img_setting);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity_.this.onClickSetting();
+                    }
+
+                }
+                );
+            }
+        }
+        if (layout_attendance!= null) {
+            layout_attendance.setOnClickListener(new OnClickListener() {
 
 
                 @Override
                 public void onClick(View view) {
-                    MainActivity_.this.onClickAvatar();
+                    MainActivity_.this.onClickAttendance();
                 }
 
             }
@@ -167,33 +180,18 @@ public final class MainActivity_
             }
             );
         }
-        {
-            View view = hasViews.findViewById(id.img_contact);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        MainActivity_.this.onClickContact();
-                    }
-
-                }
-                );
-            }
-        }
         init();
     }
 
     @Override
-    public void initBugly() {
+    public void checkUpdateService() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    MainActivity_.super.initBugly();
+                    MainActivity_.super.checkUpdateService();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -222,14 +220,14 @@ public final class MainActivity_
     }
 
     @Override
-    public void checkUpdateService() {
+    public void initData() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    MainActivity_.super.checkUpdateService();
+                    MainActivity_.super.initData();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -240,14 +238,14 @@ public final class MainActivity_
     }
 
     @Override
-    public void initData() {
+    public void initBugly() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    MainActivity_.super.initData();
+                    MainActivity_.super.initBugly();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }

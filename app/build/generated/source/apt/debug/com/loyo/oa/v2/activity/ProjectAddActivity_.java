@@ -37,6 +37,7 @@ public final class ProjectAddActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
+    public final static String M_UPDATE_EXTRA = "mUpdate";
     public final static String M_PROJECT_EXTRA = "project";
 
     @Override
@@ -85,13 +86,13 @@ public final class ProjectAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_managers = ((TextView) hasViews.findViewById(id.tv_managers));
-        layout_managers = ((ViewGroup) hasViews.findViewById(id.layout_managers));
-        layout_members = ((ViewGroup) hasViews.findViewById(id.layout_members));
         edt_content = ((EditText) hasViews.findViewById(id.edt_content));
-        edt_title = ((EditText) hasViews.findViewById(id.edt_title));
         lv_project_members = ((ListView) hasViews.findViewById(id.lv_project_members));
+        edt_title = ((EditText) hasViews.findViewById(id.edt_title));
+        layout_managers = ((ViewGroup) hasViews.findViewById(id.layout_managers));
+        tv_managers = ((TextView) hasViews.findViewById(id.tv_managers));
         tv_members = ((TextView) hasViews.findViewById(id.tv_members));
+        layout_members = ((ViewGroup) hasViews.findViewById(id.layout_members));
         if (layout_members!= null) {
             layout_members.setOnClickListener(new OnClickListener() {
 
@@ -103,6 +104,21 @@ public final class ProjectAddActivity_
 
             }
             );
+        }
+        {
+            View view = hasViews.findViewById(id.img_title_right);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        ProjectAddActivity_.this.CreateOrUpdateProject();
+                    }
+
+                }
+                );
+            }
         }
         {
             View view = hasViews.findViewById(id.img_title_left);
@@ -131,27 +147,15 @@ public final class ProjectAddActivity_
             }
             );
         }
-        {
-            View view = hasViews.findViewById(id.img_title_right);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        ProjectAddActivity_.this.CreateOrUpdateProject();
-                    }
-
-                }
-                );
-            }
-        }
         initViews();
     }
 
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
+            if (extras_.containsKey(M_UPDATE_EXTRA)) {
+                mUpdate = extras_.getBoolean(M_UPDATE_EXTRA);
+            }
             if (extras_.containsKey(M_PROJECT_EXTRA)) {
                 mProject = ((Project) extras_.getSerializable(M_PROJECT_EXTRA));
             }
@@ -168,11 +172,11 @@ public final class ProjectAddActivity_
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case  100 :
-                ProjectAddActivity_.this.OnResultManagers(resultCode, data);
-                break;
             case  200 :
                 ProjectAddActivity_.this.OnResultMembers(resultCode, data);
+                break;
+            case  100 :
+                ProjectAddActivity_.this.OnResultManagers(resultCode, data);
                 break;
         }
     }
@@ -258,6 +262,10 @@ public final class ProjectAddActivity_
                     }
                 }
             }
+        }
+
+        public ProjectAddActivity_.IntentBuilder_ mUpdate(boolean mUpdate) {
+            return super.extra(M_UPDATE_EXTRA, mUpdate);
         }
 
         public ProjectAddActivity_.IntentBuilder_ mProject(Project mProject) {

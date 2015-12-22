@@ -39,7 +39,6 @@ public final class WfinstanceInfoActivity_
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
     public final static String WF_INSTANCE_EXTRA = "data";
-    public final static String M_ID_EXTRA = "id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,24 +95,24 @@ public final class WfinstanceInfoActivity_
     @Override
     public void onViewChanged(HasViews hasViews) {
         listView_workflowNodes = ((ListView_inScrollView) hasViews.findViewById(id.listView_workflowNodes));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        layout_memo = ((ViewGroup) hasViews.findViewById(id.layout_memo));
-        tv_title_role = ((TextView) hasViews.findViewById(id.tv_title_role));
-        tv_wfnodes_title = ((TextView) hasViews.findViewById(id.tv_wfnodes_title));
-        layout_bottom = ((ViewGroup) hasViews.findViewById(id.layout_bottom));
-        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
         tv_time_creator = ((TextView) hasViews.findViewById(id.tv_time_creator));
-        layout_lastwork = ((ViewGroup) hasViews.findViewById(id.layout_lastwork));
-        tv_lastowrk = ((TextView) hasViews.findViewById(id.tv_lastowrk));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        img_wfinstance_status = ((ImageView) hasViews.findViewById(id.img_wfinstance_status));
-        tv_title_creator = ((TextView) hasViews.findViewById(id.tv_title_creator));
-        tv_memo = ((TextView) hasViews.findViewById(id.tv_memo));
-        layout_nopass = ((ViewGroup) hasViews.findViewById(id.layout_nopass));
-        layout_AttachFile = ((ViewGroup) hasViews.findViewById(id.layout_AttachFile));
-        layout_wfinstance_content = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_content));
         layout_pass = ((ViewGroup) hasViews.findViewById(id.layout_pass));
+        img_wfinstance_status = ((ImageView) hasViews.findViewById(id.img_wfinstance_status));
+        layout_lastwork = ((ViewGroup) hasViews.findViewById(id.layout_lastwork));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        layout_memo = ((ViewGroup) hasViews.findViewById(id.layout_memo));
+        tv_wfnodes_title = ((TextView) hasViews.findViewById(id.tv_wfnodes_title));
+        tv_attachment_count = ((TextView) hasViews.findViewById(id.tv_attachment_count));
+        tv_title_creator = ((TextView) hasViews.findViewById(id.tv_title_creator));
+        layout_AttachFile = ((ViewGroup) hasViews.findViewById(id.layout_AttachFile));
         listView_wfinstance = ((ListView) hasViews.findViewById(id.listView_wfinstance));
+        tv_lastowrk = ((TextView) hasViews.findViewById(id.tv_lastowrk));
+        layout_wfinstance_content = ((ViewGroup) hasViews.findViewById(id.layout_wfinstance_content));
+        layout_bottom = ((ViewGroup) hasViews.findViewById(id.layout_bottom));
+        tv_title_role = ((TextView) hasViews.findViewById(id.tv_title_role));
+        tv_memo = ((TextView) hasViews.findViewById(id.tv_memo));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        layout_nopass = ((ViewGroup) hasViews.findViewById(id.layout_nopass));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -195,9 +194,6 @@ public final class WfinstanceInfoActivity_
             if (extras_.containsKey(WF_INSTANCE_EXTRA)) {
                 wfInstance = ((WfInstance) extras_.getSerializable(WF_INSTANCE_EXTRA));
             }
-            if (extras_.containsKey(M_ID_EXTRA)) {
-                mId = extras_.getString(M_ID_EXTRA);
-            }
         }
     }
 
@@ -256,10 +252,6 @@ public final class WfinstanceInfoActivity_
 
         public WfinstanceInfoActivity_.IntentBuilder_ wfInstance(WfInstance wfInstance) {
             return super.extra(WF_INSTANCE_EXTRA, ((Serializable) wfInstance));
-        }
-
-        public WfinstanceInfoActivity_.IntentBuilder_ mId(String mId) {
-            return super.extra(M_ID_EXTRA, mId);
         }
 
     }

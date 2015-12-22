@@ -82,10 +82,10 @@ public final class BulletinManagerActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         lv_notice = ((PullToRefreshRecycleView) hasViews.findViewById(id.lv_notice));
         tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         btn_notice_add = ((Button) hasViews.findViewById(id.btn_notice_add));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

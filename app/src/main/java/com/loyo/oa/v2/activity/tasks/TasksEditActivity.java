@@ -104,6 +104,8 @@ public class TasksEditActivity extends BaseActivity {
     GridView gridView_photo;
     @Extra
     Task mTask;
+    @Extra("type")
+    Boolean isCreator;
 
     private SignInGridViewAdapter signInGridViewAdapter;
     private AlertDialog dialog_Product;
@@ -139,6 +141,18 @@ public class TasksEditActivity extends BaseActivity {
 
         if (null != mTask.getResponsiblePerson()) {
             tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
+        }
+
+        /*判断是否为创建人，否则负责人只能修改参与人*/
+        if (!isCreator) {
+            edt_title.setEnabled(false);
+            edt_content.setEnabled(false);
+            gridView_photo.setEnabled(false);
+            layout_deadline.setEnabled(false);
+            layout_remind.setEnabled(false);
+            layout_responsiblePerson.setEnabled(false);
+            layout_project.setEnabled(false);
+            switch_approve.setEnabled(false);
         }
 
         savePostData();
@@ -181,13 +195,13 @@ public class TasksEditActivity extends BaseActivity {
 
         }
 
-        member.users=userss;
+        member.users = userss;
         newUser = mTask.getResponsiblePerson();
 
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, isCreator);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -280,12 +294,14 @@ public class TasksEditActivity extends BaseActivity {
                     }
                 });
                 break;
+
             case R.id.tv_toUsers:
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
                 bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle1);
                 break;
+
             case R.id.layout_del:
                 userss.clear();
                 depts.clear();
@@ -293,9 +309,10 @@ public class TasksEditActivity extends BaseActivity {
                 layout_del.setVisibility(View.GONE);
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
                 break;
+
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
-                bundle2.putBoolean("isSelect", true);
+                bundle2.putInt("from", TASKS_ADD);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                 break;
         }
@@ -346,7 +363,7 @@ public class TasksEditActivity extends BaseActivity {
             userss.add(newUser);
         }
 
-        member.users=userss;
+        member.users = userss;
 
         if (!TextUtils.isEmpty(joinedUserName)) {
             tv_toUsers.setText(joinedUserName);

@@ -97,22 +97,22 @@ public final class ContactInfoEditActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        iv_submit = ((ImageView) hasViews.findViewById(id.iv_submit));
+        img_title_user = ((RoundImageView) hasViews.findViewById(id.img_title_user));
+        tv_mobile = ((TextView) hasViews.findViewById(id.tv_mobile));
+        tv_birthday = ((TextView) hasViews.findViewById(id.tv_birthday));
+        et_qq = ((TextView) hasViews.findViewById(id.et_qq));
+        tv_age = ((TextView) hasViews.findViewById(id.tv_age));
         et_weixin = ((EditText) hasViews.findViewById(id.et_weixin));
         layout_mobile = ((ViewGroup) hasViews.findViewById(id.layout_mobile));
-        layout_birthday = ((ViewGroup) hasViews.findViewById(id.layout_birthday));
-        sex_male = ((RadioButton) hasViews.findViewById(id.sex_male));
-        tv_mobile = ((TextView) hasViews.findViewById(id.tv_mobile));
-        sex_famale = ((RadioButton) hasViews.findViewById(id.sex_famale));
-        tv_birthday = ((TextView) hasViews.findViewById(id.tv_birthday));
-        layout_set_avartar = ((ViewGroup) hasViews.findViewById(id.layout_set_avartar));
-        et_qq = ((TextView) hasViews.findViewById(id.et_qq));
-        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
+        iv_submit = ((ImageView) hasViews.findViewById(id.iv_submit));
         tv_departments = ((TextView) hasViews.findViewById(id.tv_departments));
-        img_title_user = ((RoundImageView) hasViews.findViewById(id.img_title_user));
-        tv_age = ((TextView) hasViews.findViewById(id.tv_age));
+        tv_title = ((TextView) hasViews.findViewById(id.tv_title));
         layout_back = ((ViewGroup) hasViews.findViewById(id.layout_back));
+        layout_set_avartar = ((ViewGroup) hasViews.findViewById(id.layout_set_avartar));
+        sex_male = ((RadioButton) hasViews.findViewById(id.sex_male));
+        layout_birthday = ((ViewGroup) hasViews.findViewById(id.layout_birthday));
         tv_positions = ((TextView) hasViews.findViewById(id.tv_positions));
+        sex_famale = ((RadioButton) hasViews.findViewById(id.sex_famale));
         if (layout_back!= null) {
             layout_back.setOnClickListener(new OnClickListener() {
 

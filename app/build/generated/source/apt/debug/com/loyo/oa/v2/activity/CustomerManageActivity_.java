@@ -87,12 +87,12 @@ public final class CustomerManageActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        layout_category = ((ViewGroup) hasViews.findViewById(id.layout_category));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
-        img_title_search_right = ((ViewGroup) hasViews.findViewById(id.img_title_search_right));
         lv_customer_category = ((ListView) hasViews.findViewById(id.lv_customer_category));
         imageArrow = ((ImageView) hasViews.findViewById(id.img_title_arrow));
+        layout_title_action = ((ViewGroup) hasViews.findViewById(id.layout_title_action));
+        img_title_search_right = ((ViewGroup) hasViews.findViewById(id.img_title_search_right));
+        layout_category = ((ViewGroup) hasViews.findViewById(id.layout_category));
         if (layout_title_action!= null) {
             layout_title_action.setOnClickListener(new OnClickListener() {
 

@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.TextView;
 import com.loyo.oa.v2.R.id;
 import com.loyo.oa.v2.R.layout;
 import com.loyo.oa.v2.beans.User;
@@ -37,8 +38,10 @@ public final class AttachmentActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_USER_LIST_EXTRA = "users";
     public final static String UUID_EXTRA = "uuid";
+    public final static String M_USER_LIST_EXTRA = "users";
+    public final static String FROM_PAGE_EXTRA = "fromPage";
+    public final static String IS_MY_USER_EXTRA = "isMyUser";
     private Handler handler_ = new Handler(Looper.getMainLooper());
 
     @Override
@@ -95,7 +98,20 @@ public final class AttachmentActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        tv_upload = ((TextView) hasViews.findViewById(id.tv_upload));
         mListViewAttachment = ((SwipeListView) hasViews.findViewById(id.listView_attachment));
+        if (tv_upload!= null) {
+            tv_upload.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    AttachmentActivity_.this.addAttachment();
+                }
+
+            }
+            );
+        }
         {
             View view = hasViews.findViewById(id.img_title_left);
             if (view!= null) {
@@ -111,21 +127,6 @@ public final class AttachmentActivity_
                 );
             }
         }
-        {
-            View view = hasViews.findViewById(id.tv_upload);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        AttachmentActivity_.this.addAttachment();
-                    }
-
-                }
-                );
-            }
-        }
         init();
     }
 
@@ -133,11 +134,17 @@ public final class AttachmentActivity_
     private void injectExtras_() {
         Bundle extras_ = getIntent().getExtras();
         if (extras_!= null) {
+            if (extras_.containsKey(UUID_EXTRA)) {
+                uuid = extras_.getString(UUID_EXTRA);
+            }
             if (extras_.containsKey(M_USER_LIST_EXTRA)) {
                 mUserList = ((ArrayList<User> ) extras_.getSerializable(M_USER_LIST_EXTRA));
             }
-            if (extras_.containsKey(UUID_EXTRA)) {
-                uuid = extras_.getString(UUID_EXTRA);
+            if (extras_.containsKey(FROM_PAGE_EXTRA)) {
+                fromPage = extras_.getInt(FROM_PAGE_EXTRA);
+            }
+            if (extras_.containsKey(IS_MY_USER_EXTRA)) {
+                isMyUser = extras_.getBoolean(IS_MY_USER_EXTRA);
             }
         }
     }
@@ -209,12 +216,20 @@ public final class AttachmentActivity_
             }
         }
 
+        public AttachmentActivity_.IntentBuilder_ uuid(String uuid) {
+            return super.extra(UUID_EXTRA, uuid);
+        }
+
         public AttachmentActivity_.IntentBuilder_ mUserList(ArrayList<User> mUserList) {
             return super.extra(M_USER_LIST_EXTRA, ((Serializable) mUserList));
         }
 
-        public AttachmentActivity_.IntentBuilder_ uuid(String uuid) {
-            return super.extra(UUID_EXTRA, uuid);
+        public AttachmentActivity_.IntentBuilder_ fromPage(int fromPage) {
+            return super.extra(FROM_PAGE_EXTRA, fromPage);
+        }
+
+        public AttachmentActivity_.IntentBuilder_ isMyUser(boolean isMyUser) {
+            return super.extra(IS_MY_USER_EXTRA, isMyUser);
         }
 
     }

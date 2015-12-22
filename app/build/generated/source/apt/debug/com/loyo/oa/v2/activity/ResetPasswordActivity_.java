@@ -91,10 +91,10 @@ public final class ResetPasswordActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        et_confirm_new_password = ((EditText) hasViews.findViewById(id.et_confirm_new_password));
-        btn_submit = ((Button) hasViews.findViewById(id.btn_submit));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        btn_submit = ((Button) hasViews.findViewById(id.btn_submit));
+        et_confirm_new_password = ((EditText) hasViews.findViewById(id.et_confirm_new_password));
         et_new_password = ((EditText) hasViews.findViewById(id.et_new_password));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {

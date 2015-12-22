@@ -152,7 +152,7 @@ public class SignInfoActivity extends BaseActivity {
         if(null==lstData_Attachment){
             return;
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, false);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, false,false);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

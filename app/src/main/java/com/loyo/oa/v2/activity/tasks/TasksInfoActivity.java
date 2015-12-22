@@ -126,11 +126,17 @@ public class TasksInfoActivity extends BaseActivity {
     @Extra("task") Task mTask;
     @Extra("Id") String mId;
 
-    public PaginationX<Discussion> mPageDiscussion;
     public String taskId;  //任务ID
+    public String userId;
+    public int statusSize;
+    public boolean isJoin;
+    public boolean isCreator;
+
+    public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
-    public int statusSize = 0;
     public ArrayList<NewUser> allUsers;
+
+
     public android.os.Handler mHandler = new android.os.Handler(){
 
         public void handleMessage(Message msg){
@@ -149,12 +155,17 @@ public class TasksInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("任务详情");
+
+        /*是否为参与人判断*/
+        userId = DBManager.Instance().getUser().getId();
+        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId())?true:false;
+        isCreator = userId.equals(mTask.getCreator().getId())?true:false;
+
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
-//      layout_children_task.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
         allUsers = new ArrayList<>();
     }
@@ -261,6 +272,7 @@ public class TasksInfoActivity extends BaseActivity {
      * mTask.getchecklists()是子任务数据集
      */
     void updateUI_task_sub_task() {
+        statusSize = 0;
         if (ListUtil.IsEmpty(mTask.getchecklists())) {
             return;
         }
@@ -341,9 +353,9 @@ public class TasksInfoActivity extends BaseActivity {
      * 更新子任务状态（完成／未完成)
      */
     void requestTaskupdates(String id, String cid, int sts) {
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", sts);
-
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
@@ -367,7 +379,11 @@ public class TasksInfoActivity extends BaseActivity {
         app.getRestAdapter().create(ITask.class).getTask(getId(), new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
-
+                try {
+                    LogUtil.dll("任务详情返回JSON："+Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 mTask = task;
                 updateUI();
                 showAttachment();
@@ -414,7 +430,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             /**提交完成*/
             case R.id.btn_complete:
-                if(statusSize == mTask.getchecklists().size()){
+                if(statusSize == mTask.getchecklists().size() || mTask.getchecklists().size() == 0){
                     commitFinish();
                 }else{
                     Toast("子任务尚未完成，不能提交！");
@@ -470,10 +486,14 @@ public class TasksInfoActivity extends BaseActivity {
      * */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Task", mTask);
-        bundle.putSerializable("allUsers", allUsers);
-        app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
+        if(isJoin){
+            Toast("参与人不能创建子任务!");
+        }else{
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Task", mTask);
+            bundle.putSerializable("allUsers", allUsers);
+            app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
+        }
     }
 
     /**
@@ -530,10 +550,9 @@ public class TasksInfoActivity extends BaseActivity {
             case REQUEST_EDIT_DELETE:
                 /*编辑回调*/
                 if (data.getBooleanExtra("edit", false)) {
-
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mTask", mTask);
-
+                    bundle.putBoolean("type",isCreator);
                     app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {

@@ -30,12 +30,13 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private ArrayList<Attachment> mListData;
     private Activity mActivity;
     private boolean mIsAdd;
+    private boolean isCreator;
     ArrayList<File> mBitmaps = new ArrayList<>();
     //是否选择本地图片
     private boolean localpic = false;
     private Uri fileUri;
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd) {
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd,boolean isCreator) {
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -43,6 +44,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
         this.mActivity = mActivity;
         this.mListData = Attachment.Sort(lstData);
         this.mIsAdd = mIsAdd;
+        this.isCreator = isCreator;
         layoutInflater = LayoutInflater.from(mActivity);
 
         for (Attachment at : lstData) {
@@ -52,8 +54,8 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic) {
-        this(mActivity, lstData, mIsAdd);
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic,boolean isCreator) {
+        this(mActivity, lstData, mIsAdd,isCreator);
         localpic = _localpic;
     }
 
@@ -100,7 +102,9 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
         if (position == mListData.size()) {
             item_info.imageView.setImageResource(R.drawable.icon_add_file);
-            item_info.imageView.setOnClickListener(new OnClickListener_addImg());
+            if(isCreator){
+                item_info.imageView.setOnClickListener(new OnClickListener_addImg());
+            }
             item_info.imageView.setScaleType(ImageView.ScaleType.CENTER);
         } else {
 

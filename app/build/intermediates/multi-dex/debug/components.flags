@@ -64,7 +64,7 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.CommonTagSelectActivity_ {
+-keep class com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_ {
     <init>();
 }
 
@@ -160,11 +160,11 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.CustomerAddActivity_ {
+-keep class com.loyo.oa.v2.activity.customer.CustomerAddActivity_ {
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.CustomerInfoActivity_ {
+-keep class com.loyo.oa.v2.activity.customer.CustomerInfoActivity_ {
     <init>();
 }
 
@@ -188,15 +188,15 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.TasksAddActivity_ {
+-keep class com.loyo.oa.v2.activity.tasks.TasksAddActivity_ {
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.ContactsActivity {
+-keep class com.loyo.oa.v2.activity.customer.ContactsActivity {
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.TasksInfoActivity_ {
+-keep class com.loyo.oa.v2.activity.tasks.TasksInfoActivity_ {
     <init>();
 }
 
@@ -220,7 +220,11 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.TasksEditActivity_ {
+-keep class com.loyo.oa.v2.activity.tasks.TaskChildEdit {
+    <init>();
+}
+
+-keep class com.loyo.oa.v2.activity.tasks.TasksEditActivity_ {
     <init>();
 }
 
@@ -237,6 +241,10 @@
 }
 
 -keep class com.loyo.oa.v2.activity.WfInstanceManageActivity {
+    <init>();
+}
+
+-keep class com.loyo.oa.v2.activity.wfinstance.DepartmentChoose {
     <init>();
 }
 
@@ -284,7 +292,7 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.TasksInfoScoreActivity_ {
+-keep class com.loyo.oa.v2.activity.tasks.TasksInfoScoreActivity_ {
     <init>();
 }
 
@@ -296,7 +304,7 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.TasksSearchActivity {
+-keep class com.loyo.oa.v2.activity.tasks.TasksSearchActivity {
     <init>();
 }
 
@@ -356,11 +364,15 @@
     <init>();
 }
 
--keep class com.loyo.oa.v2.activity.TaskListActivity_ {
+-keep class com.loyo.oa.v2.activity.tasks.TaskListActivity_ {
     <init>();
 }
 
 -keep class com.loyo.oa.v2.activity.ProjectSearchActivity {
+    <init>();
+}
+
+-keep class com.loyo.oa.v2.activity.customer.CustomerRepeat {
     <init>();
 }
 

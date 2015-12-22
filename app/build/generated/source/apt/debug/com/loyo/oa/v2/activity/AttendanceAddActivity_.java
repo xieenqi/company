@@ -84,17 +84,17 @@ public final class AttendanceAddActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
-        et_reason = ((EditText) hasViews.findViewById(id.et_reason));
-        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
-        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        iv_refresh_address = ((ImageView) hasViews.findViewById(id.iv_refresh_address));
         tv_result = ((TextView) hasViews.findViewById(id.tv_result));
+        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
+        tv_count_time = ((TextView) hasViews.findViewById(id.tv_count_time));
+        tv_address = ((TextView) hasViews.findViewById(id.tv_address));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
+        tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         layout_reason = ((ViewGroup) hasViews.findViewById(id.layout_reason));
-        gridView_photo = ((GridView) hasViews.findViewById(id.gridView_photo));
-        iv_refresh_address = ((ImageView) hasViews.findViewById(id.iv_refresh_address));
-        tv_count_time = ((TextView) hasViews.findViewById(id.tv_count_time));
+        et_reason = ((EditText) hasViews.findViewById(id.et_reason));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 

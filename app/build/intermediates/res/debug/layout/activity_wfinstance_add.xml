@@ -95,6 +95,44 @@
                         android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_dept"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:text="选择部门"/>
+
+                    <TextView
+                        android:id="@+id/tv_dept"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:text=""
+                        android:textColor="@color/title_bg1"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout

@@ -80,8 +80,8 @@ public final class CustomerBaseInfoEditActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        edt_customer_basesummary = ((EditText) hasViews.findViewById(id.edt_customer_basesummary));
         edt_basename = ((EditText) hasViews.findViewById(id.edt_basename));
+        edt_customer_basesummary = ((EditText) hasViews.findViewById(id.edt_customer_basesummary));
         {
             View view = hasViews.findViewById(id.img_title_left);
             if (view!= null) {

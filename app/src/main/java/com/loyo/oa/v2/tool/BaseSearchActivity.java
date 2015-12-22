@@ -142,6 +142,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 Intent mIntent;
 
                 switch (befromPage){
+
+                    //新建审批
+                    case WFIN_ADD:
+                        mIntent = new Intent();
+                        mIntent.putExtra("data",lstData.get(position - 1));
+                        app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,mIntent);
+                        break;
                     //新建任务
                     case TASKS_ADD:
                         mIntent = new Intent();
@@ -179,7 +186,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     //项目管理
                     case PEOJECT_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        mIntent.putExtra("projectId", lstData.get(position - 1).getId());
                         startActivity(mIntent);
                         break;
 

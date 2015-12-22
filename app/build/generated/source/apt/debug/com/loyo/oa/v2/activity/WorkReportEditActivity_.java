@@ -36,7 +36,7 @@ public final class WorkReportEditActivity_
 {
 
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
-    public final static String M_WORK_REPORT_EXTRA = "data";
+    public final static String M_WORK_REPORT_EXTRA = "mWorkReport";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,18 +84,18 @@ public final class WorkReportEditActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
-        layout_toUser = ((ViewGroup) hasViews.findViewById(id.layout_toUser));
-        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
-        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
-        img_title_toUser = ((ImageView) hasViews.findViewById(id.img_title_toUser));
-        layout_reviewer = ((ViewGroup) hasViews.findViewById(id.layout_reviewer));
-        rg = ((RadioGroup) hasViews.findViewById(id.rg));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
-        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
-        layout_time = ((ViewGroup) hasViews.findViewById(id.layout_time));
-        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
         layout_del = ((ViewGroup) hasViews.findViewById(id.layout_del));
+        tv_reviewer = ((TextView) hasViews.findViewById(id.tv_reviewer));
+        edt_content = ((EditText) hasViews.findViewById(id.edt_content));
+        img_title_right = ((ViewGroup) hasViews.findViewById(id.img_title_right));
+        img_title_toUser = ((ImageView) hasViews.findViewById(id.img_title_toUser));
+        tv_time = ((TextView) hasViews.findViewById(id.tv_time));
+        layout_reviewer = ((ViewGroup) hasViews.findViewById(id.layout_reviewer));
+        layout_toUser = ((ViewGroup) hasViews.findViewById(id.layout_toUser));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
+        layout_time = ((ViewGroup) hasViews.findViewById(id.layout_time));
+        tv_toUser = ((TextView) hasViews.findViewById(id.tv_toUser));
+        rg = ((RadioGroup) hasViews.findViewById(id.rg));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
