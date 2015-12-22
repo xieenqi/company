@@ -109,12 +109,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_visit_customers_num;
 
-    @Extra("workreport")
-    WorkReport mWorkReport;
+    @Extra("workreport") WorkReport mWorkReport;
 
-    //信鸽透传过来的id
-    @Extra("id")
-    String mId;
+    @Extra("Id") String mId;
 
     public PaginationX<Discussion> mPageDiscussion;
 

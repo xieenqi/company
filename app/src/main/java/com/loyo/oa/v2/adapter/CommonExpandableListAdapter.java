@@ -62,7 +62,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         //审批
         if (obj instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) obj;
-            LogUtil.d(" 加载审批数据： "+ MainApp.gson.toJson(wfInstance));
             if (wfInstance.getTitle() != null) {
                 title.setText(wfInstance.getTitle());
             }
@@ -92,7 +91,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         }
        // 任务
         else if (obj instanceof Task) {
-            layout_discuss.setVisibility(View.VISIBLE);
+            //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
             LogUtil.d(" 加载任务的数据： "+ MainApp.gson.toJson(task));
             if (task.getStatus() == Task.STATUS_PROCESSING) {
@@ -125,7 +124,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         }
         //报告
         else if (obj instanceof WorkReport) {
-            layout_discuss.setVisibility(View.VISIBLE);
+            //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;
             LogUtil.d(" 加载 报告 的数据： "+ MainApp.gson.toJson(workReport));
             DiscussCounter discussCounter = workReport.getDiscuss();

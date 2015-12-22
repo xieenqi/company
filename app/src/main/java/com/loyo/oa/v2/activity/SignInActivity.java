@@ -178,8 +178,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
                 Bundle b = new Bundle();
                 b.putInt("queryType", 1);
-                b.putBoolean("isSelect", true);
-                b.putString("from", "新建拜访");
+                b.putInt("from",SIGNIN_ADD);
                 app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
 
                 break;

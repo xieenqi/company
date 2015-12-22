@@ -21,6 +21,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Customer;
@@ -59,23 +62,18 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected ArrayList<T> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
     protected boolean isTopAdd = true;
-    protected boolean isSelect;
     protected PaginationX paginationX = new PaginationX(20);
-    protected Intent mIntent;
-    protected String befrompage;
-    Customer customer;
+    protected int befromPage;
+    public Customer customer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
-
         vs_nodata = findViewById(R.id.vs_nodata);
-        mIntent = getIntent();
-        befrompage = mIntent.getStringExtra("from");
-        LogUtil.dll("fromPage:"+befrompage);
-        isSelect = mIntent.getBooleanExtra("isSelect", false);
+        Bundle mBundle = getIntent().getExtras();
+        befromPage = mBundle.getInt("from");
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,41 +133,57 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         adapter = new CommonSearchAdapter();
         expandableListView_search.setAdapter(adapter);
 
-//       expandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast(" 签到v 搜索 ");
-//                try {
-//                    if (isSelect) {
-//                        returnData((int) l);
-//                    } else {
-//                        openDetail((int) l);
-//                    }
-//                } catch (Exception e) {
-//                    Global.ProcException(e);
-//                }
-//            }
-//        });
 
         /**列表监听器*/
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                if ("新建拜访".equals(befrompage)) {
-                    returnData(position - 1);
-                } else if ("客户管理".equals(befrompage)) {
-                    Intent intent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
-                    intent.putExtra("Id", lstData.get(position - 1).getId());
-                    startActivity(intent);
-                } else if("新建工作报告".equals(befrompage)){
+                Intent mIntent;
 
-                    Intent intent = new Intent();
-                    intent.putExtra("data",lstData.get(position - 1));
-                    app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,intent);
+                switch (befromPage){
+                    //新建任务
+                    case TASKS_ADD:
+                        mIntent = new Intent();
+                        mIntent.putExtra("data",lstData.get(position - 1));
+                        app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,mIntent);
+                        break;
+                    //新建拜访
+                    case SIGNIN_ADD:
+                        returnData(position - 1);
+                        break;
+                    //新建报告
+                    case WORK_ADD:
+                        mIntent = new Intent();
+                        mIntent.putExtra("data",lstData.get(position - 1));
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        break;
+                    //客户管理
+                    case CUSTOMER_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
+                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        startActivity(mIntent);
+                        break;
+                    //任务管理
+                    case TASKS_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
+                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        startActivity(mIntent);
+                        break;
+                    //工作报告管理
+                    case WORK_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
+                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        startActivity(mIntent);
+                        break;
+                    //项目管理
+                    case PEOJECT_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
+                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        startActivity(mIntent);
+                        break;
 
                 }
-
             }
         });
     }

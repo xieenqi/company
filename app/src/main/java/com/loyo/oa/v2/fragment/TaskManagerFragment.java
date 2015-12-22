@@ -2,6 +2,7 @@ package com.loyo.oa.v2.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
@@ -12,6 +13,7 @@ import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -71,10 +73,16 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
+    /**
+     * 任务管理跳转搜索
+     * */
     @Override
     public void openSearch() {
         Intent intent = new Intent();
+        Bundle mBundle = new Bundle();
+        mBundle.putInt("from", BaseActivity.TASKS_MANAGE);
         intent.setClass(mActivity, TasksSearchActivity.class);
+        intent.putExtras(mBundle);
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 

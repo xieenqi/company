@@ -13,6 +13,7 @@ import com.loyo.oa.v2.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.point.IProject;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -158,9 +159,12 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         initDropMenu();
     }
 
+    /**跳转搜索*/
     @Override
     public void openSearch() {
-        app.startActivity(getActivity(), ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+        Bundle mBundle = new Bundle();
+        mBundle.putInt("from", BaseActivity.PEOJECT_MANAGE);
+        app.startActivity(getActivity(), ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
     }
 
     @Override

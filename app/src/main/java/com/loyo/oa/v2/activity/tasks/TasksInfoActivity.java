@@ -124,10 +124,7 @@ public class TasksInfoActivity extends BaseActivity {
     @ViewById
     RatingBar ratingBar_Task;
     @Extra("task") Task mTask;
-
-    //信鸽透传过来的id
-    @Extra("id")
-    String mId;
+    @Extra("Id") String mId;
 
     public PaginationX<Discussion> mPageDiscussion;
     public String taskId;  //任务ID
@@ -137,7 +134,6 @@ public class TasksInfoActivity extends BaseActivity {
     public android.os.Handler mHandler = new android.os.Handler(){
 
         public void handleMessage(Message msg){
-
             if(msg.what == 0x01){
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
             }

@@ -14,6 +14,7 @@ import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.point.IWorkReport;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -60,10 +61,14 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
+    /**跳转搜索*/
     @Override
     public void openSearch() {
 
         Intent intent = new Intent();
+        Bundle mBundle = new Bundle();
+        mBundle.putInt("from", BaseActivity.WORK_MANAGE);
+        intent.putExtras(mBundle);
         intent.setClass(mActivity, WorkReportsSearchActivity.class);
         startActivityForResult(intent, REQUEST_REVIEW);
 

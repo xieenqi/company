@@ -361,8 +361,7 @@ public class WorkReportAddActivity extends BaseActivity {
             /*选择项目归档*/
             case R.id.layout_mproject:
                 Bundle bundle1 = new Bundle();
-                bundle1.putBoolean("isSelect", true);
-                bundle1.putString("from", "新建工作报告");
+                bundle1.putInt("from",WORK_ADD);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle1);
                 break;
         }

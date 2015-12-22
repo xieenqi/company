@@ -18,6 +18,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Utils;
@@ -161,8 +162,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
             }
         }
         Bundle b=new Bundle();
-        b.putInt("queryType",type);
-        b.putString("from","客户管理");
+        b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
     }
 
