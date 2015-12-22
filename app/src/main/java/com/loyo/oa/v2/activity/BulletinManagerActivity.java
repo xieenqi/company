@@ -10,16 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.GridViewUtils;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.MyGridView;
@@ -108,7 +105,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 }
 
                 lv_notice.onRefreshComplete();
-                LogUtil.d(" 通知的数据： "+MainApp.gson.toJson(pagination));
+                LogUtil.d(" 通知的数据： " + MainApp.gson.toJson(pagination));
             }
 
             @Override
@@ -128,7 +125,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         if (null == adapter) {
             adapter = new NoticeAdapter(bulletins);
             lv_notice.getRefreshableView().setAdapter(adapter);
-            
+
         } else {
             adapter.setmDatas(bulletins);
         }
@@ -140,6 +137,10 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
+
+    /**
+     * 添加 通知 公告
+     */
     @Click(R.id.btn_notice_add)
     void onAddNew() {
         app.startActivityForResult(this, BulletinAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_NEW, null);
@@ -213,22 +214,22 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         @Override
         public void onBindViewHolder(BulletinViewHolder holder, int position) {
             final Bulletin bulletin = mBulletins.get(position);
-            holder.tv_time.setText(app.df3.format(new Date(bulletin.getCreatedAt() * 1000)));
-            holder.tv_title.setText(bulletin.getTitle());
-            holder.tv_content.setText(bulletin.getContent());
-           holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.getDeptName() + " " + bulletin.getPosition());
-           ImageLoader.getInstance().displayImage(bulletin.getCreator().avatar, holder.iv_avatar);
-            ArrayList<Attachment> attachments = bulletin.getAttachments();
-            if (null != attachments && !attachments.isEmpty()) {
-
-                holder.gridView.setVisibility(View.VISIBLE);
-                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
-                //                SignInGridViewAdapter.setAdapter(holder.gridView,adapter);
-                holder.gridView.setAdapter(adapter);
-                GridViewUtils.updateGridViewLayoutParams(holder.gridView, 3);
-            } else {
-                holder.gridView.setVisibility(View.GONE);
-            }
+            holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
+            holder.tv_title.setText(bulletin.title);
+            holder.tv_content.setText(bulletin.content);
+            holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.creator.depts.get(0).getShortDept().getName()
+                    + " " + bulletin.creator.depts.get(0).getShortPosition().getName());
+            ImageLoader.getInstance().displayImage(bulletin.creator.avatar, holder.iv_avatar);
+//            ArrayList<Attachment> attachments = bulletin.attachments;
+//            if (null != attachments && !attachments.isEmpty()) {
+//                holder.gridView.setVisibility(View.VISIBLE);
+//                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
+//                SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
+//                holder.gridView.setAdapter(adapter);
+//                GridViewUtils.updateGridViewLayoutParams(holder.gridView, 3);
+//            } else {
+//                holder.gridView.setVisibility(View.GONE);
+//            }
 
         }
 

@@ -13,33 +13,16 @@ import java.util.List;
  * 时间 : 15/8/28.
  */
 public class Bulletin extends BaseBeans {
-    private String attachmentUUId;
-    private ArrayList<Attachment> attachments = new ArrayList<>();
-    private String content;
-    private long createdAt;
-    private String deptName;
-    private String id;
-    private boolean isPublic;
-    private User creator;
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
-    private String title;
-    private ArrayList<BulletinViewer> viewers = new ArrayList<>();
-
-    public ArrayList<BulletinViewer> getViewers() {
-        return viewers;
-    }
-
-    public void setViewers(ArrayList<BulletinViewer> viewers) {
-        this.viewers = viewers;
-    }
+    public String attachmentUUId;
+    public ArrayList<Attachment> attachments = new ArrayList<>();
+    public String content;
+    public long createdAt;
+    public String deptName;
+    public String id;
+    public boolean isPublic;
+    public String title;
+    public User creator;
+    public ArrayList<BulletinViewer> viewers = new ArrayList<>();
 
     public String getUserName() {
         if (creator != null) {
@@ -48,33 +31,13 @@ public class Bulletin extends BaseBeans {
 
         return "";
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getPosition() {
+
         if (creator != null && creator.shortPosition != null) {
             return creator.shortPosition.getName();
         }
 
         return "";
-    }
-
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getDeptName() {
@@ -86,37 +49,79 @@ public class Bulletin extends BaseBeans {
         return "";
     }
 
-    public long getCreatedAt() {
-        return createdAt;
-    }
+//    public User getCreator() {
+//        return creator;
+//    }
+//    public void setCreator(User creator) {
+//        this.creator = creator;
+//    }
+//
+//
+//    public ArrayList<BulletinViewer> getViewers() {
+//        return viewers;
+//    }
+//
+//    public void setViewers(ArrayList<BulletinViewer> viewers) {
+//        this.viewers = viewers;
+//    }
+//
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
+//
+//
+//
+//    public boolean isPublic() {
+//        return isPublic;
+//    }
+//
+//    public void setIsPublic(boolean isPublic) {
+//        this.isPublic = isPublic;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//
+//
+//    public long getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    public void setCreatedAt(long createdAt) {
+//        this.createdAt = createdAt;
+//    }
+//
+//    public String getContent() {
+//        return content;
+//    }
+//
+//    public void setContent(String content) {
+//        this.content = content;
+//    }
+//
+//    public ArrayList<Attachment> getAttachments() {
+//        return attachments;
+//    }
+//
+//    public void setAttachments(ArrayList<Attachment> attachments) {
+//        this.attachments = attachments;
+//    }
+//
+//    public String getAttachmentUUId() {
+//        return attachmentUUId;
+//    }
+//
+//    public void setAttachmentUUId(String attachmentUUId) {
+//        this.attachmentUUId = attachmentUUId;
+//    }
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public ArrayList<Attachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(ArrayList<Attachment> attachments) {
-        this.attachments = attachments;
-    }
-
-    public String getAttachmentUUId() {
-        return attachmentUUId;
-    }
-
-    public void setAttachmentUUId(String attachmentUUId) {
-        this.attachmentUUId = attachmentUUId;
-    }
 
     @Override
     public String getId() {
