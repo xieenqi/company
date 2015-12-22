@@ -220,8 +220,12 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
         } else {
             adapter.notifyDataSetChanged();
         }
+        if(legworkPaginationX.records==null){
+            return;
+        }
         String visitNum= String.valueOf(legworkPaginationX.records.VistNum);
         String visitCustomerNum=String.valueOf(legworkPaginationX.records.CustNum);
+
         String teamVisitStr="团队共拜访 "+visitNum+" 次 ";
         String teamVisitCustomerStr="，共拜访 "+visitCustomerNum+" 位客户";
         tv_count_title1.setText(Utils.modifyTextColor(teamVisitStr,getResources().getColor(R.color.title_bg1),"团队共拜访 ".length(),"团队共拜访 ".length()+visitNum.length()));
