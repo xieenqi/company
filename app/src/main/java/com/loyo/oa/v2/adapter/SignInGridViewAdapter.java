@@ -1,11 +1,9 @@
 package com.loyo.oa.v2.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -110,9 +107,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
             final Attachment attachment = mListData.get(position);
             final boolean isPic = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
-            if(isPic){
-                ImageLoader.getInstance().loadImage(attachment.getUrl(),MainApp.options_3, new BitmapUtil.ImageLoadingListener_ClickShowImg(item_info.imageView, position, mListData, R.drawable.default_image, mIsAdd));
-            }else {
+            if (isPic) {
+                ImageLoader.getInstance().loadImage(attachment.getUrl(), MainApp.options_3,
+                        new BitmapUtil.ImageLoadingListener_ClickShowImg(item_info.imageView, position,
+                                mListData, R.drawable.default_image, mIsAdd));
+            } else {
                 //                      显示文件
                 item_info.imageView.setImageResource(R.drawable.other_file);
                 item_info.textView.setText(attachment.getOriginalName());

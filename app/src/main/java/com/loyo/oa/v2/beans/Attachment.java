@@ -185,7 +185,7 @@ public class Attachment implements Serializable {
         }
 
         Attachment attachment = (Attachment) o;
-        return this.getId().equals(attachment.getId());
+        return attachment.url.equals(this.url);
     }
 
     public AttachmentType getAttachmentType() {

@@ -76,6 +76,7 @@
                         android:singleLine="false"
                         android:text=""
                         android:textColor="#383838"
+                        android:layout_margin="@dimen/dimen_8"
                         android:textSize="18sp"/>
 
                     <View
@@ -91,22 +92,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_3"
+                        android:layout_marginLeft="@dimen/dimen_8"
+                        android:layout_marginRight="@dimen/dimen_8"
                         android:singleLine="false"
                         android:text=""
                         android:textColor="#383838"
+                        android:lineSpacingExtra="1dp"
                         android:textSize="14sp"/>
 
-                    <com.loyo.oa.v2.tool.customview.MyGridView
+                    <GridView
                         android:id="@+id/gv_notice_attachemnts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/activity_horizontal_margin"
                         android:gravity="center"
-                        android:horizontalSpacing="@dimen/activity_horizontal_margin"
-                        android:listSelector="@android:color/transparent"
                         android:numColumns="3"
-                        android:verticalSpacing="@dimen/activity_horizontal_margin">
-                    </com.loyo.oa.v2.tool.customview.MyGridView>
+                        android:listSelector="@android:color/transparent"
+                        android:verticalSpacing="3dp"
+                        android:horizontalSpacing="3dp"
+                        />
 
                 </LinearLayout>
             </LinearLayout>

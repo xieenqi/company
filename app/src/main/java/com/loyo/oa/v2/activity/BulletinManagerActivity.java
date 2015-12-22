@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -19,10 +20,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.GridViewUtils;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.customview.MyGridView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -183,7 +182,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         private TextView tv_content;
         private TextView tv_name;
         private RoundImageView iv_avatar;
-        private MyGridView gridView;
+        private GridView gridView;
 
         public BulletinViewHolder(View itemView) {
             super(itemView);
@@ -192,7 +191,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             tv_content = (TextView) itemView.findViewById(R.id.tv_notice_content);
             tv_name = (TextView) itemView.findViewById(R.id.tv_notice_publisher);
             iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_notice_publisher_avatar);
-            gridView = (MyGridView) itemView.findViewById(R.id.gv_notice_attachemnts);
+            gridView = (GridView) itemView.findViewById(R.id.gv_notice_attachemnts);
         }
     }
 
@@ -230,7 +229,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
                 SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
                 holder.gridView.setAdapter(adapter);
-                GridViewUtils.updateGridViewLayoutParams(holder.gridView, 3);
+               //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);
             } else {
                 holder.gridView.setVisibility(View.GONE);
             }

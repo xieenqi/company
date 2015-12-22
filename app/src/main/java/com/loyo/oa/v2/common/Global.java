@@ -37,7 +37,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -278,8 +277,8 @@ public final class Global {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
                 BitmapFactory.decodeFile(path, options);
-                int height = options.outHeight;
-                int width = options.outWidth;
+                int height = options.outHeight/3;
+                int width = options.outWidth/3;
 
                 double scale = Math.sqrt((float) fileSize / fileMaxSize);
                 options.outHeight = (int) (height / scale);

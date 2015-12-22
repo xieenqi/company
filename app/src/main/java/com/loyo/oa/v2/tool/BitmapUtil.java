@@ -466,7 +466,7 @@ public class BitmapUtil {
                 newAttachment.add(attachment);
             }
             for (int i=0;i<newAttachment.size();i++){
-                if (attachments.get(position).equals(newAttachment.get(i))){
+                if (newAttachment.get(i).equals(attachments.get(position))){
                     newPosistion = i;
                 }
             }
