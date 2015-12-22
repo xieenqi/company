@@ -38,13 +38,24 @@ import com.tencent.android.tpush.XGPushManager;
  */
 
 public class BaseActivity extends Activity implements GestureDetector.OnGestureListener {
-    protected MainApp app;
-    public CustomProgressDialog customProgressDialog;
 
+    public CustomProgressDialog customProgressDialog;
+    protected MainApp app;
     protected boolean isNeedLogin = true;
     protected Context mContext;
-
     protected static final int NO_SCROLL = -1;
+
+    /**搜索跳转分类*/
+    public static final int TASKS_ADD = 0X01;//新建任务
+    public static final int SIGNIN_ADD = 0X02;//新建拜访
+    public static final int WORK_ADD = 0X03; //新建工作报告
+
+    public static final int CUSTOMER_MANAGE = 0X04;//客户管理
+    public static final int TASKS_MANAGE = 0X05;//任务管理
+    public static final int WORK_MANAGE = 0X06;//工作报告管理
+    public static final int PEOJECT_MANAGE = 0x07; //项目管理
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -65,7 +65,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById TextView tv_project_extra;
     @ViewById ImageView img_project_status;
 
-    @Extra String projectId;
+    @Extra("Id") String projectId;
     Project project;
 
     MyPagerAdapter adapter;
