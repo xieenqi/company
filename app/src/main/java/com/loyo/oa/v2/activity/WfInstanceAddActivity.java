@@ -56,7 +56,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -154,16 +153,16 @@ public class WfInstanceAddActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.isEmpty(wfInstance.getWftemplateId())) {
-            mTemplateId = wfInstance.getWftemplateId();
+        if (!TextUtils.isEmpty(wfInstance.wftemplateId)) {
+            mTemplateId = wfInstance.wftemplateId;
         }
 
-        if (wfInstance.getBizform() != null) {
-            mBizForm = wfInstance.getBizform();
+        if (wfInstance.bizform != null) {
+            mBizForm = wfInstance.bizform;
             intBizForm();
         }
 
-        edt_memo.setText(wfInstance.getMemo());
+        edt_memo.setText(wfInstance.memo);
     }
 
     void init_gridView_photo() {
@@ -457,7 +456,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                     isSave = false;
                     //如果不clear,会提示java.io.NotSerializableException
-                    wfInstance.setAck(true);
+                    wfInstance.ack=true;
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
                     app.finishActivity(WfInstanceAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -482,18 +481,18 @@ public class WfInstanceAddActivity extends BaseActivity {
         DBManager.Instance().deleteWfInstance();
 
         WfInstance wfInstance = new WfInstance();
-        wfInstance.setAttachments(null);
-        wfInstance.setCreator(null);
+        wfInstance.attachments=null;
+        wfInstance.creator=null;
 
         if (mBizForm != null) {
-            wfInstance.setBizform(mBizForm);
+            wfInstance.bizform=mBizForm;
         }
 
         if (!TextUtils.isEmpty(mTemplateId)) {
-            wfInstance.setWftemplateId(mTemplateId);
+            wfInstance.wftemplateId=mTemplateId;
         }
 
-        wfInstance.setMemo(edt_memo.getText().toString().trim());
+        wfInstance.memo=edt_memo.getText().toString().trim();
 
         if (isSave) {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));

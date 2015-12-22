@@ -88,7 +88,7 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                 }
             } else if (item instanceof WfInstance) {
                 WfInstance wfInstance = (WfInstance) item;
-                switch (wfInstance.getStatus()) {
+                switch (wfInstance.status) {
                     case WfInstance.STATUS_NEW:
                         order = "个待审批";
                         break;

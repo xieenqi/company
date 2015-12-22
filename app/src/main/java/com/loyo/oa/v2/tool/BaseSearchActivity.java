@@ -353,16 +353,16 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //审批
             if (o instanceof WfInstance) {
                 WfInstance wfInstance = (WfInstance) o;
-                if (wfInstance.getTitle() != null) {
-                    title.setText(wfInstance.getTitle());
+                if (wfInstance.title != null) {
+                    title.setText(wfInstance.title);
                 }
-                time.setText("提交时间: " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)));
-                if (wfInstance.getCreator() != null) {
-                    content.setText(String.format("申请人 %s", wfInstance.getCreator().getRealname()));
+                time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+                if (wfInstance.creator != null) {
+                    content.setText(String.format("申请人 %s", wfInstance.creator.getRealname()));
                 }
                 //                ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
-                switch (wfInstance.getStatus()) {
+                switch (wfInstance.status) {
                     case WfInstance.STATUS_NEW:
                         status.setImageResource(R.drawable.img_wfinstance_list_status1);
                         break;
