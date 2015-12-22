@@ -255,12 +255,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         tv_workReport_time.setText("提交时间：" + date);
 
-        if (null != mWorkReport.getProject()) {
+        if (null != mWorkReport.getProject() && mWorkReport.getProject().title.length() != 0) {
             tv_ptoject.setText(mWorkReport.getProject().title);
+        }else{
+            tv_ptoject.setText("无");
         }
 
-        showAttachment();
 
+        showAttachment();
         if (mWorkReport.isReviewed()) {
             img_title_right.setVisibility(View.GONE);
             layout_score.setVisibility(View.VISIBLE);

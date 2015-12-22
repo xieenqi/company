@@ -67,10 +67,6 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
         WfNodes wfNodes = lstData.get(position);
 
-        LogUtil.dll("name:"+wfNodes.getExecutorUser().getRealname());
-        LogUtil.dll("active:"+wfNodes.getActive());
-        LogUtil.dll("approveFlag:"+wfNodes.isApproveFlag());
-
 
         if (wfNodes != null) {
             if (wfNodes.getExecutorUser() != null) {
@@ -112,56 +108,18 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                    if (wfNodes.isApproveFlag() == true) {
                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                        item_info.tv_result.setText("同意");
+                       item_info.tv_comment.setVisibility(View.VISIBLE);
+                       item_info.tv_comment.setText("处理意见:"+wfNodes.getComment());
                    } else {
                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
                        item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
                        item_info.tv_result.setText("驳回");
+                       item_info.tv_comment.setVisibility(View.VISIBLE);
+                       item_info.tv_comment.setText("处理意见:"+wfNodes.getComment());
                    }
                }
            }
 
-            //审批通过
-/*            if (wfNodes.getActive() == 3 && wfNodes.isApproveFlag()) {
-                item_info.tv_deal_time.setText(app.df3.format(new Date(wfNodes.getUpdateAt()*1000)));
-                if (!StringUtil.isEmpty(wfNodes.getComment())) {
-                    item_info.tv_comment.setVisibility(View.VISIBLE);
-                    item_info.tv_comment.setText(wfNodes.getComment());
-                } else {
-                    item_info.tv_comment.setVisibility(View.GONE);
-                }
-
-                //已否决
-                if (wfInstanceStatus == 3) {
-                    for (int i = lstData.size() - 1; i >= 0; i--) {
-                        if (lstData.get(i).isActive() &&
-                                lstData.get(i).isNeedApprove() &&
-                                lstData.get(i).isApproveFlag()) {
-
-                            if (!wfNodes.isApproveFlag()) {
-                                item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
-                                item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
-                                item_info.tv_result.setText("驳回");
-                            } else {
-                                item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
-                                item_info.tv_result.setText("同意");
-                            }
-                            break;
-                        }
-                    }
-                } else if (wfInstanceStatus == 5) {
-                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_complete);
-                    item_info.tv_result.setText("完成");
-                } else {
-                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
-                    item_info.tv_result.setText("同意");
-                }
-            } else {
-                item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
-                item_info.tv_deal_time.setText("");
-                item_info.tv_result.setText("待处理");
-                item_info.tv_comment.setVisibility(View.GONE);
-                item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
-            }*/
         }
 
         return convertView;
