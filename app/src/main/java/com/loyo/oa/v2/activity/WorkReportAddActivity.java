@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,12 +9,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -119,6 +122,9 @@ public class WorkReportAddActivity extends BaseActivity {
     @Extra("type")
     int type;
 
+    private RadioButton rb1;
+    private RadioButton rb2;
+    private RadioButton rb3;
     private long beginAt, endAt;
     private int mSelectType = 1;
     private WeeksDialog weeksDialog = null;
@@ -130,6 +136,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
 
+    @SuppressLint("WrongViewCast")
     @AfterViews
     void initViews() {
         super.setTitle("新建工作报告");
@@ -141,9 +148,17 @@ public class WorkReportAddActivity extends BaseActivity {
         layout_reviewer.setOnTouchListener(touch);
         tv_resignin.setOnTouchListener(touch);
         layout_mproject.setOnTouchListener(touch);
+
+        rb1 = (RadioButton) findViewById(R.id.rb1);
+        rb2 = (RadioButton) findViewById(R.id.rb2);
+        rb3 = (RadioButton) findViewById(R.id.rb3);
+
+        /*如果为编辑，不允许更改类型*/
         if (type == TYPE_EDIT) {
-            layout_type.setFocusable(false);
             tv_resignin.setVisibility(View.GONE);
+            rb1.setEnabled(false);
+            rb2.setEnabled(false);
+            rb3.setEnabled(false);
         }
 
         if (weeksDialog == null) {
@@ -158,6 +173,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 crmSwitch(b);
             }
         });
+
         if (null != mWorkReport) {
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
@@ -250,48 +266,53 @@ public class WorkReportAddActivity extends BaseActivity {
         }
     }
 
+
+
+    /**日报checkbox*/
     @CheckedChange(R.id.rb1)
     void dayClick(CompoundButton button, boolean b) {
         if (!b) {
             return;
         }
-        tv_crm.setText("本日工作动态统计");
-        beginAt = DateTool.getBeginAt_ofDay();
-        endAt = DateTool.getEndAt_ofDay();
-        tv_time.setText(app.df4.format(beginAt));
-        mSelectType = WorkReport.DAY;
-        LogUtil.dll("类型:"+mSelectType);
-    }
+            tv_crm.setText("本日工作动态统计");
+            beginAt = DateTool.getBeginAt_ofDay();
+            endAt = DateTool.getEndAt_ofDay();
+            tv_time.setText(app.df4.format(beginAt));
+            mSelectType = WorkReport.DAY;
 
+    }
+    /**周报checkbox*/
     @CheckedChange(R.id.rb2)
     void weekClick(CompoundButton button, boolean b) {
         if (!b) {
             return;
         }
-        tv_crm.setText("本周工作动态统计");
-        beginAt = DateTool.getBeginAt_ofWeek();
-        endAt = DateTool.getEndAt_ofWeek();
-        tv_time.setText(weeksDialog.GetDefautlText());
-        mSelectType = WorkReport.WEEK;
-        LogUtil.dll("类型:"+mSelectType);
+            tv_crm.setText("本周工作动态统计");
+            beginAt = DateTool.getBeginAt_ofWeek();
+            endAt = DateTool.getEndAt_ofWeek();
+            tv_time.setText(weeksDialog.GetDefautlText());
+            mSelectType = WorkReport.WEEK;
+
     }
 
+
+    /**
+     * 月报checkbox
+     */
     @CheckedChange(R.id.rb3)
     void monthClick(CompoundButton button, boolean b) {
         if (!b) {
             return;
         }
-        tv_crm.setText("本月工作动态统计");
-        beginAt = DateTool.getBeginAt_ofMonth();
-        endAt = DateTool.getEndAt_ofMonth();
-        DateTool.calendar = Calendar.getInstance();
+            tv_crm.setText("本月工作动态统计");
+            beginAt = DateTool.getBeginAt_ofMonth();
+            endAt = DateTool.getEndAt_ofMonth();
+            DateTool.calendar = Calendar.getInstance();
+            int year = DateTool.calendar.get(Calendar.YEAR);
+            int month = DateTool.calendar.get(Calendar.MONTH);
+            tv_time.setText(year + "." + String.format("%02d", (month + 1)));
+            mSelectType = WorkReport.MONTH;
 
-        int year = DateTool.calendar.get(Calendar.YEAR);
-        int month = DateTool.calendar.get(Calendar.MONTH);
-        tv_time.setText(year + "." + String.format("%02d", (month + 1)));
-
-        mSelectType = WorkReport.MONTH;
-        LogUtil.dll("类型:"+mSelectType);
     }
 
     void init_gridView_photo() {
@@ -383,7 +404,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
             @Override
             public void success(WorkReport workReport, Response response) {
-                LogUtil.d("发送的json： " + MainApp.gson.toJson(workReport));
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }

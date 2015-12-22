@@ -22,6 +22,11 @@ public class Config_project {
         return SERVER_URL().concat("/api/v2/oa");
     }
 
+    /**
+     * 删除附件
+     */
+    public static final String DELETE_ENCLOSURE=SERVER_URL_ATTACHMENT()+"/api/v2";
+
     public static String API_URL_CUSTOMER() {
         return SERVER_URL_CUSTOMER().concat("/api/v2");
     }

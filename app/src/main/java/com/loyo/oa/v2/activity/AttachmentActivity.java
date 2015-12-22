@@ -19,7 +19,6 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -40,7 +39,7 @@ import java.util.ArrayList;
 import retrofit.client.Response;
 
 /**
- * 附件列表
+ * 附件列表 【添加附件】页面
  */
 
 @EActivity(R.layout.activity_attachment)
@@ -159,13 +158,11 @@ public class AttachmentActivity extends BaseActivity {
                 }
                 break;
             case SelectPicPopupWindow.GET_IMG:
-
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     if (pickPhots == null) {
                         return;
                     }
-
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
@@ -186,24 +183,18 @@ public class AttachmentActivity extends BaseActivity {
      * 上传附件
      */
     private void uploadAttachment(File file) {
-//        Utils.uploadAttachment(uuid, file, new RCallback<Attachment>() {
-//            @Override
-//            public void success(Attachment attachment, Response response) {
-//                getAttachments();
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                super.failure(error);
-//                Toast("附件上传失败");
-//            }
-//        });
 
         Utils.uploadAttachment(uuid, file)
                 .subscribe(new CommonSubscriber(this) {
                     @Override
                     public void onNext(Serializable attachment) {
                         getAttachments();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        Toast(e.getMessage());
                     }
                 });
     }

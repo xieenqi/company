@@ -31,13 +31,16 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 
@@ -56,6 +59,9 @@ import java.util.ArrayList;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 【新建 客户】 页面
+ */
 @EActivity(R.layout.activity_customer_add)
 public class CustomerAddActivity extends BaseActivity implements View.OnClickListener {
 
@@ -107,10 +113,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     boolean isFocused = false;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
-            if(msg.what == 0x01){
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x01) {
                 et_address.setText(myAddress);
                 mGpsAddress = myAddress;
             }
@@ -122,7 +128,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     void initUI() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        img_refresh_address = (ImageView)findViewById(R.id.img_refresh_address);
+        img_refresh_address = (ImageView) findViewById(R.id.img_refresh_address);
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         super.setTitle("新建客户");
         init_gridView_photo();
@@ -134,16 +140,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 获取定位
-     * */
+     */
     void startLocation() {
         img_refresh_address.startAnimation(animation);
 
         new LocationUtil(this, new LocationUtil.AfterLocation() {
             @Override
             public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-                    myAddress = address;
-                    mHandler.sendEmptyMessage(0x01);
-                    img_refresh_address.clearAnimation();
+                myAddress = address;
+                mHandler.sendEmptyMessage(0x01);
+                img_refresh_address.clearAnimation();
             }
 
 
@@ -179,8 +185,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right,R.id.tv_search,
-            R.id.layout_customer_label,R.id.img_refresh_address})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
+            R.id.layout_customer_label, R.id.img_refresh_address})
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -192,13 +198,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*查重*/
             case R.id.tv_search:
 
-                if(!edt_name.getText().toString().isEmpty()) {
+                if (!edt_name.getText().toString().isEmpty()) {
 
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("name", edt_name.getText().toString());
-                    app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH,bundle1);
+                    app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
 
-                }else{
+                } else {
                     Toast("客户名称不能为空");
                 }
 
@@ -402,7 +408,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             ArrayList<ServerAPI.ParamInfo> lstParamInfo = new ArrayList<ServerAPI.ParamInfo>();
                             ServerAPI.ParamInfo paramInfo = new ServerAPI.ParamInfo("bitmap", newFile);
                             lstParamInfo.add(paramInfo);
-                            ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null, params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
+                            ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null,
+                                    params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
                         }
                     }
                 } catch (Exception ex) {
@@ -412,20 +419,23 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    MainApp.getMainApp().getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
-                        @Override
-                        public void success(Attachment attachment, Response response) {
-                            Toast("删除附件成功!");
-                            lstData_Attachment.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
+                    RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),
+                            new RCallback<Attachment>() {
+                                @Override
+                                public void success(Attachment attachment, Response response) {
+                                    Toast("删除附件成功!");
+                                    lstData_Attachment.remove(delAttachment);
+                                    signInGridViewAdapter.notifyDataSetChanged();
+                                }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    HttpErrorCheck.checkError(error);
+                                    Toast("删除附件失败!");
+                                    super.failure(error);
+                                }
+                            });
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -433,7 +443,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
         }
     }
-
 
 
     void setContract(Contact c) {
@@ -507,7 +516,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         DBManager.Instance().deleteCustomer();
         if (isSave) {
             mCustomer = new Customer();
-            mCustomer.name=(edt_name.getText().toString().trim());
+            mCustomer.name = (edt_name.getText().toString().trim());
 
             ArrayList<Contact> contacts = new ArrayList<>();
 
@@ -520,12 +529,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             defaultContact.setTel(edt_contract_tel.getText().toString());
             defaultContact.setIsDefault(true);
             contacts.add(0, defaultContact);
-            mCustomer.contacts=contacts;
+            mCustomer.contacts = contacts;
 
-            mCustomer.owner=null;
-            mCustomer.members=null;
-            mCustomer.tags=null;
-            mCustomer.creator=null;
+            mCustomer.owner = null;
+            mCustomer.members = null;
+            mCustomer.tags = null;
+            mCustomer.creator = null;
 
             DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
         }

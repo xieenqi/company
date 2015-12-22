@@ -194,7 +194,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
-        img_title_right.setVisibility(View.INVISIBLE);
         layout_attachment.setOnTouchListener(Global.GetTouch());
         layout_discussion.setOnTouchListener(Global.GetTouch());
 
@@ -262,7 +261,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
-            img_title_right.setVisibility(View.GONE);
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
@@ -414,11 +412,20 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                intent.putExtra("delete", true);
-                intent.putExtra("edit", true);
-                intent.putExtra("extra", "复制报告");
-                startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+
+                if(mWorkReport.isReviewed()){
+                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+                    intent.putExtra("delete", true);
+                    intent.putExtra("extra", "复制报告");
+                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+                }else{
+                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+                    intent.putExtra("delete", true);
+                    intent.putExtra("edit", true);
+                    intent.putExtra("extra", "复制报告");
+                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+                }
+
                 break;
             case R.id.btn_workreport_review:
                 reviewWorkreport();
