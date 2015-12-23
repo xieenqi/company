@@ -101,15 +101,13 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             } else if (task.getStatus() == Task.STATUS_FINISHED) {
                 status.setImageResource(R.drawable.task_status_3);
             }
-          //  Log.d("Volley", " 任务管理啊返回: " + task.);
             try {
                 if(System.currentTimeMillis()>task.getPlanEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
                     timeOut.setVisibility(View.VISIBLE);
                 }else{
                     timeOut.setVisibility(View.GONE);
                 }
-                //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
-                time.setText("任务截止时间: " + app.df3.format(new Date(task.getPlanEndAt())));
+                time.setText("任务截止时间: " + DateTool.timet(task.getPlanEndAt()+""));
             } catch (Exception e) {
                 Global.ProcException(e);
             }

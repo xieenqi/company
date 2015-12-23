@@ -95,7 +95,7 @@ public class DateTool {
         try {
             timestamp = sdfOut.parse(strTime).getTime();
         } catch (Exception e) {
-//            Global.ProcException(e);
+            Global.ProcException(e);
         }
         return timestamp;
     }
@@ -508,6 +508,22 @@ public class DateTool {
             e.printStackTrace();
         }
         return times;
+    }
+
+
+    /**
+     * 时间戳转时间
+     * @param time
+     * @return
+     */
+    public static String timet(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+        int i = Integer.parseInt(time);
+        String times = sdr.format(new Date(i * 1000L));
+        return times;
+
     }
 
     public static class DateSetListener_Datetool implements

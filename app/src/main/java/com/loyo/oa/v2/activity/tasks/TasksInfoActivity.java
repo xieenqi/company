@@ -35,6 +35,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -78,7 +79,6 @@ public class TasksInfoActivity extends BaseActivity {
     String vTitle;
     String vContent;
     String realName;
-    String joinName;
     String isTest;
     String beProjects;
 
@@ -260,9 +260,9 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
+        /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
-            String s = app.df3.format(new Date(mTask.getPlanEndAt())) + " 截止";
-
+            String s = DateTool.timet(mTask.getPlanEndAt()+"") + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
             }
@@ -577,12 +577,6 @@ public class TasksInfoActivity extends BaseActivity {
                 /*复制回调*/
                 else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
-                    /*intent.putExtra("title", vTitle);
-                    intent.putExtra("content", vContent);
-                    intent.putExtra("real", realName);
-                    intent.putExtra("join", joinName);
-                    intent.putExtra("istest", isTest);
-                    intent.putExtra("bepro", beProjects);*/
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data",mTask);
                     intent.putExtras(mBundle);
