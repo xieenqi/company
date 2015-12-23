@@ -41,6 +41,7 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -159,7 +160,6 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 复制任务，接受到的数据绑定
-     * 暂时只处理了"任务名，内容"复制
      */
     void getBundle() {
         
@@ -175,8 +175,8 @@ public class TasksAddActivity extends BaseActivity {
         switch_approve.setChecked(true);
         isCopy = mTask!=null?true:false;
 
-        member.users = mTask.getMembers().users;
-        newUser = mTask.getResponsiblePerson();
+        member.users = mTask.getMembers().users; //参与人
+        newUser = mTask.getResponsiblePerson();  //负责人
 
 
     }
@@ -310,14 +310,19 @@ public class TasksAddActivity extends BaseActivity {
                 app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
                 break;
 
+            //截至时间
             case R.id.layout_deadline:
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+
+                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mDeadline = DateTool.getDateToTimestamp(str, app.df3);
+                        mDeadline =Long.parseLong(DateTool.getDataOne(str));
+                        LogUtil.dll("截至时间:" + str);
+                        LogUtil.dll("截至时间戳1:"+mDeadline);
+
                     }
                 });
                 break;
