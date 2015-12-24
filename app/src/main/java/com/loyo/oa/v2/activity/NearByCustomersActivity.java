@@ -71,7 +71,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
 
         initFragments();
         initTabs();
-        LogUtil.d(" 附近客户数据： "+MainApp.gson.toJson(nearCount));
+        LogUtil.dll(" 附近客户数据： "+MainApp.gson.toJson(nearCount));
     }
 
     @Click(R.id.layout_back)
@@ -138,6 +138,4 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
             return fragmentXes.isEmpty() ? null : fragmentXes.get(position);
         }
     }
-
-
 }

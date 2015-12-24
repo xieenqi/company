@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -168,20 +169,26 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
                 break;
+
             case R.id.img_title_right:
                 addSignIn();
                 break;
+
+            /*选择客户*/
             case R.id.layout_customer_name:
 
                 Bundle b = new Bundle();
-                b.putInt("queryType", 1);
-                b.putInt("from",SIGNIN_ADD);
-                app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
+      /*          b.putInt("queryType", 1);
+                b.putInt("from",SIGNIN_ADD);*/
+                app.startActivityForResult(this, SigninSelectCustomer.class, MainApp.ENTER_TYPE_RIGHT, BaseSearchActivity.REQUEST_SEARCH, b);
 
                 break;
+
+            /*地址更新*/
             case R.id.img_refresh_address:
                 startLocation();
                 break;
@@ -236,15 +243,8 @@ LogUtil.d(" 新增拜访传递数据："+MainApp.gson.toJson(map));
 
             @Override
             public void failure(RetrofitError error) {
+                super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    LogUtil.dll("请检查您的网络连接");
-//                } else if (error.getResponse().getStatus() == 500) {
-//                    Toast("网络异常500，请稍候再试");
-//                } else {
-//                    Toast(error.getMessage());
-//                }
-//                LogUtil.d(" 签到拜访错误: " + error.getMessage());
             }
         });
     }

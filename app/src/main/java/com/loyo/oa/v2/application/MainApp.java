@@ -75,7 +75,6 @@ public class MainApp extends Application {
     public DisplayImageOptions options_rounded;
     public static DisplayImageOptions options_3;
 
-    public SimpleDateFormat df0;
     public SimpleDateFormat df1;//设置日期格式
     public SimpleDateFormat df2;//设置日期格式
     public SimpleDateFormat df3;//设置日期格式
@@ -285,7 +284,6 @@ public class MainApp extends Application {
         ServerAPI.init();
         initImageLoader(getApplicationContext());
         init_DisplayImageOptions();
-        df0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:", Locale.getDefault());//设置日期格式
         df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());//设置日期格式
         df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());//设置日期格式
         df3 = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());//设置日期格式

@@ -25,7 +25,7 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReport> {
 
 
     @Override
-    protected void getData() {
+    public void getData() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("sendType", 0);
         params.put("keyword", strSearch);

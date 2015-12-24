@@ -320,6 +320,7 @@ public class TasksAddActivity extends BaseActivity {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
                         mDeadline =Long.parseLong(DateTool.getDataOne(str));
+                        LogUtil.dll("截至时间:"+mDeadline+"");
 
                     }
                 });
@@ -480,9 +481,10 @@ public class TasksAddActivity extends BaseActivity {
                 }
 
                 break;
+            //附件删除
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
                     @Override
                     public void success(Attachment attachment, Response response) {
                         Toast("删除附件成功!");

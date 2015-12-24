@@ -25,7 +25,7 @@ public class TasksSearchActivity extends BaseSearchActivity<Task> {
     }
 
     @Override
-    protected void getData() {
+    public void getData() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("keyword", strSearch);
         params.put("endAt", System.currentTimeMillis() / 1000);
