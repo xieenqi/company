@@ -165,7 +165,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             switch (v.getId()){
                 case R.id.ll_project:
                     Bundle bundle2 = new Bundle();
-                    //bundle2.putInt("from",BaseActivity.WFIN_ADD);
+                    bundle2.putInt("from",BaseActivity.WFIN_ADD);
                     app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                     break;
