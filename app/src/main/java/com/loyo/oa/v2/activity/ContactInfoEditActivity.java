@@ -658,7 +658,8 @@ public class ContactInfoEditActivity extends BaseActivity {
             showLeaveDialog();
         }
         else if(isDataChange()){
-            super.onBackPressed();
+            finish();
+            //super.onBackPressed();
         }
     }
 

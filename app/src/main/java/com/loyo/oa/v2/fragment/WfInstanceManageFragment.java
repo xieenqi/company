@@ -70,6 +70,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     public void openSearch() {
         Intent intent = new Intent();
         intent.setClass(mActivity, WfinstanceSearchActivity.class);
+
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 

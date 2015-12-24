@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
@@ -23,9 +24,11 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -82,22 +85,27 @@ public class PreviewAttendanceActivity extends BaseActivity {
         tv_title.setText("考勤详情");
         initGridView();
         initData();
+        LogUtil.d(inOrOut+" 考勤详情 传递 数据："+ MainApp.gson.toJson(attendance));
     }
 
     /**
      * 获取附件
-     *
      * @param record
      */
     private void getAttachments(AttendanceRecord record) {
+        if (TextUtils.isEmpty(record.getAttachementuuid())){//附件id为空
+            return;
+        }
         Utils.getAttachments(record.getAttachementuuid(), new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
                 attachments = _attachments;
                 initGridView();
             }
+
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 Toast("获取附件失败");
             }
@@ -132,14 +140,16 @@ public class PreviewAttendanceActivity extends BaseActivity {
         }else if(record.getState() == AttendanceRecord.STATE_LEAVE_EARLY){
             info = "下班早退, ";
         }
-        String content=info+"打卡时间: " + app.df3.format(new Date(record.getConfirmtime() * 1000));
+        String content=info+"打卡时间: " + app.df3.format(new Date(record.getCreatetime()* 1000));//
         if(!TextUtils.isEmpty(info)) {
             tv_info.setText(Utils.modifyTextColor(content, Color.RED, 2, 4));
         }else {
             tv_info.setText(content);
         }
         tv_reason.setText(record.getReason());
-
+         if(user.id.equals(MainApp.user.id)){//自己不能确认外勤
+            btn_confirm.setVisibility(View.GONE);
+        }
         getAttachments(record);
     }
 
@@ -158,9 +168,16 @@ public class PreviewAttendanceActivity extends BaseActivity {
 
     @Click(R.id.layout_back)
     void back() {
-        onBackPressed();
+        finish();
+        //onBackPressed();
     }
-
+    /**
+     * 确认外勤的点击监听
+     */
+    @Click(R.id.btn_confirm)
+    void confirmFieldWork() {
+        showConfirmOutAttendanceDialog();
+    }
 
     /**
      * 弹出外勤确认对话框
@@ -219,24 +236,23 @@ public class PreviewAttendanceActivity extends BaseActivity {
                     iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
                 } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                     iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-                }else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
                     iv_type.setImageResource(R.drawable.icon_office_work);
                 }
 
-                Intent intent=new Intent();
-                intent.putExtra("data",attendance);
-                setResult(RESULT_OK,intent);
+                Intent intent = new Intent();
+                intent.putExtra("data", attendance);
+                setResult(RESULT_OK, intent);
             }
+
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 Toast("确认外勤失败");
             }
         });
     }
 
-    @Click(R.id.btn_confirm)
-    void confirmFieldWork() {
-        showConfirmOutAttendanceDialog();
-    }
+
 }

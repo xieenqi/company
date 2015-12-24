@@ -34,7 +34,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -318,6 +317,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
+                LogUtil.d(" 考勤列表的数据："+MainApp.gson.toJson(result));
                 dg.dismiss();
                 attendanceList=result.records;
                 attendances.addAll(result.records.getAttendances());
@@ -326,13 +326,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 if(page!=1){
                     adapter.notifyDataSetChanged();
                 }
-
-                try {
-                    LogUtil.dll("考勤:"+Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
             @Override
             public void failure(RetrofitError error) {
@@ -397,8 +390,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             final AttendanceRecord recordIn = attendance.getIn();
             final AttendanceRecord recordOut = attendance.getOut();
 
-            ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);
-            ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);
+            ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);//上午
+            ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);//晚上
             layout_recordIn.setOnTouchListener(Global.GetTouch());
             layout_recordOut.setOnTouchListener(Global.GetTouch());
 
@@ -456,8 +449,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     moring = "已打卡";
                 }
                 tv_state.setText(moring);
-                tv_time.setText(app.df6.format(new Date(recordIn.getConfirmtime() * 1000)));
-
+                tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
                 iv_recordIn_type.setVisibility(View.VISIBLE);
                 if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                     iv_recordIn_type.setImageResource(R.drawable.icon_field_work_unconfirm);
@@ -487,7 +479,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         break;
                 }
                 tv_result.setText(Utils.modifyTextColor(result, Color.RED, 0, result.length()));
-                tv_time1.setText(app.df6.format(new Date(recordOut.getConfirmtime() * 1000)));
+                tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));
 
                 iv_recordOut_type.setVisibility(View.VISIBLE);
                 if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {

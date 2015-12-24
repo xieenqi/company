@@ -21,12 +21,16 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView;
@@ -132,7 +136,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                 // 是否显示拍摄图片
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
                 // 最大可选择图片数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 10);
                 // 选择模式
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
                 startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
@@ -144,10 +148,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
      * 获取数据
      */
     private void getData() {
-        app.getRestAdapter().create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
-
+                LogUtil.d(" 项目的附件获取数据： "+MainApp.gson.toJson(attachments));
                 if (null != attachments && !attachments.isEmpty()) {
                     mAttachments = attachments;
                     bindAttachment(mAttachments);
@@ -156,6 +160,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
         });

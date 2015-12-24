@@ -482,17 +482,17 @@ public class WorkReportAddActivity extends BaseActivity {
 
                 /*负责人数据组装*/
                 User user = (User) data.getSerializableExtra(User.class.getName());
+                LogUtil.d(" RESULRT 信息： "+MainApp.gson.toJson(user));
                 if (user != null) {
-                    if (null == mReviewer) {
+
+                        if (null == mReviewer) {
                         mReviewer = new Reviewer(user.toShortUser());
                     }
                     mReviewer.setUser(user.toShortUser());
                     tv_reviewer.setText(user.getRealname());
                 }
-
                 /*参与人数据组装*/
                 else {
-
                     String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
 

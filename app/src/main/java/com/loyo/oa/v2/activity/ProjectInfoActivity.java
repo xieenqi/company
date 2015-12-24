@@ -181,9 +181,9 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 if (i <= 2) {
                     fragmentX = new BaseChildMainListFragmentX();//任务，报告，审批
                 } else if (i == TITLES.length - 1) {
-                    fragmentX = new DiscussionFragment();//文件
+                    fragmentX = new DiscussionFragment();//讨论
                 } else {
-                    fragmentX = new AttachmentFragment();//讨论
+                    fragmentX = new AttachmentFragment();//文件
                 }
                 fragmentX.setArguments(bundle);
                 fragmentX.setCallback(i, this);

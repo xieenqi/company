@@ -14,6 +14,8 @@ public class ExtraAndResult {
     public static final String RESULT_NAME= "result_name";
     public static final String RESULT_DATA = "result_data";
     public static final String RESULT_OBJ = "result_obj";
-
-
+    /**
+     * 传递部门数据的请求码
+     */
+    public static final int REQUSET_PROJECT = 100;
 }
