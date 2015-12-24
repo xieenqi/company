@@ -455,7 +455,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                //Toast("删除附件失败!");
+                Toast("删除附件失败!");
                 super.failure(error);
             }
         });

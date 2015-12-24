@@ -283,8 +283,9 @@ public class WfInstanceAddActivity extends BaseActivity {
 
                 break;
 
+            /*附件删除*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                try {
+
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
                         @Override
@@ -300,9 +301,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                             super.failure(error);
                         }
                     });
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
+
                 break;
             //选择部门 返回
             case RESULT_DEPT_CHOOSE:
