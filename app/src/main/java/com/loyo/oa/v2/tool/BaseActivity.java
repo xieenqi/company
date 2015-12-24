@@ -55,6 +55,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int TASKS_MANAGE = 0X05;//任务管理
     public static final int WORK_MANAGE = 0X06;//工作报告管理
     public static final int PEOJECT_MANAGE = 0x07; //项目管理
+    public static final int WFIN_MANAGE = 0x09; //审批列表
 
 
 

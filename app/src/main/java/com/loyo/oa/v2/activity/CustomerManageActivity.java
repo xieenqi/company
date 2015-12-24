@@ -39,6 +39,7 @@ import java.util.List;
 
 @EActivity(R.layout.activity_customer_manage)
 public class CustomerManageActivity extends BaseFragmentActivity {
+
     @Click(R.id.img_title_left)
     void back() {
         onBackPressed();
@@ -105,7 +106,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
     void initCategoryUI() {
         mCategoryAdapter = new CommonCategoryAdapter(this, Arrays.asList(CUSTOMER_FILTER_STRS));
-
         lv_customer_category.setAdapter(mCategoryAdapter);
         lv_customer_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -149,6 +149,9 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         layout_category.setVisibility(layout_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
+    /**
+     * 进入搜索
+     * */
     @Click(R.id.img_title_search_right)
     void jumpToSearch() {
         int type;

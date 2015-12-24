@@ -190,6 +190,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     //项目管理
                     case PEOJECT_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
+                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        startActivity(mIntent);
+                        break;
+                    //审批管理
+                    case WFIN_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
                         mIntent.putExtra("projectId", lstData.get(position - 1).getId());
                         startActivity(mIntent);
                         break;

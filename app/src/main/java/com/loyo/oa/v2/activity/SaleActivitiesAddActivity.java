@@ -15,6 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -29,9 +30,12 @@ import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
+/**
+ * 新建跟进动态
+ * */
 public class SaleActivitiesAddActivity extends BaseActivity implements View.OnClickListener {
 
     ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
@@ -144,6 +148,12 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void success(SaleActivity saleActivity, Response response) {
                         onBackOk(saleActivity);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
                     }
                 });
 

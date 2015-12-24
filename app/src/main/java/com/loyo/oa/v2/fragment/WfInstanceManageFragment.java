@@ -2,18 +2,22 @@ package com.loyo.oa.v2.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.WfinstanceSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.IWfInstance;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
@@ -68,9 +72,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
      */
     @Override
     public void openSearch() {
-        Intent intent = new Intent();
-        intent.setClass(mActivity, WfinstanceSearchActivity.class);
-        startActivityForResult(intent, REQUEST_REVIEW);
+        Bundle mBundle = new Bundle();
+        mBundle.putInt("from", BaseActivity.WFIN_MANAGE);
+        app.startActivity(mActivity, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
     }
 
     @Override
@@ -81,6 +85,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
         map.put("type", category);
         map.put("status", status);
+        
 //      map.put("bizformId", bizFormId);
 //      map.put("endTime", System.currentTimeMillis() / 1000);
 //      map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);

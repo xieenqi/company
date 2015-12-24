@@ -21,11 +21,13 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,7 +58,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         setContentView(R.layout.activity_sale_activities_manage);
 
 
-        if(getIntent() != null){
+        if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             customer = (Customer) bundle.getSerializable(Customer.class.getName());
             isMyUser = bundle.getBoolean("isMyUser");
@@ -78,7 +80,13 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<SaleActivity>>() {
                 @Override
                 public void success(PaginationX<SaleActivity> paginationXes, Response response) {
-                    LogUtil.d(" 跟进动态获取Url： "+response.getUrl());
+
+                    try {
+                        LogUtil.dll("跟进动态数据:" + Utils.convertStreamToString(response.getBody().in()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     lv_saleActivity.onRefreshComplete();
                     if (!PaginationX.isEmpty(paginationXes)) {
                         paginationX = paginationXes;
@@ -106,7 +114,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
-        if(!isMyUser){
+        if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
         layout_add.setOnTouchListener(Global.GetTouch());
@@ -140,7 +148,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 SaleActivity activity = (SaleActivity) data.getSerializableExtra("data");
                 if (activity != null) {
                     mSaleActivity = activity;
-                    //fixes bugly1165 v3.1.1 ykb 07-15
                     if (lstData_saleActivity_current != null) {
                         lstData_saleActivity_current.add(0, activity);
                     }
@@ -187,6 +194,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         super.onBackPressed();
     }
 
+
     private class SaleActivitiesAdapter extends BaseAdapter {
 
         @Override
@@ -206,7 +214,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
         @Override
         public View getView(int i, View convertView, ViewGroup parent) {
-
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
@@ -215,22 +222,30 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             TextView tv_creator_name = ViewHolder.get(convertView, R.id.tv_creator_name);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
             TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
-
+            TextView tv_timenow = ViewHolder.get(convertView, R.id.tv_timenow);
+            ViewGroup layout_timenow = ViewHolder.get(convertView, R.id.layout_timenow);
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
 
-            tv_content.setText("内容: " + saleActivity.getContent());
+            if (saleActivity.getRemindAt() != 0) {
+                tv_timenow.setText(DateTool.timet(saleActivity.getRemindAt() + ""));
+            }else{
+                tv_timenow.setText("无");
+            }
+
+            tv_content.setText(saleActivity.getContent());
             tv_creator_name.setText(saleActivity.getCreator().getName());
+
             if (saleActivity.getType() != null) {
                 tv_previous.setText(saleActivity.getType().getName());
             }
-            tv_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt()*1000));
-
+            tv_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
             } else {
                 convertView.setBackgroundColor(getResources().getColor(R.color.white));
             }
             return convertView;
+
         }
     }
 }
