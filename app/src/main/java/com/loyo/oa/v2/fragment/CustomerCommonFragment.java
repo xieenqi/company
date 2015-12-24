@@ -445,9 +445,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
                 String url = "";
                 switch (customer_type) {
+                    //团队客户
                     case Customer.CUSTOMER_TYPE_TEAM:
                         url = FinalVariables.QUERY_NEAR_CUSTOMERS_COUNT_TEAM;
                         break;
+                    //个人客户
                     case Customer.CUSTOMER_TYPE_MINE:
                         url = FinalVariables.QUERY_NEAR_CUSTOMERS_COUNT_SELF;
                         break;
@@ -462,7 +464,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 RestAdapterFactory.getInstance().build(url).create(ICustomer.class).queryNearCount(position, new RCallback<NearCount>() {
                     @Override
                     public void success(NearCount _nearCount, Response response) {
-                        LogUtil.d(response.getUrl()+" 附近客户个数信息： "+MainApp.gson.toJson(_nearCount));
                         nearCount = _nearCount;
                         if (null != nearCount) {
                             tv_near_customers.setText("发现" + nearCount.total + "个附近客户");
@@ -474,7 +475,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     public void failure(RetrofitError error) {
                         super.failure(error);
                         HttpErrorCheck.checkError(error);
-                       // Toast("获取附近客户信息失败！");
                     }
 
                 });
@@ -514,7 +514,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         params.put("deptId", departmentId);
         params.put("userId", userId);
 
-        LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
+        LogUtil.dll("客户查询传递参数：" + MainApp.gson.toJson(params));
         String url = "";
         switch (customer_type) {
             case Customer.CUSTOMER_TYPE_MINE:
@@ -547,8 +547,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        LogUtil.d("客户管理的URL：" + response.getUrl());
-                        LogUtil.d("客户管理json数据：" + MainApp.gson.toJson(customerPaginationX));
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (isTopAdd) {
                                 mPagination.setPageIndex(1);

@@ -47,7 +47,6 @@ public interface ICustomer {
     @GET("/")
     void queryNearCount(@Query("position") String position, Callback<NearCount> cb);
 
-
     @GET("/customers")
     void Query(@QueryMap Map<String, Object> params, retrofit.Callback<PaginationX<Customer>> cb);
 

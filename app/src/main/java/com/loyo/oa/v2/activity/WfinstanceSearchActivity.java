@@ -25,7 +25,7 @@ public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstance> {
     }
 
     @Override
-    protected void getData() {
+    public void getData() {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getPageIndex());

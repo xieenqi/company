@@ -93,7 +93,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         else if (obj instanceof Task) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
-            LogUtil.d(" 加载任务的数据： "+ MainApp.gson.toJson(task));
             if (task.getStatus() == Task.STATUS_PROCESSING) {
                 status.setImageResource(R.drawable.task_status_1);
             } else if (task.getStatus() == Task.STATUS_REVIEWING) {
@@ -101,13 +100,19 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             } else if (task.getStatus() == Task.STATUS_FINISHED) {
                 status.setImageResource(R.drawable.task_status_3);
             }
+            /*任务超时判断*/
             try {
-                if(System.currentTimeMillis()>task.getPlanEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
+
+                Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime()));
+                if(nowTime>task.getPlanEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
                     timeOut.setVisibility(View.VISIBLE);
                 }else{
                     timeOut.setVisibility(View.GONE);
                 }
                 time.setText("任务截止时间: " + DateTool.timet(task.getPlanEndAt()+""));
+                LogUtil.dll("当前时间戳:"+nowTime);
+                LogUtil.dll("截至时间戳:" + task.getPlanEndAt());
+
             } catch (Exception e) {
                 Global.ProcException(e);
             }
