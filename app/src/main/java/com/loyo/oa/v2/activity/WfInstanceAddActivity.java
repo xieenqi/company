@@ -24,9 +24,11 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.Parameters.WfInstanceAdd;
+import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfTemplate;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
@@ -101,12 +103,13 @@ public class WfInstanceAddActivity extends BaseActivity {
 
     WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
 
-    /** 审批 内容 数据
+    /**
+     * 审批 内容 数据
      * 要提交的数据  xnq
      */
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     //审批内容 新建一个的对象 集合
-    private List<WfinstanceViewGroup>  WfinObj = new ArrayList<WfinstanceViewGroup>();
+    private List<WfinstanceViewGroup> WfinObj = new ArrayList<WfinstanceViewGroup>();
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
@@ -133,8 +136,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     /**
      * 项目 过来要 创建 审批
      */
-    public void projectAddWfinstance(){
-        if(!TextUtils.isEmpty(projectId)){
+    public void projectAddWfinstance() {
+        if (!TextUtils.isEmpty(projectId)) {
             ll_project.setEnabled(false);
             tv_project.setText(projectTitle);
         }
@@ -159,15 +162,16 @@ public class WfInstanceAddActivity extends BaseActivity {
         });
     }
 
-    private View.OnClickListener click= new View.OnClickListener() {
+    private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.ll_project:
                     Bundle bundle2 = new Bundle();
-                    bundle2.putInt("from",BaseActivity.WFIN_ADD);
-                    app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                            FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                    bundle2.putInt("from", BaseActivity.WFIN_ADD);
+                    app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class,
+                            MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;
             }
         }
@@ -254,10 +258,10 @@ public class WfInstanceAddActivity extends BaseActivity {
         switch (requestCode) {
             //类型选择返回
             case RESULT_WFINSTANCT_TYPE:
-                    mBizForm = (BizForm) data.getSerializableExtra(BizForm.class.getName());
-                    if (mBizForm != null) {
-                        intBizForm();
-                    }
+                mBizForm = (BizForm) data.getSerializableExtra(BizForm.class.getName());
+                if (mBizForm != null) {
+                    intBizForm();
+                }
                 break;
             case SelectPicPopupWindow.GET_IMG:
                 try {
@@ -305,9 +309,18 @@ public class WfInstanceAddActivity extends BaseActivity {
                 break;
             //选择部门 返回
             case RESULT_DEPT_CHOOSE:
-                UserInfo userInfo=(UserInfo)data.getSerializableExtra(DepartmentChoose.class.getName());
+                UserInfo userInfo = (UserInfo) data.getSerializableExtra(DepartmentChoose.class.getName());
                 tv_dept.setText(userInfo.getShortDept().getName());
-                deptId=userInfo.getShortDept().getId();
+                deptId = userInfo.getShortDept().getId();
+                break;
+            case ExtraAndResult.REQUSET_PROJECT:
+                Project _project = (Project) data.getSerializableExtra("data");
+                projectId = _project.id;
+                if (null != _project) {
+                    tv_project.setText(_project.title);
+                } else {
+                    tv_project.setText("无");
+                }
                 break;
         }
     }
@@ -318,7 +331,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     private void intBizForm() {
         tv_bizform.setText(mBizForm.getName());
         wfInstanceAdd.setBizformId(mBizForm.getId());
-        if(null==mBizForm.getFields()){
+        if (null == mBizForm.getFields()) {
             Toast("该审批类型没有配置流程，请重新选择!");
             return;
         }
@@ -343,7 +356,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.btn_add, R.id.layout_WfTemplate, R.id.layout_wfinstance,R.id.ll_dept})
+    @Click({R.id.img_title_left, R.id.btn_add, R.id.layout_WfTemplate, R.id.layout_wfinstance, R.id.ll_dept})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -365,23 +378,23 @@ public class WfInstanceAddActivity extends BaseActivity {
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
             case R.id.ll_dept:
-
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;
         }
     }
 
-    public void info (){
-        if(WfinObj==null)
+    public void info() {
+        if (WfinObj == null)
             return;
         HashMap<String, Object> mapInfo = WfinObj.get(0).getInfoData();
-        for (Map.Entry<String, Object> entry:mapInfo.entrySet()){
+        for (Map.Entry<String, Object> entry : mapInfo.entrySet()) {
             LogUtil.d(entry.getKey() + "--3453->" + entry.getValue());
         }
 
     }
 
-    /**xnq
+    /**
+     * xnq
      * 界面上 新增加审批内容 栏目
      */
     void addTypeData() {
@@ -389,7 +402,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             Toast("请选择类型");
             return;
         }
-        if(null==mBizForm.getFields()){
+        if (null == mBizForm.getFields()) {
             return;
         }
 
@@ -419,7 +432,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         if (submitData.isEmpty()) {
             Toast("请输入审批内容");
             return;
-        }else if(TextUtils.isEmpty(deptId)){
+        } else if (TextUtils.isEmpty(deptId)) {
             Toast("请输选择部门");
             return;
         }
@@ -430,22 +443,22 @@ public class WfInstanceAddActivity extends BaseActivity {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
             HashMap<String, Object> map_Values = submitData.get(k);
             for (BizFormFields field : mBizForm.getFields()) {
-               for (String key : map_Values.keySet()) {
-                   if (!TextUtils.equals(field.getId(), key)) {
+                for (String key : map_Values.keySet()) {
+                    if (!TextUtils.equals(field.getId(), key)) {
                         continue;
                     }
                     String value = (String) map_Values.get(key);
                     jsonMapValues.put(key, value);
                 }
-           }
+            }
             workflowValues.add(jsonMapValues);
         }
 
-        for(WfinstanceViewGroup element:WfinObj){
-            LogUtil.d("   审批dd的内容  "+element.getInfoData());
+        for (WfinstanceViewGroup element : WfinObj) {
+            LogUtil.d("   审批dd的内容  " + element.getInfoData());
             workflowValues.add(element.getInfoData());
         }
-        if(!(workflowValues.size()>0)){
+        if (!(workflowValues.size() > 0)) {
             Toast("请填写审批内容\"必填项\"");
             return;
         }
@@ -465,7 +478,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         map.put("bizformId", mBizForm.getId());//表单Id
         map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
-        map.put("deptId",deptId);//部门 id
+        map.put("deptId", deptId);//部门 id
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
         map.put("projectId", projectId);//项目Id
@@ -476,7 +489,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         map.put("memo", edt_memo.getText().toString().trim()); //备注
 
-        LogUtil.dll("新建审批发送数据:"+MainApp.gson.toJson(map));
+        LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
@@ -485,7 +498,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                     isSave = false;
                     //如果不clear,会提示java.io.NotSerializableException
-                    wfInstance.ack=true;
+                    wfInstance.ack = true;
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
                     app.finishActivity(WfInstanceAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -495,7 +508,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 Toast("提交审批失败");
-                LogUtil.d(" 失败原因： "+error.getMessage());
+                LogUtil.d(" 失败原因： " + error.getMessage());
                 super.failure(error);
             }
         });
@@ -510,18 +523,18 @@ public class WfInstanceAddActivity extends BaseActivity {
         DBManager.Instance().deleteWfInstance();
 
         WfInstance wfInstance = new WfInstance();
-        wfInstance.attachments=null;
-        wfInstance.creator=null;
+        wfInstance.attachments = null;
+        wfInstance.creator = null;
 
         if (mBizForm != null) {
-            wfInstance.bizform=mBizForm;
+            wfInstance.bizform = mBizForm;
         }
 
         if (!TextUtils.isEmpty(mTemplateId)) {
-            wfInstance.wftemplateId=mTemplateId;
+            wfInstance.wftemplateId = mTemplateId;
         }
 
-        wfInstance.memo=edt_memo.getText().toString().trim();
+        wfInstance.memo = edt_memo.getText().toString().trim();
 
         if (isSave) {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));

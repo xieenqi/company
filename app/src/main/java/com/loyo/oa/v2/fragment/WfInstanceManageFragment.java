@@ -72,9 +72,11 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
      */
     @Override
     public void openSearch() {
+
         Bundle mBundle = new Bundle();
         mBundle.putInt("from", BaseActivity.WFIN_MANAGE);
         app.startActivity(mActivity, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+
     }
 
     @Override

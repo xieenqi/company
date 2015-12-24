@@ -104,7 +104,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             public void success(PaginationX<Discussion> pagination, Response response) {
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
-
                     mPagination = pagination;
                     if (isTopAdd) {
                         discussions.clear();

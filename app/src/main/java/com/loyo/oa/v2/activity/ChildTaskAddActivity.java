@@ -1,11 +1,9 @@
 package com.loyo.oa.v2.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,6 +21,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -266,10 +265,12 @@ public class ChildTaskAddActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("childTask", taskCheckPoint);
                 MainApp.getMainApp().finishActivity(ChildTaskAddActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                LogUtil.d(" 添加子任务： "+response.getUrl());
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("创建子任务失败");
                 LogUtil.d("LOG","创建子任务失败"+error.getMessage());
                 super.failure(error);

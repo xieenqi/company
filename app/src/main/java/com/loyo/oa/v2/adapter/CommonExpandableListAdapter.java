@@ -66,7 +66,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 title.setText(wfInstance.title);
             }
             time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
-            if (wfInstance.creator != null&&!TextUtils.isEmpty(wfInstance.nextExecutor.getRealname())) {
+            if (wfInstance.creator != null&&wfInstance.nextExecutor!=null) {
                 content.setText("审批人 "+wfInstance.nextExecutor.getRealname());
             }
             ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);

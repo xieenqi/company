@@ -36,7 +36,7 @@ public class HttpErrorCheck {
             Toast(error.getMessage());
         }
         LogUtil.d("失败的错误信息："+error.getMessage());
-        LogUtil.d("接口URL："+error.getUrl());
+        LogUtil.d("error接口URL："+error.getUrl());
     }
 
 }
