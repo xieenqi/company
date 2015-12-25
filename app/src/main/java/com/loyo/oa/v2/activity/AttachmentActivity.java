@@ -90,7 +90,7 @@ public class AttachmentActivity extends BaseActivity {
                 mListAttachment = attachments;
                 bindAttachment();
                 try {
-                    LogUtil.dll("附件返回:"+Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.dll("附件返回:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

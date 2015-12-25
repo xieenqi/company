@@ -24,11 +24,16 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit.RetrofitError;
@@ -162,7 +167,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         if (!hasRights || !MainApp.user.equals(attachment.getCreator())) {
             holder.layout_action_update.setVisibility(View.GONE);
             holder.layout_action_delete.setVisibility(View.GONE);
-        }else {
+        } else {
             holder.layout_action_update.setVisibility(View.VISIBLE);
             holder.layout_action_delete.setVisibility(View.VISIBLE);
             /**权限设置*/
@@ -191,7 +196,8 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            app.getRestAdapter().create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
+
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment att, Response response) {
 

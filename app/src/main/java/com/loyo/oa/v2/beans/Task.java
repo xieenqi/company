@@ -278,14 +278,6 @@ public class Task extends BaseBeans {
         return status + "";
     }
 
-    public ArrayList<NewUser> getJoinedUsers() {
-        ArrayList<NewUser> user = new ArrayList<>();
-        for (int i = 0; i < getMembers().users.size(); i++) {
-            user.add(getMembers().users.get(i));
-        }
-        return user;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

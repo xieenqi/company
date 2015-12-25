@@ -11,10 +11,12 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -48,6 +50,10 @@ public class AttachmentRightActivity extends BaseActivity {
 
     @AfterViews
     void init() {
+        LogUtil.dll("附件权限设置 users:"+ MainApp.gson.toJson(users));
+        LogUtil.dll("附件权限设置 mAttachment:"+ MainApp.gson.toJson(mAttachment));
+
+
         super.setTitle("权限设置");
         rv_user.setHasFixedSize(true);
 
