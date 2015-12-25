@@ -20,7 +20,8 @@ public class Reviewer implements Serializable {
     public String id;
     public String name;
     public String avatar;
-
+    public Reviewer() {
+    }
     public Reviewer(NewUser user) {
         this.user = user;
     }

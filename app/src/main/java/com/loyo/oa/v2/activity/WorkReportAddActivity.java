@@ -29,6 +29,7 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -129,7 +130,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
     private String uuid = StringUtil.getUUID();
-    private Reviewer mReviewer;
+    private Reviewer mReviewer = new Reviewer();
     private Members members = new Members();
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
@@ -362,8 +363,8 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("projectId", projectId);
                 }
                 map.put("attachmentUUId", uuid);
-                map.put("reviewer", mReviewer);
-                map.put("members", members);
+                map.put("reviewer", mReviewer);//点评人
+                map.put("members", members);//抄送人
 
                 if (type != TYPE_EDIT) {
                     map.put("isDelayed", tv_time.getText().toString().contains("补签") ? true : false);
@@ -383,10 +384,10 @@ public class WorkReportAddActivity extends BaseActivity {
             case R.id.layout_reviewer:
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
+                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, bundle);
                 break;
             case R.id.layout_toUser:
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
+                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COPY_PERSONS, null);
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -428,6 +429,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(HashMap map) {
+        LogUtil.d(" 新建报告组装json："+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
@@ -478,40 +480,73 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-            case DepartmentUserActivity.request_Code:
-
-                /*负责人数据组装*/
+//            case DepartmentUserActivity.request_Code:
+//
+//                /*负责人数据组装*/
+//                User user = (User) data.getSerializableExtra(User.class.getName());
+//                //LogUtil.d(" RESULRT 信息： "+MainApp.gson.toJson(user));
+//                if (user != null) {
+//                    if (null == mReviewer) {
+//                        mReviewer = new Reviewer(user.toShortUser());
+//                    }
+//                    mReviewer.setUser(user.toShortUser());
+//                    tv_reviewer.setText(user.getRealname());
+//                }
+//                /*参与人数据组装*/
+//                else {
+//                    String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
+//                    String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+//
+//                    if (userIds != null || userNames != null) {
+//                        String ids[] = userIds.split(",");
+//                        String names[] = userNames.split(",");
+//                        for (int i = 0; i < ids.length; i++) {
+//                            NewUser newUser = new NewUser();
+//                            newUser.setId(ids[i]);
+//                            newUser.setName(names[i]);
+//                            users.add(newUser);
+//                        }
+//                        members.users = users;
+//                        tv_toUser.setText(userNames);
+//                    } else {
+//                        Toast("操作失败");
+//                    }
+//
+//                }
+//
+//                break;
+            case ExtraAndResult.REQUSET_COMMENT://点评人回调
                 User user = (User) data.getSerializableExtra(User.class.getName());
-                LogUtil.d(" RESULRT 信息： "+MainApp.gson.toJson(user));
                 if (user != null) {
-
-                        if (null == mReviewer) {
+                    if (null == mReviewer) {
                         mReviewer = new Reviewer(user.toShortUser());
                     }
                     mReviewer.setUser(user.toShortUser());
                     tv_reviewer.setText(user.getRealname());
                 }
-                /*参与人数据组装*/
-                else {
-                    String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-                    String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+//                String commentId = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
+//                String commentnName = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+//                mReviewer.id = commentId;
+//                mReviewer.name = commentnName;
+//                tv_reviewer.setText(commentnName);
+                LogUtil.d(" reviewr回调回来的信息：" + "commentId-->" + mReviewer.getUser().getId() +
+                        "commentnName-->" + mReviewer.getUser().getName() );
+                break;
+            case ExtraAndResult.REQUSET_COPY_PERSONS://抄送人回调
+                String department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
+                String department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
+                String user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
+                String user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
 
-                    if (userIds != null || userNames != null) {
-                        String ids[] = userIds.split(",");
-                        String names[] = userNames.split(",");
-                        for (int i = 0; i < ids.length; i++) {
-                            NewUser newUser = new NewUser();
-                            newUser.setId(ids[i]);
-                            newUser.setName(names[i]);
-                            users.add(newUser);
-                        }
-                        members.users = users;
-                        tv_toUser.setText(userNames);
-                    } else {
-                        Toast("操作失败");
-                    }
-
+                LogUtil.d(" menber回调回来的信息：" + "department_id-->" + department_id +
+                        "department_name-->" + department_name + "user_id-->" + user_id + "user_name-->" + user_name);
+                setMembers(user_id, user_name, department_id, department_name);
+                if (!TextUtils.isEmpty(department_name)) {
+                    tv_toUser.setText(department_name);
+                } else if (!TextUtils.isEmpty(user_name)) {
+                    tv_toUser.setText(user_name);
                 }
+
                 break;
             case SelectPicPopupWindow.GET_IMG:
                 try {
@@ -560,6 +595,46 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * 组装 抄送人 数据
+     *
+     * @param UserIds
+     * @param UserName
+     * @param departIds
+     * @param departName
+     */
+    private void setMembers(String UserIds, String UserName, String departIds, String departName) {
+        users.clear();
+        depts.clear();
+        if (!TextUtils.isEmpty(UserIds) && !TextUtils.isEmpty(UserName)) {
+            String[] userIds = UserIds.split(",");
+            String[] userNames = UserName.split(",");
+            for (int i = 0; i < userIds.length; i++) {
+                NewUser newUser = new NewUser();
+                newUser.setName(userNames[i]);
+                newUser.setId(userIds[i]);
+                users.add(newUser);
+            }
+            if (users != null && users.size() > 0) {
+                members.users = users;
+            }
+        }
+        if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
+            String[] dpIds = departIds.split(",");
+            String[] dpNames = departName.split(",");
+            for (int i = 0; i < dpIds.length; i++) {
+                NewUser newUser = new NewUser();
+                newUser.setName(dpNames[i]);
+                newUser.setId(dpIds[i]);
+                depts.add(newUser);
+            }
+            if (depts != null && depts.size() > 0) {
+                members.depts = depts;
+            }
+        }
+    }
+
 
     void selectDate() {
         DateTool.calendar = Calendar.getInstance();
