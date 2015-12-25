@@ -48,6 +48,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -217,7 +218,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
-
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
@@ -253,8 +253,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
-
-
 
     }
 

@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * 通讯录页面，包含部门，员工两个Fragment
+ * 参与人 负责人 点评人 抄送人 选择界面
  * */
 
 public class DepartmentUserActivity extends FragmentActivity implements View.OnClickListener {

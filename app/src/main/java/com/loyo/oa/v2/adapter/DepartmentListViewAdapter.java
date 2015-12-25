@@ -20,6 +20,7 @@ import com.loyo.oa.v2.beans.Department;
 import java.util.ArrayList;
 
 /**
+ * 部门选择适配器
  * Created by Administrator on 2014/12/11 0011.
  */
 public class DepartmentListViewAdapter extends BaseAdapter {

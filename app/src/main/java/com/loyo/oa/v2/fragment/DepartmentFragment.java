@@ -12,7 +12,9 @@ import android.widget.ListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.adapter.DepartmentListViewAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * 部门通讯录Fragment
@@ -66,6 +68,6 @@ public class DepartmentFragment extends Fragment {
         listView_department.setAdapter(departmentListViewAdapter);
         listView_department.setItemsCanFocus(false);
 //        listView_department.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-    }
 
+    }
 }

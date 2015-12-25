@@ -26,6 +26,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
 import java.util.ArrayList;

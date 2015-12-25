@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 人员选择适配器
+ * */
+
 public class UserGroupExpandableListAdapter extends BaseExpandableListAdapter {
 
     private DepartmentUserActivity departmentUserActivity;
