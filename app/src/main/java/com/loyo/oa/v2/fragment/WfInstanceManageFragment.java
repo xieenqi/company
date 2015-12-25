@@ -87,8 +87,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
         map.put("type", category);
         map.put("status", status);
-        
-//      map.put("bizformId", bizFormId);
+        map.put("bizformId", bizFormId);
 //      map.put("endTime", System.currentTimeMillis() / 1000);
 //      map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
 
