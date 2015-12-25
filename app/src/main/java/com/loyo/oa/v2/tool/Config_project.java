@@ -16,7 +16,7 @@ public class Config_project {
 
     public static String IP = "http://192.168.31.131";  //内部服务器
 
-    //public static String IP2 = "http://192.168.31.136";//马涛地址
+    //public static String IP2 = "http://192.168.31.136"; //马涛地址
 
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");
@@ -31,15 +31,6 @@ public class Config_project {
         return SERVER_URL_CUSTOMER().concat("/api/v2");
     }
 
-    /**
-     * 附件地址
-     *
-     * @return
-     */
-    public static String SERVER_URL_ATTACHMENT() {
-        return IP + ":8030";
-    }
-
     public static String API_URL_ATTACHMENT() {
         return SERVER_URL_ATTACHMENT().concat("/api/v2");
     }
@@ -47,6 +38,17 @@ public class Config_project {
     public static String API_URL_EXTRA() {
         return SERVER_URL_EXTRA().concat("/api/v2/");
     }
+
+    /**
+     * 附件地址
+     *
+     *
+     * @return
+     */
+    public static String SERVER_URL_ATTACHMENT() {
+        return IP + ":8030";
+    }
+
 
     /**
      * 讨论地址

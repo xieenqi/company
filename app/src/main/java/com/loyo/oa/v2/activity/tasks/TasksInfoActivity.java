@@ -28,6 +28,7 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
+import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -655,7 +656,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", false);
         bundle.putInt("fromPage", Common.TASK_PAGE);
 
-     /*   ArrayList<NewUser> users = new ArrayList<>();
+        ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getMembers() != null) {
             users.addAll(mTask.getMembers().getAllData());
         }
@@ -665,8 +666,8 @@ public class TasksInfoActivity extends BaseActivity {
         if (mTask.getResponsiblePerson() != null && !users.contains(mTask.getResponsiblePerson())) {
             users.add(mTask.getResponsiblePerson());
         }
-        bundle.putSerializable("users", users);*/
 
+        bundle.putSerializable("users", users);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
 

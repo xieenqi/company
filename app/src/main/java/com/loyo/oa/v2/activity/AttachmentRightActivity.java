@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,15 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -27,32 +32,37 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 附件权限设置
- * */
+ */
 
 @EActivity(R.layout.activity_attachment_right_setting)
 public class AttachmentRightActivity extends BaseActivity {
 
-    @Extra("users") ArrayList<User> users;
+    @Extra("users")
+    ArrayList<NewUser> users;
 
-    @Extra("data") Attachment mAttachment;
+    @Extra("data")
+    Attachment mAttachment;
 
-    @ViewById RecyclerView rv_user;
+    @ViewById
+    RecyclerView rv_user;
 
-    @ViewById CheckBox cb1;
+    @ViewById
+    CheckBox cb1;
 
-    @ViewById ViewGroup layout_type1;
+    @ViewById
+    ViewGroup layout_type1;
 
     RecyclerView.LayoutManager mLayoutManager;
 
     @AfterViews
     void init() {
-        LogUtil.dll("附件权限设置 users:"+ MainApp.gson.toJson(users));
-        LogUtil.dll("附件权限设置 mAttachment:"+ MainApp.gson.toJson(mAttachment));
-
+        LogUtil.dll("附件权限设置 users:" + MainApp.gson.toJson(users));
+        LogUtil.dll("附件权限设置 :" + MainApp.gson.toJson(users));
 
         super.setTitle("权限设置");
         rv_user.setHasFixedSize(true);
@@ -72,14 +82,20 @@ public class AttachmentRightActivity extends BaseActivity {
                         }
                     }
 
-                    //发送public请求
-                    app.getRestAdapter().create(IAttachment.class).pub(mAttachment.getId(),1, new RCallback<Attachment>() {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).pub(mAttachment.getId(), 1, new RCallback<Attachment>() {
                         @Override
                         public void success(Attachment o, Response response) {
-                            app.logUtil.i("设置全部成功!");
+                            Toast("设置成功");
                             mAttachment.SetIsPublic(true);
                             mAttachment.getViewers().clear();
                         }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            super.failure(error);
+                            HttpErrorCheck.checkError(error);
+                        }
+
                     });
                 } else {
                     layout_type1.setEnabled(true);
@@ -101,7 +117,8 @@ public class AttachmentRightActivity extends BaseActivity {
     }
 
     @Click(R.id.layout_type1)
-    void toggleCbAll() {
+    void toggleCbAll()
+    {
         cb1.toggle();
     }
 
@@ -109,7 +126,7 @@ public class AttachmentRightActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("data", mAttachment);
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
 //        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
@@ -142,14 +159,14 @@ public class AttachmentRightActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final UserViewHolder holder, int position) {
-            final User user = users.get(position);
+            final NewUser user = users.get(position);
 
             if (user != null) {
                 holder.tv_title.setText(user.getRealname());
 
                 if (!mAttachment.isPublic() && mAttachment.getViewers() != null) {
                     //回显
-                    for (User u : mAttachment.getViewers()) {
+                    for (NewUser u : mAttachment.getViewers()) {
                         if (u.equals(user)) {
                             holder.cb.setChecked(true);
                             break;
@@ -172,24 +189,30 @@ public class AttachmentRightActivity extends BaseActivity {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (b) {
-                            app.getRestAdapter().create(IAttachment.class).addViewer(mAttachment.getId(), user.id, new RCallback<Attachment>() {
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).addViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment o, Response response) {
-                                    app.logUtil.i("设置" + user.getRealname() + "附件权限成功!");
+                                    LogUtil.dll("设置" + user.getRealname() + "附件权限成功!");
                                     mAttachment.SetIsPublic(false);
 
                                     if (mAttachment.getViewers() == null) {
-                                        mAttachment.setViewers(new ArrayList<User>());
+                                        mAttachment.setViewers(new ArrayList<NewUser>());
                                     }
 
                                     mAttachment.getViewers().add(user);
                                 }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    super.failure(error);
+                                    HttpErrorCheck.checkError(error);
+                                }
                             });
                         } else {
-                            app.getRestAdapter().create(IAttachment.class).removeViewer(mAttachment.getId(), user.id, new RCallback<Attachment>() {
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).removeViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment o, Response response) {
-                                    app.logUtil.i("删除" + user.getRealname() + "附件权限成功!");
+                                    LogUtil.dll("删除" + user.getRealname() + "附件权限成功!");
                                     mAttachment.SetIsPublic(false);
 
                                     if (mAttachment.getViewers() != null) {
@@ -207,6 +230,12 @@ public class AttachmentRightActivity extends BaseActivity {
                                             layout_type1.setEnabled(true);
                                         }
                                     }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    super.failure(error);
+                                    HttpErrorCheck.checkError(error);
                                 }
                             });
                         }

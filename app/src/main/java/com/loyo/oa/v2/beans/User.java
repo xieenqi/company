@@ -82,16 +82,6 @@ public class User implements Serializable {
         user.setId(this.id);
         user.setName(this.getRealname());
         user.setAvatar(this.avatar);
-//        if (null != depts) {
-//            String deptId = "";
-//            for (int i = 0; i < depts.size(); i++) {
-//                deptId += depts.get(i).getShortDept().getId();
-//                if (i < depts.size() - 1) {
-//                    deptId += ",";
-//                }
-//            }
-//            user.setDeptId(deptId);
-//        }
         return user;
     }
 

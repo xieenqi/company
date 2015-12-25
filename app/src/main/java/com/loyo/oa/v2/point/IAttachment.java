@@ -29,7 +29,7 @@ public interface IAttachment {
 
     //设置附件公开
     @PUT("/attachment/{id}/public/{isopen}")
-    void pub(@Path("id") String id,@Path("isOpen") long isOpen, retrofit.Callback<Attachment> cb);
+    void pub(@Path("id") String id,@Path("isopen") int isOpen, retrofit.Callback<Attachment> cb);
 
     //删除附件
     @DELETE("/attachment/{id}")
