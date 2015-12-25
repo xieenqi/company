@@ -23,6 +23,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.BizFormFields;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Parameters.WfInstanceAdd;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.beans.WfTemplate;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
@@ -131,6 +133,16 @@ public class WfInstanceAddActivity extends BaseActivity {
         init_gridView_photo();
         getTempWfintance();
         projectAddWfinstance();
+        setDefaultDept();
+    }
+
+    /**
+     * 设置默认的部门 信息
+     */
+    public void setDefaultDept() {
+        Department myDepartment = MainApp.user.depts.get(0).getShortDept();
+        tv_dept.setText(myDepartment.getName());
+        deptId = myDepartment.getId();
     }
 
     /**
@@ -290,21 +302,21 @@ public class WfInstanceAddActivity extends BaseActivity {
             /*附件删除*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
 
-                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
-                        @Override
-                        public void success(Attachment attachment, Response response) {
-                            Toast("删除附件成功!");
-                            lstData_Attachment.remove(delAttachment);
-                            init_gridView_photo();
-                        }
+                final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                    @Override
+                    public void success(Attachment attachment, Response response) {
+                        Toast("删除附件成功!");
+                        lstData_Attachment.remove(delAttachment);
+                        init_gridView_photo();
+                    }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast("删除附件失败!");
+                        super.failure(error);
+                    }
+                });
 
                 break;
             /*选择部门 返回*/
@@ -489,9 +501,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-
         LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance, Response response) {
@@ -508,8 +518,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("提交审批失败");
-                LogUtil.d(" 失败原因： " + error.getMessage());
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
         });

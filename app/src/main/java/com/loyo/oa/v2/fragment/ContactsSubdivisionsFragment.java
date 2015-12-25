@@ -203,6 +203,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
 
             tv_content.setText(user.getRealname());
             String departmentName = user.departmentsName;
+           // LogUtil.d(" re人员信息： "+MainApp.gson.toJson(user));
             if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
                 departmentName = departmentName.concat(" | " + user.shortPosition.getName());
             }
