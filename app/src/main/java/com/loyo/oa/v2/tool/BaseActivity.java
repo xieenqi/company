@@ -30,7 +30,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
-import com.tencent.android.tpush.XGPushManager;
 
 
 /**
@@ -143,7 +142,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     protected void onResume() {
-        XGPushManager.onActivityStarted(this);
         getWindow().getDecorView().setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
         if (MainApp.user == null) {
@@ -155,7 +153,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     protected void onPause() {
-        XGPushManager.onActivityStoped(this);
         super.onPause();
     }
 

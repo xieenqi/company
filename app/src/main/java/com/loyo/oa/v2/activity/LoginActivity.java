@@ -1,20 +1,13 @@
 package com.loyo.oa.v2.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -28,12 +21,8 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.tool.WXUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPI;
 
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,67 +42,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     ViewGroup tv_bqq_login;
     ViewGroup tv_bwx_login;
     ViewGroup layout_third_login, layout_reset_password;
-    IWXAPI iwxapi;
     HashMap<String, String> wxUnionIds = new HashMap<>();
 
     private JSONObject jsObj;
     private int codes;
 
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (!TextUtils.isEmpty(action) && action.equals(WXUtil.ACTION_WX_CODE_RETURN))
-                getWxToken();
-        }
-    };
+//    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (!TextUtils.isEmpty(action))
+//                getWxToken();
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         super.isNeedLogin = false;
-        iwxapi = WXUtil.getInstance().getIwxapi();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(WXUtil.ACTION_WX_CODE_RETURN));
+
+        //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(WXUtil.ACTION_WX_CODE_RETURN));
         initUI();
     }
 
-    /**
-     * 获取微信TOKEN和APPID
-     */
-    private void getWxToken() {
-        wxUnionIds.clear();
-        WXUtil.getInstance().getWxAccessToken(new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                try {
-                    JSONObject json = new JSONObject(new String(bytes));
-                    Log.e(getClass().getSimpleName(), "getWxAccessToken,result : " + json.toString());
-                    if (!json.has("errcode")) {
-                        WXUtil.wxToken = (String) json.get("access_token");
-                        WXUtil.wxOpenId = (String) json.get("openid");
-                        String wxUninoId = (String) json.get("unionid");
-                        WXUtil.wxUnionid = wxUninoId;
-                        String account = edt_username.getText().toString().trim();
-                        if (TextUtils.isEmpty(account))
-                            account = "bind";
-                        wxUnionIds.put(account, wxUninoId);
-                        Log.e(getClass().getSimpleName(), "getWxAccessToken,success,wxToken : " + WXUtil.wxToken + " wxOpenId : " + WXUtil.wxOpenId + " unionid : " + WXUtil.wxUnionid);
-                        loginWithWx(wxUninoId);
-                    } else
-                        Toast("获取微信OPENID和TOKEN失败");
-                } catch (Exception e) {
-                    Log.e(getClass().getSimpleName(), "getWxAccessToken,success,exception : " + e.toString());
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast("获取微信OPENID和TOKEN失败");
-            }
-        });
-    }
 
     void initUI() {
         layout_login = (WaveView) findViewById(R.id.layout_login);
@@ -227,15 +179,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    /**
-     * 请求获取微信信息
-     */
-    private void requestWeixinInfo() {
-        SendAuth.Req req = new SendAuth.Req();
-        req.scope = WXUtil.WEIXIN_SCOPE;
-        req.state = WXUtil.WEIXIN_STATE;
-        iwxapi.sendReq(req);
-    }
 
     @Override
     public void onWaveComplete(int color) {
@@ -348,18 +291,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         login(body, 1);
     }
 
-    /**
-     * 注册到微信
-     */
-    private boolean regToWx() {
-        if (!iwxapi.isWXAppInstalled()) {
-            Toast("你的手机没有安装微信，请先安装微信客户端");
-            return false;
-        }
-        iwxapi.registerApp(WXUtil.WX_APPID);
-
-        return true;
-    }
 
 
     public class Token {
@@ -388,6 +319,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 }

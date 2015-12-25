@@ -26,6 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
@@ -46,8 +47,8 @@ import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
@@ -59,9 +60,6 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.tencent.android.tpush.XGIOperateCallback;
-import com.tencent.android.tpush.XGPushConfig;
-import com.tencent.android.tpush.XGPushManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.androidannotations.annotations.AfterViews;
@@ -217,7 +215,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
-
+        LogUtil.d(" 获得现有的token："+MainApp.getToken());
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
@@ -730,20 +728,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         });
         Global.setHeadImage(img_user, MainApp.user.avatar);
         tv_user_name.setText(MainApp.user.getRealname());
-        //注册信鸽,同时绑定帐号,绑号为用户的Id
-        XGPushConfig.enableDebug(this, Config_project.is_developer_mode);
-        String uid = String.valueOf(MainApp.user.id);
-        XGPushManager.registerPush(getApplicationContext(), uid, new XGIOperateCallback() {
-            @Override
-            public void onSuccess(Object o, int i) {
-                app.logUtil.e("信鸽绑定成功,绑定ID=" + MainApp.user.id + ",Token=" + o);
-            }
-
-            @Override
-            public void onFail(Object o, int i, String s) {
-                app.logUtil.e("信鸽绑定失败,绑定ID=" + MainApp.user.id + ",Token=" + o + ",errCode=" + i + ",msg=" + s);
-            }
-        });
 
         initBugly();
     }
