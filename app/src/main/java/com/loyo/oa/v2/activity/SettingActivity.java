@@ -18,6 +18,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
@@ -38,22 +39,22 @@ import retrofit.client.Response;
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
-    TextView tv_title_1,tv_version,tv_new_version;
+    TextView tv_title_1, tv_version, tv_new_version;
 
     ViewGroup layout_exit;
     ViewGroup img_title_left;
-    ViewGroup layout_setpassword, layout_update, layout_feedback,layout_profile;
+    ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
     ViewGroup layout_check_update;
 
     Intent mIntentCheckUpdate;
 
-    private BroadcastReceiver mReceiver=new BroadcastReceiver() {
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (null==intent)
+            if (null == intent)
                 return;
-            String action=intent.getAction();
-            if(TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)){
+            String action = intent.getAction();
+            if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
                 Global.Toast("更新完成");
             }
         }
@@ -66,7 +67,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         initUI();
 
 
-
     }
 
     @Override
@@ -77,8 +77,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     void initUI() {
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        layout_profile= (ViewGroup) findViewById(R.id.layout_profile);
-        tv_title_1= (TextView) findViewById(R.id.tv_title_1);
+        layout_profile = (ViewGroup) findViewById(R.id.layout_profile);
+        tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         tv_new_version = (TextView) findViewById(R.id.tv_new_version);
         layout_exit = (ViewGroup) findViewById(R.id.btn_setting_exit);
         layout_update = (ViewGroup) findViewById(R.id.layout_update);
@@ -118,14 +118,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         tv_title_1.setText("设置");
 
-        if (app.hasNewVersion){
+        if (app.hasNewVersion) {
             tv_new_version.setHint("有新版本");
         }
     }
 
     @Override
     public void onBackPressed() {
-        app.finishActivity(this,MainApp.ENTER_TYPE_LEFT,RESULT_CANCELED,null);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.layout_check_update:
                 mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
-                mIntentCheckUpdate.putExtra("EXTRA_TOAST",true);
+                mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
                 startService(mIntentCheckUpdate);
                 break;
             /*编辑个人资料*/
@@ -163,8 +163,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 获取个人资料
-     * */
-    void updateUserinfp(){
+     */
+    void updateUserinfp() {
 
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
@@ -182,21 +182,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void failure(RetrofitError error) {
-
-                if(error.getKind() == RetrofitError.Kind.NETWORK){
-                    Toast("请检查您的网络连接");
-                }
-                else if(error.getKind() == RetrofitError.Kind.HTTP){
-                    if(error.getResponse().getStatus() == 500){
-                        Toast("网络异常500，请稍候再试");
-                    }
-                }
+                HttpErrorCheck.checkError(error);
+//                if(error.getKind() == RetrofitError.Kind.NETWORK){
+//                    Toast("请检查您的网络连接");
+//                }
+//                else if(error.getKind() == RetrofitError.Kind.HTTP){
+//                    if(error.getResponse().getStatus() == 500){
+//                        Toast("网络异常500，请稍候再试");
+//                    }
+//                }
             }
         });
     }
 
-    /**更新 组织架构
-     *
+    /**
+     * 更新 组织架构
      */
     void initService() {
         InitDataService_.intent(mContext).start();

@@ -13,7 +13,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 
 /**
  * 【部门选择】  页面
- * Created by pj on 15/12/3.xnq
+ * Created15/12/3.xnq
  */
 public class DepartmentChoose extends BaseActivity {
 
