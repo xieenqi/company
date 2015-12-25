@@ -655,19 +655,16 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", false);
         bundle.putInt("fromPage", Common.TASK_PAGE);
 
-/*        ArrayList<NewUser> users = new ArrayList<>();
-        if (mTask.getJoinedUsers() != null) {
-            users.addAll(mTask.getJoinedUsers());
+     /*   ArrayList<NewUser> users = new ArrayList<>();
+        if (mTask.getMembers() != null) {
+            users.addAll(mTask.getMembers().getAllData());
         }
-
         if (mTask.getCreator() != null && !users.contains(mTask.getCreator())) {
             users.add(mTask.getCreator());
         }
-
         if (mTask.getResponsiblePerson() != null && !users.contains(mTask.getResponsiblePerson())) {
             users.add(mTask.getResponsiblePerson());
         }
-
         bundle.putSerializable("users", users);*/
 
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
