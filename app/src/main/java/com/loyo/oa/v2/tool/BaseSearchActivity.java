@@ -146,18 +146,21 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 Intent mIntent;
 
                 switch (befromPage){
-
                     //新建审批
                     case WFIN_ADD:
                         mIntent = new Intent();
                         mIntent.putExtra("data",lstData.get(position - 1));
                         app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,mIntent);
                         break;
-                    //新建任务
+                    //新建任务 所属项目
                     case TASKS_ADD:
                         mIntent = new Intent();
                         mIntent.putExtra("data",lstData.get(position - 1));
                         app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,mIntent);
+                        break;
+                    //新建任务 关联客户
+                    case TASKS_ADD_CUSTOMER:
+                        returnData(position - 1);
                         break;
                     //新建拜访
                     case SIGNIN_ADD:

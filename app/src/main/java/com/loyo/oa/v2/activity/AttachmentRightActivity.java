@@ -27,6 +27,10 @@ import java.util.ArrayList;
 
 import retrofit.client.Response;
 
+/**
+ * 附件权限设置
+ * */
+
 @EActivity(R.layout.activity_attachment_right_setting)
 public class AttachmentRightActivity extends BaseActivity {
 
@@ -117,6 +121,7 @@ public class AttachmentRightActivity extends BaseActivity {
             tv_content = (TextView) view.findViewById(R.id.tv_content);
             cb = (CheckBox) view.findViewById(R.id.cb);
             layout_title = (ViewGroup) view.findViewById(R.id.layout_title);
+
         }
     }
 

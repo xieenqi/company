@@ -47,6 +47,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**搜索跳转分类*/
     public static final int TASKS_ADD = 0X01;//新建任务 编辑任务
+    public static final int TASKS_ADD_CUSTOMER = 0X10;//新建任务关联客户
     public static final int SIGNIN_ADD = 0X02;//新建拜访
     public static final int WORK_ADD = 0X03; //新建工作报告
     public static final int WFIN_ADD= 0X08;   //新建审批

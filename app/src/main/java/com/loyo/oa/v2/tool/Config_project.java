@@ -10,11 +10,11 @@ public class Config_project {
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
-    public static String IP="http://112.74.66.99";    //正式服务
+    //public static String IP="http://112.74.66.99";    //正式服务
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
 
-    //public static String IP = "http://192.168.31.131";  //内部服务器
+    public static String IP = "http://192.168.31.131";  //内部服务器
 
     //public static String IP2 = "http://192.168.31.136";//马涛地址
 
@@ -43,7 +43,6 @@ public class Config_project {
     public static String API_URL_ATTACHMENT() {
         return SERVER_URL_ATTACHMENT().concat("/api/v2");
     }
-
 
     public static String API_URL_EXTRA() {
         return SERVER_URL_EXTRA().concat("/api/v2/");

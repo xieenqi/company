@@ -307,12 +307,13 @@ public class WfInstanceAddActivity extends BaseActivity {
                     });
 
                 break;
-            //选择部门 返回
+            /*选择部门 返回*/
             case RESULT_DEPT_CHOOSE:
                 UserInfo userInfo = (UserInfo) data.getSerializableExtra(DepartmentChoose.class.getName());
                 tv_dept.setText(userInfo.getShortDept().getName());
                 deptId = userInfo.getShortDept().getId();
                 break;
+
             case ExtraAndResult.REQUSET_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
                 projectId = _project.id;

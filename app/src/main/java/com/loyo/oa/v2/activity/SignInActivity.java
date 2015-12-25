@@ -160,7 +160,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     /**
      * 图片适配器绑定
-     * */
+     */
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, false);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
@@ -219,12 +219,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
-LogUtil.d(" 新增拜访传递数据："+MainApp.gson.toJson(map));
+        LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(LegWork legWork, Response response) {
                 //待接口调试
-                LogUtil.d(" 新增拜访传result："+MainApp.gson.toJson(legWork));
+                LogUtil.d(" 新增拜访传result：" + MainApp.gson.toJson(legWork));
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
@@ -236,7 +236,7 @@ LogUtil.d(" 新增拜访传递数据："+MainApp.gson.toJson(map));
                     }
                 } else {
                     Toast("提交失败" + response.getStatus());
-                    legWork.creator=MainApp.user.toShortUser();
+                    legWork.creator = MainApp.user.toShortUser();
                 }
 
             }
@@ -256,8 +256,8 @@ LogUtil.d(" 新增拜访传递数据："+MainApp.gson.toJson(map));
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
-                LogUtil.dll("获取附件成功 result:"+MainApp.gson.toJson(attachments));
-                LogUtil.dll("success code:"+response.getStatus());
+                LogUtil.dll("获取附件成功 result:" + MainApp.gson.toJson(attachments));
+                LogUtil.dll("success code:" + response.getStatus());
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -329,6 +329,7 @@ LogUtil.d(" 新增拜访传递数据："+MainApp.gson.toJson(map));
                     Global.ProcException(e);
                 }
                 break;
+            /*选择客户回调*/
             case BaseSearchActivity.REQUEST_SEARCH:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {

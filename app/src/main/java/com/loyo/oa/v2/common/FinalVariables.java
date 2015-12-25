@@ -62,6 +62,10 @@ public final class FinalVariables {
      */
     public static final int REQUEST_SELECT_PROJECT=REQUEST_DEAL_ATTACHMENT+12;
 
+    /**
+     * 关联客户
+     */
+    public static final int REQUEST_SELECT_CUSTOMER=REQUEST_DEAL_ATTACHMENT+13;
 
     /*接口地址*/
     public static String GetLogin() {

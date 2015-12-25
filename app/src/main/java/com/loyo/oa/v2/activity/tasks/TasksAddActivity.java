@@ -19,11 +19,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
@@ -54,6 +56,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
@@ -69,6 +72,7 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_tasks_add)
 public class TasksAddActivity extends BaseActivity {
+
 
     @ViewById
     ViewGroup img_title_left;
@@ -97,6 +101,8 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     TextView tv_Project;
     @ViewById
+    TextView tv_mycustomer;
+    @ViewById
     Switch switch_approve;
     @ViewById
     EditText edt_content;
@@ -119,6 +125,7 @@ public class TasksAddActivity extends BaseActivity {
     private Members member;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
+    private String aboutName;
 
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
@@ -162,9 +169,9 @@ public class TasksAddActivity extends BaseActivity {
      * 复制任务，接受到的数据绑定
      */
     void getBundle() {
-        
-        for(int i = 0;i<mTask.getMembers().getAllData().size();i++){
-            strBuf.append(mTask.getMembers().getAllData().get(i).getName()+",");
+
+        for (int i = 0; i < mTask.getMembers().getAllData().size(); i++) {
+            strBuf.append(mTask.getMembers().getAllData().get(i).getName() + ",");
         }
 
         edt_title.setText(mTask.getTitle());
@@ -173,7 +180,7 @@ public class TasksAddActivity extends BaseActivity {
         tv_toUsers.setText(strBuf.toString());
         //tv_Project.setText();
         switch_approve.setChecked(true);
-        isCopy = mTask!=null?true:false;
+        isCopy = mTask != null ? true : false;
 
         member.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();  //负责人
@@ -230,6 +237,7 @@ public class TasksAddActivity extends BaseActivity {
         map.put("remindtime", mRemind);
         map.put("reviewFlag", switch_approve.isChecked());
         map.put("attachmentUUId", uuid);
+        map.put("customerName", aboutName);
 
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
@@ -269,7 +277,7 @@ public class TasksAddActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -319,8 +327,8 @@ public class TasksAddActivity extends BaseActivity {
 
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mDeadline =Long.parseLong(DateTool.getDataOne(str));
-                        LogUtil.dll("截至时间:"+mDeadline+"");
+                        mDeadline = Long.parseLong(DateTool.getDataOne(str));
+                        LogUtil.dll("截至时间:" + mDeadline + "");
 
                     }
                 });
@@ -346,6 +354,13 @@ public class TasksAddActivity extends BaseActivity {
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt("from", TASKS_ADD);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                break;
+
+            /*关联客户*/
+            case R.id.layout_mycustomer:
+                Bundle bundle3 = new Bundle();
+                bundle3.putInt("from", TASKS_ADD_CUSTOMER);
+                app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
                 break;
         }
     }
@@ -430,6 +445,19 @@ public class TasksAddActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+
+            /*关联任务回调*/
+            case FinalVariables.REQUEST_SELECT_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                if (null != customer) {
+                    aboutName = customer.name;
+                    tv_mycustomer.setText(customer.name);
+                } else {
+                    tv_mycustomer.setText("无");
+                }
+                break;
+
+            /*所属项目回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
                 projectId = _project.id;

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.AttachmentRightActivity_;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
@@ -29,6 +31,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.util.ArrayList;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class AttachmentSwipeAdapter extends BaseAdapter {
@@ -162,7 +165,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }else {
             holder.layout_action_update.setVisibility(View.VISIBLE);
             holder.layout_action_delete.setVisibility(View.VISIBLE);
-            //权限设置
+            /**权限设置*/
             holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -177,7 +180,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                 }
             });
 
-            //删除
+            /**附件删除*/
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -195,6 +198,12 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                                     if (mAction != null) {
                                         mAction.afterDelete(attachment);
                                     }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    super.failure(error);
+                                    HttpErrorCheck.checkError(error);
                                 }
                             });
 

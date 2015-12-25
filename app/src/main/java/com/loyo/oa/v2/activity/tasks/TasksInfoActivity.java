@@ -108,6 +108,8 @@ public class TasksInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_task_project;
     @ViewById
+    TextView tv_task_aboutuser;
+    @ViewById
     TextView tv_toUsers;
     @ViewById
     TextView tv_responsiblePerson;
@@ -218,6 +220,11 @@ public class TasksInfoActivity extends BaseActivity {
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
+        }
+        if(null != mTask.getCustomerName()){
+            tv_task_aboutuser.setText("关联客户:"+mTask.getCustomerName());
+        }else{
+            tv_task_aboutuser.setVisibility(View.GONE);
         }
     }
 
