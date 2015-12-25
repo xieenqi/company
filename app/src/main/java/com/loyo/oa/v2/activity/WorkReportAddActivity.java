@@ -480,41 +480,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-//            case DepartmentUserActivity.request_Code:
-//
-//                /*负责人数据组装*/
-//                User user = (User) data.getSerializableExtra(User.class.getName());
-//                //LogUtil.d(" RESULRT 信息： "+MainApp.gson.toJson(user));
-//                if (user != null) {
-//                    if (null == mReviewer) {
-//                        mReviewer = new Reviewer(user.toShortUser());
-//                    }
-//                    mReviewer.setUser(user.toShortUser());
-//                    tv_reviewer.setText(user.getRealname());
-//                }
-//                /*参与人数据组装*/
-//                else {
-//                    String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-//                    String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-//
-//                    if (userIds != null || userNames != null) {
-//                        String ids[] = userIds.split(",");
-//                        String names[] = userNames.split(",");
-//                        for (int i = 0; i < ids.length; i++) {
-//                            NewUser newUser = new NewUser();
-//                            newUser.setId(ids[i]);
-//                            newUser.setName(names[i]);
-//                            users.add(newUser);
-//                        }
-//                        members.users = users;
-//                        tv_toUser.setText(userNames);
-//                    } else {
-//                        Toast("操作失败");
-//                    }
-//
-//                }
-//
-//                break;
             case ExtraAndResult.REQUSET_COMMENT://点评人回调
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
@@ -524,13 +489,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     mReviewer.setUser(user.toShortUser());
                     tv_reviewer.setText(user.getRealname());
                 }
-//                String commentId = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-//                String commentnName = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-//                mReviewer.id = commentId;
-//                mReviewer.name = commentnName;
-//                tv_reviewer.setText(commentnName);
-                LogUtil.d(" reviewr回调回来的信息：" + "commentId-->" + mReviewer.getUser().getId() +
-                        "commentnName-->" + mReviewer.getUser().getName() );
                 break;
             case ExtraAndResult.REQUSET_COPY_PERSONS://抄送人回调
                 String department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
@@ -538,15 +496,12 @@ public class WorkReportAddActivity extends BaseActivity {
                 String user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                 String user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
 
-                LogUtil.d(" menber回调回来的信息：" + "department_id-->" + department_id +
-                        "department_name-->" + department_name + "user_id-->" + user_id + "user_name-->" + user_name);
                 setMembers(user_id, user_name, department_id, department_name);
                 if (!TextUtils.isEmpty(department_name)) {
                     tv_toUser.setText(department_name);
                 } else if (!TextUtils.isEmpty(user_name)) {
                     tv_toUser.setText(user_name);
                 }
-
                 break;
             case SelectPicPopupWindow.GET_IMG:
                 try {
