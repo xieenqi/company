@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         switch (position) {
             /*暂时用于测试新版选人 跳转*/
             case 0:
-/*                Intent intent = new Intent(this,SelectDetUserActivity.class);
+                /*Intent intent = new Intent(this,SelectDetUserActivity.class);
                 startActivity(intent);*/
                 _class = TasksAddActivity_.class;
                 break;

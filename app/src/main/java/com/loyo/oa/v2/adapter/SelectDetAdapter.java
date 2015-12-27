@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ public class SelectDetAdapter extends BaseAdapter {
     public LayoutInflater mInflater;
 
 
-    public SelectDetAdapter(Context mContext,ArrayList<Department> listDepartment){
+    public SelectDetAdapter(Context mContext, ArrayList<Department> listDepartment) {
         this.mContext = mContext;
         this.listDepartment = listDepartment;
         mInflater = LayoutInflater.from(mContext);
@@ -52,7 +53,9 @@ public class SelectDetAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
+
         ViewHolder holder = null;
+
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_selectcustomer_left_lv, null);
@@ -61,6 +64,7 @@ public class SelectDetAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
         holder.detName.setText(listDepartment.get(position).getName());
         return convertView;
     }

@@ -71,22 +71,23 @@
         </LinearLayout>
     </RelativeLayout>
 
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal">
+
         <ListView
             android:id="@+id/lv_selectdetuser_left"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
-            android:layout_weight="0.35" />
+            android:layout_weight="0.4" />
+
         <ListView
+            android:background="@color/gray"
             android:id="@+id/lv_selectdetuser_right"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"/>
 
     </LinearLayout>
-
 </LinearLayout>
