@@ -97,7 +97,6 @@ public class DepartmentListViewAdapter extends BaseAdapter {
                     bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, select_type);
                     bundle.putInt(DepartmentUserActivity.STR_SHOW_TYPE, show_type);
 
-
 //                    app.startActivity((Activity)context,DepartmentActivity.class,MainApp.ENTER_TYPE_RIGHT,false,bundle);
 
                     app.startActivityForResult((Activity) context, DepartmentActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentActivity.RESULT_ON_ACTIVITY_RETURN, bundle);

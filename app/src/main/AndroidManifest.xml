@@ -97,40 +97,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- 【必须】 (2.30及以上版新增)展示通知的activity -->
-        <!-- 【注意】 如果被打开的activity是启动模式为SingleTop，SingleTask或SingleInstance，请根据通知的异常自查列表第8点处理 -->
-        <activity
-            android:name="com.tencent.android.tpush.XGPushActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action" />
-            </intent-filter>
-        </activity>
 
-        <!-- 【必须】 信鸽service -->
-        <service
-            android:name="com.tencent.android.tpush.service.XGPushService"
-            android:exported="true"
-            android:persistent="true"
-            android:process=":xg_service_v2" />
-
-        <!-- 【必须】 通知service，此选项有助于提高抵达率 -->
-        <service
-            android:name="com.tencent.android.tpush.rpc.XGRemoteService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.loyo.oa.v2.debug.PUSH_ACTION" />
-            </intent-filter>
-        </service>
-
-        <meta-data
-            android:name="XG_V2_ACCESS_ID"
-            android:value="@string/xg_v2_access_id" />
-        <meta-data
-            android:name="XG_V2_ACCESS_KEY"
-            android:value="@string/xg_v2_access_key" />
-
-        <!-- 上面是信鸽的配置 -->
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -611,68 +578,14 @@
             </intent-filter>
         </receiver>
 
-        <!-- APP实现的Receiver，用于接收消息和结果反馈 -->
-        <receiver android:name=".service.XgMessageReceiver">
-            <intent-filter>
 
-                <!-- 接收消息透传 -->
-                <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE" />
-                <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
-                <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
-            </intent-filter>
-        </receiver>
 
         <!-- 高德定位后台服务 -->
         <service
             android:name=".service.AMapService"
             android:enabled="true" />
 
-        <!-- 小米推送 -->
-        <receiver
-            android:name=".service.XmPushReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR" />
-            </intent-filter>
-        </receiver>
 
-        <service
-            android:name="com.xiaomi.push.service.XMPushService"
-            android:enabled="true"
-            android:process=":pushservice" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
-        <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.PingReceiver"
-            android:exported="false"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.xiaomi.push.PING_TIMER" />
-            </intent-filter>
-        </receiver>
-
-        <!-- 激光推送 -->
         <!-- Required SDK 核心功能 -->
         <!-- option since 2.0.5 可配置PushService，DaemonService,PushReceiver,AlarmReceiver的android:process参数 将JPush相关组件设置为一个独立进程 -->
         <!-- 如：android:process=":remote" -->
@@ -764,7 +677,7 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="023bdeb58e5fefe8a2aeeaed" />
+            android:value="f78e54766a8910db098ce699" />
 
         <service
             android:name=".service.JushService"

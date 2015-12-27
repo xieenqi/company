@@ -29,7 +29,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.tencent.android.tpush.XGPushManager;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -224,10 +223,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         //安全退出
         MainApp.setToken(null);
         MainApp.user = null;
-
-        //解除信鸽与帐号的绑定
-        XGPushManager.registerPush(getApplicationContext(), "*");
-
         //清楚sp
         SharedUtil.clearInfo(mContext);
 

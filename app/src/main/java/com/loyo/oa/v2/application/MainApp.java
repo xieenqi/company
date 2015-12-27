@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
@@ -44,9 +43,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.xiaomi.channel.commonutils.logger.LoggerInterface;
-import com.xiaomi.mipush.sdk.Logger;
-import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import cn.jpush.android.api.JPushInterface;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
@@ -164,12 +161,11 @@ public class MainApp extends Application {
         super.onCreate();
         mainApp = this;
         init();
-        initXiaomi();
         loadAreaCodeTable();
         loadIndustryCodeTable();
-        //       getWindowWH();
-        //JPushInterface.setDebugMode(true);
-        //JPushInterface.init(this);
+           //    getWindowWH();
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
     static RestAdapter restAdapter = null;
@@ -224,43 +220,7 @@ public class MainApp extends Application {
         return restAdapter;
     }
 
-    /**
-     * 初始化小米推送服务
-     */
-    private void initXiaomi() {
-        //初始化push推送服务
-        try {
-            MiPushClient.checkManifest(this);
-        } catch (Exception e) {
-            Log.e(TAG, "小米Manifest配置错误 ");
-            e.printStackTrace();
-        }
-        boolean shouldInitXm = Utils.shouldInitXm(this);
-        Log.e(TAG, "shouldInitXm : " + shouldInitXm);
-        if (shouldInitXm) {
-            MiPushClient.registerPush(this, FinalVariables.XM_APP_ID, FinalVariables.XM_APP_KEY);
-            MiPushClient.setAlias(this, FinalVariables.XM_APP_ALIAS, null);
-        }
-        //打开Log
-        LoggerInterface newLogger = new LoggerInterface() {
 
-            @Override
-            public void setTag(String tag) {
-                // ignore
-            }
-
-            @Override
-            public void log(String content, Throwable t) {
-                Log.e(TAG, content, t);
-            }
-
-            @Override
-            public void log(String content) {
-                Log.e(TAG, content);
-            }
-        };
-        Logger.setLogger(this, newLogger);
-    }
 
     void init() {
         CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
