@@ -97,8 +97,6 @@
             </intent-filter>
         </receiver>
 
-
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_api_key" />
@@ -554,6 +552,7 @@
             />
         <activity
             android:name=".activity.SelectDetUserActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
