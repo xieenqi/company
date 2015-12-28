@@ -31,6 +31,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.Department;
@@ -39,6 +40,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttendance;
@@ -73,12 +75,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuDismissListener, PopupMenu.OnPopupMenuItemClickListener, LocationUtil.AfterLocation {
+public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuDismissListener,
+        PopupMenu.OnPopupMenuItemClickListener, LocationUtil.AfterLocation {
 
     @ViewById(R.id.tv_title_1)
     TextView tv_user_name;
@@ -125,7 +133,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 主界面弹窗  新建任务  提交报告 审批申请 添加客户 拜访签到
-     *xnq
+     * xnq
+     *
      * @param position
      * @param item
      */
@@ -218,7 +227,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
-        LogUtil.d(" 获得现有的token："+MainApp.getToken());
+        LogUtil.d(" 获得现有的token：" + MainApp.getToken());
+
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
@@ -231,7 +241,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_signin, "客戶拜访", SignInManagerActivity_.class),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
-                new ClickItem(R.drawable.home_task, "任务计划",TasksManageActivity_.class),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
@@ -255,6 +265,33 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         checkUpdateService();
         updateUser();
 
+    }
+
+    /**
+     * 给激光推送 设置别名
+     */
+    public void setJpushAlias() {
+        //给激光推送 设置别名
+        if (null == MainApp.user) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    LogUtil.d(" Jpush user kongkong 空空");
+                    setJpushAlias();
+                }
+            }, 5000);
+            return;
+        }
+        JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                if (i != 0) {
+                    setJpushAlias();
+                }
+                LogUtil.d(" 激光的alias： " + s);
+            }
+        });
     }
 
     /**
@@ -668,6 +705,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 return;
             }
         }
+        //初始化 用户数据
         if (!mInitData) {
             initData();
             mInitData = true;
@@ -737,6 +775,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     void initData() {
         Intent intent = new Intent(mContext, InitDataService_.class);
         startService(intent);
+        setJpushAlias();
     }
 
     @Background
@@ -771,6 +810,32 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onResume();
         if (User.getImageUrl() != null)
             ImageLoader.getInstance().displayImage(User.getImageUrl(), img_user);
+        intentJpushInfo();
+    }
+
+    /**
+     * 激光推送要跳转 的 页面
+     * buzzType 1，任务2，报告3，审批
+     */
+    public void intentJpushInfo() {
+        if (MainApp.jpushData != null) {
+            Intent intent = new Intent();
+            switch (MainApp.jpushData.buzzType) {
+                case 1:
+                    intent.setClass(MainActivity.this,TasksInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID,MainApp.jpushData.buzzId);
+                case 2:
+                    intent.setClass(MainActivity.this,WorkReportsInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID,MainApp.jpushData.buzzId);
+                case 3:
+                    intent.setClass(MainActivity.this,WfinstanceInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID,MainApp.jpushData.buzzId);
+
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+            }
+        }
     }
 
     @Override

@@ -48,10 +48,11 @@ public class LauncherActivity extends BaseActivity {
                 //动画加载完成
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    Intent intent = new Intent(LauncherActivity.this, MainActivity_.class);
-                    if (TextUtils.isEmpty(MainApp.getToken())) {
-                        intent.setClass(LauncherActivity.this, LoginActivity.class);
-                    }
+                    Intent intent = new Intent(LauncherActivity.this,
+                            TextUtils.isEmpty(MainApp.getToken())?LoginActivity.class:MainActivity_.class);
+//                    if (TextUtils.isEmpty(MainApp.getToken())) {
+//                        intent.setClass(LauncherActivity.this, LoginActivity.class);
+//                    }
                     startActivity(intent);
                     finish();
                     overridePendingTransition(0, 0);

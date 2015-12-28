@@ -24,6 +24,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
@@ -68,6 +69,8 @@ public class MainApp extends Application {
 
     private static MainApp mainApp;
     public static Gson gson;
+    public static HttpJpushNotification jpushData;
+
 
     public DisplayImageOptions options_rounded;
     public static DisplayImageOptions options_3;
@@ -440,7 +443,8 @@ public class MainApp extends Application {
         MultiDex.install(this);
     }
 
-    public void startActivity(Activity activity, Class<?> cls, int enterType, boolean isFinish, Bundle bundle, boolean FLAG_ACTIVITY_FORWARD_RESULT) {
+    public void startActivity(Activity activity, Class<?> cls, int enterType, boolean isFinish,
+                              Bundle bundle, boolean FLAG_ACTIVITY_FORWARD_RESULT) {
         Intent intent = new Intent();
         intent.setClass(this, cls);
         if (bundle != null) {

@@ -21,6 +21,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
@@ -111,7 +112,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     @Extra("workreport") WorkReport mWorkReport;
 
-    @Extra("Id") String mId;
+    @Extra(ExtraAndResult.EXTRA_ID) String mId;//推送的id
 
     public PaginationX<Discussion> mPageDiscussion;
 
@@ -148,8 +149,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 报告删除
-     * */
-    void delete_WorkReport(){
+     */
+    void delete_WorkReport() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(getId(), new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
@@ -168,7 +169,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 获取讨论内容，服务端已启用，暂注释
-     * */
+     */
 /*    @Background
     void getDiscussion() {
         app.getRestAdapter().create(IWorkReport.class).getDiscussions(getId(), new RCallback<PaginationX<Discussion>>() {
@@ -254,7 +255,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         if (null != mWorkReport.getProject() && mWorkReport.getProject().title.length() != 0) {
             tv_ptoject.setText(mWorkReport.getProject().title);
-        }else{
+        } else {
             tv_ptoject.setText("无");
         }
 
@@ -322,9 +323,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                }
-
-                else if ((data.getBooleanExtra("extra", false))) {
+                } else if ((data.getBooleanExtra("extra", false))) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
@@ -381,7 +380,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 附件上传
-     * */
+     */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
         Bundle bundle = new Bundle();
@@ -394,7 +393,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 讨论
-     * */
+     */
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
         Bundle bundle = new Bundle();
@@ -413,12 +412,12 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
             case R.id.img_title_right:
 
-                if(mWorkReport.isReviewed()){
+                if (mWorkReport.isReviewed()) {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("delete", true);
                     intent.putExtra("extra", "复制报告");
                     startActivityForResult(intent, MSG_DELETE_WORKREPORT);
-                }else{
+                } else {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("delete", true);
                     intent.putExtra("edit", true);

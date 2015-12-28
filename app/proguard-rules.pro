@@ -15,5 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class com.loyo.oa.v2.service.XmPushReceiver {*;}
--keep class com.tencent.mm.sdk.** {*;}
+# 激光的 免混淆
+-dontoptimize
+-dontpreverify
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+#==================gson==========================
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
+
+#==================protobuf======================
+-dontwarn com.google.**
+-keep class com.google.protobuf.** {*;}
+
+
+
