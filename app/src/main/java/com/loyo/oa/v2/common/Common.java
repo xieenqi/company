@@ -127,6 +127,7 @@ public final class Common {
         return result;
     }
     public static String companyId;
+
     /**
      * 获取 本部门 的人员信息  xnq
      *
@@ -298,7 +299,7 @@ public final class Common {
     }
 
     /**
-     * 缓存  组织 架构 信息 xnq
+     * 缓存 组织 架构 信息 xnq
      *
      * @param _lstDepartment
      */

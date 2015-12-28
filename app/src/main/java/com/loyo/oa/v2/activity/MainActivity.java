@@ -133,7 +133,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public void onPopupMenuItemClick(int position, PopupMenuItem item) {
         Class<?> _class = null;
         switch (position) {
+            /*暂时用于测试新版选人 跳转*/
             case 0:
+                /*Intent intent = new Intent(this,SelectDetUserActivity.class);
+                startActivity(intent);*/
                 _class = TasksAddActivity_.class;
                 break;
             case 1:
@@ -251,8 +254,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
-
-
 
     }
 

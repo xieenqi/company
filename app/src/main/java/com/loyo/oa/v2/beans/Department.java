@@ -30,8 +30,6 @@ public class Department implements Serializable {
         this.xpath = xpath;
     }
 
-
-
     public long getCreatedAt() {
         return createdAt;
     }

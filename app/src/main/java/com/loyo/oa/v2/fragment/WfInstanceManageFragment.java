@@ -87,7 +87,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
         map.put("type", category);
         map.put("status", status);
-        map.put("bizformId", bizFormId);
+        map.put("bizformId", bizFormId); //自定义筛选字段
 //      map.put("endTime", System.currentTimeMillis() / 1000);
 //      map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
 
@@ -160,6 +160,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
             }
         });
 
+        /**
+         * 顶部删选Menu
+         * */
         mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
             @Override
             //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引

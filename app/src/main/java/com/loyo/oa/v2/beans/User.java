@@ -39,6 +39,14 @@ public class User implements Serializable {
     public Position shortPosition;
     public Department shortDept;
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public static String getImageUrl() {
         return imageUrl;
     }

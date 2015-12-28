@@ -20,6 +20,7 @@ import com.loyo.oa.v2.beans.Department;
 import java.util.ArrayList;
 
 /**
+ * 部门选择适配器
  * Created by Administrator on 2014/12/11 0011.
  */
 public class DepartmentListViewAdapter extends BaseAdapter {
@@ -95,7 +96,6 @@ public class DepartmentListViewAdapter extends BaseAdapter {
                     bundle.putString(DepartmentUserActivity.STR_SUPER_NAME, listDepartment.get(position).getName());
                     bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, select_type);
                     bundle.putInt(DepartmentUserActivity.STR_SHOW_TYPE, show_type);
-
 
 //                    app.startActivity((Activity)context,DepartmentActivity.class,MainApp.ENTER_TYPE_RIGHT,false,bundle);
 
