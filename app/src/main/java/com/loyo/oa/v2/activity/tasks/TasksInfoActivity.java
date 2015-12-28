@@ -28,8 +28,8 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
@@ -130,7 +130,7 @@ public class TasksInfoActivity extends BaseActivity {
     RatingBar ratingBar_Task;
     @Extra("task")
     Task mTask;
-    @Extra("Id")
+    @Extra(ExtraAndResult.EXTRA_ID)//推送的id
     String mId;
 
     public String taskId;  //任务ID
@@ -162,12 +162,6 @@ public class TasksInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("任务详情");
-
-        /*是否为参与人判断*/
-        userId = DBManager.Instance().getUser().getId();
-        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
-        isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
-
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -187,6 +181,10 @@ public class TasksInfoActivity extends BaseActivity {
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
         }
+        /*是否为参与人判断*/
+        userId = DBManager.Instance().getUser().getId();
+        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
+        isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
     }
 
     /**
@@ -222,9 +220,9 @@ public class TasksInfoActivity extends BaseActivity {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
         }
-        if(null != mTask.getCustomerName()){
-            tv_task_aboutuser.setText("关联客户:"+mTask.getCustomerName());
-        }else{
+        if (null != mTask.getCustomerName()) {
+            tv_task_aboutuser.setText("关联客户:" + mTask.getCustomerName());
+        } else {
             tv_task_aboutuser.setVisibility(View.GONE);
         }
     }
@@ -270,7 +268,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
-            String s = DateTool.timet(mTask.getPlanEndAt()+"") + " 截止";
+            String s = DateTool.timet(mTask.getPlanEndAt() + "") + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
             }
@@ -586,7 +584,7 @@ public class TasksInfoActivity extends BaseActivity {
                 else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
-                    mBundle.putSerializable("data",mTask);
+                    mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
                 }

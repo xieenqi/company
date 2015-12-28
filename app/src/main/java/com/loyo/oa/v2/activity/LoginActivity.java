@@ -12,21 +12,18 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import retrofit.RestAdapter;
@@ -236,44 +233,45 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 MainApp.setToken(token.getAccess_token());
                 SharedUtil.put(mContext, FinalVariables.TOKEN, token.getAccess_token());
                 app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
-
+               // LogUtil.d("登陆过后：uer : " + response.getBody());
             }
 
             @Override
             public void failure(RetrofitError error) {
-            LogUtil.d("登陆失败："+error.getMessage());
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-
-                    switch (type) {
-
-                        case 1:
-                          //Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
-                            Toast("微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号");
-                            break;
-
-                        case 2:
-                            try {
-                                String errorStr = Utils.convertStreamToString(error.getResponse().getBody().in());
-                                codes = error.getResponse().getStatus();
-                                jsObj = new JSONObject(errorStr);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            if (codes == 500) {
-                                Toast("手机号码或密码错误");
-                            } else if (codes == 401) {
-                                Toast("登录失败，请稍后再试");
-                            }
-
-                            break;
-                    }
-                }
+                HttpErrorCheck.checkError(error);
+//                LogUtil.d("登陆失败：" + error.getMessage());
+//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                    Toast("请检查您的网络连接");
+//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+//
+//                    switch (type) {
+//
+//                        case 1:
+//                            //Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
+//                            Toast("微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号");
+//                            break;
+//
+//                        case 2:
+//                            try {
+//                                String errorStr = Utils.convertStreamToString(error.getResponse().getBody().in());
+//                                codes = error.getResponse().getStatus();
+//                                jsObj = new JSONObject(errorStr);
+//
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                            if (codes == 500) {
+//                                Toast("手机号码或密码错误");
+//                            } else if (codes == 401) {
+//                                Toast("登录失败，请稍后再试");
+//                            }
+//
+//                            break;
+//                    }
+//                }
 
                 layout_login.setText("登录失败");
                 changeColor(R.color.title_bg1, R.color.red);
@@ -282,15 +280,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         });
     }
 
-    /**
-     * 微信登录
-     */
-    private void loginWithWx(String wxUninoId) {
-        HashMap<String, Object> body = new HashMap<String, Object>();
-        body.put("wxUnionId", wxUninoId);
-        login(body, 1);
-    }
-
+//    /**
+//     * 微信登录
+//     */
+//    private void loginWithWx(String wxUninoId) {
+//        HashMap<String, Object> body = new HashMap<String, Object>();
+//        body.put("wxUnionId", wxUninoId);
+//        login(body, 1);
+//    }
 
 
     public class Token {

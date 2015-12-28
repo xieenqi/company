@@ -9,6 +9,7 @@ import android.view.View;
 
     public class MyLayoutUtils extends LinearLayoutManager {
 
+
         public MyLayoutUtils(Context context) {
             super(context);
             // TODO Auto-generated constructor stub

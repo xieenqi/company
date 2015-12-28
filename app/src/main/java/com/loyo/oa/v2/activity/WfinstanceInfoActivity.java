@@ -24,6 +24,7 @@ import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
@@ -105,6 +106,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @Extra("data")
     WfInstance wfInstance;
 
+    @Extra(ExtraAndResult.EXTRA_ID)
+    String wfInstanceId;
 
     @AfterViews
     void init() {
