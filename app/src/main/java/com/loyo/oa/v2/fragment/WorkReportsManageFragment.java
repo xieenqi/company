@@ -6,18 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportsSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
@@ -95,7 +94,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra("workreport", (WorkReport) mAdapter.getChild(groupPosition, childPosition));
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReport) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WorkReportsInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }

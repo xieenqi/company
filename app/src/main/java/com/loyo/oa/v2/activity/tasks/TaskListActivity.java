@@ -14,6 +14,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ITask;
@@ -105,7 +106,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                     Task task=(Task) adapter.getChild(groupPosition, childPosition);
-                    previewTask(task);
+                    openTaskDetial(task);
                     return false;
                 }
             });
@@ -170,10 +171,10 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      *
      * @param task
      */
-    private void previewTask(Task task) {
+    private void openTaskDetial(Task task) {
         Intent intent = new Intent(this, TasksInfoActivity_.class);
-        intent.putExtra("task", task);
-        intent.putExtra("mCustomer", mCustomer);
+        intent.putExtra(ExtraAndResult.EXTRA_ID, task.getId());
+        //intent.putExtra("mCustomer", mCustomer);
         startActivityForResult(intent, BaseCommonMainListFragment.REQUEST_REVIEW);
     }
 

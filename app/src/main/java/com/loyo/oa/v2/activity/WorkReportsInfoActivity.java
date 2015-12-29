@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -110,9 +111,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_visit_customers_num;
 
-    @Extra("workreport") WorkReport mWorkReport;
+    //@Extra("workreport")
+    WorkReport mWorkReport;
 
-    @Extra(ExtraAndResult.EXTRA_ID) String mId;//推送的id
+    @Extra(ExtraAndResult.EXTRA_ID) String workReportId;//推送的id
 
     public PaginationX<Discussion> mPageDiscussion;
 
@@ -123,16 +125,21 @@ public class WorkReportsInfoActivity extends BaseActivity {
         getData_WorkReport();
     }
 
-    String getId() {
-        return (mWorkReport != null) ? mWorkReport.getId() : mId;
-    }
+//    String getId() {
+//        return (mWorkReport != null) ? mWorkReport.getId() : mId;
+//    }
 
     /**
      * 获取报告详情
      */
     @Background
     void getData_WorkReport() {
-        app.getRestAdapter().create(IWorkReport.class).get(getId(), new RCallback<WorkReport>() {
+        if (TextUtils.isEmpty(workReportId)) {
+            Toast("参数不完整");
+            finish();
+            return;
+        }
+        app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
                 mWorkReport = _workReport;
@@ -151,7 +158,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 报告删除
      */
     void delete_WorkReport() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(getId(), new RCallback<WorkReport>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(workReportId, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
                 Intent intent = new Intent();

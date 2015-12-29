@@ -9,12 +9,12 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.WfinstanceSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -99,7 +99,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra("data", (WfInstance) mAdapter.getChild(groupPosition, childPosition));
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstance) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }

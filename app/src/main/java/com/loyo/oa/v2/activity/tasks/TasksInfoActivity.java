@@ -128,10 +128,10 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @ViewById
     RatingBar ratingBar_Task;
-    @Extra("task")
+    //@Extra("task")
     Task mTask;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id
-    String mId;
+            String mTaskId;
 
     public String taskId;  //任务ID
     public String userId;
@@ -171,9 +171,9 @@ public class TasksInfoActivity extends BaseActivity {
         allUsers = new ArrayList<>();
     }
 
-    String getId() {
-        return (mTask != null) ? mTask.getId() : mId;
-    }
+//    String getId() {
+//        return (mTask != null) ? mTask.getId() : mId;
+//    }
 
     void updateUI() {
         if (mTask != null) {
@@ -386,7 +386,12 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Background
     void getTask() {
-        app.getRestAdapter().create(ITask.class).getTask(getId(), new RCallback<Task>() {
+        if (TextUtils.isEmpty(mTaskId)) {
+            Toast("参数不完整");
+            finish();
+            return;
+        }
+        app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
                 try {
@@ -463,7 +468,7 @@ public class TasksInfoActivity extends BaseActivity {
         //信鸽透传时可能task为空 ykb 07-16
         if (null != mTask && mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
-                    .commitTask(null != mTask ? mTask.getId() : mId, new RCallback<Task>() {
+                    .commitTask(null != mTask ? mTask.getId() : mTaskId, new RCallback<Task>() {
                         @Override
                         public void success(Task task, Response response) {
                             if (task != null) {

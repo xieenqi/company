@@ -10,14 +10,13 @@ import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
 
@@ -88,7 +87,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra("task", (Task) mAdapter.getChild(groupPosition, childPosition));
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((Task) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, TasksInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,7 +104,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
     public ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
-    @Extra("data")
+    //@Extra("data")
     WfInstance wfInstance;
 
     @Extra(ExtraAndResult.EXTRA_ID)
@@ -113,7 +114,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     void init() {
         super.setTitle("审批详情");
         initUI();
-        requestData_wfinstance();
+        getWfinstanceData();
     }
 
     void initData_WorkflowValues() {
@@ -304,8 +305,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
     /**
      * 获取审批详情
      */
-    void requestData_wfinstance() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstance.getId(), new RCallback<WfInstance>() {
+    void getWfinstanceData() {
+        if(TextUtils.isEmpty(wfInstanceId)){
+            Toast("参数不完整！");
+            finish();
+            return;
+        }
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance_current, Response response) {
                 wfInstance = wfInstance_current;

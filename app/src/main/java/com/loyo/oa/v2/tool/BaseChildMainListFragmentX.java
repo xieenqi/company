@@ -27,6 +27,7 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
 
@@ -109,7 +110,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 break;
         }
     }
+
     int pageIndex;
+
     @Override
     public void GetData(final Boolean isTopAdd, final Boolean isBottomAdd) {
         if (null == mProject) {
@@ -119,7 +122,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         if (lstData == null) {
             lstData = new ArrayList();
         }
-         pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
+        pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
         int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : pagination.getPageSize();
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
@@ -145,7 +148,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                     changeAdapter();
                     expand();
                 } else {
-                    if (!(paginationx.getRecords().size() >0)&&pageIndex==1) {
+                    if (!(paginationx.getRecords().size() > 0) && pageIndex == 1) {
                         pagingGroupDatas.clear();
                         changeAdapter();
                     }
@@ -230,13 +233,13 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     public void openItem(int groupPosition, int childPosition) {
         switch (type) {
             case 1:
-                goToReviewPage(WorkReportsInfoActivity_.class, "workreport", (WorkReport) adapter.getChild(groupPosition, childPosition));
+                goToReviewPage(WorkReportsInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WorkReport) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 2:
-                goToReviewPage(TasksInfoActivity_.class, "task", (Task) adapter.getChild(groupPosition, childPosition));
+                goToReviewPage(TasksInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((Task) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 12:
-                goToReviewPage(WfinstanceInfoActivity_.class, "data", (WfInstance) adapter.getChild(groupPosition, childPosition));
+                goToReviewPage(WfinstanceInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WfInstance) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
         }
     }
