@@ -20,58 +20,22 @@ public class ProjectMember extends BaseBeans {
 
     public ProjectMember(String userId, boolean canreadall) {
         this.userId = userId;
-        this.canreadall = canreadall;
+        this.canReadAll = canreadall;
     }
 
-    public boolean canreadall;// (bool, optional): ,
+    public boolean canReadAll;// (bool, optional): ,
     public String id;// (int64, optional): ,
     public boolean ismanager; //(bool, optional): ,
     public long projectId;// (int64, optional): ,
     public User user;// (&{organization User}, optional): ,
     public String userId;// (int, optional):
-//
-//    public String getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(String userId) {
-//        this.userId = userId;
-//    }
-//
-//    public User getUser() {
-//        return user==null?new User():user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-//
-//    public long getProjectId() {
-//        return projectId;
-//    }
-//
-//    public void setProjectId(long projectId) {
-//        this.projectId = projectId;
-//    }
-//
-//    public boolean ismanager() {
-//        return ismanager;
-//    }
-//
-//    public void setIsmanager(boolean ismanager) {
-//        this.ismanager = ismanager;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public boolean isCanreadall() {
-//        return canreadall;
-//    }
-//
-//    public void setCanreadall(boolean canreadall) {
-//        this.canreadall = canreadall;
+    public Department dept;
+
+
+//    public class Dept {
+//        public String id;
+//        public String xpath;
+//        public String name;
 //    }
 
     public static String GetUserIds(ArrayList<ProjectMember> memberList) {
@@ -135,4 +99,6 @@ public class ProjectMember extends BaseBeans {
 
         return this.userId == ((ProjectMember) o).userId;
     }
+
+
 }

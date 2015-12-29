@@ -9,6 +9,7 @@ import android.webkit.WebViewClient;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.customview.ProgressWebView;
 
@@ -40,7 +41,7 @@ public class PreviewOfficeActivity extends Activity {
                             handler.proceed();
                         }
                     });
-
+                    LogUtil.d(" web显示图片URL："+url);
                     mWebView.loadUrl(url);
                 } catch (Exception e) {
                     Global.ProcException(e);

@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.tool.BitmapUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -36,7 +37,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private boolean localpic = false;
     private Uri fileUri;
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd,boolean isCreator) {
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator) {
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -54,8 +55,8 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic,boolean isCreator) {
-        this(mActivity, lstData, mIsAdd,isCreator);
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic, boolean isCreator) {
+        this(mActivity, lstData, mIsAdd, isCreator);
         localpic = _localpic;
     }
 
@@ -102,8 +103,8 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
         if (position == mListData.size()) {
             item_info.imageView.setImageResource(R.drawable.icon_add_file);
-            if(isCreator){
-                item_info.imageView.setOnClickListener(new OnClickListener_addImg());
+            if (isCreator) {
+                item_info.imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
             }
             item_info.imageView.setScaleType(ImageView.ScaleType.CENTER);
         } else {
@@ -123,6 +124,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 item_info.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        LogUtil.d(" 预览图片的URL：" + attachment.getUrl());
                         //预览文件
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("data", attachment.getUrl());

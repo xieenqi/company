@@ -19,79 +19,88 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"/>
-
-            <EditText
-                android:id="@+id/edt_title"
-                style="@style/text_item2"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
-                android:background="@null"
-                android:gravity="left|center_vertical"
-                android:hint="添加项目名称"
-                android:paddingLeft="@dimen/margin_other_view"/>
-
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_other_view"/>
-
-            <EditText
-                android:id="@+id/edt_content"
-                style="@style/edtText_normal"
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:gravity="left|top"
-                android:hint="请输入项目简介"
-                android:minHeight="180dp"
-                android:padding="10dp"/>
-
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_other_view"/>
-
             <LinearLayout
-                android:id="@+id/layout_managers"
+                android:id="@+id/ll_managerGon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:minHeight="@dimen/view_h_title"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                >
 
-                <TextView
-                    style="@style/text_item1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="@dimen/margin_other_view"
-                    android:text="项目负责人"/>
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"/>
 
-                <TextView
-                    android:id="@+id/tv_managers"
+                <EditText
+                    android:id="@+id/edt_title"
                     style="@style/text_item2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
                     android:background="@null"
                     android:gravity="left|center_vertical"
+                    android:hint="添加项目名称"
                     android:paddingLeft="@dimen/margin_other_view"/>
 
-                <ImageView
-                    android:id="@+id/img_title_right_reviewer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
-            </LinearLayout>
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_other_view"/>
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_other_view"/>
+                <EditText
+                    android:id="@+id/edt_content"
+                    style="@style/edtText_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="left|top"
+                    android:hint="请输入项目简介"
+                    android:minHeight="180dp"
+                    android:padding="10dp"/>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_other_view"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_managers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:minHeight="@dimen/view_h_title"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/margin_other_view"
+                        android:text="项目负责人"/>
+
+                    <TextView
+                        android:id="@+id/tv_managers"
+                        style="@style/text_item2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="left|center_vertical"
+                        android:paddingLeft="@dimen/margin_other_view"/>
+
+                    <ImageView
+                        android:id="@+id/img_title_right_reviewer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+                </LinearLayout>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_other_view"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_members"
@@ -130,8 +139,8 @@
                 android:id="@+id/lv_project_members"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:cacheColorHint="#00000000"
                 android:animateLayoutChanges="true"
+                android:cacheColorHint="#00000000"
                 android:divider="@color/activity_split"
                 android:dividerHeight="@dimen/dimen_0.5"
                 android:padding="@dimen/dimen_0.5">

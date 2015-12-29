@@ -67,7 +67,7 @@ import retrofit.client.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * 工作报告新建
+ * 工作报告新建  [承载 编辑 新建]
  */
 
 @EActivity(R.layout.activity_workreports_add)
@@ -130,7 +130,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
     private String uuid = StringUtil.getUUID();
-    private Reviewer mReviewer = new Reviewer();
+    private Reviewer mReviewer ;
     private Members members = new Members();
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
@@ -174,6 +174,7 @@ public class WorkReportAddActivity extends BaseActivity {
         });
 
         if (null != mWorkReport) {
+            LogUtil.d("编辑工作报告的数据:"+MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
             }
@@ -339,7 +340,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
             case R.id.img_title_right:
-
                 String content = edt_content.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
                     Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
@@ -348,10 +348,11 @@ public class WorkReportAddActivity extends BaseActivity {
                 if (mReviewer == null) {
                     Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
                     break;
-                }
-                if (mReviewer.getUser().isCurrentUser()) {
-                    Toast("点评人不能是自己");
-                    break;
+                } else {
+                    if (mReviewer.getUser()!=null&&MainApp.user.id.equals(mReviewer.getUser().getId())) {
+                        Toast("点评人不能是自己");
+                        break;
+                    }
                 }
 
                 HashMap<String, Object> map = new HashMap<>();
@@ -429,7 +430,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(HashMap map) {
-        LogUtil.d(" 新建报告组装json："+MainApp.gson.toJson(map));
+        LogUtil.d(" 新建报告组装json：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
@@ -540,6 +541,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                         @Override
                         public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
                             Toast("删除附件失败!");
                             super.failure(error);
                         }

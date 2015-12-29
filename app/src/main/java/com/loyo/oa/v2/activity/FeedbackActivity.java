@@ -19,9 +19,12 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.FeedBackCommit;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IFeedback;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -77,6 +80,7 @@ public class FeedbackActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
             }
         });
@@ -86,7 +90,7 @@ public class FeedbackActivity extends BaseActivity {
      * 显示附件
      */
     private void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true,true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -114,6 +118,7 @@ public class FeedbackActivity extends BaseActivity {
             }
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("提交失败");
                 super.failure(error);
             }
@@ -155,7 +160,7 @@ public class FeedbackActivity extends BaseActivity {
             return;
         }
         switch (requestCode) {
-            case SelectPicPopupWindow.GET_IMG:
+            case SelectPicPopupWindow.GET_IMG://上传附件
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
@@ -174,6 +179,29 @@ public class FeedbackActivity extends BaseActivity {
                     }
                 } catch (Exception ex) {
                     Global.ProcException(ex);
+                }
+                break;
+            case FinalVariables.REQUEST_DEAL_ATTACHMENT://删除附件
+                try {
+                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                        @Override
+                        public void success(Attachment attachment, Response response) {
+                            Toast("删除附件成功!");
+                            attachments.remove(delAttachment);
+                            signInGridViewAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                            Toast("删除附件失败!");
+                            super.failure(error);
+                        }
+                    });
+                } catch (Exception e) {
+                    Global.ProcException(e);
                 }
                 break;
         }

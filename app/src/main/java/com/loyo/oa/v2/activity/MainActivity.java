@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
@@ -145,7 +146,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             case 0:
                 Intent intent = new Intent(this, SelectDetUserActivity.class);
                 startActivity(intent);
-                //_class = TasksAddActivity_.class;
+                _class = TasksAddActivity_.class;
                 break;
             case 1:
                 _class = WorkReportAddActivity_.class;
