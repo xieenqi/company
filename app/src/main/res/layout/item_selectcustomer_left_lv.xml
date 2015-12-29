@@ -6,11 +6,12 @@
 
 
     <LinearLayout
+        android:layout_marginLeft="@dimen/dimen_10"
         android:layout_width="fill_parent"
         android:layout_height="50dp">
 
         <TextView
-            android:layout_marginLeft="@dimen/dimen_10"
+
             android:layout_gravity="center"
             android:id="@+id/item_selectdu_left_tv"
             android:layout_width="wrap_content"

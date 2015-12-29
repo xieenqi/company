@@ -13,31 +13,38 @@ public class User implements Serializable {
 
     public String id;
     public String company_id;
-    public String username;
-    public int gender;
     public String mobile;
-    public boolean avaactivatedtar;
     public String simplePinyin;
-    public ArrayList<UserInfo> depts = new ArrayList<>();
     public String avatar;
     public String birthDay;
-    public long createdAt;
-    public String email;
     public String fullPinyin;
     public String realname;
     public String tel;
     public String title;
-    public long updatedAt;
     public String departmentsName;
     public String superiorId;
-    public boolean isBQQ;
     public String weixinId;
-    public String weixinUnionId;
     public String name;
+
     public static String imageUrl;
     public Role role;
     public Position shortPosition;
     public Department shortDept;
+    public ArrayList<UserInfo> depts = new ArrayList<>();
+
+    public boolean isBQQ;
+    public boolean index;
+    public int gender;
+    public long updatedAt;
+    public long createdAt;
+
+    public boolean isIndex() {
+        return index;
+    }
+
+    public void setIndex(boolean index) {
+        this.index = index;
+    }
 
     public String getAvatar() {
         return avatar;
@@ -111,8 +118,4 @@ public class User implements Serializable {
         String rname = TextUtils.isEmpty(realname) ? name : realname;
         return TextUtils.isEmpty(rname) ? "" : rname;
     }
-//    public User(String _id, String _RealName) {
-//        id = _id;
-//        realname = _RealName;
-//    }
 }

@@ -5,12 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -21,34 +24,41 @@ import java.util.ArrayList;
  */
 public class SelectUserAdapter extends BaseAdapter {
 
-    public ArrayList<User> listDepartment;
-    public Context mContext;
-    public LayoutInflater mInflater;
-    public String deptName;
-    public String npcName;
+    private ArrayList<User> listUsers;
+    private Context mContext;
+    private LayoutInflater mInflater;
+    private String deptName;
+    private String npcName;
+    private boolean isAllCheck;
 
+    public SelectUserAdapter(Context mContext, ArrayList<User> listUsers, boolean isAllCheck) {
 
-    public SelectUserAdapter(Context mContext, ArrayList<User> listDepartment) {
+        this.isAllCheck = isAllCheck;
         this.mContext = mContext;
-        this.listDepartment = listDepartment;
+        this.listUsers = listUsers;
         mInflater = LayoutInflater.from(mContext);
+
+
     }
 
+    class ViewHolder {
 
-    public class ViewHolder {
         TextView userName;
         TextView worker;
         TextView dept;
+        ImageView heading;
+        CheckBox checkBox;
+
     }
 
     @Override
     public int getCount() {
-        return listDepartment.size();
+        return listUsers.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listDepartment.get(position);
+        return listUsers.get(position);
     }
 
     @Override
@@ -61,36 +71,51 @@ public class SelectUserAdapter extends BaseAdapter {
         ViewHolder holder = null;
 
         if (convertView == null) {
+
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_selectcustomer_right_lv, null);
             holder.userName = (TextView) convertView.findViewById(R.id.item_selectdu_right_name);
             holder.dept = (TextView) convertView.findViewById(R.id.item_selectdu_right_dept);
             holder.worker = (TextView) convertView.findViewById(R.id.item_selectdu_right_worker);
+            holder.heading = (ImageView) convertView.findViewById(R.id.img_title_left);
+            holder.checkBox = (CheckBox) convertView.findViewById(R.id.item_selectdu_checkbox);
             convertView.setTag(holder);
+
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
-        try{
-            deptName = listDepartment.get(position).depts.get(0).getShortDept().getName();
-        }catch (NullPointerException e){
+        /*部门名称*/
+        try {
+            deptName = listUsers.get(position).depts.get(0).getShortDept().getName();
+        } catch (NullPointerException e) {
             e.printStackTrace();
             deptName = "无";
         }
 
-        try{
-            npcName = listDepartment.get(position).role.name;
-        }catch (NullPointerException e){
+        /*用户级别*/
+        try {
+            npcName = listUsers.get(position).role.name;
+        } catch (NullPointerException e) {
             e.printStackTrace();
             npcName = "无";
         }
 
-        holder.userName.setText(listDepartment.get(position).getRealname());
+        holder.userName.setText(listUsers.get(position).getRealname());
         holder.dept.setText(deptName);
         holder.worker.setText(npcName);
 
-        return convertView;
+            /*选中赋值*/
+            if (listUsers.get(position).isIndex()) {
+                holder.checkBox.setChecked(true);
+            } else if (listUsers.get(position).isIndex() == false) {
+                holder.checkBox.setChecked(false);
+            } else {
+                holder.checkBox.setChecked(false);
+            }
 
+        ImageLoader.getInstance().displayImage(listUsers.get(position).getAvatar(), holder.heading);
+
+        return convertView;
     }
 }

@@ -5,7 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+
+
+
     <RelativeLayout
+        android:id="@+id/item_selectdu_rel"
         android:layout_width="fill_parent"
         android:layout_height="50dp">
 
@@ -15,7 +20,6 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dimen_15"
-            android:background="@drawable/icon_disscuss_unreviewed"
             android:scaleType="center"
             imagecontrol:border_inside_color="#a8d4e9"
             imagecontrol:border_outside_color="#a8d4e9"
@@ -35,8 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_5"
                 android:text="海蛇你"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -48,8 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="培训组"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/item_selectdu_right_worker"
@@ -57,16 +59,23 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="高级员工"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 
         <CheckBox
+            android:id="@+id/item_selectdu_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:background="@drawable/checkbox_selectdetuser"
+            android:button="@null"
+            android:focusable="false"
+            android:clickable="false"
+            android:focusableInTouchMode="false"
+             />
+
     </RelativeLayout>
 </LinearLayout>
