@@ -15,6 +15,25 @@ public class ExtraAndResult {
     public static final String RESULT_NAME = "result_name";
     public static final String RESULT_DATA = "result_data";
     public static final String RESULT_OBJ = "result_obj";
+
+    public static final String CC_DEPARTMENT_ID = "Department_id";
+    public static final String CC_USER_ID = "User_id";
+    public static final String CC_DEPARTMENT_NAME = "Department_name";
+    public static final String CC_USER_NAME = "User_name";
+
+    public static final String STR_SHOW_TYPE = "show_type";
+    public static final String STR_SELECT_TYPE = "select_type";
+    public static final String STR_SUPER_ID = "super_id";
+    public static final String STR_SUPER_NAME = "super_name";
+
+    public static final int TYPE_SELECT_SINGLE = 1;
+    public static final int TYPE_SELECT_MULTUI = 0;
+
+    public static final int TYPE_SHOW_USER = 1;
+    public static final int TYPE_SHOW_DEPT_USER = 0;
+
+    public static final int request_Code = 100;
+
     /**
      * 传递部门数据的请求码
      */

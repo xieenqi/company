@@ -38,6 +38,7 @@ import java.util.Map;
  * */
 
 public class DepartmentUserActivity extends FragmentActivity implements View.OnClickListener {
+
     public static final int request_Code = 100;
 
     static final String MSG_TYPE_MULTI = "com.loyo.oa.v2.multi";
