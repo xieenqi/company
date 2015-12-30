@@ -8,7 +8,6 @@ import com.loyo.oa.v2.application.MainApp;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@DatabaseTable
 public class User implements Serializable {
 
     public String id;

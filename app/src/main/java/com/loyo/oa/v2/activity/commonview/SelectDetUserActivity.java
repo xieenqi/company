@@ -25,6 +25,7 @@ import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -35,11 +36,7 @@ import java.util.ArrayList;
  */
 public class SelectDetUserActivity extends Activity {
 
-    public static final String CC_DEPARTMENT_ID = "chaosong_Department_id";
-    public static final String CC_USER_ID = "chaosong_User_id";
-    public static final String CC_DEPARTMENT_NAME = "chaosong_Department_name";
-    public static final String CC_USER_NAME = "chaosong_User_name";
-
+    public MainApp app = MainApp.getMainApp();
     public ListView leftLv, rightLv;
     public LinearLayout llback;
     public RelativeLayout relAllcheck;
@@ -50,6 +47,8 @@ public class SelectDetUserActivity extends Activity {
     public LayoutInflater mInflater;
     public SelectDetAdapter mDetAdapter;
     public SelectUserAdapter mUserAdapter;
+    public Intent mIntent;
+    public Bundle mBundle;
 
     public ArrayList<User> userList;
     public ArrayList<User> userAllList; //所有员工
@@ -57,16 +56,16 @@ public class SelectDetUserActivity extends Activity {
     public ArrayList<UserGroupData> totalSource; //全部数据源
     public ArrayList<User> selectList; //选中数据
 
-    public int seltSize;
-    public int isSize;
-
     public boolean isAllCheck = false;
     public boolean popy; //当前列表 是否全选
     public int totalSize = 0;
     public int positions = 0;
+    public int seltSize;
+    public int isSize;
+    public int selectType;
     public StringBuffer nameApd;
     public StringBuffer idApd;
-    public MainApp app = MainApp.getMainApp();
+
 
     public Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -90,6 +89,10 @@ public class SelectDetUserActivity extends Activity {
      * 初始化
      */
     void initView() {
+
+        mIntent = getIntent();
+        mBundle = mIntent.getExtras();
+        selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);
 
         totalSource = Common.getLstUserGroupData();
         deptSource = Common.getLstDepartment();
@@ -171,6 +174,17 @@ public class SelectDetUserActivity extends Activity {
                 }
 
                 mHandler.sendEmptyMessage(0x01);
+
+                if (selectType == 1) {
+
+                    btnSure.setVisibility(View.INVISIBLE);
+                    Intent mIntent = new Intent();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable(User.class.getName(),userList.get(position - 1));
+                    mIntent.putExtras(mBundle);
+                    app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+
+                }
             }
         });
 
@@ -223,8 +237,8 @@ public class SelectDetUserActivity extends Activity {
 
                 Intent intent = new Intent();
                 Bundle mBundle = new Bundle();
-                mBundle.putString(DepartmentUserActivity.CC_USER_ID,idApd.toString());
-                mBundle.putString(DepartmentUserActivity.CC_USER_NAME,nameApd.toString());
+                mBundle.putString(ExtraAndResult.CC_USER_ID, idApd.toString());
+                mBundle.putString(ExtraAndResult.CC_USER_NAME, nameApd.toString());
                 intent.putExtras(mBundle);
 
                 app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -267,11 +281,11 @@ public class SelectDetUserActivity extends Activity {
 
                 if (seltSize == isSize) {
                     nameApd.append(deptSource.get(i).getName() + ",");
-                } else if (seltSize != isSize)  {
+                } else if (seltSize != isSize) {
                     for (User user : userList) {
                         if (user.isIndex()) {
-                            if(!nameApd.toString().contains(user.getRealname())){
-                                idApd.append(user.getId()+",");
+                            if (!nameApd.toString().contains(user.getRealname())) {
+                                idApd.append(user.getId() + ",");
                                 nameApd.append(user.getRealname() + ",");
                             }
                         }
@@ -322,7 +336,7 @@ public class SelectDetUserActivity extends Activity {
     }
 
 
-    //************************************************************弃用**********************************************************
+    //************************************************************暂时弃用**********************************************************
 
     /**
      * 获取改部门下 所有员工

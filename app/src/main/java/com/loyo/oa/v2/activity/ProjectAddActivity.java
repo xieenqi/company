@@ -332,13 +332,8 @@ public class ProjectAddActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                if(error.getKind() == RetrofitError.Kind.NETWORK){
-//                    Toast("请检查您的网络连接");
-//                }
-//                else if(error.getResponse().getStatus() == 500){
-//                    Toast("网络异常500，请稍候再试");
-//                }
             }
         });
     }

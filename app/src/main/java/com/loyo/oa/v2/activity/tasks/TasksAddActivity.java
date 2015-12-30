@@ -22,6 +22,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.ProjectSearchActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -56,7 +58,6 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
@@ -311,12 +312,6 @@ public class TasksAddActivity extends BaseActivity {
 
                 break;
 
-            //负责人选项
-            case R.id.layout_responsiblePerson:
-                Bundle bundle = new Bundle();
-                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
-                break;
 
             //截至时间
             case R.id.layout_deadline:
@@ -334,12 +329,22 @@ public class TasksAddActivity extends BaseActivity {
                 });
                 break;
 
+            //负责人选项
+            case R.id.layout_responsiblePerson:
+                Bundle bundle = new Bundle();
+                bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle);
+                break;
+
             //参与人选项
             case R.id.tv_toUsers:
+
                 Bundle bundle1 = new Bundle();
-                bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-                bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle1);
+                bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
+
+
                 break;
 
             case R.id.layout_del:
@@ -469,21 +474,24 @@ public class TasksAddActivity extends BaseActivity {
                 break;
 
             case DepartmentUserActivity.request_Code:
+
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 //负责人回调
                 if (user != null) {
                     setResponsiblePersion(user);
                 }
+
                 //参与人回调
                 else {
-                    String cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-                    String cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+                    String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
+                    String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
                     if (cc_user_id != null || cc_user_name != null) {
                         setJoinUsers(cc_user_id, cc_user_name);
                     } else {
                         Toast("未选择相关人员");
                     }
                 }
+
                 break;
 
             case SelectPicPopupWindow.GET_IMG:

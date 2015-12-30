@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.customer.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
@@ -144,9 +145,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         switch (position) {
             /*暂时用于测试新版选人 跳转*/
             case 0:
-                Intent intent = new Intent(this,SelectDetUserActivity.class);
-                startActivity(intent);
-                //_class = TasksAddActivity_.class;
+                /*Intent intent = new Intent(this,SelectDetUserActivity.class);
+                startActivity(intent);*/
+                _class = TasksAddActivity_.class;
                 break;
             case 1:
                 _class = WorkReportAddActivity_.class;
@@ -161,7 +162,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 _class = SignInActivity.class;
                 break;
         }
-       // app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+       app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);
     }
 
     @Override
