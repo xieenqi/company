@@ -163,6 +163,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             case 4:
                 _class = SignInActivity.class;
                 break;
+
         }
 
        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);

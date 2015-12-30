@@ -182,22 +182,6 @@ public final class Common {
         return MainApp.lstDepartment == null ? new ArrayList<Department>() : MainApp.lstDepartment;
     }
 
-    /*public static ArrayList<User> getSubUsers() {
-        if (MainApp.subUsers == null) {
-            MainApp.subUsers = DBManager.Instance().getSubordinates();
-        }
-
-        if (MainApp.subUsers == null) {
-            Global.ProcException(new Exception("下属为空!"));
-        }
-
-        return MainApp.subUsers == null ? new ArrayList<User>() : MainApp.subUsers;
-    }*/
-
-
-//    public static void setSubUsers(ArrayList<User> subUsers) {
-//        MainApp.subUsers = subUsers;
-//    }
 
     public static void InitOrganizationFromDB() {
         //根据当前 token到DB中获取
@@ -443,4 +427,41 @@ public final class Common {
         }
         return new User();
     }
+
+
+    /**
+     * 获取改部门下 所有员工
+     */
+    public static void  getDeptAllUsers(ArrayList<User> userList,String depId) {
+
+        userList.clear();
+        String Id = depId;
+        assUserList(userList, Common.getLstDepartment(Id), Common.getListUser(Id));
+
+    }
+
+
+    /**
+     * 拣取人员
+     */
+   public static void assUserList(ArrayList<User> arrayList, ArrayList<Department> departments, ArrayList<User> users) {
+
+        if (users.size() != 0) {
+            arrayList.addAll(users);
+        }
+
+        if (departments.size() != 0) {
+
+            for (Department department : departments) {
+                String id = department.getId();
+                ArrayList<Department> dept = Common.getLstDepartment(id);
+                ArrayList<User> user = Common.getListUser(id);
+                assUserList(arrayList, dept, user);
+            }
+
+        } else {
+            return;
+        }
+    }
+
 }

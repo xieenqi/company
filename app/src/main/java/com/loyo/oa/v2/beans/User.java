@@ -24,6 +24,7 @@ public class User implements Serializable {
     public String superiorId;
     public String weixinId;
     public String name;
+    private String sortLetters;
 
     public static String imageUrl;
     public Role role;
@@ -68,6 +69,14 @@ public class User implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSortLetters() {
+        return sortLetters;
+    }
+
+    public void setSortLetters(String sortLetters) {
+        this.sortLetters = sortLetters;
     }
 
     @Override

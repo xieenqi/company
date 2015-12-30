@@ -105,7 +105,6 @@
                     android:scaleType="center"
                     />
 
-
             </RelativeLayout>
 
             <com.loyo.oa.v2.tool.customview.RoundImageView

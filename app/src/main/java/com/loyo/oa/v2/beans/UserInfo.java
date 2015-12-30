@@ -9,6 +9,7 @@ import java.io.Serializable;
  * 时间 : 15/10/12.
  */
 public class UserInfo implements Serializable {
+
     private Department shortDept;
     private Position shortPosition;
 

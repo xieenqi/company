@@ -18,6 +18,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.fragment.ContactsInDepartmentFragment;
+import com.loyo.oa.v2.fragment.ContactsInMyDeptFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
@@ -35,7 +36,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     ViewGroup img_title_right;
 
     ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
-    ContactsInDepartmentFragment userFragment;     //本部门  人员frag
+    //ContactsInDepartmentFragment userFragment;     //本部门  人员frag
+    ContactsInMyDeptFragment userFragment;     //本部门  人员frag
 
     PagerSlidingTabStrip tabs;
     ViewPager pager;
@@ -52,7 +54,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         setContentView(R.layout.activity_department_contacts);
 
         departmentFragment = new ContactsDepartmentFragment();
-        userFragment = new ContactsInDepartmentFragment();
+        userFragment = new ContactsInMyDeptFragment();
 
         initUI();
     }
