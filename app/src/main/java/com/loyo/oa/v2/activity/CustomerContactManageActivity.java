@@ -34,7 +34,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :客户联系人管理界面
+ * 描述 :客户联系人管理界面【联系人详情】
  * 作者 : ykb
  * 时间 : 15/9/24.
  */

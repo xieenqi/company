@@ -5,8 +5,10 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by pj on 15/12/18.
@@ -35,8 +37,17 @@ public class HttpErrorCheck {
         }else{
             Toast(error.getMessage());
         }
-        LogUtil.d("失败的错误信息："+error.getMessage());
-        LogUtil.d("error接口URL："+error.getUrl());
+        LogUtil.d("失败的错误信息：" + error.getMessage());
+        LogUtil.d("error接口URL：" + error.getUrl());
+    }
+
+    public static void checkResponse(Response response){
+        try{
+            String result=Utils.convertStreamToString(response.getBody().in());
+            LogUtil.d("接口成功result："+result);
+        }catch (Exception e){
+
+        }
     }
 
 }

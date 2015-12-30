@@ -21,6 +21,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
@@ -45,7 +46,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :客户详情界面
+ * 描述 :【客户详情】 界面
  * 作者 : ykb
  * 时间 : 15/9/24.
  */
@@ -407,7 +408,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*购买意向*/
             case R.id.layout_purchase:
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putSerializable(Customer.class.getName(), mCustomer);
+                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
                 _class = DemandsManageActivity.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_DEMANDS;
                 break;

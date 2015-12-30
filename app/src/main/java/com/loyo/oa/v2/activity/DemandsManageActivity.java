@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.DemandsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -30,7 +32,7 @@ import retrofit.client.Response;
 
 /**
  * 购买意向
- * */
+ */
 
 public class DemandsManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
@@ -38,7 +40,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     private PullToRefreshListView listView_demands;
     private DemandsRadioListViewAdapter demandsRadioListViewAdapter;
     private ArrayList<Demand> lstData_Demand = new ArrayList<Demand>();
-    private Customer customer;
+    private String customerId,customerName;
 
     private Intent mIntent;
     private Bundle bundle;
@@ -52,7 +54,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     public static final int CREATE_DEMANDS = 300;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +64,8 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 isMyUser = bundle.getBoolean("isMyUser");
-                customer = (Customer) bundle.getSerializable(Customer.class.getName());
+                customerId = bundle.getString(ExtraAndResult.EXTRA_ID);
+                customerName = bundle.getString(ExtraAndResult.EXTRA_NAME);
             }
         }
 
@@ -77,7 +79,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
 
-        if(!isMyUser){
+        if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
 
@@ -97,7 +99,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customer.getId(), map, new RCallback<PaginationX<Demand>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
             @Override
             public void success(PaginationX<Demand> demandPaginationX, Response response) {
                 listView_demands.onRefreshComplete();
@@ -109,10 +111,12 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                     lstData_Demand.addAll(paginationX.getRecords());
                     bindData();
                 }
+                LogUtil.d(" 购买意向详情：" + MainApp.gson.toJson(demandPaginationX));
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 listView_demands.onRefreshComplete();
                 super.failure(error);
             }
@@ -124,7 +128,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
      */
     private void bindData() {
         if (lstData_Demand != null) {
-            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand,isMyUser);
+            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand, isMyUser);
             listView_demands.setAdapter(demandsRadioListViewAdapter);
             listView_demands.setMode(PullToRefreshBase.Mode.BOTH);
             listView_demands.setOnRefreshListener(this);
@@ -139,11 +143,12 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                 onBackPressed();
                 break;
             case R.id.layout_add:
-                if (customer == null) {
+                if (customerId == null) {
                     break;
                 }
                 bundle = new Bundle();
-                bundle.putSerializable(Customer.class.getName(), customer);
+                bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
+                bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
                 app.startActivityForResult(this, DemandsAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 break;
         }

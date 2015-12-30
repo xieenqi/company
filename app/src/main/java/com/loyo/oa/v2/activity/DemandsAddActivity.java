@@ -19,15 +19,17 @@ import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.adapter.ProductsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Product;
 import com.loyo.oa.v2.beans.SaleStage;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.fragment.SaleStageDialogFragment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -35,11 +37,12 @@ import com.loyo.oa.v2.tool.ViewUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 新增购买意向
- * */
+ */
 
 public class DemandsAddActivity extends BaseActivity implements View.OnClickListener {
     ViewGroup img_title_left, img_title_right;
@@ -56,10 +59,9 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private TextView tv_salestages;
     private TextView tv_reason;
 
-    private Customer customer;
     private ArrayList<Product> lstData_Product = new ArrayList<Product>();
     private ArrayList<SaleStage> lstData_SaleStage = new ArrayList<SaleStage>();
-    private String lProductID_select;
+    private String productIdSelect, productNameSelect, customerName, customerId;
     private AlertDialog dialog_Product;
     private SaleStageDialogFragment saleStageDialogFragment;
     private Demand demand;
@@ -73,7 +75,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                customer = (Customer) bundle.getSerializable(Customer.class.getName());
+                customerId = bundle.getString(ExtraAndResult.EXTRA_ID);
+                customerName = bundle.getString(ExtraAndResult.EXTRA_NAME);
 
                 if (bundle.containsKey(Demand.class.getName())) {
                     demand = (Demand) bundle.getSerializable(Demand.class.getName());
@@ -134,7 +137,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         }
         super.setTitle("更新购买意向");
 
-        lProductID_select = demand.getProduct().getId();
+        productIdSelect = demand.getProduct().getId();
+        productNameSelect = demand.getProduct().getName();
         tv_products.setText(demand.getProduct().getName());
 
         edt_num.setText(String.valueOf(demand.getEstimatedNum()));
@@ -184,10 +188,10 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         if (null == loseResons || loseResons.isEmpty()) {
             return null;
         }
-        String []reasons = new String[loseResons.size()];
+        String[] reasons = new String[loseResons.size()];
         int index = 0;
         for (CommonTag reson : loseResons) {
-            reasons[index]=reson.getId();
+            reasons[index] = reson.getId();
             index++;
         }
         return reasons;
@@ -241,7 +245,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
                 break;
             case R.id.img_title_right:
-                if (TextUtils.isEmpty(lProductID_select)) {
+                if (TextUtils.isEmpty(productIdSelect)) {
                     Toast("请选择产品");
                     return;
                 }
@@ -251,7 +255,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                     return;
                 }
 
-                if(tv_salestages.getText().toString().equals("输单") && tv_reason.getText().toString().equals("请选择输单原因")){
+                if (tv_salestages.getText().toString().equals("输单") && tv_reason.getText().toString().equals("请选择输单原因")) {
                     Toast("请填写输单原因");
                     return;
                 }
@@ -289,7 +293,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         productsRadioListViewAdapter.notifyDataSetChanged();
                         productsRadioListViewAdapter.isSelected = id;
 
-                        lProductID_select = lstData_Product.get((int) id).getId();
+                        productIdSelect = lstData_Product.get((int) id).getId();
+                        productNameSelect = lstData_Product.get((int) id).getName();
                         tv_products.setText(lstData_Product.get((int) id).getName());
 
                         dialog_Product.dismiss();
@@ -297,12 +302,12 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 });
                 break;
             case R.id.layout_reason:
-                Bundle loseBundle=new Bundle();
-                loseBundle.putSerializable("data",loseResons);
+                Bundle loseBundle = new Bundle();
+                loseBundle.putSerializable("data", loseResons);
                 loseBundle.putString("title", "输单原因");
                 loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_MULTIPLE);
                 loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_LOSE_REASON);
-                app.startActivityForResult(this, CommonTagSelectActivity_.class, 0, CommonTagSelectActivity.REQUEST_TAGS,loseBundle);
+                app.startActivityForResult(this, CommonTagSelectActivity_.class, 0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                 break;
             case R.id.layout_salestages:
                 if (lstData_SaleStage == null) {
@@ -357,8 +362,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
 
         HashMap<String, Object> map = new HashMap<>();
 
-        if (!TextUtils.isEmpty(lProductID_select)) {
-            map.put("productId", lProductID_select);
+        if (!TextUtils.isEmpty(productIdSelect)) {
+            map.put("productId", productIdSelect);
         }
 
         if (saleStageDialogFragment != null && null != saleStageDialogFragment.lSaleStageID_select) {
@@ -384,19 +389,20 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         if (!TextUtils.isEmpty(memo)) {
             map.put("memo", memo);
         }
-
-        String [] reasons= getLoseReasonIds();
-        if(null!=reasons&&reasons.length>0) {
-            map.put("loseIds",reasons );
+        map.put("productName", productNameSelect);
+        map.put("customerName", customerName);
+        String[] reasons = getLoseReasonIds();
+        if (null != reasons && reasons.length > 0) {
+            map.put("loseIds", reasons);
         }
 
         if (type == 2) {
             map.put("wfId", demand.getWfId());
             map.put("wfState", demand.getWfState());
-        }else {
-            map.put("customerId", customer.getId());
+        } else if (type == 1) {
+            map.put("customerId", customerId);
         }
-
+        LogUtil.d("新增购买意向传递："+MainApp.gson.toJson(map));
         return map;
     }
 
@@ -422,10 +428,17 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
      * 新增购买意向
      */
     private void addDemand() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addDemand(buildDatas(1), new RCallback<Demand>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(ICustomer.class).addDemand(buildDatas(1), new RCallback<Demand>() {
             @Override
             public void success(Demand demand, Response response) {
                 processResult(demand);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
             }
         });
     }
@@ -434,10 +447,17 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
      * 更新购买意向
      */
     private void updateDemad() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).updateDemand(demand.getId(), buildDatas(2), new RCallback<Demand>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(ICustomer.class).updateDemand(demand.getId(), buildDatas(2), new RCallback<Demand>() {
             @Override
             public void success(Demand demand, Response response) {
                 processResult(demand);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
             }
         });
     }
@@ -445,12 +465,12 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(null==data||resultCode!=RESULT_OK){
+        if (null == data || resultCode != RESULT_OK) {
             return;
         }
-        switch (requestCode){
+        switch (requestCode) {
             case CommonTagSelectActivity.REQUEST_TAGS:
-                loseResons=(ArrayList<CommonTag>)data.getSerializableExtra("data");
+                loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
                 tv_reason.setText(getLoseReason());
                 break;
         }
