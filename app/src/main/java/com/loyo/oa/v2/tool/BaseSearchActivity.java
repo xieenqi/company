@@ -74,7 +74,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         Bundle mBundle = getIntent().getExtras();
 
         befromPage = mBundle.getInt("from");
-        if(befromPage == SIGNIN_ADD || befromPage ==TASKS_ADD||befromPage ==TASKS_ADD_CUSTOMER){
+        if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
+                befromPage == WFIN_ADD || befromPage == WORK_ADD) {
             getData();
         }
 
@@ -144,18 +145,18 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
                 Intent mIntent;
 
-                switch (befromPage){
+                switch (befromPage) {
                     //新建审批
                     case WFIN_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data",lstData.get(position - 1));
-                        app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,mIntent);
+                        mIntent.putExtra("data", lstData.get(position - 1));
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
                         break;
                     //新建任务 所属项目
                     case TASKS_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data",lstData.get(position - 1));
-                        app.finishActivity(BaseSearchActivity.this,MainApp.ENTER_TYPE_TOP, RESULT_OK,mIntent);
+                        mIntent.putExtra("data", lstData.get(position - 1));
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
                         break;
                     //新建任务 关联客户
                     case TASKS_ADD_CUSTOMER:
@@ -168,7 +169,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     //新建报告
                     case WORK_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data",lstData.get(position - 1));
+                        mIntent.putExtra("data", lstData.get(position - 1));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
                         break;
                     //客户管理
@@ -480,9 +481,13 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //客户
             else if (o instanceof Customer) {
                 customer = (Customer) o;
-                time.setVisibility(View.GONE);
+                time.setText("跟进时间："+app.df3.format(new Date(customer.lastActAt * 1000)));
                 title.setText(customer.name);
-                content.setText("距离：" + customer.distance);
+                if(!TextUtils.isEmpty(customer.distance)){
+                    content.setText("距离：" + customer.distance);
+                }else{
+                    content.setVisibility(View.GONE);
+                }
             }
 
             return convertView;
