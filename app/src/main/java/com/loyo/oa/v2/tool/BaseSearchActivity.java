@@ -27,7 +27,6 @@ import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
@@ -36,7 +35,6 @@ import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.fragment.TaskManagerFragment;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
@@ -74,8 +72,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         setContentView(R.layout.activity_public_search);
         vs_nodata = findViewById(R.id.vs_nodata);
         Bundle mBundle = getIntent().getExtras();
+
         befromPage = mBundle.getInt("from");
-        if(befromPage == SIGNIN_ADD){
+        if(befromPage == SIGNIN_ADD || befromPage ==TASKS_ADD||befromPage ==TASKS_ADD_CUSTOMER){
             getData();
         }
 
@@ -281,7 +280,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     public void success(Object o, Response response) {
 
         LogUtil.dll("URL:" + response.getUrl());
-
+        try {
+            LogUtil.dll("搜索result success:" + Utils.convertStreamToString(response.getBody().in()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

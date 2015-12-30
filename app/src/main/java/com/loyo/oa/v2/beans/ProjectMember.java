@@ -2,6 +2,7 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.tool.ListUtil;
 
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class ProjectMember extends BaseBeans {
         return sb == null ? "" : sb.toString();
     }
 
+
+
     public static String GetUserNames(ArrayList<ProjectMember> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
             return "";
@@ -76,6 +79,54 @@ public class ProjectMember extends BaseBeans {
         }
 
         return sb == null ? "" : sb.toString();
+    }
+
+
+    public static String getManagersName(ArrayList<HttpProject.ProjectManaer> memberList) {
+        if (ListUtil.IsEmpty(memberList)) {
+            return "";
+        }
+
+        StringBuffer sb = null;
+        for ( HttpProject.ProjectManaer  member : memberList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+            } else {
+                sb.append(",");
+            }
+
+            if (member.user != null) {
+                sb.append(member.user.getRealname());
+            }
+        }
+
+        return sb == null ? "" : sb.toString();
+    }
+
+    public static String getMembersName(ArrayList<HttpProject.ProjectMember> memberList) {
+        if (ListUtil.IsEmpty(memberList)) {
+            return "";
+        }
+
+        StringBuffer sb = null;
+        for (HttpProject.ProjectMember member : memberList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+            } else {
+                sb.append(",");
+            }
+
+            if (member.user != null) {
+                sb.append(member.user.getRealname());
+            }
+
+            if (member.dept!=null){
+                sb.append(member.dept.name);
+            }
+        }
+
+        return sb == null ? "" : sb.toString();
+
     }
 
     @Override

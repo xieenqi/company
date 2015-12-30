@@ -23,7 +23,8 @@ public class ProjectManageActivity extends BaseFragmentActivity{
     void initUI()
     {
         setTouchView(-1);
-        getSupportFragmentManager().beginTransaction().add(R.id.project_container, Fragment.instantiate(this, ProjectManageFragment.class.getName())).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.project_container,
+                Fragment.instantiate(this, ProjectManageFragment.class.getName())).commit();
     }
 
     @Override

@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.AttachmentRightActivity_;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -55,7 +55,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
 
     private View mView;
     private SwipeListView mListViewAttachment;
-    private Project mProject;
+    private HttpProject mProject;
     private ArrayList<Attachment> mAttachments = new ArrayList<>();
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
@@ -64,7 +64,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey("project")) {
-            mProject = (Project) getArguments().getSerializable("project");
+            mProject = (HttpProject) getArguments().getSerializable("project");
         }
     }
 
@@ -81,9 +81,9 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         onLoadSuccess(mAttachments.size());
 
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
-        ArrayList<User> users = Common.getUsersByProject(mProject);
+        ArrayList<User> users =  Common.getUsersByProject(mProject);
         boolean hasRights = checkRights();
-        app.logUtil.e("users : " + users.size());
+
         if (null == adapter) {
             adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights);
             mListViewAttachment.setAdapter(adapter);
@@ -114,7 +114,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         if (mProject.creator.equals(MainApp.user)) {
             hasRights = true;
         } else {
-            ArrayList<ProjectMember> members = mProject.managers;
+            ArrayList<HttpProject.ProjectManaer> members = mProject.managers;
             if (null != members && !members.isEmpty()) {
                 for (int i = 0; i < members.size(); i++) {
                     if (members.get(i).user.equals(MainApp.user)) {

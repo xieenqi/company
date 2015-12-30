@@ -5,9 +5,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -40,7 +39,7 @@ public class ProjectDescriptionActivity extends BaseActivity {
     @ViewById TextView tv_title_1;
     @ViewById ViewGroup img_title_left;
 
-    @Extra Project project;
+    @Extra HttpProject project;
 
     @AfterViews
     void initViews() {
@@ -52,8 +51,8 @@ public class ProjectDescriptionActivity extends BaseActivity {
         tv_extra.setText(project.creator.getRealname()+" "+MainApp.getMainApp().df2.format(new Date(project.getCreatedAt()))+" 发布");
         tv_title.setText(project.title);
         tv_content.setText(project.content);
-        ArrayList<ProjectMember> responsers = project.managers;
-        ArrayList<ProjectMember> members = project.members;
+        ArrayList<HttpProject.ProjectManaer> responsers = project.managers;
+        ArrayList<HttpProject.ProjectMember> members = project.members;
         if (null != responsers && !responsers.isEmpty()) {
             StringBuilder managers = new StringBuilder();
             for (int i = 0; i < responsers.size(); i++) {

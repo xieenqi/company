@@ -56,7 +56,6 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
@@ -277,7 +276,8 @@ public class TasksAddActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
+            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:

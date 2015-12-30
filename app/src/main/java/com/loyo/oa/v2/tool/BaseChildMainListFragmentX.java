@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
@@ -47,7 +48,7 @@ import retrofit.client.Response;
  */
 public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implements AbsListView.OnScrollListener {
     private CommonExpandableListAdapter adapter;
-    private Project mProject;
+    private HttpProject mProject;
     private int type;
 
     private FrameLayout indicatorGroup;
@@ -61,7 +62,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 type = getArguments().getInt("type");
             }
             if (getArguments().containsKey("project")) {
-                mProject = (Project) getArguments().getSerializable("project");
+                mProject = (HttpProject) getArguments().getSerializable("project");
             }
         }
         super.onCreate(savedInstanceState);

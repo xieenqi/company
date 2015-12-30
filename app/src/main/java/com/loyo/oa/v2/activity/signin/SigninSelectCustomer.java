@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,35 +15,17 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
-import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.NearCount;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.fragment.TaskManagerFragment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -53,9 +34,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -190,7 +169,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         kalo = 1;
         params.put("pageIndex", paginationX.getPageIndex());
         params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-        params.put("keyword", strSearch);
+        params.put("keyWords", strSearch);
         dataRequestvoid(url, params);
     }
 

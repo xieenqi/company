@@ -6,14 +6,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
@@ -55,15 +53,15 @@ public class ProjectAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_members;
 
     @ViewById ListView lv_project_members;
-    @ViewById LinearLayout ll_managerGon;
+
     @Extra("project") Project mProject;
     @Extra("mUpdate") boolean mUpdate;
 
     ProjectMemberListViewAdapter mAdapter;
-    ArrayList<ManagersMembers> mProjectMember = new ArrayList<>();
+    ArrayList<ManagersMembers> mProjectMember=new ArrayList<>();
 
-    String mManagerIds = "", mManagerNames = "", mMemberIds = "", mMemberNames = "";
-    // boolean mUpdate = false;
+    String mManagerIds="", mManagerNames="", mMemberIds = "", mMemberNames = "";
+   // boolean mUpdate = false;
 
     @AfterViews
     void initViews() {
@@ -85,7 +83,6 @@ public class ProjectAddActivity extends BaseActivity {
             if (!mProject.isCreator()) {
                 layout_managers.setOnClickListener(null);
             }
-            checkMnagerGon();
         }
 
         if (mUpdate) {
@@ -100,34 +97,22 @@ public class ProjectAddActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 编辑 项目的时候 隐藏head
-     */
-    public void checkMnagerGon() {
-        if (!mProject.isCreator() && mProject.isManager()) {
-            ll_managerGon.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 编辑项目 初始化数据
-     */
     void setProjectExtra() {
         if (!mUpdate || mProject == null || TextUtils.isEmpty(mProject.getId())) {
             return;
         }
-        LogUtil.d("得到项目json： " + MainApp.gson.toJson(mProject));
+
         edt_title.setText(mProject.title);
         edt_content.setText(mProject.content);
 
         //mManagerIds = ProjectMember.GetUserIds(mProject.managers);
-        for (ProjectMember ele : mProject.managers) {
-            mManagerIds += ele.user.id + ",";
+        for (ProjectMember ele:mProject.managers) {
+            mManagerIds+=ele.user.id+",";
         }
-        LogUtil.d(" deao得到的参与人： " + MainApp.gson.toJson(mProject.members));
+        LogUtil.d(mManagerIds+" deao得到的负责人： "+MainApp.gson.toJson(mProject.managers));
         //mMemberIds = ProjectMember.GetUserIds(mProject.managers);
-        for (ProjectMember ele : mProject.managers) {
-            mMemberIds += ele.user.id + ",";
+        for (ProjectMember ele:mProject.managers) {
+            mMemberIds+=ele.user.id+",";
         }
         mManagerNames = ProjectMember.GetUserNames(mProject.managers);
         mMemberNames = ProjectMember.GetUserNames(mProject.managers);
@@ -211,20 +196,11 @@ public class ProjectAddActivity extends BaseActivity {
                 for (ProjectMember element : mProject.members) {
                     ManagersMembers member = new ManagersMembers();
                     member.canreadall = element.canReadAll;
-                    NewUser nu = new NewUser();
-                    Department dept = new Department();
-                    if (element.user != null) {
-                        nu.id = element.user.id;
-                        nu.name = element.user.name;
-                        nu.avatar = element.user.avatar;
-                        member.user = nu;
-                    }
-                    if (element.dept != null) {
-                        dept.setId(element.dept.getId());
-                        dept.setName(element.dept.getName());
-                        dept.setXpath(element.dept.getXpath());
-                        member.dept = dept;
-                    }
+                    NewUser nu=new NewUser();
+                    nu.id= element.user.id;
+                    nu.name = element.user.name;
+                    nu.avatar = element.user.avatar;
+                    member.user=nu;
                     mProjectMember.add(member);
                 }
             }
@@ -264,14 +240,14 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         if (mProject != null) {
-            for (ManagersMembers element : mProjectMember) {
-                ProjectMember pm = new ProjectMember();
-                pm.canReadAll = element.canreadall;
-                pm.userId = element.user.id;
-                User uu = new User();
-                uu.id = element.user.id;
-                uu.name = element.user.name;
-                pm.user = uu;
+            for (ManagersMembers element:mProjectMember){
+                ProjectMember pm=new ProjectMember();
+                pm.canReadAll=element.canreadall;
+                pm.userId=element.user.id;
+                User uu=new User();
+                uu.id=element.user.id;
+                uu.name=element.user.name;
+                pm.user=uu;
                 mProject.members.add(pm);
             }
         }
@@ -280,14 +256,11 @@ public class ProjectAddActivity extends BaseActivity {
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
-                for (ProjectMember ele : mAdapter.GetProjectMembers()) {
-                    ManagersMembers mm = new ManagersMembers();
-                    mm.canreadall = ele.canReadAll;
-                    mm.user.id = ele.user.id;
-                    mm.user.name = ele.user.realname;
-                    mm.dept.setId(ele.dept.getId());
-                    mm.dept.setName(ele.dept.getName());
-                    mm.dept.setXpath(ele.dept.getXpath());
+                for (ProjectMember ele :mAdapter.GetProjectMembers()) {
+                    ManagersMembers mm=new ManagersMembers();
+                    mm.canreadall=ele.canReadAll;
+                    mm.user.id=ele.user.id;
+                    mm.user.name=ele.user.realname;
                     mProjectMember.add(mm);
                 }
                 mAdapter.notifyDataSetInvalidated();
@@ -297,36 +270,20 @@ public class ProjectAddActivity extends BaseActivity {
         lv_project_members.setAdapter(mAdapter);
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
-
-    /**
-     * 组建 参与人数据
-     * @return
-     */
-    public ArrayList<ProjectMember> createData() {
-        ArrayList<ProjectMember> obj = new ArrayList<ProjectMember>();
-        for (ManagersMembers ele : mProjectMember) {
-            //LogUtil.d(" cy参与人json： " +MainApp.gson.toJson(ele));
-            ProjectMember pm = new ProjectMember();
-            pm.canReadAll = ele.canreadall;
-            pm.userId = ele.user.id;
-            User uu = new User();
-            Department dept=new Department();
-            if(ele.user!=null){
-                uu.id = ele.user.id;
-                uu.name = ele.user.name;
-                pm.user = uu;
-            }
-            if(ele.dept!=null){
-                dept.setId(ele.dept.getId());
-                dept.setName(ele.dept.getName());
-                dept.setXpath(ele.dept.getXpath());
-                pm.dept=dept;
-            }
+    public ArrayList<ProjectMember> createData(){
+        ArrayList<ProjectMember> obj=new ArrayList<ProjectMember>();
+        for (ManagersMembers ele:mProjectMember){
+            ProjectMember pm=new ProjectMember();
+            pm. canReadAll=ele.canreadall;
+            pm.userId=ele.user.id;
+            User uu=new User();
+            uu.id=ele.user.id;
+            uu.name=ele.user.name;
+            pm.user=uu;
             obj.add(pm);
         }
         return obj;
     }
-
     @Click(R.id.img_title_right)
     void CreateOrUpdateProject() {
         if (TextUtils.isEmpty(mManagerIds)) {
@@ -375,20 +332,15 @@ public class ProjectAddActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                if(error.getKind() == RetrofitError.Kind.NETWORK){
-//                    Toast("请检查您的网络连接");
-//                }
-//                else if(error.getResponse().getStatus() == 500){
-//                    Toast("网络异常500，请稍候再试");
-//                }
             }
         });
     }
 
     @Background
     void UpdateProject(ProjectTransObj obj) {
-        LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
+        LogUtil.d(" 编辑项目传递数据: "+MainApp.gson.toJson(obj));
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
             public void success(Project project, Response response) {
@@ -407,7 +359,6 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 组装 【负责人】
-     *
      * @return
      */
     ArrayList<ManagersMembers> getProjectManager() {
@@ -441,7 +392,7 @@ public class ProjectAddActivity extends BaseActivity {
         ArrayList<ManagersMembers> newData = new ArrayList<>();
         for (ProjectMember element : data) {
             ManagersMembers menb = new ManagersMembers();
-            menb.canreadall = element.canReadAll;
+            menb.canreadall = false;
             User userOlde = element.user;
             menb.user.id = userOlde.id;
             menb.user.avatar = userOlde.avatar;
@@ -461,7 +412,7 @@ public class ProjectAddActivity extends BaseActivity {
     public class ManagersMembers {
         public boolean canreadall;
         public NewUser user = new NewUser();
-        public Department dept = new Department();
+
     }
 
     public class NewUser {
