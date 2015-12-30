@@ -145,7 +145,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Global.Toast("开始更新");
                 initService();
                 break;
-            case R.id.layout_feedback:
+            case R.id.layout_feedback://意见反馈
                 app.startActivity(this, FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.layout_check_update:

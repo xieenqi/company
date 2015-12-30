@@ -154,6 +154,8 @@ public class ContactsInDepartmentFragment extends BaseFragment {
             mIndex = "#".concat(sb.toString());
         }
 
+
+
         return 1;
     }
 
@@ -593,6 +595,7 @@ public class ContactsInDepartmentFragment extends BaseFragment {
                 if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
                     departmentName = departmentName.concat(" | " + user.shortPosition.getName());
                 }
+                LogUtil.d(" ben本部门的数据："+MainApp.gson.toJson( user.shortPosition));
                 //jobName=user.getDepts().get(0).getShortPosition().getName();
                 tv_position.setText(departmentName+"  "+jobName);
 

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
@@ -66,7 +67,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById ImageView img_project_status;
 
     @Extra("projectId") String projectId;
-    Project project;
+    HttpProject project;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
@@ -77,9 +78,9 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目
      */
     private void getProject() {
-        app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<Project>() {
+        app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
-            public void success(Project _project, Response response) {
+            public void success(HttpProject _project, Response response) {
 //                _project.totalAttachment=project.totalAttachment;
 //                _project.totalDiscussion=project.totalDiscussion;
 //                _project.totalWfinstance=project.totalWfinstance;
@@ -89,7 +90,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 project = _project;
                 img_title_right.setEnabled(true);
                 initData(project);
-                LogUtil.d(" 获取项目详情的json： "+MainApp.gson.toJson(_project));
+                LogUtil.d(" 获取项目详情的json： "+response.getHeaders());
             }
 
             @Override
@@ -157,7 +158,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     /**
      * 初始化数据
      */
-    private void initData(Project project) {
+    private void initData(HttpProject project) {
         if (null == project) {
             return;
         }

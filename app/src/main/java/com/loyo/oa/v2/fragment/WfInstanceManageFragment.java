@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.WfinstanceSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
@@ -75,7 +75,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
 
         Bundle mBundle = new Bundle();
         mBundle.putInt("from", BaseActivity.WFIN_MANAGE);
-        app.startActivity(mActivity, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+        app.startActivity(mActivity, WfinstanceSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
 
     }
 

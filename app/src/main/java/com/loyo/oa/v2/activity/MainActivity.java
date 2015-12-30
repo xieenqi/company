@@ -141,8 +141,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Override
     public void onPopupMenuItemClick(int position, PopupMenuItem item) {
+
         Class<?> _class = null;
         switch (position) {
+
             /*暂时用于测试新版选人 跳转*/
             case 0:
                 /*Intent intent = new Intent(this,SelectDetUserActivity.class);
@@ -162,7 +164,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 _class = SignInActivity.class;
                 break;
         }
+
        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+
     }
 
     @Override
@@ -823,15 +827,20 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Intent intent = new Intent();
             switch (MainApp.jpushData.buzzType) {
                 case 1:
-                    intent.setClass(MainActivity.this,TasksInfoActivity_.class);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID,MainApp.jpushData.buzzId);
+                    intent.setClass(MainActivity.this, TasksInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
                 case 2:
-                    intent.setClass(MainActivity.this,WorkReportsInfoActivity_.class);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID,MainApp.jpushData.buzzId);
+                    intent.setClass(MainActivity.this, WorkReportsInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
                 case 3:
-                    intent.setClass(MainActivity.this,WfinstanceInfoActivity_.class);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID,MainApp.jpushData.buzzId);
-
+                    intent.setClass(MainActivity.this, WfinstanceInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;

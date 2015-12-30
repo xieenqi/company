@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
@@ -48,7 +49,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     protected PaginationX<Discussion> mPagination = new PaginationX(20);
     private boolean isTopAdd = true;
     private DiscussionAdapter adapter;
-    private Project project;
+    private HttpProject project;
     private LayoutInflater mInflater;
     private EditText et_comment;
     private TextView tv_send;
@@ -59,7 +60,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey("project")) {
-            project = (Project) getArguments().getSerializable("project");
+            project = (HttpProject) getArguments().getSerializable("project");
         }
     }
 

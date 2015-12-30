@@ -4,11 +4,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -28,40 +27,19 @@ public final class Common {
     public static final int WORK_PAGE = 2;
     public static final int WFIN_PAGE = 3;
 
-    public static ArrayList<User> getUsersByProject(Project project) {
+    public static ArrayList<User> getUsersByProject(HttpProject project) {
         if (null == project) {
             return new ArrayList<>();
         }
 
         ArrayList<User> users = new ArrayList<>();
-        ArrayList<ProjectMember> managers = project.managers;
-        ArrayList<ProjectMember> members = project.members;
+        ArrayList<HttpProject.ProjectManaer> managers = project.managers;
+        ArrayList<HttpProject.ProjectMember> members = project.members;
 
         if (null == managers) {
             managers = new ArrayList<>();
         }
-        if (null != members && !members.isEmpty()) {
-            managers.addAll(members);
-        }
-//        if (null == managers) {
-//            managers = new ArrayList<>();
-//            if (null != members && !members.isEmpty()) {
-//                managers.addAll(members);
-//            }
-//        } else {
-//            if (managers.isEmpty()) {
-//                if (null != members && !members.isEmpty()) {
-//                    managers.addAll(members);
-//                } else {
-//                    for (int i = 0; i < members.size(); i++) {
-//                        ProjectMember member = members.get(i);
-//                        if (!managers.contains(member)) {
-//                            managers.add(member);
-//                        }
-//                    }
-//                }
-//            }
-//        }
+
         if (!managers.isEmpty()) {
             for (int i = 0; i < managers.size(); i++) {
                 User member = managers.get(i).user;
@@ -70,7 +48,17 @@ public final class Common {
                 }
             }
         }
+        if (null != members && !members.isEmpty()) {
+            for (int i=0;i<members.size();i++) {
+                User member = members.get(i).user;
+                if (null!=member) {
+                    users.add(member);
+                }
+            }
+        }
+
         return users;
+
     }
 
     public static ArrayList<UserGroupData> getLstUserGroupData() {

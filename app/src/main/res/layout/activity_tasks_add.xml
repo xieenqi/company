@@ -321,6 +321,11 @@
                         android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"/>
 
                 <LinearLayout
                     android:id="@+id/layout_mycustomer"

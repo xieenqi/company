@@ -32,6 +32,8 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
     public void getData() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("keyword", strSearch);
+        params.put("status", 0);
+        params.put("type", 0);
         params.put("endAt", System.currentTimeMillis() / 1000);
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getPageIndex());

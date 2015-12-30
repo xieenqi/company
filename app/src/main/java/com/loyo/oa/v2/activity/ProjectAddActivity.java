@@ -195,7 +195,7 @@ public class ProjectAddActivity extends BaseActivity {
                 mProjectMember = new ArrayList<>();
                 for (ProjectMember element : mProject.members) {
                     ManagersMembers member = new ManagersMembers();
-                    member.canreadall = element.canreadall;
+                    member.canreadall = element.canReadAll;
                     NewUser nu=new NewUser();
                     nu.id= element.user.id;
                     nu.name = element.user.name;
@@ -242,7 +242,7 @@ public class ProjectAddActivity extends BaseActivity {
         if (mProject != null) {
             for (ManagersMembers element:mProjectMember){
                 ProjectMember pm=new ProjectMember();
-                pm.canreadall=element.canreadall;
+                pm.canReadAll=element.canreadall;
                 pm.userId=element.user.id;
                 User uu=new User();
                 uu.id=element.user.id;
@@ -258,7 +258,7 @@ public class ProjectAddActivity extends BaseActivity {
             public void DeleteMember() {
                 for (ProjectMember ele :mAdapter.GetProjectMembers()) {
                     ManagersMembers mm=new ManagersMembers();
-                    mm.canreadall=ele.canreadall;
+                    mm.canreadall=ele.canReadAll;
                     mm.user.id=ele.user.id;
                     mm.user.name=ele.user.realname;
                     mProjectMember.add(mm);
@@ -274,7 +274,7 @@ public class ProjectAddActivity extends BaseActivity {
         ArrayList<ProjectMember> obj=new ArrayList<ProjectMember>();
         for (ManagersMembers ele:mProjectMember){
             ProjectMember pm=new ProjectMember();
-            pm. canreadall=ele.canreadall;
+            pm. canReadAll=ele.canreadall;
             pm.userId=ele.user.id;
             User uu=new User();
             uu.id=ele.user.id;

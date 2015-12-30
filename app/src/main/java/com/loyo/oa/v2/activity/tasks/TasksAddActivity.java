@@ -278,7 +278,8 @@ public class TasksAddActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
+            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
