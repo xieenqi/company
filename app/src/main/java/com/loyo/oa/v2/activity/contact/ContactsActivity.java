@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.customer;
+package com.loyo.oa.v2.activity.contact;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,7 +37,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
     ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
     //ContactsInDepartmentFragment userFragment;     //本部门  人员frag
-    ContactsInMyDeptFragment userFragment;     //本部门  人员frag
+    ContactsInMyDeptFragment userFragment;     //重构后 本部门  人员frag
 
     PagerSlidingTabStrip tabs;
     ViewPager pager;

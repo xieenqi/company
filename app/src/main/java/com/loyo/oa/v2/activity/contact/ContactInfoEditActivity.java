@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.contact;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -28,13 +29,17 @@ import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.point.IUser;
+import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -111,26 +116,22 @@ public class ContactInfoEditActivity extends BaseActivity {
     TextView tv_departments;
     @ViewById
     TextView tv_positions;
-
     @Extra
     User user;
 
+    private int mobile_phone = 1;
+    private boolean isRun = true;
     private int sex;
-    private String birthday;
-    private String avartarPath;
+    private String uuid = null;
+    private String path = null;
 
     private MHandler mHandler = new MHandler(this);
     private Timer mTimer;
     private TimerTask mTimerTask;
-    private boolean isRun;
     private TextView tv_get_code;
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private String uuid = null;
-    private int mobile_phone = 1;
-    private String path = null;
-    ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
 
     private static class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
@@ -174,20 +175,13 @@ public class ContactInfoEditActivity extends BaseActivity {
         initData();
     }
 
-
-    void testRequest() {
-
-    }
-
-
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_back:
                 if (isDataChange() == false) {
                     showLeaveDialog();
-                }
-                else if(isDataChange()){
+                } else if (isDataChange()) {
                     app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
                 }
                 break;
@@ -246,28 +240,28 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private boolean isDataChange() {
 
-        String tel = TextUtils.isEmpty(tv_mobile.getText().toString())?null:tv_mobile.getText().toString();
-        String birthDay = TextUtils.isEmpty(tv_birthday.getText().toString())?null:tv_birthday.getText().toString();
-        String weixinId = TextUtils.isEmpty(et_weixin.getText().toString())?null:et_weixin.getText().toString();
+        String tel = TextUtils.isEmpty(tv_mobile.getText().toString()) ? null : tv_mobile.getText().toString();
+        String birthDay = TextUtils.isEmpty(tv_birthday.getText().toString()) ? null : tv_birthday.getText().toString();
+        String weixinId = TextUtils.isEmpty(et_weixin.getText().toString()) ? null : et_weixin.getText().toString();
 
-        if(tel != null){
-            if(!tel.equals(user.mobile)){
+        if (tel != null) {
+            if (!tel.equals(user.mobile)) {
                 return false;
             }
         }
 
-        if(birthDay != null){
-            if(!birthDay.equals(user.birthDay)){
+        if (birthDay != null) {
+            if (!birthDay.equals(user.birthDay)) {
                 return false;
             }
         }
 
-        if(weixinId != null){
-            if(!weixinId.equals(user.weixinId)){
+        if (weixinId != null) {
+            if (!weixinId.equals(user.weixinId)) {
                 return false;
             }
         }
-        if(sex+"" != null) {
+        if (sex + "" != null) {
             if (sex != user.gender) {
                 return false;
             }
@@ -305,10 +299,11 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
 
         if (!TextUtils.isEmpty(user.avatar)) {
-            ImageLoader.getInstance().displayImage(user.avatar, img_title_user);
+            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         }
 
-        //        Utils.setContent(tv_title, user.getRealname());
+        path = user.getAvatar();
+        //Utils.setContent(tv_title, user.getRealname());
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         if (user.gender == 2) {
@@ -350,9 +345,10 @@ public class ContactInfoEditActivity extends BaseActivity {
 
 
     /**
-     * 更新个人信息
+     * 编辑个人信息
      */
     private void updateProfile() {
+
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();
@@ -364,26 +360,27 @@ public class ContactInfoEditActivity extends BaseActivity {
         map.put("weixinId", weixinId);
         map.put("avatar", path);
 
-        LogUtil.dll("wx:"+weixinId);
-
-        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.id, map, new RCallback<User>() {
+        RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-                if (null != user) {
-                    Toast("修改个人信息成功");
-                    Intent intent = new Intent();
-                    intent.putExtra("user", user);
-                    app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, intent);
-                }
+
+                Toast("修改个人信息成功");
+                Intent mIntent = new Intent();
+                InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
+                mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
+                app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
+                HttpErrorCheck.checkResponse(response);
+
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
                 Toast("修改个人信息失败");
+                HttpErrorCheck.checkError(error);
+                finish();
             }
         });
-
     }
 
     /**
@@ -656,10 +653,8 @@ public class ContactInfoEditActivity extends BaseActivity {
     public void onBackPressed() {
         if (isDataChange() == false) {
             showLeaveDialog();
-        }
-        else if(isDataChange()){
+        } else if (isDataChange()) {
             finish();
-            //super.onBackPressed();
         }
     }
 

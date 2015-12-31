@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.CustomerLabelActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;

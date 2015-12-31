@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.contact;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

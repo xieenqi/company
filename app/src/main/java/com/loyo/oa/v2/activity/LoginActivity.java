@@ -34,12 +34,12 @@ import retrofit.client.Response;
  * 登陆界面
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, WaveView.OnWaveCompleteListener {
-    EditText edt_username, edt_password;
-    WaveView layout_login;
-    ViewGroup tv_bqq_login;
-    ViewGroup tv_bwx_login;
-    ViewGroup layout_third_login, layout_reset_password;
-    HashMap<String, String> wxUnionIds = new HashMap<>();
+
+    private EditText edt_username, edt_password;
+    private WaveView layout_login;
+    private ViewGroup tv_bqq_login;
+    private ViewGroup layout_third_login, layout_reset_password;
+    private HashMap<String, String> wxUnionIds = new HashMap<>();
 
     private JSONObject jsObj;
     private int codes;
@@ -156,6 +156,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
 
                 login(body, 2);
+
                 break;
             //企业qq登陆
             case R.id.tv_bqq_login:
@@ -233,12 +234,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 MainApp.setToken(token.getAccess_token());
                 SharedUtil.put(mContext, FinalVariables.TOKEN, token.getAccess_token());
                 app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
-               // LogUtil.d("登陆过后：uer : " + response.getBody());
             }
 
             @Override
             public void failure(RetrofitError error) {
+                super.failure(error);
                 HttpErrorCheck.checkError(error);
+
 //                LogUtil.d("登陆失败：" + error.getMessage());
 //                if (error.getKind() == RetrofitError.Kind.NETWORK) {
 //                    Toast("请检查您的网络连接");

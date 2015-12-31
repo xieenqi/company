@@ -16,18 +16,18 @@
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="5dp"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="23dp"
+            android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_side_edge"
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="15sp"/>
 
     </LinearLayout>
 
@@ -37,7 +37,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text=""/>
+        android:text=""
+        android:gravity="center"
+        android:paddingRight="20dp"
+        />
 
     <RelativeLayout
         android:id="@+id/img_title_right"

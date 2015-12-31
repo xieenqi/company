@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.AttachmentRightActivity_;
+import com.loyo.oa.v2.activity.attendance.AttachmentRightActivity_;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
