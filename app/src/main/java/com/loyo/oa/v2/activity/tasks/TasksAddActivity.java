@@ -117,6 +117,11 @@ public class TasksAddActivity extends BaseActivity {
     String projectTitle;
     @Extra("data")
     Task mTask;
+    @Extra(ExtraAndResult.EXTRA_ID)
+    String customerId;
+    @Extra(ExtraAndResult.EXTRA_NAME)
+    String customerName;
+
 
     private AlertDialog dialog_Product;
     private SignInGridViewAdapter signInGridViewAdapter;
@@ -126,7 +131,7 @@ public class TasksAddActivity extends BaseActivity {
     private Members member;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
-    private String aboutName;
+    private String remindTime;
 
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
@@ -153,7 +158,9 @@ public class TasksAddActivity extends BaseActivity {
         getTempTask();
 
         projectAddTask();
-
+        if (!TextUtils.isEmpty(customerId)) {
+            tv_mycustomer.setText(customerName);
+        }
     }
 
     /**
@@ -182,11 +189,8 @@ public class TasksAddActivity extends BaseActivity {
         //tv_Project.setText();
         switch_approve.setChecked(true);
         isCopy = mTask != null ? true : false;
-
         member.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();  //负责人
-
-
     }
 
     void getTempTask() {
@@ -218,7 +222,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -235,15 +239,14 @@ public class TasksAddActivity extends BaseActivity {
         map.put("members", member);
         map.put("planendAt", mDeadline);
         map.put("remindflag", mRemind > 0);
-        map.put("remindtime", mRemind);
+        map.put("remindtime", remindTime);
         map.put("reviewFlag", switch_approve.isChecked());
         map.put("attachmentUUId", uuid);
-        map.put("customerName", aboutName);
-
+        map.put("customerId", customerId);
+        map.put("customerName", customerName);
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
@@ -382,13 +385,13 @@ public class TasksAddActivity extends BaseActivity {
         }
         dialog_Product.show();
         ListView listView_products = (ListView) dialog_Product.findViewById(R.id.listView);
-
         final RemindAdapter productsRadioListViewAdapter = new RemindAdapter(this, Task.RemindList, R.layout.item_listview_product_select);
         listView_products.setAdapter(productsRadioListViewAdapter);
         listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mRemind = Task.RemindListSource.get(position);
+                remindTime = Task.RemindList.get(position);
                 tv_remind.setText(Task.RemindList.get(position));
                 dialog_Product.dismiss();
             }
@@ -456,7 +459,8 @@ public class TasksAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_SELECT_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
-                    aboutName = customer.name;
+                    customerId = customer.id;
+                    customerName = customer.name;
                     tv_mycustomer.setText(customer.name);
                 } else {
                     tv_mycustomer.setText("无");

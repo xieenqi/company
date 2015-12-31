@@ -8,6 +8,7 @@ import com.loyo.oa.v2.adapter.DiscussionAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -40,6 +41,7 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     @Extra("attachmentUUId") String attachmentUUId;
     @ViewById PullToRefreshListView listView_discussion;
     @ViewById TextView et_comment;
+    private boolean isPullUp=false;
 
     private PaginationX<Discussion> mPageDiscussion = new PaginationX<>(20);
     private DiscussionAdapter adapter;
@@ -59,16 +61,21 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         body.put("pageSize", mPageDiscussion.getPageSize());
         body.put("attachmentUUId", attachmentUUId);
         t.getDiscussions(body, new RCallback<PaginationX<Discussion>>() {
-
             @Override
             public void success(PaginationX<Discussion> d, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 listView_discussion.onRefreshComplete();
-                mPageDiscussion = d;
+                if(isPullUp){
+                    mPageDiscussion.getRecords().addAll(d.getRecords());
+                }else{
+                    mPageDiscussion = d;
+                }
                 bindDiscussion();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 listView_discussion.onRefreshComplete();
                 super.failure(error);
             }
@@ -115,11 +122,13 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         t.createDiscussion(body, new RCallback<Discussion>() {
             @Override
             public void success(Discussion d, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 onPullDownToRefresh(listView_discussion);
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
         });
@@ -134,12 +143,14 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        isPullUp=false;
         mPageDiscussion.setPageIndex(1);
         getDDiscussion();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isPullUp=true;
         mPageDiscussion.setPageIndex(mPageDiscussion.getPageIndex() + 1);
         mPageDiscussion.setPageSize(20);
         getDDiscussion();

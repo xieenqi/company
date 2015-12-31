@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -105,7 +106,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @Click(R.id.layout_back)
     void back() {
-        onBackPressed();
+        finish();
+        //onBackPressed();
     }
 
     @Override
@@ -139,45 +141,56 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         }
     }
 
+    /**
+     * 删除联系人的回调 xnq
+     * @param contact
+     */
     @Override
     public void onDel(final Contact contact) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).deleteContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
-            @Override
-            public void success(Contact contact, Response response) {
-                for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                    Contact newContact=mCustomer.contacts.get(i);
-                    if(newContact.equals(contact)){
-                       mCustomer.contacts.remove(i);
-                        initData();
-                        break;
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                deleteContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
+                    @Override
+                    public void success(Contact contact, Response response) {
+                        for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                            Contact newContact = mCustomer.contacts.get(i);
+                            if (newContact.equals(contact)) {
+                                mCustomer.contacts.remove(i);
+                                initData();
+                                break;
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
     }
-
+    /**
+     *  设置默认联系人的回调 xnq
+     * @param contact
+     */
     @Override
     public void onSetDefault(final Contact contact) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).setDefaultContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
-            @Override
-            public void success(Contact _contact, Response response) {
-                for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                    Contact newContact=mCustomer.contacts.get(i);
-                    if(newContact.isDefault()){
-                        newContact.setIsDefault(false);
-                        break;
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                setDefaultContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
+                    @Override
+                    public void success(Contact _contact, Response response) {
+                        Intent intent=new Intent();
+                        CustomerContactManageActivity.this.setResult(Activity.RESULT_OK,intent);//回调刷新界面
+                        for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                            Contact newContact = mCustomer.contacts.get(i);
+                            if (newContact.isDefault()) {
+                                newContact.setIsDefault(false);
+                                break;
+                            }
+                        }
+                        for (int i = 0; i < mCustomer.contacts.size(); i++) {
+                            Contact newContact = mCustomer.contacts.get(i);
+                            if (newContact.equals(contact)) {
+                                newContact.setIsDefault(true);
+                                mCustomer.contacts.set(i, newContact);
+                                initData();
+                                break;
+                            }
+                        }
                     }
-                }
-                for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                    Contact newContact=mCustomer.contacts.get(i);
-                    if(newContact.equals(contact)){
-                        newContact.setIsDefault(true);
-                        mCustomer.contacts.set(i,newContact);
-                        initData();
-                        break;
-                    }
-                }
-            }
-        });
+                });
     }
 }
