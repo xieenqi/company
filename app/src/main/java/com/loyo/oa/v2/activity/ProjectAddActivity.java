@@ -10,11 +10,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
@@ -58,10 +60,10 @@ public class ProjectAddActivity extends BaseActivity {
     @Extra("mUpdate") boolean mUpdate;
 
     ProjectMemberListViewAdapter mAdapter;
-    ArrayList<ManagersMembers> mProjectMember=new ArrayList<>();
+    ArrayList<ManagersMembers> mProjectMember = new ArrayList<>();
 
-    String mManagerIds="", mManagerNames="", mMemberIds = "", mMemberNames = "";
-   // boolean mUpdate = false;
+    String mManagerIds = "", mManagerNames = "", mMemberIds = "", mMemberNames = "";
+    // boolean mUpdate = false;
 
     @AfterViews
     void initViews() {
@@ -106,13 +108,13 @@ public class ProjectAddActivity extends BaseActivity {
         edt_content.setText(mProject.content);
 
         //mManagerIds = ProjectMember.GetUserIds(mProject.managers);
-        for (ProjectMember ele:mProject.managers) {
-            mManagerIds+=ele.user.id+",";
+        for (ProjectMember ele : mProject.managers) {
+            mManagerIds += ele.user.id + ",";
         }
-        LogUtil.d(mManagerIds+" deao得到的负责人： "+MainApp.gson.toJson(mProject.managers));
+        LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.managers));
         //mMemberIds = ProjectMember.GetUserIds(mProject.managers);
-        for (ProjectMember ele:mProject.managers) {
-            mMemberIds+=ele.user.id+",";
+        for (ProjectMember ele : mProject.managers) {
+            mMemberIds += ele.user.id + ",";
         }
         mManagerNames = ProjectMember.GetUserNames(mProject.managers);
         mMemberNames = ProjectMember.GetUserNames(mProject.managers);
@@ -129,19 +131,28 @@ public class ProjectAddActivity extends BaseActivity {
     //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
-        Bundle bundle1 = new Bundle();
-        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MANAGERS, bundle1);
+//        Bundle bundle1 = new Bundle();
+//        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
+//        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
+//        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MANAGERS, bundle1);
+        Bundle bundle = new Bundle();
+        bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                ExtraAndResult.request_Code, bundle);
     }
 
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
+//        Bundle bundle1 = new Bundle();
+//        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
+//        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
+//        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MEMBERS, bundle1);
         Bundle bundle1 = new Bundle();
-        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MEMBERS, bundle1);
+        bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+        bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                ExtraAndResult.request_Code, bundle1);
     }
 
     @OnActivityResult(REQUEST_MANAGERS)
@@ -196,11 +207,11 @@ public class ProjectAddActivity extends BaseActivity {
                 for (ProjectMember element : mProject.members) {
                     ManagersMembers member = new ManagersMembers();
                     member.canreadall = element.canReadAll;
-                    NewUser nu=new NewUser();
-                    nu.id= element.user.id;
+                    NewUser nu = new NewUser();
+                    nu.id = element.user.id;
                     nu.name = element.user.name;
                     nu.avatar = element.user.avatar;
-                    member.user=nu;
+                    member.user = nu;
                     mProjectMember.add(member);
                 }
             }
@@ -240,14 +251,14 @@ public class ProjectAddActivity extends BaseActivity {
         }
 
         if (mProject != null) {
-            for (ManagersMembers element:mProjectMember){
-                ProjectMember pm=new ProjectMember();
-                pm.canReadAll=element.canreadall;
-                pm.userId=element.user.id;
-                User uu=new User();
-                uu.id=element.user.id;
-                uu.name=element.user.name;
-                pm.user=uu;
+            for (ManagersMembers element : mProjectMember) {
+                ProjectMember pm = new ProjectMember();
+                pm.canReadAll = element.canreadall;
+                pm.userId = element.user.id;
+                User uu = new User();
+                uu.id = element.user.id;
+                uu.name = element.user.name;
+                pm.user = uu;
                 mProject.members.add(pm);
             }
         }
@@ -256,11 +267,11 @@ public class ProjectAddActivity extends BaseActivity {
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
-                for (ProjectMember ele :mAdapter.GetProjectMembers()) {
-                    ManagersMembers mm=new ManagersMembers();
-                    mm.canreadall=ele.canReadAll;
-                    mm.user.id=ele.user.id;
-                    mm.user.name=ele.user.realname;
+                for (ProjectMember ele : mAdapter.GetProjectMembers()) {
+                    ManagersMembers mm = new ManagersMembers();
+                    mm.canreadall = ele.canReadAll;
+                    mm.user.id = ele.user.id;
+                    mm.user.name = ele.user.realname;
                     mProjectMember.add(mm);
                 }
                 mAdapter.notifyDataSetInvalidated();
@@ -270,20 +281,22 @@ public class ProjectAddActivity extends BaseActivity {
         lv_project_members.setAdapter(mAdapter);
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
-    public ArrayList<ProjectMember> createData(){
-        ArrayList<ProjectMember> obj=new ArrayList<ProjectMember>();
-        for (ManagersMembers ele:mProjectMember){
-            ProjectMember pm=new ProjectMember();
-            pm. canReadAll=ele.canreadall;
-            pm.userId=ele.user.id;
-            User uu=new User();
-            uu.id=ele.user.id;
-            uu.name=ele.user.name;
-            pm.user=uu;
+
+    public ArrayList<ProjectMember> createData() {
+        ArrayList<ProjectMember> obj = new ArrayList<ProjectMember>();
+        for (ManagersMembers ele : mProjectMember) {
+            ProjectMember pm = new ProjectMember();
+            pm.canReadAll = ele.canreadall;
+            pm.userId = ele.user.id;
+            User uu = new User();
+            uu.id = ele.user.id;
+            uu.name = ele.user.name;
+            pm.user = uu;
             obj.add(pm);
         }
         return obj;
     }
+
     @Click(R.id.img_title_right)
     void CreateOrUpdateProject() {
         if (TextUtils.isEmpty(mManagerIds)) {
@@ -340,7 +353,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     @Background
     void UpdateProject(ProjectTransObj obj) {
-        LogUtil.d(" 编辑项目传递数据: "+MainApp.gson.toJson(obj));
+        LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
             public void success(Project project, Response response) {
@@ -359,6 +372,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 组装 【负责人】
+     *
      * @return
      */
     ArrayList<ManagersMembers> getProjectManager() {
