@@ -65,7 +65,7 @@ import retrofit.client.Response;
  */
 public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, OnDropItemSelectedListener {
 
-    private static final String[] TIMES_TAG = new String[]{"按跟进时间 倒序", "按跟进时间 顺序", "按创建时间 倒序", "按创建时间 顺序"};
+    private static final String[] TIMES_TAG = new String[]{"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 倒序"};
 
     private View mView;
     private PullToRefreshListView listView;
@@ -78,7 +78,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private int customer_type;//"0,我的客户", "1,团队客户", "2,公海客户"
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
-    private boolean isTopAdd = true;
+    private boolean isPullUp = false;
     private boolean isFrist = false;
     private String position;
     private NearCount nearCount;
@@ -90,6 +90,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String tagItemIds = "";
     private String departmentId = "";
     private String userId = "";
+    private int page = 1;
 
 
     @Override
@@ -183,14 +184,16 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = true;
+        page = 1;
+        isPullUp = false;
         mPagination.setPageIndex(1);
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        isTopAdd = false;
+        page++;
+        isPullUp = true;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
@@ -206,6 +209,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
         //初始化时间筛选menu
         DropItem time = new DropItem("时间");
+        time.setSelectType(DropItem.GROUP_SINGLE);
         for (int i = 0; i < TIMES_TAG.length; i++) {
             time.addSubDropItem(new DropItem(TIMES_TAG[i], i));
         }
@@ -220,9 +224,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).GetTags(new RCallback<ArrayList<Tag>>() {
             @Override
             public void success(ArrayList<Tag> tags, Response response) {
-
-                LogUtil.dll("标签：" + MainApp.gson.toJson(tags));
-
+                HttpErrorCheck.checkResponse(response);
                 if (null == tags) {
                     return;
                 }
@@ -255,7 +257,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private void initOrganizationMenu() {
         ArrayList<Department> departments = Common.getLstDepartment();
         DropItem dropItemTag = new DropItem("部门");
-        dropItemTag.setSelectType(DropItem.GROUP_SINGLE_DISMISS);
+        dropItemTag.setSelectType(DropItem.GROUP_SINGLE);
         for (int i = 0; i < departments.size(); i++) {
             ArrayList<User> users = Common.getUsersByDeptId(departments.get(i).getId(), new ArrayList<User>());
             ArrayList<DropItem> dropItems = new ArrayList<>();
@@ -274,6 +276,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onCancelAll(int ColumnIndex) {
+        page = 1;
         switch (customer_type) {
             case Customer.CUSTOMER_TYPE_MINE:
             case Customer.CUSTOMER_TYPE_PUBLIC:
@@ -297,13 +300,15 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     }
 
     /**
-     * 赛选 选择监听
+     * 【筛选 选择监听】
+     *
      * @param listview
      * @param ColumnIndex
      * @param items
      */
     @Override
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
+        page = 1;
         if (items != null && items.size() > 0) {
             switch (customer_type) {
                 /**我的客户*/
@@ -422,8 +427,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             for (int i = 0; i < items.size(); i++) {
                 sb.append(items.get(items.keyAt(i)).getName()).append(" ").append(items.get(items.keyAt(i)).getValue()).append(",");
             }
-            Toast("选择的内容：" + sb.toString());
             getData();
+            Toast("选择的内容：" + sb.toString());
         }
     }
 
@@ -479,6 +484,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 });
             }
+
             @Override
             public void OnLocationFailed() {
                 Toast("获取附近客户信息失败！");
@@ -506,15 +512,15 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private void getData() {
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageIndex", mPagination.getPageIndex());
-        params.put("pageSize", isTopAdd ? mCustomers.size() >= 20 ? mCustomers.size() : 20 : 20);
+        params.put("pageIndex", page);
+        params.put("pageSize", 15);
         params.put("field", filed);
         params.put("order", order);
         params.put("tagItemIds", tagItemIds);
         params.put("deptId", departmentId);
         params.put("userId", userId);
 
-        LogUtil.dll("客户查询传递参数：" + MainApp.gson.toJson(params));
+        LogUtil.d("客户查询传递参数：" + MainApp.gson.toJson(params));
         String url = "";
         switch (customer_type) {
             case Customer.CUSTOMER_TYPE_MINE:
@@ -547,8 +553,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
+                        HttpErrorCheck.checkResponse(response);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
-                            if (isTopAdd) {
+                            if (!isPullUp) {
                                 mPagination.setPageIndex(1);
                                 mPagination.setPageSize(20);
                                 mCustomers.clear();
@@ -561,13 +568,13 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             }
                         } else {
                             mPagination = customerPaginationX;
-                            if (isTopAdd) {
+                            if (!isPullUp) {
                                 mCustomers.clear();
                             }
                             mCustomers.addAll(customerPaginationX.getRecords());
                             bindData();
                         }
-                        if (isTopAdd && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
+                        if (!isPullUp && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
                             getNearCustomersInfo();
                         }
                         listView.onRefreshComplete();
@@ -581,7 +588,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                 }
         );
-        tagItemIds="";
+        tagItemIds = "";
     }
 
 

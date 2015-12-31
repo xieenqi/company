@@ -19,10 +19,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -324,7 +323,8 @@ public class TasksAddActivity extends BaseActivity {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
 
-                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
+                                String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
                         mDeadline = Long.parseLong(DateTool.getDataOne(str));
                         LogUtil.dll("截至时间:" + mDeadline + "");
@@ -337,7 +337,8 @@ public class TasksAddActivity extends BaseActivity {
             case R.id.layout_responsiblePerson:
                 Bundle bundle = new Bundle();
                 bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        ExtraAndResult.request_Code, bundle);
                 break;
 
             //参与人选项
@@ -346,7 +347,8 @@ public class TasksAddActivity extends BaseActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
                 bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        ExtraAndResult.request_Code, bundle1);
 
 
                 break;
@@ -478,7 +480,7 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            case DepartmentUserActivity.request_Code:
+            case ExtraAndResult.request_Code:
 
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 //负责人回调
@@ -501,7 +503,8 @@ public class TasksAddActivity extends BaseActivity {
 
             case SelectPicPopupWindow.GET_IMG:
                 try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>)
+                            data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
