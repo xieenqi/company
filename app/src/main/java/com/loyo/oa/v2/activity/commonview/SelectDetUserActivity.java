@@ -52,7 +52,7 @@ public class SelectDetUserActivity extends Activity {
 
     public ArrayList<User> userList;
     public ArrayList<User> userAllList; //所有员工
-    public ArrayList<Department> deptSource;//部门数据源
+    public ArrayList<Department> deptSource;//部门数据源｀
     public ArrayList<UserGroupData> totalSource; //全部数据源
     public ArrayList<User> selectList; //选中数据
 
@@ -100,6 +100,7 @@ public class SelectDetUserActivity extends Activity {
         userList = new ArrayList<>();
         selectList = new ArrayList<>();
 
+
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
             for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
@@ -117,6 +118,10 @@ public class SelectDetUserActivity extends Activity {
         rightLv = (ListView) findViewById(R.id.lv_selectdetuser_right);
         btnSure = (Button) findViewById(R.id.btn_title_right);
         llback = (LinearLayout) findViewById(R.id.ll_back);
+
+        if(selectType == 1){
+            btnSure.setVisibility(View.INVISIBLE);
+        }
 
         /*左侧Lv初始化*/
         mDetAdapter = new SelectDetAdapter(mContext, deptSource);
@@ -176,8 +181,6 @@ public class SelectDetUserActivity extends Activity {
                 mHandler.sendEmptyMessage(0x01);
 
                 if (selectType == 1) {
-
-                    btnSure.setVisibility(View.INVISIBLE);
                     Intent mIntent = new Intent();
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable(User.class.getName(),userList.get(position - 1));

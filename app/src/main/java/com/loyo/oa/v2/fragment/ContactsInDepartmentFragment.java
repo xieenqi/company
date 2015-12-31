@@ -41,16 +41,17 @@ import java.util.List;
  * 时间 : 15/8/24.
  */
 public class ContactsInDepartmentFragment extends BaseFragment {
-    ExpandableListView expandableListView_user;
-    ContactsExpandableListAdapter userGroupExpandableListAdapter;
-    ArrayList<CommonItem> listDatas = new ArrayList<>();
-    MyLetterListView letterView;
-    AlphabetIndexer index;
-    ViewGroup layout_toast;
-    TextView tv_toast;
-    String mIndex;
-    String depId;
-    boolean isMyDept;
+
+    public ExpandableListView expandableListView_user;
+    public ContactsExpandableListAdapter userGroupExpandableListAdapter;
+    public ArrayList<CommonItem> listDatas = new ArrayList<>();
+    public MyLetterListView letterView;
+    public AlphabetIndexer index;
+    public ViewGroup layout_toast;
+    public TextView tv_toast;
+    public String mIndex;
+    public String depId;
+    public boolean isMyDept;
 
     //必须大于adapter的viewType
     private int itemCount = 2;
@@ -65,10 +66,8 @@ public class ContactsInDepartmentFragment extends BaseFragment {
      * 初始化数据
      */
     private int initData() {
-//Toast(" 本部门联系人 ");
-        depId = (null == getArguments() || !getArguments().containsKey("depId")) ? "" : getArguments().getString("depId");
 
-        //Toast(" 部门id " + !getArguments().containsKey("depId"));
+        depId = (null == getArguments() || !getArguments().containsKey("depId")) ? "" : getArguments().getString("depId");
 
         if (TextUtils.isEmpty(depId) && depId.length() == 0) {
             depId = MainApp.user.depts.get(0).getShortDept().getId();
@@ -77,7 +76,6 @@ public class ContactsInDepartmentFragment extends BaseFragment {
         if (MainApp.user.depts.size() != 0) {
             isMyDept = TextUtils.equals(depId, MainApp.user.depts.get(0).getShortDept().getId());
         }
-
 
         List<Department> departments = isMyDept ? null : Common.getLstDepartment(depId);
         List<User> users = isMyDept ? Common.getUsersByDeptId(depId, new ArrayList<User>()) : Common.getListUser(depId);
@@ -103,6 +101,7 @@ public class ContactsInDepartmentFragment extends BaseFragment {
                     }
                 }
             }
+
             if (null != users && !users.isEmpty()) {
                 if (itemCount == 2)
                     itemCount = 3;
@@ -153,8 +152,6 @@ public class ContactsInDepartmentFragment extends BaseFragment {
         } else {
             mIndex = "#".concat(sb.toString());
         }
-
-
 
         return 1;
     }
@@ -518,9 +515,6 @@ public class ContactsInDepartmentFragment extends BaseFragment {
 
         public ContactsExpandableListAdapter() {
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            for (CommonItem element:listDatas){
-                LogUtil.d(" 部门名字  "+element.datas.get(0));
-            }
         }
 
         @Override
@@ -589,19 +583,21 @@ public class ContactsInDepartmentFragment extends BaseFragment {
 
                 tv_content.setText(user.getRealname());
 
+                /*部门名*/
                 String departmentName = ((User) getChild(groupPosition, childPosition)).departmentsName;
-
+                /*职位*/
                 String jobName = ((User) getChild(groupPosition, childPosition)).role.name;
+
                 if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
                     departmentName = departmentName.concat(" | " + user.shortPosition.getName());
                 }
-                LogUtil.d(" ben本部门的数据："+MainApp.gson.toJson( user.shortPosition));
-                //jobName=user.getDepts().get(0).getShortPosition().getName();
-                tv_position.setText(departmentName+"  "+jobName);
+
+                tv_position.setText(departmentName + "  " + jobName);
 
                 if (!TextUtils.isEmpty(user.avatar)) {
                     ImageLoader.getInstance().displayImage(user.avatar, img);
                 }
+
             } else {
                 Department d = (Department) o;
                 TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
