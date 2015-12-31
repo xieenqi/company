@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -30,15 +31,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+/**
+ * 通讯录搜索
+ * */
+
 public class DepartmentUserSearchActivity extends Activity {
 
-    EditText edt_search;
-    PullToRefreshListView listView;
-    ArrayList<User> data = new ArrayList<>();
-    ArrayList<User> resultData = new ArrayList<>();
-
-    ViewGroup img_title_left;
-
+    private EditText edt_search;
+    private PullToRefreshListView listView;
+    private ArrayList<User> data = new ArrayList<>();
+    private ArrayList<User> resultData = new ArrayList<>();
+    private ViewGroup img_title_left;
     private int type = -1;
 
     @Override
@@ -116,6 +119,10 @@ public class DepartmentUserSearchActivity extends Activity {
 
     String key;
 
+    /**
+     * 搜索操作
+     * */
+
     void doSearch() {
         key = edt_search.getText().toString().trim();
         if (StringUtil.isEmpty(key)) {
@@ -148,6 +155,10 @@ public class DepartmentUserSearchActivity extends Activity {
         }
     }
 
+    /**
+     * 适配器
+     * */
+
     BaseAdapter adapter = new BaseAdapter() {
         @Override
         public int getCount() {
@@ -175,10 +186,26 @@ public class DepartmentUserSearchActivity extends Activity {
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             tv_content.setText(user.getRealname());
-            String departmentName = user.departmentsName;
-            if (null != user && null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
-                tv_position.setText(departmentName + " | " + user.shortPosition.getName());
+
+
+            String deptName,workName;
+
+            try{
+                deptName = user.depts.get(0).getShortDept().getName();
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                deptName = "无";
             }
+
+            try{
+                workName = user.role.name;
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                workName = "无";
+            }
+
+            tv_position.setText(deptName+"  "+workName);
+
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);
             }

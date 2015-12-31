@@ -143,7 +143,7 @@ public final class FinalVariables {
     /**登陆**/
     public static final String GET_TOKEN = Config_project.SERVER_URL_LOGIN()+"/oapi/auth/";
     /**获取个人资料**/
-    public static final String GET_PROFILE = Config_project.SERVER_URL_LOGIN()+"/api/v2/user/profile/";//oapi/user/profile
+    public static final String GET_PROFILE = Config_project.SERVER_URL_LOGIN()+"/api/v2/user/profile/";
     /**更新个人资料**/
     public static final String UPDATE_PROFILE = Config_project.SERVER_URL_LOGIN()+"/api/v2/user/{id}profile/";
     /**获取组织架构**/

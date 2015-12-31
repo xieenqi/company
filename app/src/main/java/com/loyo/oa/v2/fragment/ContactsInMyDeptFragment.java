@@ -11,11 +11,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ContactInfoActivity_;
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.adapter.ContactsInMyDeptAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.SortModel;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.CharacterParser;
 import com.loyo.oa.v2.common.Common;
@@ -24,12 +23,8 @@ import com.loyo.oa.v2.common.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * 【本部门】人员列表页
@@ -51,6 +46,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
 
     public int positions;
 
+    public View view;
     public View headView;
     public ImageView heading;
     public TextView nameTv;
@@ -61,10 +57,17 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_user_users, container, false);
+        view = inflater.inflate(R.layout.fragment_user_users, container, false);
         initView(view);
         return view;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        /*及时刷新头像*/
+        heading = (ImageView)headView.findViewById(R.id.img);
+        ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), heading);
     }
 
     public void initView(View view) {
@@ -74,7 +77,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         mInflater = LayoutInflater.from(getActivity());
 
         headView = mInflater.inflate(R.layout.item_medleft, null);
-        heading = (ImageView)headView.findViewById(R.id.img);
         nameTv =  (TextView)headView.findViewById(R.id.tv_name);
         deptInfoTv = (TextView)headView.findViewById(R.id.tv_position);
         catalogTv = (TextView)headView.findViewById(R.id.catalog);
@@ -86,7 +88,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         pinyinComparator = new PinyinComparator();
         characterParser = CharacterParser.getInstance();
 
-        ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), heading);
         nameTv.setText(MainApp.user.getRealname());
         deptInfoTv.setText(MainApp.user.depts.get(0).getShortDept().getName());
         catalogTv.setText("我");

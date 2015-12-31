@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -38,14 +39,12 @@ import retrofit.client.Response;
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
-    TextView tv_title_1, tv_version, tv_new_version;
-
-    ViewGroup layout_exit;
-    ViewGroup img_title_left;
-    ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
-    ViewGroup layout_check_update;
-
-    Intent mIntentCheckUpdate;
+    public TextView tv_title_1, tv_version, tv_new_version;
+    public ViewGroup layout_exit;
+    public ViewGroup img_title_left;
+    public ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
+    public ViewGroup layout_check_update;
+    public Intent mIntentCheckUpdate;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -64,8 +63,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initUI();
-
-
     }
 
     @Override
@@ -175,21 +172,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Bundle b = new Bundle();
                 b.putSerializable("user", MainApp.user);
                 app.startActivity(SettingActivity.this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
-
-
             }
 
             @Override
             public void failure(RetrofitError error) {
+                super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                if(error.getKind() == RetrofitError.Kind.NETWORK){
-//                    Toast("请检查您的网络连接");
-//                }
-//                else if(error.getKind() == RetrofitError.Kind.HTTP){
-//                    if(error.getResponse().getStatus() == 500){
-//                        Toast("网络异常500，请稍候再试");
-//                    }
-//                }
             }
         });
     }

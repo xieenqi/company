@@ -12,10 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ContactInfoActivity_;
-import com.loyo.oa.v2.activity.ContactsDepartmentActivity_;
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;

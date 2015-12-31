@@ -19,14 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ContactInfoActivity_;
-import com.loyo.oa.v2.activity.ContactsDepartmentActivity_;
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 import com.nostra13.universalimageloader.core.ImageLoader;

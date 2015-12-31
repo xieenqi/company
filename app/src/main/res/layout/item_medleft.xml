@@ -6,6 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:id="@+id/item_medleft_top"
+    android:background="@color/white"
     >
 
     <TextView

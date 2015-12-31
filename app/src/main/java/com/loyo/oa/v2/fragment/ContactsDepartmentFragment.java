@@ -17,7 +17,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ContactsDepartmentActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;

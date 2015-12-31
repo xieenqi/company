@@ -28,8 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
-import com.loyo.oa.v2.activity.customer.ContactsActivity;
+import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
