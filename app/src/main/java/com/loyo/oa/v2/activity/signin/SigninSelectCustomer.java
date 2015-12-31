@@ -27,12 +27,10 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,7 +39,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 新建拜访 客户选择
+ * 新建拜访 [客户选择]
  * Created by yyy on 15/12/24.
  */
 public class SigninSelectCustomer extends BaseActivity implements PullToRefreshListView.OnRefreshListener2 {
@@ -129,7 +127,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                returnData(position-1);
+                returnData(position - 1);
             }
         });
     }
@@ -138,31 +136,32 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     /**
      * 获取附近客户数据
      */
-        private void getNearCustomersInfo() {
-            new LocationUtil(this, new LocationUtil.AfterLocation() {
-                @Override
-                public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-                    LogUtil.dll("附近");
-                    position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
-                    String url = FinalVariables.QUERY_NEAR_CUSTOMERS_SELF;
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("pageIndex", paginationX.getPageIndex());
-                    params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-                    params.put("position", position);
-                    kalo = 0;
-                    dataRequestvoid(url, params);
-                }
-                @Override
-                public void OnLocationFailed() {
-                    Toast("获取附近客户信息失败！");
-                }
-            });
-        }
+    private void getNearCustomersInfo() {
+        new LocationUtil(this, new LocationUtil.AfterLocation() {
+            @Override
+            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+                LogUtil.dll("附近");
+                position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
+                String url = FinalVariables.QUERY_NEAR_CUSTOMERS_SELF;
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("pageIndex", paginationX.getPageIndex());
+                params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+                params.put("position", position);
+                kalo = 0;
+                dataRequestvoid(url, params);
+            }
+
+            @Override
+            public void OnLocationFailed() {
+                Toast("获取附近客户信息失败！");
+            }
+        });
+    }
 
     /**
      * 查询客户数据
-     * */
-    void getAllData(){
+     */
+    void getAllData() {
         LogUtil.dll("查询");
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
         HashMap<String, Object> params = new HashMap<>();
@@ -175,18 +174,12 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
     /**
      * 请求体
-     * */
-    void dataRequestvoid(String url,HashMap<String,Object> params){
+     */
+    void dataRequestvoid(String url, HashMap<String, Object> params) {
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
             public void success(PaginationX<Customer> customerPaginationX, Response response) {
-
-                LogUtil.dll("URL:" + response.getUrl());
-                try {
-                    LogUtil.dll("result success:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                HttpErrorCheck.checkResponse(response);
 
                 expandableListView_search.onRefreshComplete();
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -244,9 +237,9 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = true;
         paginationX.setPageIndex(1);
-        if(kalo == 0){
+        if (kalo == 0) {
             getNearCustomersInfo();
-        }else{
+        } else {
             getAllData();
         }
     }
@@ -255,9 +248,9 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = false;
         paginationX.setPageIndex(paginationX.getPageIndex() + 1);
-        if(kalo == 0){
+        if (kalo == 0) {
             getNearCustomersInfo();
-        }else{
+        } else {
             getAllData();
         }
     }
@@ -269,7 +262,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
     protected void returnData(int position) {
         Intent intent = new Intent();
-        intent.putExtra("data",lstData.get(position));
+        intent.putExtra("data", lstData.get(position));
         setResult(RESULT_OK, intent);
         onBackPressed();
     }

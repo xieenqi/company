@@ -41,7 +41,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 新增购买意向
+ * 【新增购买意向】
  */
 
 public class DemandsAddActivity extends BaseActivity implements View.OnClickListener {
@@ -392,7 +392,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         map.put("productName", productNameSelect);
         map.put("customerName", customerName);
         String[] reasons = getLoseReasonIds();
-        if (null != reasons && reasons.length > 0) {
+        if (null != reasons && reasons.length > 0) {//输单原因的id
             map.put("loseIds", reasons);
         }
 

@@ -18,6 +18,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -32,12 +33,15 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
     ArrayList<Demand> lstData;
     private Context mContext;
     private boolean isMyUser;
+    private String customerId, customerName;
 
-    public DemandsRadioListViewAdapter(Context context, ArrayList<Demand> lstData,boolean isMyUser) {
+    public DemandsRadioListViewAdapter(Context context, ArrayList<Demand> lstData, boolean isMyUser, String customerId, String customerName) {
         mInflater = LayoutInflater.from(context);
         this.lstData = lstData;
         mContext = context;
         this.isMyUser = isMyUser;
+        this.customerId = customerId;
+        this.customerName = customerName;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
 
         tv_memo.setText("备注：" + demand.getMemo());
 
-        if(!isMyUser){
+        if (!isMyUser) {
             img_edit_damand.setVisibility(View.GONE);
         }
 
@@ -112,17 +116,19 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
                     goWfInstance(demand.getWfId());
                 }
             });
-        } return convertView;
+        }
+        return convertView;
     }
 
     /**
      * 审批
+     *
      * @param wFInstanceId
      */
     private void goWfInstance(String wFInstanceId) {
-        Bundle b=new Bundle();
-        b.putString("id",wFInstanceId);
-       MainApp.getMainApp().startActivityForResult((DemandsManageActivity)mContext, WfinstanceInfoActivity_.class,0, BaseMainListFragment.REQUEST_REVIEW,b);
+        Bundle b = new Bundle();
+        b.putString("id", wFInstanceId);
+        MainApp.getMainApp().startActivityForResult((DemandsManageActivity) mContext, WfinstanceInfoActivity_.class, 0, BaseMainListFragment.REQUEST_REVIEW, b);
     }
 
     /**
@@ -133,6 +139,9 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
     private void editDemand(Demand data) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Demand.class.getName(), data);
-        MainApp.getMainApp().startActivityForResult((Activity) mContext, DemandsAddActivity.class, MainApp.ENTER_TYPE_BUTTOM, DemandsManageActivity.VIEW_DEMANDS, bundle);
+        bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
+        bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
+        MainApp.getMainApp().startActivityForResult((Activity) mContext, DemandsAddActivity.class,
+                MainApp.ENTER_TYPE_BUTTOM, DemandsManageActivity.VIEW_DEMANDS, bundle);
     }
 }

@@ -15,6 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -111,19 +112,28 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
             case R.id.img_title_right:
-
                 String name = edt_name.getText().toString().trim();
                 String phone = edt_phone.getText().toString().trim();
-
                 if (name.isEmpty()) {
                     Toast("联系人不能为空");
                     return;
                 }
-
                 if (phone.isEmpty()) {
                     Toast("电话不能为空");
                     return;
+                }else{//验证电话号码
+                    if(!RegularCheck.isMobilePhone(phone)){
+                        Toast("电话号码不正确");
+                        return;
+                    }
                 }
+//                //如果有输入座机就验证座机
+//                if(!TextUtils.isEmpty(getEditTextContent(edt_wiretel))){
+//                    if(!RegularCheck.isPhone(getEditTextContent(edt_wiretel))){
+//                        Toast("座机号码不正确");
+//                        return;
+//                    }
+//                }
                 //现有客户新增联系人
                 HashMap<String, Object> maps = new HashMap<>();
                 maps.put("name", getContractName());

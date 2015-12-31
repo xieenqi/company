@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.beans.Parameters;
 
-import com.loyo.oa.v2.tool.json.JSONObjectUtil;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,25 +9,28 @@ import java.util.ArrayList;
  * Created by Administrator on 2014/12/29 0029.
  */
 public class WorkFlowValuesAdd implements Serializable {
-    private String   wfInstanceId ;//int64, optional): ,
-    private ArrayList<JSONObjectUtil> wfInstanceValuesDatas ;//array[&{bson M}], optional):
+    public String   wfInstanceId ;//int64, optional): ,
+    public ArrayList<JSONObject> wfInstanceValuesDatas ;//array[&{bson M}], optional):
+
+
+
     public WorkFlowValuesAdd(){
-        wfInstanceValuesDatas=new ArrayList<JSONObjectUtil>();
+        wfInstanceValuesDatas=new ArrayList<JSONObject>();
 
     }
-    public String getWfInstanceId() {
-        return wfInstanceId;
-    }
-
-    public void setWfInstanceId(String wfInstanceId) {
-        this.wfInstanceId = wfInstanceId;
-    }
-
-    public ArrayList<JSONObjectUtil> getWfInstanceValuesDatas() {
-        return wfInstanceValuesDatas;
-    }
-
-    public void setWfInstanceValuesDatas(ArrayList<JSONObjectUtil> wfInstanceValuesDatas) {
-        this.wfInstanceValuesDatas = wfInstanceValuesDatas;
-    }
+//    public String getWfInstanceId() {
+//        return wfInstanceId;
+//    }
+//
+//    public void setWfInstanceId(String wfInstanceId) {
+//        this.wfInstanceId = wfInstanceId;
+//    }
+//
+//    public ArrayList<JSONObjectUtil> getWfInstanceValuesDatas() {
+//        return wfInstanceValuesDatas;
+//    }
+//
+//    public void setWfInstanceValuesDatas(ArrayList<JSONObjectUtil> wfInstanceValuesDatas) {
+//        this.wfInstanceValuesDatas = wfInstanceValuesDatas;
+//    }
 }

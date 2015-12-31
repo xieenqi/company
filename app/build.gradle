@@ -106,7 +106,7 @@ dependencies {
     //compile files('libs/libammsdk.jar')
 
     compile files('libs/wup-1.0.0-SNAPSHOT.jar')
-    compile files('libs/mid-sdk-2.20.jar')
+    //compile files('libs/mid-sdk-2.20.jar')
     compile files('libs/jg_filter_sdk_1.1.jar')
 
     compile 'com.nineoldandroids:library:2.4.0'

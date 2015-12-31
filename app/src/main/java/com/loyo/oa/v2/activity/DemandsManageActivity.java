@@ -31,7 +31,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 购买意向
+ * 【购买意向】
  */
 
 public class DemandsManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
@@ -102,6 +102,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
             @Override
             public void success(PaginationX<Demand> demandPaginationX, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 listView_demands.onRefreshComplete();
                 if (!PaginationX.isEmpty(demandPaginationX)) {
                     paginationX = demandPaginationX;
@@ -128,7 +129,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
      */
     private void bindData() {
         if (lstData_Demand != null) {
-            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand, isMyUser);
+            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand, isMyUser,customerId,customerName);
             listView_demands.setAdapter(demandsRadioListViewAdapter);
             listView_demands.setMode(PullToRefreshBase.Mode.BOTH);
             listView_demands.setOnRefreshListener(this);

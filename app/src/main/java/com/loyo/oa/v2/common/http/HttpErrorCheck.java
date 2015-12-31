@@ -10,8 +10,8 @@ import com.loyo.oa.v2.tool.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by pj on 15/12/18.
+/** 网络回调 的检查
+ * Created xnq 15/12/18.
  */
 public class HttpErrorCheck {
     private static Toast mCurrentToast;
@@ -45,6 +45,7 @@ public class HttpErrorCheck {
         try{
             String result=Utils.convertStreamToString(response.getBody().in());
             LogUtil.d("接口成功result："+result);
+            LogUtil.d("接口成功URL："+response.getUrl());
         }catch (Exception e){
 
         }

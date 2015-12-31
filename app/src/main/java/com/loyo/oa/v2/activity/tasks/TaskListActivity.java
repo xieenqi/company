@@ -38,6 +38,9 @@ import java.util.HashMap;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
+/**
+ * 客户详情 的任务计划  【任务管理】
+ */
 @EActivity(R.layout.activity_customer_task_list)
 public class TaskListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     @ViewById ViewGroup layout_back;
@@ -83,7 +86,8 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     @Click(R.id.layout_add)
     void createNewTask() {
         Bundle b = new Bundle();
-        b.putSerializable("data", mCustomer);
+        b.putString(ExtraAndResult.EXTRA_ID, mCustomer.id);
+        b.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
         app.startActivityForResult(this, TasksAddActivity_.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_CREATE_TASK, b);
     }
 

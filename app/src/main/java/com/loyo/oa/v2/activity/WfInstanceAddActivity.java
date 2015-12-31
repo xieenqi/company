@@ -451,7 +451,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
         ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
 
-        wfInstanceAdd.getWorkflowValuesAdd().getWfInstanceValuesDatas().clear();
+        wfInstanceAdd.getWorkflowValuesAdd().wfInstanceValuesDatas.clear();
         for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
             HashMap<String, Object> map_Values = submitData.get(k);
