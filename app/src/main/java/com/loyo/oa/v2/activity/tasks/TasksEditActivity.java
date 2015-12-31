@@ -41,6 +41,7 @@ import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -165,6 +166,9 @@ public class TasksEditActivity extends BaseActivity {
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
 
+        LogUtil.dll("是否审核:" + mTask.isReviewFlag());
+        LogUtil.dll("结构："+MainApp.gson.toJson(mTask));
+
     }
 
     void getAttachments() {
@@ -245,7 +249,7 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("planendAt", mTask.getPlanEndAt());
                 map.put("remindflag", mTask.getRemindTime() > 0);
                 map.put("remindtime", mTask.getRemindTime());
-                map.put("reworkflag", switch_approve.isChecked());
+                map.put("reviewFlag", switch_approve.isChecked());
                 map.put("attachmentUUId", uuid);
 
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
