@@ -109,7 +109,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 }else{
                     timeOut.setVisibility(View.GONE);
                 }
-                time.setText("任务截止时间: " + DateTool.timet(task.getPlanEndAt()+""));
+                time.setText("任务截止时间: " + MainApp.getMainApp().df10.format(new Date(task.getPlanEndAt()*1000))+"");
                 LogUtil.dll("当前时间戳:"+nowTime);
                 LogUtil.dll("截至时间戳:" + task.getPlanEndAt());
 

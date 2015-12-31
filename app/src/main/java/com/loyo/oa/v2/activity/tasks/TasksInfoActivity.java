@@ -36,7 +36,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -268,7 +267,9 @@ public class TasksInfoActivity extends BaseActivity {
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
-            String s = DateTool.timet(mTask.getPlanEndAt() + "") + " 截止";
+
+            //String s = DateTool.timet(mTask.getPlanEndAt() + "") + " 截止";
+            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt()*1000)) + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
             }
