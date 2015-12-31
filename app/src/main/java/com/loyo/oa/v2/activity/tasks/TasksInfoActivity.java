@@ -14,9 +14,9 @@ import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
-import com.loyo.oa.v2.activity.tasks.ChildTaskAddActivity_;
 import com.loyo.oa.v2.activity.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -43,6 +43,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -50,10 +51,12 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -73,11 +76,11 @@ public class TasksInfoActivity extends BaseActivity {
     public static final int MSG_ATTACHMENT = 700;
     public static final int MSG_DISCUSSION = 800;
 
-    String vTitle;
-    String vContent;
-    String realName;
-    String isTest;
-    String beProjects;
+    public String vTitle;
+    public String vContent;
+    public String realName;
+    public String isTest;
+    public String beProjects;
 
     @ViewById
     ViewGroup img_title_left;
@@ -139,7 +142,6 @@ public class TasksInfoActivity extends BaseActivity {
     public static TasksInfoActivity instance = null;
     public ArrayList<NewUser> allUsers;
 
-
     public android.os.Handler mHandler = new android.os.Handler() {
 
         public void handleMessage(Message msg) {
@@ -167,28 +169,28 @@ public class TasksInfoActivity extends BaseActivity {
         allUsers = new ArrayList<>();
     }
 
-//    String getId() {
-//        return (mTask != null) ? mTask.getId() : mId;
-//    }
-
     void updateUI() {
+
         if (mTask != null) {
             updateUI_task_base();
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
         }
+
         /*是否为参与人判断*/
         userId = DBManager.Instance().getUser().getId();
         isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
         isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
+
     }
 
     /**
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
+
         //进行中,分派人登陆可修改负责人和参与人
-        if ((IsCreator() || IsResponsiblePerson()) && mTask.getStatus() == Task.STATUS_PROCESSING) {
+        if (IsCreator() && mTask.getStatus() == Task.STATUS_PROCESSING) {
             img_title_right.setVisibility(View.VISIBLE);
         } else {
             img_title_right.setVisibility(View.GONE);
@@ -232,7 +234,9 @@ public class TasksInfoActivity extends BaseActivity {
             if (mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
                 //负责人提交
                 btn_complete.setText("提交完成");
-            } else if (mTask.getStatus() == Task.STATUS_REVIEWING && IsCreator()) {
+            } else if (mTask.getStatus() == Task.STATUS_REVIEWING
+                    && IsCreator()
+                    && !mTask.getCreator().getId().equals(mTask.getResponsiblePerson().getId())) {
                 btn_complete.setText("审 核");
             } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
                 btn_complete.setVisibility(View.GONE);
@@ -251,7 +255,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         tv_task_title.setText(mTask.getTitle());
         tv_content.setText(mTask.getContent());
-        isTest = mTask.isRemindFlag() ? "是" : "否";
+        isTest = mTask.isReviewFlag() ? "是" : "否";
         tv_task_audit.setText("是否审核:" + isTest);
 
         vTitle = mTask.getTitle();
@@ -327,7 +331,9 @@ public class TasksInfoActivity extends BaseActivity {
                 }
             });
 
-            //到编辑子任务
+            /**
+             * 子任务编辑跳转
+             * */
             view.setTag(subTask);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -341,10 +347,10 @@ public class TasksInfoActivity extends BaseActivity {
                         reponserDataUser.add(element.getUser());
                     }
 
-                    Intent intent = new Intent(TasksInfoActivity.this, TaskChildEdit.class);
+                    Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
                     intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
                     intent.putExtra("TaskId", mTask.getId());
-                    intent.putExtra("reponserData", reponserDataUser);
+                    intent.putExtra("allUsers", allUsers);
                     TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
                     TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
                 }

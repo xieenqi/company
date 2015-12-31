@@ -137,7 +137,12 @@ public class ChildTaskAddActivity extends BaseActivity {
                 app.startActivityForResult(this, ChildTaskResponserSelectActivity_.class, MainApp.ENTER_TYPE_RIGHT, 300, b1);
 
                 break;
+
             case R.id.btn_child_add_complete:
+
+
+                break;
+
             case R.id.btn_child_add_cancel_complete:
                 if (view.getId() == R.id.btn_child_add_complete) {
                     mChildTask.setAchieved(true);
@@ -146,8 +151,10 @@ public class ChildTaskAddActivity extends BaseActivity {
                 }
                 update(false);
                 break;
+
             case R.id.img_title_left:
                 MainApp.getMainApp().finishActivity(this, MainApp.ENTER_TYPE_TOP, RESULT_OK, null);
+
                 break;
             case R.id.img_title_right:
                 if (null == chidTask || !mChildTask.getResponsiblePerson().equals(chidTask.getResponsiblePerson())) {
@@ -304,7 +311,6 @@ public class ChildTaskAddActivity extends BaseActivity {
         app.getRestAdapter().create(ICheckPoint.class).updateChildTask(mChildTask.getTaskId(), mChildTask.getId(), datas2, new RCallback<TaskCheckPoint>() {
             @Override
             public void success(TaskCheckPoint taskCheckPoint, Response response) {
-//                dismissDialog();
                 Toast("更新子任务成功");
                 Intent completeIntent = new Intent();
                 completeIntent.putExtra("childTask", mChildTask);
@@ -313,7 +319,6 @@ public class ChildTaskAddActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-//                dismissDialog();
                 Toast("更新子任务失败");
                 super.failure(error);
             }
