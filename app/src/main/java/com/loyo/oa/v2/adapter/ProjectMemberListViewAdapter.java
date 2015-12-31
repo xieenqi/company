@@ -8,20 +8,20 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
 import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
-public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectMember> {
+public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.ProjectMember> {
 
-    ArrayList<ProjectMember> mProjectMembers;
+    ArrayList<HttpProject.ProjectMember> mProjectMembers;
     ProjectMemberAction mAction;
 
-    public ArrayList<ProjectMember> GetProjectMembers() {
+    public ArrayList<HttpProject.ProjectMember> GetProjectMembers() {
         return mProjectMembers;
     }
 
@@ -29,19 +29,19 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectMember> {
         mAction = action;
     }
 
-    public ProjectMemberListViewAdapter(Context context, ArrayList<ProjectMember> projectMembers) {
+    public ProjectMemberListViewAdapter(Context context, ArrayList<HttpProject.ProjectMember> projectMembers) {
         super(context, projectMembers, R.layout.item_listview_project_members);
         mProjectMembers = projectMembers;
     }
 
     @Override
-    public void convert(final ViewHolder holder, final ProjectMember projectMember) {
+    public void convert(final ViewHolder holder, final HttpProject.ProjectMember projectMember) {
 
         LogUtil.d(" 参与人的数据： " + MainApp.gson.toJson(projectMember));
         if (!TextUtils.isEmpty(projectMember.user.getRealname())) {
             holder.setText(R.id.tv_member, projectMember.user.getRealname());
         }else if(projectMember.dept != null){
-            holder.setText(R.id.tv_member, projectMember.dept.getName());
+            holder.setText(R.id.tv_member, projectMember.dept.name);
         }
 
         ImageView view = holder.getView(R.id.img_project_member_delete);
@@ -60,7 +60,7 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectMember> {
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ProjectMember p = mProjectMembers.get(holder.getPosition());
+                HttpProject.ProjectMember p = mProjectMembers.get(holder.getPosition());
                 if (p != null) {
                     p.canReadAll = isChecked;
                 }

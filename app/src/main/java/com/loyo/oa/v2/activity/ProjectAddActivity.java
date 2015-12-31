@@ -10,13 +10,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
@@ -56,11 +55,11 @@ public class ProjectAddActivity extends BaseActivity {
 
     @ViewById ListView lv_project_members;
 
-    @Extra("project") Project mProject;
+    @Extra("project") HttpProject mProject;
     @Extra("mUpdate") boolean mUpdate;
 
     ProjectMemberListViewAdapter mAdapter;
-    ArrayList<ManagersMembers> mProjectMember = new ArrayList<>();
+    ArrayList<HttpProject.ProjectMember> mProjectMember = new ArrayList<>();
 
     String mManagerIds = "", mManagerNames = "", mMemberIds = "", mMemberNames = "";
     // boolean mUpdate = false;
@@ -107,17 +106,24 @@ public class ProjectAddActivity extends BaseActivity {
         edt_title.setText(mProject.title);
         edt_content.setText(mProject.content);
 
-        //mManagerIds = ProjectMember.GetUserIds(mProject.managers);
-        for (ProjectMember ele : mProject.managers) {
-            mManagerIds += ele.user.id + ",";
-        }
+        mManagerIds = ProjectMember.GetMnagerUserIds(mProject.managers);
+//        for (HttpProject.ProjectManaer ele : mProject.managers) {
+//            mManagerIds += ele.user.id + ",";
+//        }
         LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.managers));
-        //mMemberIds = ProjectMember.GetUserIds(mProject.managers);
-        for (ProjectMember ele : mProject.managers) {
-            mMemberIds += ele.user.id + ",";
+        if (mProject.members != null) {
+            mMemberIds = ProjectMember.GetMenberUserIds(mProject.members);
         }
-        mManagerNames = ProjectMember.GetUserNames(mProject.managers);
-        mMemberNames = ProjectMember.GetUserNames(mProject.managers);
+        if (mProject.members != null) {
+            for (HttpProject.ProjectMember ele : mProject.members) {
+                if (ele.user != null) {
+                    mMemberIds += ele.user.id + ",";
+                }
+            }
+        }
+
+        mManagerNames = ProjectMember.getManagersName(mProject.managers);
+        mMemberNames = ProjectMember.GetUserNames(mProject.members);
 
         tv_managers.setText(mManagerNames);
         setMemberOnActivityResult();
@@ -131,28 +137,19 @@ public class ProjectAddActivity extends BaseActivity {
     //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
-//        Bundle bundle1 = new Bundle();
-//        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-//        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-//        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MANAGERS, bundle1);
-        Bundle bundle = new Bundle();
-        bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                ExtraAndResult.request_Code, bundle);
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
+        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
+        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MANAGERS, bundle1);
     }
 
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
-//        Bundle bundle1 = new Bundle();
-//        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-//        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-//        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MEMBERS, bundle1);
         Bundle bundle1 = new Bundle();
-        bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-        bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                ExtraAndResult.request_Code, bundle1);
+        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
+        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
+        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MEMBERS, bundle1);
     }
 
     @OnActivityResult(REQUEST_MANAGERS)
@@ -166,7 +163,7 @@ public class ProjectAddActivity extends BaseActivity {
 
         tv_managers.setText(mManagerNames);
 
-        ArrayList<ManagersMembers> projectManagers = getProjectManager();
+        ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
         if (mProject != null && !ListUtil.IsEmpty(projectManagers)) {
             mProject.setManagers(projectManagers);
         }
@@ -204,10 +201,12 @@ public class ProjectAddActivity extends BaseActivity {
             if (mProject != null && !ListUtil.IsEmpty(mProject.members)) {
 
                 mProjectMember = new ArrayList<>();
-                for (ProjectMember element : mProject.members) {
-                    ManagersMembers member = new ManagersMembers();
-                    member.canreadall = element.canReadAll;
-                    NewUser nu = new NewUser();
+                for (HttpProject.ProjectMember element : mProject.members) {
+                    HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
+                    member.canReadAll = element.canReadAll;
+                    User nu = new User();
+                    if (element.user == null)
+                        continue;
                     nu.id = element.user.id;
                     nu.name = element.user.name;
                     nu.avatar = element.user.avatar;
@@ -227,11 +226,13 @@ public class ProjectAddActivity extends BaseActivity {
 //                }
                 String uId = memberIds[i];
                 if (!TextUtils.isEmpty(uId)) {
-                    NewUser u = new NewUser();
-                    u.id = uId;
-                    u.name = memberNames[i];
-                    ManagersMembers member = new ManagersMembers();
-                    member.user = u;
+                    HttpProject.ProjectMember u = new HttpProject().new ProjectMember();
+                    User uu = new User();
+                    u.user = uu;
+                    u.user.id = uId;
+                    u.user.name = memberNames[i];
+                    HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
+                    member.user = u.user;
                     mProjectMember.add(member);
                     if (!mProjectMember.contains(member)) {
                     }
@@ -244,17 +245,16 @@ public class ProjectAddActivity extends BaseActivity {
         if (mProject != null && !ListUtil.IsEmpty(mProject.managers) && !ListUtil.IsEmpty(mProject.managers)) {
             mProjectMember.removeAll(mProject.managers);
         } else {
-            ArrayList<ManagersMembers> projectManagers = getProjectManager();
+            ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
             if (!ListUtil.IsEmpty(projectManagers)) {
                 mProjectMember.removeAll(projectManagers);
             }
         }
 
         if (mProject != null) {
-            for (ManagersMembers element : mProjectMember) {
-                ProjectMember pm = new ProjectMember();
-                pm.canReadAll = element.canreadall;
-                pm.userId = element.user.id;
+            for (HttpProject.ProjectMember element : mProjectMember) {
+                HttpProject.ProjectMember pm = new HttpProject().new ProjectMember();
+                pm.canReadAll = element.canReadAll;
                 User uu = new User();
                 uu.id = element.user.id;
                 uu.name = element.user.name;
@@ -267,9 +267,9 @@ public class ProjectAddActivity extends BaseActivity {
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
-                for (ProjectMember ele : mAdapter.GetProjectMembers()) {
-                    ManagersMembers mm = new ManagersMembers();
-                    mm.canreadall = ele.canReadAll;
+                for (HttpProject.ProjectMember ele : mAdapter.GetProjectMembers()) {
+                    HttpProject.ProjectMember mm = new HttpProject().new ProjectMember();
+                    mm.canReadAll = ele.canReadAll;
                     mm.user.id = ele.user.id;
                     mm.user.name = ele.user.realname;
                     mProjectMember.add(mm);
@@ -282,12 +282,11 @@ public class ProjectAddActivity extends BaseActivity {
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
 
-    public ArrayList<ProjectMember> createData() {
-        ArrayList<ProjectMember> obj = new ArrayList<ProjectMember>();
-        for (ManagersMembers ele : mProjectMember) {
-            ProjectMember pm = new ProjectMember();
-            pm.canReadAll = ele.canreadall;
-            pm.userId = ele.user.id;
+    public ArrayList<HttpProject.ProjectMember> createData() {
+        ArrayList<HttpProject.ProjectMember> obj = new ArrayList<>();
+        for (HttpProject.ProjectMember ele : mProjectMember) {
+            HttpProject.ProjectMember pm = new HttpProject().new ProjectMember();
+            pm.canReadAll = ele.canReadAll;
             User uu = new User();
             uu.id = ele.user.id;
             uu.name = ele.user.name;
@@ -375,23 +374,21 @@ public class ProjectAddActivity extends BaseActivity {
      *
      * @return
      */
-    ArrayList<ManagersMembers> getProjectManager() {
+    ArrayList<HttpProject.ProjectManaer> getProjectManager() {
         if (TextUtils.isEmpty(mManagerIds)) {
             return new ArrayList<>();
         }
         String[] arr = mManagerIds.split(",");
-        ArrayList<ManagersMembers> members = new ArrayList<>();
-        for (String a : arr) {
-            if (!TextUtils.isEmpty(a)) {
-                ManagersMembers mm = new ManagersMembers();
-                mm.canreadall = true;
-                mm.user.id = a;
+        String[] arrName = mManagerNames.split(",");
+        ArrayList<HttpProject.ProjectManaer> members = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (!TextUtils.isEmpty(arr[i])) {
+                HttpProject.ProjectManaer mm = new HttpProject().new ProjectManaer();
+                mm.canReadAll = true;
+                mm.user.id = arr[i];
+                mm.user.name = arrName[i];
                 members.add(mm);
             }
-        }
-        String[] arrName = mManagerNames.split(",");
-        for (int i = 0; i < arrName.length; i++) {
-            members.get(i).user.name = arrName[i];
         }
         return members;
     }
@@ -401,12 +398,12 @@ public class ProjectAddActivity extends BaseActivity {
      *
      * @return
      */
-    public List<ManagersMembers> getProjectMenbers() {
-        ArrayList<ProjectMember> data = mAdapter.GetProjectMembers();
-        ArrayList<ManagersMembers> newData = new ArrayList<>();
-        for (ProjectMember element : data) {
-            ManagersMembers menb = new ManagersMembers();
-            menb.canreadall = false;
+    public List<HttpProject.ProjectMember> getProjectMenbers() {
+        ArrayList<HttpProject.ProjectMember> data = mAdapter.GetProjectMembers();
+        ArrayList<HttpProject.ProjectMember> newData = new ArrayList<>();
+        for (HttpProject.ProjectMember element : data) {
+            HttpProject.ProjectMember menb = new HttpProject().new ProjectMember();
+            menb.canReadAll = false;
             User userOlde = element.user;
             menb.user.id = userOlde.id;
             menb.user.avatar = userOlde.avatar;
@@ -419,8 +416,8 @@ public class ProjectAddActivity extends BaseActivity {
     public class ProjectTransObj {
         public String title;
         public String content;
-        public List<ManagersMembers> members;
-        public List<ManagersMembers> managers;
+        public List<HttpProject.ProjectMember> members;
+        public List<HttpProject.ProjectManaer> managers;
     }
 
     public class ManagersMembers {

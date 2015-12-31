@@ -10,23 +10,23 @@ import java.util.Date;
 /**
  * Created by pj on 15/12/29.
  */
-public class HttpProject implements Serializable{
+public class HttpProject implements Serializable {
     public String id;
     public String name;
     public String title;
     public String content;
-    public ArrayList<ProjectManaer> managers;
-    public ArrayList<ProjectMember> members;
+    public ArrayList<ProjectManaer> managers=new ArrayList<>();
+    public ArrayList<ProjectMember> members=new ArrayList<>();
     public User creator;
     public String attachmentUUId;
     public long createdAt;
     public boolean viewed;
     public int status;
     public ArchiveData archiveData;
-    public BizExtData  bizExtData;
+    public BizExtData bizExtData;
 
 
-    public class BizExtData  implements Serializable {
+    public class BizExtData implements Serializable {
         public int discussCount;
         public int attachmentCount;
     }
@@ -39,14 +39,14 @@ public class HttpProject implements Serializable{
         public int workreport;
     }
 
-    public class ProjectManaer  implements Serializable {
-        public User user;
+    public class ProjectManaer implements Serializable {
+        public User user=new User();
         public boolean canReadAll;
     }
 
 
-    public class ProjectMember  implements Serializable {
-        public User user;
+    public class ProjectMember implements Serializable {
+        public User user=new User();
         public Dept dept;
         public boolean canReadAll;
     }
@@ -57,14 +57,14 @@ public class HttpProject implements Serializable{
 //        public String avatar;
 //    }
 
-    public class Dept  implements Serializable {
+    public class Dept implements Serializable {
         public String id;
         public String xpath;
         public String name;
     }
 
 
-    public long getCreatedAt(){
+    public long getCreatedAt() {
         return createdAt * 1000;
     }
 
@@ -83,7 +83,7 @@ public class HttpProject implements Serializable{
                     continue;
                 }
                 if (u.isCurrentUser()) {
-                    isFound =true;
+                    isFound = true;
                     break;
                 }
             }
@@ -94,7 +94,7 @@ public class HttpProject implements Serializable{
     }
 
 
-    public void setManagers(ArrayList<ProjectManaer> managers) {
+    public void setManagers(ArrayList<HttpProject.ProjectManaer> managers) {
         ArrayList<ProjectManaer> newData = new ArrayList<>();
         for (ProjectManaer element : managers) {
             ProjectManaer pm = new ProjectManaer();
@@ -104,6 +104,7 @@ public class HttpProject implements Serializable{
         }
         this.managers = newData;
     }
+
     /**
      * 判断是否是创建者
      *
