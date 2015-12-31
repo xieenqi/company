@@ -15,9 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.CustomerLabelActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;

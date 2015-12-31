@@ -9,9 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ChildTaskResponserSelectActivity_;
+import com.loyo.oa.v2.activity.tasks.ChildTaskResponserSelectActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Reviewer;

@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.customer;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,6 +15,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerContactManageActivity_;
+import com.loyo.oa.v2.activity.DemandsManageActivity;
+import com.loyo.oa.v2.activity.SaleActivitiesManageActivity;
+import com.loyo.oa.v2.activity.SignInListActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;

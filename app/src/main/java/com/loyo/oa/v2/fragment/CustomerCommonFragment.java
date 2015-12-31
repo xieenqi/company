@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.NearByCustomersActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;

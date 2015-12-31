@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.AttendanceAddActivity_;
+import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;

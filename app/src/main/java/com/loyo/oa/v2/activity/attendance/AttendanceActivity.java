@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.attendance;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

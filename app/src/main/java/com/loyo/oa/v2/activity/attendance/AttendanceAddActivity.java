@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.attendance;
 
 import android.content.Context;
 import android.content.Intent;

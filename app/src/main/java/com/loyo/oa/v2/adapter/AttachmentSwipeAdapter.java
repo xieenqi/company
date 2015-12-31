@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.AttachmentRightActivity_;
+import com.loyo.oa.v2.activity.attendance.AttachmentRightActivity_;
 import com.loyo.oa.v2.activity.PreviewImageActivity;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;

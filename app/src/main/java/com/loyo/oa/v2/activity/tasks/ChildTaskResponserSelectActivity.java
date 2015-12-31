@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.tasks;
 
 import android.app.Activity;
 import android.content.Context;
