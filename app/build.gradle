@@ -8,13 +8,13 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
         }
     }
@@ -104,11 +104,9 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     //微信
     //compile files('libs/libammsdk.jar')
-
     compile files('libs/wup-1.0.0-SNAPSHOT.jar')
     compile files('libs/mid-sdk-2.20.jar')
     compile files('libs/jg_filter_sdk_1.1.jar')
-
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'joda-time:joda-time:2.3'
     //图片选择
