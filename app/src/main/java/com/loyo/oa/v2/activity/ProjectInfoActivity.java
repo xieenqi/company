@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activity.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.fragment.AttachmentFragment;
@@ -81,16 +82,10 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
             public void success(HttpProject _project, Response response) {
-//                _project.totalAttachment=project.totalAttachment;
-//                _project.totalDiscussion=project.totalDiscussion;
-//                _project.totalWfinstance=project.totalWfinstance;
-//                _project.totalWorkReport=project.totalWorkReport;
-//                _project.totalTask=project.totalTask;pp
-//
+                HttpErrorCheck.checkResponse("项目详情", response);
                 project = _project;
                 img_title_right.setEnabled(true);
                 initData(project);
-                LogUtil.d(" 获取项目详情的json： "+response.getHeaders());
             }
 
             @Override
@@ -166,8 +161,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             int[] sizes = new int[]{project.archiveData.task, project.archiveData.workreport,
                     project.archiveData.approval, project.archiveData.attachment, project.archiveData.discuss};
             for (int i = 0; i < TITLES.length; i++) {
-                TITLES[i]+="("+sizes[i]+")";
-               // LogUtil.d("栏目-> size : "+sizes[i]);
+                TITLES[i] += "(" + sizes[i] + ")";
+                // LogUtil.d("栏目-> size : "+sizes[i]);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("project", project);
                 BaseFragment fragmentX = null;
@@ -221,6 +216,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
     /**
      * 【数据加载成功】的 回调
+     *
      * @param id
      * @param size
      */
@@ -272,8 +268,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             case TasksInfoActivity.REQUEST_EDIT_DELETE:
                 if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean("mUpdate",true);
-                    bundle.putSerializable("project", project);
+                    bundle.putBoolean("mUpdate", true);
+                    bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
                     app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
                             TasksInfoActivity.REQUEST_EDIT, bundle);
                 } else if (data.getBooleanExtra("delete", false)) {
@@ -285,6 +281,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                             intent.putExtra("delete", project);
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
                         }
+
                         @Override
                         public void failure(RetrofitError error) {
                             HttpErrorCheck.checkError(error);
@@ -292,20 +289,20 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     });
                 } else if (data.getBooleanExtra("extra", false)) {
                     //结束任务或重启任务
-                    app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(),project.status == 1 ? 2 : 1, new RCallback<Project>() {
-                                @Override
-                                public void success(Project o, Response response) {
-                                    LogUtil.d(" 结束 和 编辑项目： "+MainApp.gson.toJson(o));
-                                    project.status=(project.status == 1 ? 0 : 1);
-                                    initViews();
-                                }
+                    app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
+                        @Override
+                        public void success(Project o, Response response) {
+                            LogUtil.d(" 结束 和 编辑项目： " + MainApp.gson.toJson(o));
+                            project.status = (project.status == 1 ? 0 : 1);
+                            initViews();
+                        }
 
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    HttpErrorCheck.checkError(error);
-                                    Global.ToastLong("有任务未结束,不能结束项目!");
-                                }
-                            });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                            Global.ToastLong("有任务未结束,不能结束项目!");
+                        }
+                    });
                 }
 
                 break;

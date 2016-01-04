@@ -16,6 +16,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
@@ -55,7 +56,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     @ViewById ListView lv_project_members;
 
-    @Extra("project") HttpProject mProject;
+    @Extra(ExtraAndResult.EXTRA_OBJ) HttpProject mProject;
     @Extra("mUpdate") boolean mUpdate;
 
     ProjectMemberListViewAdapter mAdapter;
@@ -102,18 +103,16 @@ public class ProjectAddActivity extends BaseActivity {
         if (!mUpdate || mProject == null || TextUtils.isEmpty(mProject.getId())) {
             return;
         }
-
         edt_title.setText(mProject.title);
         edt_content.setText(mProject.content);
-
         mManagerIds = ProjectMember.GetMnagerUserIds(mProject.managers);
 //        for (HttpProject.ProjectManaer ele : mProject.managers) {
 //            mManagerIds += ele.user.id + ",";
 //        }
-        LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.managers));
-        if (mProject.members != null) {
-            mMemberIds = ProjectMember.GetMenberUserIds(mProject.members);
-        }
+        LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.members));
+//        if (mProject.members != null) {
+//            mMemberIds = ProjectMember.GetMenberUserIds(mProject.members);
+//        }
         if (mProject.members != null) {
             for (HttpProject.ProjectMember ele : mProject.members) {
                 if (ele.user != null) {
@@ -121,7 +120,6 @@ public class ProjectAddActivity extends BaseActivity {
                 }
             }
         }
-
         mManagerNames = ProjectMember.getManagersName(mProject.managers);
         mMemberNames = ProjectMember.GetUserNames(mProject.members);
 
@@ -197,7 +195,7 @@ public class ProjectAddActivity extends BaseActivity {
             mProjectMember.clear();
         }
 
-        if (mUpdate) {
+        if (mUpdate) {//编辑项目 时的参与人
             if (mProject != null && !ListUtil.IsEmpty(mProject.members)) {
 
                 mProjectMember = new ArrayList<>();
@@ -205,8 +203,6 @@ public class ProjectAddActivity extends BaseActivity {
                     HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
                     member.canReadAll = element.canReadAll;
                     User nu = new User();
-                    if (element.user == null)
-                        continue;
                     nu.id = element.user.id;
                     nu.name = element.user.name;
                     nu.avatar = element.user.avatar;
@@ -216,33 +212,31 @@ public class ProjectAddActivity extends BaseActivity {
             }
         }
 
-        if (!TextUtils.isEmpty(mMemberIds)) {
-            String[] memberIds = mMemberIds.split(",");
-            String[] memberNames = mMemberNames.split(",");
-
-            for (int i = 0; i < memberIds.length; i++) {
-//                if (TextUtils.isEmpty(memberIds[i])) {
-//                    continue;
+//        if (!TextUtils.isEmpty(mMemberIds)) {
+//            String[] memberIds = mMemberIds.split(",");
+//            String[] memberNames = mMemberNames.split(",");
+//
+//            for (int i = 0; i < memberIds.length; i++) {
+//                String uId = memberIds[i];
+//                if (!TextUtils.isEmpty(uId)) {
+//                    HttpProject.ProjectMember u = new HttpProject().new ProjectMember();
+//                    User uu = new User();
+//                    u.user = uu;
+//                    u.user.id = uId;
+//                    u.user.name = memberNames[i];
+//                    HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
+//                    member.user = u.user;
+//                    mProjectMember.add(member);
+////
+////                    if (!mProjectMember.contains(member)) {
+////                    }
+//
 //                }
-                String uId = memberIds[i];
-                if (!TextUtils.isEmpty(uId)) {
-                    HttpProject.ProjectMember u = new HttpProject().new ProjectMember();
-                    User uu = new User();
-                    u.user = uu;
-                    u.user.id = uId;
-                    u.user.name = memberNames[i];
-                    HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
-                    member.user = u.user;
-                    mProjectMember.add(member);
-                    if (!mProjectMember.contains(member)) {
-                    }
-
-                }
-            }
-        }
+//            }
+//        }
 
         // 从Members中去掉与Manager重复的用户
-        if (mProject != null && !ListUtil.IsEmpty(mProject.managers) && !ListUtil.IsEmpty(mProject.managers)) {
+        if (mProject != null && !ListUtil.IsEmpty(mProject.managers) && !ListUtil.IsEmpty(mProjectMember)) {
             mProjectMember.removeAll(mProject.managers);
         } else {
             ArrayList<HttpProject.ProjectManaer> projectManagers = getProjectManager();
@@ -250,18 +244,18 @@ public class ProjectAddActivity extends BaseActivity {
                 mProjectMember.removeAll(projectManagers);
             }
         }
-
-        if (mProject != null) {
-            for (HttpProject.ProjectMember element : mProjectMember) {
-                HttpProject.ProjectMember pm = new HttpProject().new ProjectMember();
-                pm.canReadAll = element.canReadAll;
-                User uu = new User();
-                uu.id = element.user.id;
-                uu.name = element.user.name;
-                pm.user = uu;
-                mProject.members.add(pm);
-            }
-        }
+//
+//        if (mProject != null) {
+//            for (HttpProject.ProjectMember element : mProjectMember) {
+//                HttpProject.ProjectMember pm = new HttpProject().new ProjectMember();
+//                pm.canReadAll = element.canReadAll;
+//                User uu = new User();
+//                uu.id = element.user.id;
+//                uu.name = element.user.name;
+//                pm.user = uu;
+//                mProject.members.add(pm);
+//            }
+//        }
 
         mAdapter = new ProjectMemberListViewAdapter(this, createData());//?????mProjectMember
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
@@ -282,6 +276,10 @@ public class ProjectAddActivity extends BaseActivity {
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
 
+    /**
+     * 参与人的数据  adapter列表
+     * @return
+     */
     public ArrayList<HttpProject.ProjectMember> createData() {
         ArrayList<HttpProject.ProjectMember> obj = new ArrayList<>();
         for (HttpProject.ProjectMember ele : mProjectMember) {
@@ -320,7 +318,7 @@ public class ProjectAddActivity extends BaseActivity {
         projectTransObj.managers = getProjectManager();
 
         if (!TextUtils.isEmpty(mMemberIds) && mAdapter != null) {
-            projectTransObj.members = getProjectMenbers();
+            projectTransObj.members = getProjectMenbers(mAdapter.GetProjectMembers());
         }
 
         if (mUpdate) {
@@ -380,17 +378,17 @@ public class ProjectAddActivity extends BaseActivity {
         }
         String[] arr = mManagerIds.split(",");
         String[] arrName = mManagerNames.split(",");
-        ArrayList<HttpProject.ProjectManaer> members = new ArrayList<>();
+        ArrayList<HttpProject.ProjectManaer> mManager = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             if (!TextUtils.isEmpty(arr[i])) {
                 HttpProject.ProjectManaer mm = new HttpProject().new ProjectManaer();
                 mm.canReadAll = true;
                 mm.user.id = arr[i];
                 mm.user.name = arrName[i];
-                members.add(mm);
+                mManager.add(mm);
             }
         }
-        return members;
+        return mManager;
     }
 
     /**
@@ -398,12 +396,11 @@ public class ProjectAddActivity extends BaseActivity {
      *
      * @return
      */
-    public List<HttpProject.ProjectMember> getProjectMenbers() {
-        ArrayList<HttpProject.ProjectMember> data = mAdapter.GetProjectMembers();
+    public List<HttpProject.ProjectMember> getProjectMenbers(ArrayList<HttpProject.ProjectMember> data) {
         ArrayList<HttpProject.ProjectMember> newData = new ArrayList<>();
         for (HttpProject.ProjectMember element : data) {
             HttpProject.ProjectMember menb = new HttpProject().new ProjectMember();
-            menb.canReadAll = false;
+            menb.canReadAll = element.canReadAll;
             User userOlde = element.user;
             menb.user.id = userOlde.id;
             menb.user.avatar = userOlde.avatar;
