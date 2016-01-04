@@ -268,7 +268,6 @@ public class TasksInfoActivity extends BaseActivity {
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
 
-            //String s = DateTool.timet(mTask.getPlanEndAt() + "") + " 截止";
             String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt()*1000)) + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());

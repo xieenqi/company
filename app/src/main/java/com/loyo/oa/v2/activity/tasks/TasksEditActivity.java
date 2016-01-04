@@ -160,7 +160,8 @@ public class TasksEditActivity extends BaseActivity {
 
         savePostData();
         tv_toUsers.setText(joinUser.toString());
-        tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt())));
+        tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt()*1000)));
+        LogUtil.dll("时间:"+mTask.getPlanEndAt());
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setChecked(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());

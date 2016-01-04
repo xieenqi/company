@@ -70,7 +70,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:textColor="#262626"
-            android:layout_toRightOf="@+id/img_attachment"/>
+            android:layout_toRightOf="@+id/img_attachment"
+            android:text="xxx.jpg"
+            />
 
         <TextView
             android:id="@+id/tv_creator"
@@ -81,8 +83,22 @@
             android:textColor="#555555"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/img_attachment"/>
+            android:layout_toRightOf="@+id/img_attachment"
+            android:text="xxx上传"
+            />
+
+        <TextView
+            android:id="@+id/tv_createtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_creator"
+            android:textSize="13sp"
+            android:textColor="#555555"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/img_attachment"
+            android:text="xxx上传"
+            />
 
     </RelativeLayout>
-
 </FrameLayout>

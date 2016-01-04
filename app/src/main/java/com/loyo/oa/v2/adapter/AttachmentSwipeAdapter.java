@@ -27,12 +27,14 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -110,6 +112,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.img_attachment = (ImageView) convertView.findViewById(R.id.img_attachment);
             holder.tv_creator = (TextView) convertView.findViewById(R.id.tv_creator);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+            holder.tv_time = (TextView) convertView.findViewById(R.id.tv_createtime);
             holder.layout_action_update = (ViewGroup) convertView.findViewById(R.id.layout_action_update);
             holder.layout_action_delete = (ViewGroup) convertView.findViewById(R.id.layout_action_delete);
 
@@ -138,7 +141,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
         holder.tv_title.setText(attachment.getOriginalName());
         holder.tv_creator.setText(String.format("%s %s 上传", attachment.getCreator().getRealname(), DateTool.getDate(attachment.getCreatedAt(), app.df_api_get, app.df3)));
-
+        holder.tv_time.setText(MainApp.getMainApp().df14.format(new Date(Integer.parseInt(attachment.getCreatedAt()) * 1000L)));
         holder.img_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,6 +160,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data", attachment.getUrl());
                     app.startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+
                 }
             }
         });
@@ -241,6 +245,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         public ImageView img_attachment;
         public TextView tv_creator;
         public TextView tv_title;
+        public TextView tv_time;
         public ViewGroup front;
         public ViewGroup layout_action_update;
         public ViewGroup layout_action_delete;

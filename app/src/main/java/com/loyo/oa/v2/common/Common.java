@@ -429,6 +429,41 @@ public final class Common {
     }
 
 
+    public static ArrayList<User> getMyUserDept(){
+
+        ArrayList<User> myUsers = new ArrayList<>();
+        ArrayList<User> userAllList = new ArrayList<>();
+        int positions = 0;
+
+        /*全部人员获取*/
+        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
+            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+            }
+        }
+
+       /*获取我的部门下标*/
+        for(int i = 0;i<getLstDepartment().size();i++){
+            if(getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(0).getShortDept().getId())){
+                positions = i;
+                break;
+            }
+        }
+
+        /*根据部门下标获取本部门人员*/
+        myUsers.clear();
+        for (User user : userAllList) {
+            String xPath = user.depts.get(0).getShortDept().getXpath();
+            if (xPath.contains(getLstDepartment().get(positions).getXpath())) {
+                myUsers.add(user);
+            }
+        }
+
+        return myUsers;
+    }
+
+
+
     /**
      * 获取改部门下 所有员工
      */
