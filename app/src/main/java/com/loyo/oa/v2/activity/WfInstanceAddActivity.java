@@ -181,6 +181,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 case R.id.ll_project:
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt("from", BaseActivity.WFIN_ADD);
+                    bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
                     app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);

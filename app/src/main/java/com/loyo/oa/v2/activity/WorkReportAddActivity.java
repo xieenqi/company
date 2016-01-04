@@ -130,7 +130,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private SignInGridViewAdapter signInGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
     private String uuid = StringUtil.getUUID();
-    private Reviewer mReviewer ;
+    private Reviewer mReviewer;
     private Members members = new Members();
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
@@ -174,7 +174,7 @@ public class WorkReportAddActivity extends BaseActivity {
         });
 
         if (null != mWorkReport) {
-            LogUtil.d("编辑工作报告的数据:"+MainApp.gson.toJson(mWorkReport));
+            LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
             }
@@ -349,7 +349,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
                     break;
                 } else {
-                    if (mReviewer.getUser()!=null&&MainApp.user.id.equals(mReviewer.getUser().getId())) {
+                    if (mReviewer.getUser() != null && MainApp.user.id.equals(mReviewer.getUser().getId())) {
                         Toast("点评人不能是自己");
                         break;
                     }
@@ -401,6 +401,7 @@ public class WorkReportAddActivity extends BaseActivity {
             case R.id.layout_mproject:
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("from", WORK_ADD);
+                bundle1.putInt(ExtraAndResult.EXTRA_STATUS, 1);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle1);
                 break;
         }

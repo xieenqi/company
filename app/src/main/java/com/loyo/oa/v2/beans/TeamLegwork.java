@@ -9,9 +9,9 @@ import java.util.ArrayList;
  * 时间 : 15/10/29.
  */
 public class TeamLegwork extends BaseBeans {
-    public int CustNum;
-    public int VistNum;
-    public ArrayList<TeamLegworkDetail> Detail;
+    public int visitTotalNum;
+    public int customerTotalNum;
+    public ArrayList<TeamLegworkDetail> data;
 
 
     @Override

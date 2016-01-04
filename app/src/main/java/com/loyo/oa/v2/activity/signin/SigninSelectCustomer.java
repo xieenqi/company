@@ -56,27 +56,21 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public Customer customer;
     public String position;
     public int kalo = 0;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
         vs_nodata = findViewById(R.id.vs_nodata);
         getNearCustomersInfo();
-
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
         tv_search = (TextView) findViewById(R.id.tv_search);
         tv_search.setText("取消");
-
         edt_search = (EditText) findViewById(R.id.edt_search);
-
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -130,6 +124,8 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 returnData(position - 1);
             }
         });
+
+        getAllData();//默认 初始化所有客户
     }
 
 

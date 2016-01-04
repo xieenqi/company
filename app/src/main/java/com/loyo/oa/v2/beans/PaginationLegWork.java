@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class PaginationLegWork implements Serializable {
     public int pageIndex;
     public int pageSize;
-    public TeamLegwork records;
     public int totalRecords;
+    public TeamLegwork records;
 
     public PaginationLegWork() {
         pageIndex = 1;

@@ -65,13 +65,14 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected PaginationX paginationX = new PaginationX(20);
     protected int befromPage;
     public Customer customer;
+    public Bundle mBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
         vs_nodata = findViewById(R.id.vs_nodata);
-        Bundle mBundle = getIntent().getExtras();
+        mBundle = getIntent().getExtras();
 
         befromPage = mBundle.getInt("from");
         if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
@@ -481,11 +482,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //客户
             else if (o instanceof Customer) {
                 customer = (Customer) o;
-                time.setText("跟进时间："+app.df3.format(new Date(customer.lastActAt * 1000)));
+                time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
                 title.setText(customer.name);
-                if(!TextUtils.isEmpty(customer.distance)){
+                if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);
-                }else{
+                } else {
                     content.setVisibility(View.GONE);
                 }
             }

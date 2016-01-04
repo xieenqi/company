@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 
 import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -24,7 +25,7 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
     protected void openDetail(int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, ProjectInfoActivity_.class);
-        intent.putExtra("project",adapter.getItem(position));
+        intent.putExtra("project", adapter.getItem(position));
         startActivity(intent);
     }
 
@@ -32,12 +33,13 @@ public class ProjectSearchActivity extends BaseSearchActivity<Project> {
     public void getData() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("keyword", strSearch);
-        params.put("status", 0);
+        //项目 默认搜索全部 选择项目只能是进行中 全部(0) 进行(1) 完成(2)
+        params.put("status", mBundle.getInt(ExtraAndResult.EXTRA_STATUS, -1) == -1 ? 0 : mBundle.getInt(ExtraAndResult.EXTRA_STATUS, -1));
         params.put("type", 0);
         params.put("endAt", System.currentTimeMillis() / 1000);
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getPageIndex());
-        params.put("pageSize", isTopAdd?lstData.size()>=20?lstData.size():20:20);
+        params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params, this);
     }

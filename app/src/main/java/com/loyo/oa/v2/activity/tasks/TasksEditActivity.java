@@ -19,7 +19,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
@@ -160,15 +159,15 @@ public class TasksEditActivity extends BaseActivity {
 
         savePostData();
         tv_toUsers.setText(joinUser.toString());
-        tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt()*1000)));
-        LogUtil.dll("时间:"+mTask.getPlanEndAt());
+        tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt() * 1000)));
+        LogUtil.dll("时间:" + mTask.getPlanEndAt());
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setChecked(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
 
         LogUtil.dll("是否审核:" + mTask.isReviewFlag());
-        LogUtil.dll("结构："+MainApp.gson.toJson(mTask));
+        LogUtil.dll("结构：" + MainApp.gson.toJson(mTask));
 
     }
 
@@ -314,7 +313,6 @@ public class TasksEditActivity extends BaseActivity {
                 break;
 
 
-
             case R.id.layout_del:
                 userss.clear();
                 depts.clear();
@@ -326,6 +324,7 @@ public class TasksEditActivity extends BaseActivity {
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt("from", TASKS_ADD);
+                bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                 break;
         }
