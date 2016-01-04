@@ -19,9 +19,12 @@ import com.loyo.oa.v2.tool.ExitActivity;
  * 任务详情编辑[ 选择【项目 的结束 编辑 删除】弹窗 ]
  * */
 public class SelectEditDeleteActivity extends BaseActivity implements OnClickListener {
-    Button btn_delete, btn_edit, btn_cancel, btn_extra;
-    LinearLayout layout;
-    Intent intent;
+
+    private Button btn_delete, btn_edit, btn_cancel, btn_extra;
+    private LinearLayout layout;
+    private Intent intent;
+    private Intent mIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
         btn_edit = (Button) this.findViewById(R.id.btn_edit);
         btn_cancel = (Button) this.findViewById(R.id.btn_cancel);
         btn_extra = (Button) this.findViewById(R.id.btn_extra);
-
         layout = (LinearLayout) findViewById(R.id.pop_layout);
 
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
@@ -45,7 +47,9 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 Toast.makeText(getApplicationContext(), "提示：点击窗口外部关闭窗口！",
                         Toast.LENGTH_SHORT).show();
             }
+
         });
+
         // 添加按钮监听
         btn_cancel.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
@@ -55,7 +59,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
             if (!intent.getBooleanExtra("edit", false)) {
                 btn_edit.setVisibility(View.GONE);
             }else{
-
                 String editText=intent.getStringExtra("editText");
                 btn_edit.setText(TextUtils.isEmpty(editText)?"编 辑":editText);
             }
@@ -69,7 +72,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 btn_extra.setVisibility(View.VISIBLE);
                 btn_extra.setOnClickListener(this);
             }
-
         }
     }
 
@@ -91,7 +93,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //编辑
             case R.id.btn_edit:
-                Intent intent = new Intent();
+                mIntent = new Intent();
                 intent.putExtra("edit", true);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -102,18 +104,18 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 super.ConfirmDialog("提示", "确认删除?", new ConfirmDialogInterface() {
                     @Override
                     public void Confirm() {
-                        Intent intent1 = new Intent();
-                        intent1.putExtra("delete", true);
-                        setResult(RESULT_OK, intent1);
+                        mIntent = new Intent();
+                        mIntent.putExtra("delete", true);
+                        setResult(RESULT_OK, mIntent);
                         finish();
                     }
                 });
                 break;
 
             case R.id.btn_extra:
-                Intent intent1 = new Intent();
-                intent1.putExtra("extra", true);
-                setResult(RESULT_OK, intent1);
+                mIntent = new Intent();
+                mIntent.putExtra("extra", true);
+                setResult(RESULT_OK, mIntent);
                 finish();
                 break;
 

@@ -19,14 +19,17 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
 import com.loyo.oa.v2.activity.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Discussion;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
+import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -40,6 +43,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
@@ -58,6 +62,8 @@ import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * 【任务详情】
@@ -80,6 +86,7 @@ public class TasksInfoActivity extends BaseActivity {
     public String realName;
     public String isTest;
     public String beProjects;
+    public NewUser newUser;
 
     @ViewById
     ViewGroup img_title_left;
@@ -131,11 +138,15 @@ public class TasksInfoActivity extends BaseActivity {
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id
             String mTaskId;
 
-    public String taskId;  //任务ID
-    public String userId;
-    public int statusSize;
-    public boolean isJoin;
-    public boolean isCreator;
+    private String taskId;  //任务ID
+    private String userId;
+    private String uuid = StringUtil.getUUID();
+    private int statusSize;
+    private boolean isJoin;
+    private boolean isCreator;
+    private ArrayList<NewUser> userss;
+    private ArrayList<NewUser> depts;
+    private Members member;
 
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
@@ -159,6 +170,10 @@ public class TasksInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("任务详情");
+
+        userss = new ArrayList<>();
+        depts = new ArrayList<>();
+        member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
         img_title_left.setOnTouchListener(Global.GetTouch());
@@ -188,11 +203,10 @@ public class TasksInfoActivity extends BaseActivity {
      */
     void updateUI_task_responsiblePerson() {
 
-        //进行中,分派人登陆可修改负责人和参与人
-        if (IsCreator() && mTask.getStatus() == Task.STATUS_PROCESSING) {
-            img_title_right.setVisibility(View.VISIBLE);
-        } else {
+        if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_REVIEWING) {
             img_title_right.setVisibility(View.GONE);
+        } else {
+            img_title_right.setVisibility(View.VISIBLE);
         }
 
         if (mTask.getResponsiblePerson() != null) {
@@ -268,7 +282,7 @@ public class TasksInfoActivity extends BaseActivity {
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
 
-            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt()*1000)) + " 截止";
+            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)) + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
             }
@@ -423,26 +437,34 @@ public class TasksInfoActivity extends BaseActivity {
     void onClick(View v) {
 
         switch (v.getId()) {
+
             case R.id.img_title_left:
                 finish();
                 break;
+
             case R.id.img_title_right:
+
                 if (null == mTask) {
                     Toast("任务为空！");
                     return;
                 }
+
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
 
+                /*创建人*/
                 if (IsCreator() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
                     intent.putExtra("delete", true);
                     intent.putExtra("extra", "复制任务");
-                } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
+                }
+
+                /*负责人*/
+                else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
+                    intent.putExtra("editText", "修改参与人");
                 }
 
                 startActivityForResult(intent, REQUEST_EDIT_DELETE);
-
                 break;
 
             /**提交完成*/
@@ -514,7 +536,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     /**
-     * 获取讨论内容，服务端已启用，暂注释
+     * 获取讨论内容，服务端已弃用，暂注释
      */
 /*    @Background
     void getDiscussion() {
@@ -548,14 +570,32 @@ public class TasksInfoActivity extends BaseActivity {
 
         switch (requestCode) {
 
-            case REQUEST_EDIT_TASK://编辑 子任务 返回
+            /*选择完参与人后，回调*/
+            case ExtraAndResult.request_Code:
+                LogUtil.dll("参与人选择回调");
+                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
+                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
+                if (cc_user_id != null && cc_user_name != null) {
+                    setJoinUsers(cc_user_id, cc_user_name);
+
+                } else {
+                    Toast("未选择相关人员");
+                }
+
+                break;
+
+            //编辑 子任务 返回
+            case REQUEST_EDIT_TASK:
                 layout_child_Add_area.removeAllViews();
                 getTask();
                 break;
+
             case REQUEST_SCORE:
 //                mTask = (Task) data.getSerializableExtra("review");
 //                updateUI();
                 getTask();
+                break;
+
             case REQUEST_EDIT:
                 //TODO:奇怪这里取不到数据
                 //                mTask = (Task) data.getSerializableExtra("task_return");
@@ -565,13 +605,20 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
 
             case REQUEST_EDIT_DELETE:
-                /*编辑回调*/
-                if (data.getBooleanExtra("edit", false)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("mTask", mTask);
-                    bundle.putBoolean("type", isCreator);
-                    app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
 
+                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
+                if (data.getBooleanExtra("edit", false)) {
+                    if (isCreator) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("mTask", mTask);
+                        bundle.putBoolean("type", isCreator);
+                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+                    } else {
+                        Bundle mBundle = new Bundle();
+                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, mBundle);
+                    }
                 }
 
                 /*删除回调*/
@@ -594,6 +641,15 @@ public class TasksInfoActivity extends BaseActivity {
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
+                }
+
+                /*修改参与人回调*/
+                else if (data.getBooleanExtra("editjoiner", false)) {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle);
+
                 }
                 break;
 
@@ -648,6 +704,63 @@ public class TasksInfoActivity extends BaseActivity {
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
+
+    /**
+     * 参与人组装
+     */
+    void setJoinUsers(String joinedUserIds, String joinedUserName) {
+        userss.clear();
+        depts.clear();
+
+        String[] userIds = joinedUserIds.split(",");
+        String[] userNames = joinedUserName.split(",");
+
+        for (int i = 0; i < userIds.length; i++) {
+            NewUser newUser = new NewUser();
+            newUser.setName(userNames[i]);
+            newUser.setId(userIds[i]);
+            userss.add(newUser);
+        }
+
+        member.users = userss;
+        editJoiner();
+    }
+
+    /**
+     * 修改参与人
+     */
+    void editJoiner() {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("title", mTask.getTitle());
+        map.put("content", mTask.getContent());
+        map.put("responsiblePerson", mTask.getResponsiblePerson());
+        map.put("members", member);
+        map.put("planendAt", mTask.getPlanEndAt());
+        map.put("remindflag", mTask.getRemindTime() > 0);
+        map.put("remindtime", mTask.getRemindTime());
+        map.put("reviewFlag", mTask.isReviewFlag());
+        map.put("attachmentUUId", uuid);
+
+        if (!TextUtils.isEmpty(mTask.getProjectId())) {
+            map.put("projectId", mTask.getProjectId());
+        }
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
+            @Override
+            public void success(Task task, Response response) {
+                Toast("修改参与人成功");
+                getTask();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
 
     /**
      * 附件上传
