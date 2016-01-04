@@ -88,6 +88,7 @@ public class MainApp extends Application {
     public SimpleDateFormat df11;//设置日期格式
     public SimpleDateFormat df12;//设置日期格式
     public SimpleDateFormat df13;//设置日期格式
+    public SimpleDateFormat df14;//设置日期格式
     public SimpleDateFormat df_api;//服务器返回的时间格式
     public SimpleDateFormat df_api_get;
     public SimpleDateFormat df_api_get2;
@@ -260,6 +261,7 @@ public class MainApp extends Application {
         df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
         df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
         df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
+        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
         df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
         df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
         df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00

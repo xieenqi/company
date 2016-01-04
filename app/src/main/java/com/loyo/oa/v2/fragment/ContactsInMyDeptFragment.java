@@ -41,11 +41,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public LayoutInflater mInflater;
 
     public ArrayList<User> myUserList;
-    public ArrayList<User> userAllList;
-    public ArrayList<Department> deptSource;//部门数据源
-
-    public int positions;
-
     public View view;
     public View headView;
     public ImageView heading;
@@ -60,6 +55,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_user_users, container, false);
         initView(view);
         return view;
+
     }
 
     @Override
@@ -82,9 +78,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         catalogTv = (TextView)headView.findViewById(R.id.catalog);
         item_medleft_top = (LinearLayout)headView.findViewById(R.id.item_medleft_top);
 
-        deptSource = Common.getLstDepartment();
-        userAllList = new ArrayList<>();
-        myUserList = new ArrayList<>();
         pinyinComparator = new PinyinComparator();
         characterParser = CharacterParser.getInstance();
 
@@ -92,29 +85,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         deptInfoTv.setText(MainApp.user.depts.get(0).getShortDept().getName());
         catalogTv.setText("我");
 
-        /*全部人员获取*/
-        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
-            }
-        }
-
-       /*获取我的部门下标*/
-        for(int i = 0;i<deptSource.size();i++){
-            if(deptSource.get(i).getId().equals(MainApp.user.depts.get(0).getShortDept().getId())){
-                positions = i;
-                break;
-            }
-        }
-
-        /*根据部门下标获取本部门人员*/
-        myUserList.clear();
-        for (User user : userAllList) {
-            String xPath = user.depts.get(0).getShortDept().getXpath();
-            if (xPath.contains(deptSource.get(positions).getXpath())) {
-                myUserList.add(user);
-            }
-        }
+        myUserList = Common.getMyUserDept();
 
         /*我的部门数据中，移除自己*/
         for(int i = 0;i<myUserList.size();i++){

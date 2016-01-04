@@ -9,7 +9,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -17,7 +16,6 @@ import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.fragment.ContactsDepartmentFragment;
-import com.loyo.oa.v2.fragment.ContactsInDepartmentFragment;
 import com.loyo.oa.v2.fragment.ContactsInMyDeptFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -92,9 +90,11 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      * 获取部门数量和本部门人员数量
      */
     void getUserAndDepartmentSize() {
+
         String depId = (null != MainApp.user.depts && MainApp.user.depts.size() > 0) ? MainApp.user.depts.get(0).getShortDept().getId() : "";
 
-        myDepartmentContactsSize = Common.getUsersByDeptId(depId, new ArrayList<User>()).size();
+        //myDepartmentContactsSize = Common.getUsersByDeptId(depId, new ArrayList<User>()).size();
+        myDepartmentContactsSize = Common.getMyUserDept().size();
 
         ArrayList<ContactsGroup> groups = Common.getContactsGroups(null);
 

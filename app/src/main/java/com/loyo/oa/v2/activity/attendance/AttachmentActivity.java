@@ -82,6 +82,9 @@ public class AttachmentActivity extends BaseActivity {
 
     }
 
+    /**
+     * 获取附件列表信息
+     * */
     @UiThread
     void getAttachments() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
