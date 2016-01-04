@@ -86,7 +86,6 @@ public class TasksInfoActivity extends BaseActivity {
     public String realName;
     public String isTest;
     public String beProjects;
-    public NewUser newUser;
 
     @ViewById
     ViewGroup img_title_left;
@@ -321,8 +320,10 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             /*Checkbox勾选,赋值*/
+
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
             boolean isStatus = subTask.getStatus().equals("1") ? true : false;
+
 
             /*子任务个数设置*/
             if (isStatus) {
@@ -333,14 +334,18 @@ public class TasksInfoActivity extends BaseActivity {
             childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                    if (isCheck) {
-                        statusSize++;
-                        mHandler.sendEmptyMessage(0x01);
-                        requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
+                    if(MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())){
+                        if (isCheck) {
+                            statusSize++;
+                            mHandler.sendEmptyMessage(0x01);
+                            requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
+                        } else {
+                            statusSize--;
+                            mHandler.sendEmptyMessage(0x01);
+                            requestTaskupdates(taskId, subTask.getId(), 0);
+                        }
                     } else {
-                        statusSize--;
-                        mHandler.sendEmptyMessage(0x01);
-                        requestTaskupdates(taskId, subTask.getId(), 0);
+                        Toast("你不是子任务负责人，不能操作！");
                     }
                 }
             });
@@ -365,6 +370,7 @@ public class TasksInfoActivity extends BaseActivity {
                     intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
                     intent.putExtra("TaskId", mTask.getId());
                     intent.putExtra("allUsers", allUsers);
+                    intent.putExtra("isReponser",MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())?true:false);
                     TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
                     TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
                 }

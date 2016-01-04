@@ -43,6 +43,7 @@ public class ChildTaskEdit extends BaseActivity {
     private ArrayList<NewUser> reponserData;
     private NewUser newUser;//负责人 信息
     private Intent mIntent;
+    private boolean isReponser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +59,33 @@ public class ChildTaskEdit extends BaseActivity {
         data = (TaskCheckPoint) mIntent.getSerializableExtra("TaskEdit");
         TaskId = mIntent.getStringExtra("TaskId");
         reponserData = (ArrayList<NewUser>)mIntent.getSerializableExtra("allUsers");
+        isReponser = mIntent.getBooleanExtra("isReponser",false);
+
+        LogUtil.dll("AAAAA:"+isReponser);
 
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        img_title_left.setOnClickListener(click);
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
-        img_title_right.setOnClickListener(click);
         et_info = (EditText) findViewById(R.id.et_info);
-        et_info.setText(data.getcontent());
         tv_responser = (TextView) findViewById(R.id.tv_responser);
-        tv_responser.setText(data.getResponsiblePerson().getName());
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
-        tv_title_1.setText("编辑子任务");
         ll_responser = (LinearLayout) findViewById(R.id.ll_responser);
-        ll_responser.setOnClickListener(click);
         btn_delete = (Button) findViewById(R.id.btn_delete);
-        btn_delete.setOnClickListener(click);
+
+        img_title_left.setOnClickListener(click);
+        et_info.setText(data.getcontent());
+        tv_responser.setText(data.getResponsiblePerson().getName());
+        tv_title_1.setText("编辑子任务");
+
+        /*判断是否为子任务负责人*/
+        if(isReponser){
+            img_title_right.setOnClickListener(click);
+            ll_responser.setOnClickListener(click);
+            btn_delete.setOnClickListener(click);
+        }else{
+            et_info.setEnabled(false);
+            btn_delete.setBackgroundColor(getResources().getColor(R.color.gray));
+        }
+
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
