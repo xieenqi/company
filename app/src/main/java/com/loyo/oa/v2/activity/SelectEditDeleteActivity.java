@@ -20,7 +20,7 @@ import com.loyo.oa.v2.tool.ExitActivity;
  * */
 public class SelectEditDeleteActivity extends BaseActivity implements OnClickListener {
 
-    private Button btn_delete, btn_edit, btn_cancel, btn_extra,btn_edtjoiner;
+    private Button btn_delete, btn_edit, btn_cancel, btn_extra;
     private LinearLayout layout;
     private Intent intent;
     private Intent mIntent;
@@ -38,8 +38,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
         btn_edit = (Button) this.findViewById(R.id.btn_edit);
         btn_cancel = (Button) this.findViewById(R.id.btn_cancel);
         btn_extra = (Button) this.findViewById(R.id.btn_extra);
-        btn_edtjoiner = (Button) this.findViewById(R.id.btn_edtjoiner);
-
         layout = (LinearLayout) findViewById(R.id.pop_layout);
 
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
@@ -61,7 +59,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
             if (!intent.getBooleanExtra("edit", false)) {
                 btn_edit.setVisibility(View.GONE);
             }else{
-
                 String editText=intent.getStringExtra("editText");
                 btn_edit.setText(TextUtils.isEmpty(editText)?"编 辑":editText);
             }
@@ -70,16 +67,11 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 btn_delete.setVisibility(View.GONE);
             }
 
-            if(!intent.getBooleanExtra("editjoiner",false)){
-                btn_edtjoiner.setVisibility(View.GONE);
-            }
-
             if (intent.hasExtra("extra")) {
                 btn_extra.setText(intent.getStringExtra("extra"));
                 btn_extra.setVisibility(View.VISIBLE);
                 btn_extra.setOnClickListener(this);
             }
-
         }
     }
 
@@ -98,6 +90,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
     public void onClick(View v) {
         switch (v.getId()) {
+
             //编辑
             case R.id.btn_edit:
                 mIntent = new Intent();

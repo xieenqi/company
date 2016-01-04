@@ -57,6 +57,10 @@ public interface ITask {
     @PUT("/task/{Id}")
     Observable<Task> update(@Path("Id") String Id,@Body HashMap<String, Object> body);
 
+    /*修改参与人*/
+    @PUT("/task/{Id}")
+    void updateJioner(@Path("Id") String Id,@Body HashMap<String, Object> body,RCallback<Task> callback);
+
     /*任务完成*/
     @PUT("/task/{id}/finished")
     void commitTask(@Path("id") String id ,Callback<Task> callback);

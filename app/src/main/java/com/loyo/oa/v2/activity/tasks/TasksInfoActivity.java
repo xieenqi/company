@@ -203,9 +203,9 @@ public class TasksInfoActivity extends BaseActivity {
      */
     void updateUI_task_responsiblePerson() {
 
-        if(IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_REVIEWING){
+        if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_REVIEWING) {
             img_title_right.setVisibility(View.GONE);
-        }else{
+        } else {
             img_title_right.setVisibility(View.VISIBLE);
         }
 
@@ -282,7 +282,7 @@ public class TasksInfoActivity extends BaseActivity {
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
 
-            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt()*1000)) + " 截止";
+            String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)) + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
             }
@@ -456,16 +456,15 @@ public class TasksInfoActivity extends BaseActivity {
                     intent.putExtra("edit", true);
                     intent.putExtra("delete", true);
                     intent.putExtra("extra", "复制任务");
-                    intent.putExtra("editjoiner", false);
                 }
 
                 /*负责人*/
                 else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
-                    intent.putExtra("editjoiner", true);
+                    intent.putExtra("edit", true);
+                    intent.putExtra("editText", "修改参与人");
                 }
 
                 startActivityForResult(intent, REQUEST_EDIT_DELETE);
-
                 break;
 
             /**提交完成*/
@@ -537,7 +536,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     /**
-     * 获取讨论内容，服务端已启用，暂注释
+     * 获取讨论内容，服务端已弃用，暂注释
      */
 /*    @Background
     void getDiscussion() {
@@ -573,18 +572,16 @@ public class TasksInfoActivity extends BaseActivity {
 
             /*选择完参与人后，回调*/
             case ExtraAndResult.request_Code:
-                User user = (User) data.getSerializableExtra(User.class.getName());
-                if (user != null) {
-                    setResponsiblePersion(user);
+                LogUtil.dll("参与人选择回调");
+                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
+                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
+                if (cc_user_id != null && cc_user_name != null) {
+                    setJoinUsers(cc_user_id, cc_user_name);
+
                 } else {
-                    String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                    String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-                    if (cc_user_id != null && cc_user_name != null) {
-                        setJoinUsers(cc_user_id, cc_user_name);
-                    } else {
-                        Toast("未选择相关人员");
-                    }
+                    Toast("未选择相关人员");
                 }
+
                 break;
 
             //编辑 子任务 返回
@@ -609,13 +606,19 @@ public class TasksInfoActivity extends BaseActivity {
 
             case REQUEST_EDIT_DELETE:
 
-                /*编辑回调*/
+                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
                 if (data.getBooleanExtra("edit", false)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("mTask", mTask);
-                    bundle.putBoolean("type", isCreator);
-                    app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
-
+                    if (isCreator) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("mTask", mTask);
+                        bundle.putBoolean("type", isCreator);
+                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+                    } else {
+                        Bundle mBundle = new Bundle();
+                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, mBundle);
+                    }
                 }
 
                 /*删除回调*/
@@ -641,7 +644,7 @@ public class TasksInfoActivity extends BaseActivity {
                 }
 
                 /*修改参与人回调*/
-                else if(data.getBooleanExtra("editjoiner",false)){
+                else if (data.getBooleanExtra("editjoiner", false)) {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
@@ -702,13 +705,10 @@ public class TasksInfoActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
-    void setResponsiblePersion(User user) {
-        newUser = user.toShortUser();
-        tv_responsiblePerson.setText(newUser.getName());
-    }
-
+    /**
+     * 参与人组装
+     */
     void setJoinUsers(String joinedUserIds, String joinedUserName) {
-
         userss.clear();
         depts.clear();
 
@@ -723,53 +723,42 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         member.users = userss;
-
+        editJoiner();
     }
 
     /**
      * 修改参与人
-     * */
-    void editJoiner(){
+     */
+    void editJoiner() {
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("title",mTask.getTitle());
-        map.put("content",mTask.getContent());
-        map.put("responsiblePerson", newUser);
+        map.put("title", mTask.getTitle());
+        map.put("content", mTask.getContent());
+        map.put("responsiblePerson", mTask.getResponsiblePerson());
         map.put("members", member);
         map.put("planendAt", mTask.getPlanEndAt());
         map.put("remindflag", mTask.getRemindTime() > 0);
         map.put("remindtime", mTask.getRemindTime());
-        map.put("reviewFlag", isTest);
+        map.put("reviewFlag", mTask.isReviewFlag());
         map.put("attachmentUUId", uuid);
 
         if (!TextUtils.isEmpty(mTask.getProjectId())) {
             map.put("projectId", mTask.getProjectId());
         }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).update(mTask.getId(), map)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Task>() {
-                    @Override
-                    public void onCompleted() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
+            @Override
+            public void success(Task task, Response response) {
+                Toast("修改参与人成功");
+                getTask();
+            }
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(Task task) {
-                        task.setAck(true);
-                        Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-
-                        Intent intent = new Intent();
-                        intent.putExtra("data", task);
-                        setResult(Activity.RESULT_OK, intent);
-                        onBackPressed();
-                    }
-                });
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
 
