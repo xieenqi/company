@@ -53,6 +53,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     @ViewById ViewGroup layout_managers;
     @ViewById ViewGroup layout_members;
+    @ViewById ViewGroup ll_managerGon;
 
     @ViewById ListView lv_project_members;
 
@@ -61,6 +62,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     ProjectMemberListViewAdapter mAdapter;
     ArrayList<HttpProject.ProjectMember> mProjectMember = new ArrayList<>();
+    private boolean isEditMember = false;
 
     String mManagerIds = "", mManagerNames = "", mMemberIds = "", mMemberNames = "";
     // boolean mUpdate = false;
@@ -68,10 +70,8 @@ public class ProjectAddActivity extends BaseActivity {
     @AfterViews
     void initViews() {
         super.setTitle(mUpdate ? "编辑项目" : "新建项目");
-
         layout_managers.setOnTouchListener(Global.GetTouch());
         layout_members.setOnTouchListener(Global.GetTouch());
-
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,44 +81,25 @@ public class ProjectAddActivity extends BaseActivity {
 
         if (mProject != null && !TextUtils.isEmpty(mProject.getId())) {
             mUpdate = true;
-
-            if (!mProject.isCreator()) {
+            if (!mProject.isCreator()) {//非创建者不能修改负责人
                 layout_managers.setOnClickListener(null);
             }
-        }
-
-        if (mUpdate) {
-//            app.getRestAdapter().create(IProject.class).getProjectById(mProject.getId(), new RCallback<Project>() {
-//                @Override
-//                public void success(Project project, Response response) {
-//                    mProject = project;
-//
-//                }
-//            });
             setProjectExtra();
         }
     }
 
     void setProjectExtra() {
-        if (!mUpdate || mProject == null || TextUtils.isEmpty(mProject.getId())) {
+        if (TextUtils.isEmpty(mProject.getId())) {
             return;
         }
         edt_title.setText(mProject.title);
         edt_content.setText(mProject.content);
+        if (mProject.isManager())
+            ll_managerGon.setVisibility(View.GONE);
         mManagerIds = ProjectMember.GetMnagerUserIds(mProject.managers);
-//        for (HttpProject.ProjectManaer ele : mProject.managers) {
-//            mManagerIds += ele.user.id + ",";
-//        }
         LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.members));
-//        if (mProject.members != null) {
-//            mMemberIds = ProjectMember.GetMenberUserIds(mProject.members);
-//        }
         if (mProject.members != null) {
-            for (HttpProject.ProjectMember ele : mProject.members) {
-                if (ele.user != null) {
-                    mMemberIds += ele.user.id + ",";
-                }
-            }
+            mMemberIds = ProjectMember.GetMenberUserIds(mProject.members);
         }
         mManagerNames = ProjectMember.getManagersName(mProject.managers);
         mMemberNames = ProjectMember.GetUserNames(mProject.members);
@@ -155,7 +136,6 @@ public class ProjectAddActivity extends BaseActivity {
         if (resultCode != RESULT_OK) {
             return;
         }
-
         mManagerIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
         mManagerNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
 
@@ -178,13 +158,9 @@ public class ProjectAddActivity extends BaseActivity {
         if (resultCode != RESULT_OK) {
             return;
         }
-
+        isEditMember = true;
         mMemberIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
         mMemberNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-
-//        mMemberIds = TextUtils.isEmpty(memberIds) ? memberIds : mMemberIds + "," + memberIds;
-//        mMemberNames = TextUtils.isEmpty(memberNames) ? memberNames : mMemberNames + "," + memberNames;
-
         setMemberOnActivityResult();
     }
 
@@ -194,46 +170,25 @@ public class ProjectAddActivity extends BaseActivity {
         } else {
             mProjectMember.clear();
         }
+        if (!TextUtils.isEmpty(mMemberIds)) {
+            String[] memberIds = mMemberIds.split(",");
+            String[] memberNames = mMemberNames.split(",");
 
-        if (mUpdate) {//编辑项目 时的参与人
-            if (mProject != null && !ListUtil.IsEmpty(mProject.members)) {
-
-                mProjectMember = new ArrayList<>();
-                for (HttpProject.ProjectMember element : mProject.members) {
+            for (int i = 0; i < memberIds.length; i++) {
+                String uId = memberIds[i];
+                if (!TextUtils.isEmpty(uId)) {
                     HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
-                    member.canReadAll = element.canReadAll;
-                    User nu = new User();
-                    nu.id = element.user.id;
-                    nu.name = element.user.name;
-                    nu.avatar = element.user.avatar;
-                    member.user = nu;
+                    if (!isEditMember) {
+                        member.canReadAll = mProject.members.get(i).canReadAll;
+                    }
+                    User uu = new User();
+                    uu.id = uId;
+                    uu.name = memberNames[i];
+                    member.user = uu;
                     mProjectMember.add(member);
                 }
             }
         }
-
-//        if (!TextUtils.isEmpty(mMemberIds)) {
-//            String[] memberIds = mMemberIds.split(",");
-//            String[] memberNames = mMemberNames.split(",");
-//
-//            for (int i = 0; i < memberIds.length; i++) {
-//                String uId = memberIds[i];
-//                if (!TextUtils.isEmpty(uId)) {
-//                    HttpProject.ProjectMember u = new HttpProject().new ProjectMember();
-//                    User uu = new User();
-//                    u.user = uu;
-//                    u.user.id = uId;
-//                    u.user.name = memberNames[i];
-//                    HttpProject.ProjectMember member = new HttpProject().new ProjectMember();
-//                    member.user = u.user;
-//                    mProjectMember.add(member);
-////
-////                    if (!mProjectMember.contains(member)) {
-////                    }
-//
-//                }
-//            }
-//        }
 
         // 从Members中去掉与Manager重复的用户
         if (mProject != null && !ListUtil.IsEmpty(mProject.managers) && !ListUtil.IsEmpty(mProjectMember)) {
@@ -244,19 +199,6 @@ public class ProjectAddActivity extends BaseActivity {
                 mProjectMember.removeAll(projectManagers);
             }
         }
-//
-//        if (mProject != null) {
-//            for (HttpProject.ProjectMember element : mProjectMember) {
-//                HttpProject.ProjectMember pm = new HttpProject().new ProjectMember();
-//                pm.canReadAll = element.canReadAll;
-//                User uu = new User();
-//                uu.id = element.user.id;
-//                uu.name = element.user.name;
-//                pm.user = uu;
-//                mProject.members.add(pm);
-//            }
-//        }
-
         mAdapter = new ProjectMemberListViewAdapter(this, createData());//?????mProjectMember
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
@@ -278,6 +220,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 参与人的数据  adapter列表
+     *
      * @return
      */
     public ArrayList<HttpProject.ProjectMember> createData() {

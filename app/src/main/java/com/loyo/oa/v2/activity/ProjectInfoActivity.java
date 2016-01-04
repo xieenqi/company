@@ -75,14 +75,23 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
 
+
+    @AfterViews
+    void initViews() {
+        setTouchView(-1);
+        img_title_right.setEnabled(false);
+        tv_title_1.setText("项目详情");
+        getProject();
+    }
+
     /**
-     * 获取项目
+     * 获取项目 详细数据
      */
     private void getProject() {
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
             public void success(HttpProject _project, Response response) {
-                HttpErrorCheck.checkResponse("项目详情", response);
+                HttpErrorCheck.checkResponse("项目详情 ", response);
                 project = _project;
                 img_title_right.setEnabled(true);
                 initData(project);
@@ -95,14 +104,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 //Global.Toast("获取项目失败");
             }
         });
-    }
-
-    @AfterViews
-    void initViews() {
-        setTouchView(-1);
-        img_title_right.setEnabled(false);
-        tv_title_1.setText("项目详情");
-        getProject();
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_project_des})
@@ -118,13 +119,14 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 }
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
 
-                if (project.status == Project.STATUS_PROCESSING) {
+                if (project.status == 1) {
                     if (project.isCreator()) {
                         intent.putExtra("delete", true);
                         intent.putExtra("edit", true);
                         intent.putExtra("extra", "结束项目"); //1:进行中
                     } else if (project.isManager()) {
                         intent.putExtra("edit", true);
+                        intent.putExtra("editText", "修改参与人");
                     }
                 } else {
                     if (project.isCreator()) {
@@ -132,8 +134,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                         intent.putExtra("extra", "重启项目"); //0:关闭
                     }
                 }
-
-                startActivityForResult(intent, TasksInfoActivity.REQUEST_EDIT_DELETE);
+                startActivityForResult(intent, ExtraAndResult.REQUSET_STATUS);
                 break;
             case R.id.layout_project_des:
                 Bundle b = new Bundle();
@@ -186,8 +187,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 callbacks.add(fragmentX);
                 fragmentXes.add(fragmentX);
             }
-
-
             tabs.setTextSize(app.spTopx(18));
             adapter = new MyPagerAdapter(getSupportFragmentManager());
             pager.setAdapter(adapter);
@@ -212,6 +211,13 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         } else {
             img_project_status.setImageResource(R.drawable.icon_project_completed);
         }
+        //是否显示三个点的功能键
+        if (!project.isCreator() && !project.isManager()) {
+            img_title_right.setVisibility(View.GONE);
+        } else if (project.isManager() && project.status == 0) {
+            img_title_right.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -265,7 +271,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             case TasksInfoActivity.REQUEST_EDIT:
                 getProject();
                 break;
-            case TasksInfoActivity.REQUEST_EDIT_DELETE:
+            case ExtraAndResult.REQUSET_STATUS:
                 if (data.getBooleanExtra("edit", false)) {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("mUpdate", true);
@@ -292,7 +298,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
                         @Override
                         public void success(Project o, Response response) {
-                            LogUtil.d(" 结束 和 编辑项目： " + MainApp.gson.toJson(o));
+                            HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                             project.status = (project.status == 1 ? 0 : 1);
                             initViews();
                         }
