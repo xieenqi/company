@@ -39,34 +39,52 @@ public class ProjectMember extends BaseBeans {
 //        public String name;
 //    }
 
-    public static String GetUserIds(ArrayList<ProjectMember> memberList) {
+    public static String GetMenberUserIds(ArrayList<HttpProject.ProjectMember> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
             return "";
         }
 
         StringBuffer sb = null;
-        for (ProjectMember member : memberList) {
+        for (HttpProject.ProjectMember member : memberList) {
             if (sb == null) {
                 sb = new StringBuffer();
             } else {
                 sb.append(",");
             }
 
-            sb.append(TextUtils.isEmpty(member.userId) ? member.userId : member.user.id);
+            if(member.user!=null){
+                sb.append(member.user.id);
+            }
         }
 
         return sb == null ? "" : sb.toString();
     }
-
-
-
-    public static String GetUserNames(ArrayList<ProjectMember> memberList) {
+    public static String GetMnagerUserIds(ArrayList<HttpProject.ProjectManaer> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
             return "";
         }
 
         StringBuffer sb = null;
-        for (ProjectMember member : memberList) {
+        for (HttpProject.ProjectManaer member : memberList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+            } else {
+                sb.append(",");
+            }
+
+            sb.append(TextUtils.isEmpty(member.user.id) ? member.user.id : member.user.id);
+        }
+
+        return sb == null ? "" : sb.toString();
+    }
+
+    public static String GetUserNames(ArrayList<HttpProject.ProjectMember> memberList) {
+        if (ListUtil.IsEmpty(memberList)) {
+            return "";
+        }
+
+        StringBuffer sb = null;
+        for (HttpProject.ProjectMember member : memberList) {
             if (sb == null) {
                 sb = new StringBuffer();
             } else {
@@ -88,7 +106,7 @@ public class ProjectMember extends BaseBeans {
         }
 
         StringBuffer sb = null;
-        for ( HttpProject.ProjectManaer  member : memberList) {
+        for (HttpProject.ProjectManaer member : memberList) {
             if (sb == null) {
                 sb = new StringBuffer();
             } else {
@@ -120,7 +138,7 @@ public class ProjectMember extends BaseBeans {
                 sb.append(member.user.getRealname());
             }
 
-            if (member.dept!=null){
+            if (member.dept != null) {
                 sb.append(member.dept.name);
             }
         }

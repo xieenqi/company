@@ -484,8 +484,8 @@ public class TasksAddActivity extends BaseActivity {
 
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 //负责人回调
-                if (user != null) {
-                    setResponsiblePersion(user);
+                if (user != null) {  setResponsiblePersion(user);
+
                 }
 
                 //参与人回调
