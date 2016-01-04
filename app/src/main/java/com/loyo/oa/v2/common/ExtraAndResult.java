@@ -46,4 +46,8 @@ public class ExtraAndResult {
      * 传递【抄送人】数据的请求码
      */
     public static final int REQUSET_COPY_PERSONS = 301;
+    /**
+     * 操作状态
+     */
+    public static final int REQUSET_STATUS = 302;
 }

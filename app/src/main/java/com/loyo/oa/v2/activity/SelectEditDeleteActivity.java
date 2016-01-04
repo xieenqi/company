@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,6 +60,10 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
         if (intent != null && intent.getExtras() != null) {
             if (!intent.getBooleanExtra("edit", false)) {
                 btn_edit.setVisibility(View.GONE);
+            }else{
+
+                String editText=intent.getStringExtra("editText");
+                btn_edit.setText(TextUtils.isEmpty(editText)?"编 辑":editText);
             }
 
             if (!intent.getBooleanExtra("delete", false)) {
@@ -74,6 +79,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 btn_extra.setVisibility(View.VISIBLE);
                 btn_extra.setOnClickListener(this);
             }
+
         }
     }
 
