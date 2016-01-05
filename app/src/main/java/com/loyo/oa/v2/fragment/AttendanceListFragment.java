@@ -33,6 +33,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -193,24 +194,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             case R.id.img_time_right:
                 switch (type) {
                     case 1:
-                        java.util.Calendar c1 = java.util.Calendar.getInstance();
-                        java.util.Calendar c2 = java.util.Calendar.getInstance();
-                        String currentTime = app.df12.format(System.currentTimeMillis());
-                        String nextTime = app.df12.format(qtime);
-                        try {
-                            c1.setTime(app.df13.parse(nextTime));//获得的时间
-                            c2.setTime(app.df13.parse(currentTime));//系统当前时间
-                            int resultTime = c1.compareTo(c2);
-                            if (resultTime < 0) {
-                                nextMonth();
-                            }
-                        } catch (Exception e) {
-
+                        if (checkTime(qtime, app.df13)) {
+                            nextMonth();
                         }
-
                         break;
                     case 2:
-                        nextDay();
+                        if (checkTime(qtime, app.df12)) {
+                            nextDay();
+                        }
                         break;
                 }
                 break;
@@ -286,6 +277,27 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         qtime = (int) (cal.getTime().getTime() / 1000);
         initTimeStr(cal.getTime().getTime());
         getData(page);
+    }
+
+    /**
+     * 检查时间是否超出了现在时间
+     */
+    private boolean checkTime(int time, SimpleDateFormat format) {
+        java.util.Calendar c1 = java.util.Calendar.getInstance();
+        java.util.Calendar c2 = java.util.Calendar.getInstance();
+        String currentTime = format.format(System.currentTimeMillis());
+        String nextTime = format.format((long) time * 1000);
+        try {
+            c1.setTime(format.parse(nextTime));//获得的时间
+            c2.setTime(format.parse(currentTime));//系统当前时间
+            int resultTime = c1.compareTo(c2);
+            if (resultTime < 0) {
+                return true;
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
     }
 
     /**
