@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.LegworksListActivity_;
 import com.loyo.oa.v2.activity.SignInActivity;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationLegWork;
 import com.loyo.oa.v2.beans.TeamLegworkDetail;
 import com.loyo.oa.v2.beans.User;
@@ -25,7 +24,6 @@ import com.loyo.oa.v2.point.ILegwork;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -68,7 +66,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private View mView;
     private PaginationLegWork legworkPaginationX = new PaginationLegWork(20);
     private boolean isTopAdd;
-    private String currentTime, nextTime;
+    private String currentTime, nextTime, duration;
 
 
     @Nullable
@@ -93,6 +91,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             imgTimeRight.setOnClickListener(this);
 
             btn_add = (Button) mView.findViewById(R.id.btn_add);
+            btn_add.setVisibility(View.GONE);//暂时不做 增加 团队拜访的功能
             btn_add.setOnTouchListener(Global.GetTouch());
             btn_add.setOnClickListener(this);
 
@@ -126,6 +125,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
      */
     private void initTimeStr(long mills) {
         String time = app.df12.format(new Date(mills));
+        duration = app.df5.format(new Date(mills));
         tv_time.setText(time);
     }
 
@@ -141,14 +141,14 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                 java.util.Calendar c2 = java.util.Calendar.getInstance();
                 currentTime = app.df12.format(System.currentTimeMillis());
                 nextTime = app.df12.format(endAt);
-                try{
+                try {
                     c1.setTime(app.df12.parse(nextTime));//获得的时间
                     c2.setTime(app.df12.parse(currentTime));//系统当前时间
                     int resultTime = c1.compareTo(c2);
-                    if (resultTime < 0 ) {
+                    if (resultTime < 0) {
                         nextDay();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
                 break;
@@ -159,7 +159,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     }
 
     /**
-     * 新增拜访
+     * 新增团队拜访
      */
     private void create() {
         startActivityForResult(new Intent(mActivity, SignInActivity.class), FinalVariables.REQUEST_CREATE_LEGWORK);
@@ -220,54 +220,57 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
         } else {
             adapter.notifyDataSetChanged();
         }
-        if(legworkPaginationX.records==null){
+        if (legworkPaginationX.records == null) {
             return;
         }
-        String visitNum= String.valueOf(legworkPaginationX.records.VistNum);
-        String visitCustomerNum=String.valueOf(legworkPaginationX.records.CustNum);
+        String visitNum = String.valueOf(legworkPaginationX.records.visitTotalNum);
+        String visitCustomerNum = String.valueOf(legworkPaginationX.records.customerTotalNum);
 
-        String teamVisitStr="团队共拜访 "+visitNum+" 次 ";
-        String teamVisitCustomerStr="，共拜访 "+visitCustomerNum+" 位客户";
-        tv_count_title1.setText(Utils.modifyTextColor(teamVisitStr,getResources().getColor(R.color.title_bg1),"团队共拜访 ".length(),"团队共拜访 ".length()+visitNum.length()));
-        tv_count_title2.setText(Utils.modifyTextColor(teamVisitCustomerStr,getResources().getColor(R.color.title_bg1),"，共拜访 ".length(),"，共拜访 ".length()+visitCustomerNum.length()));
+        String teamVisitStr = "团队共拜访 " + visitNum + " 次 ";
+        String teamVisitCustomerStr = "，共拜访 " + visitCustomerNum + " 位客户";
+        tv_count_title1.setText(Utils.modifyTextColor(teamVisitStr, getResources().getColor(R.color.title_bg1), "团队共拜访 ".length(), "团队共拜访 ".length() + visitNum.length()));
+        tv_count_title2.setText(Utils.modifyTextColor(teamVisitCustomerStr, getResources().getColor(R.color.title_bg1), "，共拜访 ".length(), "，共拜访 ".length() + visitCustomerNum.length()));
     }
 
     /**
-     * 获取列表
+     * 获取 团队拜访 列表
+     * //api/v2/statistics/visit/team?duration=2015-12-04
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userId", "");
-        map.put("deptId", MainApp.user.depts.get(0).getShortDept().getId());
-        map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
-        map.put("endAt", endAt / 1000);
-        map.put("custId", "");
+//        map.put("userId", "");
+//        map.put("deptId", MainApp.user.depts.get(0).getShortDept().getId());
+//        map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
+//        map.put("endAt", endAt / 1000);
+
+        map.put("duration", duration);
         map.put("pageIndex", legworkPaginationX.pageIndex);
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
+//
+        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(ILegwork.class)
+                .getTeamLegworks(map, new RCallback<PaginationLegWork>() {
+                    @Override
+                    public void success(PaginationLegWork paginationX, Response response) {
+                        HttpErrorCheck.checkResponse("团队客户拜访", response);
+                        legworkPaginationX = paginationX;
+                        if (isTopAdd) {
+                            legWorks.clear();
+                        }
+                        if (null != paginationX.records && null != paginationX.records.data) {
+                            legWorks.addAll(paginationX.records.data);
+                        } else {
+                            legWorks.clear();
+                        }
+                        bindData();
+                    }
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getTeamLegworks(map, new RCallback<PaginationLegWork>() {
-            @Override
-            public void success(PaginationLegWork paginationX, Response response) {
-                LogUtil.d(" 团队客户拜访url： "+response.getUrl());
-                LogUtil.d(" 团队客户拜访json： "+MainApp.gson.toJson(paginationX));
-                legworkPaginationX = paginationX;
-                if (isTopAdd) {
-                    legWorks.clear();
-                }
-                if (null != paginationX.records&&null != paginationX.records.Detail) {
-                    legWorks.addAll(paginationX.records.Detail);
-                } else {
-                    legWorks.clear();
-                }
-                bindData();
-            }
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                lv.onRefreshComplete();
-                super.failure(error);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        lv.onRefreshComplete();
+                        super.failure(error);
+                    }
+                });
     }
 
     /**
@@ -283,7 +286,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        legworkPaginationX.pageIndex=1;
+        legworkPaginationX.pageIndex = 1;
         isTopAdd = true;
         getData();
     }
@@ -291,7 +294,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         isTopAdd = false;
-        legworkPaginationX.pageIndex=(legworkPaginationX.pageIndex + 1);
+        legworkPaginationX.pageIndex = (legworkPaginationX.pageIndex + 1);
         getData();
     }
 
@@ -322,13 +325,13 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
             RoundImageView avatar = ViewHolder.get(view, R.id.iv_avatar);
             TextView tv_name = ViewHolder.get(view, R.id.tv_name);
             TextView tv_visit_num = ViewHolder.get(view, R.id.tv_visitnum);
-            //            TextView tv_customer_num = ViewHolder.get(view, R.id.tv_visitcustomers);
+            TextView tv_customer_num = ViewHolder.get(view, R.id.tv_visitcustomers);
 
             ImageLoader.getInstance().displayImage(legWork.user.getAvatar(), avatar);
             tv_name.setText(legWork.user.getName());
-            tv_visit_num.setText("拜访次数 " + legWork.visitcount);
-            //            tv_customer_num.setText("拜访客户数 "+legWork.getTotalCustCount());
-            //            tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt() * 1000));
+            tv_visit_num.setText("拜访次数 " + legWork.visitNum);
+            tv_customer_num.setText("拜访客户数 " + legWork.customerNum);
+            //tv_time.setText(DateTool.getDiffTime(legWork.getCreatedAt() * 1000));
 
             return view;
         }

@@ -18,6 +18,9 @@ public class Config_project {
 
     //public static String IP2 = "http://192.168.31.136"; //马涛地址
 
+
+
+    public static String SIGNLN_TEM =IP+":9000"+"/api/v2";//团队拜访 列表
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");
     }
@@ -68,7 +71,7 @@ public class Config_project {
      */
     public static String SERVER_URL_CUSTOMER() {
         return IP + ":8090";
-    }
+    }//8090
 
     /**
      * 登录地址
@@ -92,5 +95,9 @@ public class Config_project {
     public static String URL() {
 
         return IP;
+    }
+
+    private enum Port{
+
     }
 }

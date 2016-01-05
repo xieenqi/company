@@ -47,7 +47,8 @@ public class LegworksListActivity extends FragmentActivity {
 
     @Click({R.id.img_title_left})
     void onClick() {
-        onBackPressed();
+        //onBackPressed();
+        finish();
     }
 
 }

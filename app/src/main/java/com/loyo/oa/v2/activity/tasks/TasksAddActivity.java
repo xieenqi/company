@@ -364,7 +364,9 @@ public class TasksAddActivity extends BaseActivity {
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt("from", TASKS_ADD);
-                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
+                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
                 break;
 
             /*关联客户*/

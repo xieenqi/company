@@ -52,8 +52,8 @@ public class HttpErrorCheck {
     public static void checkResponse(Response response) {
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(TAG + "接口成功result：" + result);
-            LogUtil.d(TAG + "接口成功URL：" + response.getUrl());
+            LogUtil.d(TAG + " 接口成功result：" + result);
+            LogUtil.d(TAG + " 接口成功URL：" + response.getUrl());
         } catch (Exception e) {
 
         }
