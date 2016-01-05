@@ -17,7 +17,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -40,7 +39,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     private PullToRefreshListView listView_demands;
     private DemandsRadioListViewAdapter demandsRadioListViewAdapter;
     private ArrayList<Demand> lstData_Demand = new ArrayList<Demand>();
-    private String customerId,customerName;
+    private String customerId, customerName;
 
     private Intent mIntent;
     private Bundle bundle;
@@ -102,7 +101,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
             @Override
             public void success(PaginationX<Demand> demandPaginationX, Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse(" 购买意向详情：", response);
                 listView_demands.onRefreshComplete();
                 if (!PaginationX.isEmpty(demandPaginationX)) {
                     paginationX = demandPaginationX;
@@ -112,7 +111,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                     lstData_Demand.addAll(paginationX.getRecords());
                     bindData();
                 }
-                LogUtil.d(" 购买意向详情：" + MainApp.gson.toJson(demandPaginationX));
             }
 
             @Override
@@ -129,7 +127,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
      */
     private void bindData() {
         if (lstData_Demand != null) {
-            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand, isMyUser,customerId,customerName);
+            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand, isMyUser, customerId, customerName);
             listView_demands.setAdapter(demandsRadioListViewAdapter);
             listView_demands.setMode(PullToRefreshBase.Mode.BOTH);
             listView_demands.setOnRefreshListener(this);

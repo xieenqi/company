@@ -29,7 +29,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -143,6 +142,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
+                HttpErrorCheck.checkResponse("报告详情", response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -238,7 +238,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
-                reportDate = DateTool.toDateStr(mWorkReport.getBeginAt() * 1000, "yyyy.MM");
+                reportDate =app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
                 break;
 
         }
@@ -296,9 +296,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 btn_workreport_review.setVisibility(View.GONE);
             }
 
-            if (mWorkReport.getCreator() != null && mWorkReport.getCreator().isCurrentUser()) {
+            if (!mWorkReport.getCreator().id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
-                img_title_right.setVisibility(View.VISIBLE);
+                img_title_right.setVisibility(View.GONE);
             }
 
         }
@@ -422,7 +422,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
                 if (mWorkReport.isReviewed()) {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                    intent.putExtra("delete", true);
+                    //intent.putExtra("delete", true);
                     intent.putExtra("extra", "复制报告");
                     startActivityForResult(intent, MSG_DELETE_WORKREPORT);
                 } else {

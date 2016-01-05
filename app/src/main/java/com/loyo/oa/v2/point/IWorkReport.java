@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activity.work.HttpDefaultComment;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
@@ -43,6 +44,7 @@ public interface IWorkReport {
 
     /**
      * 根据ID获取报告详情
+     *
      * @param id
      * @param cb
      */
@@ -51,37 +53,48 @@ public interface IWorkReport {
 
     /**
      * 根据筛选条件获取报告列表
+     *
      * @param map
      * @param cb
      */
     @GET("/wreport/")
-    void getWorkReports(@QueryMap HashMap<String ,Object> map,Callback<PaginationX<WorkReport>> cb);
+    void getWorkReports(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReport>> cb);
 
     /**
      * 点评报告
+     *
      * @param id
      * @param map
      * @param cb
      */
     @PUT("/wreport/{id}/review")
-    void reviewWorkReport(@Path("id") String id,@Body HashMap<String ,Object> map,Callback<WorkReport> cb);
+    void reviewWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
 
     /**
      * 创建报告
+     *
      * @param map
      * @param cb
      */
     @POST("/wreport/")
-    void createWorkReport(@Body HashMap<String ,Object> map,Callback<WorkReport> cb);
+    void createWorkReport(@Body HashMap<String, Object> map, Callback<WorkReport> cb);
 
     /**
      * 删除报告
+     *
      * @param id
      * @param cb
      */
     @DELETE("/wreport/{id}")
-    void deleteWorkReport(@Path("id") String  id,Callback<WorkReport> cb);
+    void deleteWorkReport(@Path("id") String id, Callback<WorkReport> cb);
 
     @PUT("/wreport/{id}")
-    void updateWorkReport(@Path("id") String id,@Body HashMap<String ,Object> map,Callback<WorkReport> cb);
+    void updateWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
+
+    /**
+     * 获取默认的点评人
+     * @param cb
+     */
+    @GET("/wreport/latest")
+    void defaultComment(Callback<HttpDefaultComment> cb);
 }

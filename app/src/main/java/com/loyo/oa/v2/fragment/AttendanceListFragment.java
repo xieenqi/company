@@ -29,7 +29,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -45,7 +44,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :考勤列表
+ * 描述 :考勤列表【我的 和 团队】
  * 作者 : ykb
  * 时间 : 15/9/15.
  */
@@ -61,11 +60,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private TextView tv_unattendance;//未打卡
     private TextView tv_field_work;//外勤
 
-    private int type;
+    private int type;//我的考勤【1】 团队考勤【2】
     private AttendanceList attendanceList;
-    private ArrayList<DayofAttendance> attendances=new ArrayList<DayofAttendance>();
+    private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private AttendanceListAdapter adapter;
-    private int qtime,page=1;
+    private int qtime, page = 1;
     private Calendar cal;
 
     private View mView;
@@ -114,12 +113,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         // 判断是否滚动到底部
                         if (view.getLastVisiblePosition() == view.getCount() - 1) {
                             //加载更多功能的代码
-                           // Toast("到底部啦");
-                            if(type==2){
+                            // Toast("到底部啦");
+                            if (type == 2) {
                                 loadMore();
                             }
                         }
-                        if(view.getLastVisiblePosition()==0){
+                        if (view.getLastVisiblePosition() == 0) {
                             //Toast("到 顶部 啦");
                         }
                     }
@@ -178,7 +177,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        page=1;
+        page = 1;
         switch (view.getId()) {
             case R.id.img_time_left:
                 switch (type) {
@@ -194,7 +193,21 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             case R.id.img_time_right:
                 switch (type) {
                     case 1:
-                        nextMonth();
+                        java.util.Calendar c1 = java.util.Calendar.getInstance();
+                        java.util.Calendar c2 = java.util.Calendar.getInstance();
+                        String currentTime = app.df12.format(System.currentTimeMillis());
+                        String nextTime = app.df12.format(qtime);
+                        try {
+                            c1.setTime(app.df13.parse(nextTime));//获得的时间
+                            c2.setTime(app.df13.parse(currentTime));//系统当前时间
+                            int resultTime = c1.compareTo(c2);
+                            if (resultTime < 0) {
+                                nextMonth();
+                            }
+                        } catch (Exception e) {
+
+                        }
+
                         break;
                     case 2:
                         nextDay();
@@ -278,12 +291,13 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     /**
      * 加载跟多 xnq
      */
-    public void loadMore(){
+    public void loadMore() {
         page++;
         qtime = (int) (cal.getTime().getTime() / 1000);
         initTimeStr(cal.getTime().getTime());
         getData(page);
     }
+
     /**
      * 绑定数据
      */
@@ -311,22 +325,23 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
-        map.put("pageIndex",page);
+        map.put("pageIndex", page);
         map.put("pageSize", 50);
 
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
-                LogUtil.d(" 考勤列表的数据："+MainApp.gson.toJson(result));
+                HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
                 dg.dismiss();
-                attendanceList=result.records;
+                attendanceList = result.records;
                 attendances.addAll(result.records.getAttendances());
                 initStatistics();
                 bindData();
-                if(page!=1){
+                if (page != 1) {
                     adapter.notifyDataSetChanged();
                 }
             }
+
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);

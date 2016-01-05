@@ -218,7 +218,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
      */
     private void init_gridView_photo() {
         if (null == adapter) {
-            adapter = new SignInGridViewAdapter(this, attachments, true, false);
+            adapter = new SignInGridViewAdapter(this, attachments, true, true);
         } else {
             adapter.setDataSource(attachments);
         }

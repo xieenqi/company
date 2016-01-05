@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.work.HttpDefaultComment;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -217,6 +218,29 @@ public class WorkReportAddActivity extends BaseActivity {
             getAttachments();
         }
         projectAddWorkReport();
+        getDefaultComment();
+    }
+
+    /**
+     * 获取默认点评人
+     */
+    private void getDefaultComment() {
+        RestAdapterFactory.getInstance().build(Config_project.ADD_WORK_REPORT_PL).create(IWorkReport.class)
+                .defaultComment(new RCallback<HttpDefaultComment>() {
+                    @Override
+                    public void success(HttpDefaultComment reviewer, Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        mReviewer = new Reviewer();
+                        mReviewer.setUser(reviewer.reviewer.user);
+                        tv_reviewer.setText(reviewer.reviewer.user.getName());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                    }
+                });
     }
 
     /**
@@ -315,7 +339,7 @@ public class WorkReportAddActivity extends BaseActivity {
             return;
         }
         tv_crm.setText("本月工作动态统计");
-        beginAt = DateTool.getBeginAt_ofMonth();
+        beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
         endAt = DateTool.getEndAt_ofMonth();
         DateTool.calendar = Calendar.getInstance();
         int year = DateTool.calendar.get(Calendar.YEAR);
@@ -329,7 +353,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (lstData_Attachment == null) {
             lstData_Attachment = new ArrayList<>();
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
