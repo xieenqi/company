@@ -10,7 +10,7 @@ public class Config_project {
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
-   // public static String IP="http://112.74.66.99";    //正式服务
+    // public static String IP="http://112.74.66.99";    //正式服务
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
 
@@ -19,8 +19,10 @@ public class Config_project {
     //public static String IP2 = "http://192.168.31.136"; //马涛地址
 
 
+    public static String SIGNLN_TEM = IP + ":9000" + "/api/v2";//团队拜访 列表
 
-    public static String SIGNLN_TEM =IP+":9000"+"/api/v2";//团队拜访 列表
+    public static String ADD_WORK_REPORT_PL = IP + ":8070" + "/api/v2/oa";//添加工作报告 的默认点评人
+
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");
     }
@@ -28,7 +30,7 @@ public class Config_project {
     /**
      * 删除附件
      */
-    public static final String DELETE_ENCLOSURE=SERVER_URL_ATTACHMENT()+"/api/v2";
+    public static final String DELETE_ENCLOSURE = SERVER_URL_ATTACHMENT() + "/api/v2";
 
     public static String API_URL_CUSTOMER() {
         return SERVER_URL_CUSTOMER().concat("/api/v2");
@@ -43,10 +45,8 @@ public class Config_project {
     }
 
 
-
     /**
      * 附件地址
-     *
      *
      * @return
      */
@@ -97,7 +97,6 @@ public class Config_project {
         return IP;
     }
 
-    private enum Port{
-
+    private enum Port {
     }
 }

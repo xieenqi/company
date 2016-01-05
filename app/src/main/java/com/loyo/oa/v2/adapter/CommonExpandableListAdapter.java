@@ -30,7 +30,7 @@ import java.util.Date;
 
 /**
  * 任务管理列表的adapter
- *
+ * <p/>
  * xnq
  */
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
@@ -66,8 +66,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 title.setText(wfInstance.title);
             }
             time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
-            if (wfInstance.creator != null&&wfInstance.nextExecutor!=null) {
-                content.setText("审批人 "+wfInstance.nextExecutor.getRealname());
+            if (wfInstance.creator != null && wfInstance.nextExecutor != null) {
+                content.setText("审批人 " + wfInstance.nextExecutor.getRealname());
             }
             ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);
 
@@ -89,7 +89,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     break;
             }
         }
-       // 任务
+        // 任务
         else if (obj instanceof Task) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
@@ -104,19 +104,19 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             try {
 
                 Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime()));
-                if(nowTime>task.getPlanEndAt()&&task.getStatus() == Task.STATUS_PROCESSING){
+                if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
                     timeOut.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     timeOut.setVisibility(View.GONE);
                 }
-                time.setText("任务截止时间: " + MainApp.getMainApp().df10.format(new Date(task.getPlanEndAt()*1000))+"");
-                LogUtil.dll("当前时间戳:"+nowTime);
+                time.setText("任务截止时间: " + MainApp.getMainApp().df10.format(new Date(task.getPlanEndAt() * 1000)) + "");
+                LogUtil.dll("当前时间戳:" + nowTime);
                 LogUtil.dll("截至时间戳:" + task.getPlanEndAt());
 
             } catch (Exception e) {
                 Global.ProcException(e);
             }
-                           ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
+            ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
             if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
                 content.setText("负责人: " + task.getResponsiblePerson().getRealname());
             }
@@ -129,7 +129,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         else if (obj instanceof WorkReport) {
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;
-            LogUtil.d(" 加载 报告 的数据： "+ MainApp.gson.toJson(workReport));
+            LogUtil.d(" 加载 报告 的数据： " + MainApp.gson.toJson(workReport));
             DiscussCounter discussCounter = workReport.getDiscuss();
             //iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
             //tv_discuss_num.setText(discussCounter.getTotal() + "");
@@ -149,19 +149,18 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             switch (workReport.getType()) {
                 case WorkReport.DAY:
                     reportType = " 日报";
-                    reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000));
+                    //reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000));
                     break;
                 case WorkReport.WEEK:
                     reportType = " 周报";
-                    reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(workReport.getEndAt() * 1000));
+                    //reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(workReport.getEndAt() * 1000));
                     break;
                 case WorkReport.MONTH:
                     reportType = " 月报";
-                    reportDate = DateTool.toDateStr(workReport.getBeginAt() * 1000, "yyyy.MM");
-                    ;
+                    //reportDate = app.df8.format(new Date(workReport.getBeginAt() * 1000));
                     break;
             }
-            reportTitle.append(reportDate + reportType);
+            reportTitle.append( reportType);
             if (workReport.isDelayed()) {
                 reportTitle.append(" (补签)");
             }

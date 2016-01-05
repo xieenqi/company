@@ -285,6 +285,7 @@
                     android:layout_marginTop="@dimen/dimen_10"
                     android:background="@color/white"
                     android:gravity="left|top"
+                    android:maxLength="500"
                     android:hint="请输入报告内容"
                     android:minHeight="100dp"
                     android:padding="10dp"/>
