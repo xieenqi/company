@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -54,11 +57,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -94,8 +100,6 @@ public class TasksInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_responsiblePerson;
     @ViewById
-    ViewGroup layout_score;
-    @ViewById
     ViewGroup layout_child_add_action;
     @ViewById
     ViewGroup layout_child_Add_area;
@@ -119,8 +123,6 @@ public class TasksInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_responsiblePerson;
     @ViewById
-    TextView tv_reviewer;
-    @ViewById
     TextView tv_comment;
     @ViewById
     TextView tv_discussion_count;
@@ -130,10 +132,6 @@ public class TasksInfoActivity extends BaseActivity {
     TextView tv_children_info;
     @ViewById
     Button btn_complete;
-    @ViewById
-    RatingBar ratingBar_Task;
-    //@Extra("task")
-    Task mTask;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id
             String mTaskId;
 
@@ -146,10 +144,21 @@ public class TasksInfoActivity extends BaseActivity {
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private Members member;
+    private Task mTask;
+
 
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
     public ArrayList<NewUser> allUsers;
+
+    public LinearLayout layout_test_Add_area;
+    public LinearLayout layout_task_testfather;
+    public ImageView iv_task_status;
+    public RatingBar ratingBar_Task;
+    public TextView tv_reviewtime;
+    public TextView tv_task_content;
+    public TextView tv_task_status;
+    public TextView tv_reviewer;
 
     public android.os.Handler mHandler = new android.os.Handler() {
 
@@ -175,6 +184,10 @@ public class TasksInfoActivity extends BaseActivity {
         member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
+        layout_test_Add_area = (LinearLayout) findViewById(R.id.layout_test_Add_area);
+        layout_task_testfather = (LinearLayout) findViewById(R.id.layout_task_testfather);
+        iv_task_status = (ImageView) findViewById(R.id.iv_task_status);
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
@@ -203,6 +216,8 @@ public class TasksInfoActivity extends BaseActivity {
     void updateUI_task_responsiblePerson() {
 
         if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_REVIEWING) {
+            img_title_right.setVisibility(View.GONE);
+        } else if (!IsResponsiblePerson() && !IsCreator()) {
             img_title_right.setVisibility(View.GONE);
         } else {
             img_title_right.setVisibility(View.VISIBLE);
@@ -235,6 +250,70 @@ public class TasksInfoActivity extends BaseActivity {
         } else {
             tv_task_aboutuser.setVisibility(View.GONE);
         }
+
+        switch (mTask.getStatus()) {
+            case 1:
+                iv_task_status.setBackgroundResource(R.drawable.img_wfinstance_status2);
+                break;
+
+            case 2:
+                iv_task_status.setBackgroundResource(R.drawable.img_wfinstance_status1);
+                break;
+
+            case 3:
+                iv_task_status.setBackgroundResource(R.drawable.img_wfinstance_status5);
+                break;
+        }
+
+
+
+        /**
+         * 审核View
+         * */
+
+        if(ListUtil.IsEmpty(mTask.getReviewers())){
+            return;
+        }
+
+        layout_task_testfather.setVisibility(View.VISIBLE);
+        layout_test_Add_area.removeAllViews();
+
+        for(Reviewer reviewer : mTask.getReviewers()){
+
+            View mView = LayoutInflater.from(mContext).inflate(R.layout.item_tasks_testview,null);
+
+            tv_reviewtime = (TextView) mView.findViewById(R.id.tv_reviewtime);
+            tv_task_content = (TextView) mView.findViewById(R.id.tv_task_content);
+            tv_task_status = (TextView) mView.findViewById(R.id.tv_task_status);
+            tv_reviewer = (TextView) mView.findViewById(R.id.tv_reviewer);
+            ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
+
+            if(!TextUtils.isEmpty(reviewer.getUser().getName())){
+                tv_reviewer.setText(reviewer.getUser().getName());
+            }
+
+            if(!TextUtils.isEmpty(reviewer.getReviewedAt() + "")){
+                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.getReviewedAt() * 1000L)));
+            }
+
+            if(!TextUtils.isEmpty(reviewer.getComment())){
+                tv_task_content.setText(reviewer.getComment());
+            }
+
+            if(!TextUtils.isEmpty(reviewer.getScore()+"")){
+                int rat = (reviewer.getScore()/20);
+                ratingBar_Task.setRating((float) (rat/1.0));
+            }
+
+            if (reviewer.getStatus().equals("1")) {
+                tv_task_status.setText("通过");
+                tv_task_status.setTextColor(getResources().getColor(R.color.green));
+            } else {
+                tv_task_status.setText("不通过");
+                tv_task_status.setTextColor(getResources().getColor(R.color.red));
+            }
+            layout_test_Add_area.addView(mView);
+        }
     }
 
     /**
@@ -243,6 +322,7 @@ public class TasksInfoActivity extends BaseActivity {
     void updateUI_task_base() {
 
         if (mTask.getCreator() != null) {
+
             if (mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
                 //负责人提交
                 btn_complete.setText("提交完成");
@@ -250,19 +330,16 @@ public class TasksInfoActivity extends BaseActivity {
                     && IsCreator()
                     && !mTask.getCreator().getId().equals(mTask.getResponsiblePerson().getId())) {
                 btn_complete.setText("审 核");
-            } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
-                btn_complete.setVisibility(View.GONE);
-                //显示分数
-                layout_score.setVisibility(mTask.isReviewFlag() ? View.VISIBLE : View.GONE);
-                ratingBar_Task.setProgress(mTask.getScore() / 20);
-                tv_reviewer.setText(mTask.getCreator().getRealname());
-
-                if (!ListUtil.IsEmpty(mTask.getReviewComments())) {
-                    tv_comment.setText(mTask.getReviewComments().get(mTask.getReviewComments().size() - 1).getContent());
-                }
             } else {
+
                 btn_complete.setVisibility(View.GONE);
+
             }
+
+            if (!ListUtil.IsEmpty(mTask.getReviewComments())) {
+                tv_comment.setText(mTask.getReviewComments().get(mTask.getReviewComments().size() - 1).getContent());
+            }
+
         }
 
         tv_task_title.setText(mTask.getTitle());
@@ -334,7 +411,7 @@ public class TasksInfoActivity extends BaseActivity {
             childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                    if(MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())){
+                    if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
                         if (isCheck) {
                             statusSize++;
                             mHandler.sendEmptyMessage(0x01);
@@ -345,7 +422,7 @@ public class TasksInfoActivity extends BaseActivity {
                             requestTaskupdates(taskId, subTask.getId(), 0);
                         }
                     } else {
-                        Toast("你不是子任务负责人，不能操作！");
+                        Toast("你没有操作权限");
                     }
                 }
             });
@@ -357,6 +434,7 @@ public class TasksInfoActivity extends BaseActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     //组装 负责人 于 参与人
                     ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
                     //reponserData.addAll(mTask.getMembers().getUsers());
@@ -370,9 +448,14 @@ public class TasksInfoActivity extends BaseActivity {
                     intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
                     intent.putExtra("TaskId", mTask.getId());
                     intent.putExtra("allUsers", allUsers);
-                    intent.putExtra("isReponser",MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())?true:false);
+                    if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
+                        intent.putExtra("isReponser", true);
+                    } else {
+                        intent.putExtra("isReponser", false);
+                    }
                     TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
                     TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
+
                 }
             });
             layout_child_Add_area.addView(view);
@@ -802,11 +885,11 @@ public class TasksInfoActivity extends BaseActivity {
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
-    boolean IsCreator() {
+    public boolean IsCreator() {
         return null != mTask.getCreator() ? mTask.getCreator().isCurrentUser() : false;
     }
 
-    boolean IsResponsiblePerson() {
+    public boolean IsResponsiblePerson() {
 
         return null != mTask.getResponsiblePerson() ? mTask.getResponsiblePerson().isCurrentUser() : false;
     }
