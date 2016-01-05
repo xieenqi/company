@@ -33,12 +33,21 @@ public class Task extends BaseBeans {
     public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
     public NewUser responsiblePerson;
     public NewUser creator;
+    public ArrayList<Reviewer> reviewers = new ArrayList<>();
 
     /*保存本地使用*/
     public String responsiblePersonId;
     public String responsiblePersonName;
     public String TaskComment;
 
+
+    public ArrayList<Reviewer> getReviewers() {
+        return reviewers;
+    }
+
+    public void setReviewers(ArrayList<Reviewer> reviewers) {
+        this.reviewers = reviewers;
+    }
 
     public static final String GetRemindText(int remind) {
         int index = RemindListSource.indexOf(remind);

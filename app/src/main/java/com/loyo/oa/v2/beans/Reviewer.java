@@ -9,21 +9,30 @@ import java.io.Serializable;
  * 时间 : 15/10/12.
  */
 public class Reviewer implements Serializable {
-    private NewUser user;
+
+    private NewUser user = new NewUser();
     private boolean viewed;//k看过吗
     private boolean reviewed;//点评过吗
-    private long viewAt;//看的时间
-    private long reviewAt;//点评时间
+    private long reviewedAt;//点评时间
     private int score;//点评分数
     private String comment;//点评内容
+    private String status;
 
     public String id;
     public String name;
     public String avatar;
-    public Reviewer() {
-    }
+
     public Reviewer(NewUser user) {
         this.user = user;
+    }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 
@@ -33,6 +42,14 @@ public class Reviewer implements Serializable {
 
     public int getScore() {
         return score;
+    }
+
+    public long getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(long reviewedAt) {
+        this.reviewedAt = reviewedAt;
     }
 
 
