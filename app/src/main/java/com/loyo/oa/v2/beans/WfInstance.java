@@ -38,7 +38,7 @@ public class WfInstance extends BaseBeans {
     public String memo;
     public int nextExecutorId;//int, optional): ,
     public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
-    public BizForm bizform;//&{bizform BizForm}, optional): ,
+    public BizForm bizForm;//&{bizform BizForm}, optional): ,
 
     public boolean ack;
     public boolean candel;

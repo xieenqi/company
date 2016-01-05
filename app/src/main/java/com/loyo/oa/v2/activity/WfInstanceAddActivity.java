@@ -54,6 +54,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
@@ -70,6 +71,7 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_wfinstance_add)
 public class WfInstanceAddActivity extends BaseActivity {
+
     /**
      * 审批类型选择 请求码
      */
@@ -204,8 +206,8 @@ public class WfInstanceAddActivity extends BaseActivity {
             mTemplateId = wfInstance.wftemplateId;
         }
 
-        if (wfInstance.bizform != null) {
-            mBizForm = wfInstance.bizform;
+        if (wfInstance.bizForm != null) {
+            mBizForm = wfInstance.bizForm;
             intBizForm();
         }
 
@@ -402,9 +404,8 @@ public class WfInstanceAddActivity extends BaseActivity {
             return;
         HashMap<String, Object> mapInfo = WfinObj.get(0).getInfoData();
         for (Map.Entry<String, Object> entry : mapInfo.entrySet()) {
-            LogUtil.d(entry.getKey() + "--3453->" + entry.getValue());
+            LogUtil.dll("KEY:"+entry.getKey() + "Value:" + entry.getValue());
         }
-
     }
 
     /**
@@ -476,6 +477,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         for (WfinstanceViewGroup element : WfinObj) {
             workflowValues.add(element.getInfoData());
+            LogUtil.dll("map:"+element.getInfoData().toString());
         }
 
         if (!(workflowValues.size() > 0)) {
@@ -483,11 +485,12 @@ public class WfInstanceAddActivity extends BaseActivity {
             return;
         }
 
-        for (int k = 0; k < submitData.size(); k++) {
-            HashMap<String, Object> map_Values = submitData.get(k);
-            for (BizFormFields field : mBizForm.getFields()) {
-                String value = (String) map_Values.get(field.getId());
-                if ( !TextUtils.isEmpty(value)) {
+        /**必填项判断*/
+        for(int i = 0;i<workflowValues.size();i++){
+            HashMap<String,Object> map = workflowValues.get(i);
+            for(Map.Entry<String,Object> entry : workflowValues.get(i).entrySet()){
+                LogUtil.dll("values:"+entry.getValue());
+                if(TextUtils.isEmpty((CharSequence) entry.getValue())){
                     Toast("请填写\"必填项\"");
                     return;
                 }
@@ -495,9 +498,9 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizformId", mBizForm.getId());//表单Id
+        map.put("bizformId", mBizForm.getId());   //表单Id
         map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
-        map.put("deptId", deptId);//部门 id
+        map.put("deptId", deptId);                //部门 id
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
         map.put("projectId", projectId);//项目Id
@@ -505,7 +508,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         if (uuid != null && lstData_Attachment.size() > 0) {
             map.put("attachmentUUId", uuid);
         }
-
         map.put("memo", edt_memo.getText().toString().trim()); //备注
         LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
@@ -543,7 +545,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         wfInstance.creator = null;
 
         if (mBizForm != null) {
-            wfInstance.bizform = mBizForm;
+            wfInstance.bizForm = mBizForm;
         }
 
         if (!TextUtils.isEmpty(mTemplateId)) {

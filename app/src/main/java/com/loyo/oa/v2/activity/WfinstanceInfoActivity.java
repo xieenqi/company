@@ -63,8 +63,6 @@ import retrofit.client.Response;
 public class WfinstanceInfoActivity extends BaseActivity {
 
     @ViewById
-    ListView listView_wfinstance;
-    @ViewById
     ListView_inScrollView listView_workflowNodes;
     @ViewById
     TextView tv_lastowrk, tv_attachment_count, tv_wfnodes_title;
@@ -100,13 +98,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     public String userId;
     public WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
-    public WfInstanceValuesInfoAdapter wfInstanceValuesListViewAdapter;
     public ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
     public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
     public ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
     //@Extra("data")
-    WfInstance wfInstance;
+    public WfInstance wfInstance;
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String wfInstanceId;
@@ -142,6 +139,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initUI() {
+
         userId = DBManager.Instance().getUser().id;
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -153,24 +151,29 @@ public class WfinstanceInfoActivity extends BaseActivity {
         img_title_left.setOnTouchListener(touch);
         img_title_right.setOnTouchListener(touch);
         img_title_right.setVisibility(View.GONE);
+
     }
 
+    /**
+     * 审批内容数据设置
+     * */
     void initUI_listView_wfinstance() {
+
         ArrayList<BizFormFields> fields = new ArrayList<>();
-        if (wfInstance != null && wfInstance.bizform != null && wfInstance.bizform.getFields() != null) {
-            fields = wfInstance.bizform.getFields();
+        if (wfInstance != null && wfInstance.bizForm != null && wfInstance.bizForm.getFields() != null) {
+            fields = wfInstance.bizForm.getFields();
         }
 
         if (null != wfInstanceValuesDatas) {
             for (int j = 0; j < wfInstanceValuesDatas.size(); j++) {
                 HashMap<String, Object> jsonObject = wfInstanceValuesDatas.get(j);
                 for (int i = 0; i < fields.size(); i++) {
+
                     BizFormFields field = fields.get(i);
                     View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
                     EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
                     tv_value.setEnabled(false);
                     tv_value.setText(jsonObject.get(field.getId()) + "");
-
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
                     tv_key.setText(field.getName());
                     layout_wfinstance_content.addView(view_value);
@@ -328,9 +331,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                LogUtil.dll("返回的解析数据：" + MainApp.gson.toJson(wfInstance_current));
-
             }
 
             @Override
