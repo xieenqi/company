@@ -226,23 +226,26 @@ public class PreviewAttendanceActivity extends BaseActivity {
      * 确认外勤
      */
     private void confirmOutAttendance(){
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).confirmOutAttendance(attendance.getIn().getId(), new RCallback<AttendanceRecord>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
+                confirmOutAttendance(attendance.getOut().getId(), new RCallback<AttendanceRecord>() {
             @Override
             public void success(AttendanceRecord record, Response response) {
+               HttpErrorCheck.checkResponse(" 考勤返回 ",response);
                 btn_confirm.setVisibility(View.GONE);
                 attendance.setIn(record);
 
-                if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
-                    iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
-                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
+//                if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
+//                    iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+//                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                     iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-                    iv_type.setImageResource(R.drawable.icon_office_work);
-                }
+//                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+//                    iv_type.setImageResource(R.drawable.icon_office_work);
+//                }
 
                 Intent intent = new Intent();
-                intent.putExtra("data", attendance);
+                //intent.putExtra("data", attendance);
                 setResult(RESULT_OK, intent);
+                finish();
             }
 
             @Override

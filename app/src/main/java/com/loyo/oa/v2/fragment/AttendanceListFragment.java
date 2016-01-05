@@ -67,6 +67,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private AttendanceListAdapter adapter;
     private int qtime, page = 1;
     private Calendar cal;
+    private boolean isPullDowne = true;//是否下拉刷新 默认是
 
     private View mView;
     ProgressDialog dg;
@@ -120,7 +121,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                             }
                         }
                         if (view.getLastVisiblePosition() == 0) {
-                            //Toast("到 顶部 啦");
+                            Toast("到 顶部 啦");
+                            page=1;
+                            isPullDowne = true;
                         }
                     }
                 }
@@ -304,6 +307,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 加载跟多 xnq
      */
     public void loadMore() {
+        isPullDowne = false;
         page++;
         qtime = (int) (cal.getTime().getTime() / 1000);
         initTimeStr(cal.getTime().getTime());
@@ -339,14 +343,17 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtime", qtime);
         map.put("pageIndex", page);
         map.put("pageSize", 50);
-
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
                 dg.dismiss();
                 attendanceList = result.records;
-                attendances.addAll(result.records.getAttendances());
+                if (isPullDowne||page==1) {
+                    attendances = result.records.getAttendances();
+                } else {
+                    attendances.addAll(result.records.getAttendances());
+                }
                 initStatistics();
                 bindData();
                 if (page != 1) {
@@ -382,10 +389,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != Activity.RESULT_OK || null == data) {
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
+            page=1;
             getData(page);
         }
     }
