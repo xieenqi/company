@@ -98,11 +98,8 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                     case WfInstance.STATUS_ABORT:
                         order = "个审批未通过";
                         break;
-                    case WfInstance.STATUS_APPROVED:
-                        order = "个审批已通过";
-                        break;
                     case WfInstance.STATUS_FINISHED:
-                        order = "个审批已办结";
+                        order = "个审批已通过";
                         break;
                 }
 

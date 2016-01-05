@@ -29,6 +29,7 @@ public class ExtraAndResult {
 
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;
+    public static final int TYPE_SELECT_EDT = 2;
 
     public static final int TYPE_SHOW_USER = 1;
     public static final int TYPE_SHOW_DEPT_USER = 0;
