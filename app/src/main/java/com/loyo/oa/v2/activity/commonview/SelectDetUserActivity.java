@@ -54,7 +54,6 @@ public class SelectDetUserActivity extends Activity {
     public ArrayList<User> userAllList; //所有员工
     public ArrayList<Department> deptSource;//部门数据源｀
     public ArrayList<UserGroupData> totalSource; //全部数据源
-    public ArrayList<User> selectList; //选中数据
 
     public boolean isAllCheck = false;
     public boolean popy; //当前列表 是否全选
@@ -62,7 +61,8 @@ public class SelectDetUserActivity extends Activity {
     public int positions = 0;
     public int seltSize;
     public int isSize;
-    public int selectType;
+    public int selectType; //1负责人 0参与人 2编辑参与人
+    public String []joinUserId;
     public StringBuffer nameApd;
     public StringBuffer idApd;
 
@@ -93,18 +93,29 @@ public class SelectDetUserActivity extends Activity {
         mIntent = getIntent();
         mBundle = mIntent.getExtras();
         selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);
-
+        joinUserId = mBundle.getString(ExtraAndResult.STR_SUPER_ID).split(",");
         totalSource = Common.getLstUserGroupData();
         deptSource = Common.getLstDepartment();
         userAllList = new ArrayList<>();
         userList = new ArrayList<>();
-        selectList = new ArrayList<>();
 
+        for (User user : userAllList) {
+            user.setIndex(false);
+        }
 
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
             for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
                 userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+            }
+        }
+        /*来自编辑页面已存在的参与人，选中设为true*/
+        for (User user : userAllList){
+            for(int i = 0;i<joinUserId.length;i++){
+                if(user.getId().equals(joinUserId[i])){
+                    user.setIndex(true);
+                    totalSize++;
+                }
             }
         }
 
@@ -123,15 +134,13 @@ public class SelectDetUserActivity extends Activity {
             btnSure.setVisibility(View.INVISIBLE);
         }
 
+        btnSure.setText("确定" + "(" + totalSize + ")");
         /*左侧Lv初始化*/
         mDetAdapter = new SelectDetAdapter(mContext, deptSource);
         leftLv.setAdapter(mDetAdapter);
         lvOnClick();
         rightLv.addHeaderView(headerView);
 
-        for (User user : userAllList) {
-            user.setIndex(false);
-        }
 
         userList.addAll(userAllList);
         /*右侧Lv初始化*/
@@ -162,14 +171,7 @@ public class SelectDetUserActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 userList.get(position - 1).setIndex(userList.get(position - 1).isIndex() ? false : true);
-
-                /*选择数量统计*/
-                if (userList.get(position - 1).isIndex()) {
-                    totalSize += 1;
-                } else {
-                    totalSize -= 1;
-                }
-
+                statisticsTotalSize(position);
                 dealisAllSelect(userList);
 
                 if (popy) {
@@ -250,6 +252,17 @@ public class SelectDetUserActivity extends Activity {
         });
     }
 
+    /**
+     * 选中总数统计
+     * */
+    void statisticsTotalSize(int position){
+        if (userList.get(position - 1).isIndex()) {
+            totalSize += 1;
+        } else {
+            totalSize -= 1;
+        }
+    }
+
 
     void dealDeptContent() {
 
@@ -272,9 +285,7 @@ public class SelectDetUserActivity extends Activity {
             }
 
             if (userList.size() != 0) {
-
                 seltSize = userList.size();
-                LogUtil.dll("当前列表大小:" + seltSize);
 
                 for (User user : userList) {
                     if (user.isIndex()) {

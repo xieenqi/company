@@ -117,6 +117,7 @@ public class TasksEditActivity extends BaseActivity {
     private Members member;
     private NewUser newUser;
     private StringBuffer joinUser = new StringBuffer();
+    private StringBuffer joinUserId = new StringBuffer();
 
     @AfterViews
         //类似onCreate方法执行入口
@@ -193,6 +194,7 @@ public class TasksEditActivity extends BaseActivity {
         for (int i = 0; i < mTask.getMembers().getAllData().size(); i++) {
 
             joinUser.append(mTask.getMembers().getAllData().get(i).getName() + ",");
+            joinUserId.append(mTask.getMembers().getAllData().get(i).getId()+",");
 
             NewUser newUser = new NewUser();
             newUser.setName(mTask.members.getAllData().get(i).getName());
@@ -285,17 +287,19 @@ public class TasksEditActivity extends BaseActivity {
 
             /*编辑负责人*/
             case R.id.layout_responsiblePerson:
+
                 Bundle bundle = new Bundle();
                 bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle);
+
                 break;
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
 
                 Bundle bundle1 = new Bundle();
-                bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
+                bundle1.putString(ExtraAndResult.STR_SUPER_ID,joinUserId.toString());
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
 
                 break;

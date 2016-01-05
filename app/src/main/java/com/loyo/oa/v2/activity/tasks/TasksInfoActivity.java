@@ -408,56 +408,62 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             childCheckbox.setChecked(isStatus);
-            childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
-                    if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
-                        if (isCheck) {
-                            statusSize++;
-                            mHandler.sendEmptyMessage(0x01);
-                            requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
+            if(mTask.getStatus() != Task.STATUS_PROCESSING){
+                childCheckbox.setEnabled(false);
+                view.setEnabled(false);
+                layout_child_add_action.setVisibility(View.GONE);
+            }else{
+                childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
+                        if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
+                            if (isCheck) {
+                                statusSize++;
+                                mHandler.sendEmptyMessage(0x01);
+                                requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
+                            } else {
+                                statusSize--;
+                                mHandler.sendEmptyMessage(0x01);
+                                requestTaskupdates(taskId, subTask.getId(), 0);
+                            }
                         } else {
-                            statusSize--;
-                            mHandler.sendEmptyMessage(0x01);
-                            requestTaskupdates(taskId, subTask.getId(), 0);
+                            Toast("你没有操作权限");
                         }
-                    } else {
-                        Toast("你没有操作权限");
                     }
-                }
-            });
+                });
 
-            /**
-             * 子任务编辑跳转
-             * */
-            view.setTag(subTask);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                /**
+                 * 子任务编辑跳转
+                 * */
+                view.setTag(subTask);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    //组装 负责人 于 参与人
-                    ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
-                    //reponserData.addAll(mTask.getMembers().getUsers());
-                    reponserData.addAll(mTask.responsiblePersons);
-                    ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
-                    for (Reviewer element : reponserData) {
-                        reponserDataUser.add(element.getUser());
+                        //组装 负责人 于 参与人
+                        ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
+                        //reponserData.addAll(mTask.getMembers().getUsers());
+                        reponserData.addAll(mTask.responsiblePersons);
+                        ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
+                        for (Reviewer element : reponserData) {
+                            reponserDataUser.add(element.getUser());
+                        }
+
+                        Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
+                        intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
+                        intent.putExtra("TaskId", mTask.getId());
+                        intent.putExtra("allUsers", allUsers);
+                        if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
+                            intent.putExtra("isReponser", true);
+                        } else {
+                            intent.putExtra("isReponser", false);
+                        }
+                        TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
+                        TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
+
                     }
-
-                    Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
-                    intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
-                    intent.putExtra("TaskId", mTask.getId());
-                    intent.putExtra("allUsers", allUsers);
-                    if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
-                        intent.putExtra("isReponser", true);
-                    } else {
-                        intent.putExtra("isReponser", false);
-                    }
-                    TasksInfoActivity.this.startActivityForResult(intent, REQUEST_EDIT_TASK);
-                    TasksInfoActivity.this.overridePendingTransition(R.anim.enter_lefttoright, R.anim.exit_lefttoright);
-
-                }
-            });
+                });
+            }
             layout_child_Add_area.addView(view);
         }
         //子任务完成度(3/5)设置

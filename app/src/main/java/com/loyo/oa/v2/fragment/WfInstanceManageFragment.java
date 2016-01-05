@@ -36,7 +36,7 @@ import retrofit.client.Response;
 public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstance> {
 
     private static final String FILTER_CATEGORY[] = new String[]{"全部类别", "我申请", "我审批", "我经办"};
-    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过", "已办结"};
+    private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
 
     private int category = 0;
     private int status = 0;

@@ -131,7 +131,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         btn_add.setOnTouchListener(Global.GetTouch());
         ll_project.setOnClickListener(click);
         init_gridView_photo();
-        getTempWfintance();
+        //getTempWfintance();
         projectAddWfinstance();
         setDefaultDept();
     }
@@ -412,6 +412,7 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 界面上 新增加审批内容 栏目
      */
     void addTypeData() {
+
         if (mBizForm == null) {
             Toast("请选择类型");
             return;
@@ -431,11 +432,16 @@ public class WfInstanceAddActivity extends BaseActivity {
         WfinObj.add(viewGroup);//新增一个内容 就存起来
 
     }
+
 //        @Click(R.id.layout_delete2)
 //        void delete() {
 //            bizFormFieldsListViewAdapter.setEmpty();
 //            layout_edit.setVisibility(View.GONE);
 //        }
+
+    /**
+     * 确认
+     * */
 
     @Click(R.id.img_title_right)
     void submit() {
@@ -469,27 +475,26 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         for (WfinstanceViewGroup element : WfinObj) {
-            LogUtil.d("   审批dd的内容  " + element.getInfoData());
             workflowValues.add(element.getInfoData());
         }
+
         if (!(workflowValues.size() > 0)) {
             Toast("请填写审批内容\"必填项\"");
             return;
         }
-        /*for (int k = 0; k < submitData.size(); k++) {
+
+        for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> map_Values = submitData.get(k);
             for (BizFormFields field : mBizForm.getFields()) {
                 String value = (String) map_Values.get(field.getId());
-                System.out.print(" 审批必填项： "+field.isRequired()+"  value: "+TextUtils.isEmpty(value)+"  后面的 "+(!map_Values.keySet().contains(field.getId())));
                 if ( !TextUtils.isEmpty(value)) {
                     Toast("请填写\"必填项\"");
                     return;
                 }
             }
-        }*/
+        }
 
         HashMap<String, Object> map = new HashMap<>();
-
         map.put("bizformId", mBizForm.getId());//表单Id
         map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
         map.put("deptId", deptId);//部门 id

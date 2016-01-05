@@ -74,6 +74,7 @@
 
 
     <TextView
+        android:id="@+id/tv_selectdetuser_tv"
         android:paddingLeft="10dp"
         android:gravity="center_vertical"
         android:layout_width="fill_parent"
@@ -85,6 +86,11 @@
         android:background="@color/white"
         />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/beogray"
+        />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -92,6 +98,7 @@
         android:orientation="horizontal">
 
         <ListView
+            android:background="@color/white"
             android:id="@+id/lv_selectdetuser_left"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
@@ -99,6 +106,7 @@
 
 
         <ListView
+            android:background="@color/beogray"
             android:id="@+id/lv_selectdetuser_right"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
