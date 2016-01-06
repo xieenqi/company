@@ -225,7 +225,6 @@ public class MainApp extends Application {
     void init() {
 //        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
 //        SDKInitializer.initialize(this);
-//
 //        if (BuildConfig.DEBUG) {
 //            try {
 //                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");

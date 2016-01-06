@@ -30,17 +30,17 @@ public class HttpErrorCheck {
     public static void checkError(RetrofitError error) {
         String msg = error.getMessage();
         if (msg.contains("500")) {
-            Toast("失败：" + error.getMessage());
+            Toast(error.getBody().toString());
         } else if (msg.contains("401")) {
-            Toast("失败：" + error.getMessage());
+            Toast(error.getBody().toString());
         } else if (msg.contains("404")) {
-            Toast("失败：" + error.getMessage());
+            Toast( error.getBody().toString());
         } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
             Toast("请检查您的网络连接");
         } else {
-            Toast(error.getMessage());
+            Toast(error.getBody().toString());
         }
-        LogUtil.d("失败的错误信息：" + error.getMessage());
+        LogUtil.d(error.getMessage()+" 失败的错误信息：" + error.getBody().toString());
         LogUtil.d("error接口URL：" + error.getUrl());
     }
 
