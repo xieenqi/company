@@ -59,6 +59,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private ArrayList<Attachment> mAttachments = new ArrayList<>();
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
+    private int goneBtn = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         boolean hasRights = checkRights();
 
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights);
+            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights,goneBtn);
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);

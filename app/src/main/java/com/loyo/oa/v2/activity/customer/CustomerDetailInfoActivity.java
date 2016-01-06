@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.customer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -148,14 +150,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getResponse().getStatus() == 500) {
-                    Toast("网络异常500，请稍候再试");
-                } else {
-                    Toast("没有客户详情信息");
-                }
+                HttpErrorCheck.checkError(error);
                 Utils.dialogDismiss();
                 finish();
             }
@@ -232,7 +227,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         btnUpdate.setText("投入公海");
         btn_child_delete_task.setText("删除");
-        btn_child_delete_task.setVisibility(View.GONE); //暂时注释掉删除
+        //btn_child_delete_task.setVisibility(View.GONE);
 
         btn_child_delete_task.setOnTouchListener(Global.GetTouch());
         btnCancel.setOnTouchListener(Global.GetTouch());
@@ -290,13 +285,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(Customer newCustomer, Response response) {
-                onBackPressed();
+                app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, new Intent());
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("删除客户失败");
-                super.failure(error);
             }
         });
     }
@@ -314,13 +309,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getResponse().getStatus() == 500) {
-                    Toast("网络异常500，请稍候再试");
-                } else {
-                    Toast("操作失败");
-                }
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -362,21 +351,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(Customer newCustomer, Response response) {
-                        finish();
+                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, new Intent());
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-
-                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                            Toast("请检查您的网络连接");
-                        } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                            if (error.getResponse().getStatus() == 500) {
-                                Toast("网络异常500，请稍候再试");
-                            }
-                        } else {
-                            Toast("操作失败");
-                        }
+                        HttpErrorCheck.checkError(error);
                         finish();
                     }
                 });
@@ -430,6 +410,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
+                bundle.putSerializable("goneBtn",1);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;
@@ -446,6 +427,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * @param _class
      * @param requestCode
      */
+
     private void goToChild(Bundle b, Class<?> _class, int requestCode) {
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, requestCode, b);
     }

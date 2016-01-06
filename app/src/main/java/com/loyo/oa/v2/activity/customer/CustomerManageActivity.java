@@ -130,7 +130,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
                 Animation.RELATIVE_TO_SELF, 0.5f);// y轴
 
         rotateAnimation.setDuration(200);
-        rotateAnimation.setFillAfter(true);             //保留在终止位置
+        rotateAnimation.setFillAfter(true);       //保留在终止位置
         rotateAnimation.setFillEnabled(true);
         rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
 

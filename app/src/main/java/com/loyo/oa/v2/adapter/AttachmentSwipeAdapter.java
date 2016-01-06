@@ -25,11 +25,13 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -40,26 +42,27 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class AttachmentSwipeAdapter extends BaseAdapter {
-    Context mContext;
-    ArrayList<Attachment> mAttachments;
-    ArrayList<User> users = new ArrayList<>();
-    MainApp app;
-    private boolean hasRights = true;
-    public static final int REQUEST_ATTACHMENT = 4000;
 
-    AttachmentAction mAction;
+    public static final int REQUEST_ATTACHMENT = 4000;
+    private Context mContext;
+    private ArrayList<Attachment> mAttachments;
+    private ArrayList<User> users = new ArrayList<>();
+    private MainApp app;
+    private AttachmentAction mAction;
     private OnRightClickCallback callback;
+    private int goneBtn; //隐藏对应的按钮 1:权限 2:删除
+    private boolean hasRights = true;
 
     public interface OnRightClickCallback {
         void onRightClick(Bundle b);
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users) {
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int _goneBtn) {
         super();
-
         mAttachments = _attachments;
         mContext = _context;
         app = (MainApp) _context.getApplicationContext();
+        this.goneBtn = _goneBtn;
 
         if (_users != null) {
             users = _users;
@@ -67,8 +70,8 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback, boolean hasRights) {
-        this(_context, _attachments, _users);
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback, boolean hasRights, int _goneBtn) {
+        this(_context, _attachments, _users, _goneBtn);
         this.hasRights = hasRights;
         callback = _callback;
     }
@@ -165,13 +168,20 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             }
         });
 
-        //只有附件的上传人是自已，才可以设置权限
+
+        /*只有附件的上传人是自已，才可以设置权限*/
         if (!hasRights || !MainApp.user.equals(attachment.getCreator())) {
-            holder.layout_action_update.setVisibility(View.GONE);
-            holder.layout_action_delete.setVisibility(View.GONE);
+            holder.layout_action_update.setVisibility(View.INVISIBLE);
+            holder.layout_action_delete.setVisibility(View.INVISIBLE);
         } else {
             holder.layout_action_update.setVisibility(View.VISIBLE);
             holder.layout_action_delete.setVisibility(View.VISIBLE);
+
+            /*客户管理里面，没有权限功能，需禁用*/
+            if (goneBtn == 1) {
+                holder.layout_action_update.setVisibility(View.INVISIBLE);
+            }
+
             /**权限设置*/
             holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,7 +207,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     builder.setPositiveButton(mContext.getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            Utils.dialogShow(mContext);
                             RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment att, Response response) {
@@ -205,12 +215,15 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                                     if (mAction != null) {
                                         mAction.afterDelete(attachment);
                                     }
+                                    Utils.dialogDismiss();
+
                                 }
 
                                 @Override
                                 public void failure(RetrofitError error) {
                                     super.failure(error);
                                     HttpErrorCheck.checkError(error);
+                                    Utils.dialogDismiss();
                                 }
                             });
 

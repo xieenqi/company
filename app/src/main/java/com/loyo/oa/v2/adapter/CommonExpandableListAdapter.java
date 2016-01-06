@@ -59,7 +59,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         ImageView iv_disscuss_status = ViewHolder.get(convertView, R.id.img_discuss_status);
         status.setVisibility(View.GONE);
 
-        //审批
+        /**审批*/
         if (obj instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) obj;
             if (wfInstance.title != null) {
@@ -89,7 +89,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     break;
             }
         }
-        // 任务
+        /**任务*/
         else if (obj instanceof Task) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
@@ -125,7 +125,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
 
         }
-        //报告
+        /**报告*/
         else if (obj instanceof WorkReport) {
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;
