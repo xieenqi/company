@@ -606,7 +606,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_main, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_main, null, false);
 
                 holder.img_item = (ImageView) convertView.findViewById(R.id.img_item);
                 holder.tv_item = (TextView) convertView.findViewById(R.id.tv_item);

@@ -134,7 +134,7 @@ public class BulletinAddActivity extends BaseActivity {
 
                 map.put("members", member);
                 map.put("attachments", newData());
-                LogUtil.d(" 通知 发松 传递是数据： " + MainApp.gson.toJson(map));
+                LogUtil.d(" 通知 传递数据： " + MainApp.gson.toJson(map));
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
                     @Override
                     public void success(Bulletin bulletin, Response response) {
