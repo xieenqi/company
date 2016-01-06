@@ -56,6 +56,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public Customer customer;
     public String position;
     public int kalo = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
