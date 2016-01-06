@@ -94,8 +94,9 @@ public class ProjectAddActivity extends BaseActivity {
         }
         edt_title.setText(mProject.title);
         edt_content.setText(mProject.content);
-        if (mProject.isManager())
+        if (mProject.isManager() && !mProject.isCreator()) {
             ll_managerGon.setVisibility(View.GONE);
+        }
         mManagerIds = ProjectMember.GetMnagerUserIds(mProject.managers);
         LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.members));
         if (mProject.members != null) {
@@ -240,13 +241,13 @@ public class ProjectAddActivity extends BaseActivity {
     @Click(R.id.img_title_right)
     void CreateOrUpdateProject() {
         if (TextUtils.isEmpty(mManagerIds)) {
-            Global.Toast("项目负责人不能为空!");
+            Toast("项目负责人不能为空!");
             return;
         }
 
         String title = edt_title.getText().toString().trim();//标题
         if (TextUtils.isEmpty(title)) {
-            Global.Toast("项目标题不能为空!");
+            Toast("项目标题不能为空!");
             return;
         }
 
@@ -256,6 +257,7 @@ public class ProjectAddActivity extends BaseActivity {
         String content = edt_content.getText().toString().trim();//内容
         if (!TextUtils.isEmpty(content)) {
             projectTransObj.content = content;
+            Toast("项目内容不能为空!");
         }
 
         projectTransObj.managers = getProjectManager();

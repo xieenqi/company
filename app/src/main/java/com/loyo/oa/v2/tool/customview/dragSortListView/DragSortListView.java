@@ -728,7 +728,7 @@ public class DragSortListView extends ListView {
                     v.addView(child);
                 }
             } else {
-                child = mAdapter.getView(position, null, DragSortListView.this);
+                child = mAdapter.getView(position, convertView, DragSortListView.this);
                 if (child instanceof Checkable) {
                     v = new DragSortItemViewCheckable(getContext());
                 } else {

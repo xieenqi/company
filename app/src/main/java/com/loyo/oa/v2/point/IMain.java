@@ -18,14 +18,14 @@ public interface IMain {
     @GET("/home")
     void getNumber(retrofit.Callback<ArrayList<HomeNumber>> cb);
 
-    @GET("/checkupdate/")
+    @GET("/checkupdate/android")
     void checkUpdate(retrofit.Callback<CheckUpdateService.UpdateInfo> cb);
 
     @GET("/gettime")
     void getServerTime(retrofit.Callback<ServerTime> cb);
 
     @PUT("/")
-    void resetPassword(@Body HashMap<String,Object> map,retrofit.Callback<Object> cb);
+    void resetPassword(@Body HashMap<String, Object> map, retrofit.Callback<Object> cb);
 
     @GET("/forgetpwd/")
     void verifyPhone(@Query("tel") String tel, Callback<Object> callback);
