@@ -10,6 +10,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
@@ -64,24 +65,26 @@ public class SettingPasswordActivity extends BaseActivity {
             return;
         }
 
-        if(!TextUtils.equals(newPassword,confirmNewPassword)){
+        if (!TextUtils.equals(newPassword, confirmNewPassword)) {
             Toast("两次输入的新密码不一致");
             return;
         }
 
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("oldpasswd",oldPassword);
-        map.put("newpasswd",confirmNewPassword);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("oldpasswd", oldPassword);
+        map.put("newpasswd", confirmNewPassword);
         RestAdapterFactory.getInstance().build(FinalVariables.URL_UPDATE_PASSWORD).create(IUser.class).updatePassword(map, new RCallback<Object>() {
             @Override
             public void success(Object o, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 Toast("修改密码成功");
                 onBackPressed();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("修改密码失败");
+                HttpErrorCheck.checkError(error);
+                //Toast("修改密码失败");
                 super.failure(error);
             }
         });

@@ -135,7 +135,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 exit();
                 break;
             case R.id.layout_setpassword:
-                //设置密码
+                //修改密码
                 app.startActivity(this, SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.layout_update:
