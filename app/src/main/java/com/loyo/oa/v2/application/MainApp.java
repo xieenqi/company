@@ -10,9 +10,7 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
-import com.loyo.oa.v2.BuildConfig;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CellInfo;
 import com.loyo.oa.v2.beans.Department;
@@ -43,11 +41,9 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -227,20 +223,20 @@ public class MainApp extends Application {
 
 
     void init() {
-        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
-        SDKInitializer.initialize(this);
-
-        if (BuildConfig.DEBUG) {
-            try {
-                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");
-                Method m = c.getMethod("install", Application.class);
-                if (m != null) {
-                    m.invoke(null, this);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+//        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
+//        SDKInitializer.initialize(this);
+//
+//        if (BuildConfig.DEBUG) {
+//            try {
+//                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");
+//                Method m = c.getMethod("install", Application.class);
+//                if (m != null) {
+//                    m.invoke(null, this);
+//                }
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
         //        init_StrictMode();
 
         logUtil = LogUtil.lLog();
