@@ -88,13 +88,18 @@ public class WfinstanceViewGroup extends LinearLayout {
                 }
             });
         }
-        //加载子条目
+
+
+        /**
+         * 加载子条目，根据后台返回的Type，设置不同的EditText属性
+         * */
         for (int i = 0; i < lstData.size(); i++) {
             View view = new View(context);
             view.setBackgroundColor(getResources().getColor(R.color.activity_split));
             view.setLayoutParams(new ViewGroup.LayoutParams(-1, 1));
             addView(view);
             BizFormFields bizFormFields = lstData.get(i);
+            LogUtil.dll("类型TYPE："+bizFormFields.getDbtype());
             View convertView = inflater.inflate(R.layout.item_bizform_string, this, false);
             TextView label = (TextView) convertView.findViewById(R.id.tv_label);
             EditText value = (EditText) convertView.findViewById(R.id.edt_value);
@@ -114,7 +119,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.setFocusableInTouchMode(false);
                     value.setOnFocusChangeListener(null);
                     value.setInputType(InputType.TYPE_CLASS_TEXT);
-                } else if ("string".equals(bizFormFields.getDbtype())) {//输入字符类型
+                } else if ("String".equals(bizFormFields.getDbtype())) {//输入字符类型
                     value.setTag(new String("输入字符类型"));
                     value.setFocusableInTouchMode(true);
                     value.setFocusable(true);
@@ -171,7 +176,6 @@ public class WfinstanceViewGroup extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-           LogUtil.d(vv.getTag() + "  after输入过后TextChanged, s : " + s.toString());
             if (s.toString().length() > 0) {
                 map_Values.put(lstData.get(position).getId(), s.toString());
             } else {
