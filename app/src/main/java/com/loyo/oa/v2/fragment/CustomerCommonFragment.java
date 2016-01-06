@@ -17,7 +17,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
@@ -65,7 +64,7 @@ import retrofit.client.Response;
  */
 public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, OnDropItemSelectedListener {
 
-    private static final String[] TIMES_TAG = new String[]{"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 倒序"};
+    private static final String[] TIMES_TAG = new String[]{"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
 
     private View mView;
     private PullToRefreshListView listView;
@@ -91,7 +90,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String departmentId = "";
     private String userId = "";
     private int page = 1;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -422,13 +420,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     break;
             }
-
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < items.size(); i++) {
                 sb.append(items.get(items.keyAt(i)).getName()).append(" ").append(items.get(items.keyAt(i)).getValue()).append(",");
             }
             getData();
-            Toast("选择的内容：" + sb.toString());
+            Toast("选择的内容AAA：" + sb.toString());
         }
     }
 
