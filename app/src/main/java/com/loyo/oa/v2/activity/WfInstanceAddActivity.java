@@ -89,10 +89,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById ViewGroup ll_project;
     @ViewById TextView tv_project;
     @ViewById Button btn_add;
-
     @ViewById TextView tv_WfTemplate;
     @ViewById TextView tv_bizform;
-
     @ViewById GridView gridView_photo;
     @ViewById EditText edt_memo;
     @Extra
@@ -457,8 +455,9 @@ public class WfInstanceAddActivity extends BaseActivity {
             Toast("请输选择部门");
             return;
         }
-        ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
 
+        /**审批内容，装进Post数据的list中*/
+        ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
         wfInstanceAdd.getWorkflowValuesAdd().wfInstanceValuesDatas.clear();
         for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
@@ -475,21 +474,19 @@ public class WfInstanceAddActivity extends BaseActivity {
             workflowValues.add(jsonMapValues);
         }
 
-        for (WfinstanceViewGroup element : WfinObj) {
+     /*     for (WfinstanceViewGroup element : WfinObj) {
             workflowValues.add(element.getInfoData());
-            LogUtil.dll("map:"+element.getInfoData().toString());
-        }
+        }*/
 
         if (!(workflowValues.size() > 0)) {
             Toast("请填写审批内容\"必填项\"");
             return;
         }
 
-        /**必填项判断*/
+        /**必填项判断是否为空*/
         for(int i = 0;i<workflowValues.size();i++){
             HashMap<String,Object> map = workflowValues.get(i);
             for(Map.Entry<String,Object> entry : workflowValues.get(i).entrySet()){
-                LogUtil.dll("values:"+entry.getValue());
                 if(TextUtils.isEmpty((CharSequence) entry.getValue())){
                     Toast("请填写\"必填项\"");
                     return;

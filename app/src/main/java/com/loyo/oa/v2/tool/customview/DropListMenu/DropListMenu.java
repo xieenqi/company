@@ -149,7 +149,7 @@ public class DropListMenu extends LinearLayout {
                     for (int i = 0; i < mMenuCount; i++) {
                         mIvMenuArrow.get(i).setImageResource(mDownArrow);
                         mRlMenuBacks.get(i).setBackgroundColor(mMenuBackColor);
-                       // mTvMenuTitles.get(i).setTextColor(mMenuTitleTextColor);
+                        //mTvMenuTitles.get(i).setTextColor(mMenuTitleTextColor);
                     }
                 }
             });
@@ -158,9 +158,10 @@ public class DropListMenu extends LinearLayout {
             if (layoutConfirm != null) {
                 layoutConfirm.setVisibility(menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS ? View.GONE : View.VISIBLE);
             }
-/**
- * 弹窗 的 列表
- */
+
+            /**
+             * 弹窗列表，确认 取消监听
+             */
             ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
@@ -168,6 +169,7 @@ public class DropListMenu extends LinearLayout {
                 menuList.setDivider(null);
             }
 
+            /**确定*/
             Button buttonConfirm = (Button) viewPopWindow.findViewById(R.id.btn_confirm);
             buttonConfirm.setOnClickListener(new OnClickListener() {
                 @Override
@@ -179,6 +181,7 @@ public class DropListMenu extends LinearLayout {
                 }
             });
 
+            /**取消*/
             Button buttonCancel = (Button) viewPopWindow.findViewById(R.id.btn_cancel);
             buttonCancel.setOnClickListener(new OnClickListener() {
                 @Override
@@ -193,10 +196,9 @@ public class DropListMenu extends LinearLayout {
             });
 
             Global.SetTouchView(buttonConfirm, buttonCancel);
-
             menuList.setBackgroundColor(mMenuListBackColor);
             menuList.setSelector(mMenuListSelectorRes);
-            
+
             /**
              * 左侧Listiew
              * */
@@ -217,7 +219,7 @@ public class DropListMenu extends LinearLayout {
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
                                     //popupWindow.dismiss();
 
-                                   // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
+                                    // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                                     mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                                     mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
 
@@ -246,12 +248,12 @@ public class DropListMenu extends LinearLayout {
                                     syncConfirmButton();
 
                                 }
-                               // popupWindow.dismiss();
+                                // popupWindow.dismiss();
                             }
                         });
                     } else {
 
-                       // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
+                        // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                         mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                         mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
 
@@ -390,7 +392,6 @@ public class DropListMenu extends LinearLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mDrawable) {
-            LogUtil.d("弹窗：DropListMenu onDraw");
             int width = getWidth();
 
             for (int i = 0; i < mMenuCount; i++) {
@@ -461,7 +462,7 @@ public class DropListMenu extends LinearLayout {
                         getMenuList().setBackgroundColor(mMenuListBackColor);
                         getMenuList().setSelector(mMenuListSelectorRes);
                         getSubMenuList().setBackgroundColor(getResources().getColor(R.color.white));
-                       // mTvMenuTitles.get(index).setTextColor(mMenuPressedTitleTextColor);
+                        // mTvMenuTitles.get(index).setTextColor(mMenuPressedTitleTextColor);
                         mRlMenuBacks.get(index).setBackgroundColor(mMenuPressedBackColor);
                         mIvMenuArrow.get(index).setImageResource(mUpArrow);
                         getPopupWindow().showAsDropDown(v);

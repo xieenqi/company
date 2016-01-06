@@ -398,7 +398,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         status.setImageResource(R.drawable.img_wfinstance_list_status5);
                         break;
                 }
-            } else if (o instanceof Task) {
+            }
+            //任务
+            else if (o instanceof Task) {
                 Task task = (Task) o;
                 if (task.getStatus() == Task.STATUS_PROCESSING) {
                     status.setImageResource(R.drawable.task_status_1);
@@ -481,14 +483,17 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             }
             //客户
             else if (o instanceof Customer) {
+
                 customer = (Customer) o;
                 time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
                 title.setText(customer.name);
-                if (!TextUtils.isEmpty(customer.distance)) {
+                content.setText("标签"+Utils.getTagItems(customer));
+
+              /*  if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);
                 } else {
                     content.setVisibility(View.GONE);
-                }
+                }*/
             }
 
             return convertView;

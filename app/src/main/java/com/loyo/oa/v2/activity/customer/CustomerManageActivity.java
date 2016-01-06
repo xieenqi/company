@@ -23,19 +23,17 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * 客户管理列表
- * */
+ */
 
 @EActivity(R.layout.activity_customer_manage)
 public class CustomerManageActivity extends BaseFragmentActivity {
@@ -45,24 +43,30 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         onBackPressed();
     }
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById ViewGroup img_title_search_right;
-    @ViewById ViewGroup layout_title_action;
-    @ViewById ViewGroup layout_category;
-    @ViewById ListView lv_customer_category;
-    @ViewById(R.id.img_title_arrow) ImageView imageArrow;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    ViewGroup img_title_search_right;
+    @ViewById
+    ViewGroup layout_title_action;
+    @ViewById
+    ViewGroup layout_category;
+    @ViewById
+    ListView lv_customer_category;
+    @ViewById(R.id.img_title_arrow)
+    ImageView imageArrow;
 
-    CommonCategoryAdapter mCategoryAdapter;
-    Animation rotateAnimation;
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    List<BaseFragment> fragments = new ArrayList<>();//fragment 界面列表列表
-
-    String[] CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户", "公海客户"};
-    float mRotation = 0;
-    int mIndex = -1;
+    public CommonCategoryAdapter mCategoryAdapter;
+    public Animation rotateAnimation;
+    public FragmentManager fragmentManager = getSupportFragmentManager();
+    public List<BaseFragment> fragments = new ArrayList<>();//fragment 界面列表列表
+    public String[] CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户", "公海客户"};
+    public float mRotation = 0;
+    public int mIndex = -1;
 
     @AfterViews
     void initUI() {
+
         setTitle("我的客户");
         setTouchView(-1);
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
@@ -75,9 +79,11 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         rotateAnimation = getArrowAnimation();
         imageArrow.setVisibility(View.VISIBLE);
         initFragments();
+
     }
 
     void initFragments() {
+
         int len = CUSTOMER_FILTER_STRS.length;
         int type = -1;
         for (int i = 0; i < len; i++) {
@@ -102,6 +108,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
             fragments.add(fragment);//添加fragment 界面
         }
         changeChild(0);
+
     }
 
     void initCategoryUI() {
@@ -143,6 +150,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     }
 
     void changeCategoryView() {
+
         imageArrow.setRotation(mRotation);
         imageArrow.startAnimation(rotateAnimation);
         mRotation = (mRotation == 0f ? 180f : 0f);
@@ -151,20 +159,20 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
     /**
      * 进入搜索
-     * */
+     */
     @Click(R.id.img_title_search_right)
     void jumpToSearch() {
         int type;
-        if(Utils.hasRights()){
-           type=mIndex+1;
-        }else {
-            if(mIndex==0) {
+        if (Utils.hasRights()) {
+            type = mIndex + 1;
+        } else {
+            if (mIndex == 0) {
                 type = 1;
-            }else {
-                type=3;
+            } else {
+                type = 3;
             }
         }
-        Bundle b=new Bundle();
+        Bundle b = new Bundle();
         b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
     }
