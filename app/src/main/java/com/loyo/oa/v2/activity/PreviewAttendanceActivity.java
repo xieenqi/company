@@ -85,15 +85,16 @@ public class PreviewAttendanceActivity extends BaseActivity {
         tv_title.setText("考勤详情");
         initGridView();
         initData();
-        LogUtil.d(inOrOut+" 考勤详情 传递 数据："+ MainApp.gson.toJson(attendance));
+        LogUtil.d(inOrOut + " 考勤详情 传递 数据：" + MainApp.gson.toJson(attendance));
     }
 
     /**
      * 获取附件
+     *
      * @param record
      */
     private void getAttachments(AttendanceRecord record) {
-        if (TextUtils.isEmpty(record.getAttachementuuid())){//附件id为空
+        if (TextUtils.isEmpty(record.getAttachementuuid())) {//附件id为空
             return;
         }
         Utils.getAttachments(record.getAttachementuuid(), new RCallback<ArrayList<Attachment>>() {
@@ -111,6 +112,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * 初始化数据
      */
@@ -118,12 +120,12 @@ public class PreviewAttendanceActivity extends BaseActivity {
         if (null == attendance) {
             return;
         }
-        AttendanceRecord record =inOrOut== ValidateItem.ATTENDANCE_STATE_OUT?attendance.getOut():attendance.getIn();
+        AttendanceRecord record = inOrOut == ValidateItem.ATTENDANCE_STATE_OUT ? attendance.getOut() : attendance.getIn();
         ImageLoader.getInstance().displayImage(attendance.getUser().avatar, iv_avartar);
         final User user = attendance.getUser();
 
         tv_name.setText(user.getRealname());
-        String deptName= TextUtils.isEmpty(user.departmentsName)? Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName():user.departmentsName;
+        String deptName = TextUtils.isEmpty(user.departmentsName) ? Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
         tv_role.setText(deptName + " " + (null == user.shortPosition || TextUtils.isEmpty(user.shortPosition.getName()) ? "" : user.shortPosition.getName()));
 
         if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
@@ -131,23 +133,23 @@ public class PreviewAttendanceActivity extends BaseActivity {
             btn_confirm.setVisibility(View.VISIBLE);
         } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
             iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-        }else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+        } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
             iv_type.setImageResource(R.drawable.icon_office_work);
         }
-        String info="";
+        String info = "";
         if (record.getState() == AttendanceRecord.STATE_BE_LATE) {
             info = "上班迟到, ";
-        }else if(record.getState() == AttendanceRecord.STATE_LEAVE_EARLY){
+        } else if (record.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
             info = "下班早退, ";
         }
-        String content=info+"打卡时间: " + app.df3.format(new Date(record.getCreatetime()* 1000));//
-        if(!TextUtils.isEmpty(info)) {
+        String content = info + "打卡时间: " + app.df3.format(new Date(record.getCreatetime() * 1000));//
+        if (!TextUtils.isEmpty(info)) {
             tv_info.setText(Utils.modifyTextColor(content, Color.RED, 2, 4));
-        }else {
+        } else {
             tv_info.setText(content);
         }
         tv_reason.setText(record.getReason());
-         if(user.id.equals(MainApp.user.id)){//自己不能确认外勤
+        if (user.id.equals(MainApp.user.id)) {//自己不能确认外勤
             btn_confirm.setVisibility(View.GONE);
         }
         getAttachments(record);
@@ -171,6 +173,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
         finish();
         //onBackPressed();
     }
+
     /**
      * 确认外勤的点击监听
      */
@@ -225,36 +228,36 @@ public class PreviewAttendanceActivity extends BaseActivity {
     /**
      * 确认外勤
      */
-    private void confirmOutAttendance(){
+    private void confirmOutAttendance() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
-                confirmOutAttendance(attendance.getOut().getId(), new RCallback<AttendanceRecord>() {
-            @Override
-            public void success(AttendanceRecord record, Response response) {
-               HttpErrorCheck.checkResponse(" 考勤返回 ",response);
-                btn_confirm.setVisibility(View.GONE);
-                attendance.setIn(record);
+                confirmOutAttendance(inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId(), new RCallback<AttendanceRecord>() {
+                    @Override
+                    public void success(AttendanceRecord record, Response response) {
+                        HttpErrorCheck.checkResponse(" 考勤返回 ", response);
+                        btn_confirm.setVisibility(View.GONE);
+                        attendance.setIn(record);
 
 //                if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
 //                    iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
 //                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
-                    iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+                        iv_type.setImageResource(R.drawable.icon_field_work_confirm);
 //                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
 //                    iv_type.setImageResource(R.drawable.icon_office_work);
 //                }
 
-                Intent intent = new Intent();
-                //intent.putExtra("data", attendance);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+                        Intent intent = new Intent();
+                        //intent.putExtra("data", attendance);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                Toast("确认外勤失败");
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        Toast("确认外勤失败");
+                    }
+                });
     }
 
 
