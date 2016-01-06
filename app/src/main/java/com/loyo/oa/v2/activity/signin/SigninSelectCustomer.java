@@ -27,6 +27,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -51,16 +52,25 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<Customer> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
-    protected boolean isTopAdd = true;
     protected PaginationX paginationX = new PaginationX(20);
     public Customer customer;
     public String position;
+
+    public Context mContext;
     public int kalo = 0;
+    public boolean isTopAdd = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
+        mContext = this;
+        initView();
+    }
+
+
+    public void initView(){
+
         vs_nodata = findViewById(R.id.vs_nodata);
         getNearCustomersInfo();
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
@@ -104,6 +114,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         });
         edt_search.requestFocus();
 
+        /*搜索操作*/
         findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +125,6 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         expandableListView_search.setOnRefreshListener(this);
-
         adapter = new CommonSearchAdapter();
         expandableListView_search.setAdapter(adapter);
 
@@ -126,7 +136,8 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             }
         });
 
-        getAllData();//默认 初始化所有客户
+        /*默认先展示附近客户，所有客户先屏蔽*/
+        //getAllData();
     }
 
 
@@ -159,7 +170,6 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 查询客户数据
      */
     void getAllData() {
-        LogUtil.dll("查询");
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
         HashMap<String, Object> params = new HashMap<>();
         kalo = 1;
@@ -173,11 +183,12 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 请求体
      */
     void dataRequestvoid(String url, HashMap<String, Object> params) {
+        Utils.dialogShow(mContext);
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
             public void success(PaginationX<Customer> customerPaginationX, Response response) {
+                Utils.dialogDismiss();
                 HttpErrorCheck.checkResponse(response);
-
                 expandableListView_search.onRefreshComplete();
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -215,6 +226,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 expandableListView_search.onRefreshComplete();
+                Utils.dialogDismiss();
             }
         });
     }
