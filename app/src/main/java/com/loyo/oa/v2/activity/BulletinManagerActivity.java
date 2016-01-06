@@ -20,7 +20,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -92,6 +91,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(PaginationX<Bulletin> pagination, Response response) {
+                HttpErrorCheck.checkResponse(" 通知公告的数据： ",response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
@@ -105,9 +105,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 } else {
                     Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
                 }
-
                 lv_notice.onRefreshComplete();
-                LogUtil.d(" 通知的数据： " + MainApp.gson.toJson(pagination));
             }
 
             @Override
@@ -115,7 +113,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
                 lv_notice.onRefreshComplete();
-                Toast("获取通知失败" + error.getMessage());
             }
         });
     }
@@ -226,9 +223,9 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             ArrayList<Attachment> attachments = bulletin.attachments;
             if (null != attachments && !attachments.isEmpty()) {
                 holder.gridView.setVisibility(View.VISIBLE);
-                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
+                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true,true);
                 SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
-                holder.gridView.setAdapter(adapter);
+                //holder.gridView.setAdapter(adapter);
                //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);
             } else {
                 holder.gridView.setVisibility(View.GONE);

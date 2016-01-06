@@ -84,7 +84,6 @@ public class SettingPasswordActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                //Toast("修改密码失败");
                 super.failure(error);
             }
         });
