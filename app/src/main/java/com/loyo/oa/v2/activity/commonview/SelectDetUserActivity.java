@@ -62,7 +62,7 @@ public class SelectDetUserActivity extends Activity {
     public int seltSize;
     public int isSize;
     public int selectType; //1负责人 0参与人 2编辑参与人
-    public String []joinUserId;
+    public String[] joinUserId;
     public StringBuffer nameApd;
     public StringBuffer idApd;
 
@@ -90,34 +90,15 @@ public class SelectDetUserActivity extends Activity {
      */
     void initView() {
 
+
+
         mIntent = getIntent();
         mBundle = mIntent.getExtras();
         selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);
-        joinUserId = mBundle.getString(ExtraAndResult.STR_SUPER_ID).split(",");
         totalSource = Common.getLstUserGroupData();
         deptSource = Common.getLstDepartment();
         userAllList = new ArrayList<>();
         userList = new ArrayList<>();
-
-        for (User user : userAllList) {
-            user.setIndex(false);
-        }
-
-        /*全部人员获取*/
-        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
-            }
-        }
-        /*来自编辑页面已存在的参与人，选中设为true*/
-        for (User user : userAllList){
-            for(int i = 0;i<joinUserId.length;i++){
-                if(user.getId().equals(joinUserId[i])){
-                    user.setIndex(true);
-                    totalSize++;
-                }
-            }
-        }
 
         /*header初始化*/
         mInflater = LayoutInflater.from(this);
@@ -130,8 +111,32 @@ public class SelectDetUserActivity extends Activity {
         btnSure = (Button) findViewById(R.id.btn_title_right);
         llback = (LinearLayout) findViewById(R.id.ll_back);
 
-        if(selectType == 1){
+
+        /*全部人员获取*/
+        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
+            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+            }
+        }
+
+        for (User user : userAllList) {
+            user.setIndex(false);
+        }
+
+
+        if (selectType == 1) {
             btnSure.setVisibility(View.INVISIBLE);
+        } else if (selectType == 2) {
+            /*来自编辑页面已存在的参与人，选中设为true*/
+            joinUserId = mBundle.getString(ExtraAndResult.STR_SUPER_ID).split(",");
+            for (User user : userAllList) {
+                for (int i = 0; i < joinUserId.length; i++) {
+                    if (user.getId().equals(joinUserId[i])) {
+                        user.setIndex(true);
+                        totalSize++;
+                    }
+                }
+            }
         }
 
         btnSure.setText("确定" + "(" + totalSize + ")");
@@ -140,8 +145,6 @@ public class SelectDetUserActivity extends Activity {
         leftLv.setAdapter(mDetAdapter);
         lvOnClick();
         rightLv.addHeaderView(headerView);
-
-
         userList.addAll(userAllList);
         /*右侧Lv初始化*/
         mUserAdapter = new SelectUserAdapter(mContext, userList, isAllCheck);
@@ -185,7 +188,7 @@ public class SelectDetUserActivity extends Activity {
                 if (selectType == 1) {
                     Intent mIntent = new Intent();
                     Bundle mBundle = new Bundle();
-                    mBundle.putSerializable(User.class.getName(),userList.get(position - 1));
+                    mBundle.putSerializable(User.class.getName(), userList.get(position - 1));
                     mIntent.putExtras(mBundle);
                     app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 
@@ -254,8 +257,8 @@ public class SelectDetUserActivity extends Activity {
 
     /**
      * 选中总数统计
-     * */
-    void statisticsTotalSize(int position){
+     */
+    void statisticsTotalSize(int position) {
         if (userList.get(position - 1).isIndex()) {
             totalSize += 1;
         } else {

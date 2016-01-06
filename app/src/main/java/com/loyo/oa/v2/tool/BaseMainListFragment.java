@@ -25,10 +25,6 @@ public abstract class BaseMainListFragment extends BaseFragment implements PullT
     protected DrawerLayout mDrawerLayout;
     protected int mFragmentContainerViewId;
 
-//    public static final int UPDATE_LISTVIEW_ADD_TOP = 1;
-//    public static final int UPDATE_LISTVIEW_ADD_BUTTOM = 2;
-//    public static final int UPDATE_LISTVIEW = 3;
-
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
 

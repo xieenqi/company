@@ -621,10 +621,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /*详情中有投入公海操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
+        /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-            LogUtil.dll("投入公海，刷新");
+            LogUtil.dll("投入公海，公海挑入，刷新");
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
