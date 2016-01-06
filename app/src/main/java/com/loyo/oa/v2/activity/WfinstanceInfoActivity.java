@@ -215,19 +215,19 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         switch (wfInstance.status) {
 
-            case 1:
+            case WfInstance.STATUS_NEW:
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status1);
                 break;
-            case 2:
+            case WfInstance.STATUS_PROCESSING:
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status2);
                 break;
-            case 3:
+            case WfInstance.STATUS_ABORT:
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status3);
                 break;
-            case 4:
+            case WfInstance.STATUS_APPROVED:
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4);
                 break;
-            case 5:
+            case WfInstance.STATUS_FINISHED://服务器返回的 已办结 暂时没返回。
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status5);
                 break;
 

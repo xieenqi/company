@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -20,7 +19,6 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -61,6 +59,9 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("fromPage")
     int fromPage;
 
+    @Extra("goneBtn")
+    int goneBtn;
+
     @ViewById(R.id.listView_attachment)
     SwipeListView mListViewAttachment;
     @ViewById(R.id.tv_upload)
@@ -92,11 +93,7 @@ public class AttachmentActivity extends BaseActivity {
             public void success(ArrayList<Attachment> attachments, Response response) {
                 mListAttachment = attachments;
                 bindAttachment();
-                try {
-                    LogUtil.dll("附件返回:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                HttpErrorCheck.checkResponse(response);
             }
 
             @Override
@@ -118,7 +115,7 @@ public class AttachmentActivity extends BaseActivity {
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList,goneBtn);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(Attachment attachment) {
@@ -137,10 +134,7 @@ public class AttachmentActivity extends BaseActivity {
         }
     }
 
-    @Click(R.id.img_title_left)
-    void click() {
-        finish();
-    }
+
 
     @Override
     public void onBackPressed() {
@@ -149,6 +143,13 @@ public class AttachmentActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
+    /**返回*/
+    @Click(R.id.img_title_left)
+    void click() {
+        finish();
+    }
+
+    /**附件上传*/
     @Click(R.id.tv_upload)
     void addAttachment() {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);

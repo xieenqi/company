@@ -86,25 +86,29 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
         ImageView img_status=ViewHolder.get(convertView,R.id.img_time_point);
 
         PagingGroupData_ data = pagingGroupDatas.get(groupPosition);
+
         /*列表状态条 颜色设置*/
         if (data != null && data.getOrderStr() != null) {
             if(data.getOrderStr().contains("已")){
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isfinish));
                 img_status.setImageResource(R.drawable.bg_view_green_circle);
             }
-            else if(data.getOrderStr().contains("进") || data.getOrderStr().contains("待")){
+            else if(data.getOrderStr().contains("进行中") || data.getOrderStr().contains("待点评") ||data.getOrderStr().contains("待审批")){
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isteston));
+                img_status.setImageResource(R.drawable.bg_view_purple_circle);
+            }
+            else if(data.getOrderStr().contains("待审核") || data.getOrderStr().contains("审")){
+                tv_title.setTextColor(mContext.getResources().getColor(R.color.iswrite));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
             }
             else if(data.getOrderStr().contains("未")){
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.wfinstance_notagree));
                 img_status.setImageResource(R.drawable.bg_view_red_circle);
             }
-            else{
-                tv_title.setTextColor(mContext.getResources().getColor(R.color.iswrite));
-                img_status.setImageResource(R.drawable.bg_view_blue_circle);
-            }
-            tv_title.setText(pagingGroupDatas.get(groupPosition).getRecords().size()+data.getOrderStr());
+
+            //暂时不要数量
+            //tv_title.setText(pagingGroupDatas.get(groupPosition).getRecords().size()+data.getOrderStr());
+            tv_title.setText(data.getOrderStr());
         }
 
         return convertView;
