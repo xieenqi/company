@@ -32,6 +32,7 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.fragment.TaskManagerFragment;
@@ -182,19 +183,19 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     //任务管理
                     case TASKS_MANAGE:
                         mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
-                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 1).getId());
                         startActivity(mIntent);
                         break;
                     //工作报告管理
                     case WORK_MANAGE:
                         mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
-                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 1).getId());
                         startActivity(mIntent);
                         break;
                     //项目管理
                     case PEOJECT_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        mIntent.putExtra("projectId", lstData.get(position - 1).getId());
                         startActivity(mIntent);
                         break;
                     //审批管理

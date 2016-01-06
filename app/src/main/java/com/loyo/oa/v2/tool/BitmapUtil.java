@@ -482,7 +482,8 @@ public class BitmapUtil {
             bundle.putInt("position", newPosistion);
             bundle.putBoolean("isEdit", isEdit);
 //            MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
-            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageActivity.class,
+                    MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 
 
         }

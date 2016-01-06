@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 
 import uk.co.senab.photoview.PhotoView;
 
+/**
+ * 预览图片
+ */
 public class PreviewImageActivity extends Activity {
 
     ViewPager mViewPager;
@@ -37,24 +41,21 @@ public class PreviewImageActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
-        isEdit=getIntent()==null||!getIntent().hasExtra("isEdit")?false:getIntent().getBooleanExtra("isEdit",false);
-        if(isEdit) {
+        isEdit = getIntent() == null || !getIntent().hasExtra("isEdit") ? false : getIntent().getBooleanExtra("isEdit", false);
+        if (isEdit) {
             delete = (TextView) findViewById(R.id.delete_image);
             delete.setOnTouchListener(Global.GetTouch());
             delete.setVisibility(View.VISIBLE);
-            delete.setOnClickListener(new View.OnClickListener()
-            {
+            delete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     //删除
                     AlertDialog.Builder builder = new AlertDialog.Builder(PreviewImageActivity.this);
                     builder.setTitle("确认");
-                    builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener()
-                    {
+                    builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                        public void onClick(DialogInterface dialog, int which) {
+                            LogUtil.d(" 删除第几张图片：" + mPosition);
                             dialog.dismiss();
                             Intent intent = new Intent();
                             intent.putExtra("delAtm", mNewAttachments.get(mPosition));
@@ -62,11 +63,9 @@ public class PreviewImageActivity extends Activity {
                         }
                     });
 
-                    builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener()
-                    {
+                    builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                        public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
@@ -111,20 +110,17 @@ public class PreviewImageActivity extends Activity {
         mViewPager.setCurrentItem(mNewPosition);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mPosition = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
 
             }
 
             @Override
-            public void onPageSelected(int position)
-            {
-                mPosition=position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });

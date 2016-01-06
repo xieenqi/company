@@ -223,6 +223,7 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
         final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+        LogUtil.d("删除附件id "+delAttachment.getId());
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
