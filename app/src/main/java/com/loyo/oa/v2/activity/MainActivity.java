@@ -66,7 +66,6 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -798,7 +797,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             info = info + "," + MainApp.user.getRealname();
         }
 
-        CrashReport.setUserId(info);
+        //CrashReport.setUserId(info);//leakd的东西
 
     }
 
