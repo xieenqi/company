@@ -29,18 +29,19 @@ public class HttpErrorCheck {
 
     public static void checkError(RetrofitError error) {
         String msg = error.getMessage();
+        String bod=error.getBody()==null?msg:error.getBody().toString();
         if (msg.contains("500")) {
-            Toast(error.getBody().toString());
+            Toast(bod);
         } else if (msg.contains("401")) {
-            Toast(error.getBody().toString());
+            Toast(bod);
         } else if (msg.contains("404")) {
-            Toast( error.getBody().toString());
+            Toast( msg);
         } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
             Toast("请检查您的网络连接");
         } else {
-            Toast(error.getBody().toString());
+            Toast(error.getMessage());
         }
-        LogUtil.d(error.getMessage()+" 失败的错误信息：" + error.getBody().toString());
+        LogUtil.d(error.getMessage()+" 失败的错误信息：" + bod);
         LogUtil.d("error接口URL：" + error.getUrl());
     }
 
