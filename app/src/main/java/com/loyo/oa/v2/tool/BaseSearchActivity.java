@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -59,23 +60,39 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected EditText edt_search;
     protected TextView tv_search;
     protected View vs_nodata;
+    protected View headerView;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<T> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
-    protected boolean isTopAdd = true;
     protected PaginationX paginationX = new PaginationX(20);
-    protected int befromPage;
     public Customer customer;
     public Bundle mBundle;
+    public LayoutInflater mInflater;
+    public RelativeLayout headerViewBtn;
+
+    protected int befromPage;
+    protected boolean isTopAdd = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
+        initView();
+    }
+
+    /**
+     * 初始化
+     * */
+    void initView(){
         vs_nodata = findViewById(R.id.vs_nodata);
         mBundle = getIntent().getExtras();
+        mInflater = LayoutInflater.from(this);
+        headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
+        headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
 
         befromPage = mBundle.getInt("from");
+        switchPage(befromPage);
         if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
                 befromPage == WFIN_ADD || befromPage == WORK_ADD) {
             getData();
@@ -137,87 +154,120 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
-        expandableListView_search.setAdapter(adapter);
-
+        expandableListView.setAdapter(adapter);
+        expandableListView.addHeaderView(headerView);
 
         /**列表监听器*/
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
                 Intent mIntent;
-
                 switch (befromPage) {
                     //新建审批
                     case WFIN_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data", lstData.get(position - 1));
+                        mIntent.putExtra("data", lstData.get(position - 2));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
                         break;
                     //新建任务 所属项目
                     case TASKS_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data", lstData.get(position - 1));
+                        mIntent.putExtra("data", lstData.get(position - 2));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
                         break;
                     //新建任务 关联客户
                     case TASKS_ADD_CUSTOMER:
-                        returnData(position - 1);
+                        returnData(position - 2);
                         break;
                     //新建拜访
                     case SIGNIN_ADD:
-                        returnData(position - 1);
+                        returnData(position - 2);
                         break;
                     //新建报告
                     case WORK_ADD:
                         mIntent = new Intent();
-                        mIntent.putExtra("data", lstData.get(position - 1));
+                        mIntent.putExtra("data", lstData.get(position - 2));
                         app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
                         break;
                     //客户管理
                     case CUSTOMER_MANAGE:
                         mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
-                        mIntent.putExtra("Id", lstData.get(position - 1).getId());
+                        mIntent.putExtra("Id", lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //任务管理
                     case TASKS_MANAGE:
                         mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 1).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //工作报告管理
                     case WORK_MANAGE:
                         mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
-                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 1).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //项目管理
                     case PEOJECT_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-                        mIntent.putExtra("projectId", lstData.get(position - 1).getId());
+                        mIntent.putExtra("projectId", lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
                     //审批管理
                     case WFIN_MANAGE:
                         mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-                        mIntent.putExtra("projectId", lstData.get(position - 1).getId());
+                        mIntent.putExtra("projectId", lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
 
                 }
             }
         });
+
+        /**
+         * 返回"无"
+         * */
+        headerViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, new Intent());
+            }
+        });
     }
 
-
-    void doSearch() {
+    /**
+     * 搜索操作
+     * */
+    public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         if (strSearch.length() > 0) {
             isTopAdd = true;
             getData();
         } else {
             onBackPressed();
+        }
+    }
+
+    /**
+     * 根据业务 展示"无"Item
+     * */
+    public void switchPage(int befromPage){
+        switch (befromPage){
+            case WFIN_ADD:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case TASKS_ADD:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case TASKS_ADD_CUSTOMER:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case WORK_ADD:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
         }
     }
 

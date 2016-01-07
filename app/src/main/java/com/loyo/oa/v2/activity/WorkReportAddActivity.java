@@ -513,12 +513,11 @@ public class WorkReportAddActivity extends BaseActivity {
 
         switch (requestCode) {
 
-            /*项目归档回调*/
+            /**项目归档回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
-                LogUtil.dll("回来");
                 Project _project = (Project) data.getSerializableExtra("data");
-                projectId = _project.id;
                 if (null != _project) {
+                    projectId = _project.id;
                     tv_project.setText(_project.title);
                 } else {
                     tv_project.setText("无");
@@ -603,6 +602,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 break;
+            /**删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
