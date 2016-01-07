@@ -409,7 +409,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             return result.toString();
         } else {
-            return result.append("无点评人").toString();
+            return result.append("无抄送人").toString();
         }
     }
 
