@@ -21,7 +21,7 @@ public class HttpProject implements Serializable {
     public String attachmentUUId;
     public long createdAt;
     public boolean viewed;
-    public int status;
+    public int status;//进行中【1】已结束【2】全部【0】
     public ArchiveData archiveData;
     public BizExtData bizExtData;
 

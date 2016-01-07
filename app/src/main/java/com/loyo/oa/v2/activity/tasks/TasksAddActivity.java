@@ -130,7 +130,7 @@ public class TasksAddActivity extends BaseActivity {
     private Members member;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
-    private String remindTime;
+    private int remindTime;
 
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
@@ -237,8 +237,10 @@ public class TasksAddActivity extends BaseActivity {
         map.put("responsiblePerson", newUser);
         map.put("members", member);
         map.put("planendAt", mDeadline);
-        map.put("remindflag", mRemind > 0);
-        map.put("remindtime", remindTime);
+        if (mRemind > 0) {
+            map.put("remindflag", mRemind > 0);
+            map.put("remindtime", remindTime);
+        }
         map.put("reviewFlag", switch_approve.isChecked());
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
@@ -246,6 +248,8 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
+        LogUtil.d(" " +
+                "新建任务传递： "+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
@@ -267,15 +271,15 @@ public class TasksAddActivity extends BaseActivity {
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常500，请稍候再试");
-                    }
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-
-                }
+//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                    Toast("请检查您的网络连接");
+//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+//                    if (error.getResponse().getStatus() == 500) {
+//                        Toast("网络异常500，请稍候再试");
+//                    }
+//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+//
+//                }
             }
         });
     }
@@ -395,7 +399,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mRemind = Task.RemindListSource.get(position);
-                remindTime = Task.RemindList.get(position);
+                remindTime = Task.RemindListSource.get(position);
                 tv_remind.setText(Task.RemindList.get(position));
                 dialog_Product.dismiss();
             }
@@ -486,7 +490,8 @@ public class TasksAddActivity extends BaseActivity {
 
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 //负责人回调
-                if (user != null) {  setResponsiblePersion(user);
+                if (user != null) {
+                    setResponsiblePersion(user);
 
                 }
 
