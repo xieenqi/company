@@ -43,6 +43,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -73,7 +74,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     ViewGroup img_title_left;
     @ViewById
     ViewGroup img_title_right;
-
     @ViewById
     EditText edt_name;
     @ViewById
@@ -82,36 +82,30 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     EditText edt_contract_tel;
     @ViewById
     EditText et_address;
-
     @ViewById
     TextView tv_labels;
-
     @ViewById
     LinearLayout layout_newContract;
     @ViewById
     LinearLayout layout_address;
-
     @ViewById
     Button btn_add_new_contract;
-
     @ViewById
     GridView gridView_photo;
 
-    ImageView img_refresh_address;
+    private ImageView img_refresh_address;
+    private SignInGridViewAdapter signInGridViewAdapter;
+    private Animation animation;
+    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
+    private ArrayList<Contact> mContacts = new ArrayList<>();
+    private ArrayList<TagItem> items = new ArrayList<>();
+    private ArrayList<NewTag> tags;
 
-    SignInGridViewAdapter signInGridViewAdapter;
-    Animation animation;
-    String uuid = null;
-    ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-
-    ArrayList<Contact> mContacts = new ArrayList<>();
-    ArrayList<TagItem> items = new ArrayList<>();
-    ArrayList<NewTag> tags;
-    String tagItemIds;
-    String mGpsAddress;
-    String myAddress;
-
-    boolean isFocused = false;
+    private String uuid = null;
+    private String tagItemIds;
+    private String mGpsAddress;
+    private String myAddress;
+    private boolean isFocused = false;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -420,7 +414,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Global.ProcException(ex);
                 }
                 break;
+
+            /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
+                Utils.dialogShow(this,"请稍候");
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                     RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
@@ -428,13 +425,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment attachment, Response response) {
-                                    Toast("删除附件成功!");
+                                    Utils.dialogDismiss();
                                     lstData_Attachment.remove(delAttachment);
                                     signInGridViewAdapter.notifyDataSetChanged();
                                 }
 
                                 @Override
                                 public void failure(RetrofitError error) {
+                                    Utils.dialogDismiss();
                                     HttpErrorCheck.checkError(error);
                                     Toast("删除附件失败!");
                                     super.failure(error);

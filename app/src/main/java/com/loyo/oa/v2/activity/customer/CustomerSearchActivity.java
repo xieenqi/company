@@ -9,6 +9,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 
@@ -36,7 +37,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     public void getData() {
-
+        Utils.dialogShow(this,"请稍候");
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
         HashMap<String, Object> params = new HashMap<>();
 
