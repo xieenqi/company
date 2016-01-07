@@ -397,14 +397,16 @@ public class TasksEditActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+
+            /*所属项目回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project project = (Project) data.getSerializableExtra("data");
                 if (null != project) {
                     tv_Project.setText(project.title);
                     mTask.setProjectId(project.getId());
                 } else {
-                    tv_Project.setText("无");
                     mTask.setProjectId("");
+                    tv_Project.setText("无");
                 }
                 break;
             case ExtraAndResult.request_Code:

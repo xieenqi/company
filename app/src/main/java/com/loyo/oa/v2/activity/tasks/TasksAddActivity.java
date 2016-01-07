@@ -271,15 +271,6 @@ public class TasksAddActivity extends BaseActivity {
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    Toast("请检查您的网络连接");
-//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-//                    if (error.getResponse().getStatus() == 500) {
-//                        Toast("网络异常500，请稍候再试");
-//                    }
-//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-//
-//                }
             }
         });
     }
@@ -463,7 +454,7 @@ public class TasksAddActivity extends BaseActivity {
 
         switch (requestCode) {
 
-            /*关联任务回调*/
+            /*关联客户回调*/
             case FinalVariables.REQUEST_SELECT_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
                 if (null != customer) {
@@ -471,6 +462,8 @@ public class TasksAddActivity extends BaseActivity {
                     customerName = customer.name;
                     tv_mycustomer.setText(customer.name);
                 } else {
+                    customerName = "";
+                    customerId = "";
                     tv_mycustomer.setText("无");
                 }
                 break;
@@ -482,6 +475,7 @@ public class TasksAddActivity extends BaseActivity {
                     projectId = _project.id;
                     tv_Project.setText(_project.title);
                 } else {
+                    projectId = "";
                     tv_Project.setText("无");
                 }
                 break;

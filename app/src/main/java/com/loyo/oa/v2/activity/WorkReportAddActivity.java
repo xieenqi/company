@@ -513,18 +513,19 @@ public class WorkReportAddActivity extends BaseActivity {
 
         switch (requestCode) {
 
-            /**项目归档回调*/
+            /*所属项目回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
                 if (null != _project) {
                     projectId = _project.id;
                     tv_project.setText(_project.title);
                 } else {
+                    projectId = "";
                     tv_project.setText("无");
                 }
                 break;
 
-            /**点评人 抄送人回调*/
+            /*点评人 抄送人回调*/
             case ExtraAndResult.request_Code:
 
                 /*点评人*/
@@ -602,7 +603,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 break;
-            /**删除附件回调*/
+
+            /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
