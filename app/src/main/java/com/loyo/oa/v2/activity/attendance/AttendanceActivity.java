@@ -39,24 +39,21 @@ import java.util.List;
  */
 @EActivity(R.layout.activity_attendance)
 public class AttendanceActivity extends BaseFragmentActivity {
-    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
+
     @ViewById ViewGroup img_title_left;
-
     @ViewById TextView tv_title_1;
-
     @ViewById ViewGroup layout_title_action;
     @ViewById ViewGroup layout_category;
-
     @ViewById(R.id.img_title_arrow) ImageView imageArrow;
-
     @ViewById(R.id.lv_attendance_category) ListView categoryListView;
 
+    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
-    private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
     private int mIndex = -1,Identity;
+    private float mRotation = 0;
 
 
     @AfterViews

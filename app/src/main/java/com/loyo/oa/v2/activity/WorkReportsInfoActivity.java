@@ -393,7 +393,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     /**
-     * 获取参与人
+     * 获取抄送人
      *
      * @return
      */

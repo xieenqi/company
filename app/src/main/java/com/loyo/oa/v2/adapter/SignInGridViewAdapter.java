@@ -30,12 +30,12 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private ArrayList<Attachment> mListData;
     private Activity mActivity;
+    private ArrayList<File> mBitmaps = new ArrayList<>();
+    private Uri fileUri;
+
     private boolean mIsAdd;
     private boolean isCreator;
-    ArrayList<File> mBitmaps = new ArrayList<>();
-    //是否选择本地图片
-    private boolean localpic = false;
-    private Uri fileUri;
+    private boolean localpic = false; //是否可以选择相册
 
     public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator) {
         if (lstData == null) {
@@ -124,7 +124,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 item_info.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LogUtil.d(" 预览图片的URL：" + attachment.getUrl());
+                        LogUtil.dll(" 预览图片的URL：" + attachment.getUrl());
                         //预览文件
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("data", attachment.getUrl());
@@ -190,24 +190,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**添加图片操作*/
     private class OnClickListener_addImg implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-
-/*            try {
-                //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
-                //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
-
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                fileUri = Global.getOutputMediaFileUri();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                mActivity.startActivityForResult(intent, 1);
-
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }*/
-
             Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
             intent.putExtra("localpic", localpic);
             mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);

@@ -213,7 +213,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -269,6 +269,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             return;
         }
         switch (requestCode) {
+
             //类型选择返回
             case RESULT_WFINSTANCT_TYPE:
                 mBizForm = (BizForm) data.getSerializableExtra(BizForm.class.getName());
@@ -276,6 +277,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     intBizForm();
                 }
                 break;
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
