@@ -30,9 +30,9 @@ public class HttpErrorCheck {
     public static void checkError(RetrofitError error) {
         String msg = error.getMessage();
         if (msg.contains("500")) {
-            Toast(error.getMessage().toString());
+            Toast(error.getMessage());
         } else if (msg.contains("401")) {
-            Toast(error.getMessage().toString());
+            Toast(error.getMessage());
         } else if (msg.contains("404")) {
             Toast(msg);
         } else if (error.getKind() == RetrofitError.Kind.NETWORK) {

@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
@@ -159,6 +160,16 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             btn_add.setVisibility(View.GONE);
         }
         getData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //客户信息有跟新 刷新列表
+        if (MainApp.getMainApp().isCutomerEdit) {
+            getData();
+        }
+
     }
 
     @Override
@@ -575,6 +586,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             getNearCustomersInfo();
                         }
                         listView.onRefreshComplete();
+                        MainApp.getMainApp().isCutomerEdit = false;
                     }
 
                     @Override

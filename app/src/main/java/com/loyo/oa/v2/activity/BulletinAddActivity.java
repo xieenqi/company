@@ -74,7 +74,7 @@ public class BulletinAddActivity extends BaseActivity {
      * 添加 图片 附件
      */
     void init_gridView_photo() {
-        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true,true,true);
+        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
     }
 
@@ -138,6 +138,7 @@ public class BulletinAddActivity extends BaseActivity {
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
                     @Override
                     public void success(Bulletin bulletin, Response response) {
+                        HttpErrorCheck.checkResponse("add通知",response);
                         if (bulletin != null) {
                             if (mAttachment != null) {
                                 bulletin.attachmentUUId = mUuid;
@@ -153,7 +154,7 @@ public class BulletinAddActivity extends BaseActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+                        Toast(error.getBody().toString());
                         super.failure(error);
                     }
                 });
@@ -223,7 +224,7 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
         final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-        LogUtil.d("删除附件id "+delAttachment.getId());
+        LogUtil.d("删除附件id " + delAttachment.getId());
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
@@ -302,10 +303,10 @@ public class BulletinAddActivity extends BaseActivity {
     /**
      * 过滤 图片数据、
      */
-    private ArrayList<Attachment>  newData( ){
-        ArrayList<Attachment> newAttachment=new ArrayList<Attachment> ();
-        for (Attachment element:mAttachment) {
-            Attachment obj=new Attachment();
+    private ArrayList<Attachment> newData() {
+        ArrayList<Attachment> newAttachment = new ArrayList<Attachment>();
+        for (Attachment element : mAttachment) {
+            Attachment obj = new Attachment();
             obj.setMime(element.getMime());
             obj.setOriginalName(element.getOriginalName());
             obj.setName(element.getName());

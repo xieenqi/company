@@ -83,7 +83,7 @@ public class SettingPasswordActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+                Toast(error.getBody().toString());
                 super.failure(error);
             }
         });

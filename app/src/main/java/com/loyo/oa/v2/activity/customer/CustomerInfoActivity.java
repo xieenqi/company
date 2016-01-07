@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -425,6 +425,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(Customer customer, Response response) {
+                        app.isCutomerEdit=true;
                         Intent intent = new Intent();
                         customer.loc=mLocate;
                         intent.putExtra(Customer.class.getName(), customer);

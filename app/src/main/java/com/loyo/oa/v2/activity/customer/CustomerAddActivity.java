@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -31,6 +30,7 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
@@ -233,6 +233,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Toast("请输入联系电话");
                     break;
                 }
+                if(!RegularCheck.isMobilePhone(customerContractTel)){
+                Toast("电话号码不正确");
+                return;
+            }
                 if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
                     Contact defaultContact;
                     defaultContact = new Contact();
