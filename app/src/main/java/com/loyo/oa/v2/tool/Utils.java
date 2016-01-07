@@ -62,6 +62,7 @@ import rx.Observable;
 public class Utils {
 
      static ProgressDialog  progressDialog;
+     static ProgressDialog  progressDialogAtt;
 
 
     /**
@@ -243,9 +244,9 @@ public class Utils {
     /**
      * 等待进度条
      * */
-    public static void dialogShow(Context ct){
+    public static void dialogShow(Context ct,String info){
         progressDialog = new ProgressDialog(ct);
-        progressDialog.setMessage("请稍候");
+        progressDialog.setMessage(info);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         progressDialog.show();

@@ -183,7 +183,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 请求体
      */
     void dataRequestvoid(String url, HashMap<String, Object> params) {
-        Utils.dialogShow(mContext);
+        Utils.dialogShow(mContext,"请稍候");
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
             public void success(PaginationX<Customer> customerPaginationX, Response response) {

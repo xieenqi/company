@@ -47,6 +47,7 @@ import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.AMapService;
@@ -350,8 +351,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return menuObjects;
     }
 
+    /**
+     * 定位成功后，跳转新建考勤回调
+     * */
     @Override
     public void OnLocationFailed() {
+        Utils.dialogDismiss();
         Toast("获取打卡位置失败");
     }
 
@@ -361,6 +366,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(AttendanceRecord attendanceRecord, Response response) {
+                Utils.dialogDismiss();
                 attendanceRecord.setAddress(address);
                 Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
                 intent.putExtra("mAttendanceRecord", attendanceRecord);
@@ -371,6 +377,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void failure(RetrofitError error) {
                 Toast("服务器连接失败,请检查网络" + error.getMessage());
                 super.failure(error);
+                Utils.dialogDismiss();
             }
         });
     }
@@ -382,7 +389,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(ValidateInfo _validateInfo, Response response) {
-
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
@@ -405,9 +411,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("获取考勤信息失败" + error.getMessage());
-                System.out.println(" 考勤： " + error.getUrl());
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
+                Toast("获取考勤信息失败" + error.getMessage());
             }
         });
     }
@@ -428,32 +434,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return validateItem;
     }
 
-
     /**
-     * 打考勤
-     */
-    private void attendance() {
-        ValidateItem validateItem = availableValidateItem();
-        if (null == validateItem) {
-            return;
-        }
-        final int type = validateItem.getType();
-        checkAttendance(type);
-    }
-
-    /**
-     * 新增考勤
-     *
-     * @param inOrOut
-     */
-    private void checkAttendance(int inOrOut) {
-        map.clear();
-        map.put("inorout", inOrOut);
-        new LocationUtil(this, this);
-    }
-
+     * 点击打卡,准备跳转新建考勤
+     * */
     @Click(R.id.layout_attendance)
     void onClickAttendance() {
+
         if (null == validateInfo) {
             return;
         }
@@ -461,9 +447,22 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-        attendance();
+        Utils.dialogShow(this,"正在获取考勤信息");
+        ValidateItem validateItem = availableValidateItem();
+        if (null == validateItem) {
+            return;
+        }
+        int type = validateItem.getType();
+
+        map.clear();
+        map.put("inorout", type);
+        new LocationUtil(this, this);
+
     }
 
+    /**
+     * 点击头像，获取能否打卡信息
+     * */
     @Click(R.id.img_title_left)
     void onClickAvatar() {
         getValidateInfo();

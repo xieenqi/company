@@ -134,7 +134,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
-        Utils.dialogShow(this);
+        Utils.dialogShow(this,"请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {

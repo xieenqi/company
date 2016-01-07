@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * 任务详情编辑[ 选择【项目 的结束 编辑 删除】弹窗 ]
@@ -93,6 +94,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //编辑
             case R.id.btn_edit:
+                LogUtil.dll("点击编辑");
                 mIntent = new Intent();
                 intent.putExtra("edit", true);
                 setResult(RESULT_OK, intent);
@@ -112,6 +114,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 });
                 break;
 
+            //复制
             case R.id.btn_extra:
                 mIntent = new Intent();
                 mIntent.putExtra("extra", true);
@@ -121,6 +124,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //取消
             case R.id.btn_cancel:
+                LogUtil.dll("点击btn_cancel");
                 finish();
                 break;
         }

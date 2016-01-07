@@ -44,7 +44,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/img_wfinstance_status1" />
+                     />
 
 
             </RelativeLayout>
