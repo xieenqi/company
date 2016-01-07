@@ -16,7 +16,7 @@ import java.util.Date;
 public class Project extends BaseBeans {
 
     public static final int STATUS_PROCESSING = 1;  //进行中
-    public static final int STATUS_FINISHED = 0;    //已完成
+    public static final int STATUS_FINISHED = 2;    //已完成
 
     public String attachmentUUId;//(string, optional): ,
     public ArrayList<Attachment> attachments = new ArrayList<>();//(array[&{common Attachment}], optional): ,

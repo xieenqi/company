@@ -481,14 +481,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         layout_avatar.setPivotX(layout_avatar.getWidth() / 2);
         layout_avatar.setPivotY(layout_avatar.getHeight() / 2);
 
-        ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(img_user, "rotationY", 0f, 180f).setDuration(500);
+        ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(img_user, "rotationY", 0f, 180f).setDuration(300);
         objectAnimator.setInterpolator(new LinearInterpolator());
         objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
                 layout_avatar.setRotationY(value);
-                app.logUtil.e("CurrentPlayTime = " + valueAnimator.getCurrentPlayTime() + " value : " + value);
+                LogUtil.d("" +
+                        "打卡点击CurrentPlayTime = " + valueAnimator.getCurrentPlayTime() + " value : " + value);
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
                     layout_attendance.setVisibility(View.VISIBLE);
@@ -508,7 +509,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             layout_avatar.setPivotX(layout_avatar.getWidth() / 2);
             layout_avatar.setPivotY(layout_avatar.getHeight() / 2);
 
-            ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(500);
+            ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(300);
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
