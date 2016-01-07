@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -30,11 +32,12 @@ import uk.co.senab.photoview.PhotoView;
  */
 public class PreviewImageActivity extends Activity {
 
-    ViewPager mViewPager;
-    ArrayList<Attachment> mNewAttachments = null;
-    int mNewPosition = 0;
-    TextView delete;
+    private ViewPager mViewPager;
+    private ArrayList<Attachment> mNewAttachments = null;
+    private TextView delete;
+
     private int mPosition;
+    private int mNewPosition = 0;
     private boolean isEdit;
 
     @Override
@@ -55,7 +58,6 @@ public class PreviewImageActivity extends Activity {
                     builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            LogUtil.d(" 删除第几张图片：" + mPosition);
                             dialog.dismiss();
                             Intent intent = new Intent();
                             intent.putExtra("delAtm", mNewAttachments.get(mPosition));

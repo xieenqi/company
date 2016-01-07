@@ -527,12 +527,14 @@ public class TasksAddActivity extends BaseActivity {
                 }
 
                 break;
-            //附件删除
+            //附件删除回调
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
+                Utils.dialogShow(this,"请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
                     @Override
                     public void success(Attachment attachment, Response response) {
+                        Utils.dialogDismiss();
                         Toast("删除附件成功!");
                         lstData_Attachment.remove(delAttachment);
                         init_gridView_photo();
@@ -540,6 +542,7 @@ public class TasksAddActivity extends BaseActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
+                        Utils.dialogDismiss();
                         Toast("删除附件失败!");
                         super.failure(error);
                     }

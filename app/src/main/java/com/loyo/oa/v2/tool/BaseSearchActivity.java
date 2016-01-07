@@ -281,13 +281,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     @Override
     public void success(Object o, Response response) {
-
-        LogUtil.dll("URL:" + response.getUrl());
-        try {
-            LogUtil.dll("搜索result success:" + Utils.convertStreamToString(response.getBody().in()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Utils.dialogDismiss();
+        HttpErrorCheck.checkResponse(response);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -325,6 +320,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     @Override
     public void failure(RetrofitError error) {
+        Utils.dialogDismiss();
         HttpErrorCheck.checkError(error);
     }
 
