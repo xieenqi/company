@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.work.HttpDefaultComment;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -359,6 +360,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
     @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
     void onClick(View v) {
+        Bundle mBundle;
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -406,13 +408,29 @@ public class WorkReportAddActivity extends BaseActivity {
             /*选择日期*/
                 selectDate();
                 break;
+
+            /*点评人*/
             case R.id.layout_reviewer:
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, bundle);
+                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, bundle);*/
+
+                mBundle = new Bundle();
+                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        ExtraAndResult.request_Code, mBundle);
+
                 break;
+
+            /*抄送人*/
             case R.id.layout_toUser:
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COPY_PERSONS, null);
+                //app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COPY_PERSONS, null);
+
+                mBundle = new Bundle();
+                mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                        ExtraAndResult.request_Code, mBundle);
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -423,10 +441,10 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
             /*选择项目归档*/
             case R.id.layout_mproject:
-                Bundle bundle1 = new Bundle();
-                bundle1.putInt("from", WORK_ADD);
-                bundle1.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle1);
+                mBundle = new Bundle();
+                mBundle.putInt("from", WORK_ADD);
+                mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
+                app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
                 break;
         }
     }
@@ -494,6 +512,7 @@ public class WorkReportAddActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+
             /*项目归档回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 LogUtil.dll("回来");
@@ -506,9 +525,38 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-            case ExtraAndResult.REQUSET_COMMENT://点评人回调
+            /**点评人 抄送人回调*/
+            case ExtraAndResult.request_Code:
+
+                /*点评人*/
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
+                    mReviewer = new Reviewer(user.toShortUser());
+                    mReviewer.setUser(user.toShortUser());
+                    tv_reviewer.setText(user.getRealname());
+                }
+                /*抄送人*/
+                else {
+
+                    String department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
+                    String department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
+                    String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
+                    String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
+
+                    setMembers(cc_user_id, cc_user_name, department_id, department_name);
+                    if (!TextUtils.isEmpty(department_name)) {
+                        tv_toUser.setText(department_name);
+                    } else if (!TextUtils.isEmpty(cc_user_name)) {
+                        tv_toUser.setText(cc_user_name);
+                    }
+                }
+
+                break;
+
+/*            *//*点评人回调*//*
+            case ExtraAndResult.REQUSET_COMMENT:
+                User user = (User) data.getSerializableExtra(User.class.getName());
+                if (user != null) {//点评人回调
                     if (null == mReviewer) {
                         mReviewer = new Reviewer(user.toShortUser());
                     }
@@ -516,7 +564,8 @@ public class WorkReportAddActivity extends BaseActivity {
                     tv_reviewer.setText(user.getRealname());
                 }
                 break;
-            case ExtraAndResult.REQUSET_COPY_PERSONS://抄送人回调
+            *//*抄送人回调*//*
+            case ExtraAndResult.REQUSET_COPY_PERSONS:
                 String department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
                 String department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
                 String user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
@@ -528,7 +577,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 } else if (!TextUtils.isEmpty(user_name)) {
                     tv_toUser.setText(user_name);
                 }
-                break;
+                break;*/
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
@@ -587,6 +637,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param departName
      */
     private void setMembers(String UserIds, String UserName, String departIds, String departName) {
+
         users.clear();
         depts.clear();
         if (!TextUtils.isEmpty(UserIds) && !TextUtils.isEmpty(UserName)) {
@@ -602,6 +653,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 members.users = users;
             }
         }
+
         if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
             String[] dpIds = departIds.split(",");
             String[] dpNames = departName.split(",");

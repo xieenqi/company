@@ -207,7 +207,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     builder.setPositiveButton(mContext.getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Utils.dialogShow(mContext);
+                            Utils.dialogShow(mContext,"请稍候");
                             RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment att, Response response) {

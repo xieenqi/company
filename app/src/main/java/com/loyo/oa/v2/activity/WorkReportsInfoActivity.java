@@ -29,6 +29,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -114,7 +115,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     //@Extra("workreport")
     WorkReport mWorkReport;
 
-    @Extra(ExtraAndResult.EXTRA_ID) String workReportId;//推送的id
+    @Extra(ExtraAndResult.EXTRA_ID)
+    String workReportId;//推送的id
 
     public PaginationX<Discussion> mPageDiscussion;
 
@@ -124,10 +126,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         setTouchView(R.id.layout_touch);
         getData_WorkReport();
     }
-
-//    String getId() {
-//        return (mWorkReport != null) ? mWorkReport.getId() : mId;
-//    }
 
     /**
      * 获取报告详情
@@ -238,7 +236,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
-                reportDate =app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
+                reportDate = app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
                 break;
 
         }
@@ -304,62 +302,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-        switch (requestCode) {
-
-            case MSG_REVIEW:
-                getData_WorkReport();
-                break;
-
-            case MSG_DELETE_WORKREPORT:
-
-                //删除回调
-                if (data.getBooleanExtra("delete", false)) {
-                    delete_WorkReport();
-                }
-
-                //编辑回调
-                else if (data.getBooleanExtra("edit", false)) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("mWorkReport", mWorkReport);
-                    bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
-                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                } else if ((data.getBooleanExtra("extra", false))) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("mWorkReport", mWorkReport);
-                    bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
-                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                }
-
-                break;
-
-            case MSG_ATTACHMENT:
-                if (data == null || data.getExtras() == null) {
-                    return;
-                }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWorkReport.setAttachments(attachments);
-                showAttachment();
-                break;
-
-            case MSG_DISCUSSION:
-                if (data == null || data.getExtras() == null) {
-                    return;
-                }
-
-                mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
-                showDiscussion();
-
-                break;
-        }
-    }
 
     void showAttachment() {
         if (mWorkReport.getAttachments() != null && mWorkReport.getAttachments().size() > 0) {
@@ -378,7 +320,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        //fixes buugly1084 v3.1.1 ykb 07-15
         if (mWorkReport != null) {
             mWorkReport.setAck(true);
             intent.putExtra("review", mWorkReport);
@@ -420,12 +361,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
             case R.id.img_title_right:
 
+                LogUtil.dll("报告详情，右上角按钮");
                 if (mWorkReport.isReviewed()) {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                    //intent.putExtra("delete", true);
                     intent.putExtra("extra", "复制报告");
                     startActivityForResult(intent, MSG_DELETE_WORKREPORT);
                 } else {
+                    LogUtil.dll("报告详情，右上角按钮 else");
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("delete", true);
                     intent.putExtra("edit", true);
@@ -468,6 +410,68 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return result.toString();
         } else {
             return result.append("无点评人").toString();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+
+            case MSG_REVIEW:
+                getData_WorkReport();
+                break;
+
+            case MSG_DELETE_WORKREPORT:
+
+                  /*编辑回调*/
+                if (data.getBooleanExtra("edit", false)) {
+                    LogUtil.dll("进入回调：编辑");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("mWorkReport", mWorkReport);
+                    bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
+                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+                }
+                /*复制回调*/
+                else if ((data.getBooleanExtra("extra", false))) {
+                    LogUtil.dll("进入回调：复制");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("mWorkReport", mWorkReport);
+                    bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
+                    app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
+                }
+
+                /*删除回调*/
+                else if (data.getBooleanExtra("delete", false)) {
+                    delete_WorkReport();
+                    LogUtil.dll("进入回调：删除");
+                }
+
+                break;
+
+            case MSG_ATTACHMENT:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
+                mWorkReport.setAttachments(attachments);
+                showAttachment();
+                break;
+
+            case MSG_DISCUSSION:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+
+                mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
+                showDiscussion();
+
+                break;
         }
     }
 }
