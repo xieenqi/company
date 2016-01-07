@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +41,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -56,7 +59,7 @@ public class FeedbackActivity extends BaseActivity {
     private String uuid = StringUtil.getUUID();
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
-
+    Handler han= new Handler();
     @AfterViews
     void init() {
         tv_title.setVisibility(View.VISIBLE);
@@ -90,7 +93,7 @@ public class FeedbackActivity extends BaseActivity {
      * 显示附件
      */
     private void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true,true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true, true);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -114,8 +117,10 @@ public class FeedbackActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
             @Override
             public void success(FeedBackCommit feedBackCommit, Response response) {
+
                 showSuccessDialog();
             }
+
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
@@ -129,6 +134,7 @@ public class FeedbackActivity extends BaseActivity {
      * 显示发送反馈成功的对话框
      */
     private void showSuccessDialog() {
+        hideInputKeyboard(et_content);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_send_feedback, null, false);
         dialogView.getBackground().setAlpha(150);
         final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
@@ -147,9 +153,22 @@ public class FeedbackActivity extends BaseActivity {
         dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                onBackPressed();
+                finish();
             }
         });
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                han.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        }, 1000);
     }
 
     @Override
@@ -168,7 +187,7 @@ public class FeedbackActivity extends BaseActivity {
                         File newFile = Global.scal(this, uri);
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
