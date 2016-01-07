@@ -5,7 +5,7 @@
               android:background="@color/activity_bg"
               android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit" />
+    <include layout="@layout/include_common_title_edit"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,41 +25,41 @@
                 >
 
                 <LinearLayout
-                    android:layout_toLeftOf="@+id/layout_right"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_10"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_toLeftOf="@+id/layout_right"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_marginLeft="@dimen/dimen_16"
                         android:id="@+id/tv_customer_name"
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_16"
                         android:singleLine="false"
                         android:textColor="#383838"
                         />
 
                     <TextView
-                        android:padding="@dimen/dimen_4"
-                        android:layout_marginLeft="@dimen/dimen_16"
                         android:id="@+id/tv_address"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_4"
                         android:singleLine="false"
                         android:textColor="#999999"
                         android:textSize="14sp"/>
 
                     <TextView
-                        android:padding="@dimen/dimen_4"
-                        android:layout_marginLeft="@dimen/dimen_16"
                         android:id="@+id/tv_tags"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_4"
                         android:singleLine="false"
                         android:textColor="#999999"
                         android:textSize="14sp"/>
@@ -67,29 +67,28 @@
 
                 <RelativeLayout
                     android:id="@+id/layout_right"
-                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true">
 
-                <ImageView
-                    android:layout_marginTop="5dp"
-                    android:visibility="invisible"
-                    android:id="@+id/img_public"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_25"
-                    android:layout_marginRight="@dimen/dimen_10"
-                    android:src="@drawable/icon_customer_pick"
-                    />
+                    <ImageView
+                        android:id="@+id/img_public"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_10"
+                        android:src="@drawable/icon_customer_pick"
+                        android:visibility="invisible"
+                        />
 
-                <ImageView
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/img_public"
-                    android:layout_marginRight="@dimen/dimen_10"
-                    android:src="@drawable/right_arrow"
-                    />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/img_public"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_10"
+                        android:src="@drawable/right_arrow"
+                        />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -141,8 +140,8 @@
                         android:text="姓名"/>
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_contact_name"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_5"
@@ -161,9 +160,9 @@
                     android:layout_height="@dimen/dimen_45">
 
                     <LinearLayout
-                        android:layout_toLeftOf="@+id/layout_action"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_45"
+                        android:layout_toLeftOf="@+id/layout_action"
                         android:orientation="horizontal">
 
                         <TextView
@@ -175,8 +174,8 @@
                             android:text="手机"/>
 
                         <TextView
-                            style="@style/text_item1"
                             android:id="@+id/tv_contact_tel"
+                            style="@style/text_item1"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/dimen_5"
@@ -244,8 +243,8 @@
                     android:layout_height="@dimen/dimen_45">
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_sale_activity_title"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
@@ -253,8 +252,8 @@
                         android:text="跟进动态"/>
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_sale_activity_date"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_5"
@@ -283,8 +282,8 @@
                     android:layout_height="@dimen/dimen_45">
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_visit_title"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
@@ -292,8 +291,8 @@
                         android:text="拜访签到"/>
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_visit_times"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@+id/tv_visit_title"
@@ -322,8 +321,8 @@
                     android:layout_height="@dimen/dimen_45">
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_purchase_title"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
@@ -331,8 +330,8 @@
                         android:text="购买意向"/>
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_purchase_count"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@+id/tv_purchase_title"
@@ -360,8 +359,8 @@
                     android:layout_height="@dimen/dimen_45">
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_task_title"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
@@ -369,8 +368,8 @@
                         android:text="任务计划"/>
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_task_count"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@+id/tv_task_title"
@@ -398,8 +397,8 @@
                     android:layout_height="@dimen/dimen_45">
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_attachment_title"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
@@ -407,8 +406,8 @@
                         android:text="文件"/>
 
                     <TextView
-                        style="@style/text_item1"
                         android:id="@+id/tv_attachment_count"
+                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_toRightOf="@+id/tv_attachment_title"
