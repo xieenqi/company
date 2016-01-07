@@ -331,8 +331,8 @@ public class WfInstanceAddActivity extends BaseActivity {
 
             case ExtraAndResult.REQUSET_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                projectId = _project.id;
                 if (null != _project) {
+                    projectId = _project.id;
                     tv_project.setText(_project.title);
                 } else {
                     tv_project.setText("无");

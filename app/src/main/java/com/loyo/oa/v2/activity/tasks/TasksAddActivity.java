@@ -478,8 +478,8 @@ public class TasksAddActivity extends BaseActivity {
             /*所属项目回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
-                projectId = _project.id;
                 if (null != _project) {
+                    projectId = _project.id;
                     tv_Project.setText(_project.title);
                 } else {
                     tv_Project.setText("无");
