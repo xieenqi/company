@@ -29,7 +29,6 @@ import com.loyo.oa.v2.beans.CellInfo;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Member;
-import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
@@ -43,7 +42,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -445,24 +443,24 @@ public class Utils {
         return cellInfo;
     }
 
-    /**
-     * 是否初始化小米推送
-     *
-     * @param context
-     * @return
-     */
-    public static boolean shouldInitXm(Context context) {
-        ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
-        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-        String mainProcessName = context.getApplicationContext().getPackageName();
-        int myPid = android.os.Process.myPid();
-        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    /**
+//     * 是否初始化小米推送
+//     *
+//     * @param context
+//     * @return
+//     */
+//    public static boolean shouldInitXm(Context context) {
+//        ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
+//        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+//        String mainProcessName = context.getApplicationContext().getPackageName();
+//        int myPid = android.os.Process.myPid();
+//        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+//            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
