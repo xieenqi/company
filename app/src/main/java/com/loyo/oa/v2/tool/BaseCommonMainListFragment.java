@@ -85,7 +85,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         //            btn_add.setVisibility(View.VISIBLE);
         //            mView.postDelayed(UiRunner,5000);
         //        }
-        return false;
+        return true;
     }
 
     @Override
@@ -167,7 +167,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return true;
+                return false;
             }
         });
 
@@ -190,7 +190,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
      */
     protected void expand() {
         for (int i = 0; i < pagingGroupDatas.size(); i++) {
-            mExpandableListView.getRefreshableView().expandGroup(i, false);
+            mExpandableListView.getRefreshableView().expandGroup(i, false);//true 自动滑到底部
         }
     }
 
