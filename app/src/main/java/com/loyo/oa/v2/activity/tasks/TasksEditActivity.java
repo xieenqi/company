@@ -309,10 +309,11 @@ public class TasksEditActivity extends BaseActivity {
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
+                                String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mTask.setPlanEndAt(DateTool.getDateToTimestamp(str, app.df3));
-                        LogUtil.d("修改截至时间："+DateTool.getDateToTimestamp(str, app.df3));
+                        mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str)));
+                        LogUtil.d("修改截至时间："+Long.parseLong(DateTool.getDataOne(str)));
                     }
                 });
                 break;
