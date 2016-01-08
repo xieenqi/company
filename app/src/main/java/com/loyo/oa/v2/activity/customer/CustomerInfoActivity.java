@@ -248,7 +248,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.name;
             tv_customer_responser.setText(responser);
             if (members.size() != 0) {
-                img_del_join_users.setVisibility(View.VISIBLE);
+                if (isMyUser) {
+                    img_del_join_users.setVisibility(View.VISIBLE);
+                }
                 tv_customer_join_users.setText(Utils.getMembers(members));
             }
         }

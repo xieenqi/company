@@ -11,14 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
-import com.loyo.oa.v2.adapter.WfInstanceValuesInfoAdapter;
 import com.loyo.oa.v2.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -56,7 +54,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 审批详情
+ * 【审批详情】
  */
 
 @EActivity(R.layout.activity_wfinstance_info)
@@ -404,6 +402,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 bundle.putSerializable("uuid", wfInstance.attachmentUUId);
                 bundle.putBoolean("isMyUser", false);
                 bundle.putInt("fromPage", Common.WFIN_PAGE);
+                bundle.putInt("goneBtn",1);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
         }

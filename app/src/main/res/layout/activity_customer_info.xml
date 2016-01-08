@@ -245,6 +245,7 @@
                 android:layout_marginTop="@dimen/view_first_margin_top"
                 android:background="@color/white"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:id="@+id/layout_customer_responser"
                     android:layout_width="match_parent"
@@ -305,13 +306,13 @@
                         android:hint=""/>
 
                     <ImageView
-                        android:visibility="gone"
                         android:id="@+id/img_del_join_users"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/dimen_8"
                         android:scaleType="center"
-                        android:src="@drawable/img_delete"/>
+                        android:src="@drawable/img_delete"
+                        android:visibility="invisible"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -339,15 +340,15 @@
                         android:text="创建人"/>
 
                     <TextView
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:textColor="#999999"
                         android:id="@+id/tv_customer_creator"
                         style="@style/text_item2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/dimen_16"
                         android:gravity="right|center"
                         android:paddingLeft="20dp"
-                        android:text=""/>
+                        android:text=""
+                        android:textColor="#999999"/>
 
                 </LinearLayout>
 
@@ -372,15 +373,15 @@
                         android:text="创建时间"/>
 
                     <TextView
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:textColor="#999999"
                         android:id="@+id/tv_customer_create_at"
                         style="@style/text_item2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/dimen_16"
                         android:gravity="right|center"
                         android:paddingLeft="20dp"
-                        android:text=""/>
+                        android:text=""
+                        android:textColor="#999999"/>
                 </LinearLayout>
 
             </LinearLayout>

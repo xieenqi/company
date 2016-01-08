@@ -230,20 +230,20 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_marginLeft="@dimen/dimen_16"
                             style="@style/text_item2"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_16"
                             android:gravity="left|center_vertical"
                             android:text="审批流程"
                             android:textColor="@color/black"/>
 
                         <TextView
                             android:id="@+id/tv_wfnodes_title"
-                            android:layout_marginLeft="@dimen/dimen_4"
                             style="@style/text_item2"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_4"
                             android:gravity="left|center_vertical"
                             android:text="(0/0)"
                             android:textColor="#999999"/>
@@ -256,14 +256,15 @@
                         android:layout_marginLeft="@dimen/margin_side_edge"/>
 
                     <com.loyo.oa.v2.tool.customview.ListView_inScrollView
-                        android:listSelector="@android:color/transparent"
                         android:id="@+id/listView_workflowNodes"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="15dp"
                         android:background="@color/white"
                         android:divider="@android:color/transparent"
-                        android:dividerHeight="0dp"/>
+                        android:dividerHeight="0dp"
+                        android:listSelector="@android:color/transparent"/>
+
                     <View
                         style="@style/view_split"
                         android:layout_width="match_parent"/>
@@ -276,13 +277,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/layout_bg1"
         android:orientation="vertical"
+        android:visibility="gone"
         >
 
         <LinearLayout
@@ -353,24 +354,24 @@
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/white"
         android:id="@+id/layout_lastwork"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_other_view"
+        android:background="@color/white"
         android:orientation="vertical"
         android:visibility="gone">
 
         <TextView
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:drawableLeft="@drawable/icon_wfinstance_lastwork"
             android:id="@+id/tv_lastowrk"
             style="@style/text_title"
-            android:textColor="#38a5af"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/view_h_title"
-            android:text=" 办 结 "/>
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/icon_wfinstance_lastwork"
+            android:gravity="center"
+            android:text=" 办 结 "
+            android:textColor="#38a5af"/>
 
     </LinearLayout>
 </LinearLayout>

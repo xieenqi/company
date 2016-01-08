@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
@@ -32,8 +33,10 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -133,10 +136,11 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
             return;
         }
         super.setTitle("更新购买意向");
-
-        productIdSelect = demand.getProduct().getId();
-        productNameSelect = demand.getProduct().getName();
-        tv_products.setText(demand.getProduct().getName());
+        if (demand.getProduct() != null) {
+            productIdSelect = demand.getProduct().getId();
+            productNameSelect = demand.getProduct().getName();
+            tv_products.setText(demand.getProduct().getName());
+        }
 
         edt_num.setText(String.valueOf(demand.getEstimatedNum()));
         edt_price.setText(String.valueOf(demand.getEstimatedPrice()));
@@ -399,7 +403,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         } else if (type == 1) {
             map.put("customerId", customerId);
         }
-        LogUtil.d("新增购买意向传递："+MainApp.gson.toJson(map));
+        LogUtil.d("新增购买意向传递：" + MainApp.gson.toJson(map));
         return map;
     }
 
