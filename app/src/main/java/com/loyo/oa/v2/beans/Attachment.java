@@ -39,14 +39,14 @@ public class Attachment implements Serializable {
     @DatabaseField
     public String localPath;
 
-    String size;
-    String humanizeSize;
-    String mime;
-    String createdAt;
-    String updatedAt;
-    File file;
-    Boolean isPublic;
-    ArrayList<NewUser> viewers=new ArrayList<>();
+    public String size;
+    public String humanizeSize;
+    public String mime;
+    public String createdAt;
+    public String updatedAt;
+    public File file;
+    public Boolean isPublic;
+    public ArrayList<NewUser> viewers=new ArrayList<>();
 
     public String getLocalPath() {
         return localPath;

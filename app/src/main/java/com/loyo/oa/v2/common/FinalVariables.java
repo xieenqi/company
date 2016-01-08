@@ -72,8 +72,16 @@ public final class FinalVariables {
         return Config_project.SERVER_URL() + "/oauth2/authorize";
     }
 
-    public static String GetBQQLogin() {
+    /**
+     * 企业QQ url
+     * */
+
+/*    public static String GetBQQLogin() {
         return Config_project.URL() + "/oauth2/bqq/authorize" ;
+    }*/
+
+        public static String GetBQQLogin() {
+        return "http://www.ukuaiqi.com/oauth2/bqq/authorize" ;
     }
 
     public static String GetLogin_success_prefix() {

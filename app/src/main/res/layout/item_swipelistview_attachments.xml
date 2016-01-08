@@ -9,7 +9,9 @@
         android:layout_height="84dp"
         android:layout_gravity="right">
 
+        <!--左滑权限暂时弃用-->
         <RelativeLayout
+            android:visibility="invisible"
             android:id="@+id/layout_action_update"
             android:layout_width="60dp"
             android:layout_height="match_parent"
