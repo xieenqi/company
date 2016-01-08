@@ -113,8 +113,14 @@ public class TasksAddActivity extends BaseActivity {
     String projectId;
     @Extra
     String projectTitle;
+    @ViewById
+    ViewGroup layout_mycustomer;
     @Extra("data")
     Task mTask;
+    @Extra(ExtraAndResult.EXTRA_ID)
+    String customerId;
+    @Extra(ExtraAndResult.EXTRA_NAME)
+    String customerName;
 
 
     private AlertDialog dialog_Product;
@@ -132,8 +138,8 @@ public class TasksAddActivity extends BaseActivity {
     private int mRemind = 0;
     private boolean isCopy;
 
-    private String customerId;
-    private String customerName;
+//    private String customerId;
+//    private String customerName;
 
     @AfterViews
     void initUI() {
@@ -157,6 +163,7 @@ public class TasksAddActivity extends BaseActivity {
         projectAddTask();
         if (!TextUtils.isEmpty(customerId)) {
             tv_mycustomer.setText(customerName);
+            layout_mycustomer.setEnabled(false);
         }
     }
 
@@ -247,7 +254,7 @@ public class TasksAddActivity extends BaseActivity {
             map.put("projectId", projectId);
         }
         LogUtil.d(" " +
-                "新建任务传递： "+MainApp.gson.toJson(map));
+                "新建任务传递： " + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
@@ -527,7 +534,7 @@ public class TasksAddActivity extends BaseActivity {
                 break;
             //附件删除回调
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this,"请稍候");
+                Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
                     @Override

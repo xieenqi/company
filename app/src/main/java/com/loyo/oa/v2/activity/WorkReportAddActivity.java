@@ -232,8 +232,10 @@ public class WorkReportAddActivity extends BaseActivity {
                     public void success(HttpDefaultComment reviewer, Response response) {
                         HttpErrorCheck.checkResponse(response);
                         mReviewer = new Reviewer();
-                        mReviewer.setUser(reviewer.reviewer.user);
-                        tv_reviewer.setText(reviewer.reviewer.user.getName());
+                        if (reviewer.reviewer != null) {
+                            mReviewer.setUser(reviewer.reviewer.user);
+                            tv_reviewer.setText(reviewer.reviewer.user.getName());
+                        }
                     }
 
                     @Override

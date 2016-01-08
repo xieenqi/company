@@ -39,7 +39,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * 客户详情 的任务计划  【任务管理】
+ * 客户详情->的任务计划->  【任务管理】
  */
 @EActivity(R.layout.activity_customer_task_list)
 public class TaskListActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
@@ -65,7 +65,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("任务管理");
         layout_back.setOnTouchListener(Global.GetTouch());
-        if(!isMyUser){
+        if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
 
@@ -83,6 +83,10 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         onBackPressed();
     }
 
+
+    /**
+     * 客户创建新的任务
+     */
     @Click(R.id.layout_add)
     void createNewTask() {
         Bundle b = new Bundle();
@@ -109,7 +113,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    Task task=(Task) adapter.getChild(groupPosition, childPosition);
+                    Task task = (Task) adapter.getChild(groupPosition, childPosition);
                     openTaskDetial(task);
                     return false;
                 }
@@ -188,8 +192,8 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         if (resultCode != RESULT_OK || null == data) {
             return;
         }
-        switch (requestCode){
-            case  BaseCommonMainListFragment.REQUEST_REVIEW:
+        switch (requestCode) {
+            case BaseCommonMainListFragment.REQUEST_REVIEW:
 
                 break;
             case FinalVariables.REQUEST_CREATE_TASK:
