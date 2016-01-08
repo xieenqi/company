@@ -21,9 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
@@ -40,7 +41,6 @@ import com.loyo.oa.v2.fragment.TaskManagerFragment;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -215,8 +215,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         break;
                     //审批管理
                     case WFIN_MANAGE:
-                        mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
-                        mIntent.putExtra("projectId", lstData.get(position - 2).getId());
+                        mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
 
