@@ -167,13 +167,14 @@ public class TasksEditActivity extends BaseActivity {
         savePostData();
         tv_toUsers.setText(joinUser.toString());
         tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt() * 1000)));
-        LogUtil.dll("时间:" + mTask.getPlanEndAt());
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
         switch_approve.setChecked(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
         tv_mycustomer.setText(mTask.getCustomerName());
-        tv_Project.setText(mTask.getProject().title);
+        if (mTask.getProject() != null) {
+            tv_Project.setText(mTask.getProject().title);
+        }
 
     }
 
@@ -199,7 +200,7 @@ public class TasksEditActivity extends BaseActivity {
         for (int i = 0; i < mTask.getMembers().getAllData().size(); i++) {
 
             joinUser.append(mTask.getMembers().getAllData().get(i).getName() + ",");
-            joinUserId.append(mTask.getMembers().getAllData().get(i).getId()+",");
+            joinUserId.append(mTask.getMembers().getAllData().get(i).getId() + ",");
 
             NewUser newUser = new NewUser();
             newUser.setName(mTask.members.getAllData().get(i).getName());
@@ -214,11 +215,11 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true,isCreator);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true, isCreator);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project,R.id.layout_mycustomer})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -306,7 +307,7 @@ public class TasksEditActivity extends BaseActivity {
 
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
-                bundle1.putString(ExtraAndResult.STR_SUPER_ID,joinUserId.toString());
+                bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
 
                 break;
@@ -320,7 +321,7 @@ public class TasksEditActivity extends BaseActivity {
                                 String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
                         mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str)));
-                        LogUtil.d("修改截至时间："+Long.parseLong(DateTool.getDataOne(str)));
+                        LogUtil.d("修改截至时间：" + Long.parseLong(DateTool.getDataOne(str)));
                     }
                 });
                 break;
@@ -478,7 +479,7 @@ public class TasksEditActivity extends BaseActivity {
                 break;
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this,"请稍候");
+                Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
                     @Override
