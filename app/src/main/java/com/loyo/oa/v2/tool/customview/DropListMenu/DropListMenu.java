@@ -93,6 +93,7 @@ public class DropListMenu extends LinearLayout {
     private boolean mDrawable = false;
 
     private String[] mDefaultMenuTitle;
+    PopupWindow popupWindow;
 
     public DropListMenu(Context mContext) {
         super(mContext);
@@ -138,7 +139,7 @@ public class DropListMenu extends LinearLayout {
         for (int index = 0; index < mMenuCount; index++) {
             final DropItem menuItem = mMenuItems.get(index);
             View viewPopWindow = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_droplist_menu, null);
-            final PopupWindow popupWindow = new PopupWindow(viewPopWindow, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+             popupWindow = new PopupWindow(viewPopWindow, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
             popupWindow.setTouchable(true);
             popupWindow.setOutsideTouchable(true);
@@ -160,9 +161,17 @@ public class DropListMenu extends LinearLayout {
             }
 
             /**
-             * 弹窗列表，确认 取消监听
+             * 弹窗列表，确认 取消监听 右边列表第一个列表
              */
             ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
+            menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                    LogUtil.d(" DAINIJI 点击了 ");
+                                                    popupWindow.dismiss();
+                                                }
+                                            }
+            );
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
             if (!mShowDivider) {

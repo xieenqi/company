@@ -35,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.AutoRoteLoadingLayout;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.FlipLoadingLayout;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
@@ -424,7 +425,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	public final void setMode(Mode mode) {
 		if (mode != mMode) {
 			if (DEBUG) {
-				Log.d(LOG_TAG, "Setting mode to: " + mode);
+				LogUtil.d("Setting刷新 mode to: " + mode);
 			}
 			mMode = mode;
 			updateUIForMode();

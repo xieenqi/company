@@ -436,7 +436,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 sb.append(items.get(items.keyAt(i)).getName()).append(" ").append(items.get(items.keyAt(i)).getValue()).append(",");
             }
             getData();
-            Toast("选择的内容AAA：" + sb.toString());
+            //Toast("选择的内容AAA：" + sb.toString());
         }
     }
 
