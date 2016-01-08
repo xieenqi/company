@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 public class UserInfo implements Serializable {
 
+
+    private String title;
     private Department shortDept;
     private Position shortPosition;
 
@@ -27,5 +29,13 @@ public class UserInfo implements Serializable {
 
     public void setShortDept(Department shortDept) {
         this.shortDept = shortDept;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

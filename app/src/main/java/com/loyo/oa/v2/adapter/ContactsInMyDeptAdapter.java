@@ -17,7 +17,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -27,7 +29,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
     private List<User> list = null;
     private Context mContext;
-    private String deptName;
+    private StringBuffer deptName;
     private String workName;
 
     public ContactsInMyDeptAdapter(Context mContext, List<User> list) {
@@ -78,13 +80,20 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
             viewHolder.tvLetter.setVisibility(View.GONE);
         }
 
+        /*部门名字*/
         try {
-            deptName = this.list.get(position).depts.get(0).getShortDept().getName();
+            deptName = new StringBuffer();
+            for(UserInfo userInfo : this.list.get(position).getDepts()){
+                deptName.append(userInfo.getShortDept().getName()+" ");
+                LogUtil.dll(this.list.get(position).getRealname() + ":" + userInfo.getShortDept().getName());
+            }
+        //deptName = this.list.get(position).depts.get(0).getShortDept().getName();
         } catch (NullPointerException e) {
             e.printStackTrace();
-            deptName = "无";
+            deptName.append("无");
         }
 
+        /*职位名字*/
         try {
             workName = this.list.get(position).role.name;
         } catch (NullPointerException e) {
@@ -93,7 +102,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         }
 
         viewHolder.name.setText(this.list.get(position).getRealname());
-        viewHolder.deptInf.setText(deptName + " " + workName);
+        viewHolder.deptInf.setText(deptName.toString() + " " + workName);
         ImageLoader.getInstance().displayImage(this.list.get(position).getAvatar(), viewHolder.img);
 
         return view;

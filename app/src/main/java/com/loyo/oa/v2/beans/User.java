@@ -38,6 +38,15 @@ public class User implements Serializable {
     public long updatedAt;
     public long createdAt;
 
+
+    public ArrayList<UserInfo> getDepts() {
+        return depts;
+    }
+
+    public void setDepts(ArrayList<UserInfo> depts) {
+        this.depts = depts;
+    }
+
     public boolean isIndex() {
         return index;
     }

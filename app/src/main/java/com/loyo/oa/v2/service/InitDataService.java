@@ -63,11 +63,17 @@ public class InitDataService extends IntentService {
                 .create(IUser.class).getOrganization();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
-            LogUtil.d("更新 组织 架构 json："+MainApp.gson.toJson(lstDepartment_current));
+            LogUtil.d("更新 组织 架构 json：" + MainApp.gson.toJson(lstDepartment_current));
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
+
+            for(int i = 0;i<lstDepartment_current.size();i++){
+                for(User user : lstDepartment_current.get(i).getUsers()){
+                    LogUtil.dll("部门大小aaaaa:"+user.getDepts().size());
+                }
+            }
         }
     }
 

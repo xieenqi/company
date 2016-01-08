@@ -13,6 +13,7 @@ import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
@@ -444,21 +445,24 @@ public final class Common {
 
        /*获取我的部门下标*/
         for(int i = 0;i<getLstDepartment().size();i++){
-            if(getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(0).getShortDept().getId())){
-                positions = i;
-                break;
+            for(int j = 0;j<MainApp.user.depts.size();j++){
+                if(getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())){
+                    positions = i;
+                    break;
+                }
             }
         }
 
         /*根据部门下标获取本部门人员*/
         myUsers.clear();
         for (User user : userAllList) {
-            String xPath = user.depts.get(0).getShortDept().getXpath();
-            if (xPath.contains(getLstDepartment().get(positions).getXpath())) {
-                myUsers.add(user);
+            for(int j = 0;j<user.depts.size();j++){
+                String xPath = user.depts.get(j).getShortDept().getXpath();
+                if (xPath.contains(getLstDepartment().get(positions).getXpath())) {
+                    myUsers.add(user);
+                }
             }
         }
-
         return myUsers;
     }
 
