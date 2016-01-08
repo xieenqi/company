@@ -195,6 +195,7 @@ public final class Common {
     }
 
     /**
+     * 组装组织架构
      * @param departmentList
      */
     static void setOrganization(ArrayList<Department> departmentList) {
@@ -211,7 +212,6 @@ public final class Common {
 
             for (User user : department.getUsers()) {
                 if (TextUtils.isEmpty(user.departmentsName)) {
-
                     user.departmentsName=department.getName();
                 }
 
@@ -222,11 +222,9 @@ public final class Common {
 
                 UserInfo userInfo = new UserInfo();
                 userInfo.setShortDept(department);
-
                 user.depts=new ArrayList<>(Arrays.asList(userInfo));
 
                 String groupName_current = user.getGroupName();
-
                 Boolean isContainsGroupName = false;
                 UserGroupData userGroupData_current;
 

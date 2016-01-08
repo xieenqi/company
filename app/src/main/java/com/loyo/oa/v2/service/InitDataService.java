@@ -38,7 +38,6 @@ public class InitDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         app = (MainApp) getApplicationContext();
-
         try {
             getOrganization();
         } catch (Exception ex) {
@@ -59,6 +58,7 @@ public class InitDataService extends IntentService {
      *
      */
     void getOrganization() {
+
         ArrayList<Department> lstDepartment_current = RestAdapterFactory.getInstance().build(FinalVariables.GET_ORGANIZATION)
                 .create(IUser.class).getOrganization();
 
@@ -71,7 +71,7 @@ public class InitDataService extends IntentService {
 
             for(int i = 0;i<lstDepartment_current.size();i++){
                 for(User user : lstDepartment_current.get(i).getUsers()){
-                    LogUtil.dll("部门大小aaaaa:"+user.getDepts().size());
+                    LogUtil.dll("SIZE:"+user.getDepts().size());
                 }
             }
         }
