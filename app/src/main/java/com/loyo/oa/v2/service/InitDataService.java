@@ -7,6 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -64,16 +65,12 @@ public class InitDataService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
             LogUtil.d("更新 组织 架构 json：" + MainApp.gson.toJson(lstDepartment_current));
+
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
 
-            for(int i = 0;i<lstDepartment_current.size();i++){
-                for(User user : lstDepartment_current.get(i).getUsers()){
-                    LogUtil.dll("SIZE:"+user.getDepts().size());
-                }
-            }
         }
     }
 

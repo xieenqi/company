@@ -87,11 +87,11 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
                 deptName.append(userInfo.getShortDept().getName()+" ");
                 LogUtil.dll(this.list.get(position).getRealname() + ":" + userInfo.getShortDept().getName());
             }
-        //deptName = this.list.get(position).depts.get(0).getShortDept().getName();
         } catch (NullPointerException e) {
             e.printStackTrace();
             deptName.append("无");
         }
+
 
         /*职位名字*/
         try {

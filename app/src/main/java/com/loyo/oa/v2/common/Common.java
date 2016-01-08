@@ -215,14 +215,20 @@ public final class Common {
                     user.departmentsName=department.getName();
                 }
 
+
                 Department deptInUser = new Department();
                 deptInUser.setId(department.getId());
                 deptInUser.setSuperiorId(department.getSuperiorId());
                 deptInUser.setName(department.getName());
 
-                UserInfo userInfo = new UserInfo();
+                //2016.1.8，当depts包含多个部门时，处理
+                for(UserInfo userInfo : user.getDepts()){
+                    userInfo.setShortDept(department);
+                }
+
+                /*UserInfo userInfo = new UserInfo();
                 userInfo.setShortDept(department);
-                user.depts=new ArrayList<>(Arrays.asList(userInfo));
+                user.depts=new ArrayList<>(Arrays.asList(userInfo));*/
 
                 String groupName_current = user.getGroupName();
                 Boolean isContainsGroupName = false;
@@ -275,6 +281,7 @@ public final class Common {
      * @param _lstDepartment
      */
     public static void setLstDepartment(ArrayList<Department> _lstDepartment) {
+
         if (_lstDepartment == null) {
             return;
         }
@@ -427,7 +434,9 @@ public final class Common {
         return new User();
     }
 
-
+    /**
+     * 获取当前账号人员信息
+     * */
     public static ArrayList<User> getMyUserDept(){
 
         ArrayList<User> myUsers = new ArrayList<>();
@@ -454,10 +463,10 @@ public final class Common {
         /*根据部门下标获取本部门人员*/
         myUsers.clear();
         for (User user : userAllList) {
-            for(int j = 0;j<user.depts.size();j++){
-                String xPath = user.depts.get(j).getShortDept().getXpath();
+            for(int j = 0;j<user.getDepts().size();j++){
+                String xPath = user.getDepts().get(j).getShortDept().getXpath();
                 if (xPath.contains(getLstDepartment().get(positions).getXpath())) {
-                    myUsers.add(user);
+                            myUsers.add(user);
                 }
             }
         }

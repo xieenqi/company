@@ -107,6 +107,8 @@ public class ContactsInMyDeptFragment extends BaseFragment {
             }
         });
 
+
+
         // 根据a-z进行排序源数据
         sortDataList();
         Collections.sort(myUserList, pinyinComparator);
