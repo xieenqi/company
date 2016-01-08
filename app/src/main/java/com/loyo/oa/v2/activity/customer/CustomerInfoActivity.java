@@ -27,6 +27,7 @@ import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -124,6 +125,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @Extra("isMyUser")
     boolean isMyUser;
+    @Extra(ExtraAndResult.EXTRA_STATUS)
+    boolean isPublic;
 
     @Extra("CustomerId")
     String mCustomerId;
@@ -241,14 +244,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         tv_customer_creator.setText(mCustomer.creator.getName());
-        String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.name;
-        tv_customer_responser.setText(responser);
-
-        if (members.size() != 0) {
-            img_del_join_users.setVisibility(View.VISIBLE);
-            tv_customer_join_users.setText(Utils.getMembers(members));
+        if (isPublic) {//是公海客户
+            String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.name;
+            tv_customer_responser.setText(responser);
+            if (members.size() != 0) {
+                img_del_join_users.setVisibility(View.VISIBLE);
+                tv_customer_join_users.setText(Utils.getMembers(members));
+            }
         }
-
         if (regional.province != null) {
             tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
         }
@@ -260,8 +263,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             mTagItems = mCustomer.tags;
             setTag();
         }
-
-
     }
 
     @UiThread
@@ -397,7 +398,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             return;
         }
 
-        mLocate.addr=customerAddress;
+        mLocate.addr = customerAddress;
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
@@ -410,31 +411,31 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("regional", regional);
         map.put("industry", industry);
 
-        LogUtil.dll("id:"+mCustomer.getId());
+        LogUtil.dll("id:" + mCustomer.getId());
         LogUtil.dll("name:" + customerName);
         LogUtil.dll("summary:" + summary);
         LogUtil.dll("owner:" + owner);
         LogUtil.dll("members:" + members);
         LogUtil.dll("tags:" + mTagItems);
         LogUtil.dll("loc:" + mLocate);
-        LogUtil.dll("extDatas:"+ mCustomer.extDatas);
-        LogUtil.dll("regional:"+regional);
-        LogUtil.dll("industry:"+industry);
+        LogUtil.dll("extDatas:" + mCustomer.extDatas);
+        LogUtil.dll("regional:" + regional);
+        LogUtil.dll("industry:" + industry);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(Customer customer, Response response) {
-                        app.isCutomerEdit=true;
+                        app.isCutomerEdit = true;
                         Intent intent = new Intent();
-                        customer.loc=mLocate;
+                        customer.loc = mLocate;
                         intent.putExtra(Customer.class.getName(), customer);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                            LogUtil.dll("url:"+error.getUrl());
+                        LogUtil.dll("url:" + error.getUrl());
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
                         } else if (error.getResponse().getStatus() == 500) {
@@ -460,7 +461,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         lat = latitude;
         lng = longitude;
         LogUtil.dll("onlocationSucessed:" + address);
-        mLocate.addr=address;
+        mLocate.addr = address;
         mLocate.loc[0] = longitude;
         mLocate.loc[1] = latitude;
         tv_address.setText(address);
@@ -495,9 +496,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     NewUser u = new NewUser();
                     u.setId(user.id);
                     u.setName(user.getRealname());
-                    owner.id=u.getId();
-                    owner.name=u.getName();
-                    owner.avatar=u.getAvatar();
+                    owner.id = u.getId();
+                    owner.name = u.getName();
+                    owner.avatar = u.getAvatar();
 
                     tv_customer_responser.setText(u.getName());
                 }
@@ -539,7 +540,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     tv_labels.setText("");
                 }
 
-                mCustomer.tags=mTagItems;
+                mCustomer.tags = mTagItems;
                 break;
 
         }

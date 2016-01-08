@@ -59,20 +59,20 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private ArrayList<Attachment> mAttachments = new ArrayList<>();
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
-    private int goneBtn = 0;
+    private int goneBtn = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null && getArguments().containsKey("project")) {
             mProject = (HttpProject) getArguments().getSerializable("project");
         }
     }
 
     /**
-     * a
-     * 显示图片
      *
+     * 显示图片
      * @param mListAttachment
      */
     private void bindAttachment(final ArrayList<Attachment> mListAttachment) {
@@ -82,11 +82,12 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         onLoadSuccess(mAttachments.size());
 
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
-        ArrayList<User> users =  Common.getUsersByProject(mProject);
+        ArrayList<User> users = Common.getUsersByProject(mProject);
         boolean hasRights = checkRights();
 
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights,goneBtn);
+            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights, goneBtn);
+
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);
@@ -152,7 +153,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
-                LogUtil.d(" 项目的附件获取数据： "+MainApp.gson.toJson(attachments));
+                LogUtil.d(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
                 if (null != attachments && !attachments.isEmpty()) {
                     mAttachments = attachments;
                     bindAttachment(mAttachments);
@@ -195,7 +196,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onProjectChange(int status) {
         if (null != mProject) {
-            mProject.status=status;
+            mProject.status = status;
         }
         if (layout_upload == null) {
             return;
