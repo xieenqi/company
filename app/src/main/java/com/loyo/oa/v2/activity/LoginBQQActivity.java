@@ -11,6 +11,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 /**
@@ -46,22 +47,23 @@ public class LoginBQQActivity extends BaseActivity {
 
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                final boolean blockLoadingNetworkImage=true;
+                final boolean blockLoadingNetworkImage = true;
+                LogUtil.dll("URL:" + url);
                 if (url.indexOf(FinalVariables.GetLogin_success_prefix()) >= 0) {
-                    String token = url.substring(FinalVariables.GetLogin_success_prefix().length(), url.length());
-                    MainApp.setToken(token);
-                    SharedUtil.put(mContext, FinalVariables.TOKEN, token);
+                    //String token = url.substring(FinalVariables.GetLogin_success_prefix().length(), url.length());
+                    String[] token = url.split("=");
+                    LogUtil.dll("token:" + token);
+                    MainApp.setToken(token[1]);
+                    SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);
                     app.startActivity(LoginBQQActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                 } else {
                     view.loadUrl(url);
                 }
-                if(blockLoadingNetworkImage){
+                if (blockLoadingNetworkImage) {
                     webView.getSettings().setBlockNetworkImage(false);
                 }
                 return true;
             }
-
-
         });
 
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
