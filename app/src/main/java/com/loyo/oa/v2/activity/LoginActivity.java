@@ -12,7 +12,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -239,8 +238,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
-
+                Toast(error.getBody().toString());
 //                LogUtil.d("登陆失败：" + error.getMessage());
 //                if (error.getKind() == RetrofitError.Kind.NETWORK) {
 //                    Toast("请检查您的网络连接");
