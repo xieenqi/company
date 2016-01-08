@@ -18,11 +18,39 @@
         android:orientation="vertical"
         android:background="@color/white">
 
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            >
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_width="120dp"
+                style="@style/text_item1"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_height="wrap_content"
+                android:text="是否通过" />
+
+            <Switch
+                android:id="@+id/task_info_switch"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="Yes"
+                android:textOff="On"
+                android:checked="true"
+                />
+            </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             style="@style/view_split" />
 
         <LinearLayout
+            android:id="@+id/tasks_info_sorceview"
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
@@ -101,18 +129,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:textColor="@color/white"
-            android:text="通过"
+            android:text="提 交"
             android:background="@drawable/btn_rectangle_agree" />
-
-        <Button
-            android:id="@+id/btn_task_notagree"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:textColor="@color/white"
-            android:text="不通过"
-            android:background="@drawable/btn_rectangle_not_agree" />
 
     </LinearLayout>
 

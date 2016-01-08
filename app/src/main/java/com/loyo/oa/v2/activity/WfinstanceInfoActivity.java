@@ -414,7 +414,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
      */
     private void showApproveDialog(final int type) {
 
-
         View container = LayoutInflater.from(mContext).inflate(R.layout.dialog_wfinstance_approve, null, false);
         container.getBackground().setAlpha(70);
         TextView tv_confirm = (TextView) container.findViewById(R.id.tv_confirm);
