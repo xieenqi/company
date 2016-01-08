@@ -21,9 +21,11 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
@@ -95,6 +97,8 @@ public class TasksEditActivity extends BaseActivity {
     @ViewById
     TextView tv_remind;
     @ViewById
+    TextView tv_mycustomer;
+    @ViewById
     TextView tv_Project;
     @ViewById
     Switch switch_approve;
@@ -119,6 +123,7 @@ public class TasksEditActivity extends BaseActivity {
     private StringBuffer joinUser = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
 
+
     @AfterViews
         //类似onCreate方法执行入口
     void initUI() {
@@ -138,6 +143,7 @@ public class TasksEditActivity extends BaseActivity {
         UpdateUI();
         init_gridView_photo();
         setTouchView(-1);
+
     }
 
     void UpdateUI() {
@@ -166,9 +172,8 @@ public class TasksEditActivity extends BaseActivity {
         switch_approve.setChecked(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
-
-        LogUtil.dll("是否审核:" + mTask.isReviewFlag());
-        LogUtil.dll("结构：" + MainApp.gson.toJson(mTask));
+        tv_mycustomer.setText(mTask.getCustomerName());
+        tv_Project.setText(mTask.getProject().title);
 
     }
 
@@ -213,7 +218,7 @@ public class TasksEditActivity extends BaseActivity {
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project,R.id.layout_mycustomer})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -253,6 +258,8 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("remindtime", mTask.getRemindTime());
                 map.put("reviewFlag", switch_approve.isChecked());
                 map.put("attachmentUUId", uuid);
+                map.put("customerId", mTask.getCustomerId());
+                map.put("customerName", mTask.getCustomerName());
 
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
                     map.put("projectId", mTask.getProjectId());
@@ -327,11 +334,19 @@ public class TasksEditActivity extends BaseActivity {
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
                 break;
 
+            /*关联项目*/
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt("from", TASKS_ADD);
                 bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, bundle2);
+                break;
+
+            /*关联客户*/
+            case R.id.layout_mycustomer:
+                Bundle bundle3 = new Bundle();
+                bundle3.putInt("from", TASKS_ADD_CUSTOMER);
+                app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
                 break;
         }
     }
@@ -397,6 +412,21 @@ public class TasksEditActivity extends BaseActivity {
         }
 
         switch (requestCode) {
+
+                        /*关联客户回调*/
+            case FinalVariables.REQUEST_SELECT_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                if (null != customer) {
+                    mTask.setCustomerId(customer.id);
+                    mTask.setCustomerName(customer.name);
+                    tv_mycustomer.setText(customer.name);
+                } else {
+                    mTask.setCustomerId("");
+                    mTask.setCustomerName("");
+                    tv_mycustomer.setText("无");
+                }
+                break;
+
 
             /*所属项目回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:

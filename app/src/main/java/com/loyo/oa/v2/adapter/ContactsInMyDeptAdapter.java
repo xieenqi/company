@@ -92,7 +92,6 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
             deptName.append("无");
         }
 
-
         /*职位名字*/
         try {
             workName = this.list.get(position).role.name;

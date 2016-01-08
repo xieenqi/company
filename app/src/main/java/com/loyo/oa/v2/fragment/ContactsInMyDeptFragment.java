@@ -107,15 +107,12 @@ public class ContactsInMyDeptFragment extends BaseFragment {
             }
         });
 
-
-
         // 根据a-z进行排序源数据
         sortDataList();
         Collections.sort(myUserList, pinyinComparator);
         adapter = new ContactsInMyDeptAdapter(getActivity(), myUserList);
         sortListView.addHeaderView(headView);
         sortListView.setAdapter(adapter);
-
 
         /*列表监听*/
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

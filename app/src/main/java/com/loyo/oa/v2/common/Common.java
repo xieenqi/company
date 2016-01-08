@@ -215,20 +215,19 @@ public final class Common {
                     user.departmentsName=department.getName();
                 }
 
-
                 Department deptInUser = new Department();
                 deptInUser.setId(department.getId());
                 deptInUser.setSuperiorId(department.getSuperiorId());
                 deptInUser.setName(department.getName());
 
                 //2016.1.8，当depts包含多个部门时，处理
-                for(UserInfo userInfo : user.getDepts()){
+/*                for(UserInfo userInfo : user.getDepts()){
                     userInfo.setShortDept(department);
-                }
+                }*/
 
-                /*UserInfo userInfo = new UserInfo();
+                UserInfo userInfo = new UserInfo();
                 userInfo.setShortDept(department);
-                user.depts=new ArrayList<>(Arrays.asList(userInfo));*/
+                user.depts=new ArrayList<>(Arrays.asList(userInfo));
 
                 String groupName_current = user.getGroupName();
                 Boolean isContainsGroupName = false;

@@ -73,7 +73,6 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_tasks_add)
 public class TasksAddActivity extends BaseActivity {
 
-
     @ViewById
     ViewGroup img_title_left;
     @ViewById
@@ -116,10 +115,6 @@ public class TasksAddActivity extends BaseActivity {
     String projectTitle;
     @Extra("data")
     Task mTask;
-    @Extra(ExtraAndResult.EXTRA_ID)
-    String customerId;
-    @Extra(ExtraAndResult.EXTRA_NAME)
-    String customerName;
 
 
     private AlertDialog dialog_Product;
@@ -136,6 +131,9 @@ public class TasksAddActivity extends BaseActivity {
     private long mDeadline;
     private int mRemind = 0;
     private boolean isCopy;
+
+    private String customerId;
+    private String customerName;
 
     @AfterViews
     void initUI() {
@@ -355,6 +353,7 @@ public class TasksAddActivity extends BaseActivity {
                 layout_del.setVisibility(View.GONE);
                 img_title_right_toUsers.setVisibility(View.VISIBLE);
                 break;
+
             /*所属项目*/
             case R.id.layout_project:
                 Bundle bundle2 = new Bundle();
