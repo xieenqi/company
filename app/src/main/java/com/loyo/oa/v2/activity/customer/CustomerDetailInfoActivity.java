@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity.customer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -16,12 +15,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerContactManageActivity_;
 import com.loyo.oa.v2.activity.DemandsManageActivity;
 import com.loyo.oa.v2.activity.SaleActivitiesManageActivity;
 import com.loyo.oa.v2.activity.SignInListActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerInfoActivity_;
+import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
@@ -134,7 +131,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
-        Utils.dialogShow(this,"请稍候");
+        Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
@@ -270,9 +267,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     delete();
                     break;
                 case R.id.btn_child_add_update:
-                    toPublic();
+                    ConfirmDialog("提示", "投入公海，相当于放弃此客户所有数据和管理权限，你确定要投入公海？", new ConfirmDialogInterface() {
+                        @Override
+                        public void Confirm() {
+                            toPublic();
+                        }
+                    });
                     break;
-
             }
             mWindow.dismiss();
         }
@@ -303,8 +304,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(Customer newCustomer, Response response) {
-                getData();
+                //getData();
                 isPutOcen = true;
+                Intent intent=new Intent();
+                setResult(RESULT_OK,intent);
+                finish();
             }
 
             @Override
@@ -410,7 +414,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
-                bundle.putSerializable("goneBtn",1);
+                bundle.putSerializable("goneBtn", 1);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;

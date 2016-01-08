@@ -11,24 +11,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendanceRecord;
-import com.loyo.oa.v2.beans.DayofAttendance;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -49,7 +49,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :查看考勤界面
+ * 描述 :查看考勤界面【考勤详情】
  * 作者 : ykb
  * 时间 : 15/9/16.
  */
@@ -70,9 +70,15 @@ public class PreviewAttendanceActivity extends BaseActivity {
 
     @ViewById GridView gridView_photo;
     @ViewById Button btn_confirm;
+    @ViewById LinearLayout ll_confirm;
+    @ViewById TextView tv_confirmDept;
+    @ViewById TextView tv_confirmName;
+    @ViewById TextView tv_confirmTime;
 
-    @Extra("data") DayofAttendance attendance;
+
+    HttpAttendanceDetial attendance;
     @Extra int inOrOut;
+    @Extra(ExtraAndResult.EXTRA_ID) String attendanceId;
 
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
@@ -84,22 +90,37 @@ public class PreviewAttendanceActivity extends BaseActivity {
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("考勤详情");
         initGridView();
-        initData();
-        LogUtil.d(inOrOut + " 考勤详情 传递 数据：" + MainApp.gson.toJson(attendance));
+        getData();
+    }
+
+    public void getData() {
+        app.getRestAdapter().create(IAttendance.class).getAttendancesDetial(attendanceId, new RCallback<HttpAttendanceDetial>() {
+            @Override
+            public void success(HttpAttendanceDetial attend, Response response) {
+                attendance = attend;
+                HttpErrorCheck.checkResponse("考勤详情-->", response);
+                initData();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
+            }
+        });
     }
 
     /**
      * 获取附件
-     *
-     * @param record
      */
-    private void getAttachments(AttendanceRecord record) {
-        if (TextUtils.isEmpty(record.getAttachementuuid())) {//附件id为空
+    private void getAttachments(String attachementuuid) {
+        if (TextUtils.isEmpty(attachementuuid)) {//附件id为空
             return;
         }
-        Utils.getAttachments(record.getAttachementuuid(), new RCallback<ArrayList<Attachment>>() {
+        Utils.getAttachments(attachementuuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
+                HttpErrorCheck.checkResponse("考勤详情-获取附件", response);
                 attachments = _attachments;
                 initGridView();
             }
@@ -120,39 +141,47 @@ public class PreviewAttendanceActivity extends BaseActivity {
         if (null == attendance) {
             return;
         }
-        AttendanceRecord record = inOrOut == ValidateItem.ATTENDANCE_STATE_OUT ? attendance.getOut() : attendance.getIn();
-        ImageLoader.getInstance().displayImage(attendance.getUser().avatar, iv_avartar);
-        final User user = attendance.getUser();
+        //AttendanceRecord record = inOrOut == ValidateItem.ATTENDANCE_STATE_OUT ? attendance.getOut() : attendance.getIn();
+        ImageLoader.getInstance().displayImage(attendance.user.avatar, iv_avartar);
+        final User user = attendance.user;
 
         tv_name.setText(user.getRealname());
-        String deptName = TextUtils.isEmpty(user.departmentsName) ? Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
-        tv_role.setText(deptName + " " + (null == user.shortPosition || TextUtils.isEmpty(user.shortPosition.getName()) ? "" : user.shortPosition.getName()));
+        String deptName = TextUtils.isEmpty(user.departmentsName) ?
+                Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
+        tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortPosition().getName())
+                ? "-" : user.depts.get(0).getShortPosition().getName()));
 
-        if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
+        if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
             iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
             btn_confirm.setVisibility(View.VISIBLE);
-        } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
+        } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
             iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-        } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+        } else if (attendance.outstate == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
             iv_type.setImageResource(R.drawable.icon_office_work);
         }
         String info = "";
-        if (record.getState() == AttendanceRecord.STATE_BE_LATE) {
+        if (attendance.state == AttendanceRecord.STATE_BE_LATE) {
             info = "上班迟到, ";
-        } else if (record.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
+        } else if (attendance.state == AttendanceRecord.STATE_LEAVE_EARLY) {
             info = "下班早退, ";
         }
-        String content = info + "打卡时间: " + app.df3.format(new Date(record.getCreatetime() * 1000));//
+        String content = info + "打卡时间: " + app.df3.format(new Date(attendance.createtime * 1000));//
         if (!TextUtils.isEmpty(info)) {
             tv_info.setText(Utils.modifyTextColor(content, Color.RED, 2, 4));
         } else {
             tv_info.setText(content);
         }
-        tv_reason.setText(record.getReason());
+        tv_reason.setText(TextUtils.isEmpty(attendance.reason) ? "正常考勤" : attendance.reason);
         if (user.id.equals(MainApp.user.id)) {//自己不能确认外勤
             btn_confirm.setVisibility(View.GONE);
         }
-        getAttachments(record);
+        getAttachments(attendance.attachementuuid);
+        if (null != attendance.confirmuser) {
+            ll_confirm.setVisibility(View.VISIBLE);
+            tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
+            tv_confirmName.setText(attendance.confirmuser.name);
+            tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
+        }
     }
 
 
@@ -171,7 +200,6 @@ public class PreviewAttendanceActivity extends BaseActivity {
     @Click(R.id.layout_back)
     void back() {
         finish();
-        //onBackPressed();
     }
 
     /**
@@ -230,12 +258,12 @@ public class PreviewAttendanceActivity extends BaseActivity {
      */
     private void confirmOutAttendance() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
-                confirmOutAttendance(inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId(), new RCallback<AttendanceRecord>() {
+                confirmOutAttendance(attendanceId, new RCallback<AttendanceRecord>() {
                     @Override
                     public void success(AttendanceRecord record, Response response) {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);
                         btn_confirm.setVisibility(View.GONE);
-                        attendance.setIn(record);
+                        //attendance.setIn(record);
 
 //                if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
 //                    iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);

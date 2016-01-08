@@ -93,7 +93,7 @@ public class DropListMenu extends LinearLayout {
     private boolean mDrawable = false;
 
     private String[] mDefaultMenuTitle;
-    PopupWindow popupWindow;
+
 
     public DropListMenu(Context mContext) {
         super(mContext);
@@ -139,7 +139,7 @@ public class DropListMenu extends LinearLayout {
         for (int index = 0; index < mMenuCount; index++) {
             final DropItem menuItem = mMenuItems.get(index);
             View viewPopWindow = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_droplist_menu, null);
-             popupWindow = new PopupWindow(viewPopWindow, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+           final PopupWindow popupWindow = new PopupWindow(viewPopWindow, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
             popupWindow.setTouchable(true);
             popupWindow.setOutsideTouchable(true);

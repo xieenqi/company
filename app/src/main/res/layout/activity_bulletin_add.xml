@@ -31,6 +31,7 @@
                 android:background="@null"
                 android:gravity="left|center_vertical"
                 android:hint="通知标题"
+                android:maxLength="50"
                 android:paddingLeft="@dimen/margin_other_view"/>
 
             <View
@@ -48,6 +49,7 @@
                 android:gravity="left|top"
                 android:hint="请输入通知内容"
                 android:minHeight="180dp"
+                android:maxLength="500"
                 android:padding="10dp"/>
 
             <LinearLayout

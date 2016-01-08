@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.ValidateInfo;
@@ -69,5 +70,12 @@ public interface IAttendance {
     @PUT("/attendance/{id}")
     void confirmOutAttendance(@Path("id") String  id,Callback<AttendanceRecord> callback);
 
+
+    /**
+     * 获取考勤打卡详细内容
+     * @param callback
+     */
+    @GET("/attendance/{id}")
+    void getAttendancesDetial(@Path("id") String id, Callback<HttpAttendanceDetial> callback);
 
 }

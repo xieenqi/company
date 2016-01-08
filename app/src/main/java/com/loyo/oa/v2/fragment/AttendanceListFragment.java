@@ -23,6 +23,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -371,7 +372,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     /**
-     * 查看考勤
+     * 查看考勤xq
      *
      * @param inOrOut
      * @param attendance
@@ -381,7 +382,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             attendance.setUser(MainApp.user);
         }
         Intent intent = new Intent(mActivity, PreviewAttendanceActivity_.class);
-        intent.putExtra("data", attendance);
+        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut==1?attendance.getIn().getId():attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
         startActivityForResult(intent, FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE);
     }
