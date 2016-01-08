@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +18,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
 import com.loyo.oa.v2.activity.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
+import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -32,12 +31,10 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -47,7 +44,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -57,19 +53,13 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.Text;
 
-import java.io.IOException;
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * 【任务详情】
@@ -136,11 +126,11 @@ public class TasksInfoActivity extends BaseActivity {
             String mTaskId;
 
     private String taskId;  //任务ID
-    private String userId;
+    //    private String userId;
     private String uuid = StringUtil.getUUID();
     private int statusSize;
-    private boolean isJoin;
-    private boolean isCreator;
+    //    private boolean isJoin;
+//    private boolean isCreator;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private Members member;
@@ -204,9 +194,9 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         /*是否为参与人判断*/
-        userId = DBManager.Instance().getUser().getId();
-        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
-        isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
+//        userId = DBManager.Instance().getUser().getId();
+//        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
+//        isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
 
     }
 
@@ -215,9 +205,10 @@ public class TasksInfoActivity extends BaseActivity {
      */
     void updateUI_task_responsiblePerson() {
 
-        if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_REVIEWING) {
+        if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING ||
+                mTask.getStatus() == Task.STATUS_FINISHED)) {//负责人 任务 审核中 完成
             img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {
+        } else if (!IsResponsiblePerson() && !IsCreator()) {//不是创建者 负责人
             img_title_right.setVisibility(View.GONE);
         } else {
             img_title_right.setVisibility(View.VISIBLE);
@@ -266,21 +257,20 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
 
-
         /**
          * 审核View
          * */
 
-        if(ListUtil.IsEmpty(mTask.getReviewers())){
+        if (ListUtil.IsEmpty(mTask.getReviewers())) {
             return;
         }
 
         layout_task_testfather.setVisibility(View.VISIBLE);
         layout_test_Add_area.removeAllViews();
 
-        for(Reviewer reviewer : mTask.getReviewers()){
+        for (Reviewer reviewer : mTask.getReviewers()) {
 
-            View mView = LayoutInflater.from(mContext).inflate(R.layout.item_tasks_testview,null);
+            View mView = LayoutInflater.from(mContext).inflate(R.layout.item_tasks_testview, null);
 
             tv_reviewtime = (TextView) mView.findViewById(R.id.tv_reviewtime);
             tv_task_content = (TextView) mView.findViewById(R.id.tv_task_content);
@@ -288,21 +278,21 @@ public class TasksInfoActivity extends BaseActivity {
             tv_reviewer = (TextView) mView.findViewById(R.id.tv_reviewer);
             ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
 
-            if(!TextUtils.isEmpty(reviewer.getUser().getName())){
+            if (!TextUtils.isEmpty(reviewer.getUser().getName())) {
                 tv_reviewer.setText(reviewer.getUser().getName());
             }
 
-            if(!TextUtils.isEmpty(reviewer.getReviewedAt() + "")){
+            if (!TextUtils.isEmpty(reviewer.getReviewedAt() + "")) {
                 tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.getReviewedAt() * 1000L)));
             }
 
-            if(!TextUtils.isEmpty(reviewer.getComment())){
+            if (!TextUtils.isEmpty(reviewer.getComment())) {
                 tv_task_content.setText(reviewer.getComment());
             }
 
-            if(!TextUtils.isEmpty(reviewer.getScore()+"")){
-                int rat = (reviewer.getScore()/20);
-                ratingBar_Task.setRating((float) (rat/1.0));
+            if (!TextUtils.isEmpty(reviewer.getScore() + "")) {
+                int rat = (reviewer.getScore() / 20);
+                ratingBar_Task.setRating((float) (rat / 1.0));
             }
 
             if (reviewer.getStatus().equals("1")) {
@@ -408,11 +398,12 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             childCheckbox.setChecked(isStatus);
-            if(mTask.getStatus() != Task.STATUS_PROCESSING){
+
+            if (mTask.getStatus() != Task.STATUS_PROCESSING) {
                 childCheckbox.setEnabled(false);
                 view.setEnabled(false);
                 layout_child_add_action.setVisibility(View.GONE);
-            }else{
+            } else {
                 childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
@@ -505,16 +496,11 @@ public class TasksInfoActivity extends BaseActivity {
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
-                try {
-                    LogUtil.dll("任务详情返回JSON：" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
                 updateUI();
                 showAttachment();
                 taskId = task.getId(); //任务ID获取
-
             }
 
             @Override
@@ -547,12 +533,15 @@ public class TasksInfoActivity extends BaseActivity {
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
 
                 /*创建人*/
-                if (IsCreator() && mTask.getStatus() == Task.STATUS_PROCESSING) {
-                    intent.putExtra("edit", true);
-                    intent.putExtra("delete", true);
-                    intent.putExtra("extra", "复制任务");
+                if (IsCreator()) {
+                    if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
+                        intent.putExtra("edit", true);
+                        intent.putExtra("delete", true);
+                        intent.putExtra("extra", "复制任务");
+                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
+                        intent.putExtra("delete", true);
+                    }
                 }
-
                 /*负责人*/
                 else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
@@ -620,7 +609,7 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if (isJoin) {
+        if (IsResponsiblePerson()) {
             Toast("参与人不能创建子任务!");
         } else {
             Bundle bundle = new Bundle();
@@ -703,10 +692,10 @@ public class TasksInfoActivity extends BaseActivity {
 
                 /*编辑回调 创建人可编辑 负责人只能修改参与人*/
                 if (data.getBooleanExtra("edit", false)) {
-                    if (isCreator) {
+                    if (IsCreator()) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("mTask", mTask);
-                        bundle.putBoolean("type", isCreator);
+                        bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
                         Bundle mBundle = new Bundle();
@@ -891,10 +880,20 @@ public class TasksInfoActivity extends BaseActivity {
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
+    /**
+     * 是否是任务的创建者
+     *
+     * @return
+     */
     public boolean IsCreator() {
         return null != mTask.getCreator() ? mTask.getCreator().isCurrentUser() : false;
     }
 
+    /**
+     * 是否是任务负责人
+     *
+     * @return
+     */
     public boolean IsResponsiblePerson() {
 
         return null != mTask.getResponsiblePerson() ? mTask.getResponsiblePerson().isCurrentUser() : false;

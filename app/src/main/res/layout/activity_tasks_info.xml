@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_bg"
+              android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit" />
+    <include layout="@layout/include_common_title_edit"/>
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -34,7 +34,7 @@
                     android:paddingLeft="@dimen/margin_side_edge"
                     android:singleLine="false"
                     android:text="123"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"/>
 
 
                 <ImageView
@@ -44,7 +44,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                     />
+                    />
 
 
             </RelativeLayout>
@@ -58,14 +58,14 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:textSize="13sp" />
+                android:textSize="13sp"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_3"
                 android:layout_margin="@dimen/dimen_10"
                 android:background="@drawable/view_dashed_line"
-                android:layerType="software" />
+                android:layerType="software"/>
 
             <TextView
                 android:id="@+id/tv_content"
@@ -79,7 +79,7 @@
                 android:paddingLeft="@dimen/margin_side_edge"
                 android:paddingRight="@dimen/margin_side_edge"
                 android:paddingTop="8dp"
-                android:singleLine="false" />
+                android:singleLine="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_responsiblePerson"
@@ -102,7 +102,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="负责人:"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_toUsers"
@@ -112,7 +112,7 @@
                     android:singleLine="false"
                     android:text="参与人:"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_task_audit"
@@ -121,7 +121,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_task_project"
@@ -130,7 +130,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_task_aboutuser"
@@ -139,7 +139,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
@@ -147,7 +147,7 @@
                 style="@style/view_split"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginRight="@dimen/margin_side_edge" />
+                android:layout_marginRight="@dimen/margin_side_edge"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -168,7 +168,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="讨论" />
+                        android:text="讨论"/>
 
                     <TextView
                         android:id="@+id/tv_discussion_count"
@@ -177,13 +177,13 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="0" />
+                        android:text="0"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow" />
+                        android:src="@drawable/right_arrow"/>
 
                 </LinearLayout>
 
@@ -191,7 +191,7 @@
                     style="@style/view_split"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge" />
+                    android:layout_marginRight="@dimen/margin_side_edge"/>
 
                 <LinearLayout
                     android:id="@+id/layout_attachment"
@@ -206,7 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="附件" />
+                        android:text="附件"/>
 
                     <TextView
                         android:id="@+id/tv_attachment_count"
@@ -215,13 +215,13 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="0" />
+                        android:text="0"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow" />
+                        android:src="@drawable/right_arrow"/>
 
                 </LinearLayout>
 
@@ -233,7 +233,7 @@
 
                 <View
                     style="@style/view_split"
-                    android:layout_width="match_parent" />
+                    android:layout_width="match_parent"/>
 
             </LinearLayout>
 
@@ -255,7 +255,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="子任务" />
+                        android:text="子任务"/>
 
                     <TextView
                         android:id="@+id/tv_children_info"
@@ -264,7 +264,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="0" />
+                        android:text="0"/>
 
                     <LinearLayout
                         android:id="@+id/layout_child_add_action"
@@ -279,16 +279,17 @@
                             android:layout_marginLeft="@dimen/dimen_20"
                             android:layout_marginRight="@dimen/dimen_20"
                             android:scaleType="centerInside"
-                            android:src="@drawable/img_add" />
+                            android:src="@drawable/img_add"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/layout_child_Add_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"/>
 
                 <LinearLayout
                     android:id="@+id/layout_task_testfather"
@@ -311,18 +312,17 @@
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginTop="10dp"
                         android:text="审核"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"/>
+
                     <LinearLayout
                         android:id="@+id/layout_test_Add_area"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                        android:orientation="vertical"/>
 
                 </LinearLayout>
 
             </LinearLayout>
-
-
 
 
             <Button
@@ -334,7 +334,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="@dimen/margin_other_view"
                 android:background="@color/title_bg1"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"/>
 
         </LinearLayout>
     </ScrollView>
