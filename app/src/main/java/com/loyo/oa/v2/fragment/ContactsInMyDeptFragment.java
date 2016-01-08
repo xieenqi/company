@@ -114,7 +114,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         sortListView.addHeaderView(headView);
         sortListView.setAdapter(adapter);
 
-
         /*列表监听*/
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -256,7 +256,6 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
         }
 
-
         /**
          * 审核View
          * */
@@ -390,7 +389,6 @@ public class TasksInfoActivity extends BaseActivity {
 
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
             boolean isStatus = subTask.getStatus().equals("1") ? true : false;
-
 
             /*子任务个数设置*/
             if (isStatus) {
@@ -718,6 +716,7 @@ public class TasksInfoActivity extends BaseActivity {
                     });
 
                 }
+
                 /*复制回调*/
                 else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);

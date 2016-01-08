@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * */
 
 public class Department implements Serializable {
+
     private String id;
     private String xpath;
     private String name;

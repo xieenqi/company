@@ -19,6 +19,7 @@ public class Task extends BaseBeans {
     public long planendAt;
     public String projectId;
     public String customerName;
+    public String customerId;
     public boolean remindflag;
     public int remindtime;
     public boolean reviewFlag;
@@ -55,6 +56,15 @@ public class Task extends BaseBeans {
             return RemindList.get(index);
         }
         return "";
+    }
+
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getCustomerName() {

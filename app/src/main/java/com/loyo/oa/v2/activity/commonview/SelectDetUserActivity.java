@@ -24,6 +24,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -338,10 +339,8 @@ public class SelectDetUserActivity extends Activity {
     /**
      * 判断当前用户是否属于本部门，xpath判断
      */
-    void getInfoUser(int positions) {
-
+   void getInfoUser(int positions) {
         String xPath = null;
-
         userList.clear();
         for (User user : userAllList) {
             xPath = user.depts.get(0).getShortDept().getXpath();
@@ -351,6 +350,7 @@ public class SelectDetUserActivity extends Activity {
         }
         dealisAllSelect(userList);
     }
+
 
 
     //************************************************************暂时弃用**********************************************************

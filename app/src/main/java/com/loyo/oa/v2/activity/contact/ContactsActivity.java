@@ -93,9 +93,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
         String depId = (null != MainApp.user.depts && MainApp.user.depts.size() > 0) ? MainApp.user.depts.get(0).getShortDept().getId() : "";
 
-        //myDepartmentContactsSize = Common.getUsersByDeptId(depId, new ArrayList<User>()).size();
         myDepartmentContactsSize = Common.getMyUserDept().size();
-
         ArrayList<ContactsGroup> groups = Common.getContactsGroups(null);
 
         if (!groups.isEmpty()) {

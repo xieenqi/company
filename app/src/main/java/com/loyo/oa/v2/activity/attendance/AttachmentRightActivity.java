@@ -62,7 +62,6 @@ public class AttachmentRightActivity extends BaseActivity {
     @AfterViews
     void init() {
         LogUtil.dll("附件权限设置 users:" + MainApp.gson.toJson(users));
-        LogUtil.dll("附件权限设置 :" + MainApp.gson.toJson(users));
 
         super.setTitle("权限设置");
         rv_user.setHasFixedSize(true);
