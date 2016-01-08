@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
@@ -14,7 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
-import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -22,7 +23,9 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import java.util.ArrayList;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -38,10 +41,11 @@ public class SignInfoActivity extends BaseActivity {
     ViewGroup img_title_left;
     GridView gridView_photo;
     ViewGroup layout_customer_info;
-    private Customer mCustomer;
-
     SignInGridViewAdapter signInGridViewAdapter;
+
     ArrayList<Attachment> lstData_Attachment;
+    private Customer mCustomer;
+    private boolean isFormCustom;
     LegWork legWork;
 
     @Override
@@ -54,7 +58,7 @@ public class SignInfoActivity extends BaseActivity {
             if (bundle != null) {
                 if (bundle.containsKey("mCustomer")) {
                     mCustomer = (Customer) bundle.getSerializable("mCustomer");
-
+                    isFormCustom = bundle.getBoolean(ExtraAndResult.EXTRA_STATUS);
                 }
                 if (bundle.containsKey(LegWork.class.getName())) {
                     legWork = (LegWork) bundle.getSerializable(LegWork.class.getName());
@@ -78,15 +82,18 @@ public class SignInfoActivity extends BaseActivity {
         img_title_left.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
 
         layout_customer_info = (ViewGroup) findViewById(R.id.layout_customer_info);
-        layout_customer_info.setOnTouchListener(Global.GetTouch());
-        layout_customer_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle b = new Bundle();
-                b.putString("Id", legWork.customerId);
-                app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
-            }
-        });
+        // layout_customer_info.setOnTouchListener(Global.GetTouch());
+        if (!isFormCustom) {
+            layout_customer_info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle b = new Bundle();
+                    b.putString("Id", legWork.customerId);
+                    app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
+                }
+            });
+
+        }
 
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
@@ -150,10 +157,10 @@ public class SignInfoActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        if(null==lstData_Attachment){
+        if (null == lstData_Attachment) {
             return;
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, false,false);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, false, false);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -164,8 +171,8 @@ public class SignInfoActivity extends BaseActivity {
             return;
         }
         Customer customer = (Customer) data.getSerializableExtra(Customer.class.getName());
-        legWork.address=customer.loc.addr;
-        legWork.customerName=customer.name;
+        legWork.address = customer.loc.addr;
+        legWork.customerName = customer.name;
         updateUI();
     }
 }

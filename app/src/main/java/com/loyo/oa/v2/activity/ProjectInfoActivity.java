@@ -214,7 +214,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         //是否显示三个点的功能键
         if (!project.isCreator() && !project.isManager()) {
             img_title_right.setVisibility(View.GONE);
-        } else if (project.isManager() && project.status == 0) {
+        } else if (project.isManager() && project.status == 2) {
             img_title_right.setVisibility(View.GONE);
         }
 

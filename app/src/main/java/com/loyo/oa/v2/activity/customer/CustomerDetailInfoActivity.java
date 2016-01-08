@@ -32,7 +32,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -135,8 +134,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
-                LogUtil.d(" 客户管理详情URL： " + response.getUrl());
-                LogUtil.d(" 客户管理详情： " + MainApp.gson.toJson(customer));
+                HttpErrorCheck.checkResponse("客户详情-->", response);
                 ownErId = customer.owner.id;
                 isLock = customer.lock;
                 mCustomer = customer;
@@ -306,8 +304,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             public void success(Customer newCustomer, Response response) {
                 //getData();
                 isPutOcen = true;
-                Intent intent=new Intent();
-                setResult(RESULT_OK,intent);
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
 
@@ -328,22 +326,20 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         switch (view.getId()) {
             /*返回*/
             case R.id.img_title_left:
-
                 Intent intent = new Intent();
                 if (isPutOcen) {
                     app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, intent);
                 } else {
                     finish();
                 }
-
                 break;
             case R.id.img_title_right:
                 showEditPopu();
                 break;
             case R.id.layout_customer_info:
-
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS,mCustomer.lock);
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
 

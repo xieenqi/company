@@ -14,6 +14,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -157,7 +158,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     }
 
     /**
-     * 查看签到
+     * 查看【签到详情】
      *
      * @param legWork
      */
@@ -165,6 +166,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         Intent intent = new Intent(this, SignInfoActivity.class);
         intent.putExtra(LegWork.class.getName(), legWork);
         intent.putExtra("mCustomer", mCustomer);
+        intent.putExtra(ExtraAndResult.EXTRA_STATUS, true);
         startActivity(intent);
     }
 

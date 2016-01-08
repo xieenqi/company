@@ -5,16 +5,16 @@
 
     <LinearLayout
         android:id="@+id/back"
-        android:layout_gravity="right"
         android:layout_width="120dp"
-        android:layout_height="84dp">
+        android:layout_height="84dp"
+        android:layout_gravity="right">
 
         <RelativeLayout
             android:id="@+id/layout_action_update"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:background="#bcbcbc">
+            android:background="#bcbcbc"
+            android:clickable="true">
 
             <ImageView
                 android:id="@+id/update"
@@ -27,12 +27,12 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_toRightOf="@+id/layout_action_update"
             android:id="@+id/layout_action_delete"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:background="#ef4646">
+            android:layout_toRightOf="@+id/layout_action_update"
+            android:background="#ef4646"
+            android:clickable="true">
 
             <ImageView
                 android:id="@+id/delete"
@@ -48,30 +48,30 @@
 
     <RelativeLayout
         android:id="@+id/front"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="84dp">
+        android:layout_height="84dp"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/img_attachment"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:scaleType="centerCrop"
             android:layout_width="70dp"
-            android:layout_height="78dp"/>
+            android:layout_height="78dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginTop="3dp"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/tv_title"
-            android:textSize="13sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
-            android:textColor="#262626"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/img_attachment"
             android:text="xxx.jpg"
+            android:textColor="#262626"
+            android:textSize="13sp"
             />
 
         <TextView
@@ -79,12 +79,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_title"
-            android:textSize="13sp"
-            android:textColor="#555555"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/img_attachment"
             android:text="xxx上传"
+            android:textColor="#555555"
+            android:textSize="13sp"
             />
 
         <TextView
@@ -92,12 +92,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_creator"
-            android:textSize="13sp"
-            android:textColor="#555555"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/img_attachment"
             android:text="xxx上传"
+            android:textColor="#555555"
+            android:textSize="13sp"
             />
 
     </RelativeLayout>
