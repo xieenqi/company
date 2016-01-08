@@ -88,14 +88,14 @@ public class TasksInfoScoreActivity extends BaseActivity {
                 verfyTask(map);
                 break;
             case R.id.btn_task_notagree:
-                final int grade1 = ratingBar_Task.getProgress() * 20;
+               // final int grade1 = ratingBar_Task.getProgress() * 20;
                 final String comment = edt_content.getText().toString().trim();
                 if (comment.isEmpty()) {
                     Toast("请输入意见");
                     break;
                 }
                 HashMap<String,Object> map1=new HashMap<>();
-                map1.put("score", grade1);
+                map1.put("score", 0);
                 map1.put("comment", comment);
                 map1.put("status", 0);
 
