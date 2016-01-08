@@ -135,14 +135,13 @@ public class TasksInfoActivity extends BaseActivity {
     private ArrayList<NewUser> depts;
     private Members member;
     private Task mTask;
-
-
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
     public ArrayList<NewUser> allUsers;
 
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
+    public LinearLayout item_tasks_sorece;
     public ImageView iv_task_status;
     public RatingBar ratingBar_Task;
     public TextView tv_reviewtime;
@@ -257,7 +256,7 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         /**
-         * 审核View
+         * 审核列表View
          * */
 
         if (ListUtil.IsEmpty(mTask.getReviewers())) {
@@ -276,6 +275,7 @@ public class TasksInfoActivity extends BaseActivity {
             tv_task_status = (TextView) mView.findViewById(R.id.tv_task_status);
             tv_reviewer = (TextView) mView.findViewById(R.id.tv_reviewer);
             ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
+            item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
 
             if (!TextUtils.isEmpty(reviewer.getUser().getName())) {
                 tv_reviewer.setText(reviewer.getUser().getName());
@@ -287,6 +287,10 @@ public class TasksInfoActivity extends BaseActivity {
 
             if (!TextUtils.isEmpty(reviewer.getComment())) {
                 tv_task_content.setText(reviewer.getComment());
+            }
+
+            if(reviewer.getStatus().equals("0")){
+                item_tasks_sorece.setVisibility(View.GONE);
             }
 
             if (!TextUtils.isEmpty(reviewer.getScore() + "")) {
