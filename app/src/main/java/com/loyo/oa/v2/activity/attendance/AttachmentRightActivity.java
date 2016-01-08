@@ -3,19 +3,16 @@ package com.loyo.oa.v2.activity.attendance;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -44,16 +41,12 @@ public class AttachmentRightActivity extends BaseActivity {
 
     @Extra("users")
     ArrayList<NewUser> users;
-
     @Extra("data")
     Attachment mAttachment;
-
     @ViewById
     RecyclerView rv_user;
-
     @ViewById
     CheckBox cb1;
-
     @ViewById
     ViewGroup layout_type1;
 
@@ -183,6 +176,17 @@ public class AttachmentRightActivity extends BaseActivity {
                         }
                     }
                 });
+
+                LogUtil.dll("SIZE:"+mAttachment.getViewers().size());
+
+                /*勾选状态设置*/
+/*                for(NewUser newUser : mAttachment.getViewers()){
+                    LogUtil.dll("可以看的ID:"+newUser.getUsers().get(0).getId());
+                    if(user.getId().equals(newUser.getUsers().get(0).getId())){
+                        holder.cb.setChecked(true);
+                        LogUtil.dll("可以看的名字:"+user.getName());
+                    }
+                }*/
 
                 holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override

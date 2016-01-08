@@ -3,6 +3,7 @@ package com.loyo.oa.v2.beans;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,16 @@ public class NewUser implements Serializable {
     private String id;
     private String name;
     private String avatar;
+    private ArrayList<NewUser> users = new ArrayList<>();
+
+
+    public ArrayList<NewUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<NewUser> users) {
+        this.users = users;
+    }
 
     public static String GetNewUserNames(List<NewUser> users) {
         if (users == null || users.isEmpty()){

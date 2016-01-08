@@ -174,8 +174,10 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.layout_action_update.setVisibility(View.INVISIBLE);
             holder.layout_action_delete.setVisibility(View.INVISIBLE);
         } else {
-            holder.layout_action_update.setVisibility(View.VISIBLE);
-            holder.layout_action_delete.setVisibility(View.VISIBLE);
+
+            /*暂时弃用附件权限*/
+            /*holder.layout_action_update.setVisibility(View.VISIBLE);
+            holder.layout_action_delete.setVisibility(View.VISIBLE);*/
 
             /*客户管理里面，没有权限功能，需禁用*/
             if (goneBtn == 1) {
