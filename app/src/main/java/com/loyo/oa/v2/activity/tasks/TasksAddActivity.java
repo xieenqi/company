@@ -259,7 +259,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void success(Task task, Response response) {
                 //task.setAck(true);
-                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+//                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 //不需要保存
                 isSave = false;
                 Intent intent = new Intent();

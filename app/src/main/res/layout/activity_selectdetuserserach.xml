@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/layout_selectuser_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:background="@color/title_bg1"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:id="@+id/img_title_left"
+            android:layout_width="39dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back_left1" />
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/edt_selectuser_search"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_weight="1"
+            android:background="@drawable/bg_et_search"
+            android:gravity="center_vertical"
+            android:hint="请输入查询姓名"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingLeft="12dp"
+            android:singleLine="false"
+            android:textColor="#6f6f6f"
+            android:textColorHint="#c9c9c9"
+            android:textCursorDrawable="@null" />
+
+        <TextView
+            android:id="@+id/tv_selectuser_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="搜索"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_selectuser_serach"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF"
+        />
+
+</LinearLayout>

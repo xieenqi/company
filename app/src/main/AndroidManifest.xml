@@ -501,6 +501,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
+        <activity
+            android:name=".activity.commonview.SelectDetUserSerach"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
 
         <service
             android:name=".service.InitDataService_"
