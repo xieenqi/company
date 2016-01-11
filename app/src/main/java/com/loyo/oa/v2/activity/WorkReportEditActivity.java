@@ -48,14 +48,11 @@ public class WorkReportEditActivity extends BaseActivity {
     @ViewById ViewGroup layout_toUser;
     @ViewById ViewGroup layout_time;
     @ViewById ViewGroup layout_del;
-
     @ViewById EditText edt_content;
     @ViewById RadioGroup rg;
-
     @ViewById TextView tv_time;
     @ViewById TextView tv_toUser;
     @ViewById TextView tv_reviewer;
-
     @ViewById ImageView img_title_toUser;
 
     String cc_user_id = null;

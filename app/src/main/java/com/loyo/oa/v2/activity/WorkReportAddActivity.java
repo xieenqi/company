@@ -75,9 +75,10 @@ import rx.android.schedulers.AndroidSchedulers;
 @EActivity(R.layout.activity_workreports_add)
 public class WorkReportAddActivity extends BaseActivity {
 
-    public static final int TYPE_CREATE = 1;
-    public static final int TYPE_EDIT = TYPE_CREATE + 1;
-    public static final int TYPE_CREATE_FROM_COPY = TYPE_CREATE + 2;
+    public static final int TYPE_CREATE = 1; //任务创建
+    public static final int TYPE_EDIT = 2; //任务编辑
+    public static final int TYPE_CREATE_FROM_COPY = 3; //任务复制
+    public static final int TYPE_PROJECT= 4; //项目创建报告
 
     @ViewById
     ViewGroup img_title_left, img_title_right;
@@ -154,14 +155,6 @@ public class WorkReportAddActivity extends BaseActivity {
         rb2 = (RadioButton) findViewById(R.id.rb2);
         rb3 = (RadioButton) findViewById(R.id.rb3);
 
-        /*如果为编辑，不允许更改类型*/
-        if (type == TYPE_EDIT) {
-            tv_resignin.setVisibility(View.GONE);
-            rb1.setEnabled(false);
-            rb2.setEnabled(false);
-            rb3.setEnabled(false);
-        }
-
         if (weeksDialog == null) {
             weeksDialog = new WeeksDialog(tv_time);
         }
@@ -183,7 +176,15 @@ public class WorkReportAddActivity extends BaseActivity {
             if (type == TYPE_EDIT) {
                 uuid = mWorkReport.getAttachmentUUId();
             }
-            mReviewer = mWorkReport.getReviewer();
+
+            try{
+                mReviewer = mWorkReport.getReviewer();
+                members = mWorkReport.getMembers();
+                projectId = mWorkReport.getProject().getId();
+            }catch(NullPointerException e){
+                e.printStackTrace();
+            }
+
             switch (mWorkReport.getType()) {
                 case WorkReport.DAY:
                     rg.check(R.id.rb1);
@@ -215,10 +216,21 @@ public class WorkReportAddActivity extends BaseActivity {
             rg.check(R.id.rb1);
         }
         init_gridView_photo();
+
+        /*来自不同的业务 判断*/
         if (type == TYPE_EDIT) {
+            tv_resignin.setVisibility(View.GONE);
+            rb1.setEnabled(false);
+            rb2.setEnabled(false);
+            rb3.setEnabled(false);
+        }
+        else if (type == TYPE_EDIT) {
             getAttachments();
         }
-        projectAddWorkReport();
+        else if(type == TYPE_PROJECT){
+            projectAddWorkReport();
+        }
+
         getDefaultComment();
     }
 
@@ -247,7 +259,7 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     /**
-     * 项目 过来创建 工作报稿
+     * 项目 过来创建 工作报告
      */
     public void projectAddWorkReport() {
         if (!TextUtils.isEmpty(projectId)) {
@@ -364,9 +376,13 @@ public class WorkReportAddActivity extends BaseActivity {
     void onClick(View v) {
         Bundle mBundle;
         switch (v.getId()) {
+
+            /*返回*/
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
+
+            /*提交*/
             case R.id.img_title_right:
                 String content = edt_content.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
@@ -399,6 +415,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("isDelayed", tv_time.getText().toString().contains("补签") ? true : false);
                 }
 
+                /*报告新建／编辑*/
                 if (type == TYPE_EDIT) {
                     updateReport(map);
                 } else {
@@ -413,9 +430,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*点评人*/
             case R.id.layout_reviewer:
-                /*Bundle bundle = new Bundle();
-                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COMMENT, bundle);*/
 
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
@@ -426,7 +440,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*抄送人*/
             case R.id.layout_toUser:
-                //app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUSET_COPY_PERSONS, null);
 
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
@@ -455,8 +468,8 @@ public class WorkReportAddActivity extends BaseActivity {
      * 编辑报告请求
      */
     public void updateReport(HashMap map) {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
 
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
@@ -468,6 +481,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
+
         });
     }
 
