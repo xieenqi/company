@@ -29,6 +29,7 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -166,13 +167,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 获取用户信息
      */
     void getCustomer() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
-            @Override
-            public void success(Customer customer, Response response) {
-                mCustomer = customer;
-                initData();
-            }
-        });
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
+                    @Override
+                    public void success(Customer customer, Response response) {
+                        HttpErrorCheck.checkResponse("客户信息",response);
+                                mCustomer = customer;
+                        initData();
+                    }
+                });
     }
 
     /**

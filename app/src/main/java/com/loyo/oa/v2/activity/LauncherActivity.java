@@ -39,17 +39,18 @@ public class LauncherActivity extends BaseActivity {
     private Runnable finishRunner = new Runnable() {
         @Override
         public void run() {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(findViewById(R.id.layout_launcher_main), "alpha", 1, 0).setDuration(1000);
+            ObjectAnimator animator = ObjectAnimator.ofFloat(findViewById(R.id.layout_launcher_main), "alpha", 1, 0).setDuration(1000);//结束动画
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
 
                 }
+
                 //动画加载完成
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     Intent intent = new Intent(LauncherActivity.this,
-                            TextUtils.isEmpty(MainApp.getToken())?LoginActivity.class:MainActivity_.class);
+                            TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
 //                    if (TextUtils.isEmpty(MainApp.getToken())) {
 //                        intent.setClass(LauncherActivity.this, LoginActivity.class);
 //                    }
@@ -74,7 +75,7 @@ public class LauncherActivity extends BaseActivity {
 
     private Runnable advRunner = new Runnable() {
         @Override
-        public void run() {
+        public void run() {//小微企业工作台
             iv_launcher_adv.setVisibility(View.VISIBLE);
             ObjectAnimator animator = ObjectAnimator.ofFloat(iv_launcher_adv, "translationY", iv_launcher_adv.getHeight(), 0);
             animator.setDuration(500);
@@ -85,7 +86,7 @@ public class LauncherActivity extends BaseActivity {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    iv_launcher_adv.postDelayed(rocketRunner, 2500);
+                    iv_launcher_adv.postDelayed(rocketRunner, 1200);
                 }
 
                 @Override
@@ -106,13 +107,13 @@ public class LauncherActivity extends BaseActivity {
         @Override
         public void run() {
             iv_launcher_fade.setY(layout_launcher_fade.getTop());
-            ObjectAnimator animator = ObjectAnimator.ofFloat(layout_launcher_fade, "translationY", (float)getResources().getDisplayMetrics().heightPixels-layout_launcher_fade.getHeight(),0f);
+            ObjectAnimator animator = ObjectAnimator.ofFloat(layout_launcher_fade, "translationY", (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), 0f);
             animator.setDuration(300);
             animator.setInterpolator(new AccelerateInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    iv_launcher_fade.setVisibility(View.VISIBLE);
+                    iv_launcher_fade.setVisibility(View.VISIBLE);//火箭头
                     layout_launcher_fade.setVisibility(View.GONE);
                     float value = (float) valueAnimator.getAnimatedValue();
                     iv_launcher_fade.setY(value);

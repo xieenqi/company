@@ -149,14 +149,14 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 java.util.Calendar c2 = java.util.Calendar.getInstance();
                 currentTime = app.df12.format(System.currentTimeMillis());
                 nextTime = app.df12.format(endAt);
-                try{
+                try {
                     c1.setTime(app.df12.parse(nextTime));//获得的时间
                     c2.setTime(app.df12.parse(currentTime));//系统当前时间
                     int resultTime = c1.compareTo(c2);
-                    if (resultTime < 0 ) {
+                    if (resultTime < 0) {
                         nextDay();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -247,12 +247,11 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         map.put("custId", "");
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
-
+        LogUtil.d("我客户拜传递：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {
-                LogUtil.d(" 我客户拜访url： "+response.getUrl());
-                LogUtil.d(" 我客户拜访json： "+ MainApp.gson.toJson(paginationX));
+                HttpErrorCheck.checkResponse("我客户拜访", response);
                 lv.onRefreshComplete();
                 workPaginationX = paginationX;
                 if (isTopAdd) {
