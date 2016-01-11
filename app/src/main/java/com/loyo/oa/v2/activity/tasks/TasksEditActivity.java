@@ -110,6 +110,7 @@ public class TasksEditActivity extends BaseActivity {
     GridView gridView_photo;
     @Extra
     Task mTask;
+
     @Extra("type")
     Boolean isCreator;
 

@@ -240,7 +240,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         } else {
             Intent intent = new Intent();
             Bundle bundle = intent.getExtras();
-            tv_address.setText(bundle.getString("CustomerAddress"));
+            try{
+                tv_address.setText(bundle.getString("CustomerAddress"));
+            }catch(NullPointerException e){
+                e.printStackTrace();
+            }
         }
 
         tv_customer_creator.setText(mCustomer.creator.getName());

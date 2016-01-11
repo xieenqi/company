@@ -258,8 +258,7 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
-
-                task.setAck(true);
+                //task.setAck(true);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 //不需要保存
                 isSave = false;
@@ -269,7 +268,6 @@ public class TasksAddActivity extends BaseActivity {
                 finish();
                 if (isCopy)
                     TasksInfoActivity.instance.finish();
-
             }
 
             @Override

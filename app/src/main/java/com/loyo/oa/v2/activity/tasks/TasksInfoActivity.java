@@ -35,6 +35,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -126,11 +127,9 @@ public class TasksInfoActivity extends BaseActivity {
             String mTaskId;
 
     private String taskId;  //任务ID
-    //    private String userId;
+    private String userId;
     private String uuid = StringUtil.getUUID();
     private int statusSize;
-    //    private boolean isJoin;
-//    private boolean isCreator;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private Members member;
@@ -167,7 +166,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("任务详情");
-
+        userId = DBManager.Instance().getUser().getId();
         userss = new ArrayList<>();
         depts = new ArrayList<>();
         member = new Members();
@@ -191,24 +190,19 @@ public class TasksInfoActivity extends BaseActivity {
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
         }
-
-        /*是否为参与人判断*/
-//        userId = DBManager.Instance().getUser().getId();
-//        isJoin = !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
-//        isCreator = userId.equals(mTask.getCreator().getId()) ? true : false;
-
     }
 
     /**
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
-
-        if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING ||
-                mTask.getStatus() == Task.STATUS_FINISHED)) {//负责人 任务 审核中 完成
+        allUsers.clear();
+        if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
             img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//不是创建者 负责人
+        } else if (!IsResponsiblePerson() && !IsCreator()) {//为负责人时
             img_title_right.setVisibility(View.GONE);
+        } else if(IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED){ //同时为创建者 负责人 任务完成
+            img_title_right.setVisibility(View.VISIBLE);
         } else {
             img_title_right.setVisibility(View.VISIBLE);
         }
@@ -324,9 +318,7 @@ public class TasksInfoActivity extends BaseActivity {
                     && !mTask.getCreator().getId().equals(mTask.getResponsiblePerson().getId())) {
                 btn_complete.setText("审 核");
             } else {
-
                 btn_complete.setVisibility(View.GONE);
-
             }
 
             if (!ListUtil.IsEmpty(mTask.getReviewComments())) {
@@ -350,7 +342,6 @@ public class TasksInfoActivity extends BaseActivity {
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
-
             String s = MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)) + " 截止";
             if (mTask.getRemindTime() > 0) {
                 s += "," + Task.GetRemindText(mTask.getRemindTime());
@@ -390,7 +381,6 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             /*Checkbox勾选,赋值*/
-
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
             boolean isStatus = subTask.getStatus().equals("1") ? true : false;
 
@@ -611,13 +601,13 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if (IsResponsiblePerson()) {
-            Toast("参与人不能创建子任务!");
-        } else {
+        if(IsResponsiblePerson() || IsCreator()){
             Bundle bundle = new Bundle();
             bundle.putSerializable("Task", mTask);
             bundle.putSerializable("allUsers", allUsers);
             app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
+        }else{
+            Toast("参与人不能创建子任务!");
         }
     }
 
@@ -762,6 +752,7 @@ public class TasksInfoActivity extends BaseActivity {
         }
     }
 
+
     @OnActivityResult(REQUEST_CREATE_SUB)
     void onNewSubTaskActivityResult(int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK || data.hasExtra("data")) {
@@ -890,6 +881,7 @@ public class TasksInfoActivity extends BaseActivity {
      */
     public boolean IsCreator() {
         return null != mTask.getCreator() ? mTask.getCreator().isCurrentUser() : false;
+        //return userId.equals(mTask.getCreator().getId()) ? true : false;
     }
 
     /**
@@ -898,7 +890,8 @@ public class TasksInfoActivity extends BaseActivity {
      * @return
      */
     public boolean IsResponsiblePerson() {
-
         return null != mTask.getResponsiblePerson() ? mTask.getResponsiblePerson().isCurrentUser() : false;
+        //return !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
     }
+
 }

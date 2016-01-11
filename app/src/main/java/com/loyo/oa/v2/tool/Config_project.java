@@ -9,6 +9,7 @@ import com.loyo.oa.v2.BuildConfig;
 public class Config_project {
 
     //public static final Boolean is_developer_mode = false; //生产模式
+
     //public static String IP = "http://112.74.66.99";    //正式服务
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
