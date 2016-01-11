@@ -39,7 +39,7 @@ import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.HomeNumber;
+import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateInfo;
@@ -54,9 +54,11 @@ import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RippleView;
@@ -106,7 +108,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     ImageView img_home_head, img_fast_add;
 
     private Intent mIntentCheckUpdate;
-    private ArrayList<HomeNumber> mItemNumbers = new ArrayList<>();
+    private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
     private boolean mInitData;
     private boolean isSign;
@@ -169,7 +171,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         }
 
-       app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+        app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);
 
     }
 
@@ -236,7 +238,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
-        LogUtil.d(" 获得现有的token：" + MainApp.getToken());
+        LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
 
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
@@ -353,7 +355,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 定位成功后，跳转新建考勤回调
-     * */
+     */
     @Override
     public void OnLocationFailed() {
         Utils.dialogDismiss();
@@ -436,7 +438,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 点击打卡,准备跳转新建考勤
-     * */
+     */
     @Click(R.id.layout_attendance)
     void onClickAttendance() {
 
@@ -447,7 +449,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-        Utils.dialogShow(this,"正在获取考勤信息");
+        Utils.dialogShow(this, "正在获取考勤信息");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
@@ -462,7 +464,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 点击头像，获取能否打卡信息
-     * */
+     */
     @Click(R.id.img_title_left)
     void onClickAvatar() {
         getValidateInfo();
@@ -621,26 +623,26 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             final ClickItem item = getItem(position);
 
-            for (HomeNumber num : mItemNumbers) {
+            for (HttpMainRedDot num : mItemNumbers) {
                 String extra = "";
-                if ((item.title.equals("工作报告") && num.getBiz_name().toLowerCase().equals("workreport"))) {
-                    extra = num.getNumber() + "个待点评";
-                } else if ((item.title.equals("任务计划") && num.getBiz_name().toLowerCase().equals("task"))) {
-                    extra = num.getNumber() + "个待处理";
-                } else if ((item.title.equals("审批流程") && num.getBiz_name().toLowerCase().equals("approval"))) {
-                    extra = num.getNumber() + "个待审核";
-                } else if (item.title.equals("项目管理")) {
-                    extra = num.getNumber() + "个进行中";
-                } else if (item.title.equals("客户管理")) {
-                    extra = num.getNumber() + "个将掉公海";
-                } else if (item.title.equals("客户拜访")) {
-                    extra = num.getNumber() + "个需拜访";
-                } else if (item.title.equals("考勤管理")) {
-                    extra = "未打卡";
+                if ((item.title.equals("工作报告") && num.bizType == 1 && !num.viewed)) {
+                    extra = num.bizNum + "个待点评";
+                } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
+                    extra = num.bizNum + "个待处理";
+                } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
+                    extra = num.bizNum + "个待审批";
+                } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
+                    extra = num.bizNum + "个进行中";
+                } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
+                    extra = num.bizNum + "个将掉公海";
+                } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
+                    extra = num.bizNum + "个需拜访";
+                } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
+                    extra = num.bizNum + "个外勤";
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);
-                    holder.view_number.setVisibility(num.getNumber() <= 0 ? View.GONE : View.VISIBLE);
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else {
                     holder.view_number.setVisibility(View.GONE);
                 }
@@ -783,6 +785,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Intent intent = new Intent(mContext, InitDataService_.class);
         startService(intent);
         setJpushAlias();
+        requestNumber();
     }
 
     @Background
@@ -856,10 +859,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onDestroy();
     }
 
+    /**
+     * 获取首页红点数据
+     */
     void requestNumber() {
-        app.getRestAdapter().create(IMain.class).getNumber(new RCallback<ArrayList<HomeNumber>>() {
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
             @Override
-            public void success(ArrayList<HomeNumber> homeNumbers, Response response) {
+            public void success(ArrayList<HttpMainRedDot> homeNumbers, Response response) {
+                HttpErrorCheck.checkResponse("首页红点", response);
                 mItemNumbers = homeNumbers;
                 adapter.notifyDataSetChanged();
                 mHandler.sendEmptyMessageDelayed(0, 500);
@@ -867,6 +874,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 mHandler.sendEmptyMessageDelayed(0, 500);
             }

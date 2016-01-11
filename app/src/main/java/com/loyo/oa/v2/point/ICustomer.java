@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.City;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
@@ -254,7 +253,7 @@ public interface ICustomer {
      * @param map
      * @param callback
      */
-    @POST("/visit/")
+    @POST("/visit")
     void addSignIn(@Body HashMap<String, Object> map, Callback<LegWork> callback);
 
     @GET("/visit/bycustId")

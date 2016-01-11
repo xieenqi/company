@@ -59,8 +59,8 @@ import rx.Observable;
  */
 public class Utils {
 
-     static ProgressDialog  progressDialog;
-     static ProgressDialog  progressDialogAtt;
+    static ProgressDialog progressDialog;
+    static ProgressDialog progressDialogAtt;
 
 
     /**
@@ -106,13 +106,14 @@ public class Utils {
 
     /**
      * 解决视图比屏幕大时无法builddrawingcache的bug
+     *
      * @param v
      * @return
      */
     public static Bitmap loadBitmapFromView(View v) {
         final int width = v.getMeasuredWidth();
         final int height = v.getMeasuredHeight();
-        Bitmap b = Bitmap.createBitmap( width, height, Bitmap.Config.RGB_565);
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
         Canvas c = new Canvas(b);
         v.draw(c);
@@ -241,8 +242,8 @@ public class Utils {
 
     /**
      * 等待进度条
-     * */
-    public static void dialogShow(Context ct,String info){
+     */
+    public static void dialogShow(Context ct, String info) {
         progressDialog = new ProgressDialog(ct);
         progressDialog.setMessage(info);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -250,8 +251,8 @@ public class Utils {
         progressDialog.show();
     }
 
-    public static void dialogDismiss(){
-        if(progressDialog!=null&&progressDialog.isShowing()){
+    public static void dialogDismiss() {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
@@ -347,8 +348,6 @@ public class Utils {
                 }*/
 
 
-
-
             }
 
             @Override
@@ -402,6 +401,9 @@ public class Utils {
      * @return
      */
     public static boolean hasRights() {
+        if (MainApp.user == null) {
+            return false;
+        }
         Role role = MainApp.user.role;
         if (null != role) {
             if (role.getDataRange() != Role.SELF) {
@@ -600,7 +602,7 @@ public class Utils {
 
     /**
      * InputStream转String
-     * */
+     */
 
     public static String convertStreamToString(InputStream is) {
 

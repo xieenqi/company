@@ -88,7 +88,7 @@ public final class FinalVariables {
     }
 
     public static String GetLogin_success_prefix() {
-        return "http://www.ukuaiqi.com";
+        return "http://www.ukuaiqi.com/oauth2/authorized?authorizationToken";
     }
 
 

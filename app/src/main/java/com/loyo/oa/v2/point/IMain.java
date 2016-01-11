@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.HomeNumber;
+import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.ServerTime;
 import com.loyo.oa.v2.service.CheckUpdateService;
 
@@ -15,8 +15,8 @@ import retrofit.http.Query;
 
 public interface IMain {
 
-    @GET("/home")
-    void getNumber(retrofit.Callback<ArrayList<HomeNumber>> cb);
+    @GET("/feed")
+    void getNumber(retrofit.Callback<ArrayList<HttpMainRedDot>> cb);
 
     @GET("/checkupdate/android")
     void checkUpdate(retrofit.Callback<CheckUpdateService.UpdateInfo> cb);

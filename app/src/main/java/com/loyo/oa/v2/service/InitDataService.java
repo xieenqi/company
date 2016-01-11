@@ -72,6 +72,8 @@ public class InitDataService extends IntentService {
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
 
+        }else{
+            LogUtil.d("更新 组织 架构 sb 失败");
         }
     }
 
