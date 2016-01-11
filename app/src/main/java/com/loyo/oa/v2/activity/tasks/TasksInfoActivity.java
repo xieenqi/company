@@ -123,7 +123,7 @@ public class TasksInfoActivity extends BaseActivity {
     TextView tv_children_info;
     @ViewById
     Button btn_complete;
-    @Extra(ExtraAndResult.EXTRA_ID)//推送的id
+    @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
 
     private String taskId;  //任务ID
@@ -201,7 +201,7 @@ public class TasksInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.GONE);
         } else if (!IsResponsiblePerson() && !IsCreator()) {//为负责人时
             img_title_right.setVisibility(View.GONE);
-        } else if(IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED){ //同时为创建者 负责人 任务完成
+        } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
             img_title_right.setVisibility(View.VISIBLE);
         } else {
             img_title_right.setVisibility(View.VISIBLE);
@@ -283,7 +283,7 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_content.setText(reviewer.getComment());
             }
 
-            if(reviewer.getStatus().equals("0")){
+            if (reviewer.getStatus().equals("0")) {
                 item_tasks_sorece.setVisibility(View.GONE);
             }
 
@@ -499,6 +499,7 @@ public class TasksInfoActivity extends BaseActivity {
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                // LogUtil.d("任务错误信息："+error.getBody().toString());
             }
         });
     }
@@ -601,12 +602,12 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if(IsResponsiblePerson() || IsCreator()){
+        if (IsResponsiblePerson() || IsCreator()) {
             Bundle bundle = new Bundle();
             bundle.putSerializable("Task", mTask);
             bundle.putSerializable("allUsers", allUsers);
             app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
-        }else{
+        } else {
             Toast("参与人不能创建子任务!");
         }
     }

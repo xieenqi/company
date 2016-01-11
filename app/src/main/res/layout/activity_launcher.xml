@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/layout_launcher_main"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="center"
-              android:background="@color/white"
-              android:gravity="center"
-              android:orientation="vertical">
+<LinearLayout
+    android:id="@+id/layout_launcher_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,38 +53,38 @@
         </LinearLayout>
 
         <ImageView
-            android:visibility="invisible"
             android:id="@+id/iv_launcher_fade"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/icon_launcher_bg_bottom"
             android:layerType="software"
             android:scaleType="fitXY"
+            android:src="@drawable/icon_launcher_bg_bottom"
+            android:visibility="invisible"
             />
 
         <ScrollView
-            android:clipChildren="false"
-            android:layerType="software"
             android:id="@+id/layout_launcher_fade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_center"
-            android:layout_marginTop="@dimen/dimen_10">
+            android:layout_marginTop="@dimen/dimen_10"
+            android:clipChildren="false"
+            android:layerType="software">
 
             <LinearLayout
-                android:clipChildren="false"
-                android:layerType="software"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:layerType="software"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_launcher_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_launcher_bg_bottom"
                     android:layerType="software"
                     android:scaleType="fitXY"
+                    android:src="@drawable/icon_launcher_bg_bottom"
                     />
 
             </LinearLayout>

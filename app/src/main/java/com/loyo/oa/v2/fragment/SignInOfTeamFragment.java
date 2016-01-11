@@ -274,7 +274,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     }
 
     /**
-     * 查看下属签到
+     * 【查看下属签到】item点击
      *
      * @param user
      */
