@@ -7,6 +7,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -28,20 +33,36 @@ public class HttpErrorCheck {
     }
 
     public static void checkError(RetrofitError error) {
-        String msg = error.getBody() == null ? error.getMessage() : error.getBody().toString();//error.getMessage();
-        if (msg.contains("500")) {
-            Toast(msg);
-        } else if (msg.contains("401")) {
-            Toast(msg);
-        } else if (msg.contains("404")) {
-            Toast(msg);
-        } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
-            Toast("请检查您的网络连接");
-        } else {
-            Toast(msg);
+
+
+        try {
+            String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
+            LogUtil.d("error获得的：",msg);
+            JSONObject job = new JSONObject(msg);
+            if (500 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (401 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (404 == error.getResponse().getStatus()) {
+                Toast(job.getString("error"));
+            } else if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                Toast("请检查您的网络连接");
+            } else {
+                Toast(job.getString("error"));
+            }
+            LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
+            LogUtil.d("error接口URL：" + error.getUrl());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            LogUtil.d("JSON异常err:"+error.getUrl());
+            e.printStackTrace();
         }
-        LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
-        LogUtil.d("error接口URL：" + error.getUrl());
+        // LogUtil.d("cu123ow :" + error.getResponse().getBody().toString());
+        //Object obj = error.getBody();
+//        String msg = null == obj
+//                ? error.getMessage() :
+//                obj.toString();//error.getMessage();
     }
 
     public static void checkResponse(String tag, Response response) {
