@@ -165,7 +165,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         putStr(t, "", json);
     }
 
-    void putStr(final String t, final String sid, final String json) {
+    void putStr(final String t, final String sid, final String json) {//db 缓存user信息
 
         final RuntimeExceptionDao<SomeConfig, Integer> cateRuntimeDao = DBManager
                 .Instance()

@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -217,6 +218,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         adapter.create(ILogin.class).login(body, new RCallback<Token>() {
             @Override
             public void success(Token token, Response response) {
+                HttpErrorCheck.checkResponse("登录", response);
                 if (null == token || TextUtils.isEmpty(token.access_token)) {
 
                     Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
@@ -237,6 +239,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 Toast(error.getBody().toString());
 //                LogUtil.d("登陆失败：" + error.getMessage());

@@ -48,11 +48,11 @@ public class LoginBQQActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 final boolean blockLoadingNetworkImage = true;
-                LogUtil.dll("URL:" + url);
+                LogUtil.d("QQ登录URL:"+url);
                 if (url.indexOf(FinalVariables.GetLogin_success_prefix()) >= 0) {
                     //String token = url.substring(FinalVariables.GetLogin_success_prefix().length(), url.length());
                     String[] token = url.split("=");
-                    LogUtil.dll("token:" + token);
+                    LogUtil.d("QQ登录token:" + token[1]);
                     MainApp.setToken(token[1]);
                     SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);
                     app.startActivity(LoginBQQActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());

@@ -704,7 +704,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     protected void onStart() {
         super.onStart();
-
         //判断登陆是否失效
         if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
             if (StringUtil.isEmpty(MainApp.getToken())) {
