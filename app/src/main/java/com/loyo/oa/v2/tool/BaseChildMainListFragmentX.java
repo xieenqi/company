@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.WorkReportAddActivity;
 import com.loyo.oa.v2.activity.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.project.HttpProject;
@@ -210,6 +211,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         Intent intent = new Intent(mActivity, _class);
         intent.putExtra("projectId", mProject.id);
         intent.putExtra("projectTitle", mProject.title);
+        intent.putExtra("type", WorkReportAddActivity.TYPE_PROJECT);
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
