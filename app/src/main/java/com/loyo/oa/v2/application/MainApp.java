@@ -55,6 +55,7 @@ import retrofit.client.Response;
 
 
 public class MainApp extends Application {
+
     public static final String TAG = "com.loyo.oa.v2app";
     public static final int ENTER_TYPE_TOP = 1;
     public static final int ENTER_TYPE_BUTTOM = 2;
@@ -101,9 +102,10 @@ public class MainApp extends Application {
 
     //-------这些数据需要保存在本地-------------
     //下属
-    public static ArrayList<User> subUsers = new ArrayList<>();
     public static ArrayList<UserGroupData> lstUserGroupData;
     public static ArrayList<Department> lstDepartment;//组织架构 的缓存
+    public static ArrayList<User> selectAllUsers; //选人功能 所有人员缓存
+
     static String token;
     public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;

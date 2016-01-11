@@ -60,7 +60,7 @@ public class SelectDetUserActivity extends Activity {
     public int positions = 0;
     public int seltSize;
     public int isSize;
-    public int selectType; //1负责人 0参与人 2编辑参与人
+    public int selectType; //0参与人 1负责人 2编辑参与人
     public String[] joinUserId;
     public StringBuffer nameApd;
     public StringBuffer idApd;
@@ -189,7 +189,6 @@ public class SelectDetUserActivity extends Activity {
                     mBundle.putSerializable(User.class.getName(), userList.get(position - 1));
                     mIntent.putExtras(mBundle);
                     app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-
                 }
             }
         });
@@ -240,12 +239,14 @@ public class SelectDetUserActivity extends Activity {
             public void onClick(View view) {
 
                 dealDeptContent();
-                Intent intent = new Intent();
-                Bundle mBundle = new Bundle();
-                mBundle.putString(ExtraAndResult.CC_USER_ID, idApd.toString());
-                mBundle.putString(ExtraAndResult.CC_USER_NAME, nameApd.toString());
-                intent.putExtras(mBundle);
-                app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                mIntent = new Intent();
+                mBundle = new Bundle();
+                if(totalSize != 0){
+                    mBundle.putString(ExtraAndResult.CC_USER_ID, idApd.toString());
+                    mBundle.putString(ExtraAndResult.CC_USER_NAME, nameApd.toString());
+                }
+                mIntent.putExtras(mBundle);
+                app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 
             }
         });
@@ -254,9 +255,10 @@ public class SelectDetUserActivity extends Activity {
         tv_selectdetuser_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle mBundle = new Bundle();
-                mBundle.putSerializable("allUsers", userAllList);
-                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE,selectType);
+                MainApp.selectAllUsers = userAllList;
+                mBundle = new Bundle();
+               //mBundle.putSerializable("allUsers", userAllList);
+                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, selectType);
                 app.startActivityForResult(SelectDetUserActivity.this, SelectDetUserSerach.class, MainApp.ENTER_TYPE_ZOOM_IN, ExtraAndResult.request_Code, mBundle);
             }
         });
@@ -361,33 +363,61 @@ public class SelectDetUserActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-       switch(requestCode){
-
+        if (requestCode != ExtraAndResult.request_Code) {
+            return;
+        }
+        int selectTypePage = 999;
+        String userId;
+        switch (requestCode) {
            /*选人搜索回调*/
-           case ExtraAndResult.request_Code:
-               switch(data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE,0)){
-                   case ExtraAndResult.TYPE_SELECT_SINGLE:
+            case ExtraAndResult.request_Code:
 
-                       Intent mIntent = new Intent();
-                       Bundle mBundle = new Bundle();
-                       mBundle.putSerializable(User.class.getName(), data.getSerializableExtra(User.class.getName()));
-                       mIntent.putExtras(mBundle);
-                       app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+                try{
+                     selectTypePage = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
 
-                       break;
+                switch (selectTypePage) {
+                   /*负责人*/
+                    case ExtraAndResult.TYPE_SELECT_SINGLE:
 
-                   case ExtraAndResult.TYPE_SELECT_MULTUI:
+                        mIntent = new Intent();
+                        mBundle = new Bundle();
+                        mBundle.putSerializable(User.class.getName(), data.getSerializableExtra(User.class.getName()));
+                        mIntent.putExtras(mBundle);
+                        app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 
-                       break;
+                        break;
+                   /*参与人*/
+                    case ExtraAndResult.TYPE_SELECT_MULTUI:
 
-                   case ExtraAndResult.TYPE_SELECT_EDT:
-                       break;
-               }
+                        userId = data.getStringExtra("userId");
+                        for (User user : userAllList) {
+                            if (user.getId().equals(userId)) {
+                                user.setIndex(true);
+                            }
+                        }
+                        totalSize += 1;
+                        mHandler.sendEmptyMessage(0x01);
 
+                        break;
 
-               break;
+                   /*参与人编辑*/
+                    case ExtraAndResult.TYPE_SELECT_EDT:
 
-       }
+                        userId = data.getStringExtra("userId");
+                        for (User user : userAllList) {
+                            if (user.getId().equals(userId)) {
+                                user.setIndex(true);
+                            }
+                        }
+                        totalSize += 1;
+                        mHandler.sendEmptyMessage(0x01);
+
+                        break;
+                }
+        }
     }
 
 

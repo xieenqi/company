@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,9 @@ public class SelectDetUserSerach extends Activity{
     private int selectType;
     private MainApp app = MainApp.getMainApp();
 
+    private Intent mIntent;
+    private Bundle mBundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +64,8 @@ public class SelectDetUserSerach extends Activity{
     /*初始化*/
     public void initView(){
          selectType = getIntent().getExtras().getInt(ExtraAndResult.STR_SELECT_TYPE);
-         userAllList = (ArrayList<User>) getIntent().getSerializableExtra("allUsers");
-
+         //userAllList = (ArrayList<User>) getIntent().getSerializableExtra("allUsers");
+         userAllList = MainApp.selectAllUsers;
          tv_selectuser_search = (TextView) findViewById(R.id.tv_selectuser_search);
          edt_selectuser_search = (EditText) findViewById(R.id.edt_selectuser_search);
          lv_selectuser_serach = (ListView) findViewById(R.id.lv_selectuser_serach);
@@ -90,20 +94,24 @@ public class SelectDetUserSerach extends Activity{
         lv_selectuser_serach.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User user = resultData.get((int) id);
-                LogUtil.dll("选中的人:"+resultData.get(position).getRealname());
 
+                 mIntent = new Intent();
+                 mBundle = new Bundle();
                 switch(selectType){
 
                     /*参与人*/
-                    case 0:
+                    case ExtraAndResult.TYPE_SELECT_MULTUI:
+
+                        mBundle.putString("userId",resultData.get(position).getId());
+                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                        mIntent.putExtras(mBundle);
+                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.request_Code, mIntent);
 
                         break;
 
                     /*负责人*/
-                    case 1:
-                        Intent mIntent = new Intent();
-                        Bundle mBundle = new Bundle();
+                    case ExtraAndResult.TYPE_SELECT_SINGLE:
+
                         mBundle.putSerializable(User.class.getName(), resultData.get(position));
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
                         mIntent.putExtras(mBundle);
@@ -111,7 +119,12 @@ public class SelectDetUserSerach extends Activity{
                         break;
 
                     /*编辑参与人*/
-                    case 2:
+                    case ExtraAndResult.TYPE_SELECT_EDT:
+
+                        mBundle.putString("userId",resultData.get(position).getId());
+                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                        mIntent.putExtras(mBundle);
+                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.request_Code, mIntent);
 
                         break;
 
@@ -210,8 +223,6 @@ public class SelectDetUserSerach extends Activity{
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             tv_content.setText(user.getRealname());
-
-
             String deptName,workName;
 
             try{
@@ -243,4 +254,14 @@ public class SelectDetUserSerach extends Activity{
         }
     };
 
+    /**
+     * 返回
+     */
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
