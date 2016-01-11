@@ -7,10 +7,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.tool.ListUtil;
@@ -47,9 +47,10 @@ public class InitDataService extends IntentService {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
+                HttpErrorCheck.checkResponse("获取user",response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
-                DBManager.Instance().putUser(json);
+                DBManager.Instance().putUser(json);//保存用户信息
                 sendDataChangeBroad(user);
             }
         });

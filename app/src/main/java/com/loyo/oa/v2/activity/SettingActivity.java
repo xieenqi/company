@@ -93,7 +93,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
         layout_setpassword = (ViewGroup) findViewById(R.id.layout_setpassword);
-        if (!MainApp.user.isBQQ) {
+        if (null!=MainApp.user&&!MainApp.user.isBQQ) {
             layout_setpassword.setOnClickListener(this);
             layout_setpassword.setOnTouchListener(touch);
         } else {
