@@ -19,6 +19,7 @@ public class Config_project {
     public static String SIGNLN_TEM = IP + ":9000" + "/api/v2";//团队拜访 列表
 
     public static String ADD_WORK_REPORT_PL = IP + ":8070" + "/api/v2/oa";//添加工作报告 的默认点评人
+    public static String MAIN_RED_DOT = IP + ":88" + "/api/v2/";//首页红点接口
 
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");

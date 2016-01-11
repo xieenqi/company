@@ -213,7 +213,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("gpsInfo", mLng + "," + mLat);
         map.put("address", mAddress.trim());
         map.put("attachmentUUId", uuid);
-        map.put("customerid", customerId);
+        map.put("customerId", customerId);
 
 
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
@@ -223,8 +223,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(LegWork legWork, Response response) {
-                //待接口调试
-                LogUtil.d(" 新增拜访传result：" + MainApp.gson.toJson(legWork));
+                HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
