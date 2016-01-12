@@ -602,13 +602,17 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if (IsResponsiblePerson() || IsCreator()) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("Task", mTask);
-            bundle.putSerializable("allUsers", allUsers);
-            app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
-        } else {
-            Toast("参与人不能创建子任务!");
+        if(mTask.getStatus() != Task.STATUS_PROCESSING){
+            Toast("当前状态不能添加子任务");
+        }else{
+            if (IsResponsiblePerson() || IsCreator()) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Task", mTask);
+                bundle.putSerializable("allUsers", allUsers);
+                app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
+            } else {
+                Toast("参与人不能创建子任务!");
+            }
         }
     }
 

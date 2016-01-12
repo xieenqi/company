@@ -63,9 +63,9 @@ public class SelectDetUserSerach extends Activity{
 
     /*初始化*/
     public void initView(){
-         selectType = getIntent().getExtras().getInt(ExtraAndResult.STR_SELECT_TYPE);
-         //userAllList = (ArrayList<User>) getIntent().getSerializableExtra("allUsers");
+
          userAllList = MainApp.selectAllUsers;
+         selectType = getIntent().getExtras().getInt(ExtraAndResult.STR_SELECT_TYPE);
          tv_selectuser_search = (TextView) findViewById(R.id.tv_selectuser_search);
          edt_selectuser_search = (EditText) findViewById(R.id.edt_selectuser_search);
          lv_selectuser_serach = (ListView) findViewById(R.id.lv_selectuser_serach);

@@ -257,7 +257,6 @@ public class SelectDetUserActivity extends Activity {
             public void onClick(View view) {
                 MainApp.selectAllUsers = userAllList;
                 mBundle = new Bundle();
-               //mBundle.putSerializable("allUsers", userAllList);
                 mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, selectType);
                 app.startActivityForResult(SelectDetUserActivity.this, SelectDetUserSerach.class, MainApp.ENTER_TYPE_ZOOM_IN, ExtraAndResult.request_Code, mBundle);
             }
