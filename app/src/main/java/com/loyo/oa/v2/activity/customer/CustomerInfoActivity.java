@@ -126,8 +126,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @Extra("isMyUser")
     boolean isMyUser;
-    @Extra(ExtraAndResult.EXTRA_STATUS)
+    @Extra(ExtraAndResult.EXTRA_TYPE)
     boolean isPublic;
+    @Extra(ExtraAndResult.EXTRA_STATUS)
+    boolean isMenber;
 
     @Extra("CustomerId")
     String mCustomerId;
@@ -156,7 +158,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
 
-        if (isMyUser == false) {
+        if (isMyUser == false||isMenber) {
             imgview_title_right.setVisibility(View.GONE);
         }
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
@@ -191,7 +193,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     void initData() {
 
         /*如果不是自己的客户，不允许操作*/
-        if (!isMyUser) {
+        if (!isMyUser||isMenber) {
             layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
             img_refresh_address.setVisibility(View.GONE);
             tv_customer_name.setEnabled(false);
@@ -251,16 +253,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         tv_customer_creator.setText(mCustomer.creator.getName());
-        if (isPublic) {//是公海客户
-            String responser = null == mCustomer.owner || null == mCustomer.owner ? "" : mCustomer.owner.name;
+        //if (isPublic) {//是公海客户
+            String responser = (null == mCustomer.owner || null == mCustomer.owner )? "" : mCustomer.owner.name;
             tv_customer_responser.setText(responser);
             if (members.size() != 0) {
-                if (isMyUser) {
-                    img_del_join_users.setVisibility(View.VISIBLE);
+                if (isMyUser&&!isMenber) {
+                    img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
                 }
                 tv_customer_join_users.setText(Utils.getMembers(members));
             }
-        }
+       // }
         if (regional.province != null) {
             tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
         }

@@ -31,6 +31,7 @@ import com.loyo.oa.v2.beans.Tag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -75,7 +76,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private ViewStub emptyView;
 
     private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private int customer_type;//"0,我的客户", "1,团队客户", "2,公海客户"
+    private int customer_type;//"1,我的客户", "2,团队客户", "3,公海客户"
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isPullUp = false;
@@ -622,7 +623,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 LogUtil.d(" 客户管理每一个item： " + MainApp.gson.toJson(mCustomers.get((int) l)));
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
-
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, customer_type);
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
             }

@@ -23,6 +23,7 @@ import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -111,7 +112,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     Customer mCustomer;
     @Extra("Id")
     String id;
-
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    int customerType;//"1,我的客户", "2,团队客户", "3,公海客户"
     String ownErId;
     boolean isLock;
     boolean isMyUser;
@@ -160,7 +162,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-        if (!mCustomer.lock) {
+        if (customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
         }
 
@@ -169,9 +171,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
 
-        isMyUser = MainApp.user.id.equals(ownErId) && isLock ? true : false;
+        //isMyUser = MainApp.user.id.equals(ownErId) && isLock ? true : false;
+        isMyUser = (customerType != 3) ? true : false;
 
-        if (isMyUser) {
+        if (customerType != 3 && customerType != 0 && !(customerType == 1 && isMenber(mCustomer))) {
             img_title_right.setOnTouchListener(Global.GetTouch());
         } else {
             img_title_right.setVisibility(View.INVISIBLE);
@@ -206,6 +209,18 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
 
+    }
+
+    /**
+     * 判断是否是参与人
+     */
+    public boolean isMenber(Customer mCustomer) {
+        for (Member element : mCustomer.members) {
+            if (MainApp.user.id.equals(element.getUser().getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -339,7 +354,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_customer_info:
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS,mCustomer.lock);
+                bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 3);
+                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
 
@@ -366,6 +382,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*联系人*/
             case R.id.layout_contact:
                 bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 bundle.putSerializable("Customer", mCustomer);
                 _class = CustomerContactManageActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;

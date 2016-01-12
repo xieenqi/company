@@ -65,8 +65,8 @@ import retrofit.client.Response;
 
 public class CustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtil.AfterLocation {
 
-    public static final int TYPE_FILTER_CUSTOMER_ID=3;
-    public static final int TYPE_FILTER_TAG_IDS=TYPE_FILTER_CUSTOMER_ID+1;
+    public static final int TYPE_FILTER_CUSTOMER_ID = 3;
+    public static final int TYPE_FILTER_TAG_IDS = TYPE_FILTER_CUSTOMER_ID + 1;
 
     String strSearch, strSearchOld;
 
@@ -89,7 +89,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
     CustomerExpandableListViewAdapter adapter;
 
     ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
-    private int type=0;
+    private int type = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,10 +149,10 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
     void init() {
         expandableListView_customer.setOnRefreshListener(this);
         ExpandableListView expandableListView = expandableListView_customer.getRefreshableView();
-        if(null==adapter) {
+        if (null == adapter) {
             adapter = new CustomerExpandableListViewAdapter(mActivity, pagingGroupDatas);
             expandableListView.setAdapter(adapter);
-        }else {
+        } else {
             adapter.setData(pagingGroupDatas);
             adapter.notifyDataSetChanged();
         }
@@ -190,8 +190,8 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
     }
 
     public void GetData(Boolean isTopAdd, Boolean isBottomAdd) {
-        if(type==TYPE_FILTER_TAG_IDS){
-            GetData(isTopAdd,isBottomAdd,strSearch);
+        if (type == TYPE_FILTER_TAG_IDS) {
+            GetData(isTopAdd, isBottomAdd, strSearch);
         }
         RequestParams params = new RequestParams();
 
@@ -226,14 +226,14 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
         ServerAPI.request(this, ServerAPI.GET, FinalVariables.customers, params, AsyncHttpResponseHandler_customers_get.class, lstParamInfo);
     }
 
-    public void GetData(Boolean isTopAdd, Boolean isBottomAdd,String tagItemIds) {
+    public void GetData(Boolean isTopAdd, Boolean isBottomAdd, String tagItemIds) {
         RequestParams params = new RequestParams();
 
         long pageIndex = 1;
 
-           params.put("tagItemIds",tagItemIds);
-            params.put("type", 2);
-            pageIndex = isTopAdd ? 1 : (pagination.getPageIndex() + 1);
+        params.put("tagItemIds", tagItemIds);
+        params.put("type", 2);
+        pageIndex = isTopAdd ? 1 : (pagination.getPageIndex() + 1);
 
         params.put("pageIndex", pageIndex);
         params.put("pageSize", isTopAdd ? pagination.getPageSize() : 20);
@@ -253,8 +253,8 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 new RCallback<ArrayList<Customer>>() {
                     @Override
                     public void success(ArrayList<Customer> customers, Response response) {
-                        LatLng center=LocationUtil.convert(1, latitude,longitude);
-                        initNearCustomer(customers,center);
+                        LatLng center = LocationUtil.convert(1, latitude, longitude);
+                        initNearCustomer(customers, center);
                     }
                 });
     }
@@ -270,7 +270,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
         bdA.recycle();
     }
 
-    void initNearCustomer(final ArrayList<Customer> nearCustomers,LatLng center) {
+    void initNearCustomer(final ArrayList<Customer> nearCustomers, LatLng center) {
         if (nearCustomers == null || nearCustomers.size() == 0) {
             layout_near_customer.setOnClickListener(null);
             return;
@@ -296,7 +296,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
 //                LatLng p = new LatLng(
 //                        Double.parseDouble(customer.getGpsInfo().split(",")[1]),
 //                        Double.parseDouble(customer.getGpsInfo().split(",")[0]));
-                LatLng p=LocationUtil.convert(1,customer.loc.loc[1],customer.loc.loc[0]);
+                LatLng p = LocationUtil.convert(1, customer.loc.loc[1], customer.loc.loc[0]);
                 points.add(p);
 
                 OverlayOptions ooA = new MarkerOptions().position(p).icon(bdA)
@@ -361,20 +361,20 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
 //                        lstData_customer.clear();
 //                    }
                     //实现下拉刷新时已加载出来的数据不被清空以及上拉加载时不会滑到第一页 ykb 07-15
-                    if(isTopAdd&&lstData_customer.size() > 0) {
-                        for(int i=0;i<lstData_customer_current.size();i++){
-                            Customer tempCustomer=lstData_customer_current.get(i);
-                            for(int j=0;j<lstData_customer.size();j++){
-                                if(lstData_customer.get(j).getId()==tempCustomer.getId()){
-                                    lstData_customer.set(j,tempCustomer);
+                    if (isTopAdd && lstData_customer.size() > 0) {
+                        for (int i = 0; i < lstData_customer_current.size(); i++) {
+                            Customer tempCustomer = lstData_customer_current.get(i);
+                            for (int j = 0; j < lstData_customer.size(); j++) {
+                                if (lstData_customer.get(j).getId() == tempCustomer.getId()) {
+                                    lstData_customer.set(j, tempCustomer);
                                     break;
                                 }
                             }
                         }
                     }
                     //实现下拉刷新时已加载出来的数据不被清空以及上拉加载时不会滑到第一页 ykb 07-15
-                    if(isBottomAdd||lstData_customer.isEmpty())
-                     lstData_customer.addAll(lstData_customer_current);
+                    if (isBottomAdd || lstData_customer.isEmpty())
+                        lstData_customer.addAll(lstData_customer_current);
 
                     pagingGroupDatas = PagingGroupData.convertGroupData(lstData_customer);
                     //实现下拉刷新时已加载出来的数据不被清空以及上拉加载时不会滑到第一页 ykb 07-15
@@ -402,8 +402,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
         }
 
         @Override
-        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable)
-        {
+        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
             expandableListView_customer.onRefreshComplete();
             super.onFailure(i, headers, bytes, throwable);
         }
@@ -438,7 +437,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                         lstData_customer.clear();
                     }
 
-                    if(isBottomAdd||lstData_customer.isEmpty())
+                    if (isBottomAdd || lstData_customer.isEmpty())
                         lstData_customer.addAll(lstData_customer_current);
 
                     pagingGroupDatas = PagingGroupData.convertGroupData(lstData_customer);
@@ -558,20 +557,20 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
         init();
     }
 
-    public void filterGetData(String _strSearch,String tagItemIds) {
+    public void filterGetData(String _strSearch, String tagItemIds) {
     }
-    public void filterGetData(String _strSearch,int type_) {
+
+    public void filterGetData(String _strSearch, int type_) {
         pagination.clear();
         lstData_customer.clear();
         strSearch = _strSearch;
-        type=type_;
-        switch (type_)
-        {
+        type = type_;
+        switch (type_) {
             case TYPE_FILTER_CUSTOMER_ID:
                 GetData(false, false);
                 break;
             case TYPE_FILTER_TAG_IDS:
-                GetData(false, false,strSearch);
+                GetData(false, false, strSearch);
                 break;
         }
     }

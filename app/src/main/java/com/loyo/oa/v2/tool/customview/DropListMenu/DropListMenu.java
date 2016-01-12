@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +119,7 @@ public class DropListMenu extends LinearLayout {
         mArrowMarginTitle = 10;
         mShowCheck = true;
         mShowDivider = true;
-        mCheckIcon = R.drawable.ico_make;
+        //mCheckIcon = R.drawable.ico_make;
         mUpArrow = R.drawable.arrow_up;
         mDownArrow = R.drawable.arrow_down;
 
@@ -139,7 +138,7 @@ public class DropListMenu extends LinearLayout {
         for (int index = 0; index < mMenuCount; index++) {
             final DropItem menuItem = mMenuItems.get(index);
             View viewPopWindow = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_droplist_menu, null);
-           final PopupWindow popupWindow = new PopupWindow(viewPopWindow, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+            final PopupWindow popupWindow = new PopupWindow(viewPopWindow, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
             popupWindow.setTouchable(true);
             popupWindow.setOutsideTouchable(true);
@@ -164,14 +163,14 @@ public class DropListMenu extends LinearLayout {
              * 弹窗列表，确认 取消监听 右边列表第一个列表
              */
             ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
-            menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                @Override
-                                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                    LogUtil.d(" DAINIJI 点击了 ");
-                                                    popupWindow.dismiss();
-                                                }
-                                            }
-            );
+//            menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                                @Override
+//                                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                                    LogUtil.d(" DAINIJI 点击了 ");
+//                                                    popupWindow.dismiss();
+//                                                }
+//                                            }
+//            );
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
             if (!mShowDivider) {
@@ -257,7 +256,7 @@ public class DropListMenu extends LinearLayout {
                                     syncConfirmButton();
 
                                 }
-                                // popupWindow.dismiss();
+                                 popupWindow.dismiss();
                             }
                         });
                     } else {
