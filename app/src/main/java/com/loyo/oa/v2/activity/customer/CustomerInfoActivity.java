@@ -158,7 +158,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
 
-        if (isMyUser == false||isMenber) {
+        if (isMyUser == false || isMenber) {
             imgview_title_right.setVisibility(View.GONE);
         }
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
@@ -173,8 +173,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
                     @Override
                     public void success(Customer customer, Response response) {
-                        HttpErrorCheck.checkResponse("客户信息",response);
-                                mCustomer = customer;
+                        HttpErrorCheck.checkResponse("客户信息", response);
+                        mCustomer = customer;
                         initData();
                     }
                 });
@@ -193,7 +193,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     void initData() {
 
         /*如果不是自己的客户，不允许操作*/
-        if (!isMyUser||isMenber) {
+        if (!isMyUser || isMenber) {
             layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
             img_refresh_address.setVisibility(View.GONE);
             tv_customer_name.setEnabled(false);
@@ -245,24 +245,24 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         } else {
             Intent intent = new Intent();
             Bundle bundle = intent.getExtras();
-            try{
+            try {
                 tv_address.setText(bundle.getString("CustomerAddress"));
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
 
         tv_customer_creator.setText(mCustomer.creator.getName());
         //if (isPublic) {//是公海客户
-            String responser = (null == mCustomer.owner || null == mCustomer.owner )? "" : mCustomer.owner.name;
-            tv_customer_responser.setText(responser);
-            if (members.size() != 0) {
-                if (isMyUser&&!isMenber) {
-                    img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
-                }
-                tv_customer_join_users.setText(Utils.getMembers(members));
+        String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
+        tv_customer_responser.setText(responser);
+        if (members.size() != 0) {
+            if (isMyUser && !isMenber) {
+                img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
             }
-       // }
+            tv_customer_join_users.setText(Utils.getMembers(members));
+        }
+        // }
         if (regional.province != null) {
             tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
         }
@@ -299,17 +299,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").setMessage("负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").
+                setMessage("负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？").
+                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                dialogInterface.dismiss();
-                Bundle bundle = new Bundle();
-                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
+                        dialogInterface.dismiss();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
+                        app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class,
+                                MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
 
-            }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
 
@@ -319,7 +322,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label, R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users, R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district, R.id.layout_customer_industry})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label,
+            R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users,
+            R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district, R.id.layout_customer_industry})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:

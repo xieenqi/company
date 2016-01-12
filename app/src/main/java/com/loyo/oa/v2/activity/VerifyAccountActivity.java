@@ -127,7 +127,6 @@ public class VerifyAccountActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                //Toast("验证码不正确");
                 super.failure(error);
             }
         });

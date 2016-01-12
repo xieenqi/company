@@ -29,4 +29,8 @@ public interface IMain {
 
     @GET("/forgetpwd/")
     void verifyPhone(@Query("tel") String tel, Callback<Object> callback);
+
+    //绑定手机获取验证码
+    @GET("/newphonenum")
+    void getVerificationCode(@Query("tel") String tel, Callback<Object> callback);
 }

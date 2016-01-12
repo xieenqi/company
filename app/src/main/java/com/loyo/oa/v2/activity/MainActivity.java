@@ -33,6 +33,7 @@ import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
@@ -275,7 +276,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
-
+        isQQLogin();
     }
 
     /**
@@ -721,6 +722,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     }
 
+
     void launch() {
         updateUser();
         startTrack();
@@ -786,6 +788,23 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         startService(intent);
         setJpushAlias();
         requestNumber();
+
+    }
+
+    /**
+     * 企业QQ登录的用户绑定手机号码 权限待测试
+     */
+    public void isQQLogin() {
+        if (!app.isQQLogin && !TextUtils.isEmpty(MainApp.user.mobile)) {
+            return;
+        }
+        ConfirmDialog("企业QQ绑定手机号码", "为了你的账号安全,请立即绑定手机号,绑定后可以使用手机号登录", new ConfirmDialogInterface() {
+            @Override
+            public void Confirm() {
+                app.startActivity(MainActivity.this, ActivityEditUserMobile.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+            }
+        });
+        app.isQQLogin = false;
     }
 
     @Background
@@ -799,7 +818,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             info = info + "," + MainApp.user.getRealname();
         }
 
-        //CrashReport.setUserId(info);//leakd的东西
+        //CrashReport.setUserId(info);//leak 的东西
 
     }
 
