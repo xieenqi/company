@@ -17,6 +17,7 @@
         android:dividerHeight="0.5dp" />
 
     <LinearLayout
+        android:id="@+id/layout_comment"
         android:background="@color/white"
         android:paddingBottom="5dp"
         android:layout_width="match_parent"

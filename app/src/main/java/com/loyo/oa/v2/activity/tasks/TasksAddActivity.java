@@ -348,7 +348,6 @@ public class TasksAddActivity extends BaseActivity {
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                         ExtraAndResult.request_Code, bundle1);
 
-
                 break;
 
             case R.id.layout_del:

@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activity;
 
 import android.content.Intent;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -8,6 +10,7 @@ import com.loyo.oa.v2.adapter.DiscussionAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -37,14 +40,21 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_discussion)
 public class DiscussionActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+
     public static final int REQUEST_PREVIEW_DISCUSS=121;
+
     @Extra("attachmentUUId") String attachmentUUId;
+    @Extra("isMyUser") boolean isMyUser;
+    @Extra("fromPage") int fromPage;
+
+
     @ViewById PullToRefreshListView listView_discussion;
     @ViewById TextView et_comment;
     private boolean isPullUp=false;
 
     private PaginationX<Discussion> mPageDiscussion = new PaginationX<>(20);
     private DiscussionAdapter adapter;
+    private LinearLayout layout_comment;
 
     @AfterViews
     void init() {
@@ -55,6 +65,12 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     }
 
     void getDDiscussion() {
+
+        layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
+/*        if(!isMyUser && fromPage == Common.TASK_PAGE){
+            layout_comment.setVisibility(View.GONE);
+        }*/
+
         final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", mPageDiscussion.getPageIndex());

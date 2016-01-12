@@ -46,11 +46,11 @@ public class MyLetterListView extends View {
 
         int height = getHeight();
         int width = getWidth();
-        int count=keyword.length;
-        if(count<14){
-            count=14;
+        int count = keyword.length;
+        if (count < 14) {
+            count = 14;
         }
-        float singleHeight = height /count;
+        float singleHeight = height / count;
         for (int i = 0; i < keyword.length; i++) {
             //			paint.setColor(Color.WHITE);	//设置字体的颜色
             //            paint.setColor(getResources().getColor(R.color.gray_));
@@ -65,7 +65,7 @@ public class MyLetterListView extends View {
                 paint.setFakeBoldText(true);
             }
             float xPos = width / 2 - paint.measureText(keyword[i]) / 2;
-            float yPos = singleHeight * i +singleHeight;
+            float yPos = singleHeight * i + singleHeight;
             canvas.drawText(keyword[i], xPos, yPos, paint);
             paint.reset();
         }
