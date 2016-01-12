@@ -15,6 +15,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -45,7 +46,6 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
 
     @Extra("attachmentUUId") String attachmentUUId;
     @Extra("isMyUser") boolean isMyUser;
-    @Extra("fromPage") int fromPage;
 
 
     @ViewById PullToRefreshListView listView_discussion;
@@ -67,9 +67,10 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     void getDDiscussion() {
 
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
-/*        if(!isMyUser && fromPage == Common.TASK_PAGE){
+
+        if(!isMyUser){
             layout_comment.setVisibility(View.GONE);
-        }*/
+        }
 
         final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
         HashMap<String, Object> body = new HashMap<>();

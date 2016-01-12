@@ -74,7 +74,7 @@ public class AttachmentActivity extends BaseActivity {
     void init() {
         super.setTitle("附件");
 
-        if (!isMyUser && fromPage == Common.CUSTOMER_PAGE) {
+        if (!isMyUser) {
             tv_upload.setVisibility(View.GONE);
         }
 
@@ -204,7 +204,6 @@ public class AttachmentActivity extends BaseActivity {
      * 上传附件
      */
     private void uploadAttachment(File file) {
-
         Utils.uploadAttachment(uuid, file)
                 .subscribe(new CommonSubscriber(this) {
                     @Override
@@ -229,5 +228,4 @@ public class AttachmentActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }
