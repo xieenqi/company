@@ -137,6 +137,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private Members members = new Members();
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
+    private StringBuffer joinUserId = new StringBuffer();
 
     @SuppressLint("WrongViewCast")
     @AfterViews
@@ -167,7 +168,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 crmSwitch(b);
             }
         });
-
         if (null != mWorkReport) {
             LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
@@ -224,7 +224,7 @@ public class WorkReportAddActivity extends BaseActivity {
             rb2.setEnabled(false);
             rb3.setEnabled(false);
         }
-        else if (type == TYPE_EDIT) {
+        else if (type == TYPE_CREATE) {
             getAttachments();
         }
         else if(type == TYPE_PROJECT){
@@ -279,6 +279,8 @@ public class WorkReportAddActivity extends BaseActivity {
 
         for (int i = 0; i < mWorkReport.getMembers().getAllData().size(); i++) {
             joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName());
+            joinUserId.append(mWorkReport.getMembers().getAllData().get(i).getId() + ",");
+
         }
 
         return joinUser.toString();
@@ -442,10 +444,11 @@ public class WorkReportAddActivity extends BaseActivity {
             case R.id.layout_toUser:
 
                 mBundle = new Bundle();
-                mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
+                mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                         ExtraAndResult.request_Code, mBundle);
+
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -454,6 +457,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 layout_del.setVisibility(View.GONE);
                 img_title_toUser.setVisibility(View.VISIBLE);
                 break;
+
             /*选择项目归档*/
             case R.id.layout_mproject:
                 mBundle = new Bundle();
@@ -571,32 +575,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 break;
-
-/*            *//*点评人回调*//*
-            case ExtraAndResult.REQUSET_COMMENT:
-                User user = (User) data.getSerializableExtra(User.class.getName());
-                if (user != null) {//点评人回调
-                    if (null == mReviewer) {
-                        mReviewer = new Reviewer(user.toShortUser());
-                    }
-                    mReviewer.setUser(user.toShortUser());
-                    tv_reviewer.setText(user.getRealname());
-                }
-                break;
-            *//*抄送人回调*//*
-            case ExtraAndResult.REQUSET_COPY_PERSONS:
-                String department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
-                String department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
-                String user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-                String user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-
-                setMembers(user_id, user_name, department_id, department_name);
-                if (!TextUtils.isEmpty(department_name)) {
-                    tv_toUser.setText(department_name);
-                } else if (!TextUtils.isEmpty(user_name)) {
-                    tv_toUser.setText(user_name);
-                }
-                break;*/
 
             case SelectPicPopupWindow.GET_IMG:
                 try {
