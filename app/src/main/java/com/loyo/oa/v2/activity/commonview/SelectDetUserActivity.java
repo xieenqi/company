@@ -15,20 +15,20 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.adapter.SelectDetAdapter;
 import com.loyo.oa.v2.adapter.SelectUserAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
-import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LogUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -50,22 +50,21 @@ public class SelectDetUserActivity extends Activity {
     public SelectUserAdapter mUserAdapter;
     public Intent mIntent;
     public Bundle mBundle;
-
     public ArrayList<User> userList;
     public ArrayList<User> userAllList; //所有员工
     public ArrayList<Department> deptSource;//部门数据源｀
     public ArrayList<UserGroupData> totalSource; //全部数据源
-
     public boolean isAllCheck = false;
     public boolean popy; //当前列表 是否全选
     public int totalSize = 0;
     public int positions = 0;
     public int seltSize;
     public int isSize;
-    public int selectType; //1负责人 0参与人 2编辑参与人
+    public int selectType; //0参与人 1负责人 2编辑参与人
     public String[] joinUserId;
     public StringBuffer nameApd;
     public StringBuffer idApd;
+    private TextView tv_selectdetuser_tv;
 
 
     public Handler mHandler = new Handler() {
@@ -91,8 +90,6 @@ public class SelectDetUserActivity extends Activity {
      */
     void initView() {
 
-
-
         mIntent = getIntent();
         mBundle = mIntent.getExtras();
         selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);
@@ -111,7 +108,7 @@ public class SelectDetUserActivity extends Activity {
         rightLv = (ListView) findViewById(R.id.lv_selectdetuser_right);
         btnSure = (Button) findViewById(R.id.btn_title_right);
         llback = (LinearLayout) findViewById(R.id.ll_back);
-
+        tv_selectdetuser_tv = (TextView) findViewById(R.id.tv_selectdetuser_tv);
 
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
@@ -192,7 +189,6 @@ public class SelectDetUserActivity extends Activity {
                     mBundle.putSerializable(User.class.getName(), userList.get(position - 1));
                     mIntent.putExtras(mBundle);
                     app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-
                 }
             }
         });
@@ -243,15 +239,26 @@ public class SelectDetUserActivity extends Activity {
             public void onClick(View view) {
 
                 dealDeptContent();
+                mIntent = new Intent();
+                mBundle = new Bundle();
+                if(totalSize != 0){
+                    mBundle.putString(ExtraAndResult.CC_USER_ID, idApd.toString());
+                    mBundle.putString(ExtraAndResult.CC_USER_NAME, nameApd.toString());
+                }
+                mIntent.putExtras(mBundle);
+                app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 
-                Intent intent = new Intent();
-                Bundle mBundle = new Bundle();
-                mBundle.putString(ExtraAndResult.CC_USER_ID, idApd.toString());
-                mBundle.putString(ExtraAndResult.CC_USER_NAME, nameApd.toString());
-                intent.putExtras(mBundle);
+            }
+        });
 
-                app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-
+        /*搜索*/
+        tv_selectdetuser_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainApp.selectAllUsers = userAllList;
+                mBundle = new Bundle();
+                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, selectType);
+                app.startActivityForResult(SelectDetUserActivity.this, SelectDetUserSerach.class, MainApp.ENTER_TYPE_ZOOM_IN, ExtraAndResult.request_Code, mBundle);
             }
         });
     }
@@ -339,7 +346,7 @@ public class SelectDetUserActivity extends Activity {
     /**
      * 判断当前用户是否属于本部门，xpath判断
      */
-   void getInfoUser(int positions) {
+    void getInfoUser(int positions) {
         String xPath = null;
         userList.clear();
         for (User user : userAllList) {
@@ -351,6 +358,66 @@ public class SelectDetUserActivity extends Activity {
         dealisAllSelect(userList);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != ExtraAndResult.request_Code) {
+            return;
+        }
+        int selectTypePage = 999;
+        String userId;
+        switch (requestCode) {
+           /*选人搜索回调*/
+            case ExtraAndResult.request_Code:
+
+                try{
+                     selectTypePage = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+
+                switch (selectTypePage) {
+                   /*负责人*/
+                    case ExtraAndResult.TYPE_SELECT_SINGLE:
+
+                        mIntent = new Intent();
+                        mBundle = new Bundle();
+                        mBundle.putSerializable(User.class.getName(), data.getSerializableExtra(User.class.getName()));
+                        mIntent.putExtras(mBundle);
+                        app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+
+                        break;
+                   /*参与人*/
+                    case ExtraAndResult.TYPE_SELECT_MULTUI:
+
+                        userId = data.getStringExtra("userId");
+                        for (User user : userAllList) {
+                            if (user.getId().equals(userId)) {
+                                user.setIndex(true);
+                            }
+                        }
+                        totalSize += 1;
+                        mHandler.sendEmptyMessage(0x01);
+
+                        break;
+
+                   /*参与人编辑*/
+                    case ExtraAndResult.TYPE_SELECT_EDT:
+
+                        userId = data.getStringExtra("userId");
+                        for (User user : userAllList) {
+                            if (user.getId().equals(userId)) {
+                                user.setIndex(true);
+                            }
+                        }
+                        totalSize += 1;
+                        mHandler.sendEmptyMessage(0x01);
+
+                        break;
+                }
+        }
+    }
 
 
     //************************************************************暂时弃用**********************************************************

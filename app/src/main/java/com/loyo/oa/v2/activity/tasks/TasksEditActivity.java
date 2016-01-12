@@ -176,7 +176,6 @@ public class TasksEditActivity extends BaseActivity {
         if (mTask.getProject() != null) {
             tv_Project.setText(mTask.getProject().title);
         }
-
     }
 
     void getAttachments() {
@@ -441,7 +440,10 @@ public class TasksEditActivity extends BaseActivity {
                     tv_Project.setText("无");
                 }
                 break;
+
+            /*负责人 参与人选人回调*/
             case ExtraAndResult.request_Code:
+
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
                     setResponsiblePersion(user);
@@ -451,10 +453,13 @@ public class TasksEditActivity extends BaseActivity {
                     if (cc_user_id != null && cc_user_name != null) {
                         setJoinUsers(cc_user_id, cc_user_name);
                     } else {
-                        Toast("未选择相关人员");
+                        member = new Members();
+                        tv_toUsers.setText("无");
                     }
                 }
+
                 break;
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");

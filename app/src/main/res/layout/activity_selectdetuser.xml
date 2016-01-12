@@ -75,13 +75,13 @@
 
     <TextView
         android:id="@+id/tv_selectdetuser_tv"
-        android:paddingLeft="10dp"
+        android:paddingLeft="15dp"
         android:gravity="center_vertical"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:drawableLeft="@drawable/item_selectdetuser_serach"
         android:text="搜索"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:textColor="@color/suodesilei"
         android:background="@color/white"
         />

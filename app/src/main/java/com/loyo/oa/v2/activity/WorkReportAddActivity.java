@@ -564,6 +564,9 @@ public class WorkReportAddActivity extends BaseActivity {
                         tv_toUser.setText(department_name);
                     } else if (!TextUtils.isEmpty(cc_user_name)) {
                         tv_toUser.setText(cc_user_name);
+                    } else {
+                        members = new Members();
+                        tv_toUser.setText("无");
                     }
                 }
 
