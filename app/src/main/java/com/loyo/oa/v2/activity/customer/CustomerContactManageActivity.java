@@ -13,6 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -47,11 +48,12 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @Extra("Customer") Customer mCustomer;
     @Extra("isMyUser") boolean isMyUser;
+    @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
 
     @AfterViews
     void initViews() {
 
-        if(!isMyUser){
+        if (!isMyUser || isMenber) {
             layout_add.setVisibility(View.GONE);
         }
 
@@ -88,17 +90,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         app.logUtil.e("contacts : " + contacts.size());
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
-            ContactViewGroup contactViewGroup = new ContactViewGroup(this,mCustomer, contact,this);
-            contactViewGroup.bindView(i + 1, layout_container,isMyUser);
+            ContactViewGroup contactViewGroup = new ContactViewGroup(this, mCustomer, contact, this);
+            contactViewGroup.bindView(i + 1, layout_container, isMyUser ,isMenber);
         }
     }
 
 
-
     @Click(R.id.layout_add)
     void addNewContact() {
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("customer",mCustomer);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("customer", mCustomer);
         app.startActivityForResult(this, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT, bundle);
     }
 
@@ -141,6 +142,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     /**
      * 删除联系人的回调 xnq
+     *
      * @param contact
      */
     @Override
@@ -160,8 +162,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     }
                 });
     }
+
     /**
-     *  设置默认联系人的回调 xnq
+     * 设置默认联系人的回调 xnq
+     *
      * @param contact
      */
     @Override
@@ -170,8 +174,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 setDefaultContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(Contact _contact, Response response) {
-                        Intent intent=new Intent();
-                        CustomerContactManageActivity.this.setResult(Activity.RESULT_OK,intent);//回调刷新界面
+                        Intent intent = new Intent();
+                        CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
                         for (int i = 0; i < mCustomer.contacts.size(); i++) {
                             Contact newContact = mCustomer.contacts.get(i);
                             if (newContact.isDefault()) {
