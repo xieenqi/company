@@ -221,7 +221,7 @@ public final class Common {
                 deptInUser.setName(department.getName());
 
                 //2016.1.8，当depts包含多个部门时，处理
-/*                for(UserInfo userInfo : user.getDepts()){
+/*                for(UserInfo userInfo : user.getDepts()) {
                     userInfo.setShortDept(department);
                 }*/
 

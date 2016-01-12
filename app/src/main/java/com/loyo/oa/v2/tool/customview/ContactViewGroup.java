@@ -28,7 +28,6 @@ public class ContactViewGroup extends LinearLayout {
 
     public interface OnContactProcessCallback {
         public void onDel(Contact contact);
-
         public void onSetDefault(Contact contact);
     }
 

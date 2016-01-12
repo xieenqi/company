@@ -35,6 +35,12 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     public ContactsInMyDeptAdapter(Context mContext, List<User> list) {
         this.mContext = mContext;
         this.list = list;
+
+       for(int i = 0;i<list.size();i++){
+           for(UserInfo userInfo : list.get(i).depts){
+               LogUtil.dll(this.list.get(i).getRealname() + "::" + userInfo.getShortDept().getName());
+           }
+       }
     }
 
     public void updateListView(List<User> list) {
@@ -84,8 +90,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         try {
             deptName = new StringBuffer();
             for(UserInfo userInfo : this.list.get(position).getDepts()){
-                deptName.append(userInfo.getShortDept().getName()+" ");
-                LogUtil.dll(this.list.get(position).getRealname() + ":" + userInfo.getShortDept().getName());
+                deptName.append(userInfo.getShortDept().getName() + " ");
             }
         } catch (NullPointerException e) {
             e.printStackTrace();

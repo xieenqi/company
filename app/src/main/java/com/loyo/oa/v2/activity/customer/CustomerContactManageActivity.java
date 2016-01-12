@@ -15,9 +15,11 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ContactViewGroup;
@@ -30,6 +32,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -40,12 +43,11 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_customer_contact_manage)
 public class CustomerContactManageActivity extends BaseActivity implements ContactViewGroup.OnContactProcessCallback {
+
     @ViewById ViewGroup layout_back;
     @ViewById TextView tv_title;
-
     @ViewById LinearLayout layout_container;
     @ViewById ViewGroup layout_add;
-
     @Extra("Customer") Customer mCustomer;
     @Extra("isMyUser") boolean isMyUser;
     @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
@@ -105,8 +107,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @Click(R.id.layout_back)
     void back() {
-        finish();
-        //onBackPressed();
+        onBackPressed();
     }
 
     @Override
@@ -151,16 +152,29 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 deleteContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(Contact contact, Response response) {
+                        LogUtil.dll("onDel");
                         for (int i = 0; i < mCustomer.contacts.size(); i++) {
                             Contact newContact = mCustomer.contacts.get(i);
                             if (newContact.equals(contact)) {
+                                LogUtil.dll("if -- onDel");
                                 mCustomer.contacts.remove(i);
                                 initData();
                                 break;
                             }
                         }
+                        refresh();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
                     }
                 });
+            }
+
+    private void refresh() {
+      onCreate(null);
     }
 
     /**
