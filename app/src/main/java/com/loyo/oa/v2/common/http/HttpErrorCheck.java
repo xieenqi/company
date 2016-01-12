@@ -33,11 +33,10 @@ public class HttpErrorCheck {
     }
 
     public static void checkError(RetrofitError error) {
-
-
+        LogUtil.d("网络异常" + error.getMessage());
         try {
             String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
-            LogUtil.d("error获得的：",msg);
+            LogUtil.d("error获得的：", msg);
             JSONObject job = new JSONObject(msg);
             if (500 == error.getResponse().getStatus()) {
                 Toast(job.getString("error"));
@@ -55,7 +54,7 @@ public class HttpErrorCheck {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
-            LogUtil.d("JSON异常err:"+error.getUrl());
+            LogUtil.d("JSON异常err:" + error.getUrl());
             e.printStackTrace();
         }
         // LogUtil.d("cu123ow :" + error.getResponse().getBody().toString());
