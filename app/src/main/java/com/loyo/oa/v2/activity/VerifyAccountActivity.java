@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +13,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.IMobile;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -41,14 +41,14 @@ import retrofit.client.Response;
 public class VerifyAccountActivity extends BaseActivity {
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
-    @ViewById Button btn_confirm,btn_get_code;
+    @ViewById Button btn_confirm, btn_get_code;
     @ViewById EditText et_account, et_code;
 
     @AfterViews
-    void initViews(){
+    void initViews() {
         setTouchView(NO_SCROLL);
         tv_title_1.setText("找回密码");
-        Global.SetTouchView(img_title_left, btn_confirm,btn_get_code);
+        Global.SetTouchView(img_title_left, btn_confirm, btn_get_code);
         et_account.addTextChangedListener(textWatcher);
     }
 
@@ -69,9 +69,10 @@ public class VerifyAccountActivity extends BaseActivity {
 
     /**
      * 验证手机号
+     *
      * @param tel
      */
-    private void verifyPhone(final String tel){
+    private void verifyPhone(final String tel) {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMain.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
             public void success(Object o, Response response) {
@@ -82,14 +83,16 @@ public class VerifyAccountActivity extends BaseActivity {
                 Toast("发送验证码成功");
 
             }
+
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
                 btn_get_code.setEnabled(true);
-                Log.d("LOG",error.getResponse().getStatus()+"m:"+error.getResponse().getReason());
-                if(error.getResponse().getStatus() == 500){
-                    Toast("您的手机号尚未登记到本系统,请联系统管理员!");
-                }
+               HttpErrorCheck.checkError(error);
+                //Log.d("LOG", error.getResponse().getStatus() + "m:" + error.getResponse().getReason());
+//                if (error.getResponse().getStatus() == 500) {
+//                    Toast("您的手机号尚未登记到本系统,请联系统管理员!");
+//                }
             }
         });
     }
@@ -98,9 +101,9 @@ public class VerifyAccountActivity extends BaseActivity {
      * 密码找回确定请求
      */
     @Click(R.id.btn_confirm)
-    void doNext(){
+    void doNext() {
         final String mobile = et_account.getText().toString().trim();
-        String code=et_code.getText().toString().trim();
+        String code = et_code.getText().toString().trim();
         if (TextUtils.isEmpty(mobile)) {
             Toast("请填写手机号");
             return;
@@ -109,44 +112,47 @@ public class VerifyAccountActivity extends BaseActivity {
             Toast("请填写验证码");
             return;
         }
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("tel",mobile);
-        map.put("code",code);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("tel", mobile);
+        map.put("code", code);
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_CODE).create(IMobile.class).verifyCode(map, new RCallback<Object>() {
             @Override
             public void success(Object o, Response response) {
                 et_account.removeCallbacks(countRunner);
-                Bundle bundle=new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putString("tel", mobile);
-                app.startActivity(VerifyAccountActivity.this,ResetPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT,true,bundle);
+                app.startActivity(VerifyAccountActivity.this, ResetPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle);
             }
+
             @Override
             public void failure(RetrofitError error) {
-                Toast("验证码不正确");
+                HttpErrorCheck.checkError(error);
+                //Toast("验证码不正确");
                 super.failure(error);
             }
         });
 
     }
 
-    private Runnable countRunner=new Runnable() {
-        private int time=60;
+    private Runnable countRunner = new Runnable() {
+        private int time = 60;
+
         @Override
         public void run() {
-            if(time==0){
-                time=60;
+            if (time == 0) {
+                time = 60;
                 et_account.setEnabled(true);
                 btn_get_code.setEnabled(true);
                 btn_get_code.setText("获取验证码");
                 return;
             }
-            btn_get_code.setText("重新获取("+time+")");
+            btn_get_code.setText("重新获取(" + time + ")");
             time--;
-            tv_title_1.postDelayed(this,1000);
+            tv_title_1.postDelayed(this, 1000);
         }
     };
 
-    private TextWatcher textWatcher=new TextWatcher() {
+    private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -156,13 +162,16 @@ public class VerifyAccountActivity extends BaseActivity {
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
         }
+
         @Override
         public void afterTextChanged(Editable editable) {
-            if(RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)){
+            if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 btn_get_code.setEnabled(true);
-            }else {
+                btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
+            } else {
                 btn_get_code.setEnabled(false);
-                if(editable.length()==11){
+                btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe2);
+                if (editable.length() == 11) {
                     Toast("请输入正确的手机号码");
                 }
             }
@@ -171,7 +180,7 @@ public class VerifyAccountActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT,RESULT_CANCELED,null);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
     }
 
 }
