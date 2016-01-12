@@ -38,15 +38,15 @@ import java.util.ArrayList;
  */
 public class ContactsDepartmentFragment extends BaseFragment {
 
-    View view;
-    ExpandableListView expandableListView_user;
-    ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
-    ArrayList<ContactsGroup> lstUserGroupData;
-    MyLetterListView letterView;
-    AlphabetIndexer index;
-    ViewGroup layout_toast;
-    TextView tv_toast;
-    String mIndex;
+    private View view;
+    private ExpandableListView expandableListView_user;
+    private ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
+    private ArrayList<ContactsGroup> lstUserGroupData;
+    private MyLetterListView letterView;
+    private AlphabetIndexer index;
+    private ViewGroup layout_toast;
+    private TextView tv_toast;
+    private String mIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,16 +93,16 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
                     switch (state) {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                            layout_toast.setVisibility(View.VISIBLE);
+                            //layout_toast.setVisibility(View.VISIBLE);
                             tv_toast.setText(sectionLetter);
-                            scroll(position);
+                            scroll(position -1);
                             break;
                         case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
                             tv_toast.setText(sectionLetter);
-                            scroll(position);
+                            scroll(position -1);
                             break;
                         case MyLetterListView.FINGER_ACTION_UP:
-                            layout_toast.setVisibility(View.GONE);// 手指离开
+                            //layout_toast.setVisibility(View.GONE);// 手指离开
                             break;
                         default:
                             break;

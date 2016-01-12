@@ -611,7 +611,7 @@ public class TasksInfoActivity extends BaseActivity {
                 bundle.putSerializable("allUsers", allUsers);
                 app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
             } else {
-                Toast("参与人不能创建子任务!");
+                Toast("你没有创建子任务权限!");
             }
         }
     }
@@ -854,7 +854,7 @@ public class TasksInfoActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", false);
+        bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("fromPage", Common.TASK_PAGE);
 
         ArrayList<NewUser> users = new ArrayList<>();
@@ -872,10 +872,13 @@ public class TasksInfoActivity extends BaseActivity {
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
 
+    /*讨论*/
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
+        bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
+        bundle.putInt("fromPage", Common.TASK_PAGE);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
