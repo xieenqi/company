@@ -241,6 +241,7 @@ public class SelectDetUserActivity extends Activity {
                     app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 
                 } else {
+
                     userList.get(position - 1).setIndex(userList.get(position - 1).isIndex() ? false : true);
                     statisticsTotalSize(position);
 
