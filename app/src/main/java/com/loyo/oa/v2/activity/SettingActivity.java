@@ -31,6 +31,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 
+import cn.jpush.android.api.JPushInterface;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -93,7 +94,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
         layout_setpassword = (ViewGroup) findViewById(R.id.layout_setpassword);
-        if (null!=MainApp.user&&!MainApp.user.isBQQ) {
+        if (null != MainApp.user && !MainApp.user.isBQQ) {
             layout_setpassword.setOnClickListener(this);
             layout_setpassword.setOnTouchListener(touch);
         } else {
@@ -213,7 +214,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         MainApp.user = null;
         //清楚sp
         SharedUtil.clearInfo(mContext);
-
+        JPushInterface.stopPush(app);
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
     }

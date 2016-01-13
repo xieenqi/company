@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         layout_login.setOnClickListener(this);
 
         if (Config_project.is_developer_mode) {
-            edt_username.setText("13438207189");//18380477066
+            edt_username.setText("15884479109");//18380477066  13438207189
             edt_password.setText("123456");
         }
     }

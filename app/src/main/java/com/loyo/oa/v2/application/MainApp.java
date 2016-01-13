@@ -67,7 +67,7 @@ public class MainApp extends Application {
     private static MainApp mainApp;
     public static Gson gson;
     public static HttpJpushNotification jpushData;
-    public boolean isCutomerEdit=false;//客户信息是否编辑过
+    public boolean isCutomerEdit = false;//客户信息是否编辑过
 
     public DisplayImageOptions options_rounded;
     public static DisplayImageOptions options_3;
@@ -96,7 +96,7 @@ public class MainApp extends Application {
     public double longitude = -1;
     public double latitude = -1;
     public String address;
-
+    public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
 
 
@@ -119,6 +119,7 @@ public class MainApp extends Application {
     }
 
     public static void setToken(String _token) {
+        JPushInterface.resumePush(mainApp);
         token = _token;
         SharedUtil.put(getMainApp().getBaseContext(), FinalVariables.TOKEN, token);
     }
@@ -165,9 +166,10 @@ public class MainApp extends Application {
         init();
         loadAreaCodeTable();
         loadIndustryCodeTable();
-           //    getWindowWH();
+        //    getWindowWH();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+
     }
 
     static RestAdapter restAdapter = null;
@@ -221,7 +223,6 @@ public class MainApp extends Application {
 
         return restAdapter;
     }
-
 
 
     void init() {
@@ -287,7 +288,7 @@ public class MainApp extends Application {
                     //                    .detectAll()
                     .detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
                     .penaltyLog()
-                    //                    .penaltyDialog()
+                            //                    .penaltyDialog()
                     .build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                     //                    .detectAll()

@@ -55,6 +55,7 @@ public class HttpErrorCheck {
             e.printStackTrace();
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
+            Toast(error.getMessage());
             e.printStackTrace();
         } catch (NullPointerException e){
             e.printStackTrace();

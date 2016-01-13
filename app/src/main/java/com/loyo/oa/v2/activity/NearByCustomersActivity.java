@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :附近客户页面
+ * 描述 :【附近客户】页面 个人 和团队
  * 作者 : ykb
  * 时间 : 15/9/17.
  */
@@ -64,14 +64,17 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         iv_submit.setOnTouchListener(Global.GetTouch());
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
-            TITLES[0] = type==Customer.CUSTOMER_TYPE_MINE?"我的客戶(":"团队客戶(";
-            TITLES[0] +=nearCount.count + ")";
-            TITLES[1] = "公司已赢单客戶(" + nearCount.winCount + ")";
+            if (type == 1) {
+                TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
+                TITLES[0] += nearCount.count + ")";
+                TITLES[1] = "公司已赢单客戶(" + nearCount.winCount + ")";
+            } else {
+                tabs.setVisibility(View.GONE);
+            }
         }
-
         initFragments();
         initTabs();
-        LogUtil.dll(" 附近客户数据： "+MainApp.gson.toJson(nearCount));
+        LogUtil.d(position + " 附近客户数据： " + type);
     }
 
     @Click(R.id.layout_back)
@@ -97,10 +100,10 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         tabs.setTextSize(app.spTopx(18));
         adapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-
         int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         tabs.setViewPager(pager);
+
     }
 
     /**
@@ -109,9 +112,10 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     private void initFragments() {
         for (int i = 0; i < TITLES.length; i++) {
             Bundle bundle = new Bundle();
-            bundle.putInt("type", i == 0 ? (type==Customer.CUSTOMER_TYPE_MINE?
-                    Customer.CUSTOMER_TYPE_NEAR_MINE:Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
+            bundle.putInt("type", i == 0 ? (type == Customer.CUSTOMER_TYPE_MINE ?
+                    Customer.CUSTOMER_TYPE_NEAR_MINE : Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
             bundle.putString("position", position);
+            bundle.putBoolean("isNear", true);
             CustomerCommonFragment fragment = (CustomerCommonFragment) Fragment.instantiate(this,
                     CustomerCommonFragment.class.getName(), bundle);
             fragmentXes.add(fragment);
