@@ -200,6 +200,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     case 1:
                         if (checkTime(qtime, app.df13)) {
                             nextMonth();
+                        }else{
+                            Toast("不能查看未来考勤！");
                         }
                         break;
                     case 2:

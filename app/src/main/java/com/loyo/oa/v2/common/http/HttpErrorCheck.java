@@ -57,7 +57,11 @@ public class HttpErrorCheck {
             LogUtil.d("JSON异常err:" + error.getUrl());
             Toast(error.getMessage());
             e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
+
+
         // LogUtil.d("cu123ow :" + error.getResponse().getBody().toString());
         //Object obj = error.getBody();
 //        String msg = null == obj

@@ -382,30 +382,6 @@ public class TasksEditActivity extends BaseActivity {
         tv_responsiblePerson.setText(newUser.getName());
     }
 
-    void setJoinUsers(String joinedUserIds, String joinedUserName) {
-
-        userss.clear();
-        depts.clear();
-
-        String[] userIds = joinedUserIds.split(",");
-        String[] userNames = joinedUserName.split(",");
-
-        for (int i = 0; i < userIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(userNames[i]);
-            newUser.setId(userIds[i]);
-            userss.add(newUser);
-        }
-
-        member.users = userss;
-
-        if (!TextUtils.isEmpty(joinedUserName)) {
-            tv_toUsers.setText(joinedUserName);
-            layout_del.setVisibility(View.VISIBLE);
-            img_title_right_toUsers.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
@@ -447,14 +423,25 @@ public class TasksEditActivity extends BaseActivity {
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
                     setResponsiblePersion(user);
-                } else {
-                    String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                    String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-                    if (cc_user_id != null && cc_user_name != null) {
-                        setJoinUsers(cc_user_id, cc_user_name);
-                    } else {
-                        member = new Members();
-                        tv_toUsers.setText("无");
+                }
+                  /*参与人回调*/
+                else {
+                    member = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
+                    if (null == member) {
+                        tv_toUsers.setText("无参与人");
+                    }else{
+                        StringBuffer joinName  = new StringBuffer();
+                        if(null != member.depts){
+                            for(NewUser newUser : member.depts){
+                                joinName.append(newUser.getName()+",");
+                            }
+                        }
+                        if(null != member.users){
+                            for(NewUser newUser : member.users){
+                                joinName.append(newUser.getName()+",");
+                            }
+                        }
+                        tv_toUsers.setText(joinName.toString());
                     }
                 }
 

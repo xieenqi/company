@@ -226,11 +226,13 @@ public class TasksInfoActivity extends BaseActivity {
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
+        }else{
+            tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
             tv_task_aboutuser.setText("关联客户:" + mTask.getCustomerName());
         } else {
-            tv_task_aboutuser.setVisibility(View.GONE);
+            tv_task_aboutuser.setText("关联客户: 无");
         }
 
         switch (mTask.getStatus()) {

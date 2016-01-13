@@ -16,8 +16,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -35,12 +33,6 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     public ContactsInMyDeptAdapter(Context mContext, List<User> list) {
         this.mContext = mContext;
         this.list = list;
-
-       for(int i = 0;i<list.size();i++){
-           for(UserInfo userInfo : list.get(i).depts){
-               LogUtil.dll(this.list.get(i).getRealname() + "::" + userInfo.getShortDept().getName());
-           }
-       }
     }
 
     public void updateListView(List<User> list) {
@@ -90,7 +82,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         try {
             deptName = new StringBuffer();
             for(UserInfo userInfo : this.list.get(position).getDepts()){
-                deptName.append(userInfo.getShortDept().getName() + " ");
+                deptName.append(userInfo.getShortDept().getName()+" ");
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -99,7 +91,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
         /*职位名字*/
         try {
-            workName = this.list.get(position).role.name;
+            workName = this.list.get(position).getDepts().get(0).getTitle();
         } catch (NullPointerException e) {
             e.printStackTrace();
             workName = "无";
