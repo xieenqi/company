@@ -80,7 +80,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isPullUp = false;
-    private boolean isFrist = false;
+    private boolean isNear = false;//附近客户传的值过来
     private String position;
     private NearCount nearCount;
 
@@ -106,6 +106,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             if (getArguments().containsKey("data")) {
                 mCustomers = (ArrayList) getArguments().getSerializable("data");
             }
+            if (getArguments().containsKey("isNear")) {
+                isNear = getArguments().getBoolean("isNear");
+            }
         }
     }
 
@@ -118,8 +121,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             mDropMenu = (DropListMenu) mView.findViewById(R.id.droplist_menu);
 
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
-
             listView = (PullToRefreshListView) mView.findViewById(R.id.listView_customers);
+
+
+
             listView.setEmptyView(emptyView);
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
@@ -149,7 +154,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
         order = "desc";
         filed = "lastActAt";
-
+        if (isNear) {
+            mDropMenu.setVisibility(View.GONE);
+        }
         initMenu();
         return mView;
     }
@@ -213,7 +220,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      */
     void initMenu() {
         source.clear();
-        isFrist = true;
         if (customer_type == Customer.CUSTOMER_TYPE_TEAM) {
             initOrganizationMenu();
         }
@@ -478,6 +484,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 RestAdapterFactory.getInstance().build(url).create(ICustomer.class).queryNearCount(position, new RCallback<NearCount>() {
                     @Override
                     public void success(NearCount _nearCount, Response response) {
+                        HttpErrorCheck.checkResponse("附近客户", response);
                         nearCount = _nearCount;
                         if (null != nearCount) {
                             tv_near_customers.setText("发现" + nearCount.total + "个附近客户");

@@ -276,7 +276,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
-        isQQLogin();
+
     }
 
     /**
@@ -291,6 +291,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 public void run() {
                     LogUtil.d(" Jpush user kongkong 空空");
                     setJpushAlias();
+                    isQQLogin();
                 }
             }, 5000);
             return;

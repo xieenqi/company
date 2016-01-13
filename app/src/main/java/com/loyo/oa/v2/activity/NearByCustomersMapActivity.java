@@ -6,15 +6,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.loyo.oa.v2.R;
@@ -50,7 +47,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
 
     private BaiduMap mBaiduMap;
 
-    private BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark);
+    //private BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark);
 
     @AfterViews
     void initViews() {
@@ -154,10 +151,10 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
                 double lat = customer.loc.loc[1];
                 double lng = customer.loc.loc[0];
                 LatLng latLng = LocationUtil.convert(1, lat, lng);
-                OverlayOptions point = new MarkerOptions().position(latLng).icon(bdA).zIndex(i).draggable(false);
+                //OverlayOptions point = new MarkerOptions().position(latLng).icon(bdA).zIndex(i).draggable(false);
                 OverlayItem item=new OverlayItem();
                 item.latLng=latLng;
-                item.options=point;
+                //item.options=point;
                 item.customer=customer;
                 points.add(item);
            // }

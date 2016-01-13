@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +41,7 @@ public class ActivityEditUserMobile extends BaseActivity {
 
     Button bt_verificationCode, btn_complete;
     EditText et_mobile, et_code, et_pwd;
+    CheckBox cb_showHide;
     String verificatioNumber, pwd, mobile;
 
     @Override
@@ -59,6 +64,13 @@ public class ActivityEditUserMobile extends BaseActivity {
         et_mobile.addTextChangedListener(textWatcher);
         et_pwd = (EditText) findViewById(R.id.et_pwd);
         et_code = (EditText) findViewById(R.id.et_code);
+        cb_showHide = (CheckBox) findViewById(R.id.cb_showHide);
+        cb_showHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                et_pwd.setTransformationMethod(isChecked ? HideReturnsTransformationMethod.getInstance() : PasswordTransformationMethod.getInstance());
+            }
+        });
         setTouchView(NO_SCROLL);
         Global.SetTouchView(img_title_left, bt_verificationCode, btn_complete);
 

@@ -69,13 +69,32 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             />
 
-        <EditText
-            android:id="@+id/et_pwd"
-            style="@style/edtText_normal"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请设置登录密码"
-            android:minHeight="@dimen/dimen_50"/>
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_pwd"
+                style="@style/edtText_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请设置登录密码"
+                android:inputType="textPassword"
+                android:minHeight="@dimen/dimen_50"/>
+
+            <CheckBox
+                android:id="@+id/cb_showHide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dimen_10"
+                android:background="@drawable/box_select"
+                android:button="@null"
+                android:checked="false"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
     <Button
