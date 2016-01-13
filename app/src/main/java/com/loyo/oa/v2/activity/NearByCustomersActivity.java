@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NearCount;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -90,6 +91,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         ArrayList<Customer> customers = fragmentXes.get(pager.getCurrentItem()).getmCustomers();
         Bundle bundle = new Bundle();
         bundle.putSerializable("customers", customers);
+        bundle.putInt(ExtraAndResult.EXTRA_TYPE, type);
         app.startActivity(this, NearByCustomersMapActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
     }
 

@@ -291,7 +291,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 public void run() {
                     LogUtil.d(" Jpush user kongkong 空空");
                     setJpushAlias();
-                    isQQLogin();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            isQQLogin();
+                        }
+                    });
                 }
             }, 5000);
             return;

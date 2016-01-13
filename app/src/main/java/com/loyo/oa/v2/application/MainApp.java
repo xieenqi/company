@@ -10,6 +10,7 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CellInfo;
@@ -227,7 +228,6 @@ public class MainApp extends Application {
 
     void init() {
 //        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
-//        SDKInitializer.initialize(this);
 //        if (BuildConfig.DEBUG) {
 //            try {
 //                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");
@@ -241,6 +241,7 @@ public class MainApp extends Application {
 //        }
         //        init_StrictMode();
 
+        SDKInitializer.initialize(this);//百度sdk初始化
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();
