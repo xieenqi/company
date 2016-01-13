@@ -60,6 +60,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.Serializable;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,7 +129,7 @@ public class TasksAddActivity extends BaseActivity {
     private NewUser newUser;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private StringBuffer strBuf;
-    private Members member;
+    private Members members;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private int remindTime;
@@ -137,9 +138,6 @@ public class TasksAddActivity extends BaseActivity {
     private long mDeadline;
     private int mRemind = 0;
     private boolean isCopy;
-
-//    private String customerId;
-//    private String customerName;
 
     @AfterViews
     void initUI() {
@@ -153,7 +151,7 @@ public class TasksAddActivity extends BaseActivity {
 
         userss = new ArrayList<>();
         depts = new ArrayList<>();
-        member = new Members();
+        members = new Members();
         strBuf = new StringBuffer();
 
         init_gridView_photo();
@@ -193,7 +191,7 @@ public class TasksAddActivity extends BaseActivity {
         //tv_Project.setText();
         switch_approve.setChecked(true);
         isCopy = mTask != null ? true : false;
-        member.users = mTask.getMembers().users; //参与人
+        members.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();  //负责人
     }
 
@@ -240,7 +238,7 @@ public class TasksAddActivity extends BaseActivity {
         map.put("title", title);
         map.put("content", content);
         map.put("responsiblePerson", newUser);
-        map.put("members", member);
+        map.put("members", members);
         map.put("planendAt", mDeadline);
         if (mRemind > 0) {
             map.put("remindflag", mRemind > 0);
@@ -425,30 +423,6 @@ public class TasksAddActivity extends BaseActivity {
         });
     }
 
-    void setJoinUsers(String joinedUserIds, String joinedUserName) {
-
-        userss.clear();
-        depts.clear();
-
-        String[] userIds = joinedUserIds.split(",");
-        String[] userNames = joinedUserName.split(",");
-
-        for (int i = 0; i < userIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(userNames[i]);
-            newUser.setId(userIds[i]);
-            userss.add(newUser);
-        }
-
-        member.users = userss;
-
-        if (!TextUtils.isEmpty(joinedUserName)) {
-            tv_toUsers.setText(joinedUserName);
-            layout_del.setVisibility(View.VISIBLE);
-            img_title_right_toUsers.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
@@ -486,21 +460,28 @@ public class TasksAddActivity extends BaseActivity {
             case ExtraAndResult.request_Code:
 
                 User user = (User) data.getSerializableExtra(User.class.getName());
-                //负责人回调
+                /*负责人回调*/
                 if (user != null) {
                     setResponsiblePersion(user);
-
                 }
-
-                //参与人回调
+                /*参与人回调*/
                 else {
-                    String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                    String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-                    if (cc_user_id != null || cc_user_name != null) {
-                        setJoinUsers(cc_user_id, cc_user_name);
-                    } else {
-                        member = new Members();
-                        tv_toUsers.setText("无");
+                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
+                    if (null == members) {
+                        tv_toUsers.setText("无参与人");
+                    }else{
+                        StringBuffer joinName  = new StringBuffer();
+                        if(null != members.depts){
+                            for(NewUser newUser : members.depts){
+                                joinName.append(newUser.getName()+",");
+                            }
+                        }
+                        if(null != members.users){
+                            for(NewUser newUser : members.users){
+                                joinName.append(newUser.getName()+",");
+                            }
+                        }
+                        tv_toUsers.setText(joinName.toString());
                     }
                 }
 

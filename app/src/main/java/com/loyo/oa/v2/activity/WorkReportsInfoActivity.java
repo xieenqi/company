@@ -399,14 +399,18 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     public String getJoinUserNames() {
         StringBuilder result = new StringBuilder();
-        if (mWorkReport.getMembers().users != null && mWorkReport.getMembers().users.size() != 0) {
-            for (int i = 0; i < mWorkReport.getMembers().users.size(); i++) {
-                result.append(mWorkReport.getMembers().users.get(i).getName());
-                if (i < mWorkReport.getMembers().users.size() - 1) {
-                    result.append(",");
+        if (mWorkReport.getMembers().users != null || mWorkReport.getMembers().depts != null) {
+            if(mWorkReport.getMembers().users != null){
+                for (int i = 0; i < mWorkReport.getMembers().users.size(); i++) {
+                    result.append(mWorkReport.getMembers().users.get(i).getName()+",");
                 }
             }
 
+            if(mWorkReport.getMembers().depts != null){
+                for (int i = 0; i < mWorkReport.getMembers().depts.size(); i++) {
+                    result.append(mWorkReport.getMembers().depts.get(i).getName()+",");
+                }
+            }
             return result.toString();
         } else {
             return result.append("无抄送人").toString();

@@ -75,7 +75,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     }
 
     @Click(R.id.layout_back)
-    void back() {
+    void back()    {
         onBackPressed();
     }
 

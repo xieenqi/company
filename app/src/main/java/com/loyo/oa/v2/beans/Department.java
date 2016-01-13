@@ -16,11 +16,22 @@ public class Department implements Serializable {
     private String id;
     private String xpath;
     private String name;
-    private long createdAt;
     private String superiorId;
     private String fullPinyin;
     private String simplePinyin;
     private long updatedAt;
+    private long createdAt;
+    private boolean isIndex;
+
+
+    public boolean isIndex() {
+        return isIndex;
+    }
+
+    public void setIsIndex(boolean isIndex) {
+        this.isIndex = isIndex;
+    }
+
     private ArrayList<User> users = new ArrayList<>();
 
     public String getXpath() {

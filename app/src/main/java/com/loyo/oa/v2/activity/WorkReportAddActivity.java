@@ -557,20 +557,22 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 /*抄送人*/
                 else {
-
-                    String department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
-                    String department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
-                    String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                    String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-
-                    setMembers(cc_user_id, cc_user_name, department_id, department_name);
-                    if (!TextUtils.isEmpty(department_name)) {
-                        tv_toUser.setText(department_name);
-                    } else if (!TextUtils.isEmpty(cc_user_name)) {
-                        tv_toUser.setText(cc_user_name);
-                    } else {
-                        members = new Members();
-                        tv_toUser.setText("无");
+                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
+                    if (null == members) {
+                        tv_toUser.setText("无参与人");
+                    }else{
+                        StringBuffer joinName  = new StringBuffer();
+                        if(null != members.depts){
+                            for(NewUser newUser : members.depts){
+                                joinName.append(newUser.getName()+",");
+                            }
+                        }
+                        if(null != members.users){
+                            for(NewUser newUser : members.users){
+                                joinName.append(newUser.getName()+",");
+                            }
+                        }
+                        tv_toUser.setText(joinName.toString());
                     }
                 }
 
@@ -624,47 +626,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     Global.ProcException(e);
                 }
                 break;
-        }
-    }
-
-    /**
-     * 组装 抄送人 数据
-     *
-     * @param UserIds
-     * @param UserName
-     * @param departIds
-     * @param departName
-     */
-    private void setMembers(String UserIds, String UserName, String departIds, String departName) {
-
-        users.clear();
-        depts.clear();
-        if (!TextUtils.isEmpty(UserIds) && !TextUtils.isEmpty(UserName)) {
-            String[] userIds = UserIds.split(",");
-            String[] userNames = UserName.split(",");
-            for (int i = 0; i < userIds.length; i++) {
-                NewUser newUser = new NewUser();
-                newUser.setName(userNames[i]);
-                newUser.setId(userIds[i]);
-                users.add(newUser);
-            }
-            if (users != null && users.size() > 0) {
-                members.users = users;
-            }
-        }
-
-        if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
-            String[] dpIds = departIds.split(",");
-            String[] dpNames = departName.split(",");
-            for (int i = 0; i < dpIds.length; i++) {
-                NewUser newUser = new NewUser();
-                newUser.setName(dpNames[i]);
-                newUser.setId(dpIds[i]);
-                depts.add(newUser);
-            }
-            if (depts != null && depts.size() > 0) {
-                members.depts = depts;
-            }
         }
     }
 

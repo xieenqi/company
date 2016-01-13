@@ -128,7 +128,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_30"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -136,7 +136,7 @@
                     <TextView
                         style="@style/text_item1"
                         android:layout_width="80dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="30dp"
                         android:layout_marginLeft="@dimen/dimen_16"
                         android:hint="抄送人："
                         android:textSize="14sp"/>
@@ -148,9 +148,9 @@
                         android:layout_marginRight="@dimen/margin_side_edge"
                         android:layout_weight="1"
                         android:gravity="left|center_vertical"
-                        android:minHeight="@dimen/view_h_title"
                         android:textColor="#999999"
                         android:textSize="14sp"/>
+
                 </LinearLayout>
 
                 <LinearLayout

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.google.gson.Gson;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
@@ -179,7 +180,6 @@ public final class Common {
         if (MainApp.lstDepartment == null) {
             Global.ProcException(new Exception("部门为空!"));
         }
-
         return MainApp.lstDepartment == null ? new ArrayList<Department>() : MainApp.lstDepartment;
     }
 
@@ -193,6 +193,7 @@ public final class Common {
 
         setLstDepartment(DBManager.Instance().getOrganization());
     }
+
 
     /**
      * 组装组织架构
@@ -211,6 +212,7 @@ public final class Common {
             }
 
             for (User user : department.getUsers()) {
+
                 if (TextUtils.isEmpty(user.departmentsName)) {
                     user.departmentsName=department.getName();
                 }
@@ -220,14 +222,9 @@ public final class Common {
                 deptInUser.setSuperiorId(department.getSuperiorId());
                 deptInUser.setName(department.getName());
 
-                //2016.1.8，当depts包含多个部门时，处理
-/*                for(UserInfo userInfo : user.getDepts()) {
-                    userInfo.setShortDept(department);
-                }*/
-
-                UserInfo userInfo = new UserInfo();
+/*              UserInfo userInfo = new UserInfo();
                 userInfo.setShortDept(department);
-                user.depts=new ArrayList<>(Arrays.asList(userInfo));
+                user.depts=new ArrayList<>(Arrays.asList(userInfo));*/
 
                 String groupName_current = user.getGroupName();
                 Boolean isContainsGroupName = false;
@@ -247,7 +244,6 @@ public final class Common {
                         if (!isContainsUser) {
                             userGroupData_current.getLstUser().add(user);
                         }
-
                         break;
                     }
                 }
@@ -257,7 +253,6 @@ public final class Common {
                     userGroupData_current.setGroupName(groupName_current);
                     userGroupData_current.getLstUser().add(user);
                     userGroupData_current.setDepartmentId(department.getId());
-
                     lstUserGroupData_current.add(userGroupData_current);
                 }
             }
@@ -292,6 +287,9 @@ public final class Common {
             MainApp.lstDepartment.addAll(_lstDepartment);
         }
 
+        /*老版通讯录数据，如果屏蔽，通讯录搜索会不出结果
+        * 2016.1.13前解决。
+        * */
         setOrganization(_lstDepartment);
     }
 
@@ -433,8 +431,9 @@ public final class Common {
         return new User();
     }
 
+
     /**
-     * 获取当前账号人员信息
+     * 获取当前账号，本部门通讯录人员
      * */
     public static ArrayList<User> getMyUserDept(){
 
@@ -449,7 +448,7 @@ public final class Common {
             }
         }
 
-       /*获取我的部门下标*/
+        /*获取我的部门下标*/
         for(int i = 0;i<getLstDepartment().size();i++){
             for(int j = 0;j<MainApp.user.depts.size();j++){
                 if(getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())){
@@ -459,54 +458,16 @@ public final class Common {
             }
         }
 
-        /*根据部门下标获取本部门人员*/
+        /*获取我的部门下 所有人员*/
         myUsers.clear();
-        for (User user : userAllList) {
-            for(int j = 0;j<user.getDepts().size();j++){
-                String xPath = user.getDepts().get(j).getShortDept().getXpath();
-                if (xPath.contains(getLstDepartment().get(positions).getXpath())) {
+        for(Department department : getLstDepartment()){
+            if(department.getXpath().contains(getLstDepartment().get(positions).getXpath())){
+                for(User user : department.getUsers()){
                             myUsers.add(user);
                 }
             }
         }
+
         return myUsers;
     }
-
-
-
-    /**
-     * 获取改部门下 所有员工
-     */
-    public static void  getDeptAllUsers(ArrayList<User> userList,String depId) {
-
-        userList.clear();
-        String Id = depId;
-        assUserList(userList, Common.getLstDepartment(Id), Common.getListUser(Id));
-
-    }
-
-
-    /**
-     * 拣取人员
-     */
-   public static void assUserList(ArrayList<User> arrayList, ArrayList<Department> departments, ArrayList<User> users) {
-
-        if (users.size() != 0) {
-            arrayList.addAll(users);
-        }
-
-        if (departments.size() != 0) {
-
-            for (Department department : departments) {
-                String id = department.getId();
-                ArrayList<Department> dept = Common.getLstDepartment(id);
-                ArrayList<User> user = Common.getListUser(id);
-                assUserList(arrayList, dept, user);
-            }
-
-        } else {
-            return;
-        }
-    }
-
 }

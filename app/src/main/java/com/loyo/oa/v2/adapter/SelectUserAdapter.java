@@ -93,9 +93,9 @@ public class SelectUserAdapter extends BaseAdapter {
             deptName = "无";
         }
 
-        /*用户级别*/
+        /*用户职称*/
         try {
-            npcName = listUsers.get(position).role.name;
+            npcName = listUsers.get(position).getDepts().get(0).getTitle();
         } catch (NullPointerException e) {
             e.printStackTrace();
             npcName = "无";
