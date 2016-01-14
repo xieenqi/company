@@ -81,16 +81,14 @@ public class Config_project {
      */
     public static String SERVER_URL_CUSTOMER() {
         return isRelease ? Domain.crm : IP + ":8090";
-    }//8090
+    }
 
     /**
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-
-        return isRelease ? Domain.account : IP + ":8080";
+        return isRelease ? Domain.account : IP + ":8080"; //staging 88   本地131:8080
     }
-    //131服务器 88端口
 
     /**
      * oa 系统

@@ -22,6 +22,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ContactViewGroup;
 
 import org.androidannotations.annotations.AfterViews;
@@ -66,20 +67,27 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         layout_add.setOnTouchListener(Global.GetTouch());
         getData();
 
-        LogUtil.dll("联系人页面 是否为我的客户:" + isMyUser);
-        LogUtil.dll("联系人页面 是否为参与人:"+isMenber);
-
     }
 
     /**
      * 获取客户详情
      */
     private void getData() {
+        Utils.dialogShow(this,"请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
                 mCustomer = customer;
+                Utils.dialogDismiss();
                 initData();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                Utils.dialogDismiss();
+                finish();
             }
         });
     }

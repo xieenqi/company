@@ -16,7 +16,9 @@ import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -62,13 +64,11 @@ public class ContactViewGroup extends LinearLayout {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
 
-
         if (getId() > 1) {
             View view = new View(context);
             view.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
             view.setLayoutParams(new ViewGroup.LayoutParams(-1, app.spTopx(10)));
             addView(view);
-
         }
 
         //加载删除条目
@@ -79,8 +79,10 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
+            LogUtil.dll("isMyUser:"+isMyUser);
             /*判断是否有操作权限*/
             if (!isMyUser) {
+                LogUtil.dll("进入!isMyUser");
                 edit.setVisibility(View.GONE);
                 del.setVisibility(View.GONE);
                 default_.setVisibility(View.GONE);
@@ -119,7 +121,6 @@ public class ContactViewGroup extends LinearLayout {
             TextView tv_email = (TextView) findViewById(R.id.tv_email);
             TextView tv_memo = (TextView) findViewById(R.id.tv_memo);
 
-
             tv_name.setText(mContact.getName());
             tv_tel.setText(mContact.getTel());
             tv_wiletel.setText(mContact.getWiretel());
@@ -145,7 +146,7 @@ public class ContactViewGroup extends LinearLayout {
                 }
             });
 
-            //设置默认联系人
+            /*设置默认联系人*/
             default_.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -157,6 +158,7 @@ public class ContactViewGroup extends LinearLayout {
 
             title.setText("联系人" + getId());
 
+            /*删除条目*/
             del.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
