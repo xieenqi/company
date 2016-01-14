@@ -25,6 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -50,14 +51,13 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     @Extra ArrayList<Customer> customers;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     int customerType;
-
+    @Extra(ExtraAndResult.EXTRA_DATA)//我的附近客户个数
+            int isMySize;
     private BaiduMap mBaiduMap;
-
-    BitmapDescriptor bitmap = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_mark_team);
-
-
-    private BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark_team);
+    //地图覆盖图标类型
+    private BitmapDescriptor markCompany = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark_company);//公司
+    private BitmapDescriptor markMy = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark_my);//我
+    private BitmapDescriptor markTeam = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark_team);//团队
 
     @AfterViews
     void initViews() {
@@ -143,12 +143,13 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
                 View view = LayoutInflater.from(NearByCustomersMapActivity.this).inflate(R.layout.map_bubble, null);
                 TextView name = (TextView) view.findViewById(R.id.tv_name);
                 TextView address = (TextView) view.findViewById(R.id.tv_address);
+                TextView navigation = (TextView) view.findViewById(R.id.tv_navigation);
                 name.setText(point.customer.name);
-                address.setText(point.customer.uuid);
-                view.setOnClickListener(new View.OnClickListener() {
+                address.setText(point.customer.loc.addr);
+                navigation.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Toast(point.customer.name);
+                    public void onClick(View v) {//开始导航
+                        Utils.goWhere(NearByCustomersMapActivity.this, point.customer.loc.loc[1], point.customer.loc.loc[0]);
                     }
                 });
                 InfoWindow infoWindow = new InfoWindow(view, point.latLng, -app.diptoPx(35));
@@ -165,7 +166,6 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
      */
     private ArrayList<OverlayItem> buildPoints() {
         ArrayList<OverlayItem> points = new ArrayList<>();
-
         if (null == customers || customers.isEmpty()) {
             return points;
         }
@@ -177,7 +177,8 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
             double lat = customer.loc.loc[1];
             double lng = customer.loc.loc[0];
             LatLng latLng = LocationUtil.convert(1, lat, lng);
-            OverlayOptions point = new MarkerOptions().position(latLng).icon(bdA).zIndex(i).draggable(false);
+            OverlayOptions point = new MarkerOptions().position(latLng).icon(customerType == 1 ? (i < isMySize ? markMy : markCompany)
+                    : markTeam).zIndex(i).draggable(false);
             OverlayItem item = new OverlayItem();
             item.latLng = latLng;
             item.options = point;

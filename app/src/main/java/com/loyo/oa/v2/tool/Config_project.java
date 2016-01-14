@@ -10,7 +10,7 @@ public class Config_project {
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
-    //public static String IP = "http://112.74.66.99";    //正式服务
+    //public static String IP = "http://112.74.66.99";    //正式服务 【66.99 的测试环境已经改成 http://staging.ukuaiqi.com/login 了哈】
     //public static String IP = "http://www.ukuaiqi.com";    //正式服务内部测试
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;

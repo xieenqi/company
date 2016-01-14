@@ -124,7 +124,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             listView = (PullToRefreshListView) mView.findViewById(R.id.listView_customers);
 
 
-
             listView.setEmptyView(emptyView);
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
@@ -705,6 +704,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             ImageView img1 = ViewHolder.get(convertView, R.id.img_1);
             ImageView img2 = ViewHolder.get(convertView, R.id.img_2);
             ImageView img3 = ViewHolder.get(convertView, R.id.img_3);
+            ImageView imgWin = ViewHolder.get(convertView, R.id.iv_win);
             ImageView img_public = ViewHolder.get(convertView, R.id.img_public);
             ImageView img_go_where = ViewHolder.get(convertView, R.id.img_go_where);
 
@@ -764,7 +764,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 tv_content2.setText("跟进时间：" + lastActivityAt);
 
             }
-            //附近-个人
+            //附近 - 个人(我的客户)
             else if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {
                 layout_go_where.setVisibility(View.VISIBLE);
                 img_public.setVisibility(View.GONE);
@@ -775,8 +775,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 tv_content1.setText("标签：" + tagItems);
                 tv_content4.setText("距离：" + customer.distance);
+                if (isNear && customer.winCount != 0) {
+                    imgWin.setVisibility(View.VISIBLE);
+                }
             }
-            //附近-团队
+            //附近 - 团队
             else if (customer_type == Customer.CUSTOMER_TYPE_NEAR_TEAM) {
                 layout_go_where.setVisibility(View.VISIBLE);
                 img_public.setVisibility(View.GONE);
@@ -787,9 +790,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 tv_content1.setText("标签：" + tagItems);
                 tv_content4.setText("距离：" + customer.distance);
+                if (isNear && customer.winCount != 0) {
+                    imgWin.setVisibility(View.VISIBLE);
+                }
             }
 
-            //附近-公司已赢单
+            //附近 - 公司已赢单
             if (customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY) {
                 layout_go_where.setVisibility(View.VISIBLE);
                 img_public.setVisibility(View.GONE);
@@ -821,6 +827,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             img_go_where.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Toast("kais 开始导航");
                     Utils.goWhere(mActivity, customer.loc.loc[1], customer.loc.loc[0]);
                 }
             });

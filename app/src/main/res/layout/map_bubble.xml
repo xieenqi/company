@@ -18,7 +18,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="客户民法中"
+            android:text=""
             android:textSize="16sp"
             />
 
@@ -26,20 +26,19 @@
             android:id="@+id/tv_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="地址：和发热我就是打开你发的那活儿"
+            android:text=""
             android:textSize="11sp"
-            android:visibility="gone"
             />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_navigation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_width="@dimen/dimen_45"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_marginLeft="@dimen/dimen_8"
+        android:gravity="center"
         android:text="导航"
         android:textColor="@color/title_bg1"
-        android:visibility="gone"
         android:textSize="18sp"
         />
 </LinearLayout>
