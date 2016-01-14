@@ -805,15 +805,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 企业QQ登录的用户绑定手机号码 权限待测试
      */
     public void isQQLogin() {
-        if (!app.isQQLogin && !TextUtils.isEmpty(MainApp.user.mobile)) {
-            return;
+        if (app.isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
+            ConfirmDialog("企业QQ绑定手机号码", "为了你的账号安全,请立即绑定手机号,绑定后可以使用手机号登录", new ConfirmDialogInterface() {
+                @Override
+                public void Confirm() {
+                    app.startActivity(MainActivity.this, ActivityEditUserMobile.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            });
         }
-        ConfirmDialog("企业QQ绑定手机号码", "为了你的账号安全,请立即绑定手机号,绑定后可以使用手机号登录", new ConfirmDialogInterface() {
-            @Override
-            public void Confirm() {
-                app.startActivity(MainActivity.this, ActivityEditUserMobile.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-            }
-        });
         app.isQQLogin = false;
     }
 

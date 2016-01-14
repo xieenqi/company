@@ -130,16 +130,6 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
             @Override
             public boolean onMarkerClick(Marker marker) {
                 final OverlayItem point = points.get(marker.getZIndex());
-
-//                TextView textView = new TextView(app);
-//                int padding = app.diptoPx(5);
-//                textView.setPadding(padding, padding, padding, padding);
-//                textView.setGravity(Gravity.CENTER);
-//                textView.setBackgroundResource(R.drawable.icon_map_bubble);
-//                textView.setTextColor(getResources().getColor(R.color.text1));
-//                textView.setText(point.customer.name + "   " + "\n地址：合格我就不理对方能成为");
-//                textView.setTextSize(14);
-
                 View view = LayoutInflater.from(NearByCustomersMapActivity.this).inflate(R.layout.map_bubble, null);
                 TextView name = (TextView) view.findViewById(R.id.tv_name);
                 TextView address = (TextView) view.findViewById(R.id.tv_address);
@@ -177,8 +167,9 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
             double lat = customer.loc.loc[1];
             double lng = customer.loc.loc[0];
             LatLng latLng = LocationUtil.convert(1, lat, lng);
-            OverlayOptions point = new MarkerOptions().position(latLng).icon(customerType == 1 ? (i < isMySize ? markMy : markCompany)
-                    : markTeam).zIndex(i).draggable(false);
+            OverlayOptions point = new MarkerOptions().position(latLng).icon
+                    (customerType == 1 ?(i < isMySize ? markMy : markCompany): markTeam)
+                    .zIndex(i).draggable(false);
             OverlayItem item = new OverlayItem();
             item.latLng = latLng;
             item.options = point;

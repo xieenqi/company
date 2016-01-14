@@ -13,9 +13,9 @@ public class Config_project {
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式
 
-    public static String IP = "http://192.168.31.131";     //内部测试环境
+    //public static String IP = "http://192.168.31.131";     //内部测试环境
 
-    //public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
+    public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
 
     //public static String IP = "http://112.74.66.99";       //产品预上线环境
 
@@ -87,8 +87,11 @@ public class Config_project {
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-        return isRelease ? Domain.account : IP + ":8080"; //staging 88   本地131:8080
+
+        return isRelease ? Domain.account : IP + ":88";
     }
+    //产品预上线环境服务器 88端口  131的是8080
+
 
     /**
      * oa 系统
