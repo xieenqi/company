@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.commonview;
 
 import android.content.Intent;
 import android.view.View;

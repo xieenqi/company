@@ -1,38 +1,34 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.wfinstance;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.fragment.WorkReportsManageFragment;
+import com.loyo.oa.v2.fragment.WfInstanceManageFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 /**
- * 工作报告  页面
+ * 【审批流程】 页面 xnq
  */
-public class WorkReportsManageActivity extends BaseFragmentActivity {
+public class WfInstanceManageActivity extends BaseFragmentActivity {
 
-    WorkReportsManageFragment workReportsManageFragment = new WorkReportsManageFragment();
+    WfInstanceManageFragment fragment = new WfInstanceManageFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workreports_manage);
+        setContentView(R.layout.activity_wfinstance_manage);
         initUI();
     }
 
     void initUI() {
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content, workReportsManageFragment);
-        transaction.commit();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.main_content, fragment);
+        transaction.commit();
     }
 
     @Override

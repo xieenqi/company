@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DiscussionActivity;
-import com.loyo.oa.v2.activity.DiscussionActivity_;
+import com.loyo.oa.v2.activity.commonview.DiscussionActivity;
+import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.DiscussCounter;

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
+import com.loyo.oa.v2.beans.AttendancePhoto;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.ValidateInfo;
 
@@ -23,6 +24,11 @@ import retrofit.http.QueryMap;
  * 时间 : 15/9/15.
  */
 public interface IAttendance {
+
+
+    @GET("/attendance")
+    void getAttendancePhoto(Callback<AttendancePhoto> callback);
+
     /**
      * 验证是否能打卡
      * @param callback

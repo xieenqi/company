@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.ProjectAddActivity;
+import com.loyo.oa.v2.activity.project.ProjectAddActivity;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;

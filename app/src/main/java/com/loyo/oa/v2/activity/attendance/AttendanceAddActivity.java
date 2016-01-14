@@ -24,7 +24,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.AttendancePhoto;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -59,6 +61,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -96,7 +99,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     private boolean isRun;
     private MHandler mHandler = new MHandler(this);
     private Animation animation;
-
+    private AttendancePhoto attendancePhotos;
 
     private static class MHandler extends Handler {
         private WeakReference<AttendanceAddActivity> mActivity;
@@ -130,9 +133,31 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
         img_title_right.setOnTouchListener(Global.GetTouch());
         iv_refresh_address.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-
+        requestPhotoTest();
         initData();
     }
+
+    /**
+     * 请求是否要拍照打卡
+     * */
+    private void requestPhotoTest(){
+        Utils.dialogShow(this,"获取考勤信息中");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getAttendancePhoto(new Callback<AttendancePhoto>() {
+            @Override
+            public void success(AttendancePhoto attendancePhoto, Response response) {
+                LogUtil.dll("考勤拍照信息:" + MainApp.gson.toJson(attendancePhoto));
+                attendancePhotos = attendancePhoto;
+                Utils.dialogDismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                Utils.dialogDismiss();
+            }
+        });
+    }
+
 
     /**
      * 开始倒计时
@@ -208,11 +233,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
-                attachments=_attachments;
+                attachments = _attachments;
                 init_gridView_photo();
             }
         });
     }
+
     /**
      * 初始化附件列表
      */
@@ -233,6 +259,10 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 break;
             case R.id.img_title_right:
                 if (!check()) {
+                    return;
+                }
+                if(attendancePhotos.isNeedPhoto() && attachments.size() == 0){
+                    Toast("需要考勤照片，请拍照");
                     return;
                 }
                 if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK) {

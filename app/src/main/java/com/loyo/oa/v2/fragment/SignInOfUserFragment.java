@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.SignInActivity;
-import com.loyo.oa.v2.activity.SignInfoActivity;
+import com.loyo.oa.v2.activity.signin.SignInActivity;
+import com.loyo.oa.v2.activity.signin.SignInfoActivity;
 import com.loyo.oa.v2.adapter.SignInListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;

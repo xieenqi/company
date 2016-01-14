@@ -1,7 +1,8 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.project;
 
 import android.content.Intent;
 
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IProject;

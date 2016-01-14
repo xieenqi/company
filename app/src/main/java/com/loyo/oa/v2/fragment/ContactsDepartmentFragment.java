@@ -84,7 +84,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
             index = new AlphabetIndexer(cursor, 0, mIndex);
 
             letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
-            letterView.setKeyword(mIndex);
+            //letterView.setKeyword(mIndex);
             letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
 
                 @Override

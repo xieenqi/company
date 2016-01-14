@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ProjectAddActivity_;
-import com.loyo.oa.v2.activity.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.ProjectSearchActivity;
+import com.loyo.oa.v2.activity.project.ProjectAddActivity_;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;

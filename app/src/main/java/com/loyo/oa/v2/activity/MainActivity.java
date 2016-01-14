@@ -30,13 +30,23 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activity.commonview.SettingActivity;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
+import com.loyo.oa.v2.activity.signin.SignInActivity;
+import com.loyo.oa.v2.activity.signin.SignInManagerActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.Department;
@@ -151,10 +161,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Class<?> _class = null;
         switch (position) {
 
-            /*暂时用于测试新版选人 跳转*/
+
             case 0:
-                /*Intent intent = new Intent(this,SelectDetUserActivity.class);
-                startActivity(intent);*/
                 _class = TasksAddActivity_.class;
                 break;
             case 1:
@@ -404,6 +412,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
 
                 validateInfo = _validateInfo;
+                LogUtil.dll("考勤信息:"+MainApp.gson.toJson(_validateInfo));
 
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
@@ -456,7 +465,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-        Utils.dialogShow(this, "正在获取考勤信息");
+        Utils.dialogShow(this, "正在解析当前位置，请稍候");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;

@@ -24,12 +24,15 @@ import java.util.ArrayList;
  * 新建客户选择照片的popwindow
  */
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
+
     private String tag = "SelectPicPopupWindow";
     public static final int GET_IMG = 10;
-    private Button btn_take_photo, btn_pick_photo, btn_cancel;
+    private Button btn_take_photo;//拍照
+    private Button btn_pick_photo;//从相册选
+    private Button btn_cancel;//取消
+
     private LinearLayout layout;
     private Uri fileUri;
-
     private static final String RESTORE_FILEURI = "fileUri";
 
     @Override
@@ -51,16 +54,16 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                         Toast.LENGTH_SHORT).show();
             }
         });
-        // 添加按钮监听
+
         btn_cancel.setOnClickListener(this);
         btn_pick_photo.setOnClickListener(this);
         btn_take_photo.setOnClickListener(this);
 
+       /**判断是直接调用相机，还是弹出选相框*/
         if (getIntent() != null && getIntent().getExtras() != null) {
             boolean localpic = getIntent().getBooleanExtra("localpic", false);
-
             if (!localpic) {
-                btn_pick_photo.setVisibility(View.GONE);
+                takePhotoIntent();
             }
         }
     }
@@ -124,7 +127,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 setResult(RESULT_OK, i);
             }
         } else {
-//            //选择文件
+            //选择文件
 
             if (data.getData() != null) {
                 pickArray.add(new ImageInfo(data.getData().toString()));
@@ -138,22 +141,28 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         //选择完或者拍完照后会在这里处理，然后我们继续使用setResult返回Intent以便可以传递数据和调用
     }
 
+    private void takePhotoIntent(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        fileUri = Global.getOutputMediaFileUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent, 1);
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
+
+            /*拍照*/
             case R.id.btn_take_photo:
                 try {
                     //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
                     //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
-
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    fileUri = Global.getOutputMediaFileUri();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                    startActivityForResult(intent, 1);
-
+                    takePhotoIntent();
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
                 break;
+
+            /*从相册选*/
             case R.id.btn_pick_photo:
                 try {
                     //选择照片的时候也一样，我们用Action为Intent.ACTION_GET_CONTENT，

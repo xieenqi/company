@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
@@ -192,12 +193,15 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
     /**添加图片操作*/
     private class OnClickListener_addImg implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
-            intent.putExtra("localpic", localpic);
-            mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+           if(mListData.size() == 0){
+               Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
+               intent.putExtra("localpic", localpic);
+               mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+           }else{
+               Toast.makeText(mActivity,"只允许拍一张照片",Toast.LENGTH_SHORT).show();
+           }
         }
     }
 

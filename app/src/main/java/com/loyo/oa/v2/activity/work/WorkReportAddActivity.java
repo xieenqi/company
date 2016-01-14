@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.work;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -20,8 +20,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
-import com.loyo.oa.v2.activity.work.HttpDefaultComment;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
