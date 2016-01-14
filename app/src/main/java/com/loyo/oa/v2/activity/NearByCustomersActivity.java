@@ -50,7 +50,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
 
     @Extra String position;
     @Extra NearCount nearCount;
-    @Extra int type;
+    @Extra int type;//客户类型
 
     MyPagerAdapter adapter;
     private ArrayList<CustomerCommonFragment> fragmentXes = new ArrayList<>();
@@ -79,7 +79,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     }
 
     @Click(R.id.layout_back)
-    void back()    {
+    void back() {
         onBackPressed();
     }
 
@@ -88,9 +88,17 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
      */
     @Click(R.id.iv_submit)
     void previewOnMap() {
-        ArrayList<Customer> customers = fragmentXes.get(pager.getCurrentItem()).getmCustomers();
+        ArrayList<Customer> customers = new ArrayList<>();
+        if (type == 1) {//我的附近可 要加两部分
+            customers.addAll(fragmentXes.get(0).getmCustomers());
+            customers.addAll(fragmentXes.get(1).getmCustomers());
+        } else {//团队客户
+            customers = fragmentXes.get(pager.getCurrentItem()).getmCustomers();
+        }
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("customers", customers);
+        bundle.putInt(ExtraAndResult.EXTRA_DATA, fragmentXes.get(0).getmCustomers().size());
         bundle.putInt(ExtraAndResult.EXTRA_TYPE, type);
         app.startActivity(this, NearByCustomersMapActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
     }

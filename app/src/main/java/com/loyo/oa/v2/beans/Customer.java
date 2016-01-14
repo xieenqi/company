@@ -76,11 +76,13 @@ public class Customer extends BaseBeans {
     public String summary;
     public String uuid;
     public Industry industry;
+    public int winCount;
 
     @Override
     String getOrderStr() {
         return null;
     }
+
     public String getId() {
         return id;
     }

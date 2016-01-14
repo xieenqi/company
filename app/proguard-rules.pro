@@ -27,6 +27,10 @@
 #==================protobuf======================
 -dontwarn com.google.**
 -keep class com.google.protobuf.** {*;}
+#百度的免混淆
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-dontwarn com.baidu.**
 
 
 
