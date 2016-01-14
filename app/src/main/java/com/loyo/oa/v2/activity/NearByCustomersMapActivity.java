@@ -1,22 +1,26 @@
 package com.loyo.oa.v2.activity;
 
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtil;
@@ -44,10 +48,16 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     @ViewById MapView mapview;
 
     @Extra ArrayList<Customer> customers;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    int customerType;
 
     private BaiduMap mBaiduMap;
 
-    //private BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark);
+    BitmapDescriptor bitmap = BitmapDescriptorFactory
+            .fromResource(R.drawable.icon_mark_team);
+
+
+    private BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_mark_team);
 
     @AfterViews
     void initViews() {
@@ -56,7 +66,9 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
         new LocationUtil(this, this);
-        LogUtil.d(" 地图显示的客户数据： "+MainApp.gson.toJson(customers));
+
+
+        LogUtil.d(customerType + " 地图显示的客户数据： " + MainApp.gson.toJson(customers));
     }
 
     @Click(R.id.layout_back)
@@ -78,6 +90,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
         initMap(latitude, longitude);
         showCustomers();
+
     }
 
     /**
@@ -116,16 +129,29 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                OverlayItem point = points.get(marker.getZIndex());
-                TextView textView = new TextView(app);
-                int padding=app.diptoPx(5);
-                textView.setPadding(padding,padding,padding,padding);
-                textView.setGravity(Gravity.CENTER);
-                textView.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
-                textView.setTextColor(getResources().getColor(R.color.title_bg1));
-                textView.setText(point.customer.name);
-                textView.setBackgroundColor(getResources().getColor(R.color.gray));
-                InfoWindow infoWindow=new InfoWindow(textView,point.latLng,-app.diptoPx(30));
+                final OverlayItem point = points.get(marker.getZIndex());
+
+//                TextView textView = new TextView(app);
+//                int padding = app.diptoPx(5);
+//                textView.setPadding(padding, padding, padding, padding);
+//                textView.setGravity(Gravity.CENTER);
+//                textView.setBackgroundResource(R.drawable.icon_map_bubble);
+//                textView.setTextColor(getResources().getColor(R.color.text1));
+//                textView.setText(point.customer.name + "   " + "\n地址：合格我就不理对方能成为");
+//                textView.setTextSize(14);
+
+                View view = LayoutInflater.from(NearByCustomersMapActivity.this).inflate(R.layout.map_bubble, null);
+                TextView name = (TextView) view.findViewById(R.id.tv_name);
+                TextView address = (TextView) view.findViewById(R.id.tv_address);
+                name.setText(point.customer.name);
+                address.setText(point.customer.uuid);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast(point.customer.name);
+                    }
+                });
+                InfoWindow infoWindow = new InfoWindow(view, point.latLng, -app.diptoPx(35));
                 mBaiduMap.showInfoWindow(infoWindow);
                 return true;
             }
@@ -145,19 +171,19 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         }
         for (int i = 0; i < customers.size(); i++) {
             Customer customer = customers.get(i);
-           // String gpsInfo = customer.loc.loc[1]+","+customer.loc.loc[0];
+            // String gpsInfo = customer.loc.loc[1]+","+customer.loc.loc[0];
             //if (!TextUtils.isEmpty(gpsInfo) && gpsInfo.contains(",")) {
-               // String gps[] = gpsInfo.split(",");
-                double lat = customer.loc.loc[1];
-                double lng = customer.loc.loc[0];
-                LatLng latLng = LocationUtil.convert(1, lat, lng);
-                //OverlayOptions point = new MarkerOptions().position(latLng).icon(bdA).zIndex(i).draggable(false);
-                OverlayItem item=new OverlayItem();
-                item.latLng=latLng;
-                //item.options=point;
-                item.customer=customer;
-                points.add(item);
-           // }
+            // String gps[] = gpsInfo.split(",");
+            double lat = customer.loc.loc[1];
+            double lng = customer.loc.loc[0];
+            LatLng latLng = LocationUtil.convert(1, lat, lng);
+            OverlayOptions point = new MarkerOptions().position(latLng).icon(bdA).zIndex(i).draggable(false);
+            OverlayItem item = new OverlayItem();
+            item.latLng = latLng;
+            item.options = point;
+            item.customer = customer;
+            points.add(item);
+            // }
         }
 
         return points;
