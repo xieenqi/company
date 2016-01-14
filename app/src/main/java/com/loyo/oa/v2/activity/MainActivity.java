@@ -299,12 +299,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 public void run() {
                     LogUtil.d(" Jpush user kongkong 空空");
                     setJpushAlias();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            isQQLogin();
-                        }
-                    });
                 }
             }, 5000);
             return;
@@ -315,7 +309,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(" 激光的alias： " + s);
+                LogUtil.d(MainApp.user + " 激光的alias： " + s);
+                isQQLogin();
             }
         });
     }
@@ -412,7 +407,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
 
                 validateInfo = _validateInfo;
-                LogUtil.dll("考勤信息:"+MainApp.gson.toJson(_validateInfo));
+                LogUtil.dll("考勤信息:" + MainApp.gson.toJson(_validateInfo));
 
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;

@@ -7,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = true; //是否是正式产品
+    public static final Boolean isRelease = false; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
@@ -86,8 +86,7 @@ public class Config_project {
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-        LogUtil.d("登录的值：" + Domain.account);
-        return isRelease ? Domain.account : IP + ":88";
+        return isRelease ? Domain.account : IP + ":8080";
     }
     //131服务器 88端口
 
