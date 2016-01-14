@@ -18,7 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DiscussionActivity_;
+import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;

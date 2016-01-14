@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
-import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportAddActivity;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;

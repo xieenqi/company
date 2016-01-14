@@ -330,7 +330,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.WfInstanceManageActivity"
+            android:name=".activity.wfinstance.WfInstanceManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -342,27 +342,27 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity
-            android:name=".activity.WfInstanceTypeSelectManageActivity"
+            android:name=".activity.wfinstance.WfInstanceTypeSelectManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.WfInstanceAddActivity_"
+            android:name=".activity.wfinstance.WfInstanceAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.WfinstanceInfoActivity_"
+            android:name=".activity.wfinstance.WfinstanceInfoActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.SettingActivity"
+            android:name=".activity.commonview.SettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.SettingPasswordActivity_"
+            android:name=".activity.commonview.SettingPasswordActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
@@ -424,7 +424,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
         <activity
-            android:name=".activity.WfinstanceSearchActivity"
+            android:name=".activity.wfinstance.WfinstanceSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>
@@ -438,7 +438,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.FeedbackActivity_"
+            android:name=".activity.commonview.FeedbackActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
@@ -448,7 +448,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.DiscussionActivity_"
+            android:name=".activity.commonview.DiscussionActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>

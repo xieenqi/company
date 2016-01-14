@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.commonview;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -46,6 +46,10 @@ import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+/**
+ * 意见反馈
+ * */
 
 @EActivity(R.layout.activity_feedback)
 public class FeedbackActivity extends BaseActivity {

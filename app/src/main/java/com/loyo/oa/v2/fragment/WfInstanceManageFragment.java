@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
-import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.WfinstanceSearchActivity;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;

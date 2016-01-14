@@ -1,10 +1,11 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Task extends BaseBeans {
+public class Task extends BaseBeans implements Serializable{
 
     public static final int STATUS_PROCESSING = 1;  //进行中
     public static final int STATUS_REVIEWING = 2;   //审核中

@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;

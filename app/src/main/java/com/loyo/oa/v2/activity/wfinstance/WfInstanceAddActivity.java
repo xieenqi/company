@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.wfinstance;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activity.wfinstance.DepartmentChoose;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;

@@ -9,18 +9,25 @@ public class Config_project {
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
-    //public static String IP = "http://112.74.66.99";    //正式服务
-    public static String IP = "http://www.ukuaiqi.com";    //正式服务内部测试
+    //public static String IP = "http://192.168.31.131";     //内部测试环境
+
+    public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
+
+    //public static String IP = "http://ukuaiqi.com";        //产品正式环境
+
+    //public static String IP = "http://112.74.66.99";       //产品正式环境
+
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;
-
-    //public static String IP = "http://192.168.31.131";  //内部服务器
 
     public static String SIGNLN_TEM = IP + ":9000" + "/api/v2";//团队拜访 列表
 
     public static String ADD_WORK_REPORT_PL = IP + ":8070" + "/api/v2/oa";//添加工作报告 的默认点评人
+
     public static String MAIN_RED_DOT = IP + ":88" + "/api/v2/";//首页红点接口
+
     public static String GET_VERIFICATION_CODE = IP + ":88/oapi/sms";//绑定手机获取验证码
+
     public static String BIND_MOBLIE = IP + ":88/api/v2";//绑定手机完成
 
     public static String API_URL() {

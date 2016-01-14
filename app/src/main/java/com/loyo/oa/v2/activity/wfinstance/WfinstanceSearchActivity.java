@@ -1,7 +1,8 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.wfinstance;
 
 import android.content.Intent;
 
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;

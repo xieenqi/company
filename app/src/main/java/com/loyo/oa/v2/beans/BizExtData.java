@@ -1,9 +1,11 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
+
 /**
  * Created by loyo_dev1 on 16/1/14.
  */
-public class BizExtData {
+public class BizExtData implements Serializable{
 
     private int discussCount;
 

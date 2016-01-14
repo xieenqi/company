@@ -55,6 +55,8 @@ public class SelectDetUserActivity extends Activity {
     public SelectUserAdapter mUserAdapter;
     public Intent mIntent;
     public Bundle mBundle;
+
+    public ArrayList<User> localCacheUserList; //本地所有员工 缓存
     public ArrayList<User> userList;
     public ArrayList<User> userAllList; //所有员工
     public ArrayList<Department> deptSource;//部门数据源｀
@@ -112,6 +114,7 @@ public class SelectDetUserActivity extends Activity {
         members = new Members();
         selectDeptIds = new ArrayList<>();
         selectUserIds = new ArrayList<>();
+        localCacheUserList = new ArrayList<>();
 
         /*header初始化*/
         mInflater = LayoutInflater.from(this);
@@ -128,9 +131,11 @@ public class SelectDetUserActivity extends Activity {
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
             for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                localCacheUserList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
             }
         }
+
+        userAllList.addAll(RemoveSame(localCacheUserList));
 
         for (User user : userAllList) {
             user.setIndex(false);
@@ -162,6 +167,25 @@ public class SelectDetUserActivity extends Activity {
         mUserAdapter = new SelectUserAdapter(mContext, userList, isAllCheck);
         rightLv.setAdapter(mUserAdapter);
 
+    }
+
+    /**
+     * 去掉人员重复数据
+     * */
+    private  ArrayList RemoveSame(ArrayList<User> list)
+    {
+        for (int i = 0; i < list.size() - 1; i++)
+        {
+            for (int j = i + 1; j < list.size(); j++)
+            {
+                if (list.get(i).getId().equals(list.get(j).getId()))
+                {
+                    list.remove(j);
+                    j--;
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -465,56 +489,5 @@ public class SelectDetUserActivity extends Activity {
                         break;
                 }
         }
-    }
-
-
-    //************************************************************暂时弃用**********************************************************
-
-    /**
-     * 获取改部门下 所有员工
-     */
-    void setData(int position, ArrayList<User> userList) {
-
-        userList.clear();
-        String Id = deptSource.get(position).getId();
-
-        assUserList(userList, Common.getLstDepartment(Id), Common.getListUser(Id));
-        dealisAllSelect(userList);
-
-    }
-
-
-    /**
-     * 拣取人员
-     */
-    void assUserList(ArrayList<User> arrayList, ArrayList<Department> departments, ArrayList<User> users) {
-
-        if (users.size() != 0) {
-            arrayList.addAll(users);
-        }
-
-        if (departments.size() != 0) {
-
-            for (Department department : departments) {
-                String id = department.getId();
-                ArrayList<Department> dept = Common.getLstDepartment(id);
-                ArrayList<User> user = Common.getListUser(id);
-                assUserList(arrayList, dept, user);
-            }
-
-        } else {
-            return;
-        }
-    }
-
-    /**
-     * 返回
-     */
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            finish();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }
