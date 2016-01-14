@@ -41,6 +41,7 @@ import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PagingGroupData;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
@@ -243,7 +244,8 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 new ServerAPI.ParamInfo("isBottomAdd", isBottomAdd))
         );
 
-        ServerAPI.request(this, ServerAPI.GET, FinalVariables.customers, params, AsyncHttpResponseHandler_customers_get_tagItemIds.class, lstParamInfo);
+        ServerAPI.request(this, ServerAPI.GET, FinalVariables.customers,
+                params, AsyncHttpResponseHandler_customers_get_tagItemIds.class, lstParamInfo);
     }
 
 
@@ -253,6 +255,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 new RCallback<ArrayList<Customer>>() {
                     @Override
                     public void success(ArrayList<Customer> customers, Response response) {
+                        HttpErrorCheck.checkResponse(response);
                         LatLng center = LocationUtil.convert(1, latitude, longitude);
                         initNearCustomer(customers, center);
                     }
