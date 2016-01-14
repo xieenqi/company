@@ -169,13 +169,24 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 获取用户信息
      */
     void getCustomer() {
+        Utils.dialogShow(this,"请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
                     @Override
                     public void success(Customer customer, Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
                         mCustomer = customer;
+                        Utils.dialogDismiss();
                         initData();
+                    }
+
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                        Utils.dialogDismiss();
+                        finish();
                     }
                 });
     }

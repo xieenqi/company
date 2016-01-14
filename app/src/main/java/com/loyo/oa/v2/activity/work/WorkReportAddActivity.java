@@ -518,7 +518,6 @@ public class WorkReportAddActivity extends BaseActivity {
     private void dealResult(WorkReport workReport) {
         if (workReport != null) {
             workReport.setAck(true);
-
             Intent intent = getIntent();
             intent.putExtra("data", workReport);
             app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
