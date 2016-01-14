@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.attendance;
+package com.loyo.oa.v2.activity.attachment;
 
 import android.content.Intent;
 import android.net.Uri;

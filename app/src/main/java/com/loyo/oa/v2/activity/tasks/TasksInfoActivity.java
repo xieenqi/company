@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
-import com.loyo.oa.v2.activity.attendance.AttachmentActivity_;
+import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -301,7 +301,7 @@ public class TasksInfoActivity extends BaseActivity {
             }
             layout_test_Add_area.addView(mView);
 
-            tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount()+"");
+            tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount() + "");
             tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount()+"");
         }
     }

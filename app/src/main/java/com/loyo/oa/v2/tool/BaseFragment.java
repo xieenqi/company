@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import com.loyo.oa.v2.activity.ProjectInfoActivity;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {

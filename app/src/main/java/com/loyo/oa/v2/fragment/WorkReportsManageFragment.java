@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.WorkReportAddActivity_;
-import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
-import com.loyo.oa.v2.activity.WorkReportsSearchActivity;
+import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsSearchActivity;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WorkReport;

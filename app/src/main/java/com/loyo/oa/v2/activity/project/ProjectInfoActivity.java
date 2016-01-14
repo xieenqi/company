@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.project;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.ProjectAddActivity_;
+import com.loyo.oa.v2.activity.project.ProjectDescriptionActivity_;
+import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
