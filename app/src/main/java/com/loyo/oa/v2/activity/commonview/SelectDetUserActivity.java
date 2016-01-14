@@ -141,9 +141,10 @@ public class SelectDetUserActivity extends Activity {
             user.setIndex(false);
         }
 
-        if (selectType == 1) {
+        if (selectType == ExtraAndResult.TYPE_SELECT_SINGLE) {
             btnSure.setVisibility(View.INVISIBLE);
-        } else if (selectType == 2) {
+            relAllcheck.setVisibility(View.GONE);
+        } else if (selectType == ExtraAndResult.TYPE_SELECT_EDT) {
             /*来自编辑页面已存在的参与人，选中设为true*/
             joinUserId = mBundle.getString(ExtraAndResult.STR_SUPER_ID).split(",");
             for (User user : userAllList) {
@@ -163,6 +164,7 @@ public class SelectDetUserActivity extends Activity {
         lvOnClick();
         rightLv.addHeaderView(headerView);
         userList.addAll(userAllList);
+
         /*右侧Lv初始化*/
         mUserAdapter = new SelectUserAdapter(mContext, userList, isAllCheck);
         rightLv.setAdapter(mUserAdapter);

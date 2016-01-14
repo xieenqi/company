@@ -7,28 +7,112 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
+    public static final Boolean isRelease = false; //是否是正式产品
+
     //public static final Boolean is_developer_mode = false; //生产模式
 
-    //public static String IP = "http://192.168.31.131";     //内部测试环境
+    public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式
 
-    public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
+    public static String IP = "http://192.168.31.131";     //内部测试环境
+
+    //public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
+    //public static String IP = "http://112.74.66.99";       //产品预上线环境
 
     //public static String IP = "http://ukuaiqi.com";        //产品正式环境
 
-    //public static String IP = "http://112.74.66.99";       //产品正式环境
+    /**
+     * 正式产品的域名
+     */
+    private static enum Domain {
+        /**
+         * 账号中心
+         */
+        account("user.ukuaiqi.com"),
+        /**
+         * crm 客户管理
+         */
+        crm("crm.ukuaiqi.com"),
+        /**
+         * oa 系统
+         */
+        oa("oa.kuaiqi.com"),
+        /**
+         * attachment 附件
+         */
+        attachment("attachment.kuaiqi.com"),
+        /**
+         * discuss 讨论
+         */
+        discuss("discuss.ukuaiqi.com"),
+        /**
+         * statistics 统计
+         */
+        statistics("stat.ukuaiqi.com");
 
+        private String value = "";
 
-    public static final Boolean is_developer_mode = BuildConfig.DEBUG;
+        private Domain(String value) {
+            this.value = value;
+        }
 
-    public static String SIGNLN_TEM = IP + ":9000" + "/api/v2";//团队拜访 列表
+//        @Override
+//        public String toString() {
+//            return String.valueOf(value);
+//        }
+    }
 
-    public static String ADD_WORK_REPORT_PL = IP + ":8070" + "/api/v2/oa";//添加工作报告 的默认点评人
+    /**
+     * 附件地址
+     */
+    public static String SERVER_URL_ATTACHMENT() {
+        return isRelease ? Domain.attachment + "" : IP + ":8030";
+    }
 
-    public static String MAIN_RED_DOT = IP + ":88" + "/api/v2/";//首页红点接口
+    /**
+     * 讨论地址
+     */
+    public static String SERVER_URL_EXTRA() {
+        return isRelease ? Domain.discuss + "" : IP + ":8050";
+    }
 
-    public static String GET_VERIFICATION_CODE = IP + ":88/oapi/sms";//绑定手机获取验证码
+    /**
+     * 客户地址
+     */
+    public static String SERVER_URL_CUSTOMER() {
+        return isRelease ? Domain.crm + "" : IP + ":8090";
+    }//8090
 
-    public static String BIND_MOBLIE = IP + ":88/api/v2";//绑定手机完成
+    /**
+     * 登录地址
+     */
+    public static String SERVER_URL_LOGIN() {
+        return isRelease ? Domain.account + "" : IP + ":88";
+    }
+    //131服务器 88端口
+
+    /**
+     * oa 系统
+     */
+    public static String SERVER_URL() {
+        return isRelease ? Domain.oa + "" : IP + ":8070";
+    }
+
+    /**
+     * 统计
+     */
+    public static String SERVER_URL_STATISTICS() {
+        return isRelease ? Domain.statistics + "" : IP + ":9000";
+    }
+
+    public static String SIGNLN_TEM = SERVER_URL_STATISTICS() + "/api/v2";//团队拜访 列表
+
+    public static String ADD_WORK_REPORT_PL = SERVER_URL() + "/api/v2/oa";//添加工作报告 的默认点评人
+
+    public static String MAIN_RED_DOT = SERVER_URL_LOGIN() + "/api/v2/";//首页红点接口
+
+    public static String GET_VERIFICATION_CODE = SERVER_URL_LOGIN() + "/oapi/sms";//绑定手机获取验证码
+
+    public static String BIND_MOBLIE = SERVER_URL_LOGIN() + "/api/v2";//绑定手机完成
 
     public static String API_URL() {
         return SERVER_URL().concat("/api/v2/oa");
@@ -52,58 +136,4 @@ public class Config_project {
     }
 
 
-    /**
-     * 附件地址
-     *
-     * @return
-     */
-    public static String SERVER_URL_ATTACHMENT() {
-        return IP + ":8030";
-    }
-
-
-    /**
-     * 讨论地址
-     *
-     * @return
-     */
-    public static String SERVER_URL_EXTRA() {
-        return IP + ":8050";
-    }
-
-    /**
-     * 客户地址
-     *
-     * @return
-     */
-    public static String SERVER_URL_CUSTOMER() {
-        return IP + ":8090";
-    }//8090
-
-    /**
-     * 登录地址
-     *
-     * @return
-     */
-    public static String SERVER_URL_LOGIN() {
-        return IP + ":88";
-    }
-    //131服务器 88端口
-
-
-    public static String SERVER_URL() {
-        if (is_developer_mode) {
-
-        }
-        return IP + ":8070";
-
-    }
-
-    public static String URL() {
-
-        return IP;
-    }
-
-    private enum Port {
-    }
 }

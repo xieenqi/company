@@ -33,6 +33,7 @@ public class HttpErrorCheck {
     }
 
     public static void checkError(RetrofitError error) {
+        Toast("网络异常，请稍候再试");
         LogUtil.d("网络异常" + error.getMessage());
         try {
             String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
