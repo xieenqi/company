@@ -7,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = false; //是否是正式产品
+    public static final Boolean isRelease = true; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
@@ -24,38 +24,38 @@ public class Config_project {
     /**
      * 正式产品的域名
      */
-    private static enum Domain {
+    private static class Domain {
         /**
          * 账号中心
          */
-        account("user.ukuaiqi.com"),
+        public static String account = "http://user.ukuaiqi.com";
         /**
          * crm 客户管理
          */
-        crm("crm.ukuaiqi.com"),
+        public static String crm = "http://crm.ukuaiqi.com";
         /**
          * oa 系统
          */
-        oa("oa.kuaiqi.com"),
+        public static String oa = "http://oa.kuaiqi.com";
         /**
          * attachment 附件
          */
-        attachment("attachment.kuaiqi.com"),
+        public static String attachment = "http://attachment.kuaiqi.com";
         /**
          * discuss 讨论
          */
-        discuss("discuss.ukuaiqi.com"),
+        public static String discuss = "http://discuss.ukuaiqi.com";
         /**
          * statistics 统计
          */
-        statistics("stat.ukuaiqi.com");
+        public static String statistics = "http://stat.ukuaiqi.com";
 
-        private String value = "";
-
-        private Domain(String value) {
-            this.value = value;
-        }
-
+//        private String value = "";
+//
+//        private Domain(String value) {
+//            this.value = value;
+//        }
+//
 //        @Override
 //        public String toString() {
 //            return String.valueOf(value);
@@ -66,28 +66,29 @@ public class Config_project {
      * 附件地址
      */
     public static String SERVER_URL_ATTACHMENT() {
-        return isRelease ? Domain.attachment + "" : IP + ":8030";
+        return isRelease ? Domain.attachment : IP + ":8030";
     }
 
     /**
      * 讨论地址
      */
     public static String SERVER_URL_EXTRA() {
-        return isRelease ? Domain.discuss + "" : IP + ":8050";
+        return isRelease ? Domain.discuss : IP + ":8050";
     }
 
     /**
      * 客户地址
      */
     public static String SERVER_URL_CUSTOMER() {
-        return isRelease ? Domain.crm + "" : IP + ":8090";
+        return isRelease ? Domain.crm : IP + ":8090";
     }//8090
 
     /**
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-        return isRelease ? Domain.account + "" : IP + ":88";
+        LogUtil.d("登录的值：" + Domain.account);
+        return isRelease ? Domain.account : IP + ":88";
     }
     //131服务器 88端口
 
@@ -95,6 +96,7 @@ public class Config_project {
      * oa 系统
      */
     public static String SERVER_URL() {
+
         return isRelease ? Domain.oa + "" : IP + ":8070";
     }
 
