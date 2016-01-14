@@ -74,7 +74,7 @@ public class BulletinAddActivity extends BaseActivity {
      * 添加 图片 附件
      */
     void init_gridView_photo() {
-        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true);
+        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
     }
 

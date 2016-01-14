@@ -218,8 +218,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
-
                 }
+                hideInputKeyboard(edt_search);
             }
         });
 

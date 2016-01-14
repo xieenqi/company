@@ -370,7 +370,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (lstData_Attachment == null) {
             lstData_Attachment = new ArrayList<>();
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

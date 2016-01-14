@@ -34,6 +34,7 @@ public class ExtraAndResult {
 
     public static final int TYPE_SHOW_USER = 1;
     public static final int TYPE_SHOW_DEPT_USER = 0;
+    public static final int FROMPAGE_ATTENDANCE = 101;
 
     public static final int request_Code = 100;
 

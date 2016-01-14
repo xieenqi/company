@@ -194,10 +194,13 @@ public class TasksInfoActivity extends BaseActivity {
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
+
         allUsers.clear();
         if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
             img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//为负责人时
+        }else if(IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED){
+            img_title_right.setVisibility(View.GONE);
+        } else if (!IsResponsiblePerson() && !IsCreator()) {//为参与人时
             img_title_right.setVisibility(View.GONE);
         } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
             img_title_right.setVisibility(View.VISIBLE);

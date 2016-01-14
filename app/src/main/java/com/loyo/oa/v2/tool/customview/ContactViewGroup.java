@@ -80,7 +80,7 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
             /*判断是否有操作权限*/
-            if (!isMyUser || isMber) {
+            if (!isMyUser) {
                 edit.setVisibility(View.GONE);
                 del.setVisibility(View.GONE);
                 default_.setVisibility(View.GONE);

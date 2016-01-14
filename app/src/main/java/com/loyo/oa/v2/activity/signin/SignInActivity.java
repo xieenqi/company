@@ -161,7 +161,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 图片适配器绑定
      */
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

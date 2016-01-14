@@ -223,7 +223,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             ArrayList<Attachment> attachments = bulletin.attachments;
             if (null != attachments && !attachments.isEmpty()) {
                 holder.gridView.setVisibility(View.VISIBLE);
-                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true,true);
+                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true,true,0);
                 SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
                 //holder.gridView.setAdapter(adapter);
                //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);

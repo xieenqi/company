@@ -175,7 +175,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,true,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

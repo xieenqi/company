@@ -65,6 +65,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         layout_back.setOnTouchListener(Global.GetTouch());
         layout_add.setOnTouchListener(Global.GetTouch());
         getData();
+
+        LogUtil.dll("联系人页面 是否为我的客户:" + isMyUser);
+        LogUtil.dll("联系人页面 是否为参与人:"+isMenber);
+
     }
 
     /**

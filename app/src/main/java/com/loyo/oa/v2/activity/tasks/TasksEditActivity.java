@@ -215,7 +215,7 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true, isCreator);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true, isCreator,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

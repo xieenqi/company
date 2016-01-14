@@ -17,6 +17,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -33,16 +34,17 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private Activity mActivity;
     private ArrayList<File> mBitmaps = new ArrayList<>();
     private Uri fileUri;
+    private int fromPage;
 
     private boolean mIsAdd;
     private boolean isCreator;
     private boolean localpic = false; //是否可以选择相册
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator) {
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator,int fromPage) {
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
-
+        this.fromPage = fromPage;
         this.mActivity = mActivity;
         this.mListData = Attachment.Sort(lstData);
         this.mIsAdd = mIsAdd;
@@ -56,8 +58,8 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic, boolean isCreator) {
-        this(mActivity, lstData, mIsAdd, isCreator);
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic, boolean isCreator,int fromPage) {
+        this(mActivity, lstData, mIsAdd, isCreator,fromPage);
         localpic = _localpic;
     }
 
@@ -195,13 +197,19 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-           if(mListData.size() == 0){
-               Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
-               intent.putExtra("localpic", localpic);
-               mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
-           }else{
-               Toast.makeText(mActivity,"只允许拍一张照片",Toast.LENGTH_SHORT).show();
-           }
+            if(fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE){
+                if(mListData.size() == 0){
+                    Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
+                    intent.putExtra("localpic", localpic);
+                    mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+                }else{
+                    Toast.makeText(mActivity,"只允许拍一张照片",Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
+                intent.putExtra("localpic", localpic);
+                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+            }
         }
     }
 
