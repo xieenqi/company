@@ -151,10 +151,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Class<?> _class = null;
         switch (position) {
 
-            /*暂时用于测试新版选人 跳转*/
+
             case 0:
-                /*Intent intent = new Intent(this,SelectDetUserActivity.class);
-                startActivity(intent);*/
                 _class = TasksAddActivity_.class;
                 break;
             case 1:
@@ -399,6 +397,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
 
                 validateInfo = _validateInfo;
+                LogUtil.dll("考勤信息:"+MainApp.gson.toJson(_validateInfo));
 
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
@@ -451,7 +450,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-        Utils.dialogShow(this, "正在获取考勤信息");
+        Utils.dialogShow(this, "正在解析当前位置，请稍候");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
