@@ -87,7 +87,7 @@ public class Config_project {
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-        LogUtil.d("登录的值：" + Domain.account);
+
         return isRelease ? Domain.account : IP + ":8080";
     }
     //131服务器 88端口
