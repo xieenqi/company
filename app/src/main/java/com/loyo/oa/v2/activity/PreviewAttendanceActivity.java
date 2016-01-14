@@ -190,7 +190,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
      */
     private void initGridView() {
         if (null == adapter) {
-            adapter = new SignInGridViewAdapter(this, attachments, false, false);
+            adapter = new SignInGridViewAdapter(this, attachments, false, false,0);
         } else {
             adapter.setDataSource(attachments);
         }

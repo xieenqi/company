@@ -223,7 +223,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -270,7 +270,9 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                Toast("网络一场，＝");
                 HttpErrorCheck.checkError(error);
+
             }
         });
     }

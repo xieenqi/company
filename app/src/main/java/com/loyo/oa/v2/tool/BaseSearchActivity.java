@@ -177,7 +177,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     //新建任务 关联客户
                     case TASKS_ADD_CUSTOMER:
                         returnData(position - 2);
-                        hideInputKeyboard(edt_search);
                         break;
                     //新建拜访
                     case SIGNIN_ADD:
@@ -219,8 +218,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
                         startActivity(mIntent);
                         break;
-
                 }
+                hideInputKeyboard(edt_search);
             }
         });
 

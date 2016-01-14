@@ -97,7 +97,7 @@ public class FeedbackActivity extends BaseActivity {
      * 显示附件
      */
     private void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true, true);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true, true,0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

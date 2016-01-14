@@ -28,6 +28,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendancePhoto;
 import com.loyo.oa.v2.beans.AttendanceRecord;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -244,7 +245,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
      */
     private void init_gridView_photo() {
         if (null == adapter) {
-            adapter = new SignInGridViewAdapter(this, attachments, true, true);
+            adapter = new SignInGridViewAdapter(this, attachments, true, true, ExtraAndResult.FROMPAGE_ATTENDANCE);
         } else {
             adapter.setDataSource(attachments);
         }

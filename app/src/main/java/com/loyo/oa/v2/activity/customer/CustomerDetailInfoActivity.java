@@ -32,6 +32,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -169,6 +170,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         //isMyUser = MainApp.user.id.equals(ownErId) && isLock ? true : false;
         isMyUser = (customerType != 3) ? true : false;
+        LogUtil.dll("是否为我的客户:"+isMyUser);
 
         if (customerType != 3 && customerType != 0 && !(customerType == 1 && isMenber(mCustomer))) {
             img_title_right.setOnTouchListener(Global.GetTouch());
