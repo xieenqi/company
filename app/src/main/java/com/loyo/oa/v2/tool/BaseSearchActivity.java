@@ -140,7 +140,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             }
         });
         edt_search.requestFocus();
-
         findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -545,5 +544,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
             return convertView;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LogUtil.dll("销毁");
+        hideInputKeyboard(edt_search);
     }
 }

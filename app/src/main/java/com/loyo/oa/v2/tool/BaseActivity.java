@@ -340,6 +340,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    /**
+     * 关闭软键盘
+     * */
     public  void hideInputKeyboard(EditText et){
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(),0);
