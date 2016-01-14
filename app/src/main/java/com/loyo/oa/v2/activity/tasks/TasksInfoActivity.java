@@ -300,6 +300,9 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_status.setTextColor(getResources().getColor(R.color.red));
             }
             layout_test_Add_area.addView(mView);
+
+            tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount()+"");
+            tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount()+"");
         }
     }
 

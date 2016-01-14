@@ -15,17 +15,20 @@ public class Task extends BaseBeans {
     public String attachmentUUId;
     public String content;
     public long createdAt;
-    public String id;
     public long planendAt;
+
+    public String title;
+    public String id;
     public String projectId;
     public String customerName;
     public String customerId;
     public boolean remindflag;
-    public int remindtime;
     public boolean reviewFlag;
     public int score;
     public int status;
-    public String title;
+    public int remindtime;
+
+    private BizExtData bizExtData;
     public Project ProjectInfo;
     public ArrayList<Attachment> attachments;
     public ArrayList<TaskCheckPoint> checklists;
@@ -56,6 +59,14 @@ public class Task extends BaseBeans {
             return RemindList.get(index);
         }
         return "";
+    }
+
+    public BizExtData getBizExtData() {
+        return bizExtData;
+    }
+
+    public void setBizExtData(BizExtData bizExtData) {
+        this.bizExtData = bizExtData;
     }
 
 
