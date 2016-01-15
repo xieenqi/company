@@ -361,7 +361,6 @@ public class SelectDetUserActivity extends Activity {
         selectDeptIds.clear();
         selectUserIds.clear();
 
-
         for (Department department : deptSource) {
             dealisAllSelect(department.getUsers());
             if (popy) {
@@ -490,6 +489,6 @@ public class SelectDetUserActivity extends Activity {
 
                         break;
                 }
-         }
+        }
     }
 }

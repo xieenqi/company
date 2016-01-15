@@ -109,7 +109,7 @@ public class DropListMenu extends LinearLayout {
 
         mMenuCount = 2;
         mShowCount = 5;
-        mMenuTitleTextColor = getResources().getColor(R.color.default_menu_text);
+        mMenuTitleTextColor = getResources().getColor(R.color.default_menu_press_text);
         mMenuPressedBackColor = getResources().getColor(R.color.default_menu_press_back);
         mMenuPressedTitleTextColor = getResources().getColor(R.color.default_menu_press_text);
         mMenuBackColor = getResources().getColor(R.color.default_menu_back);

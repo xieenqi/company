@@ -775,10 +775,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                /*if (bitmap != null) {
+                if (bitmap != null) {
                     Bitmap blur = Utils.blurBitmap(bitmap);
                     img_home_head.setImageBitmap(blur);
-                }*/
+                }
 
             }
 
