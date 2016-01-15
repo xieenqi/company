@@ -525,7 +525,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 获取数据,默认设置倒序
      */
     private void getData() {
-
+        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);

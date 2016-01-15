@@ -85,6 +85,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      */
     @UiThread
     void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
