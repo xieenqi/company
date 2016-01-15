@@ -490,6 +490,6 @@ public class SelectDetUserActivity extends Activity {
 
                         break;
                 }
-        }
+         }
     }
 }
