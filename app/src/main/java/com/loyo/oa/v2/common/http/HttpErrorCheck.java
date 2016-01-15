@@ -4,6 +4,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -33,7 +34,7 @@ public class HttpErrorCheck {
     }
 
     public static void checkError(RetrofitError error) {
-
+        DialogHelp.cancelLoading();
         Toast("网络异常，请稍候再试");
         LogUtil.d("网络异常" + error.getMessage());
 
@@ -74,11 +75,13 @@ public class HttpErrorCheck {
     }
 
     public static void checkResponse(String tag, Response response) {
+        DialogHelp.cancelLoading();
         TAG = tag;
         checkResponse(response);
     }
 
     public static void checkResponse(Response response) {
+        DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(TAG + " 接口成功result：" + result);

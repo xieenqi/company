@@ -2,6 +2,7 @@ package com.loyo.oa.v2.common;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -43,7 +44,8 @@ public class DialogHelp {
                 context, R.anim.load_animayion);
         // 使用ImageView显示动画
         spaceshipImage.startAnimation(hyperspaceJumpAnimation);
-        tipTextView.setText(msg);// 设置加载信息
+        if (!TextUtils.isEmpty(msg))
+            tipTextView.setText(msg);// 设置加载信息
 
         loadingDialog = new Dialog(context, R.style.loading_dialog);// 创建自定义样式dialog
 
