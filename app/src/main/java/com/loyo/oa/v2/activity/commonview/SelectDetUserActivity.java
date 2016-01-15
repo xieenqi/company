@@ -257,7 +257,7 @@ public class SelectDetUserActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                /*负责人*/
+                /*选负责人时*/
                 if (selectType == 1) {
 
                     Intent mIntent = new Intent();
