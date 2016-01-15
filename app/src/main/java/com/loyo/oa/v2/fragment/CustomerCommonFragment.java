@@ -263,6 +263,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 mDropMenu.setmMenuItems(source);
                 mDropMenu.setMenuSelectedListener(CustomerCommonFragment.this);
             }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+
+            }
         });
     }
 
@@ -525,7 +531,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 获取数据,默认设置倒序
      */
     private void getData() {
-        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);
@@ -814,10 +819,18 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             img_public.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(customer.getId(), new RCallback<Customer>() {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                            create(ICustomer.class).pickedIn(customer.getId(), new RCallback<Customer>() {
                         @Override
                         public void success(Customer customer, Response response) {
+                            HttpErrorCheck.checkResponse(response);
                             getData();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+
                         }
                     });
                 }
