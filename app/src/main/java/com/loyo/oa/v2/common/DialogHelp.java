@@ -12,13 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * 关于与 加载 dialog 的相关类
  * Created xnq 16/1/15.
  */
 public class DialogHelp {
-    static Dialog loadingDialog;//加载loading
+    public static Dialog loadingDialog;//加载loading
 
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
@@ -32,7 +33,7 @@ public class DialogHelp {
      * @return
      */
     public static void showLoading(Context context, String msg, boolean Cancelable) {
-
+        LogUtil.d(" 开始logo ");
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_loading, null);// 得到加载view
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.dialog_view);// 加载布局
@@ -61,6 +62,7 @@ public class DialogHelp {
     public static void cancelLoading() {
         if (null != loadingDialog && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
+            LogUtil.d(" 取消logo22 ");
         }
     }
 }
