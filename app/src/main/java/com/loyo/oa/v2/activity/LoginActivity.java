@@ -5,8 +5,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -37,58 +37,33 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private EditText edt_username, edt_password;
     private WaveView layout_login;
-    private ViewGroup tv_bqq_login;
-    private ViewGroup layout_third_login, layout_reset_password;
+    private TextView tv_resetPassword, tv_qqLogin;
     private HashMap<String, String> wxUnionIds = new HashMap<>();
-
     private JSONObject jsObj;
     private int codes;
-
-//    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (!TextUtils.isEmpty(action))
-//                getWxToken();
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         super.isNeedLogin = false;
-
-        //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(WXUtil.ACTION_WX_CODE_RETURN));
         initUI();
     }
-
 
     void initUI() {
         layout_login = (WaveView) findViewById(R.id.layout_login);
         layout_login.setCallback(this);
-
-        layout_third_login = (ViewGroup) findViewById(R.id.layout_third_login);
-
-        tv_bqq_login = (ViewGroup) findViewById(R.id.tv_bqq_login);
-        //tv_bwx_login = (ViewGroup) findViewById(R.id.tv_bwx_login);
-        layout_reset_password = (ViewGroup) findViewById(R.id.layout_reset_password);
-        tv_bqq_login.setOnClickListener(this);
-        //tv_bwx_login.setOnClickListener(this);
-        tv_bqq_login.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
-        //tv_bwx_login.setOnTouchListener(Global.GetTouch());
-        layout_reset_password.setOnTouchListener(Global.GetTouch());
-        layout_reset_password.setOnClickListener(this);
-
+        tv_qqLogin = (TextView) findViewById(R.id.tv_qqLogin);
+        tv_resetPassword = (TextView) findViewById(R.id.tv_resetPassword);
+        tv_qqLogin.setOnClickListener(this);
+        tv_qqLogin.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
+        tv_resetPassword.setOnTouchListener(Global.GetTouch());
+        tv_resetPassword.setOnClickListener(this);
         edt_username = (EditText) findViewById(R.id.edt_username);
         edt_password = (EditText) findViewById(R.id.edt_password);
-
         edt_username.addTextChangedListener(nameWatcher);
         edt_password.addTextChangedListener(nameWatcher);
-
-
         layout_login.setOnClickListener(this);
-
         if (Config_project.is_developer_mode) {
             edt_username.setText("15884479109");//18380477066  13438207189
             edt_password.setText("123456");
@@ -109,14 +84,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (!TextUtils.equals(layout_login.getText(), "登  录")) {
+            if (!TextUtils.equals(layout_login.getText(), "登录")) {
                 resetLogin();
             }
         }
     };
 
     private void resetLogin() {
-        layout_login.setText("登  录");
+        layout_login.setText("登录");
         layout_login.setBackGroundColor(getResources().getColor(R.color.title_bg1));
         layout_login.setMode(WaveView.WAVE_MODE_SHRINK);
         layout_login.setChangeColor(false);
@@ -129,24 +104,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.layout_login:
                 String username = edt_username.getText().toString().trim();
                 String password = edt_password.getText().toString().trim();
-
                 if (StringUtil.isEmpty(username)) {
                     Toast("帐号不能为空!");
                     return;
                 }
-
                 if (StringUtil.isEmpty(password)) {
                     Toast("密码不能为空!");
                     return;
                 }
-
                 layout_login.setText("登录中");
                 changeColor(-1, R.color.lightgreen);
-
                 HashMap<String, Object> body = new HashMap<String, Object>();
                 body.put("username", username);
                 body.put("password", password);
-
                 if (!wxUnionIds.isEmpty()) {
                     String wxUninoId = wxUnionIds.get(username);
                     if (TextUtils.isEmpty(wxUninoId))
@@ -154,29 +124,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if (!TextUtils.isEmpty(wxUninoId))
                         body.put("wxUnionId", wxUninoId);
                 }
-
                 login(body, 2);
 
                 break;
-            //企业qq登陆
-            case R.id.tv_bqq_login:
+            case R.id.tv_qqLogin://企业qq登陆
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
                 break;
-           /* case R.id.tv_bwx_login:
-                if (regToWx()) {
-                    requestWeixinInfo();
-                }
-
-                break;*/
-
-            //忘记密码
-
-            case R.id.layout_reset_password:
+            case R.id.tv_resetPassword://忘记密码
                 app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
         }
     }
-
 
     @Override
     public void onWaveComplete(int color) {
@@ -213,8 +171,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 .setEndpoint(FinalVariables.GET_TOKEN) //URL
                 .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
                 .build();
-
-
         adapter.create(ILogin.class).login(body, new RCallback<Token>() {
             @Override
             public void success(Token token, Response response) {
@@ -241,54 +197,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    Toast("请检查您的网络连接");
-//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-//
-//                    switch (type) {
-//
-//                        case 1:
-//                            //Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
-//                            Toast("微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号");
-//                            break;
-//
-//                        case 2:
-//                            try {
-//                                String errorStr = Utils.convertStreamToString(error.getResponse().getBody().in());
-//                                codes = error.getResponse().getStatus();
-//                                jsObj = new JSONObject(errorStr);
-//
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                            if (codes == 500) {
-//                                Toast("手机号码或密码错误");
-//                            } else if (codes == 401) {
-//                                Toast("登录失败，请稍后再试");
-//                            }
-//
-//                            break;
-//                    }
-//                }
-
                 layout_login.setText("登录失败");
                 changeColor(R.color.title_bg1, R.color.red);
 
             }
         });
     }
-
-//    /**
-//     * 微信登录
-//     */
-//    private void loginWithWx(String wxUninoId) {
-//        HashMap<String, Object> body = new HashMap<String, Object>();
-//        body.put("wxUnionId", wxUninoId);
-//        login(body, 1);
-//    }
 
 
     public class Token {

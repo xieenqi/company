@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
@@ -64,7 +65,7 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
 
     }
 
-    public void setCallback(int id,OnLoadSuccessCallback callback) {
+    public void setCallback(int id, OnLoadSuccessCallback callback) {
         this.mId = id;
         this.callback = callback;
     }
@@ -73,5 +74,18 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         if (null != callback) {
             callback.onLoadSuccess(mId, size);
         }
+    }
+
+    //加载loading的方法
+    public void showLoading(String msg) {
+        DialogHelp.showLoading(getActivity(), msg, true);
+    }
+
+    public void showLoading(String msg, boolean Cancelable) {
+        DialogHelp.showLoading(getActivity(), msg, Cancelable);
+    }
+
+    public static void cancelLoading() {
+        DialogHelp.cancelLoading();
     }
 }

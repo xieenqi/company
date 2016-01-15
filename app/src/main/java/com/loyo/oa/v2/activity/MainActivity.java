@@ -635,7 +635,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             final ClickItem item = getItem(position);
 
-            for (HttpMainRedDot num : mItemNumbers) {
+            for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1 && !num.viewed)) {
                     extra = num.bizNum + "个待点评";
