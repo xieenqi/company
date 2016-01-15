@@ -247,8 +247,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
-        LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
 
+        LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),
@@ -368,7 +368,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Override
     public void OnLocationFailed() {
-        Utils.dialogDismiss();
+        cancelLoading();
         Toast("获取打卡位置失败");
     }
 
@@ -378,7 +378,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(AttendanceRecord attendanceRecord, Response response) {
-                Utils.dialogDismiss();
+                cancelLoading();
                 attendanceRecord.setAddress(address);
                 Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
                 intent.putExtra("mAttendanceRecord", attendanceRecord);
@@ -389,7 +389,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void failure(RetrofitError error) {
                 Toast("服务器连接失败,请检查网络" + error.getMessage());
                 super.failure(error);
-                Utils.dialogDismiss();
+                cancelLoading();
             }
         });
     }
@@ -460,7 +460,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-        Utils.dialogShow(this, "正在解析当前位置，请稍候");
+        //Utils.dialogShow(this, "正在解析当前位置，请稍候");
+        showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
