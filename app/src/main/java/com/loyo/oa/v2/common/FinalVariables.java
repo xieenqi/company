@@ -84,13 +84,14 @@ public final class FinalVariables {
         return Config_project.SERVER_URL() + "/oauth2/authorized?authorizationToken=" ;
     }*/
     public static String GetBQQLogin() {
-        return "http://www.ukuaiqi.com/oauth2/bqq/authorize";
+        //return "http://www.ukuaiqi.com/oauth2/bqq/authorize";
+        return "http://ukuaiqi.com/oauth2/bqq/authorize";
     }
 
     public static String GetLogin_success_prefix() {
-        return "http://www.ukuaiqi.com/oauth2/authorized?authorizationToken";
+        //return "http://www.ukuaiqi.com/oauth2/authorized?authorizationToken";
+        return "http://ukuaiqi.com/oauth2/authorized?authorizationToken";
     }
-
 
     public static final String users_profile = "/users/profile";//用户登录认证成功之后，调用本接口获得详细的当前登录人信息
     public static final String attachments = "/attachment/";//上传附件
