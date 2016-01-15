@@ -81,7 +81,7 @@ public class Config_project {
      */
     public static String SERVER_URL_CUSTOMER() {
         return isRelease ? Domain.crm : IP + ":8090";
-    }//8090
+    }
 
     /**
      * 登录地址
@@ -91,6 +91,7 @@ public class Config_project {
         return isRelease ? Domain.account : IP + ":88";
     }
     //产品预上线环境服务器 88端口  131的是8080
+
 
     /**
      * oa 系统
