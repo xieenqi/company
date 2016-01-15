@@ -248,7 +248,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @AfterViews
     void init() {
         LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
-
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
                 findViewById(R.id.img_setting),

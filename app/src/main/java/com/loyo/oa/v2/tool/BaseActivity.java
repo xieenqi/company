@@ -27,6 +27,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
@@ -348,5 +349,18 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public void hideInputKeyboard(EditText et) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    //加载loading的方法
+    public void showLoading(String msg) {
+        DialogHelp.showLoading(this, msg, true);
+    }
+
+    public void showLoading(String msg, boolean Cancelable) {
+        DialogHelp.showLoading(this, msg, Cancelable);
+    }
+
+    public static void cancelLoading() {
+        DialogHelp.cancelLoading();
     }
 }
