@@ -5,9 +5,11 @@ import android.os.Bundle;
 
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 
@@ -23,7 +25,8 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBundle = getIntent().getExtras();
-        queryType = mBundle.getInt("queryType");
+        queryType = mBundle.getInt(ExtraAndResult.CC_DEPARTMENT_NAME);
+        LogUtil.dll("来自什么客户:"+queryType);
     }
 
     @Override
@@ -58,5 +61,4 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         }
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, this);
     }
-
 }

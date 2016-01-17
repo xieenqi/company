@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -173,7 +174,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
             }
         }
         Bundle b = new Bundle();
-        b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
+        b.putInt(ExtraAndResult.CC_DEPARTMENT_NAME,type);
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
     }
 
