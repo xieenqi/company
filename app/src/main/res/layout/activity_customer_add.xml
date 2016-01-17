@@ -139,7 +139,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:hint="联系人"
+                        android:hint="请输入联系人姓名"
                         android:inputType="textPersonName"
                         android:maxLength="20"/>
 
@@ -175,7 +175,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:hint="电话"
+                        android:hint="请输入联系人手机号"
                         android:inputType="phone"
                         android:maxLength="20"/>
 

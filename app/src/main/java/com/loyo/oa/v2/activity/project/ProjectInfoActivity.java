@@ -62,7 +62,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById TextView tv_title_1;
-
     @ViewById PagerSlidingTabStrip tabs;
     @ViewById ViewPager pager;
     @ViewById ViewGroup layout_project_des;
@@ -312,8 +311,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
                         @Override
                         public void failure(RetrofitError error) {
+                            Toast("有任务未结束,不能结束项目!");
                             HttpErrorCheck.checkError(error);
-                            Global.ToastLong("有任务未结束,不能结束项目!");
                         }
                     });
                 }

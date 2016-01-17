@@ -779,7 +779,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     Bitmap blur = Utils.blurBitmap(bitmap);
                     img_home_head.setImageBitmap(blur);
                 }*/
-
             }
 
             @Override

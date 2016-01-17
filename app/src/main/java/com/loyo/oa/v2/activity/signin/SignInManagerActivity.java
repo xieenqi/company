@@ -39,14 +39,10 @@ public class SignInManagerActivity extends FragmentActivity {
 
     private String[] LEGWORK_FILTER_STRS = new String[]{"我的拜访","团队拜访"};
     @ViewById ViewGroup img_title_left;
-
     @ViewById TextView tv_title_1;
-
     @ViewById ViewGroup layout_title_action;
     @ViewById ViewGroup layout_category;
-
     @ViewById(R.id.img_title_arrow) ImageView imageArrow;
-
     @ViewById(R.id.lv_signin_category) ListView categoryListView;
 
     private Animation rotateAnimation;

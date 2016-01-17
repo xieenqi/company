@@ -7,11 +7,15 @@ import android.view.LayoutInflater;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -93,8 +97,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     /**
      * 弹出日期时间选择框方法
      *
-     * @param inputDate
-     *            :为需要设置的日期时间文本编辑框
+     * @param :为需要设置的日期时间文本编辑框
      * @return
      */
     public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener) {
@@ -110,12 +113,18 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 .setView(dateTimeLayout)
                 .setPositiveButton("完成", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        listener.onDateTimeChanged(years,month,day,hour,minutes);
+                        String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
+                        if (Integer.parseInt(DateTool.getDataOne(timeFu))
+                                < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime()))) {
+                            Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            listener.onDateTimeChanged(years, month, day, hour, minutes);
+                        }
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                     ad.dismiss();
+                        ad.dismiss();
                     }
                 }).show();
 

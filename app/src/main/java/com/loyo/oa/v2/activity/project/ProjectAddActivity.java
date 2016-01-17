@@ -260,8 +260,10 @@ public class ProjectAddActivity extends BaseActivity {
 
         String content = edt_content.getText().toString().trim();//内容
         if (TextUtils.isEmpty(content)) {
-            projectTransObj.content = content;
             Toast("项目内容不能为空!");
+            return;
+        }else{
+            projectTransObj.content = content;
         }
 
         projectTransObj.managers = getProjectManager();

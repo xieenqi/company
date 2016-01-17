@@ -106,20 +106,20 @@ public class WfinstanceViewGroup extends LinearLayout {
             AlertDialog dialog_follow = null;
 
             if (bizFormFields != null) {
-                if (bizFormFields.isList()) {//自定义选择类型
+                if ("list".equals(bizFormFields.getDbtype())) {//自定义选择类型
                     dialog_follow = initDialog_Wheel_one(value, bizFormFields.getDefaultvalue(), i);
                     value.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
                     value.setFocusable(false);
                     value.setFocusableInTouchMode(false);
                     value.setOnFocusChangeListener(null);
                     value.setInputType(InputType.TYPE_CLASS_TEXT);
-                } else if ("DateTime".equals(bizFormFields.getDbtype())) {//日期选择类型
+                } else if ("long".equals(bizFormFields.getDbtype())) {//日期选择类型
                     value.setOnClickListener(new ValueOnClickListener_dateTime(value, i));
                     value.setFocusable(false);
                     value.setFocusableInTouchMode(false);
                     value.setOnFocusChangeListener(null);
                     value.setInputType(InputType.TYPE_CLASS_TEXT);
-                } else if ("String".equals(bizFormFields.getDbtype())) {//输入字符类型
+                } else if ("string".equals(bizFormFields.getDbtype())) {//输入字符类型
                     value.setTag(new String("输入字符类型"));
                     value.setFocusableInTouchMode(true);
                     value.setFocusable(true);
@@ -127,7 +127,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.requestFocus();
                     value.setInputType(InputType.TYPE_CLASS_TEXT);
                     value.addTextChangedListener(new BizFiedTextWatcher(i, value));
-                } else if ("Numeric".equals(bizFormFields.getDbtype())) {//输入数字类型
+                } else if ("int".equals(bizFormFields.getDbtype())) {//输入数字类型
                     value.setTag(new String("输入 数字 类型"));
                     value.setFocusableInTouchMode(true);
                     value.setFocusable(true);
@@ -135,7 +135,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.addTextChangedListener(new BizFiedTextWatcher(i, value));
                     value.requestFocus();
                     value.setInputType(InputType.TYPE_CLASS_NUMBER);
-                } else if ("Money".equals(bizFormFields.getDbtype())) {//货币 输入数字
+                } else if ("double".equals(bizFormFields.getDbtype())) {//货币 输入数字
                     value.setTag(new String("输入 货币 类型"));
                     value.setFocusableInTouchMode(true);
                     value.setFocusable(true);

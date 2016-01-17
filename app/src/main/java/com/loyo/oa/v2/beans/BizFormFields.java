@@ -11,7 +11,7 @@ public class BizFormFields implements Serializable {
     private String regularExpress;
     private String value;
     private String dbType;
-    private String defaultvalue;
+    private String defaultValue;
     private String id;
     private boolean isList;
     private boolean required;
@@ -61,11 +61,11 @@ public class BizFormFields implements Serializable {
     }
 
     public String getDefaultvalue() {
-        return defaultvalue == null ? "" : defaultvalue;
+        return defaultValue == null ? "" : defaultValue;
     }
 
     public void setDefaultvalue(String defaultvalue) {
-        this.defaultvalue = defaultvalue;
+        this.defaultValue = defaultvalue;
     }
 
     public boolean isEnable() {
