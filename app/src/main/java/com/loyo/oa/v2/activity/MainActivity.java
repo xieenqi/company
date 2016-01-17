@@ -758,9 +758,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     //显示用户名字和部门的名字,同时注册信鸽推送和Bugly
     void updateUser() {
+        
         if (MainApp.user == null) {
             return;
         }
+
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
