@@ -61,6 +61,11 @@ public class DateTool {
     public static final String DATE_FORMATE_CUSTOM_1 = "yyyy年MM月dd日";
 
     /**
+     * yyyy年MM月dd日HH时mm分
+     */
+    public static final String DATE_FORMATE_CUSTOM_2 = "yyyy年MM月dd日HH时mm分";
+
+    /**
      * yyyy-MM-dd HH:mm:ss 2010-05-11 17:22:26
      */
     public static final String DATE_FORMATE_ALL = "yyyy-MM-dd HH:mm:ss";
@@ -481,7 +486,7 @@ public class DateTool {
     }
 
     /**
-     * yyyy-MM-dd-HH-mm格式转时间戳
+     * yyyy-MM-dd HH:mm格式转时间戳
      */
     public static String getDataOne(String time) {
         SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm",
@@ -507,7 +512,7 @@ public class DateTool {
      * @return
      */
     public static String timet(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy年MM月dd日HH时mm分");
+        SimpleDateFormat sdr = new SimpleDateFormat(DATE_FORMATE_CUSTOM_2);
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
         int i = Integer.parseInt(time);
@@ -520,9 +525,10 @@ public class DateTool {
      * 获取当前时间
      */
     public static String getNowTime() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES);
         return sDateFormat.format(new java.util.Date());
     }
+
 
 
     public static class DateSetListener_Datetool implements

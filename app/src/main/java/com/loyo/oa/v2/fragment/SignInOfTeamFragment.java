@@ -147,6 +147,8 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     int resultTime = c1.compareTo(c2);
                     if (resultTime < 0) {
                         nextDay();
+                    }else{
+                        Toast("不能查看未来拜访数据!");
                     }
                 } catch (Exception e) {
 

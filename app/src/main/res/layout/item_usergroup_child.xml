@@ -29,7 +29,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="" />
+            android:text=""
+            android:singleLine="true"
+            android:maxEms="6"
+            android:ellipsize="end"
+            />
 
         <TextView
             android:id="@+id/tv_content"
@@ -40,6 +44,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_side_edge"
             android:text="" />
-    </RelativeLayout>
 
+    </RelativeLayout>
 </LinearLayout>

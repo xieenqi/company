@@ -72,7 +72,8 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public void initView(){
 
         vs_nodata = findViewById(R.id.vs_nodata);
-        getNearCustomersInfo();
+        //附近客户数据有问题，先屏蔽，默认展示我的所有客户，1-17
+        //getNearCustomersInfo();
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,9 +136,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 returnData(position - 1);
             }
         });
-
-        /*默认先展示附近客户，所有客户先屏蔽*/
-        //getAllData();
+        getAllData();
     }
 
 
@@ -314,14 +313,13 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
             status.setVisibility(View.GONE);
             layout_discuss.setVisibility(View.GONE);
-            time.setVisibility(View.VISIBLE);
+            content.setVisibility(View.INVISIBLE);
 
-            time.setVisibility(View.GONE);
+            time.setVisibility(View.VISIBLE);
             title.setText(customer.name);
-            content.setText("距离：" + customer.distance);
+            time.setText(customer.distance!=null?"距离: "+customer.distance:"距离: 无");
 
             return convertView;
         }
     }
-
 }
