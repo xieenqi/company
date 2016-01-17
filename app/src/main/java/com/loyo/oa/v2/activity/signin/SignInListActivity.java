@@ -51,11 +51,8 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
 
     @ViewById ViewGroup layout_back;
     @ViewById TextView tv_title;
-
     @ViewById(R.id.listView_legworks) PullToRefreshListView lv;
-
     @ViewById ViewGroup layout_add;
-
     @Extra Customer mCustomer;
     @Extra boolean isMyUser;
 
@@ -193,5 +190,4 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         workPaginationX.setPageIndex(workPaginationX.getPageIndex() + 1);
         getData();
     }
-
 }
