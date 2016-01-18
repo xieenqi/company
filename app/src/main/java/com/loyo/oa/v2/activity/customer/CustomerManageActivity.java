@@ -175,6 +175,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         }
         Bundle b = new Bundle();
         b.putInt(ExtraAndResult.CC_DEPARTMENT_NAME,type);
+        b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
         app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
     }
 

@@ -26,7 +26,6 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         super.onCreate(savedInstanceState);
         mBundle = getIntent().getExtras();
         queryType = mBundle.getInt(ExtraAndResult.CC_DEPARTMENT_NAME);
-        LogUtil.dll("来自什么客户:"+queryType);
     }
 
     @Override

@@ -186,7 +186,6 @@ public class DepartmentUserSearchActivity extends Activity {
 
             tv_content.setText(user.getRealname());
 
-
             String deptName,workName;
 
             try{

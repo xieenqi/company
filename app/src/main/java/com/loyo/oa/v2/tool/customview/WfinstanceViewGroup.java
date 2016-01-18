@@ -209,6 +209,7 @@ public class WfinstanceViewGroup extends LinearLayout {
         public void onClick(View v) {
             if (dialog_Wheel_one != null && !dialog_Wheel_one.isShowing()) {
                 dialog_Wheel_one.show();
+                LogUtil.dll("在拉列表 点击进来 show");
             }
         }
     }
@@ -317,9 +318,9 @@ public class WfinstanceViewGroup extends LinearLayout {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 map_Values.put(lstData1.get(position).get("id"),
                         lstData1.get(position).get("title"));
-
                 textView.setText(lstData1.get(position).get("title"));
-                dialog.dismiss();
+                dialog.hide();
+                LogUtil.dll("dialog hide");
             }
         });
         builder.setView(layout);

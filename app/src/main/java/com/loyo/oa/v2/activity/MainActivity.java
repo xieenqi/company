@@ -18,6 +18,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +115,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     SwipeRefreshLayout swipe_container;
     @ViewById
-    ViewGroup layout_network, layout_attendance, layout_avatar;
+    ViewGroup layout_network, layout_attendance, layout_avatar,layout_is_attendance;
     @ViewById
     ImageView img_home_head, img_fast_add;
 
@@ -160,8 +161,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         Class<?> _class = null;
         switch (position) {
-
-
             case 0:
                 _class = TasksAddActivity_.class;
                 break;
@@ -412,14 +411,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
                 }
-
-                if (isSign) {
+                LogUtil.dll("是否打卡:"+isSign);
                     rotateInt();
-                } else {
-                    Intent intent = new Intent(MainActivity.this, AttendanceActivity_.class);
-                    startActivity(intent);
-                    Toast("您今天已经打卡完毕");
-                }
             }
 
             @Override
@@ -447,6 +440,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return validateItem;
     }
 
+
+    @Click(R.id.layout_is_attendance)
+    void onClickIsAttendance(){
+        Toast("您今天已经打卡完毕");
+        Intent intent = new Intent(MainActivity.this, AttendanceActivity_.class);
+        startActivity(intent);
+    }
+
     /**
      * 点击打卡,准备跳转新建考勤
      */
@@ -460,7 +461,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-        //Utils.dialogShow(this, "正在解析当前位置，请稍候");
         showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
@@ -482,6 +482,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         getValidateInfo();
     }
 
+
+
     /**
      * 头像翻转
      */
@@ -502,11 +504,16 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
                 layout_avatar.setRotationY(value);
-                LogUtil.d("" +
-                        "打卡点击CurrentPlayTime = " + valueAnimator.getCurrentPlayTime() + " value : " + value);
+
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
-                    layout_attendance.setVisibility(View.VISIBLE);
+                    if(isSign){
+                        layout_is_attendance.setVisibility(View.INVISIBLE);
+                        layout_attendance.setVisibility(View.VISIBLE);
+                    }else{
+                        layout_attendance.setVisibility(View.INVISIBLE);
+                        layout_is_attendance.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (Math.round(value) == 180) {
                     mHandler.postDelayed(rotateRunner, 5000);
@@ -532,7 +539,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
-                        layout_attendance.setVisibility(View.INVISIBLE);
+                        if(isSign){
+                            layout_is_attendance.setVisibility(View.INVISIBLE);
+                            layout_attendance.setVisibility(View.INVISIBLE);
+                        }else{
+                            layout_attendance.setVisibility(View.INVISIBLE);
+                            layout_is_attendance.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
             });
@@ -557,7 +570,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     /**
-     * 添加 【popu弹窗】窗口i
+     * 添加 【popu弹窗】窗口
      */
     @Click(R.id.img_fast_add)
     void onClickAdd() {
@@ -758,7 +771,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     //显示用户名字和部门的名字,同时注册信鸽推送和Bugly
     void updateUser() {
-        
+
         if (MainApp.user == null) {
             return;
         }

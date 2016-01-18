@@ -79,21 +79,42 @@
 
             <RelativeLayout
                 android:visibility="invisible"
-                android:id="@+id/layout_attendance"
+                android:id="@+id/layout_is_attendance"
                 android:layout_width="@dimen/dimen_110"
                 android:layout_height="@dimen/dimen_110"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
-                android:gravity="center">
-
-
-                <ImageView
+                android:gravity="center"
+                >
+                <TextView
                     android:background="@drawable/circle_bg_shpe"
                     android:layout_width="@dimen/dimen_110"
                     android:layout_height="@dimen/dimen_110"
                     android:layout_centerHorizontal="true"
                     android:scaleType="center"
-                    android:src="@drawable/icon_home_daka"
+                    android:text="点击进入\n考勤详情"
+                    android:gravity="center"
+                    android:rotationY="180"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="invisible"
+                android:background="@drawable/circle_bg_shpe"
+                android:id="@+id/layout_attendance"
+                android:layout_width="@dimen/dimen_110"
+                android:layout_height="@dimen/dimen_110"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dimen_40"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/icon_zhiwen"
                     />
 
                 <com.loyo.oa.v2.tool.customview.ScanningImageView
