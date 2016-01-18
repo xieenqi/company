@@ -19,11 +19,13 @@ import com.loyo.oa.v2.tool.LogUtil;
  * Created xnq 16/1/15.
  */
 public class DialogHelp {
-    public static Dialog loadingDialog;//加载loading
+    private static Dialog loadingDialog;//加载loading
 
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
     }
+
+    Animation hyperspaceJumpAnimation;
 
     /**
      * 得到自定义的progressDialog
@@ -49,9 +51,8 @@ public class DialogHelp {
             tipTextView.setText(msg);// 设置加载信息
 
         loadingDialog = new Dialog(context, R.style.loading_dialog);// 创建自定义样式dialog
-
         loadingDialog.setCancelable(Cancelable);// 不可以用“返回键”取消
-
+        loadingDialog.setCanceledOnTouchOutside(Cancelable);
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT,
                 LinearLayout.LayoutParams.FILL_PARENT));// 设置布局
@@ -61,8 +62,9 @@ public class DialogHelp {
 
     public static void cancelLoading() {
         if (null != loadingDialog && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
+            loadingDialog.cancel();
             LogUtil.d(" 取消logo22 ");
+            loadingDialog = null;
         }
     }
 }

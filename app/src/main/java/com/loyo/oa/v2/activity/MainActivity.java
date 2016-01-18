@@ -18,7 +18,6 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -506,6 +505,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
+                LogUtil.d("开始反转：" + value);
                 layout_avatar.setRotationY(value);
 
                 if (Math.round(value) >= 90) {
@@ -539,6 +539,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();
+                    LogUtil.d("反转回来：" + value);
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
