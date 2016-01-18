@@ -17,31 +17,43 @@
         <FrameLayout
             android:id="@+id/layout_customer_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            />
 
         <LinearLayout
             android:id="@+id/layout_category"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_70"
-            android:layout_marginRight="@dimen/dimen_70"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/popu_bj"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_height="match_parent"
+            android:background="#33000000"
+            android:visibility="gone"
+            >
 
-            <ListView
-                android:id="@+id/lv_customer_category"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cacheColorHint="#00000000"
-                android:choiceMode="singleChoice"
-                android:divider="@color/activity_split"
-                android:dividerHeight="@dimen/dimen_0.5"
-                android:padding="@dimen/dimen_0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_100"
+                android:layout_marginRight="@dimen/dimen_100"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/popu_bj"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
 
+                <ListView
+                    android:id="@+id/lv_customer_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="#00000000"
+                    android:choiceMode="singleChoice"
+                    android:divider="@color/activity_split"
+                    android:dividerHeight="@dimen/dimen_0.5"
+                    android:paddingLeft="@dimen/dimen_10"
+                    android:paddingRight="@dimen/dimen_10"
+                    android:paddingTop="@dimen/dimen_10"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
-
     </FrameLayout>
 
 </LinearLayout>
