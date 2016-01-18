@@ -67,7 +67,7 @@ public class LauncherActivity extends BaseActivity {
                     }
                     startActivity(intent);
                     finish();
-                    overridePendingTransition(R.anim.enter_zoom_in, R.anim.enter_zoom_out);
+                    overridePendingTransition(R.anim.enter_in, R.anim.enter_out);
                 }
 
                 @Override
@@ -116,7 +116,7 @@ public class LauncherActivity extends BaseActivity {
                                         }
                                     });
                                 }
-                            }, 480);
+                            }, 500);
 
                         }
 

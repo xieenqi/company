@@ -501,9 +501,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
+                LogUtil.d("开始反转：" + value);
                 layout_avatar.setRotationY(value);
-                LogUtil.d("" +
-                        "打卡点击CurrentPlayTime = " + valueAnimator.getCurrentPlayTime() + " value : " + value);
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
                     layout_attendance.setVisibility(View.VISIBLE);
@@ -529,6 +528,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();
+                    LogUtil.d("反转回来：" + value);
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
@@ -758,7 +758,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     //显示用户名字和部门的名字,同时注册信鸽推送和Bugly
     void updateUser() {
-        
+
         if (MainApp.user == null) {
             return;
         }

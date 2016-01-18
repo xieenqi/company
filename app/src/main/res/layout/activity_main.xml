@@ -1,12 +1,13 @@
-<LinearLayout android:id="@+id/container"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+<LinearLayout
+    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -78,26 +79,27 @@
             >
 
             <RelativeLayout
-                android:visibility="invisible"
                 android:id="@+id/layout_attendance"
                 android:layout_width="@dimen/dimen_110"
                 android:layout_height="@dimen/dimen_110"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
-                android:gravity="center">
+                android:gravity="center"
+
+                android:visibility="invisible">
 
 
                 <ImageView
-                    android:background="@drawable/circle_bg_shpe"
                     android:layout_width="@dimen/dimen_110"
                     android:layout_height="@dimen/dimen_110"
                     android:layout_centerHorizontal="true"
+                    android:background="@drawable/circle_bg_shpe1"
                     android:scaleType="center"
                     android:src="@drawable/icon_home_daka"
+
                     />
 
                 <com.loyo.oa.v2.tool.customview.ScanningImageView
-                    android:background="@drawable/circle_bg_shpe1"
                     android:layout_width="@dimen/dimen_110"
                     android:layout_height="@dimen/dimen_110"
                     android:paddingLeft="@dimen/dimen_20"
