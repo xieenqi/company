@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -21,7 +20,6 @@ import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -44,15 +42,12 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     @ViewById ViewGroup layout_back;
     @ViewById ImageView iv_submit;
     @ViewById TextView tv_title;
-
     @ViewById PagerSlidingTabStrip tabs;
     @ViewById ViewPager pager;
-
     @Extra String position;
     @Extra NearCount nearCount;
     @Extra int type;//客户类型
-
-    MyPagerAdapter adapter;
+    private MyPagerAdapter adapter;
     private ArrayList<CustomerCommonFragment> fragmentXes = new ArrayList<>();
 
     @AfterViews
@@ -95,7 +90,6 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         } else {//团队客户
             customers = fragmentXes.get(pager.getCurrentItem()).getmCustomers();
         }
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("customers", customers);
         bundle.putInt(ExtraAndResult.EXTRA_DATA, fragmentXes.get(0).getmCustomers().size());
@@ -113,7 +107,6 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         tabs.setViewPager(pager);
-
     }
 
     /**

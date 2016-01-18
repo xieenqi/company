@@ -101,7 +101,6 @@ public class WfInstanceAddActivity extends BaseActivity {
 
     //要提交的数据的展示容器
     @ViewById LinearLayout wfinstance_data_container;
-
     WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
 
     /**
@@ -207,7 +206,6 @@ public class WfInstanceAddActivity extends BaseActivity {
             mBizForm = wfInstance.bizForm;
             intBizForm();
         }
-
         edt_memo.setText(wfInstance.memo);
     }
 
@@ -346,14 +344,16 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 审批 类型 选择 初始化 流程列表
      */
     private void intBizForm() {
+
         tv_bizform.setText(mBizForm.getName());
         wfInstanceAdd.setBizformId(mBizForm.getId());
+
         if (null == mBizForm.getFields()) {
             Toast("该审批类型没有配置流程，请重新选择!");
             return;
         }
-        layout_wfinstance_data.setVisibility(View.VISIBLE);
 
+        layout_wfinstance_data.setVisibility(View.VISIBLE);
         submitData.clear();
         wfinstance_data_container.removeAllViews();
         addTypeData();
@@ -390,7 +390,6 @@ public class WfInstanceAddActivity extends BaseActivity {
                     dialog_follow.show();
                 }
                 break;
-
             case R.id.layout_wfinstance://到选择类型页面
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;

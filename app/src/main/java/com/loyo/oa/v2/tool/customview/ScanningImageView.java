@@ -12,6 +12,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+
 /**
  * com.loyo.oa.v2.tool.customview
  * 描述 :带扫描线的ImageView
@@ -35,14 +36,17 @@ public class ScanningImageView extends ImageView {
 
     public ScanningImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setClipToOutline(true);//设置绘制的覆盖物不能超出背景的轮廓
         }
+
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.TRANSPARENT);
         mPaint.setAlpha(255);
+
     }
 
     @Override
@@ -62,7 +66,6 @@ public class ScanningImageView extends ImageView {
             mHeight = 0;
         }
         postInvalidateDelayed(40);
-
         super.onDraw(canvas);
     }
 }
