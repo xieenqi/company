@@ -86,8 +86,11 @@ public class HttpErrorCheck {
             String result = Utils.convertStreamToString(response.getBody().in());
             LogUtil.d(TAG + " 接口成功result：" + result);
             LogUtil.d(TAG + " 接口成功URL：" + response.getUrl());
-        } catch (Exception e) {
+        } catch (IOException e) {
 
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空response:" + response.getUrl());
+            e.printStackTrace();
         }
     }
 }

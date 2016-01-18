@@ -12,7 +12,9 @@ import android.widget.ImageView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -32,6 +34,8 @@ public class LauncherActivity extends BaseActivity {
     @ViewById ImageView iv_launcher_adv, iv_launcher_fade;
     @ViewById ImageView iv_launcher_bottom;
     @ViewById ViewGroup ll_root, layout_launcher_fade;
+    private boolean isWelcom;
+    private String welcomKey = "welcomKey";
 
     @AfterViews
     void initVies() {
@@ -52,9 +56,15 @@ public class LauncherActivity extends BaseActivity {
                 //动画加载完成
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    Intent intent = new Intent(LauncherActivity.this,
-                            TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
-//
+                    isWelcom = SharedUtil.getBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY);
+                    Intent intent = new Intent(LauncherActivity.this, WelcomeActivity.class);
+                    if (!isWelcom) {
+                        intent.setClass(LauncherActivity.this, WelcomeActivity.class);
+                        SharedUtil.putBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY, true);
+                    } else {
+                        intent.setClass(LauncherActivity.this,
+                                TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
+                    }
                     startActivity(intent);
                     finish();
                     overridePendingTransition(R.anim.enter_zoom_in, R.anim.enter_zoom_out);
