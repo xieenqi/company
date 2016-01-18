@@ -12,6 +12,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -24,10 +25,12 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +83,12 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         rotateAnimation = getArrowAnimation();
         imageArrow.setVisibility(View.VISIBLE);
         initFragments();
+        layout_category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
     void initFragments() {

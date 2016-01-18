@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.loyo.oa.v2"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:installLocation="internalOnly">
+<manifest
+    package="com.loyo.oa.v2"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="internalOnly">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -80,6 +81,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- 启动欢迎页面 -->
+        <activity
+            android:name=".activity.WelcomeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".activity.ResetPasswordActivity_"
             android:label="@string/app_name"

@@ -6,10 +6,10 @@
                 android:orientation="horizontal">
 
     <RelativeLayout
-        android:layout_centerHorizontal="true"
         android:id="@+id/layout_title_action"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/tv_title_1"
