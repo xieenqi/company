@@ -489,6 +489,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         lng = longitude;
         LogUtil.dll("onlocationSucessed:" + address);
         mLocate.addr = address;
+        LogUtil.dll("longitude:"+longitude);
+        LogUtil.dll("latitude:"+latitude);
         mLocate.loc[0] = longitude;
         mLocate.loc[1] = latitude;
         tv_address.setText(address);

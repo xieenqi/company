@@ -209,7 +209,6 @@ public class WfinstanceViewGroup extends LinearLayout {
         public void onClick(View v) {
             if (dialog_Wheel_one != null && !dialog_Wheel_one.isShowing()) {
                 dialog_Wheel_one.show();
-                LogUtil.dll("在拉列表 点击进来 show");
             }
         }
     }
@@ -267,7 +266,6 @@ public class WfinstanceViewGroup extends LinearLayout {
     }
 
     AlertDialog dialog;
-
     AlertDialog initDialog_Wheel_one(final TextView textView, String src, int position) {
 
         String[] str = src.split(",");
@@ -311,6 +309,8 @@ public class WfinstanceViewGroup extends LinearLayout {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View layout = LayoutInflater.from(context).inflate(R.layout.dialog_products_select, null);
+        builder.setView(layout);
+        dialog = builder.create();
         ListView listView_follow = (ListView) layout.findViewById(R.id.listView);
         listView_follow.setAdapter(followAdapter);
         listView_follow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -319,13 +319,10 @@ public class WfinstanceViewGroup extends LinearLayout {
                 map_Values.put(lstData1.get(position).get("id"),
                         lstData1.get(position).get("title"));
                 textView.setText(lstData1.get(position).get("title"));
-                dialog.hide();
-                LogUtil.dll("dialog hide");
+                dialog.cancel();
             }
         });
-        builder.setView(layout);
-        dialog = builder.create();
-        return dialog;
 
+        return dialog;
     }
 }

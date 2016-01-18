@@ -119,6 +119,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     ImageView img_home_head, img_fast_add;
 
+
     private Intent mIntentCheckUpdate;
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
@@ -161,6 +162,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         Class<?> _class = null;
         switch (position) {
+
+
             case 0:
                 _class = TasksAddActivity_.class;
                 break;
