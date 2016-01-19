@@ -223,7 +223,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -408,7 +408,7 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 获取附件(创建)
-     * */
+     */
     void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
@@ -471,16 +471,16 @@ public class TasksAddActivity extends BaseActivity {
                     members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
                     if (null == members) {
                         tv_toUsers.setText("无参与人");
-                    }else{
-                        StringBuffer joinName  = new StringBuffer();
-                        if(null != members.depts){
-                            for(NewUser newUser : members.depts){
-                                joinName.append(newUser.getName()+",");
+                    } else {
+                        StringBuffer joinName = new StringBuffer();
+                        if (null != members.depts) {
+                            for (NewUser newUser : members.depts) {
+                                joinName.append(newUser.getName() + ",");
                             }
                         }
-                        if(null != members.users){
-                            for(NewUser newUser : members.users){
-                                joinName.append(newUser.getName()+",");
+                        if (null != members.users) {
+                            for (NewUser newUser : members.users) {
+                                joinName.append(newUser.getName() + ",");
                             }
                         }
                         tv_toUsers.setText(joinName.toString());
