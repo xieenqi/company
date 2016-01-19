@@ -200,7 +200,6 @@ public class WfinstanceViewGroup extends LinearLayout {
 
     private class ValueOnClickListener_list implements View.OnClickListener {
         AlertDialog dialog_Wheel_one;
-
         private ValueOnClickListener_list(AlertDialog _dialog, int position) {
             this.dialog_Wheel_one = _dialog;
         }
@@ -213,6 +212,7 @@ public class WfinstanceViewGroup extends LinearLayout {
         }
     }
 
+    /*时间选择*/
     private class ValueOnClickListener_dateTime implements View.OnClickListener {
         private TextView textView;
         private int position;
@@ -254,19 +254,13 @@ public class WfinstanceViewGroup extends LinearLayout {
 
                     }
                 });
-
-                //                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                //                        textView.getContext(), dateListener,
-                //                        DateTool.calendar.get(Calendar.YEAR),
-                //                        DateTool.calendar.get(Calendar.MONTH),
-                //                        DateTool.calendar.get(Calendar.DAY_OF_MONTH));
-                //                datePickerDialog.show();
             }
         }
     }
 
-    AlertDialog dialog;
-    AlertDialog initDialog_Wheel_one(final TextView textView, String src, int position) {
+    /*列表选择*/
+   public AlertDialog initDialog_Wheel_one(final TextView textView, String src, int position) {
+       final AlertDialog dialog;
 
         String[] str = src.split(",");
         final ArrayList<HashMap<String, String>> lstData1 = new ArrayList<HashMap<String, String>>();
@@ -302,7 +296,6 @@ public class WfinstanceViewGroup extends LinearLayout {
 
                 TextView tv = (TextView) convertView.findViewById(R.id.tv);
                 tv.setText(lstData1.get(position).get("title"));
-
                 return convertView;
             }
         };
@@ -319,10 +312,9 @@ public class WfinstanceViewGroup extends LinearLayout {
                 map_Values.put(lstData1.get(position).get("id"),
                         lstData1.get(position).get("title"));
                 textView.setText(lstData1.get(position).get("title"));
-                dialog.cancel();
+                dialog.dismiss();
             }
         });
-
         return dialog;
     }
 }

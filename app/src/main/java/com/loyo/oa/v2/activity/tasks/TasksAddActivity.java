@@ -405,6 +405,10 @@ public class TasksAddActivity extends BaseActivity {
         tv_responsiblePerson.setText(newUser.getName());
     }
 
+
+    /**
+     * 获取附件(创建)
+     * */
     void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override

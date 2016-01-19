@@ -2,8 +2,6 @@ package com.loyo.oa.v2.tool;
 
 /*public class MyLayoutUtils extends LinearLayoutManager {
 
-
-
     public MyLayoutUtils(Context context) {
         super(context);
         // TODO Auto-generated constructor stub

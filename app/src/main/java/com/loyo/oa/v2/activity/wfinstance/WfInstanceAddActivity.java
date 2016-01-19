@@ -207,6 +207,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             intBizForm();
         }
         edt_memo.setText(wfInstance.memo);
+
     }
 
     void init_gridView_photo() {
@@ -254,7 +255,6 @@ public class WfInstanceAddActivity extends BaseActivity {
                 }
             }
         }
-
         mTemplateId = wfTemplateArrayList.get(0).getId();
         tv_WfTemplate.setText(wfTemplateArrayList.get(0).getTitle());
     }
@@ -317,8 +317,8 @@ public class WfInstanceAddActivity extends BaseActivity {
                         super.failure(error);
                     }
                 });
-
                 break;
+
             /*选择部门回调*/
             case RESULT_DEPT_CHOOSE:
                 UserInfo userInfo = (UserInfo) data.getSerializableExtra(DepartmentChoose.class.getName());
@@ -441,9 +441,8 @@ public class WfInstanceAddActivity extends BaseActivity {
 //        }
 
     /**
-     * 确认
+     * 确认新建审批
      * */
-
     @Click(R.id.img_title_right)
     void submit() {
         if (TextUtils.isEmpty(mTemplateId)) {
