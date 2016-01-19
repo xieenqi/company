@@ -75,9 +75,9 @@ import rx.android.schedulers.AndroidSchedulers;
 @EActivity(R.layout.activity_workreports_add)
 public class WorkReportAddActivity extends BaseActivity {
 
-    public static final int TYPE_CREATE = 1; //任务创建
-    public static final int TYPE_EDIT = 2; //任务编辑
-    public static final int TYPE_CREATE_FROM_COPY = 3; //任务复制
+    public static final int TYPE_CREATE = 1; //报告创建
+    public static final int TYPE_EDIT = 2; //报告编辑
+    public static final int TYPE_CREATE_FROM_COPY = 3; //报告复制
     public static final int TYPE_PROJECT= 4; //项目创建报告
 
     @ViewById
@@ -223,14 +223,12 @@ public class WorkReportAddActivity extends BaseActivity {
             rb1.setEnabled(false);
             rb2.setEnabled(false);
             rb3.setEnabled(false);
-        }
-        else if (type == TYPE_CREATE) {
-            getAttachments();
+            getEditAttachments();
+
         }
         else if(type == TYPE_PROJECT){
             projectAddWorkReport();
         }
-
         getDefaultComment();
     }
 
@@ -288,7 +286,7 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     /**
-     * 获取附件
+     * 获取附件(创建)
      */
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
@@ -296,6 +294,34 @@ public class WorkReportAddActivity extends BaseActivity {
             public void success(ArrayList<Attachment> attachments, Response response) {
                 lstData_Attachment = attachments;
                 init_gridView_photo();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 获取附件(编辑)
+     */
+    private void getEditAttachments() {
+        showLoading("");
+        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
+            @Override
+            public void success(ArrayList<Attachment> attachments, Response response) {
+                cancelLoading();
+                lstData_Attachment = attachments;
+                init_gridView_photo();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                cancelLoading();
+                HttpErrorCheck.checkError(error);
             }
         });
     }

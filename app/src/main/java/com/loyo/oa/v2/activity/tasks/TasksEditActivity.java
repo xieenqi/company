@@ -34,6 +34,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -142,7 +143,7 @@ public class TasksEditActivity extends BaseActivity {
         member = new Members();
 
         UpdateUI();
-        init_gridView_photo();
+        getEditAttachments();
         setTouchView(-1);
 
     }
@@ -178,6 +179,31 @@ public class TasksEditActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 获取附件(编辑)
+     * */
+    void getEditAttachments() {
+        showLoading("");
+        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
+            @Override
+            public void success(ArrayList<Attachment> _attachments, Response response) {
+                cancelLoading();
+                mTask.setAttachments(_attachments);
+                init_gridView_photo();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                cancelLoading();
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 获取附件
+     * */
     void getAttachments() {
         Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
             @Override

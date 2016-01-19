@@ -235,7 +235,6 @@ public class WorkReportEditActivity extends BaseActivity {
                 cc_department_id = null;
                 cc_user_name = null;
                 cc_department_name = null;
-
                 tv_toUser.setText("");
                 layout_del.setVisibility(View.GONE);
                 img_title_toUser.setVisibility(View.VISIBLE);
