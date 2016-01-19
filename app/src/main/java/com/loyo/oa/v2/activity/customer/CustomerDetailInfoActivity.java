@@ -129,7 +129,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 获取数据
      */
     private void getData() {
-        Utils.dialogShow(this, "请稍候");
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
             public void success(Customer customer, Response response) {
@@ -138,14 +138,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 isLock = customer.lock;
                 mCustomer = customer;
                 initData();
-                Utils.dialogDismiss();
+                cancelLoading();
 
             }
 
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                Utils.dialogDismiss();
+                cancelLoading();
                 finish();
             }
         });

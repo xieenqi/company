@@ -438,17 +438,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("regional", regional);
         map.put("industry", industry);
 
-        LogUtil.dll("id:" + mCustomer.getId());
-        LogUtil.dll("name:" + customerName);
-        LogUtil.dll("summary:" + summary);
-        LogUtil.dll("owner:" + owner);
-        LogUtil.dll("members:" + members);
-        LogUtil.dll("tags:" + mTagItems);
-        LogUtil.dll("loc:" + mLocate);
-        LogUtil.dll("extDatas:" + mCustomer.extDatas);
-        LogUtil.dll("regional:" + regional);
-        LogUtil.dll("industry:" + industry);
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
@@ -483,17 +472,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @Override
     public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+
         img_refresh_address.clearAnimation();
         animation.reset();
         lat = latitude;
         lng = longitude;
-        LogUtil.dll("onlocationSucessed:" + address);
         mLocate.addr = address;
-        LogUtil.dll("longitude:"+longitude);
-        LogUtil.dll("latitude:"+latitude);
-        mLocate.loc[0] = longitude;
-        mLocate.loc[1] = latitude;
+        mLocate.setLoc(new double[]{longitude,latitude});
         tv_address.setText(address);
+
     }
 
     @Override
@@ -528,7 +515,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     owner.id = u.getId();
                     owner.name = u.getName();
                     owner.avatar = u.getAvatar();
-
                     tv_customer_responser.setText(u.getName());
                 }
                 //参与人

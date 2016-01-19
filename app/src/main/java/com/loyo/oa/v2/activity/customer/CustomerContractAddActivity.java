@@ -119,21 +119,28 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                     return;
                 }
                 if (phone.isEmpty()) {
-                    Toast("电话不能为空");
+                    Toast("手机号不能为空");
                     return;
                 }else{//验证电话号码
                     if(!RegularCheck.isMobilePhone(phone)){
-                        Toast("电话号码不正确");
+                        Toast("手机号码格式不正确");
                         return;
                     }
                 }
-//                //如果有输入座机就验证座机
-//                if(!TextUtils.isEmpty(getEditTextContent(edt_wiretel))){
-//                    if(!RegularCheck.isPhone(getEditTextContent(edt_wiretel))){
-//                        Toast("座机号码不正确");
-//                        return;
-//                    }
-//                }
+                //如果有输入座机就验证座机
+                if(!TextUtils.isEmpty(getEditTextContent(edt_wiretel))){
+                    if(!RegularCheck.isPhone(getEditTextContent(edt_wiretel))){
+                        Toast("座机号码格式不正确");
+                        return;
+                    }
+                }
+                //邮箱验证
+                if(!TextUtils.isEmpty(getEditTextContent(edt_email))){
+                    if(!RegularCheck.checkEmail(getEditTextContent(edt_email))){
+                        Toast("邮箱格式不正确");
+                        return;
+                    }
+                }
                 //现有客户新增联系人
                 HashMap<String, Object> maps = new HashMap<>();
                 maps.put("name", getContractName());
@@ -215,7 +222,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                     String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
                     Utils.setContent(edt_birth, str);
                 } else {
-                    Toast("出生日期不能是未来时间，请重新设置");
+                    Toast("请输入您正确的生日");
                 }
             }
         }, DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
