@@ -76,7 +76,6 @@ public class Utils {
 
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
         Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
         //Instantiate a new Renderscript
         RenderScript rs = RenderScript.create(MainApp.getMainApp());
 
@@ -98,11 +97,14 @@ public class Utils {
         allOut.copyTo(outBitmap);
 
         //recycle the original bitmap
-        //bitmap.recycle();
-
-        //After finishing everything, we destroy the Renderscript.
-        rs.destroy();
-
+        try {
+            bitmap.recycle();
+            //After finishing everything, we destroy the Renderscript.
+            rs.destroy();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            LogUtil.d("高斯模糊Bitmap转换参数异常");
+        }
         return outBitmap;
     }
 

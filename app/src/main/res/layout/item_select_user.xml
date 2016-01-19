@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <com.loyo.oa.v2.tool.customview.RoundImageView
+        android:id="@+id/riv_head"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dimen_15"
+        android:scaleType="center"
+        imagecontrol:border_inside_color="#a8d4e9"
+        imagecontrol:border_outside_color="#a8d4e9"
+        imagecontrol:border_thickness="1dp"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxLength="2"
+        android:text="dg"
+        android:textColor="@color/white"
+        />
+</RelativeLayout>

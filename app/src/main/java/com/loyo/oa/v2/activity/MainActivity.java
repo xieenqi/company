@@ -568,9 +568,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Click(R.id.img_contact)
     void onClickContact() {
-        if(null != MainApp.lstDepartment){
+        if (null != MainApp.lstDepartment) {
             app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-        }else{
+        } else {
             Toast("组织架构缺损，请重新拉去");
         }
     }

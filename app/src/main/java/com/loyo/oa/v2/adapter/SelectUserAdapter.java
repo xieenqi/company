@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -66,6 +64,10 @@ public class SelectUserAdapter extends BaseAdapter {
         return position;
     }
 
+    public ArrayList<User> getData() {
+        return listUsers;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder = null;
@@ -106,13 +108,13 @@ public class SelectUserAdapter extends BaseAdapter {
         holder.worker.setText(npcName);
 
             /*选中赋值*/
-            if (listUsers.get(position).isIndex()) {
-                holder.checkBox.setChecked(true);
-            } else if (listUsers.get(position).isIndex() == false) {
-                holder.checkBox.setChecked(false);
-            } else {
-                holder.checkBox.setChecked(false);
-            }
+        if (listUsers.get(position).isIndex()) {
+            holder.checkBox.setChecked(true);
+        } else if (listUsers.get(position).isIndex() == false) {
+            holder.checkBox.setChecked(false);
+        } else {
+            holder.checkBox.setChecked(false);
+        }
 
         ImageLoader.getInstance().displayImage(listUsers.get(position).getAvatar(), holder.heading);
 

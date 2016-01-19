@@ -1,16 +1,15 @@
 package com.loyo.oa.v2.activity.commonview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -23,27 +22,27 @@ import com.loyo.oa.v2.adapter.SelectDetAdapter;
 import com.loyo.oa.v2.adapter.SelectUserAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
-import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.customview.RoundImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * 部门 人员选择
  * Created by yyy on 15/12/25.
  */
-public class SelectDetUserActivity extends Activity {
+public class SelectDetUserActivity extends BaseActivity {
 
     public MainApp app = MainApp.getMainApp();
-    public ListView leftLv, rightLv;
+    public ListView leftLv, rightLv, lv_selectUser;
     public LinearLayout llback;
     public RelativeLayout relAllcheck;
     public Button btnSure;
@@ -56,11 +55,13 @@ public class SelectDetUserActivity extends Activity {
     public Intent mIntent;
     public Bundle mBundle;
 
-    public ArrayList<User> localCacheUserList; //本地所有员工 缓存
-    public ArrayList<User> userList;
-    public ArrayList<User> userAllList; //所有员工
-    public ArrayList<Department> deptSource;//部门数据源｀
-    public ArrayList<UserGroupData> totalSource; //全部数据源
+    public SelectDataAdapter selectDataAdapter;
+
+    public ArrayList<User> localCacheUserList = new ArrayList<>(); //本地所有员工 缓存
+    public ArrayList<User> userList = new ArrayList<>();
+    public ArrayList<User> userAllList = new ArrayList<>(); //所有员工
+    public ArrayList<Department> deptSource = new ArrayList<>();//部门数据源｀
+    public ArrayList<UserGroupData> totalSource = new ArrayList<>(); //全部数据源
 
     public boolean isAllCheck = false;
     public boolean popy; //当前列表 是否全选
@@ -70,13 +71,17 @@ public class SelectDetUserActivity extends Activity {
     public String[] joinUserId;
     private TextView tv_selectdetuser_tv;
 
-    private ArrayList<String> selectDeptIds;
-    private ArrayList<String> selectUserIds;
+    private ArrayList<String> selectDeptIds = new ArrayList<>();
+    private ArrayList<String> selectUserIds = new ArrayList<>();
 
-    private ArrayList<NewUser> usersList;
-    private ArrayList<NewUser> deptsList;
+    private ArrayList<NewUser> usersList = new ArrayList<>();
+    private ArrayList<NewUser> deptsList = new ArrayList<>();
+
+    private ArrayList<NewUser> selectUserList = new ArrayList<>();
+    public static ArrayList<Department> Data;//组织架构 的缓存
     private NewUser newUser;
     private Members members;
+
 
     public Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -88,12 +93,16 @@ public class SelectDetUserActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_selectdetuser);
+        Data = MainApp.lstDepartment;// 转存组织架构数据
+        for (Department element : Data) {
+            for (User eleUser : element.getUsers()) {
+                eleUser.index = false;
+            }
+        }
         initView();
-
     }
 
     /**
@@ -106,15 +115,9 @@ public class SelectDetUserActivity extends Activity {
         selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);
         totalSource = Common.getLstUserGroupData();
         deptSource = Common.getLstDepartment();
-        userAllList = new ArrayList<>();
-        userList = new ArrayList<>();
 
-        usersList = new ArrayList<>();
-        deptsList = new ArrayList<>();
+
         members = new Members();
-        selectDeptIds = new ArrayList<>();
-        selectUserIds = new ArrayList<>();
-        localCacheUserList = new ArrayList<>();
 
         /*header初始化*/
         mInflater = LayoutInflater.from(this);
@@ -124,6 +127,10 @@ public class SelectDetUserActivity extends Activity {
 
         leftLv = (ListView) findViewById(R.id.lv_selectdetuser_left);
         rightLv = (ListView) findViewById(R.id.lv_selectdetuser_right);
+
+        lv_selectUser = (ListView) findViewById(R.id.lv_selectUser);
+        selectDataAdapter = new SelectDataAdapter();
+        lv_selectUser.setAdapter(selectDataAdapter);
         btnSure = (Button) findViewById(R.id.btn_title_right);
         llback = (LinearLayout) findViewById(R.id.ll_back);
         tv_selectdetuser_tv = (TextView) findViewById(R.id.tv_selectdetuser_tv);
@@ -173,15 +180,11 @@ public class SelectDetUserActivity extends Activity {
 
     /**
      * 去掉人员重复数据
-     * */
-    private  ArrayList RemoveSame(ArrayList<User> list)
-    {
-        for (int i = 0; i < list.size() - 1; i++)
-        {
-            for (int j = i + 1; j < list.size(); j++)
-            {
-                if (list.get(i).getId().equals(list.get(j).getId()))
-                {
+     */
+    private ArrayList RemoveSame(ArrayList<User> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(i).getId().equals(list.get(j).getId())) {
                     list.remove(j);
                     j--;
                 }
@@ -216,6 +219,7 @@ public class SelectDetUserActivity extends Activity {
                     newUser = new NewUser();
                     newUser.setId(user.getId());
                     newUser.setName(user.getRealname());
+                    newUser.setAvatar(user.avatar);
                     usersList.add(newUser);
                 }
             }
@@ -279,6 +283,14 @@ public class SelectDetUserActivity extends Activity {
 
                     mHandler.sendEmptyMessage(0x01);
 
+//                    User selectData = mUserAdapter.getData().get(position);
+//                    NewUser selectUser = new NewUser();
+//                    selectUser.setId(selectData.getId());
+//                    selectUser.setName(selectData.name);
+//                    selectUser.setAvatar(selectData.avatar);
+//
+//                    selectUserList.add(selectUser.index ? selectUser : new User());
+                    selectDataAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -312,6 +324,7 @@ public class SelectDetUserActivity extends Activity {
 
                 mHandler.sendEmptyMessage(0x01);
 
+                selectDataAdapter.notifyDataSetChanged();
             }
         });
 
@@ -332,12 +345,12 @@ public class SelectDetUserActivity extends Activity {
                 mBundle = new Bundle();
                 if (totalSize != 0) {
                     mBundle.putSerializable(ExtraAndResult.CC_USER_ID, members);
-                } else {
+                } else if (totalSize == mUserAdapter.getData().size()) {
                     mBundle.putSerializable(ExtraAndResult.CC_USER_ID, null);
                 }
                 mIntent.putExtras(mBundle);
                 app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-
+                LogUtil.d("选择的人数：" + mUserAdapter.getData().size());
             }
         });
 
@@ -381,6 +394,12 @@ public class SelectDetUserActivity extends Activity {
         }
     }
 
+    /**
+     * 检查 选的的人的相关操作
+     */
+    public void chooseUseerData(User user) {
+
+    }
 
     /**
      * 选中总数统计
@@ -491,4 +510,47 @@ public class SelectDetUserActivity extends Activity {
                 }
         }
     }
+
+    /**
+     * 选择的人员的显示
+     */
+    public class SelectDataAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return members.users.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Holder holder = null;
+            if (convertView == null) {
+                holder = new Holder();
+                convertView = LayoutInflater.from(SelectDetUserActivity.this).inflate(R.layout.item_select_user, null);
+                holder.head = (RoundImageView) convertView.findViewById(R.id.riv_head);
+                holder.name = (TextView) convertView.findViewById(R.id.tv_name);
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
+            }
+            ImageLoader.getInstance().displayImage(members.users.get(position).getAvatar(), holder.head);
+            return convertView;
+        }
+
+        class Holder {
+            RoundImageView head;
+            TextView name;
+        }
+    }
+
 }

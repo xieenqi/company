@@ -66,12 +66,12 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-        registerBaseReceiver();
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
             customProgressDialog.setCancelable(false);
         }
+        registerBaseReceiver();
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {

@@ -2,7 +2,6 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
-import com.j256.ormlite.table.DatabaseTable;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
@@ -51,7 +50,7 @@ public class User implements Serializable {
         return index;
     }
 
-    public void setIndex(boolean index) {
+    public void setIndex(boolean index) {//是否选中
         this.index = index;
     }
 

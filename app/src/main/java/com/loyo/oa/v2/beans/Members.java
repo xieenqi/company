@@ -8,9 +8,9 @@ import java.util.ArrayList;
  */
 public class Members implements Serializable {
 
-    public ArrayList<NewUser> users;
+    public ArrayList<NewUser> users = new ArrayList<>();
 
-    public ArrayList<NewUser> depts;
+    public ArrayList<NewUser> depts = new ArrayList<>();
 
 
 //    public ArrayList<NewUser> getUsers() {
@@ -31,11 +31,11 @@ public class Members implements Serializable {
 
     /*获取参与人*/
     public ArrayList<NewUser> getAllData() {
-        ArrayList<NewUser> newData=new ArrayList<NewUser>();
-        if(users!=null){
+        ArrayList<NewUser> newData = new ArrayList<NewUser>();
+        if (users != null) {
             newData.addAll(users);
         }
-        if(depts!=null){
+        if (depts != null) {
             newData.addAll(depts);
         }
         return newData;
