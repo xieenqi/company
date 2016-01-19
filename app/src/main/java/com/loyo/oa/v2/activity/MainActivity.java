@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
@@ -114,7 +115,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     SwipeRefreshLayout swipe_container;
     @ViewById
-    ViewGroup layout_network, layout_attendance, layout_avatar,layout_is_attendance;
+    ViewGroup layout_network, layout_attendance, layout_avatar, layout_is_attendance, container;
     @ViewById
     ImageView img_home_head, img_fast_add;
 
@@ -411,8 +412,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
                 }
-                LogUtil.dll("是否打卡:"+isSign);
-                    rotateInt();
+                LogUtil.dll("是否打卡:" + isSign);
+                rotateInt();
             }
 
             @Override
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
 
     @Click(R.id.layout_is_attendance)
-    void onClickIsAttendance(){
+    void onClickIsAttendance() {
         Toast("您今天已经打卡完毕");
         Intent intent = new Intent(MainActivity.this, AttendanceActivity_.class);
         startActivity(intent);
@@ -507,10 +508,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
-                    if(isSign){
+                    if (isSign) {
                         layout_is_attendance.setVisibility(View.INVISIBLE);
                         layout_attendance.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         layout_attendance.setVisibility(View.INVISIBLE);
                         layout_is_attendance.setVisibility(View.VISIBLE);
                     }
@@ -540,10 +541,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
-                        if(isSign){
+                        if (isSign) {
                             layout_is_attendance.setVisibility(View.INVISIBLE);
                             layout_attendance.setVisibility(View.INVISIBLE);
-                        }else{
+                        } else {
                             layout_attendance.setVisibility(View.INVISIBLE);
                             layout_is_attendance.setVisibility(View.INVISIBLE);
                         }
@@ -780,7 +781,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (MainApp.user == null) {
             return;
         }
-
+        LogUtil.d("头像：" + MainApp.user.avatar);
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -795,10 +796,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                /*if (bitmap != null) {
+                if (bitmap != null) {
+                    img_home_head.setImageResource(android.R.color.transparent);
                     Bitmap blur = Utils.blurBitmap(bitmap);
-                    img_home_head.setImageBitmap(blur);
-                }*/
+                    container.setBackground(new BitmapDrawable(blur));
+
+                }
             }
 
             @Override

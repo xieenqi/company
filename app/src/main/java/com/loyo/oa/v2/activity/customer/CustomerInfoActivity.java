@@ -41,7 +41,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ExtraDataView;
 import com.loyo.oa.v2.tool.customview.multi_level_interaction_menu.DialogFragmentAreaCast;
-import com.loyo.oa.v2.tool.customview.multi_level_interaction_menu.DialogFragmentIndustryCast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -169,7 +168,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 获取用户信息
      */
     void getCustomer() {
-        Utils.dialogShow(this,"请稍候");
+        Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
                     @Override
@@ -394,15 +393,15 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 });
                 break;
 
-            case R.id.layout_customer_industry:
-                new DialogFragmentIndustryCast().show(getSupportFragmentManager(), "行业选择", new OnMenuSelectCallback() {
-                    @Override
-                    public void onMenuSelected(Object o) {
-                        industry = (Industry) o;
-                        tv_industry.setText(industry.getName());
-                    }
-                });
-                break;
+//            case R.id.layout_customer_industry:
+//                new DialogFragmentIndustryCast().show(getSupportFragmentManager(), "行业选择", new OnMenuSelectCallback() {
+//                    @Override
+//                    public void onMenuSelected(Object o) {
+//                        industry = (Industry) o;
+//                        tv_industry.setText(industry.getName());
+//                    }
+//                });
+//                break;
         }
     }
 
@@ -436,7 +435,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("loc", mLocate);
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
-        map.put("industry", industry);
+        //map.put("industry", industry);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {

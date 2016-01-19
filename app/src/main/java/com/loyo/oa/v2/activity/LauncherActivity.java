@@ -14,6 +14,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -34,8 +35,7 @@ public class LauncherActivity extends BaseActivity {
     @ViewById ImageView iv_launcher_adv, iv_launcher_fade;
     @ViewById ImageView iv_launcher_bottom;
     @ViewById ViewGroup ll_root, layout_launcher_fade;
-    private boolean isWelcom;
-    private String welcomKey = "welcomKey";
+    private boolean isWelcom = false;
 
     @AfterViews
     void initVies() {
@@ -57,7 +57,8 @@ public class LauncherActivity extends BaseActivity {
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     isWelcom = SharedUtil.getBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY);
-                    Intent intent = new Intent(LauncherActivity.this, WelcomeActivity.class);
+                    LogUtil.d("wlecom: " + isWelcom);
+                    Intent intent = new Intent();
                     if (!isWelcom) {
                         intent.setClass(LauncherActivity.this, WelcomeActivity.class);
                         SharedUtil.putBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY, true);
@@ -116,14 +117,14 @@ public class LauncherActivity extends BaseActivity {
                                         }
                                     });
                                 }
-                            }, 500);
+                            }, 700);
 
                         }
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
 
-                            iv_launcher_fade.setBackgroundResource(R.drawable.white);
+                            iv_launcher_fade.setImageResource(R.drawable.white);
                             ll_root.post(finishRunner);
                         }
 

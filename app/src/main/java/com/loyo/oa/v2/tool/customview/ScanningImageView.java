@@ -12,6 +12,8 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.loyo.oa.v2.tool.LogUtil;
+
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -58,14 +60,16 @@ public class ScanningImageView extends ImageView {
             mPath.addCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, Path.Direction.CCW);
             canvas.clipPath(mPath, Region.Op.REPLACE);
         }
-        LinearGradient linearGradient = new LinearGradient(0, mHeight - CHANGE_BOUNDS, 0, mHeight, new int[]{Color.TRANSPARENT, Color.WHITE}, null, Shader.TileMode.CLAMP);
+        LinearGradient linearGradient = new LinearGradient(0, mHeight - CHANGE_BOUNDS, 0, mHeight,
+                new int[]{Color.parseColor("#33ffffff"), Color.parseColor("#ffffff"), Color.parseColor("#33ffffff")}, null, Shader.TileMode.CLAMP);
         mPaint.setShader(linearGradient);
-        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, getWidth(), mHeight, mPaint);
-
+//        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, CHANGE_BOUNDS, mHeight, mPaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, 108, mPaint);
+        LogUtil.d("宽度：" + getWidth());
         if (mHeight >= getHeight()) {
             mHeight = 0;
         }
-        postInvalidateDelayed(40);
+        postInvalidateDelayed(80);
         super.onDraw(canvas);
     }
 }
