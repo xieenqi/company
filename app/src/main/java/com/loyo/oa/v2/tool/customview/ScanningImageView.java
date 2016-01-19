@@ -61,7 +61,7 @@ public class ScanningImageView extends ImageView {
             canvas.clipPath(mPath, Region.Op.REPLACE);
         }
         LinearGradient linearGradient = new LinearGradient(0, mHeight - CHANGE_BOUNDS, 0, mHeight,
-                new int[]{Color.parseColor("#33ffffff"), Color.parseColor("#ffffff"), Color.parseColor("#33ffffff")}, null, Shader.TileMode.CLAMP);
+                new int[]{Color.parseColor("#10ffffff"), Color.parseColor("#ffffff"), Color.parseColor("#10ffffff")}, null, Shader.TileMode.CLAMP);
         mPaint.setShader(linearGradient);
 //        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, CHANGE_BOUNDS, mHeight, mPaint);
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, 108, mPaint);

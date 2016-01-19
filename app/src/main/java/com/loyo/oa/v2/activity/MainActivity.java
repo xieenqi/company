@@ -788,23 +788,36 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void onLoadingFailed(String s, View view, FailReason failReason) {
-
+                LogUtil.d("高斯模糊加载失败！" + s);
             }
 
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                if (bitmap != null) {
-                    img_home_head.setImageResource(android.R.color.transparent);
-                    Bitmap blur = Utils.blurBitmap(bitmap);
-                    container.setBackground(new BitmapDrawable(blur));
+            public void onLoadingComplete(final String s, View view, final Bitmap bitmap) {
 
-                }
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (bitmap != null) {
+                                    img_home_head.setImageResource(android.R.color.transparent);
+                                    Bitmap blur = Utils.blurBitmap(bitmap);
+                                    container.setBackground(new BitmapDrawable(blur));
+                                    LogUtil.d("高斯模糊加载成功！" + s);
+                                }
+                            }
+                        });
+                    }
+                }, 1500);
+
             }
 
             @Override
             public void onLoadingCancelled(String s, View view) {
-
+                LogUtil.d("高斯模糊取消！" + s);
             }
         });
         Global.setHeadImage(img_user, MainApp.user.avatar);

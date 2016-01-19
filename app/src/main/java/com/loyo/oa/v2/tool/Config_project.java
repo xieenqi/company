@@ -7,19 +7,19 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = true; //是否是正式产品
+    public static final Boolean isRelease = false; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式
 
-    //public static String IP = "http://192.168.31.131";       //内部测试环境
+    public static String IP = "http://192.168.31.131";       //内部测试环境
 
     //public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
 
     //public static String IP = "http://112.74.66.99";       //产品预上线环境
 
-    public static String IP = "http://ukuaiqi.com";        //产品正式环境
+    //public static String IP = "http://ukuaiqi.com";        //产品正式环境
 
     /**
      * 正式产品的域名
@@ -97,14 +97,14 @@ public class Config_project {
      * oa 系统
      */
     public static String SERVER_URL() {
-        return isRelease ? Domain.oa + "" : IP + ":8070";
+        return isRelease ? Domain.oa : IP + ":8070";
     }
 
     /**
      * 统计
      */
     public static String SERVER_URL_STATISTICS() {
-        return isRelease ? Domain.statistics + "" : IP + ":9000";
+        return isRelease ? Domain.statistics : IP + ":9000";
     }
 
     public static String SIGNLN_TEM = SERVER_URL_STATISTICS() + "/api/v2";//团队拜访 列表

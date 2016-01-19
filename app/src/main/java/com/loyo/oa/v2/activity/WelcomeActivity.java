@@ -62,7 +62,7 @@ public class WelcomeActivity extends BaseActivity {
                     buttonOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(WelcomeActivity.this, WelcomeActivity.class);
+                            Intent intent = new Intent();
                             intent.setClass(WelcomeActivity.this,
                                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
                             startActivity(intent);
