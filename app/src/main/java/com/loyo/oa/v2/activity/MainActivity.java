@@ -162,7 +162,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Class<?> _class = null;
         switch (position) {
 
-
             case 0:
                 _class = TasksAddActivity_.class;
                 break;
@@ -239,7 +238,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public void drop(int from, int to) {
             if (from != to) {
                 ClickItem item = adapter.getItem(from);
-                //app.logUtil.e("name : " + item.title + " from : " + from + " to : " + to);
                 adapter.remove(from);
                 adapter.insert(item, to);
             }
@@ -485,7 +483,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
-
     /**
      * 头像翻转
      */
@@ -562,7 +559,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Click(R.id.img_contact)
     void onClickContact() {
-        app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+        if(null != MainApp.lstDepartment){
+            app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+        }else{
+            Toast("组织架构缺损，请重新拉去");
+        }
     }
 
     /**

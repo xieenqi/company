@@ -32,6 +32,7 @@ import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import cn.jpush.android.api.JPushInterface;
@@ -138,15 +139,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.btn_setting_exit:
                 exit();
                 break;
+            /*修改密码*/
             case R.id.layout_setpassword:
-                //修改密码
                 app.startActivity(this, SettingPasswordActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
+            /*更新组织架构*/
             case R.id.layout_update:
-                Global.Toast("开始更新");
-                initService();
+                if(Utils.isNetworkAvailable(this)){
+                    Global.Toast("开始更新");
+                    initService();
+                }else{
+                    Toast("请检查您的网络连接");
+                }
                 break;
-            case R.id.layout_feedback://意见反馈
+            /*意见反馈*/
+            case R.id.layout_feedback:
                 app.startActivity(this, FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.layout_check_update:

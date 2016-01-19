@@ -76,6 +76,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     }
 
     public void init(DatePicker datePicker, TimePicker timePicker) {
+
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
         if (!(null == initDateTime || "".equals(initDateTime))) {
             calendar = this.getCalendarByInintData(initDateTime);
@@ -92,6 +93,9 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 calendar.get(Calendar.DAY_OF_MONTH), this);
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
+
+        LogUtil.dll("时:"+calendar.get(Calendar.HOUR_OF_DAY));
+
     }
 
     /**
