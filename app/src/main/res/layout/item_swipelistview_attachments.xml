@@ -74,6 +74,9 @@
             android:text="xxx.jpg"
             android:textColor="#262626"
             android:textSize="13sp"
+            android:maxEms="15"
+            android:singleLine="true"
+            android:ellipsize="start"
             />
 
         <TextView

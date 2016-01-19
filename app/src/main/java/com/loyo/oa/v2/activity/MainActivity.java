@@ -11,11 +11,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -25,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +71,7 @@ import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -118,7 +124,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     ViewGroup layout_network, layout_attendance, layout_avatar, layout_is_attendance, container;
     @ViewById
     ImageView img_home_head, img_fast_add;
-
+    @ViewById
+    RelativeLayout group_home_relative;
 
     private Intent mIntentCheckUpdate;
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
@@ -131,6 +138,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private ValidateInfo validateInfo;
     private HashMap<String, Object> map = new HashMap<>();
     private ArrayList<Department> ad;
+
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -775,43 +783,26 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     }
 
-    //显示用户名字和部门的名字,同时注册信鸽推送和Bugly
+
+    /**
+     * 显示用户名字和部门的名字,头像，高斯模糊背景处理
+     * */
     void updateUser() {
 
         if (MainApp.user == null) {
             return;
         }
-        LogUtil.d("头像：" + MainApp.user.avatar);
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
 
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                if (bitmap != null) {
-                    img_home_head.setImageResource(android.R.color.transparent);
-                    Bitmap blur = Utils.blurBitmap(bitmap);
-                    container.setBackground(new BitmapDrawable(blur));
-
-                }
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
-        Global.setHeadImage(img_user, MainApp.user.avatar);
+        Bitmap bgIcon =  ImageLoader.getInstance().loadImageSync(MainApp.user.avatar);
+        if(null != bgIcon){
+            Bitmap blur = Utils.doBlur(bgIcon, 10, false);
+            img_home_head.setImageResource(android.R.color.transparent);
+            group_home_relative.setBackground(new BitmapDrawable(blur));
+        }
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar,img_user);
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
+
     }
 
     @Background
