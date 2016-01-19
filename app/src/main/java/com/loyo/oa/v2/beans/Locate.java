@@ -9,23 +9,17 @@ import java.io.Serializable;
  * 时间 : 15/9/30.
  */
 public class Locate implements Serializable {
-    public String addr;
-    //public double []loc=new double[2];
-    public double []loc;
 
-//    public double[] getLoc() {
-//        return null==loc?new double[2]:loc;
-//    }
-//
-//    public void setLoc(double[] loc) {
-//        this.loc = loc;
-//    }
-//
-//    public String getAddr() {
-//        return addr;
-//    }
-//
-//    public void setAddr(String addr) {
-//        this.addr = addr;
-//    }
+    public String addr;
+
+    public double[] loc = new double[2];
+
+    public double[] getLoc() {
+        return null == loc ? new double[2] : loc;
+    }
+
+    public void setLoc(double[] loc) {
+        this.loc = loc;
+    }
+
 }

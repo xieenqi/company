@@ -10,6 +10,32 @@ import java.util.regex.Pattern;
 public class RegularCheck {
 
     /**
+     * 邮箱格式验证
+     *
+     * @param email
+     * @return  通过返回true
+     * */
+
+    public static boolean checkEmail(String email) {
+
+        boolean flag = false;
+        try {
+            String check = "^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$";
+
+            Pattern regex = Pattern.compile(check);
+
+            Matcher matcher = regex.matcher(email);
+
+            flag = matcher.matches();
+
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
+
+
+    /**
      * 手机号验证
      *
      * @param str

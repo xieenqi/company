@@ -103,11 +103,10 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                     case WfInstance.STATUS_ABORT:
                         order = "未通过";
                         break;
-                    case WfInstance.STATUS_APPROVED:
+                    case WfInstance.STATUS_FINISHED:
                         order = "已通过";
                         break;
                 }
-
             }
             /*报告*/
             else if (item instanceof WorkReport) {

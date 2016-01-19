@@ -87,6 +87,8 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
 
         PagingGroupData_ data = pagingGroupDatas.get(groupPosition);
 
+        LogUtil.dll("status:"+data.getOrderStr());
+
         /*列表状态条 颜色设置*/
         if (data != null && data.getOrderStr() != null) {
             if(data.getOrderStr().contains("已")){
@@ -105,7 +107,6 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.wfinstance_notagree));
                 img_status.setImageResource(R.drawable.bg_view_red_circle);
             }
-
             //暂时不要数量
             //tv_title.setText(pagingGroupDatas.get(groupPosition).getRecords().size()+data.getOrderStr());
             tv_title.setText(data.getOrderStr());

@@ -69,7 +69,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             if (wfInstance.creator != null && wfInstance.nextExecutor != null) {
                 content.setText("审批人 " + wfInstance.nextExecutor.getRealname());
             }
-            ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);
+            //ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);
 
             switch (wfInstance.status) {
                 case WfInstance.STATUS_NEW:
@@ -116,7 +116,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             } catch (Exception e) {
                 Global.ProcException(e);
             }
-            ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
+            //ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
             if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
                 content.setText("负责人: " + task.getResponsiblePerson().getRealname());
             }
@@ -169,7 +169,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
             String end = "提交时间: " + app.df3.format(new Date(workReport.getCreatedAt() * 1000));
             time.setText(end);
-            //                ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
+            //ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
             status.setImageResource(workReport.isReviewed() ? R.drawable.img_workreport_list_status2 : R.drawable.img_workreport_list_status1);
 
         }
