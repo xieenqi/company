@@ -127,13 +127,14 @@
                 >
 
             </LinearLayout>
-
+<!-- 取消行业不做 20160119-->
             <LinearLayout
                 android:id="@+id/layout_customer_industry"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:background="@color/white"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <TextView

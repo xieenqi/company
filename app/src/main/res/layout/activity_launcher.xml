@@ -74,7 +74,7 @@
         <ScrollView
             android:id="@+id/layout_launcher_fade"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/layout_center"
             android:layout_marginTop="140dp"
             android:clipChildren="false"

@@ -9,7 +9,7 @@ public class LogUtil {
         return Config_project.is_developer_mode;
     }
 
-    public static String tag = "Logo_Server_V2";
+    public static String tag = "LogoServerV2";
     public static boolean LogoStatus = Config_project.is_developer_mode;
 
     private static int logLevel = Log.DEBUG;//Log.ERROR

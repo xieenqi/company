@@ -1,16 +1,17 @@
-<LinearLayout android:id="@+id/container"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+<LinearLayout
+    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_title"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="190dp"
         >
 
         <ImageView
@@ -22,14 +23,16 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/mian_title_bj"
             android:orientation="horizontal">
+
 
             <ImageButton
                 android:id="@+id/img_contact"
                 android:layout_width="@dimen/dimen_25"
                 android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_15"
+                android:layout_margin="@dimen/dimen_10"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_contact"/>
@@ -38,24 +41,22 @@
                 android:id="@+id/img_bulletin"
                 android:layout_width="@dimen/dimen_25"
                 android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_15"
+                android:layout_margin="@dimen/dimen_10"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_news"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
 
             <ImageButton
                 android:id="@+id/img_setting"
                 android:layout_width="@dimen/dimen_25"
                 android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_15"
+                android:layout_margin="@dimen/dimen_10"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_setting"/>
@@ -64,7 +65,7 @@
                 android:id="@+id/img_fast_add"
                 android:layout_width="@dimen/dimen_25"
                 android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_15"
+                android:layout_margin="@dimen/dimen_10"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_add"/>
@@ -78,51 +79,50 @@
             >
 
             <RelativeLayout
-                android:visibility="invisible"
                 android:id="@+id/layout_is_attendance"
                 android:layout_width="@dimen/dimen_110"
                 android:layout_height="@dimen/dimen_110"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
                 android:gravity="center"
+                android:visibility="invisible"
                 >
+
                 <TextView
-                    android:background="@drawable/circle_bg_shpe"
                     android:layout_width="@dimen/dimen_110"
                     android:layout_height="@dimen/dimen_110"
                     android:layout_centerHorizontal="true"
-                    android:scaleType="center"
-                    android:text="点击进入\n考勤详情"
+                    android:background="@drawable/circle_bg_shpe"
                     android:gravity="center"
                     android:rotationY="180"
+                    android:scaleType="center"
+                    android:text="点击进入\n考勤详情"
                     />
             </RelativeLayout>
 
             <RelativeLayout
-                android:visibility="invisible"
-                android:background="@drawable/circle_bg_shpe"
                 android:id="@+id/layout_attendance"
                 android:layout_width="@dimen/dimen_110"
                 android:layout_height="@dimen/dimen_110"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
+                android:background="@drawable/circle_bg_shpe"
                 android:gravity="center"
+                android:visibility="invisible"
                 >
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true"
+                    android:layout_width="@dimen/dimen_110"
+                    android:layout_height="@dimen/dimen_110"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/icon_zhiwen"
                     />
 
                 <com.loyo.oa.v2.tool.customview.ScanningImageView
-                    android:background="@drawable/circle_bg_shpe1"
                     android:layout_width="@dimen/dimen_110"
                     android:layout_height="@dimen/dimen_110"
-                    android:paddingLeft="@dimen/dimen_20"
-                    android:paddingRight="@dimen/dimen_20"
+                    android:background="@drawable/circle_bg_shpe1"
                     android:scaleType="center"
                     />
 
@@ -135,9 +135,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
                 android:scaleType="center"
-                imagecontrol:border_inside_color="#a8d4e9"
-                imagecontrol:border_outside_color="#a8d4e9"
-                imagecontrol:border_thickness="1dp"/>
+                imagecontrol:border_inside_color="#7fffffff"
+                imagecontrol:border_outside_color="#ccffffff"
+                imagecontrol:border_thickness="0.5dp"/>
 
         </RelativeLayout>
 
@@ -147,10 +147,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_avatar"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/dimen_20"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:shadowColor="#cccccccc"
+            android:shadowDx="0"
+            android:shadowDy="3"
+            android:shadowRadius="1"
             android:text="用户名"
             android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
 
         <LinearLayout
             android:id="@+id/layout_network"
@@ -183,7 +187,7 @@
             xmlns:dslv="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/white95"
             android:cacheColorHint="#00000000"
             android:divider="@null"
             android:scrollbars="none"

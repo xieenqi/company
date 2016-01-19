@@ -33,7 +33,6 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
 import com.loyo.oa.v2.beans.TagItem;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
 
@@ -97,7 +96,7 @@ public class Utils {
         allOut.copyTo(outBitmap);
 
         //recycle the original bitmap
-//        bitmap.recycle();
+        //bitmap.recycle();
 
         //After finishing everything, we destroy the Renderscript.
         rs.destroy();
