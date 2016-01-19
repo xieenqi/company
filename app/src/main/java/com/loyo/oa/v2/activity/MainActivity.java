@@ -807,7 +807,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         });
         Global.setHeadImage(img_user, MainApp.user.avatar);
         tv_user_name.setText(MainApp.user.getRealname());
-
         initBugly();
     }
 
