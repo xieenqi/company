@@ -120,7 +120,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         mMenu.setmCheckIcon(R.drawable.ico_make);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类别", "全部状态", "全部类型"});//默认未选择任何过滤的Menu title
+        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类型"});//默认未选择任何过滤的Menu title
 
         List<String[]> items = new ArrayList<>();
         items.add(TYPE_TAG);
