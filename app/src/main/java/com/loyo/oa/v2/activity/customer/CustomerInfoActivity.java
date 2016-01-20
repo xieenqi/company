@@ -342,9 +342,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             case R.id.img_title_right:
 
-                if (tv_industry.getText().toString().isEmpty()) {
-                    Toast("行业不能为空");
-                } else if (tv_district.getText().toString().isEmpty()) {
+                if (tv_district.getText().toString().isEmpty()) {
                     Toast("地区不能为空");
                 } else {
                     updateCustomer();

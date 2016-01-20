@@ -30,7 +30,7 @@ public class User implements Serializable {
     public Position shortPosition;
     public Department shortDept;
     public ArrayList<UserInfo> depts = new ArrayList<>();
-
+    public Permission permission;
     public boolean isBQQ;
     public boolean index;
     public int gender;

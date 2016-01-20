@@ -2,17 +2,13 @@ package com.loyo.oa.v2.activity.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-
 import java.util.HashMap;
 
 public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
@@ -39,6 +35,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     public void getData() {
+
         Utils.dialogShow(this,"请稍候");
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
         HashMap<String, Object> params = new HashMap<>();

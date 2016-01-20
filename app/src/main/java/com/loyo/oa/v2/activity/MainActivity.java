@@ -49,8 +49,8 @@ import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
-import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
+import com.loyo.oa.v2.beans.Modules;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateInfo;
@@ -93,6 +93,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -131,9 +132,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private PopupMenu popupMenu;
     private ValidateInfo validateInfo;
     private HashMap<String, Object> map = new HashMap<>();
-    private ArrayList<Department> ad;
-
-
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -261,13 +259,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_signin, "客戶拜访", SignInManagerActivity_.class),
+                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
-        initPopupMenu();
+
 
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -278,14 +276,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         });
 
+        handlerEvent();
+        checkUpdateService();
+        updateUser();
+        initPopupMenu();
+
         lv_main.setDropListener(onDrag);
         adapter = new ClickItemAdapter();
         lv_main.setAdapter(adapter);
         lv_main.setDragEnabled(true);
-
-        handlerEvent();
-        checkUpdateService();
-        updateUser();
 
     }
 
@@ -356,11 +355,23 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         signin.setText("拜访签到");
         signin.setResource(R.drawable.icon_home_menu_signin);
 
-        menuObjects.add(task);
-        menuObjects.add(report);
-        menuObjects.add(wfinstance);
-        menuObjects.add(customer);
-        menuObjects.add(signin);
+        for(ClickItem clickItem : items){
+            if(clickItem.title.contains("客户管理")){
+                menuObjects.add(customer);
+            }
+            else if(clickItem.title.contains("任务计划")){
+                menuObjects.add(task);
+            }
+            else if(clickItem.title.contains("审批流程")){
+                menuObjects.add(wfinstance);
+            }
+            else if(clickItem.title.contains("客户拜访")){
+                menuObjects.add(signin);
+            }
+            else if(clickItem.title.contains("工作报告")){
+                menuObjects.add(report);
+            }
+        }
 
         return menuObjects;
     }
@@ -650,6 +661,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 holder.view_number = (ImageView) convertView.findViewById(R.id.view_number);
                 holder.tv_num = (TextView) convertView.findViewById(R.id.tv_num);
                 convertView.setTag(holder);
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
@@ -787,7 +799,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar,img_user);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -801,9 +813,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                Bitmap blur = Utils.doBlur(bitmap,15,false);
-                img_home_head.setImageResource(android.R.color.transparent);
-                container.setBackground(new BitmapDrawable(blur));
+                if(null != bitmap){
+                    Bitmap blur = Utils.doBlur(bitmap, 15, false);
+                    img_home_head.setImageResource(android.R.color.transparent);
+                    container.setBackground(new BitmapDrawable(blur));
+                }
             }
 
             @Override
@@ -814,7 +828,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
-
+        testJurl();
     }
 
     @Background
@@ -823,8 +837,30 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         startService(intent);
         setJpushAlias();
         requestNumber();
-
     }
+
+    /**
+     * 业务使用权限 判断设置
+     * */
+    public void testJurl(){
+        for(int i = 0;i<MainApp.user.permission.suites.size();i++){
+            try{
+                for(Modules modules : MainApp.user.permission.suites.get(i).getModules()){
+                    for(int k = 0;k<items.size();k++){
+                        if(modules.getName().equals(items.get(k).title)){
+                            if(modules.isEnable()){
+                            }else{
+                                items.remove(k);
+                            }
+                        }
+                    }
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     /**
      * 企业QQ登录的用户绑定手机号码 权限待测试
