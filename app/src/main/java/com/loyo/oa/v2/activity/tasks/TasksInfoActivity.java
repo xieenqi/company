@@ -861,6 +861,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
+        bundle.putInt("status",mTask.getStatus());
 
         ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getMembers() != null) {
@@ -872,7 +873,6 @@ public class TasksInfoActivity extends BaseActivity {
         if (mTask.getResponsiblePerson() != null && !users.contains(mTask.getResponsiblePerson())) {
             users.add(mTask.getResponsiblePerson());
         }
-
         bundle.putSerializable("users", users);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
@@ -883,6 +883,7 @@ public class TasksInfoActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
+        bundle.putInt("status",mTask.getStatus());
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 

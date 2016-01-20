@@ -361,7 +361,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (null != wfInstance_current.workflowValues) {
                     wfInstance_current.workflowValues.clear();
                 }
-                wfInstance_current.ack=true;
+                wfInstance_current.ack = true;
                 Intent intent = getIntent();
                 intent.putExtra("review", wfInstance_current);
                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -402,9 +402,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("data", wfInstance.attachments);
                 bundle.putSerializable("uuid", wfInstance.attachmentUUId);
-                bundle.putBoolean("isMyUser", false);
+                bundle.putBoolean("isMyUser", isCreater());
                 bundle.putInt("fromPage", Common.WFIN_PAGE);
                 bundle.putInt("goneBtn",1);
+                bundle.putInt("status",wfInstance.status);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
         }
@@ -464,6 +465,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 popupWindow.dismiss();
             }
         });
+    }
+
+
+    /**
+     * 判断是否是创建人
+     * */
+    public boolean isCreater(){
+        return wfInstance.creator.getId().equals(MainApp.user.getId())?true:false;
     }
 
     @Override

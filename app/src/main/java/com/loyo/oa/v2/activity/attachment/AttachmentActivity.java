@@ -19,6 +19,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -62,6 +63,9 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("goneBtn")
     int goneBtn;
 
+    @Extra("status")
+    int status;
+
     @ViewById(R.id.listView_attachment)
     SwipeListView mListViewAttachment;
     @ViewById(R.id.tv_upload)
@@ -74,9 +78,10 @@ public class AttachmentActivity extends BaseActivity {
     void init() {
         super.setTitle("附件");
 
-        if (!isMyUser) {
+        if (!isMyUser || status == 3 || status == 4) {
             tv_upload.setVisibility(View.GONE);
         }
+        LogUtil.dll("权限:"+status);
 
         setTouchView(NO_SCROLL);
         getAttachments();

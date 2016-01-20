@@ -386,7 +386,6 @@ public class ContactInfoEditActivity extends BaseActivity {
     private void countDown() {
         mTimerTask = new TimerTask() {
             private int seconds = 60;
-
             @Override
             public void run() {
                 if (!isRun) {
