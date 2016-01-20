@@ -662,14 +662,19 @@ public class Utils {
 
     /**
      * 高斯模糊图片算法
-     * */
+     */
     public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
 
-        Bitmap bitmap;
+        Bitmap bitmap = null;
         if (canReuseInBitmap) {
             bitmap = sentBitmap;
         } else {
-            bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+            if (null != sentBitmap.getConfig()) {
+                bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+            } else {
+                LogUtil.d("高斯错误");
+                return sentBitmap;
+            }
         }
 
         if (radius < 1) {
