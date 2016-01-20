@@ -86,6 +86,7 @@ import com.loyo.oa.v2.tool.customview.popumenu.PopupMenuItem;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.androidannotations.annotations.AfterViews;
@@ -793,13 +794,31 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        Bitmap bgIcon =  ImageLoader.getInstance().loadImageSync(MainApp.user.avatar);
-        if(null != bgIcon){
-            Bitmap blur = Utils.doBlur(bgIcon, 10, false);
-            img_home_head.setImageResource(android.R.color.transparent);
-            group_home_relative.setBackground(new BitmapDrawable(blur));
-        }
         ImageLoader.getInstance().displayImage(MainApp.user.avatar,img_user);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                Bitmap blur = Utils.doBlur(bitmap,15,false);
+                img_home_head.setImageResource(android.R.color.transparent);
+                container.setBackground(new BitmapDrawable(blur));
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
+
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
 
