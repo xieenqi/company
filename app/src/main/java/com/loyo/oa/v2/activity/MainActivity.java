@@ -843,7 +843,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 业务使用权限 判断设置
      * */
     public void testJurl(){
-        if(null == MainApp.user){
+        if(null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites){
             return;
         }
         for(int i = 0;i<MainApp.user.permission.suites.size();i++){
