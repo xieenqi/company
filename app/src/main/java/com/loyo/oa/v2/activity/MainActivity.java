@@ -224,6 +224,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         mHandler = new MHandler(this);
     }
 
+    //刷新数据
     private void onRefresh() {
         if (!StringUtil.isEmpty(MainApp.getToken())) {
             requestNumber();
@@ -664,26 +665,30 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
-                if ((item.title.equals("工作报告") && num.bizType == 1 && !num.viewed)) {
+                if ((item.title.equals("工作报告") && num.bizType == 1)) {
                     extra = num.bizNum + "个待点评";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
                     extra = num.bizNum + "个待处理";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
                     extra = num.bizNum + "个待审批";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
                     extra = num.bizNum + "个进行中";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
                     extra = num.bizNum + "个将掉公海";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
                     extra = num.bizNum + "个需拜访";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
                     extra = num.bizNum + "个外勤";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);
-                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-                } else {
-                    holder.view_number.setVisibility(View.GONE);
                 }
             }
 
@@ -835,9 +840,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 业务使用权限 判断设置
-     * */
-    public void testJurl(){
-        if(null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites){
+     */
+    public void testJurl() {
+        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites) {
             return;
         }
         for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
