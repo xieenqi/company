@@ -35,7 +35,7 @@ public class HttpErrorCheck {
 
     public static void checkError(RetrofitError error) {
         DialogHelp.cancelLoading();
-        Toast("网络异常，请稍候再试");
+
         LogUtil.d("网络异常" + error.getMessage());
 
         try {
@@ -57,6 +57,7 @@ public class HttpErrorCheck {
             LogUtil.d("error接口URL：" + error.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
+            Toast(error.getMessage());
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
             Toast(error.getMessage());
@@ -64,6 +65,7 @@ public class HttpErrorCheck {
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
+            Toast(error.getMessage());
         }
 
 
