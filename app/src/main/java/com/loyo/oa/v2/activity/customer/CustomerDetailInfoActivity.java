@@ -167,10 +167,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         * 本地userid与服务器回传ownerId比较，相等则是自己的客户，islock＝true为自己客户，false在公海中
         * 这里不是我的客户，也会返回到我的客户列表里面,接口应该出现问题
         * */
-
-        //isMyUser = MainApp.user.id.equals(ownErId) && isLock ? true : false;
         isMyUser = (customerType != 3) ? true : false;
-        LogUtil.dll("是否为我的客户:"+isMyUser);
 
         if (customerType != 3 && customerType != 0 && !(customerType == 1 && isMenber(mCustomer))) {
             img_title_right.setOnTouchListener(Global.GetTouch());

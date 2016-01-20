@@ -66,12 +66,9 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         }
 
         WfNodes wfNodes = lstData.get(position);
-
-
         if (wfNodes != null) {
             if (wfNodes.getExecutorUser() != null) {
                 item_info.tv_name.setText(wfNodes.getExecutorUser().getRealname());
-
                 try {
                     item_info.tv_creator_title.setText(wfNodes.getExecutorUser().shortPosition.getName());
                 } catch (Exception ex) {
@@ -119,9 +116,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                    }
                }
            }
-
         }
-
         return convertView;
     }
 

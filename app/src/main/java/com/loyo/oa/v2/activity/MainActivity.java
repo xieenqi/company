@@ -813,7 +813,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                if(null != bitmap){
+                if (null != bitmap) {
                     Bitmap blur = Utils.doBlur(bitmap, 15, false);
                     img_home_head.setImageResource(android.R.color.transparent);
                     container.setBackground(new BitmapDrawable(blur));
@@ -843,6 +843,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 业务使用权限 判断设置
      * */
     public void testJurl(){
+        if(null == MainApp.user){
+            return;
+        }
         for(int i = 0;i<MainApp.user.permission.suites.size();i++){
             try{
                 for(Modules modules : MainApp.user.permission.suites.get(i).getModules()){

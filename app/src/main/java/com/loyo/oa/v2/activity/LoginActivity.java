@@ -65,11 +65,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         edt_password.addTextChangedListener(nameWatcher);
         layout_login.setOnClickListener(this);
         if (Config_project.is_developer_mode) {
-            edt_username.setText("17780704580");//18380477066  13438207189
-            edt_password.setText("123456");
+            /*edt_username.setText("17780704580");
+            edt_password.setText("123456");*/
         }
     }
-
 
     TextWatcher nameWatcher = new TextWatcher() {
         @Override
