@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -11,15 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.renderscript.Allocation;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -71,7 +65,6 @@ import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -86,8 +79,8 @@ import com.loyo.oa.v2.tool.customview.popumenu.PopupMenuItem;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -787,7 +780,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 显示用户名字和部门的名字,头像，高斯模糊背景处理
-     * */
+     */
     void updateUser() {
 
         if (MainApp.user == null) {

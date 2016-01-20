@@ -78,26 +78,26 @@ public class Utils {
         Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         //Instantiate a new Renderscript
         RenderScript rs = RenderScript.create(MainApp.getMainApp());
-
-        //Create an Intrinsic Blur Script using the Renderscript
-        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-
-        //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
-        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
-        Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
-
-        //Set the radius of the blur
-        blurScript.setRadius(25.f);
-
-        //Perform the Renderscript
-        blurScript.setInput(allIn);
-        blurScript.forEach(allOut);
-
-        //Copy the final bitmap created by the out Allocation to the outBitmap
-        allOut.copyTo(outBitmap);
-
-        //recycle the original bitmap
         try {
+            //Create an Intrinsic Blur Script using the Renderscript
+            ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+
+            //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
+            Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
+            Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
+
+            //Set the radius of the blur
+            blurScript.setRadius(50.f);
+
+            //Perform the Renderscript
+            blurScript.setInput(allIn);
+            blurScript.forEach(allOut);
+
+            //Copy the final bitmap created by the out Allocation to the outBitmap
+            allOut.copyTo(outBitmap);
+
+            //recycle the original bitmap
+
             bitmap.recycle();
             //After finishing everything, we destroy the Renderscript.
             rs.destroy();
@@ -561,7 +561,7 @@ public class Utils {
 
     /**
      * 判断网络连接是否可用
-     * */
+     */
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
