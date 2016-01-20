@@ -35,7 +35,7 @@ import retrofit.client.Response;
  */
 public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstance> {
 
-    private static final String FILTER_CATEGORY[] = new String[]{"全部类别", "我申请", "我审批", "我经办"};
+    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我申请", "我审批", "我经办"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
 
     private int category = 0;
@@ -132,7 +132,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         mMenu.setmCheckIcon(R.drawable.ico_make);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类别", "全部状态", "全部类型"});//默认未选择任何过滤的Menu title
+        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类别"});//默认未选择任何过滤的Menu title
 
         final List<String[]> items = new ArrayList<>();
         items.add(FILTER_CATEGORY);
@@ -149,7 +149,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
                     mBizForms = bizFormPaginationX.getRecords();
                     if (null != mBizForms && !mBizForms.isEmpty()) {
                         String[] FILTER_TYPE = new String[mBizForms.size() + 1];
-                        FILTER_TYPE[0] = "全部类型";
+                        FILTER_TYPE[0] = "全部类别";
                         for (int i = 0; i < mBizForms.size(); i++) {
                             FILTER_TYPE[i + 1] = mBizForms.get(i).getName();
                         }

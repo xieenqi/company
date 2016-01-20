@@ -90,7 +90,9 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                         break;
                 }
             }
-            /*审批*/
+            /*审批
+            * 状态4,5暂时都归类为 已通过
+            * */
             else if (item instanceof WfInstance) {
                 WfInstance wfInstance = (WfInstance) item;
                 switch (wfInstance.status) {
@@ -104,6 +106,9 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                         order = "未通过";
                         break;
                     case WfInstance.STATUS_FINISHED:
+                        order = "已通过";
+
+                    case WfInstance.STATUS_APPROVED:
                         order = "已通过";
                         break;
                 }

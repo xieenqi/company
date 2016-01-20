@@ -30,9 +30,9 @@ import java.util.List;
  */
 public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkReport> {
 
-    private static final String FILTER_SEND_TYPE[] = new String[]{"全部类别", "提交给我的", "我提交的", "抄送给我的"};
+    private static final String FILTER_SEND_TYPE[] = new String[]{"全部类型", "提交给我的", "我提交的", "抄送给我的"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待点评", "已点评"};
-    private static final String FILTER_TYPE[] = new String[]{"全部类型", "日报", "周报", "月报"};
+    private static final String FILTER_TYPE[] = new String[]{"全部类别", "日报", "周报", "月报"};
 
     private int sendType = 0;
     private int type = 0;
@@ -127,7 +127,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         mMenu.setmCheckIcon(R.drawable.ico_make);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
-        mMenu.setDefaultMenuTitle(new String[]{"全部类别", "全部状态", "全部类型"});//默认未选择任何过滤的Menu title
+        mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类别"});//默认未选择任何过滤的Menu title
 
         List<String[]> items = new ArrayList<>();
         items.add(FILTER_SEND_TYPE);
