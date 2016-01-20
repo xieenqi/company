@@ -45,7 +45,7 @@
                 android:layout_margin="@dimen/dimen_10"
                 android:background="@null"
                 android:scaleType="fitCenter"
-                android:src="@drawable/icon_home_news"/>
+                android:src="@drawable/home_news"/>
 
             <View
                 android:layout_width="0dp"
