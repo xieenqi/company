@@ -121,6 +121,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     String workReportId;//推送的id
 
     public PaginationX<Discussion> mPageDiscussion;
+    public int status;
 
     @AfterViews
     void init() {
@@ -270,6 +271,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
+            status = 3;
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
@@ -284,6 +286,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
 
         } else {
+            status  = 0;
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
 
@@ -337,8 +340,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", false);
+        bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("fromPage", Common.WORK_PAGE);
+        bundle.putInt("status",status);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
 
@@ -349,6 +353,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
+        bundle.putInt("status", status);
+        bundle.putBoolean("isMyUser", isCreater());
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
@@ -418,6 +424,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return result.append("无抄送人").toString();
         }
     }
+
+    /**
+     * 判断是否是创建人
+     * */
+    public boolean isCreater(){
+        return mWorkReport.getCreator().getId().equals(MainApp.user.getId())?true:false;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
