@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,15 +29,15 @@ public class SelectUserAdapter extends BaseAdapter {
     private String deptName;
     private String npcName;
     private boolean isAllCheck;
+    public Handler handler;
 
-    public SelectUserAdapter(Context mContext, ArrayList<User> listUsers, boolean isAllCheck) {
+    public SelectUserAdapter(Context mContext, ArrayList<User> listUsers, boolean isAllCheck, Handler handler) {
 
         this.isAllCheck = isAllCheck;
         this.mContext = mContext;
         this.listUsers = listUsers;
         mInflater = LayoutInflater.from(mContext);
-
-
+        this.handler = handler;
     }
 
     class ViewHolder {
@@ -69,11 +70,9 @@ public class SelectUserAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder = null;
-
         if (convertView == null) {
-
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_selectcustomer_right_lv, null);
             holder.userName = (TextView) convertView.findViewById(R.id.item_selectdu_right_name);
@@ -82,7 +81,6 @@ public class SelectUserAdapter extends BaseAdapter {
             holder.heading = (ImageView) convertView.findViewById(R.id.img_title_left);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.item_selectdu_checkbox);
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -102,7 +100,6 @@ public class SelectUserAdapter extends BaseAdapter {
             e.printStackTrace();
             npcName = "无";
         }
-
         holder.userName.setText(listUsers.get(position).getRealname());
         holder.dept.setText(deptName);
         holder.worker.setText(npcName);
@@ -115,9 +112,7 @@ public class SelectUserAdapter extends BaseAdapter {
         } else {
             holder.checkBox.setChecked(false);
         }
-
         ImageLoader.getInstance().displayImage(listUsers.get(position).getAvatar(), holder.heading);
-
         return convertView;
     }
 }

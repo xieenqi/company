@@ -81,7 +81,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -787,7 +786,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar,img_user);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -801,9 +800,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                Bitmap blur = Utils.doBlur(bitmap,15,false);
+                Bitmap blur = Utils.doBlur(bitmap, 35, false);
                 img_home_head.setImageResource(android.R.color.transparent);
-                container.setBackground(new BitmapDrawable(blur));
+                container.setBackgroundDrawable(new BitmapDrawable(blur));
             }
 
             @Override
