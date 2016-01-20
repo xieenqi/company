@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -11,15 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.renderscript.Allocation;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -71,7 +65,6 @@ import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -85,8 +78,6 @@ import com.loyo.oa.v2.tool.customview.popumenu.PopupMenu;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenuItem;
 import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -786,20 +777,20 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 显示用户名字和部门的名字,头像，高斯模糊背景处理
-     * */
+     */
     void updateUser() {
 
         if (MainApp.user == null) {
             return;
         }
 
-        Bitmap bgIcon =  ImageLoader.getInstance().loadImageSync(MainApp.user.avatar);
-        if(null != bgIcon){
+        Bitmap bgIcon = ImageLoader.getInstance().loadImageSync(MainApp.user.avatar);
+        if (null != bgIcon) {
             Bitmap blur = Utils.doBlur(bgIcon, 10, false);
             img_home_head.setImageResource(android.R.color.transparent);
-            group_home_relative.setBackground(new BitmapDrawable(blur));
+            container.setBackgroundDrawable(new BitmapDrawable(blur));
         }
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar,img_user);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
 
