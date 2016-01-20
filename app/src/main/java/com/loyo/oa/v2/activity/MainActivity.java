@@ -813,7 +813,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 if (null != bitmap) {
-                    Bitmap blur = Utils.doBlur(bitmap, 35, false);
+                    Bitmap blur = Utils.doBlur(bitmap, 50, false);
                     img_home_head.setImageResource(android.R.color.transparent);
                     container.setBackgroundDrawable(new BitmapDrawable(blur));
                 }

@@ -551,6 +551,11 @@ public class SelectDetUserActivity extends BaseActivity {
                         for (User user : userAllList) {
                             if (user.getId().equals(userId)) {
                                 user.setIndex(true);
+
+                                Message msg = new Message();
+                                msg.what = SelectDetUserActivity.selectWhat;
+                                msg.obj = user;
+                                mHandler.sendMessage(msg);
                             }
                         }
                         totalSize += 1;
@@ -565,6 +570,11 @@ public class SelectDetUserActivity extends BaseActivity {
                         for (User user : userAllList) {
                             if (user.getId().equals(userId)) {
                                 user.setIndex(true);
+
+                                Message msg = new Message();
+                                msg.what = SelectDetUserActivity.selectWhat;
+                                msg.obj = user;
+                                mHandler.sendMessage(msg);
                             }
                         }
                         totalSize += 1;
@@ -613,7 +623,6 @@ public class SelectDetUserActivity extends BaseActivity {
                     }
                     xpath = dept.get(j).getShortDept().getXpath();
                 }
-
             }
             notifyDataSetChanged();
         }
@@ -640,7 +649,7 @@ public class SelectDetUserActivity extends BaseActivity {
                 holder = (Holder) convertView.getTag();
             }
             ImageLoader.getInstance().displayImage(selectUserList.get(position).getAvatar(), holder.head);
-            holder.name.setText(selectUserList.get(position).name);
+            //holder.name.setText(selectUserList.get(position).name);
             LogUtil.d("刷新的数九：" + selectUserList.size());
             return convertView;
         }

@@ -11,18 +11,17 @@ import com.loyo.oa.v2.adapter.WfInstanceTypeSelectListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -75,11 +74,12 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(bizForm.getId(), new RCallback<BizForm>() {
                             @Override
                             public void success(BizForm bizForm, Response response) {
-                                try {
-                                    LogUtil.dll(Utils.convertStreamToString(response.getBody().in()));//获得查询的数据
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                HttpErrorCheck.checkResponse("获取审批类型详情:", response);
+//                                try {
+//                                    LogUtil.dll(Utils.convertStreamToString(response.getBody().in()));//获得查询的数据
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
                                 if (bizForm != null) {
                                     Intent intent = new Intent();
                                     intent.putExtra(BizForm.class.getName(), bizForm);
@@ -89,6 +89,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
 
                             @Override
                             public void failure(RetrofitError error) {
+                                HttpErrorCheck.checkError(error);
                                 Toast("获取审批类型详情失败");
                                 super.failure(error);
                             }
@@ -119,6 +120,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override
             public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+                HttpErrorCheck.checkResponse("获取审批类型", response);
                 listView_bizform.onRefreshComplete();
 
                 if (null != bizFormPaginationX) {
@@ -134,6 +136,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取审批类型失败");
                 listView_bizform.onRefreshComplete();
                 super.failure(error);

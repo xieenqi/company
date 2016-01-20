@@ -151,7 +151,9 @@ public class WfinstanceViewGroup extends LinearLayout {
 
                 label.setText(bizFormFields.getName() + "：");
             }
-            addView(convertView);
+            if(bizFormFields.isEnable()){
+                addView(convertView);
+            }
         }
         parent.addView(this);
     }

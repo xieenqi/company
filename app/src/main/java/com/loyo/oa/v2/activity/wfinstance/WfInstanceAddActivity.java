@@ -211,7 +211,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -361,12 +361,14 @@ public class WfInstanceAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(mBizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
             @Override
             public void success(ArrayList<WfTemplate> bizFormFieldsPaginationX, Response response) {
+                HttpErrorCheck.checkResponse("获取审批流程", response);
                 wfTemplateArrayList = bizFormFieldsPaginationX;
                 initUI_Dialog_WfTemplate();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取审批流程失败");
                 super.failure(error);
             }
@@ -404,7 +406,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             return;
         HashMap<String, Object> mapInfo = WfinObj.get(0).getInfoData();
         for (Map.Entry<String, Object> entry : mapInfo.entrySet()) {
-            LogUtil.dll("KEY:"+entry.getKey() + "Value:" + entry.getValue());
+            LogUtil.dll("KEY:" + entry.getKey() + "Value:" + entry.getValue());
         }
     }
 
@@ -442,7 +444,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
     /**
      * 确认新建审批
-     * */
+     */
     @Click(R.id.img_title_right)
     void submit() {
         if (TextUtils.isEmpty(mTemplateId)) {
@@ -485,10 +487,10 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         /**必填项判断是否为空*/
-        for(int i = 0;i<workflowValues.size();i++){
-            HashMap<String,Object> map = workflowValues.get(i);
-            for(Map.Entry<String,Object> entry : workflowValues.get(i).entrySet()){
-                if(TextUtils.isEmpty((CharSequence) entry.getValue())){
+        for (int i = 0; i < workflowValues.size(); i++) {
+            HashMap<String, Object> map = workflowValues.get(i);
+            for (Map.Entry<String, Object> entry : workflowValues.get(i).entrySet()) {
+                if (TextUtils.isEmpty((CharSequence) entry.getValue())) {
                     Toast("请填写\"必填项\"");
                     return;
                 }
