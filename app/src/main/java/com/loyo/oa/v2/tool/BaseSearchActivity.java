@@ -70,6 +70,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     public LayoutInflater mInflater;
     public RelativeLayout headerViewBtn;
 
+    protected int customerType;
     protected int befromPage;
     protected boolean isTopAdd = true;
 
@@ -91,6 +92,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
         headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
 
+        customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
         befromPage = mBundle.getInt("from");
         switchPage(befromPage);
         if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
@@ -192,6 +194,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     case CUSTOMER_MANAGE:
                         mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
                         mIntent.putExtra("Id", lstData.get(position - 2).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE,customerType);
                         startActivity(mIntent);
                         break;
                     //任务管理

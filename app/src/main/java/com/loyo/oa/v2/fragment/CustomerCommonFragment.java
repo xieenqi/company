@@ -631,7 +631,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LogUtil.d(" 客户管理每一个item： " + MainApp.gson.toJson(mCustomers.get((int) l)));
                 Intent intent = new Intent();
                 intent.putExtra("Id", mCustomers.get((int) l).getId());
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, customer_type);

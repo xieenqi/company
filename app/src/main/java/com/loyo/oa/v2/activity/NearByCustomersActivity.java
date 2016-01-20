@@ -38,6 +38,8 @@ import java.util.ArrayList;
 public class NearByCustomersActivity extends BaseFragmentActivity {
 
     private String[] TITLES = {"我的客戶(0)", "公司已赢单客户(0)"};
+    private MyPagerAdapter adapter;
+    private ArrayList<CustomerCommonFragment> fragmentXes = new ArrayList<>();
 
     @ViewById ViewGroup layout_back;
     @ViewById ImageView iv_submit;
@@ -47,8 +49,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     @Extra String position;
     @Extra NearCount nearCount;
     @Extra int type;//客户类型
-    private MyPagerAdapter adapter;
-    private ArrayList<CustomerCommonFragment> fragmentXes = new ArrayList<>();
+
 
     @AfterViews
     void initViews() {

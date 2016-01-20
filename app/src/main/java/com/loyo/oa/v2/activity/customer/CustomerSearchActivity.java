@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
-    private int queryType;
+    private int customerType;
     private Bundle mBundle;
 
 
@@ -21,7 +21,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBundle = getIntent().getExtras();
-        queryType = mBundle.getInt(ExtraAndResult.CC_DEPARTMENT_NAME);
+        customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
         params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
         params.put("keyWords", strSearch);
 
-        switch (queryType) {
+        switch (customerType) {
             case 1:
                 url = FinalVariables.SEARCH_CUSTOMERS_SELF;
                 break;
