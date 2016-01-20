@@ -40,7 +40,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private boolean isCreator;
     private boolean localpic = false; //是否可以选择相册
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator,int fromPage) {
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator, int fromPage) {
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -58,8 +58,8 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic, boolean isCreator,int fromPage) {
-        this(mActivity, lstData, mIsAdd, isCreator,fromPage);
+    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic, boolean isCreator, int fromPage) {
+        this(mActivity, lstData, mIsAdd, isCreator, fromPage);
         localpic = _localpic;
     }
 
@@ -105,7 +105,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
 
         if (position == mListData.size()) {
-            item_info.imageView.setImageResource(R.drawable.icon_add_file);
+            if (mListData.size() <= 9) {
+                item_info.imageView.setImageResource(R.drawable.icon_add_file);
+            } else {
+                item_info.imageView.setVisibility(View.INVISIBLE);
+            }
             if (isCreator) {
                 item_info.imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
             }
@@ -193,22 +197,26 @@ public class SignInGridViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /**添加图片操作*/
+    /**
+     * 添加图片操作
+     */
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if(fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE){
-                if(mListData.size() == 0){
+            if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
+                if (mListData.size() == 0) {
                     Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                     intent.putExtra("localpic", localpic);
                     mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
-                }else{
-                    Toast.makeText(mActivity,"只允许拍一张照片",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, "只允许拍一张照片", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else if (mListData.size() <= 9) {
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
+            } else {
+
             }
         }
     }

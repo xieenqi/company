@@ -76,25 +76,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:orientation="horizontal"
         >
 
-        <ListView
+        <com.loyo.oa.v2.tool.customview.HorizontalScrollListView
             android:id="@+id/lv_selectUser"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
+            android:background="@color/white"
             />
 
         <TextView
             android:id="@+id/tv_selectdetuser_tv"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:background="@color/white"
             android:drawableLeft="@drawable/item_selectdetuser_serach"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+            android:paddingLeft="@dimen/dimen_10"
+            android:paddingRight="@dimen/dimen_10"
             android:text="搜索"
             android:textColor="@color/suodesilei"
             android:textSize="15sp"

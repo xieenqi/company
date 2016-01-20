@@ -2,16 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:minHeight="50dp">
 
     <com.loyo.oa.v2.tool.customview.RoundImageView
         android:id="@+id/riv_head"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dimen_15"
         android:scaleType="center"
+        android:layout_margin="@dimen/dimen_5"
         imagecontrol:border_inside_color="#a8d4e9"
         imagecontrol:border_outside_color="#a8d4e9"
         imagecontrol:border_thickness="1dp"/>
@@ -23,6 +25,7 @@
         android:layout_centerInParent="true"
         android:maxLength="2"
         android:text="dg"
-        android:textColor="@color/white"
+        android:textColor="@color/gray"
+        android:textSize="11sp"
         />
 </RelativeLayout>

@@ -26,14 +26,18 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.customview.HorizontalScrollListView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 部门 人员选择
@@ -42,7 +46,8 @@ import java.util.ArrayList;
 public class SelectDetUserActivity extends BaseActivity {
 
     public MainApp app = MainApp.getMainApp();
-    public ListView leftLv, rightLv, lv_selectUser;
+    public ListView leftLv, rightLv;
+    private HorizontalScrollListView lv_selectUser;
     public LinearLayout llback;
     public RelativeLayout relAllcheck;
     public Button btnSure;
@@ -77,31 +82,58 @@ public class SelectDetUserActivity extends BaseActivity {
     private ArrayList<NewUser> usersList = new ArrayList<>();
     private ArrayList<NewUser> deptsList = new ArrayList<>();
 
-    private ArrayList<NewUser> selectUserList = new ArrayList<>();
+    private ArrayList<User> selectUserList = new ArrayList<>();//横 list
     public static ArrayList<Department> Data;//组织架构 的缓存
     private NewUser newUser;
     private Members members;
+    public static final int selectWhat = 130;
+    public static final int SELECT_DETEL_WHAT = 140;
 
 
     public Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0x01)
-                mUserAdapter.notifyDataSetChanged();
-            btnSure.setText("确定" + "(" + totalSize + ")");
+//        public void handleMessage(Message msg) {
+//            if (msg.what == 0x01)
+//                mUserAdapter.notifyDataSetChanged();
+//            btnSure.setText("确定" + "(" + totalSize + ")");
+//        }
+
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            switch (msg.what) {
+                case 0x01:
+                    mUserAdapter.notifyDataSetChanged();
+                    btnSure.setText("确定" + "(" + totalSize + ")");
+                    break;
+                case selectWhat://选择了的人
+                    selectUserList.add((User) msg.obj);
+                    selectDataAdapter.refreshData();
+                    break;
+                case SELECT_DETEL_WHAT:
+                    for (int i = 0; i < selectUserList.size(); i++) {
+                        if (((User) msg.obj).id.equals(selectUserList.get(i).id)) {
+                            selectUserList.remove(i);
+                        }
+                    }
+                    selectDataAdapter.refreshData();
+                    break;
+            }
         }
     };
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_selectdetuser);
         Data = MainApp.lstDepartment;// 转存组织架构数据
-        for (Department element : Data) {
-            for (User eleUser : element.getUsers()) {
-                eleUser.index = false;
-            }
-        }
+//        for (Department element : Data) {
+//            for (User eleUser : element.getUsers()) {
+//                eleUser.index = false;
+//            }
+//        }
+        setTouchView(-1);
         initView();
     }
 
@@ -127,10 +159,12 @@ public class SelectDetUserActivity extends BaseActivity {
 
         leftLv = (ListView) findViewById(R.id.lv_selectdetuser_left);
         rightLv = (ListView) findViewById(R.id.lv_selectdetuser_right);
-
-        lv_selectUser = (ListView) findViewById(R.id.lv_selectUser);
+//横着的list
+        lv_selectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
         selectDataAdapter = new SelectDataAdapter();
         lv_selectUser.setAdapter(selectDataAdapter);
+
+
         btnSure = (Button) findViewById(R.id.btn_title_right);
         llback = (LinearLayout) findViewById(R.id.ll_back);
         tv_selectdetuser_tv = (TextView) findViewById(R.id.tv_selectdetuser_tv);
@@ -173,7 +207,7 @@ public class SelectDetUserActivity extends BaseActivity {
         userList.addAll(userAllList);
 
         /*右侧Lv初始化*/
-        mUserAdapter = new SelectUserAdapter(mContext, userList, isAllCheck);
+        mUserAdapter = new SelectUserAdapter(mContext, userList, isAllCheck, mHandler);
         rightLv.setAdapter(mUserAdapter);
 
     }
@@ -232,7 +266,21 @@ public class SelectDetUserActivity extends BaseActivity {
 
 
     void lvOnClick() {
-
+        /*横着ListView*/
+        lv_selectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                selectUserList.remove(position);
+//                selectDataAdapter.refreshData();
+//                mHandler.sendEmptyMessage(0x01);
+//                for (User element : userAllList) {
+//                    if (selectUserList.get(position).id.equals(element.id)) {
+//                        element.index = false;
+//                    }
+//                }
+//                mUserAdapter.notifyDataSetChanged();
+            }
+        });
         /*左侧ListView*/
         leftLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -253,6 +301,9 @@ public class SelectDetUserActivity extends BaseActivity {
                         LogUtil.dll("下级:" + department.getName());
                     }
                 }
+                //选择部门的状态
+                mDetAdapter.setSelectedPosition(position);
+                mDetAdapter.notifyDataSetChanged();
             }
         });
 
@@ -260,7 +311,6 @@ public class SelectDetUserActivity extends BaseActivity {
         rightLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
                 /*选负责人时*/
                 if (selectType == 1) {
 
@@ -282,15 +332,18 @@ public class SelectDetUserActivity extends BaseActivity {
                     }
 
                     mHandler.sendEmptyMessage(0x01);
+                    if (userList.get(position - 1).isIndex()) {
+                        Message msg = new Message();
+                        msg.what = SelectDetUserActivity.selectWhat;
+                        msg.obj = userList.get(position - 1);
+                        mHandler.sendMessage(msg);
+                    } else {
+                        Message msg = new Message();
+                        msg.what = SelectDetUserActivity.SELECT_DETEL_WHAT;
+                        msg.obj = userList.get(position - 1);
+                        mHandler.sendMessage(msg);
+                    }
 
-//                    User selectData = mUserAdapter.getData().get(position);
-//                    NewUser selectUser = new NewUser();
-//                    selectUser.setId(selectData.getId());
-//                    selectUser.setName(selectData.name);
-//                    selectUser.setAvatar(selectData.avatar);
-//
-//                    selectUserList.add(selectUser.index ? selectUser : new User());
-                    selectDataAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -314,6 +367,18 @@ public class SelectDetUserActivity extends BaseActivity {
                         canSet++;
                     }
                     user.setIndex(isAllCheck);
+
+                    if (isAllCheck) {
+                        Message msg = new Message();
+                        msg.what = SelectDetUserActivity.selectWhat;
+                        msg.obj = user;
+                        mHandler.sendMessage(msg);
+                    } else {
+                        Message msg = new Message();
+                        msg.what = SelectDetUserActivity.SELECT_DETEL_WHAT;
+                        msg.obj = user;
+                        mHandler.sendMessage(msg);
+                    }
                 }
 
                 if (isAllCheck) {
@@ -324,7 +389,6 @@ public class SelectDetUserActivity extends BaseActivity {
 
                 mHandler.sendEmptyMessage(0x01);
 
-                selectDataAdapter.notifyDataSetChanged();
             }
         });
 
@@ -518,7 +582,7 @@ public class SelectDetUserActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return members.users.size();
+            return selectUserList.size();
         }
 
         @Override
@@ -529,6 +593,38 @@ public class SelectDetUserActivity extends BaseActivity {
         @Override
         public long getItemId(int position) {
             return 0;
+        }
+
+        /**
+         * 刷新 数据
+         */
+        public void refreshData() {
+            Set<User> userSet = new HashSet<>();
+            userSet.addAll(selectUserList);
+            selectUserList.clear();
+            selectUserList.addAll(userSet);
+            String xpath = "";
+            for (int i = 0; i < selectUserList.size(); i++) {
+                ArrayList<UserInfo> dept = selectUserList.get(i).depts;
+                for (int j = 0; j < dept.size(); j++) {
+                    if (xpath.equals(dept.get(j).getShortDept().getXpath())) {
+                        selectDept(dept.get(j).getShortDept().getXpath());
+                        continue;
+                    }
+                    xpath = dept.get(j).getShortDept().getXpath();
+                }
+
+            }
+            notifyDataSetChanged();
+        }
+
+        public String selectDept(String xpath) {
+            for (Department user : Data) {
+//                if (xpath.equals(user.getDepts().get(0).getShortDept().getXpath())) {
+//                    return user.getDepts().get(0).getShortDept().getXpath() ;
+//                }
+            }
+            return "";
         }
 
         @Override
@@ -543,7 +639,9 @@ public class SelectDetUserActivity extends BaseActivity {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            ImageLoader.getInstance().displayImage(members.users.get(position).getAvatar(), holder.head);
+            ImageLoader.getInstance().displayImage(selectUserList.get(position).getAvatar(), holder.head);
+            holder.name.setText(selectUserList.get(position).name);
+            LogUtil.d("刷新的数九：" + selectUserList.size());
             return convertView;
         }
 

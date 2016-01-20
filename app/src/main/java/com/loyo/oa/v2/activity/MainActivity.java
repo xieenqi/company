@@ -81,7 +81,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -93,7 +92,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -355,20 +353,16 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         signin.setText("拜访签到");
         signin.setResource(R.drawable.icon_home_menu_signin);
 
-        for(ClickItem clickItem : items){
-            if(clickItem.title.contains("客户管理")){
+        for (ClickItem clickItem : items) {
+            if (clickItem.title.contains("客户管理")) {
                 menuObjects.add(customer);
-            }
-            else if(clickItem.title.contains("任务计划")){
+            } else if (clickItem.title.contains("任务计划")) {
                 menuObjects.add(task);
-            }
-            else if(clickItem.title.contains("审批流程")){
+            } else if (clickItem.title.contains("审批流程")) {
                 menuObjects.add(wfinstance);
-            }
-            else if(clickItem.title.contains("客户拜访")){
+            } else if (clickItem.title.contains("客户拜访")) {
                 menuObjects.add(signin);
-            }
-            else if(clickItem.title.contains("工作报告")){
+            } else if (clickItem.title.contains("工作报告")) {
                 menuObjects.add(report);
             }
         }
@@ -814,9 +808,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 if (null != bitmap) {
-                    Bitmap blur = Utils.doBlur(bitmap, 15, false);
+                    Bitmap blur = Utils.doBlur(bitmap, 35, false);
                     img_home_head.setImageResource(android.R.color.transparent);
-                    container.setBackground(new BitmapDrawable(blur));
+                    container.setBackgroundDrawable(new BitmapDrawable(blur));
                 }
             }
 
@@ -846,19 +840,19 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if(null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites){
             return;
         }
-        for(int i = 0;i<MainApp.user.permission.suites.size();i++){
-            try{
-                for(Modules modules : MainApp.user.permission.suites.get(i).getModules()){
-                    for(int k = 0;k<items.size();k++){
-                        if(modules.getName().equals(items.get(k).title)){
-                            if(modules.isEnable()){
-                            }else{
+        for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
+            try {
+                for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
+                    for (int k = 0; k < items.size(); k++) {
+                        if (modules.getName().equals(items.get(k).title)) {
+                            if (modules.isEnable()) {
+                            } else {
                                 items.remove(k);
                             }
                         }
                     }
                 }
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
