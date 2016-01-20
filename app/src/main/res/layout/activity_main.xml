@@ -38,14 +38,28 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_contact"/>
 
-            <ImageButton
-                android:id="@+id/img_bulletin"
+            <RelativeLayout
                 android:layout_width="@dimen/dimen_25"
                 android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_10"
-                android:background="@null"
-                android:scaleType="fitCenter"
-                android:src="@drawable/icon_home_news"/>
+                android:layout_margin="@dimen/dimen_10">
+
+                <ImageButton
+                    android:id="@+id/img_bulletin"
+                    android:layout_width="@dimen/dimen_25"
+                    android:layout_height="@dimen/dimen_25"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_home_news"/>
+
+                <ImageView
+                    android:id="@+id/img_bulletinStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/bg_view_red_circle"
+                    android:visibility="gone"/>
+            </RelativeLayout>
 
             <View
                 android:layout_width="0dp"

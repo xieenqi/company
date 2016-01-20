@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     ViewGroup layout_network, layout_attendance, layout_avatar, layout_is_attendance, container;
     @ViewById
-    ImageView img_home_head, img_fast_add;
+    ImageView img_home_head, img_fast_add, img_bulletinStatus;
     @ViewById
     RelativeLayout group_home_relative;
 
@@ -140,6 +140,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
                 launch();
             }
+        }
+    };
+    Handler handler = new Handler() {//显示通知公告红点
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            img_bulletinStatus.setVisibility(View.VISIBLE);
+            LogUtil.d("红点限定");
         }
     };
 
@@ -686,6 +694,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
                     extra = num.bizNum + "个外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if (num.bizType == 19) {
+                    handler.sendEmptyMessage(12);
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);
