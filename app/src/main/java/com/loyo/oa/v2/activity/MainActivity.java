@@ -52,7 +52,6 @@ import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Modules;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -142,12 +141,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         }
     };
-    Handler handler = new Handler() {//显示通知公告红点
+    //显示通知公告红点
+    Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
             img_bulletinStatus.setVisibility(View.VISIBLE);
-            LogUtil.d("红点限定");
         }
     };
 
