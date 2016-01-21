@@ -214,101 +214,42 @@
                             android:background="@drawable/view_dashed_line"
                             android:layerType="software"/>
 
+                        <com.loyo.oa.v2.common.NoScroolGridView
+                            android:id="@+id/info_gridview_workreports"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:numColumns="3"
+                            android:listSelector="@android:color/transparent"
+                            />
+
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dimen_80"
-                            android:orientation="horizontal">
+                            android:visibility="gone"
+                            android:id="@+id/no_dysndata_workreports"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@color/beogray"
+                            >
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                            <ImageView
+                                android:layout_marginTop="10dp"
+                                android:layout_gravity="center"
+                                android:layout_width="50dp"
+                                android:layout_height="60dp"
+                                android:background="@drawable/icon_dysn_nodata"
+                                />
 
-                                <TextView
-                                    android:id="@+id/tv_new_customers_num"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#ff5959"
-                                    android:textSize="28sp"/>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="新增客戶"/>
-
-                            </LinearLayout>
-
-                            <View
-                                style="@style/view_split"
-                                android:layout_width="@dimen/dimen_0.5"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/dimen_10"
-                                android:layout_marginTop="@dimen/dimen_10"/>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_new_visit_num"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#59b80c"
-                                    android:textSize="28sp"/>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="拜访签到"/>
+                            <TextView
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="无法获取数据"
+                                android:textColor="@color/gray"
+                                />
 
                             </LinearLayout>
-
-                            <View
-                                style="@style/view_split"
-                                android:layout_width="@dimen/dimen_0.5"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/dimen_10"
-                                android:layout_marginTop="@dimen/dimen_10"/>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_visit_customers_num"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#4db1fe"
-                                    android:textSize="28sp"/>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="拜访客戶"/>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 

@@ -7,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = true; //是否是正式产品
+    public static final Boolean isRelease = false; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
@@ -126,9 +126,7 @@ public class Config_project {
      */
     public static final String DELETE_ENCLOSURE = SERVER_URL_ATTACHMENT() + "/api/v2";
 
-    public static String API_URL_CUSTOMER() {
-        return SERVER_URL_CUSTOMER().concat("/api/v2");
-    }
+    public static String API_URL_CUSTOMER() { return SERVER_URL_CUSTOMER().concat("/api/v2");}
 
     public static String API_URL_ATTACHMENT() {
         return SERVER_URL_ATTACHMENT().concat("/api/v2");
@@ -137,6 +135,8 @@ public class Config_project {
     public static String API_URL_EXTRA() {
         return SERVER_URL_EXTRA().concat("/api/v2/");
     }
+
+    public static String API_URL_WORKDYSN(){ return SERVER_URL().concat("/api/v2/");}
 
 
 }

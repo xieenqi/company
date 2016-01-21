@@ -3,27 +3,31 @@ package com.loyo.oa.v2.activity.work;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -31,12 +35,12 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -44,10 +48,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -58,10 +61,11 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_workreports_info)
 public class WorkReportsInfoActivity extends BaseActivity {
 
-    final int MSG_DELETE_WORKREPORT = 100;
-    final int MSG_ATTACHMENT = 200;
-    final int MSG_DISCUSSION = 300;
-    final int MSG_REVIEW = 400;
+    public final int MSG_DELETE_WORKREPORT = 100;
+    public final int MSG_ATTACHMENT = 200;
+    public final int MSG_DISCUSSION = 300;
+    public final int MSG_REVIEW = 400;
+    public static final int UPDATE_SUCCESS = 0x01;
 
     @ViewById
     ViewGroup img_title_left;
@@ -103,17 +107,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
     WebView webView_content;
     @ViewById
     RatingBar ratingBar_workReport;
-
+    @ViewById
+    ViewGroup no_dysndata_workreports;
     //统计数据
     @ViewById
     TextView tv_crm;
     @ViewById
-    TextView tv_new_customers_num;
-    @ViewById
-    TextView tv_new_visit_num;
-    @ViewById
-    TextView tv_visit_customers_num;
-
+    GridView info_gridview_workreports;
     //@Extra("workreport")
     WorkReport mWorkReport;
 
@@ -122,12 +122,62 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     public PaginationX<Discussion> mPageDiscussion;
     public int status;
+    private workReportAddgridViewAdapter workGridViewAdapter;
+
+    private ArrayList<WorkReportDyn> dynList;
+    private Handler mHandler = new Handler(){
+        public void handleMessage(Message msg){
+            if(msg.what == UPDATE_SUCCESS){
+                if(null == dynList || dynList.size() == 0){
+                    no_dysndata_workreports.setVisibility(View.VISIBLE);
+                    info_gridview_workreports.setVisibility(View.GONE);
+                }else{
+                    no_dysndata_workreports.setVisibility(View.GONE);
+                    info_gridview_workreports.setVisibility(View.VISIBLE);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(),dynList);
+                    info_gridview_workreports.setAdapter(workGridViewAdapter);
+                }
+            }
+        }
+    };
 
     @AfterViews
     void init() {
         initUI();
         setTouchView(R.id.layout_touch);
+        showLoading("");
         getData_WorkReport();
+    }
+
+    /**
+     * 开启动态统计数据
+     * */
+    public void openDynamic(String startTime,String endTime){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("startTime",startTime);
+        map.put("endTime",endTime);
+
+        LogUtil.dll("startTime:" + startTime);
+        LogUtil.dll("endTime:" + endTime);
+
+        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
+                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
+                    @Override
+                    public void success(ArrayList<WorkReportDyn> dyn, Response response) {
+                        cancelLoading();
+                        HttpErrorCheck.checkResponse(response);
+                        dynList = dyn;
+                        LogUtil.dll("返回的数据 动态:" + MainApp.gson.toJson(dyn));
+                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        cancelLoading();
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     /**
@@ -151,6 +201,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -199,6 +250,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void initUI() {
         super.setTitle("报告详情");
 
+        //info_gridview_workreports = (GridView) findViewById(R.id.info_gridview_workreports);
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
@@ -214,12 +266,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return;
         }
 
-        if (null != mWorkReport.getCrmDatas() && mWorkReport.getCrmDatas().size() > 2) {
-            tv_new_customers_num.setText(mWorkReport.getCrmDatas().get(0).getContent());
-            tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
-            tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
-        }
-
         StringBuilder title = new StringBuilder(mWorkReport.getCreator().name + "提交 ");
         String reportDate = "";
         String date = app.df3.format(new Date(mWorkReport.getCreatedAt() * 1000));
@@ -230,16 +276,19 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 reportType = " 日报";
                 crmName = "本日工作动态统计";
                 reportDate = app.df4.format(new Date(mWorkReport.getBeginAt() * 1000));
+                openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
                 break;
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
                 reportDate = app.df4.format(new Date(mWorkReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(mWorkReport.getEndAt() * 1000));
+                openDynamic(DateTool.getBeginAt_ofWeek()/1000+"",DateTool.getEndAt_ofWeek()/1000+"");
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
                 reportDate = app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
+                openDynamic(DateTool.getBeginAt_ofMonthMills()/1000+"",DateTool.getEndAt_ofMonth()/1000+"");
                 break;
 
         }
