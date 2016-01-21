@@ -205,6 +205,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             mActivity.get().swipe_container.setRefreshing(false);
+            // cancelLoading();
         }
     }
 
@@ -274,11 +275,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
 
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
+//        swipe_container.stopNestedScroll();
+        //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
+                showLoading("");
             }
         });
 
