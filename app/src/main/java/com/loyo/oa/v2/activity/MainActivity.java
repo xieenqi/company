@@ -909,8 +909,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     protected void onResume() {
         super.onResume();
-        if (User.getImageUrl() != null)
-            ImageLoader.getInstance().displayImage(User.getImageUrl(), img_user);
         intentJpushInfo();
     }
 
@@ -971,5 +969,4 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         });
     }
-
 }
