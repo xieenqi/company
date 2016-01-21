@@ -49,9 +49,9 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_notice)
 public class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2 {
+
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
-
     @ViewById PullToRefreshRecycleView lv_notice;
     @ViewById Button btn_notice_add;
     private ArrayList<Bulletin> bulletins = new ArrayList<>();
@@ -59,9 +59,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     private int mIndex = 1;
     private boolean isTopAdd = true;
     private NoticeAdapter adapter;
-
     public final static int REQUEST_NEW = 1;
-
     private LinearLayoutManager layoutManager;
 
     @AfterViews
