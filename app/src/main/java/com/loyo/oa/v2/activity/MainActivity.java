@@ -275,14 +275,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
 
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
-//        swipe_container.stopNestedScroll();
+        //swipe_container.stopNestedScroll();
         //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
                 //swipe_container.setRefreshing(true);
-                //MainActivity.this.onRefresh();
+                MainActivity.this.onRefresh();
                 showLoading("");
             }
         });
