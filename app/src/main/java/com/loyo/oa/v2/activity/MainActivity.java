@@ -695,7 +695,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     extra = num.bizNum + "个外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if (num.bizType == 19) {
-                    handler.sendEmptyMessage(12);
+                    if (!num.viewed)
+                        handler.sendEmptyMessage(12);
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);

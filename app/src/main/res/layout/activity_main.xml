@@ -39,8 +39,8 @@
                 android:src="@drawable/icon_home_contact"/>
 
             <RelativeLayout
-                android:layout_width="@dimen/dimen_25"
-                android:layout_height="@dimen/dimen_25"
+                android:layout_width="@dimen/dimen_30"
+                android:layout_height="@dimen/dimen_30"
                 android:layout_margin="@dimen/dimen_10">
 
                 <ImageButton
