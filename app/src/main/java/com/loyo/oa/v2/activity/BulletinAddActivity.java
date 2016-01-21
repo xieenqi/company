@@ -74,7 +74,7 @@ public class BulletinAddActivity extends BaseActivity {
      * 添加 图片 附件
      */
     void init_gridView_photo() {
-        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true,0);
+        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
     }
 
@@ -138,7 +138,7 @@ public class BulletinAddActivity extends BaseActivity {
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
                     @Override
                     public void success(Bulletin bulletin, Response response) {
-                        HttpErrorCheck.checkResponse("add通知",response);
+                        HttpErrorCheck.checkResponse("add通知", response);
                         if (bulletin != null) {
                             if (mAttachment != null) {
                                 bulletin.attachmentUUId = mUuid;
@@ -154,7 +154,7 @@ public class BulletinAddActivity extends BaseActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Toast(error.getBody().toString());
+                        HttpErrorCheck.checkError(error);
                         super.failure(error);
                     }
                 });

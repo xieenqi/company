@@ -141,8 +141,8 @@
     <string name="pull_to_refresh_from_bottom_release_label">松开刷新</string>
     <string name="pull_to_refresh_from_bottom_refreshing_label">正在刷新</string>
     <string name="pull_to_refresh_pull_label">上拉加载</string>
-    <string name="pull_to_refresh_release_label">松开加载</string>
-    <string name="pull_to_refresh_refreshing_label">正在载入</string>
+    <string name="pull_to_refresh_release_label">加载更多</string>
+    <string name="pull_to_refresh_refreshing_label"> </string>
 
     <string name="child_task_content_default">暂无任务内容</string>
 

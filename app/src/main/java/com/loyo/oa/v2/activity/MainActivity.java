@@ -52,7 +52,6 @@ import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Modules;
 import com.loyo.oa.v2.beans.TrackRule;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -116,7 +115,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     ViewGroup layout_network, layout_attendance, layout_avatar, layout_is_attendance, container;
     @ViewById
-    ImageView img_home_head, img_fast_add;
+    ImageView img_home_head, img_fast_add, img_bulletinStatus;
     @ViewById
     RelativeLayout group_home_relative;
 
@@ -140,6 +139,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
                 launch();
             }
+        }
+    };
+    //显示通知公告红点
+    Handler handler = new Handler() {
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            img_bulletinStatus.setVisibility(View.VISIBLE);
         }
     };
 
@@ -197,7 +204,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            mActivity.get().swipe_container.setRefreshing(false);
+            //mActivity.get().swipe_container.setRefreshing(false);
+            // cancelLoading();
         }
     }
 
@@ -267,11 +275,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
 
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
+        //swipe_container.stopNestedScroll();
+        //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipe_container.setRefreshing(true);
+
+                //swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
+                showLoading("");
             }
         });
 
@@ -686,6 +698,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
                     extra = num.bizNum + "个外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if (num.bizType == 19) {
+                    if (!num.viewed)
+                        handler.sendEmptyMessage(12);
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);

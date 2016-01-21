@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import com.google.gson.Gson;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
@@ -14,11 +13,9 @@ import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.ListUtil;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,9 +48,9 @@ public final class Common {
             }
         }
         if (null != members && !members.isEmpty()) {
-            for (int i=0;i<members.size();i++) {
+            for (int i = 0; i < members.size(); i++) {
                 User member = members.get(i).user;
-                if (null!=member) {
+                if (null != member) {
                     users.add(member);
                 }
             }
@@ -116,6 +113,7 @@ public final class Common {
 
         return result;
     }
+
     public static String companyId;
 
     /**
@@ -145,12 +143,12 @@ public final class Common {
                     continue;
                 }
 
-                if (companyId.equals(department.getSuperiorId())) {
+                if ((department.getSuperiorId()).equals(companyId)) {
                     String groupName_current = department.getGroupName();
                     if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
                         departments.add(department);
-                    }else if(TextUtils.isEmpty(groupName_current)){
-                        departments.add(0,department);
+                    } else if (TextUtils.isEmpty(groupName_current)) {
+                        departments.add(0, department);
                     }
                 }
 
@@ -197,6 +195,7 @@ public final class Common {
 
     /**
      * 组装组织架构
+     *
      * @param departmentList
      */
     static void setOrganization(ArrayList<Department> departmentList) {
@@ -214,7 +213,7 @@ public final class Common {
             for (User user : department.getUsers()) {
 
                 if (TextUtils.isEmpty(user.departmentsName)) {
-                    user.departmentsName=department.getName();
+                    user.departmentsName = department.getName();
                 }
 
                 Department deptInUser = new Department();
@@ -419,7 +418,7 @@ public final class Common {
 
     public static User getSuper() {
         User superior = new User();
-        superior.id=MainApp.user.superiorId;
+        superior.id = MainApp.user.superiorId;
 
         for (UserGroupData userGroup : getLstUserGroupData()) {
 
@@ -434,8 +433,8 @@ public final class Common {
 
     /**
      * 获取当前账号，本部门通讯录人员
-     * */
-    public static ArrayList<User> getMyUserDept(){
+     */
+    public static ArrayList<User> getMyUserDept() {
 
         ArrayList<User> myUsers = new ArrayList<>();
         ArrayList<User> userAllList = new ArrayList<>();
@@ -449,9 +448,9 @@ public final class Common {
         }
 
         /*获取我的部门下标*/
-        for(int i = 0;i<getLstDepartment().size();i++){
-            for(int j = 0;j<MainApp.user.depts.size();j++){
-                if(getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())){
+        for (int i = 0; i < getLstDepartment().size(); i++) {
+            for (int j = 0; j < MainApp.user.depts.size(); j++) {
+                if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {
                     positions = i;
                     break;
                 }
@@ -460,10 +459,10 @@ public final class Common {
 
         /*获取我的部门下 所有人员*/
         myUsers.clear();
-        for(Department department : getLstDepartment()){
-            if(department.getXpath().contains(getLstDepartment().get(positions).getXpath())){
-                for(User user : department.getUsers()){
-                            myUsers.add(user);
+        for (Department department : getLstDepartment()) {
+            if (department.getXpath().contains(getLstDepartment().get(positions).getXpath())) {
+                for (User user : department.getUsers()) {
+                    myUsers.add(user);
                 }
             }
         }

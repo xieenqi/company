@@ -47,8 +47,11 @@ public class DialogHelp {
                 context, R.anim.load_animayion);
         // 使用ImageView显示动画
         spaceshipImage.startAnimation(hyperspaceJumpAnimation);
-        if (!TextUtils.isEmpty(msg))
+        if (!TextUtils.isEmpty(msg)) {
             tipTextView.setText(msg);// 设置加载信息
+        } else {
+            tipTextView.setVisibility(View.GONE);
+        }
 
         loadingDialog = new Dialog(context, R.style.loading_dialog);// 创建自定义样式dialog
         loadingDialog.setCancelable(Cancelable);// 不可以用“返回键”取消

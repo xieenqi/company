@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_30">
+        >
 
         <LinearLayout
             android:layout_marginLeft="@dimen/dimen_80"
@@ -57,7 +57,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_30"
         android:background="@drawable/icon_attendance_rusult"
         android:minHeight="@dimen/dimen_45"
         android:orientation="horizontal">

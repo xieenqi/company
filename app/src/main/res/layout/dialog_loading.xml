@@ -4,18 +4,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center_vertical"
-    android:minHeight="56dp"
-    android:minWidth="166dp"
+    android:gravity="center"
+    android:minHeight="50dp"
     android:orientation="horizontal"
     >
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
         android:gravity="left">
 
         <ImageView
@@ -38,9 +35,8 @@
         android:id="@+id/tipTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="center"
         android:singleLine="true"
-        android:text="加载中..."
+        android:layout_marginRight="@dimen/dimen_10"
         android:textSize="16sp"/>
 </LinearLayout>
