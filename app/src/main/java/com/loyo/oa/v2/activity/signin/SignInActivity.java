@@ -219,10 +219,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             map.put("memo", edt_memo.getText().toString());
         }
         LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(LegWork legWork, Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
+                cancelLoading();
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
@@ -242,6 +244,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });

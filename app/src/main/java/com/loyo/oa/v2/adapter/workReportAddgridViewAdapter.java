@@ -36,12 +36,12 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return dynList.size();
+        return null == dynList ? 0 : dynList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return dynList.get(position);
+        return null == dynList || dynList.isEmpty() ? null : dynList.get(position);
     }
 
     @Override
@@ -64,8 +64,6 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
 
         holder.name.setText(dynList.get(position).getName());
         holder.num.setText(dynList.get(position).getNum());
-
-        LogUtil.dll((position+1)+"");
 
         return convertView;
     }

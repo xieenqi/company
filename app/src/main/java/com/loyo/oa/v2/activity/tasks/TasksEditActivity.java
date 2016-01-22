@@ -314,8 +314,7 @@ public class TasksEditActivity extends BaseActivity {
                             @Override
                             public void onNext(Task task) {
                                 task.setAck(true);
-                                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-
+                                Toast("编辑成功");
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
                                 setResult(Activity.RESULT_OK, intent);

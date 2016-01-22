@@ -159,7 +159,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/dimen_5"
                             android:layout_marginRight="@dimen/dimen_16"
-                             />
+                            />
 
 
                     </RelativeLayout>
@@ -167,8 +167,8 @@
                     <LinearLayout
                         android:visibility="gone"
                         android:id="@+id/layout_crm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
                         android:orientation="horizontal">
                         <com.loyo.oa.v2.common.NoScroolGridView
                             android:id="@+id/gridview_workreports"

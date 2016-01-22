@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -149,14 +150,13 @@ public class WorkReportAddActivity extends BaseActivity {
     private Handler mHandler = new Handler(){
         public void handleMessage(Message msg){
             if(msg.what == UPDATE_SUCCESS){
-                LogUtil.dll("dynList size:" + dynList.size());
                 if(null == dynList || dynList.size() == 0){
                     no_dysndata_workreports.setVisibility(View.VISIBLE);
                     gridview_workreports.setVisibility(View.GONE);
                 }else{
                     no_dysndata_workreports.setVisibility(View.GONE);
                     gridview_workreports.setVisibility(View.VISIBLE);
-                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(),dynList);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(mContext,dynList);
                     gridview_workreports.setAdapter(workGridViewAdapter);
                 }
             }
@@ -199,7 +199,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 crmSwitch(false);
             }
         });
-
 
         if (null != mWorkReport) {
             LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
@@ -366,7 +365,9 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void crmSwitch(boolean b) {
         /*获取日报 工作动态*/
-        openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
+        if(b){
+            openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
+        }
         layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
         SharedUtil.putBoolean(this, "showCrmData", b);
     }
@@ -386,7 +387,6 @@ public class WorkReportAddActivity extends BaseActivity {
         endAt = DateTool.getEndAt_ofDay();
         tv_time.setText(app.df4.format(beginAt));
         mSelectType = WorkReport.DAY;
-
     }
 
     /**
@@ -561,17 +561,19 @@ public class WorkReportAddActivity extends BaseActivity {
      * 编辑报告请求
      */
     public void updateReport(HashMap map) {
-
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
+                cancelLoading();
                 dealResult(workReport);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -581,17 +583,19 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(HashMap map) {
-        LogUtil.d(" 新建报告组装json：" + MainApp.gson.toJson(map));
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+                cancelLoading();
                 dealResult(workReport);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });

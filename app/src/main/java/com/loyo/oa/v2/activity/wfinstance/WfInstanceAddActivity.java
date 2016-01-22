@@ -510,11 +510,12 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
         LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance, Response response) {
+                cancelLoading();
                 if (wfInstance != null) {
-                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                     isSave = false;
                     //如果不clear,会提示java.io.NotSerializableException
                     wfInstance.ack = true;
@@ -527,6 +528,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
+                cancelLoading();
                 super.failure(error);
             }
         });
