@@ -149,37 +149,23 @@
                             android:textSize="18sp"/>
 
 
-<!--                        <com.loyo.oa.v2.activity.commonview.SwitchView
+                        <com.loyo.oa.v2.activity.commonview.SwitchView
                             android:id="@+id/crm_switch"
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_marginTop="6dp"
-                            android:layout_width="60dp"
+                            android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/dimen_5"
                             android:layout_marginRight="@dimen/dimen_16"
-                             />-->
+                             />
 
-                        <ToggleButton
-                            android:id="@+id/crm_toggle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dimen_30"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/dimen_5"
-                            android:layout_marginRight="@dimen/dimen_16"
-                            android:background="@drawable/toggle_selector"
-                            android:checked="false"
-                            android:minWidth="@dimen/dimen_40"
-                            android:padding="@dimen/dimen_5"
-                            android:textColor="@color/white"
-                            android:textOff=""
-                            android:textOn=""/>
 
                     </RelativeLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:id="@+id/layout_crm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -234,11 +234,9 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
             if(null == legWorks || legWorks.size() == 0){
                 layout_nodata.setVisibility(View.VISIBLE);
                 lv.setVisibility(View.GONE);
-                btn_add.setVisibility(View.GONE);
             }else{
                 layout_nodata.setVisibility(View.GONE);
                 lv.setVisibility(View.VISIBLE);
-                btn_add.setVisibility(View.VISIBLE);
                 adapter = new SignInListAdapter(mActivity, SignInListAdapter.TYPE_LIST_OF_USER, legWorks);
                 lv.setAdapter(adapter);
             }
@@ -279,7 +277,6 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                 lv.onRefreshComplete();
                 layout_nodata.setVisibility(View.VISIBLE);
                 lv.setVisibility(View.GONE);
-                btn_add.setVisibility(View.GONE);
                 super.failure(error);
             }
         });

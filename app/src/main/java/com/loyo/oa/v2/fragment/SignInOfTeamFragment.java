@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.LegworksListActivity_;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
+import com.loyo.oa.v2.adapter.SignInListAdapter;
 import com.loyo.oa.v2.beans.PaginationLegWork;
 import com.loyo.oa.v2.beans.TeamLegworkDetail;
 import com.loyo.oa.v2.beans.User;
@@ -53,6 +54,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private ViewGroup imgTimeLeft;
     private ViewGroup imgTimeRight;
     private ViewGroup layout_date;
+    private ViewGroup layout_nodata;
     private Button btn_add;
     private PullToRefreshListView lv;
     private TextView tv_time;
@@ -83,7 +85,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
 
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
-
+            layout_nodata = (ViewGroup) mView.findViewById(R.id.layout_nodata);
 
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
@@ -217,8 +219,16 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
      */
     private void bindData() {
         if (null == adapter) {
-            adapter = new TeamSignInListAdapter();
-            lv.setAdapter(adapter);
+            if(null == legWorks || legWorks.size() == 0){
+                layout_nodata.setVisibility(View.VISIBLE);
+                lv.setVisibility(View.GONE);
+            }else{
+                layout_nodata.setVisibility(View.GONE);
+                lv.setVisibility(View.VISIBLE);
+                adapter = new TeamSignInListAdapter();
+                lv.setAdapter(adapter);
+            }
+
         } else {
             adapter.notifyDataSetChanged();
         }
@@ -270,6 +280,8 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         lv.onRefreshComplete();
+                        layout_nodata.setVisibility(View.VISIBLE);
+                        lv.setVisibility(View.GONE);
                         super.failure(error);
                     }
                 });

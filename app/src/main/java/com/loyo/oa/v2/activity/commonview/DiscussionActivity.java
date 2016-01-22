@@ -68,7 +68,7 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
 
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
 
-        if(!isMyUser || status == 3){
+        if(status == 3){
             layout_comment.setVisibility(View.GONE);
         }
 

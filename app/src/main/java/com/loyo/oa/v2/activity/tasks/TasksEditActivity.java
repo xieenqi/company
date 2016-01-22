@@ -19,6 +19,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
@@ -102,7 +103,7 @@ public class TasksEditActivity extends BaseActivity {
     @ViewById
     TextView tv_Project;
     @ViewById
-    Switch switch_approve;
+    SwitchView switch_approve;
     @ViewById
     EditText edt_content;
     @ViewById
@@ -124,7 +125,7 @@ public class TasksEditActivity extends BaseActivity {
     private NewUser newUser;
     private StringBuffer joinUser = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
-
+    private boolean isState;
 
     @AfterViews
         //类似onCreate方法执行入口
@@ -170,7 +171,7 @@ public class TasksEditActivity extends BaseActivity {
         tv_toUsers.setText(joinUser.toString());
         tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt() * 1000)));
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
-        switch_approve.setChecked(mTask.isReviewFlag());
+        switch_approve.setState(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
         tv_mycustomer.setText(mTask.getCustomerName());
@@ -283,7 +284,12 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("planendAt", mTask.getPlanEndAt());
                 map.put("remindflag", mTask.getRemindTime() > 0);
                 map.put("remindtime", mTask.getRemindTime());
-                map.put("reviewFlag", switch_approve.isChecked());
+                if(switch_approve.getState() == 4){
+                    isState = true;
+                }else if(switch_approve.getState() == 1){
+                    isState = false;
+                }
+                map.put("reviewFlag",isState);
                 map.put("attachmentUUId", uuid);
                 map.put("customerId", mTask.getCustomerId());
                 map.put("customerName", mTask.getCustomerName());

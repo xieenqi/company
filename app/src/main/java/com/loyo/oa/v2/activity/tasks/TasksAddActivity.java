@@ -19,6 +19,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
@@ -102,7 +103,7 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     TextView tv_mycustomer;
     @ViewById
-    Switch switch_approve;
+    SwitchView switch_approve;
     @ViewById
     EditText edt_content;
     @ViewById
@@ -137,6 +138,7 @@ public class TasksAddActivity extends BaseActivity {
     private long mDeadline;
     private int mRemind = 0;
     private boolean isCopy;
+    private boolean isState;
 
     @AfterViews
     void initUI() {
@@ -188,7 +190,7 @@ public class TasksAddActivity extends BaseActivity {
         tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
         tv_toUsers.setText(strBuf.toString());
         //tv_Project.setText();
-        switch_approve.setChecked(true);
+        switch_approve.setState(true);
         isCopy = mTask != null ? true : false;
         members.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();  //负责人
@@ -199,7 +201,8 @@ public class TasksAddActivity extends BaseActivity {
             return;
         }
 
-        switch_approve.setChecked(mTask.isReviewFlag());
+
+        switch_approve.setState(mTask.isReviewFlag());
 
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
 
@@ -232,7 +235,7 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask(String title, String content) {
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -243,7 +246,14 @@ public class TasksAddActivity extends BaseActivity {
             map.put("remindflag", mRemind > 0);
             map.put("remindtime", remindTime);
         }
-        map.put("reviewFlag", switch_approve.isChecked());
+
+        if(switch_approve.getState() == 1){
+            isState = false;
+        }else if(switch_approve.getState() == 4){
+            isState = true;
+        }
+
+        map.put("reviewFlag", isState);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
@@ -258,6 +268,8 @@ public class TasksAddActivity extends BaseActivity {
                 //task.setAck(true);
 //                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 //不需要保存
+
+                cancelLoading();
                 isSave = false;
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
@@ -270,7 +282,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast("网络一场，＝");
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
 
             }
@@ -550,10 +562,16 @@ public class TasksAddActivity extends BaseActivity {
         DBManager.Instance().deleteTask();
 
         if (isSave) {
+            if(switch_approve.getState() == 1){
+                isState = false;
+            }else if(switch_approve.getState() == 4){
+                isState = true;
+            }
+
             mTask = new Task();
             mTask.setTitle(edt_title.getText().toString().trim());
             mTask.setContent(edt_content.getText().toString().trim());
-            mTask.setReviewFlag(switch_approve.isChecked());
+            mTask.setReviewFlag(isState);
 
             if (newUser != null) {
                 //直接保存responsiblePerson会出错
