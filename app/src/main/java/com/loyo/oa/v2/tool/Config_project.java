@@ -126,9 +126,7 @@ public class Config_project {
      */
     public static final String DELETE_ENCLOSURE = SERVER_URL_ATTACHMENT() + "/api/v2";
 
-    public static String API_URL_CUSTOMER() {
-        return SERVER_URL_CUSTOMER().concat("/api/v2");
-    }
+    public static String API_URL_CUSTOMER() { return SERVER_URL_CUSTOMER().concat("/api/v2");}
 
     public static String API_URL_ATTACHMENT() {
         return SERVER_URL_ATTACHMENT().concat("/api/v2");
@@ -137,6 +135,8 @@ public class Config_project {
     public static String API_URL_EXTRA() {
         return SERVER_URL_EXTRA().concat("/api/v2/");
     }
+
+    public static String API_URL_WORKDYSN(){ return SERVER_URL().concat("/api/v2/");}
 
 
 }

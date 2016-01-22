@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Members;
@@ -31,9 +34,11 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.NoScroolGridView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorkReport;
@@ -59,10 +64,12 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -79,6 +86,7 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_EDIT = 2; //报告编辑
     public static final int TYPE_CREATE_FROM_COPY = 3; //报告复制
     public static final int TYPE_PROJECT= 4; //项目创建报告
+    public static final int UPDATE_SUCCESS = 0x01;
 
     @ViewById
     ViewGroup img_title_left, img_title_right;
@@ -93,26 +101,21 @@ public class WorkReportAddActivity extends BaseActivity {
     @ViewById
     TextView tv_crm;
     @ViewById
-    TextView tv_new_customers_num;
-    @ViewById
-    TextView tv_new_visit_num;
-    @ViewById
-    TextView tv_visit_customers_num;
-    @ViewById
     TextView tv_project;
-
     @ViewById
     TextView tv_time, tv_toUser;
     @ViewById
     TextView tv_reviewer, tv_resignin;
-
     @ViewById
     ViewGroup layout_del;
     @ViewById
     ImageView img_title_toUser;
-
     @ViewById
     GridView gridView_photo;
+    @ViewById
+    GridView gridview_workreports;
+    @ViewById
+    ViewGroup no_dysndata_workreports;
 
     @Extra
     String projectId;
@@ -131,13 +134,32 @@ public class WorkReportAddActivity extends BaseActivity {
     private int mSelectType = 1;
     private WeeksDialog weeksDialog = null;
     private SignInGridViewAdapter signInGridViewAdapter;
+    private workReportAddgridViewAdapter workGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
+    private ArrayList<WorkReportDyn> dynList;
     private StringBuffer joinUserId = new StringBuffer();
+
+    private Handler mHandler = new Handler(){
+        public void handleMessage(Message msg){
+            if(msg.what == UPDATE_SUCCESS){
+                LogUtil.dll("dynList size:" + dynList.size());
+                if(null == dynList || dynList.size() == 0){
+                    no_dysndata_workreports.setVisibility(View.VISIBLE);
+                    gridview_workreports.setVisibility(View.GONE);
+                }else{
+                    no_dysndata_workreports.setVisibility(View.GONE);
+                    gridview_workreports.setVisibility(View.VISIBLE);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(),dynList);
+                    gridview_workreports.setAdapter(workGridViewAdapter);
+                }
+            }
+        }
+    };
 
     @SuppressLint("WrongViewCast")
     @AfterViews
@@ -160,7 +182,6 @@ public class WorkReportAddActivity extends BaseActivity {
             weeksDialog = new WeeksDialog(tv_time);
         }
 
-        crm_toggle.setChecked(SharedUtil.getBoolean(this, "showCrmData"));
         layout_crm.setVisibility(crm_toggle.isChecked() ? View.VISIBLE : View.GONE);
         crm_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -196,11 +217,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     rg.check(R.id.rb3);
                     break;
             }
-            if (null != mWorkReport.getCrmDatas() && mWorkReport.getCrmDatas().size() > 2) {
-                tv_new_customers_num.setText(mWorkReport.getCrmDatas().get(0).getContent());
-                tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
-                tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
-            }
             NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer()
                     .getUser() ? mWorkReport.getReviewer().getUser() : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
@@ -229,6 +245,8 @@ public class WorkReportAddActivity extends BaseActivity {
         else if(type == TYPE_PROJECT){
             projectAddWorkReport();
         }
+
+
         getDefaultComment();
     }
 
@@ -255,6 +273,9 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 });
     }
+
+
+
 
     /**
      * 项目 过来创建 工作报告
@@ -332,6 +353,8 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param b
      */
     private void crmSwitch(boolean b) {
+        /*获取日报 工作动态*/
+        openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
         layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
         SharedUtil.putBoolean(this, "showCrmData", b);
         if (crm_toggle.isChecked() != b) {
@@ -348,6 +371,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
         tv_crm.setText("本日工作动态统计");
         beginAt = DateTool.getBeginAt_ofDay();
         endAt = DateTool.getEndAt_ofDay();
@@ -364,6 +388,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        openDynamic(DateTool.getBeginAt_ofWeek()/1000+"",DateTool.getEndAt_ofWeek()/1000+"");
         tv_crm.setText("本周工作动态统计");
         beginAt = DateTool.getBeginAt_ofWeek();
         endAt = DateTool.getEndAt_ofWeek();
@@ -381,6 +406,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        openDynamic(DateTool.getBeginAt_ofMonthMills()/1000+"",DateTool.getEndAt_ofMonth()/1000+"");
         tv_crm.setText("本月工作动态统计");
         beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
         endAt = DateTool.getEndAt_ofMonth();
@@ -495,6 +521,34 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     /**
+     * 开启动态统计数据
+     * */
+    public void openDynamic(String startTime,String endTime){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("startTime",startTime);
+        map.put("endTime",endTime);
+
+        LogUtil.dll("startTime:"+startTime);
+        LogUtil.dll("endTime:"+endTime);
+
+            RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
+                    .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
+                        @Override
+                        public void success(ArrayList<WorkReportDyn> dyn, Response response) {
+                            HttpErrorCheck.checkResponse(response);
+                            dynList = dyn;
+                            mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            super.failure(error);
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+    }
+
+    /**
      * 编辑报告请求
      */
     public void updateReport(HashMap map) {
@@ -511,7 +565,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
-
         });
     }
 
