@@ -60,7 +60,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private String mAddress;
-    private String customerId;
+    private String customerId="";
     private String customerName;
     private SignInGridViewAdapter signInGridViewAdapter;
     private ImageView img_refresh_address;
@@ -127,7 +127,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     void startLocation() {
         img_refresh_address.startAnimation(animation);
         mLocationFlag = false;
-        tv_address.setText("获取当前位置");
+        tv_address.setText("获取当前位置中...");
 
         new LocationUtil(this, new LocationUtil.AfterLocation() {
             @Override
@@ -140,7 +140,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
                 if (radius > 200 || !gpsOpen) {
-                    address = address.concat(" (gps未开启)");
+                    address = address.concat(" (GPS未开启)");
                     if (!gpsOpen) {
                         Global.ToastLong("建议开启GPS,重新定位");
                     }
@@ -198,10 +198,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
-        if (TextUtils.isEmpty(customerId)) {
-            Toast("请选择客户");
-            return;
-        }
+//        if (TextUtils.isEmpty(customerId)) {
+//            Toast("请选择客户");
+//            return;
+//        }
 
         if (TextUtils.isEmpty(mAddress)) {
             Global.ToastLong("无效地址!请刷新地址后重试");
