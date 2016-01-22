@@ -285,10 +285,6 @@ public final class Common {
             MainApp.lstDepartment.clear();
             MainApp.lstDepartment.addAll(_lstDepartment);
         }
-
-        /*老版通讯录数据，如果屏蔽，通讯录搜索会不出结果
-        * 2016.1.13前解决。
-        * */
         setOrganization(_lstDepartment);
     }
 
@@ -442,8 +438,12 @@ public final class Common {
 
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+            try{
+                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                }
+            }catch(NullPointerException e){
+                e.printStackTrace();
             }
         }
 

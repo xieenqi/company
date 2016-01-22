@@ -580,7 +580,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                                 mPagination.setPageSize(20);
                                 mCustomers.clear();
                                 bindData();
-                                Toast("没有数据");
                             } else {
                                 Toast("没有更多数据了");
                                 listView.onRefreshComplete();

@@ -342,7 +342,7 @@ public class TasksInfoActivity extends BaseActivity {
         vContent = mTask.getContent();
 
         if (mTask.getCreator() != null && mTask.getCreatedAt() > 0) {
-            tv_sub_title.setText(String.format("%s %s 修改", mTask.getCreator().getRealname(),
+            tv_sub_title.setText(String.format("%s %s 提交", mTask.getCreator().getRealname(),
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 

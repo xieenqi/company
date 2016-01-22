@@ -171,17 +171,19 @@ public class SelectDetUserActivity extends BaseActivity {
 
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                localCacheUserList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+            try {
+                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                    localCacheUserList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
             }
         }
 
         userAllList.addAll(RemoveSame(localCacheUserList));
-
         for (User user : userAllList) {
             user.setIndex(false);
         }
-
         if (selectType == ExtraAndResult.TYPE_SELECT_SINGLE) {
             btnSure.setVisibility(View.INVISIBLE);
             relAllcheck.setVisibility(View.GONE);
@@ -439,7 +441,11 @@ public class SelectDetUserActivity extends BaseActivity {
         selectUserIds.clear();
 
         for (Department department : deptSource) {
-            dealisAllSelect(department.getUsers());
+            try{
+                dealisAllSelect(department.getUsers());
+            }catch(NullPointerException e){
+                e.printStackTrace();
+            }
             if (popy) {
                 department.setIsIndex(true);
             } else {
@@ -449,10 +455,14 @@ public class SelectDetUserActivity extends BaseActivity {
             if (department.isIndex()) {
                 selectDeptIds.add(department.getId());
             } else {
-                for (User user : department.getUsers()) {
-                    if (user.isIndex()) {
-                        selectUserIds.add(user.getId());
+                try{
+                    for (User user : department.getUsers()) {
+                        if (user.isIndex()) {
+                            selectUserIds.add(user.getId());
+                        }
                     }
+                }catch(NullPointerException e){
+                    e.printStackTrace();
                 }
             }
         }
@@ -505,8 +515,12 @@ public class SelectDetUserActivity extends BaseActivity {
         userList.clear();
         for (Department department : deptSource) {
             if (department.getXpath().contains(deptSource.get(positions).getXpath())) {
-                for (User user : department.getUsers()) {
-                    userList.add(user);
+                try{
+                    for (User user : department.getUsers()) {
+                        userList.add(user);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
             }
         }
