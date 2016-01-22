@@ -1,15 +1,17 @@
 package com.loyo.oa.v2.tool;
 
+import com.loyo.oa.v2.BuildConfig;
+
 /**
  * http 配置文件
  */
 public class Config_project {
 
-    public static final Boolean isRelease = false; //是否是正式产品
+    public static final Boolean isRelease = true; //是否是正式产品
 
-    public static final Boolean is_developer_mode = false; //生产模式
+    //public static final Boolean is_developer_mode = false; //生产模式
 
-    //public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式
+    public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式
 
     public static String IP = "http://192.168.31.131";       //内部测试环境
 
@@ -124,7 +126,9 @@ public class Config_project {
      */
     public static final String DELETE_ENCLOSURE = SERVER_URL_ATTACHMENT() + "/api/v2";
 
-    public static String API_URL_CUSTOMER() { return SERVER_URL_CUSTOMER().concat("/api/v2");}
+    public static String API_URL_CUSTOMER() {
+        return SERVER_URL_CUSTOMER().concat("/api/v2");
+    }
 
     public static String API_URL_ATTACHMENT() {
         return SERVER_URL_ATTACHMENT().concat("/api/v2");
@@ -134,7 +138,9 @@ public class Config_project {
         return SERVER_URL_EXTRA().concat("/api/v2/");
     }
 
-    public static String API_URL_WORKDYSN(){ return SERVER_URL().concat("/api/v2/");}
+    public static String API_URL_WORKDYSN() {
+        return SERVER_URL().concat("/api/v2/");
+    }
 
 
 }

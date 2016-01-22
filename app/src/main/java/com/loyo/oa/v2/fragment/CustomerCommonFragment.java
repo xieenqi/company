@@ -129,7 +129,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
             layout_near_customers = (ViewGroup) mView.findViewById(R.id.layout_near_customers);
 
-            //layout_near_customers.setOnTouchListener(Global.GetTouch());
+            layout_near_customers.setOnTouchListener(Global.GetTouch());
             layout_near_customers.setOnClickListener(this);
 
             btn_add.setOnTouchListener(Global.GetTouch());

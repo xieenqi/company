@@ -130,7 +130,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_mobile;
     private TextView tv_mobile_error;
 
-    private static class MHandler extends Handler {
+    private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
 
         private MHandler(ContactInfoEditActivity activity) {
@@ -143,15 +143,18 @@ public class ContactInfoEditActivity extends BaseActivity {
 
             String des = "重新获取(" + msg.what + "秒)";
             TextView tvtime = mActivity.get().tv_get_code;
+
             if (msg.what == 0) {
                 des = "重新获取";
                 mActivity.get().recycle();
                 if (null != tvtime) {
+                    tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.gray));
                     tvtime.setEnabled(true);
                 }
             }
 
             if (null != tvtime) {
+                tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.title_bg1));
                 tvtime.setText(des);
             }
         }
@@ -168,7 +171,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_birthday.setOnTouchListener(Global.GetTouch());
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
         layout_mobile.setOnTouchListener(Global.GetTouch());
-        et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
+        //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
     }
 
@@ -272,7 +275,8 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("系统提示").setMessage("您有数据未提交,是否提交?").setPositiveButton("提交", new DialogInterface.OnClickListener() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("系统提示").
+                setMessage("您有数据未提交,是否提交?").setPositiveButton("提交", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -360,13 +364,12 @@ public class ContactInfoEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-
+                HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
                 InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
                 mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
-                HttpErrorCheck.checkResponse(response);
 
             }
 
@@ -386,6 +389,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private void countDown() {
         mTimerTask = new TimerTask() {
             private int seconds = 60;
+
             @Override
             public void run() {
                 if (!isRun) {
@@ -583,26 +587,26 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 微信编辑框的文本观察器
-     */
-    private class WxTextWatcher extends ITextWatcher {
-        private String mDes;
-        private EditText mEt;
-
-        private WxTextWatcher(EditText tv, String des) {
-            mEt = tv;
-            mDes = des;
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
-            if (!isMobile) {
-                mEt.setError(mDes);
-            }
-        }
-    }
+//    /**
+//     * 微信编辑框的文本观察器
+//     */
+//    private class WxTextWatcher extends ITextWatcher {
+//        private String mDes;
+//        private EditText mEt;
+//
+//        private WxTextWatcher(EditText tv, String des) {
+//            mEt = tv;
+//            mDes = des;
+//        }
+//
+//        @Override
+//        public void afterTextChanged(Editable editable) {
+//            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
+//            if (!isMobile) {
+//                mEt.setError(mDes);
+//            }
+//        }
+//    }
 
     /**
      * 弹出框控件点击事件

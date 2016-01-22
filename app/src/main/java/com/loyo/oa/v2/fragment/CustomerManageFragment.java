@@ -119,7 +119,8 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 }
             });
 
-            expandableListView_customer = (PullToRefreshExpandableListView) mView.findViewById(R.id.expandableListView_customer);
+            expandableListView_customer = (PullToRefreshExpandableListView)
+                    mView.findViewById(R.id.expandableListView_customer);
 
             listview_near_customer = (ListView) mView.findViewById(R.id.listview_near_customer);
 
