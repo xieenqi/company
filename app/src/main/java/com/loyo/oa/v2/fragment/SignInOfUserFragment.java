@@ -52,6 +52,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     private ViewGroup imgTimeLeft;
     private ViewGroup imgTimeRight;
+    private ViewGroup layout_nodata;
     private PullToRefreshListView lv;
     private TextView tv_time;
     private Button btn_add;
@@ -80,7 +81,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
-
+            layout_nodata = (ViewGroup) mView.findViewById(R.id.layout_nodata);
 
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
@@ -230,8 +231,18 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void bindData() {
         if (null == adapter) {
-            adapter = new SignInListAdapter(mActivity, SignInListAdapter.TYPE_LIST_OF_USER, legWorks);
-            lv.setAdapter(adapter);
+            if(null == legWorks || legWorks.size() == 0){
+                layout_nodata.setVisibility(View.VISIBLE);
+                lv.setVisibility(View.GONE);
+                btn_add.setVisibility(View.GONE);
+            }else{
+                layout_nodata.setVisibility(View.GONE);
+                lv.setVisibility(View.VISIBLE);
+                btn_add.setVisibility(View.VISIBLE);
+                adapter = new SignInListAdapter(mActivity, SignInListAdapter.TYPE_LIST_OF_USER, legWorks);
+                lv.setAdapter(adapter);
+            }
+
         } else {
             adapter.setLegWorks(legWorks);
             adapter.notifyDataSetChanged();
@@ -249,7 +260,6 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         map.put("custId", "");
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
-        LogUtil.d("我客户拜传递：" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {
@@ -267,6 +277,9 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 lv.onRefreshComplete();
+                layout_nodata.setVisibility(View.VISIBLE);
+                lv.setVisibility(View.GONE);
+                btn_add.setVisibility(View.GONE);
                 super.failure(error);
             }
         });

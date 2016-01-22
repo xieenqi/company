@@ -46,15 +46,21 @@ public class CommonTagSelectActivity extends BaseActivity {
     public static final int SELECT_MODE_SINGLE = 1;
     public static final int SELECT_MODE_MULTIPLE = SELECT_MODE_SINGLE + 1;
 
-    @Extra("data") ArrayList<CommonTag> results;
-    @Extra String title;
-    @Extra int mode, type;
+    @Extra("data")
+    ArrayList<CommonTag> results;
+    @Extra
+    String title;
+    @Extra
+    int mode, type;
 
 
-    @ViewById RecyclerView rv_reason;
+    @ViewById
+    RecyclerView rv_reason;
 
-    @ViewById ViewGroup img_title_left, img_title_right;
-    @ViewById TextView tv_title_1;
+    @ViewById
+    ViewGroup img_title_left, img_title_right;
+    @ViewById
+    TextView tv_title_1;
 
     private ArrayList<CommonTag> commonTags = new ArrayList<>();
     ;
@@ -98,11 +104,16 @@ public class CommonTagSelectActivity extends BaseActivity {
 
     @Click(R.id.img_title_right)
     void backWidthSelect() {
-        Intent intent = new Intent();
-        intent.putExtra("data", results);
-        setResult(RESULT_OK, intent);
-        back();
+        if (results.size() == 0 || null == results) {
+            Toast("请选择跟进方式!");
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("data", results);
+            setResult(RESULT_OK, intent);
+            back();
+        }
     }
+
 
     /**
      * 处理数据
