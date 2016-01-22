@@ -204,7 +204,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            //mActivity.get().swipe_container.setRefreshing(false);
+            mActivity.get().swipe_container.setRefreshing(false);
             // cancelLoading();
         }
     }
@@ -281,9 +281,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onRefresh() {
 
-                //swipe_container.setRefreshing(true);
+                swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
-                showLoading("");
+                //showLoading("");
             }
         });
 
