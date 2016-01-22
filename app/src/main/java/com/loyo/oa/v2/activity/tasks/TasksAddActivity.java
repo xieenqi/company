@@ -235,7 +235,7 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask(String title, String content) {
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -268,6 +268,8 @@ public class TasksAddActivity extends BaseActivity {
                 //task.setAck(true);
 //                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 //不需要保存
+
+                cancelLoading();
                 isSave = false;
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
@@ -280,7 +282,7 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast("网络一场，＝");
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
 
             }

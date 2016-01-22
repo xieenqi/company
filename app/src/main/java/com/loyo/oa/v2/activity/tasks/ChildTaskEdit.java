@@ -61,8 +61,6 @@ public class ChildTaskEdit extends BaseActivity {
         reponserData = (ArrayList<NewUser>)mIntent.getSerializableExtra("allUsers");
         isReponser = mIntent.getBooleanExtra("isReponser",false);
 
-        LogUtil.dll("AAAAA:"+isReponser);
-
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
         et_info = (EditText) findViewById(R.id.et_info);
@@ -78,14 +76,17 @@ public class ChildTaskEdit extends BaseActivity {
 
         /*判断是否为子任务负责人*/
         if(isReponser){
+            btn_delete.setVisibility(View.VISIBLE);
+            img_title_right.setVisibility(View.VISIBLE);
+
             img_title_right.setOnClickListener(click);
             ll_responser.setOnClickListener(click);
             btn_delete.setOnClickListener(click);
         }else{
             et_info.setEnabled(false);
-            btn_delete.setBackgroundColor(getResources().getColor(R.color.gray));
+            btn_delete.setVisibility(View.INVISIBLE);
+            img_title_right.setVisibility(View.INVISIBLE);
         }
-
     }
 
     private View.OnClickListener click = new View.OnClickListener() {

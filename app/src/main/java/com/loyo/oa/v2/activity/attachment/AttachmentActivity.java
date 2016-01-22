@@ -78,11 +78,10 @@ public class AttachmentActivity extends BaseActivity {
     void init() {
         super.setTitle("附件");
 
-        if (!isMyUser || status == 3 || status == 4) {
+        if (status == 3 || status == 4) {
             tv_upload.setVisibility(View.GONE);
         }
         LogUtil.dll("权限:"+status);
-
         setTouchView(NO_SCROLL);
         getAttachments();
 

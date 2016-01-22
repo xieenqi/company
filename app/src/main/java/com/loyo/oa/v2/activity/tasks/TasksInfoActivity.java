@@ -442,7 +442,7 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
                         intent.putExtra("TaskId", mTask.getId());
                         intent.putExtra("allUsers", allUsers);
-                        if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
+                        if (IsCreator() || IsResponsiblePerson()) {
                             intent.putExtra("isReponser", true);
                         } else {
                             intent.putExtra("isReponser", false);
@@ -860,7 +860,7 @@ public class TasksInfoActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
+        //bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status",mTask.getStatus());
 
         ArrayList<NewUser> users = new ArrayList<>();
@@ -882,7 +882,7 @@ public class TasksInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
+        //bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status",mTask.getStatus());
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
