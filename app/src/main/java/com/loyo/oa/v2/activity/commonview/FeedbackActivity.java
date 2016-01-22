@@ -1,17 +1,13 @@
 package com.loyo.oa.v2.activity.commonview;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -41,15 +37,13 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
  * 意见反馈
- * */
+ */
 
 @EActivity(R.layout.activity_feedback)
 public class FeedbackActivity extends BaseActivity {
@@ -63,7 +57,8 @@ public class FeedbackActivity extends BaseActivity {
     private String uuid = StringUtil.getUUID();
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
-    Handler han= new Handler();
+    Handler han = new Handler();
+
     @AfterViews
     void init() {
         tv_title.setVisibility(View.VISIBLE);
@@ -97,7 +92,7 @@ public class FeedbackActivity extends BaseActivity {
      * 显示附件
      */
     private void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, attachments, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -139,40 +134,46 @@ public class FeedbackActivity extends BaseActivity {
      */
     private void showSuccessDialog() {
         hideInputKeyboard(et_content);
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_send_feedback, null, false);
-        dialogView.getBackground().setAlpha(150);
-        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-        dialog.setAnimationStyle(R.style.PopupAnimation);
-        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        dialog.showAtLocation(findViewById(R.id.tv_title), Gravity.BOTTOM, 0, 0);
 
-        dialogView.setOnTouchListener(new View.OnTouchListener() {
+        //View dialogView = getLayoutInflater().inflate(R.layout.dialog_send_feedback, null, false);
+//        dialogView.getBackground().setAlpha(150);
+//        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
+//        dialog.setAnimationStyle(R.style.PopupAnimation);
+//        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
+//        dialog.showAtLocation(findViewById(R.id.tv_title), Gravity.BOTTOM, 0, 0);
+//
+//        dialogView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                dialog.dismiss();
+//                return false;
+//            }
+//        });
+//
+//        dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                finish();
+//            }
+//        });
+        ConfirmDialog("提交成功", "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快", new ConfirmDialogInterface() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                dialog.dismiss();
-                return false;
-            }
-        });
-
-        dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
+            public void Confirm() {
                 finish();
             }
         });
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                han.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                    }
-                });
-            }
-        }, 1000);
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                han.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        dialog.dismiss();
+//                    }
+//                });
+//            }
+//        }, 1000);
     }
 
     @Override
