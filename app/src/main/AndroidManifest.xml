@@ -665,6 +665,9 @@
         <activity
             android:name=".tool.MyLayoutUtils"
             android:label="@string/title_activity_my_layout_utils"/>
+
+
+
     </application>
 
 </manifest>

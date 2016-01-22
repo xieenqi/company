@@ -274,14 +274,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
 
 
-        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
-        //swipe_container.stopNestedScroll();
+        swipe_container.setColorSchemeColors(android.R.color.transparent, android.R.color.transparent, android.R.color.transparent);
+        swipe_container.setProgressBackgroundColorSchemeResource(R.color.white60);
+
         //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                //swipe_container.setRefreshing(true);
+                swipe_container.setRefreshing(false);
                 MainActivity.this.onRefresh();
                 showLoading("");
             }

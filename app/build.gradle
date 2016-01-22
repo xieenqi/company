@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+//Google分析
+//apply plugin: 'com.google.gms.google-services'
 
 android {
     packagingOptions {
@@ -8,20 +10,20 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
         }
     }
     compileSdkVersion 22
     buildToolsVersion '22.0.0'
     defaultConfig {
-        multiDexEnabled = true
+        multiDexEnabled  true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 22
@@ -42,12 +44,12 @@ android {
 //                    variant.mergeResources.doLast {
 //                        def f = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
 //                        String content = f.getText(encoding)
-//                        content = content.replaceAll('乐享云办公', '乐享云(测试)')
+//                        content = content.replaceAll('快启', '快启(测试)')
 //                        f.write(content, encoding)
 //
 //                    }
 //                }
-//            }
+//            }/Contents/Home/Contents/Home/Contents/Home
 
             signingConfig signingConfigs.debug
             //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
@@ -111,7 +113,9 @@ dependencies {
     compile 'com.yalantis:contextmenu:1.0.4'
     //激光推送
     compile files('libs/jpush-android-2.0.5.jar')
-    //compile 'com.android.support:multidex-1.0.1'
+    //Google分析
+    //compile files('libs/google-services-1.5.0.jar')
+   // compile 'com.google.android.gms:play-services-analytics:8.1.0'
 }
 
 repositories {
