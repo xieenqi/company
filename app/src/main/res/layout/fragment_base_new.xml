@@ -12,7 +12,7 @@
                  android:layout_height="match_parent">
         <ImageView
             android:alpha="0.3"
-            android:layout_marginTop="@dimen/dimen_55"
+            android:layout_marginTop="@dimen/dimen_50"
             android:layout_marginBottom="@dimen/dimen_5"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1"
@@ -21,7 +21,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="56dp">
+            android:layout_marginTop="@dimen/dimen_50">
 
 
             <FrameLayout
@@ -56,7 +56,6 @@
                     android:id="@+id/layout_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-2dp"
                     android:background="@android:color/transparent"
                     android:paddingLeft="@dimen/dimen_70"
                     android:paddingRight="@dimen/dimen_70"
@@ -95,7 +94,7 @@
             android:layout_width="match_parent"
             android:id="@+id/drop_menu"
             android:background="@color/white"
-            android:layout_height="@dimen/dimen_55"/>
+            android:layout_height="@dimen/dimen_50"/>
 
     </FrameLayout>
 

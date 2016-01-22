@@ -191,7 +191,7 @@
     <color name="skyblue">#87CEEB</color>
     <!-- 天蓝色 -->
 
-    <color name="grayC9">#c9c9c9</color>
+
     <color name="gray">#808080</color>
     <!-- 灰色 -->
     <color name="olive">#808000</color>
@@ -344,5 +344,6 @@
     <color name="divider">#f1f1f1</color>
     <!-- 登录界面字体 线的颜色-->
     <color name="login">#b3b3b3</color>
-
+    <color name="grayC9">#c9c9c9</color>
+    <color name="graye9">#e9e9e9</color>
 </resources>

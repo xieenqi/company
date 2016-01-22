@@ -1,28 +1,35 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout
     android:id="@+id/rl_menu_head"
-    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/default_menu_back"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal">
+
     <TextView
         android:id="@+id/tv_menu_title"
         android:layout_width="wrap_content"
-        android:textColor="@color/default_menu_text"
-        android:textSize="15sp"
-        android:text="111"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_height="wrap_content" />
+        android:text="111"
+        android:textColor="@color/default_menu_text"
+        android:textSize="15sp"/>
+
     <ImageView
         android:id="@+id/iv_menu_arrow"
         android:layout_width="15dp"
-        android:layout_marginLeft="3dp"
-        android:layout_toRightOf="@+id/tv_menu_title"
+        android:layout_height="15dp"
         android:layout_centerVertical="true"
-        android:layout_height="15dp" />
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/tv_menu_title"/>
+
     <ImageView
-        android:layout_width="1px"
         android:id="@+id/iv_divider"
+        android:layout_width="1px"
+        android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:background="@color/title_bg1"
-        android:layout_height="fill_parent" />
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:background="@color/graye9"
+        />
 </RelativeLayout>
