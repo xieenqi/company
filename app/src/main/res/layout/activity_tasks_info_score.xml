@@ -32,17 +32,20 @@
                 android:layout_height="wrap_content"
                 android:text="是否通过" />
 
-            <Switch
+
+            <com.loyo.oa.v2.activity.commonview.SwitchView
                 android:id="@+id/task_info_switch"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginTop="6dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:textOn="Yes"
-                android:textOff="On"
-                android:checked="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:layout_marginRight="@dimen/dimen_16"
                 />
+
+
             </RelativeLayout>
 
         <View
@@ -102,7 +105,7 @@
             android:minHeight="80dp"
             android:gravity="left|top"
             android:paddingTop="24px"
-            android:hint="请输入审核内容"
+            android:hint="请输入审核内容(可填)"
             style="@style/edtText_normal" />
 
         <View

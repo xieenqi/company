@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
@@ -88,14 +89,15 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_PROJECT= 4; //项目创建报告
     public static final int UPDATE_SUCCESS = 0x01;
 
+
+    @ViewById
+    SwitchView crm_switch;
     @ViewById
     ViewGroup img_title_left, img_title_right;
     @ViewById
     EditText edt_content;
     @ViewById
     RadioGroup rg;//工作 动态
-    @ViewById
-    ToggleButton crm_toggle;
     @ViewById
     ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
     @ViewById
@@ -182,13 +184,23 @@ public class WorkReportAddActivity extends BaseActivity {
             weeksDialog = new WeeksDialog(tv_time);
         }
 
-        layout_crm.setVisibility(crm_toggle.isChecked() ? View.VISIBLE : View.GONE);
-        crm_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /**动态统计开关*/
+        crm_switch.setState(false);
+        crm_switch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                crmSwitch(b);
+            public void toggleToOn() {
+                crm_switch.setState(true);
+                crmSwitch(true);
+            }
+
+            @Override
+            public void toggleToOff() {
+                crm_switch.setState(false);
+                crmSwitch(false);
             }
         });
+
+
         if (null != mWorkReport) {
             LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
@@ -357,9 +369,6 @@ public class WorkReportAddActivity extends BaseActivity {
         openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
         layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
         SharedUtil.putBoolean(this, "showCrmData", b);
-        if (crm_toggle.isChecked() != b) {
-            crm_toggle.setChecked(b);
-        }
     }
 
 

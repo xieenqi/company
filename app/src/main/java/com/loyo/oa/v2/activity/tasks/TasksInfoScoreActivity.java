@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -56,7 +57,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
     public int sorce = 0;
     public int status = 1;
 
-    public Switch task_info_switch;
+    public SwitchView task_info_switch;
     public LinearLayout tasks_info_sorceview;
 
 
@@ -70,17 +71,23 @@ public class TasksInfoScoreActivity extends BaseActivity {
     void getTempTask() {
 
         tasks_info_sorceview = (LinearLayout) findViewById(R.id.tasks_info_sorceview);
-        task_info_switch = (Switch) findViewById(R.id.task_info_switch);
-        task_info_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        task_info_switch = (SwitchView) findViewById(R.id.task_info_switch);
+        task_info_switch.setState(true);
+        task_info_switch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                if (checked) {
-                    status = 1;
-                    tasks_info_sorceview.setVisibility(View.VISIBLE);
-                } else {
-                    status = 0;
-                    tasks_info_sorceview.setVisibility(View.GONE);
-                }
+            public void toggleToOn() {
+                task_info_switch.setState(true);
+                status = 1;
+                edt_content.setHint("请输入审核内容(可填)");
+                tasks_info_sorceview.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void toggleToOff() {
+                task_info_switch.setState(false);
+                status = 0;
+                edt_content.setHint("请输入审核内容(必填)");
+                tasks_info_sorceview.setVisibility(View.GONE);
             }
         });
     }
@@ -98,9 +105,13 @@ public class TasksInfoScoreActivity extends BaseActivity {
             case R.id.btn_task_agree:
                 comment = edt_content.getText().toString().trim();
                 sorce = ratingBar_Task.getProgress() * 20;
-                if (comment.isEmpty()) {
-                    Toast("请输入评语");
-                } else {
+                if(status == 0) {
+                    if (comment.isEmpty()) {
+                        Toast("请输入评语");
+                    } else {
+                        verfyTask(sorce, status, comment);
+                    }
+                }else{
                     verfyTask(sorce, status, comment);
                 }
                 break;
@@ -149,11 +160,9 @@ public class TasksInfoScoreActivity extends BaseActivity {
         if (isSave) {
             mTask.setScore(ratingBar_Task.getProgress() * 20);
             String content = edt_content.getText().toString().trim();
-
             if (!StringUtil.isEmpty(content)) {
                 mTask.setTaskComment(content);
             }
-
             mTask.setResponsiblePerson(null);
             mTask.setAttachments(null);
             mTask.setReviewComments(null);
