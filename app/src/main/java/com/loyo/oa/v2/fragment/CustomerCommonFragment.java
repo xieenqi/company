@@ -64,7 +64,8 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/21.
  */
-public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, OnDropItemSelectedListener {
+public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2,
+        OnDropItemSelectedListener {
 
     private static final String[] TIMES_TAG = new String[]{"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
 
@@ -129,7 +130,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
             layout_near_customers = (ViewGroup) mView.findViewById(R.id.layout_near_customers);
 
-            //layout_near_customers.setOnTouchListener(Global.GetTouch());
+            layout_near_customers.setOnTouchListener(Global.GetTouch());
             layout_near_customers.setOnClickListener(this);
 
             btn_add.setOnTouchListener(Global.GetTouch());
@@ -224,7 +225,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
         //初始化时间筛选menu
         DropItem time = new DropItem("时间");
-        time.setSelectType(DropItem.GROUP_SINGLE);
         for (int i = 0; i < TIMES_TAG.length; i++) {
             time.addSubDropItem(new DropItem(TIMES_TAG[i], i));
         }

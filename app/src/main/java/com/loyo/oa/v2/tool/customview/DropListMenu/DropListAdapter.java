@@ -53,7 +53,7 @@ public class DropListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null==mItems||mItems.isEmpty()?null:mItems.get(position);
+        return null == mItems || mItems.isEmpty() ? null : mItems.get(position);
     }
 
     @Override
@@ -61,13 +61,14 @@ public class DropListAdapter extends BaseAdapter {
         return position;
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         DropItem item = (DropItem) getItem(position);
         View v = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item, parent, false);
         TextView textView = (TextView) v.findViewById(R.id.tv_menu_item);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        textView.setText(null==item?"":item.getName());
+        textView.setText(null == item ? "" : item.getName());
 
         if (mSelectIndex == position) {
             ImageView imageView = (ImageView) v.findViewById(R.id.iv_menu_select);

@@ -7,7 +7,7 @@
     <com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu
         android:id="@+id/droplist_menu"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_40"
+        android:layout_height="@dimen/dimen_50"
         android:layout_gravity="top"
         android:background="@color/white"
         android:visibility="visible"/>

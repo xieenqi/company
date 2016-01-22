@@ -11,9 +11,9 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <ListView
@@ -22,6 +22,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#ffffff"
+                android:divider="@null"
                 android:scrollbarStyle="outsideOverlay"/>
 
             <ListView
@@ -30,38 +31,39 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/lightgray"
+                android:divider="@null"
                 android:scrollbarStyle="outsideOverlay"/>
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/layout_confirm"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_55"
+            android:background="@color/white"
             android:gravity="center_vertical">
 
             <Button
-                android:minWidth="@dimen/dimen_110"
-                android:padding="@dimen/dimen_5"
-                android:textColor="@color/gray"
-                android:background="@drawable/round_bg_shpe3"
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_45"
                 android:layout_marginLeft="@dimen/margin_other_view"
-                android:text="全部取消"/>
-
-            <Button
+                android:background="@drawable/round_bg_shpe3"
                 android:minWidth="@dimen/dimen_110"
                 android:padding="@dimen/dimen_5"
-                android:textColor="@color/title_bg1"
-                android:background="@drawable/round_bg_shpe3"
+                android:text="全部取消"
+                android:textColor="@color/gray"/>
+
+            <Button
                 android:id="@+id/btn_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_45"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/margin_other_view"
-                android:text="确定"/>
+                android:background="@drawable/round_bg_shpe3"
+                android:minWidth="@dimen/dimen_110"
+                android:padding="@dimen/dimen_5"
+                android:text="确定"
+                android:textColor="@color/title_bg1"/>
 
         </RelativeLayout>
     </LinearLayout>

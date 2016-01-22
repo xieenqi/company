@@ -1,153 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/black"
-    >
-    <LinearLayout
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_marginTop="@dimen/dimen_20"
-        android:layout_marginLeft="@dimen/dimen_20"
-        android:layout_marginRight="@dimen/dimen_20"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_marginTop="@dimen/dimen_10"
-        android:layout_marginLeft="@dimen/dimen_10"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="20sp"
-            android:text="修改手机号"
-            android:textColor="#383838"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginTop="@dimen/dimen_20"
-            android:textSize="14sp"
-            android:text="修改手机号成功后,请使用您提交的新手机号登录我们的APP。"
-            android:textColor="#999999"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:layout_marginRight="@dimen/dimen_5"
-            android:layout_marginTop="@dimen/dimen_20"
-            android:orientation="horizontal"
-            android:background="@drawable/edt_rectangle_bg"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45">
-        <EditText
-            android:layout_marginRight="@dimen/dimen_5"
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:inputType="phone"
-            android:maxLength="11"
-            android:background="@null"
-            android:textSize="14sp"
-            android:id="@+id/et_mobile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="输入新的手机号码"
-            />
-        </LinearLayout>
+            android:background="@color/black"
+    >
 
-        <TextView
-            android:layout_marginRight="@dimen/dimen_5"
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:id="@+id/tv_mobile_error"
-            android:enabled="false"
-            android:textSize="12sp"
-            android:textColor="@color/red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:layout_marginRight="@dimen/dimen_5"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/dimen_20"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20"
+            android:layout_marginRight="@dimen/dimen_20"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:background="@drawable/dialog_bj"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimen_1"
+            android:paddingRight="@dimen/dimen_1">
 
             <LinearLayout
-                android:layout_marginRight="@dimen/dimen_20"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:background="@drawable/edt_rectangle_bg"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_45">
-
-            <EditText
-                android:layout_marginRight="@dimen/dimen_5"
-                android:layout_marginLeft="@dimen/dimen_5"
-                android:textSize="14sp"
-                android:background="@null"
-                android:id="@+id/et_code"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_marginRight="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/btn_get_code"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:background="@drawable/edt_rectangle_bg"
-                android:layout_weight="0.7"
-                android:layout_alignParentRight="true"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="获取验证码"
-                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="修改手机号"
+                    android:textColor="#383838"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20"
+                    android:text="修改手机号成功后,请使用您提交的新手机号登录我们的APP。"
+                    android:textColor="#999999"
+                    android:textSize="14sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_45"
+                    android:layout_marginLeft="@dimen/dimen_2"
+                    android:layout_marginRight="@dimen/dimen_2"
+                    android:layout_marginTop="@dimen/dimen_20"
+                    android:background="@drawable/edt_rectangle_bg"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_5"
+                        android:layout_marginRight="@dimen/dimen_5"
+                        android:background="@null"
+                        android:hint="输入新的手机号码"
+                        android:inputType="phone"
+                        android:maxLength="11"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_mobile_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:enabled="false"
+                    android:text=""
+                    android:textColor="@color/red"
+                    android:textSize="12sp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_2"
+                    android:layout_marginRight="@dimen/dimen_2"
+                    android:layout_marginTop="@dimen/dimen_20"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimen_45"
+                        android:layout_marginRight="@dimen/dimen_20"
+                        android:layout_weight="1"
+                        android:background="@drawable/edt_rectangle_bg"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_5"
+                            android:layout_marginRight="@dimen/dimen_5"
+                            android:background="@null"
+                            android:hint="输入验证码"
+                            android:textSize="14sp"
+                            />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btn_get_code"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="0.7"
+                        android:background="@drawable/edt_rectangle_bg"
+                        android:gravity="center"
+                        android:text="获取验证码"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55"
+                android:layout_marginTop="@dimen/dimen_20"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/btn_confirm"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/determine_bt_bj"
+                    android:gravity="center"
+                    android:text="确定"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1"
+                    android:background="@drawable/cancle_bt_bj"
+                    android:gravity="center"
+                    android:text="取消"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/dimen_20"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_55">
-
-
-        <TextView
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="#b2ce34"
-            android:layout_weight="1"
-            android:id="@+id/btn_confirm"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="确定"
-            />
-
-
-        <TextView
-            android:id="@+id/btn_cancel"
-            android:textSize="17sp"
-            android:background="@color/title_bg1"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_alignParentRight="true"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="取消"
-            />
-    </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
 </ScrollView>

@@ -14,9 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.activity.LoginActivity;
-import com.loyo.oa.v2.activity.commonview.SettingPasswordActivity_;
 import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -176,6 +174,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
+                HttpErrorCheck.checkResponse("获取个人资料修改",response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);

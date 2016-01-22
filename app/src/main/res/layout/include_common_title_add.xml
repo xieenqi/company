@@ -13,7 +13,7 @@
 
         <ImageView
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="@dimen/dimen_8"
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:scaleType="fitCenter"
@@ -46,7 +46,7 @@
 
         <ImageView
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="@dimen/dimen_8"
             android:layout_width="@dimen/view_h_title"
             android:layout_height="@dimen/view_h_title"
             android:scaleType="fitCenter"
