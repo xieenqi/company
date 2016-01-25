@@ -162,7 +162,7 @@ public class DropListMenu extends LinearLayout {
             /**
              * 弹窗列表，确认 取消监听 右边列表第一个列表
              */
-            ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
+            final ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
             if (!mShowDivider) {
@@ -205,7 +205,7 @@ public class DropListMenu extends LinearLayout {
             menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    //((DropListAdapter) (menuList.getAdapter())).setSelectItem(position);//设置选择状态
                     mRowSelected = position;
                     if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);

@@ -38,31 +38,33 @@
         <RelativeLayout
             android:id="@+id/layout_confirm"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_55"
+            android:layout_height="@dimen/dimen_48"
             android:background="@color/white"
             android:gravity="center_vertical">
 
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_45"
+                android:layout_height="@dimen/dimen_35"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:background="@drawable/round_bg_shpe3"
-                android:minWidth="@dimen/dimen_110"
-                android:padding="@dimen/dimen_5"
+                android:minWidth="@dimen/dimen_100"
+                android:padding="@dimen/dimen_2"
                 android:text="全部取消"
+                android:textSize="14sp"
                 android:textColor="@color/gray"/>
 
             <Button
                 android:id="@+id/btn_confirm"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_45"
+                android:layout_height="@dimen/dimen_35"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:background="@drawable/round_bg_shpe3"
-                android:minWidth="@dimen/dimen_110"
-                android:padding="@dimen/dimen_5"
+                android:minWidth="@dimen/dimen_100"
+                android:padding="@dimen/dimen_2"
                 android:text="确定"
+                android:textSize="14sp"
                 android:textColor="@color/title_bg1"/>
 
         </RelativeLayout>
