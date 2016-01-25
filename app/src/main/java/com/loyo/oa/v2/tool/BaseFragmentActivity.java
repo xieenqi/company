@@ -27,6 +27,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected MainApp app;
     protected Context mContext;
     private Toast mCurrentToast;
+    private int mTouchViewGroupId = -1;
 
     final String Tag = "BaseFragmentActivity";
 
@@ -51,6 +52,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     /**
      * 网络状态变化回调方法
+     *
      * @param available
      */
     protected void onNetworkChanged(boolean available) {
@@ -189,7 +191,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 //                    if (main_layout != null && f != null && main_layout.isDrawerOpen(f)) {
 //                        main_layout.closeDrawers();
 //                    } else if (mTouchViewGroupId == 0) {
-                        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
 //                    }
 
                 }
@@ -200,12 +202,11 @@ public class BaseFragmentActivity extends FragmentActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    int mTouchViewGroupId;
 
     public void setTouchView(int _touchViewGroupId) {
         mTouchViewGroupId = _touchViewGroupId;
-
         if (mTouchViewGroupId <= 0) {
+
             return;
         }
 
@@ -233,11 +234,12 @@ public class BaseFragmentActivity extends FragmentActivity {
 //                            if (curX > xLast && xDistance > yDistance && xDistance > 150) {
 //                            app.finishActivity((FragmentActivity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                             onBackPressed();
+
                         }
                         xLast = curX;
                         yLast = curY;
                 }
-
+                Toast("返回了  啊啊"+mTouchViewGroupId);
                 return true;
             }
         });

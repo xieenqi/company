@@ -44,6 +44,8 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected boolean isNeedLogin = true;
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
+    private int mTouchViewGroupId;
+    private GestureDetector mDetector;
 
     /**
      * 搜索跳转分类
@@ -255,8 +257,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     //当控件Id>0的时候，是指定ViewGroup的ID
     // = 0的时候是Activity使用手势。
     // = -1的时候是Activity不使用手势。
-    int mTouchViewGroupId;
-
     protected void setTouchView(int _touchViewGroupId) {
         if (_touchViewGroupId <= 0) {
             mTouchViewGroupId = _touchViewGroupId;
@@ -274,7 +274,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         });
     }
 
-    GestureDetector mDetector;
 
     @Override
     public boolean onDown(MotionEvent e) {

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.commonview;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -37,6 +38,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -156,24 +159,29 @@ public class FeedbackActivity extends BaseActivity {
 //                finish();
 //            }
 //        });
-        ConfirmDialog("提交成功", "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快", new ConfirmDialogInterface() {
-            @Override
-            public void Confirm() {
-                finish();
-            }
-        });
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
+//        ConfirmDialog(, , new ConfirmDialogInterface() {
 //            @Override
-//            public void run() {
-//                han.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        dialog.dismiss();
-//                    }
-//                });
+//            public void Confirm() {
+//                finish();
 //            }
-//        }, 1000);
+//        });
+
+        final AlertDialog.Builder feedDialog = new AlertDialog.Builder(mContext);
+        feedDialog.setMessage("感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快");
+        feedDialog.setTitle("提示");
+        feedDialog.create().show();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                han.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                });
+            }
+        }, 1000);
     }
 
     @Override
