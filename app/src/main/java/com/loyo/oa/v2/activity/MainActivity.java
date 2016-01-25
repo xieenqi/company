@@ -197,6 +197,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     private static class MHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
+
         private MHandler(MainActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
@@ -815,13 +816,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        if(null == MainApp.user.avatar || MainApp.user.avatar.isEmpty()){
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty()) {
             img_user.setImageResource(R.drawable.img_default_user);
-            Bitmap  bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
             Bitmap blur = Utils.doBlur(bitmap, 50, false);
             img_home_head.setImageResource(android.R.color.transparent);
             container.setBackgroundDrawable(new BitmapDrawable(blur));
-        }else {
+        } else {
 
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
@@ -960,6 +961,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 case 3:
                     intent.setClass(MainActivity.this, WfinstanceInfoActivity_.class);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 19://通知公告
+                    intent.setClass(MainActivity.this, BulletinManagerActivity_.class);
+                    //intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
