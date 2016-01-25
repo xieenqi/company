@@ -46,7 +46,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     void back() {
         onBackPressed();
     }
-
     @ViewById
     ViewGroup img_title_left;
     @ViewById

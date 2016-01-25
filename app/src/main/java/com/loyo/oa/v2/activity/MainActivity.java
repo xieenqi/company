@@ -281,7 +281,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
                 //showLoading("");
