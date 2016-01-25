@@ -882,7 +882,7 @@ public class TasksInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
-        //bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
+        bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status",mTask.getStatus());
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
