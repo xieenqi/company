@@ -123,7 +123,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                         break;
                     }
                 }
-
             }
         }
         if (mProject.status == 2) {
