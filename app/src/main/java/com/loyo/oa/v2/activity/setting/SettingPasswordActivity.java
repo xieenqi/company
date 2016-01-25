@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.commonview;
+package com.loyo.oa.v2.activity.setting;
 
 import android.text.TextUtils;
 import android.view.ViewGroup;

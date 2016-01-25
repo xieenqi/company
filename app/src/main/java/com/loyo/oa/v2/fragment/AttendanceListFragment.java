@@ -23,11 +23,13 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
@@ -61,7 +63,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private TextView tv_leave_early;//早退
     private TextView tv_unattendance;//未打卡
     private TextView tv_field_work;//外勤
-
     private int type;//我的考勤【1】 团队考勤【2】
     private AttendanceList attendanceList;
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
@@ -69,10 +70,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private int qtime, page = 1;
     private Calendar cal;
     private boolean isPullDowne = true;//是否下拉刷新 默认是
-
     private View mView;
-    ProgressDialog dg;
-
 
     @Nullable
     @Override
@@ -85,10 +83,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             tv_leave_early = (TextView) mView.findViewById(R.id.tv_leave_early);
             tv_unattendance = (TextView) mView.findViewById(R.id.tv_un_attendance);
             tv_field_work = (TextView) mView.findViewById(R.id.tv_field_work);
-
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
-
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
             imgTimeLeft.setOnClickListener(this);
@@ -105,8 +101,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             initTimeStr(System.currentTimeMillis());
             qtime = type == 1 ? DateTool.getBeginAt_ofMonth() : (int) (System.currentTimeMillis() / 1000);
 
-            dg = new ProgressDialog(getActivity());
-            dg.setMessage("加载中");
             getData(page);
 
             lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -343,7 +337,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
-        dg.show();
+        DialogHelp.showLoading(getActivity(),"");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
@@ -353,7 +347,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                dg.dismiss();
+                DialogHelp.cancelLoading();
                 attendanceList = result.records;
                 if (isPullDowne || page == 1) {
                     attendances = result.records.getAttendances();
@@ -369,9 +363,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
                 super.failure(error);
-                dg.dismiss();
+                DialogHelp.cancelLoading();
+                HttpErrorCheck.checkError(error);
             }
         });
     }

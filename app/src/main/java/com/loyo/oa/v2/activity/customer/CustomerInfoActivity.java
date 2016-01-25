@@ -110,9 +110,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     TextView tv_industry;
     @ViewById
     TextView tv_district;
-
     LinearLayout layout_rushpackger;
-
     @ViewById
     ImageView img_go_where;
     @ViewById
@@ -410,7 +408,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
         String summary = edt_customer_memo.getText().toString().trim();
-
 
         if (TextUtils.isEmpty(customerName)) {
             Toast.makeText(this, "客户姓名不能为空", Toast.LENGTH_SHORT).show();

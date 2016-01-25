@@ -50,5 +50,4 @@ public class LegworksListActivity extends FragmentActivity {
         //onBackPressed();
         finish();
     }
-
 }

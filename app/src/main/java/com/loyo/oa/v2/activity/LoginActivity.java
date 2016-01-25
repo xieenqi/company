@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -21,11 +20,8 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
-
 import org.json.JSONObject;
-
 import java.util.HashMap;
-
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

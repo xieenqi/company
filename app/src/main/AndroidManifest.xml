@@ -366,12 +366,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.commonview.SettingActivity"
+            android:name=".activity.setting.SettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.commonview.SettingPasswordActivity_"
+            android:name=".activity.setting.SettingPasswordActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>

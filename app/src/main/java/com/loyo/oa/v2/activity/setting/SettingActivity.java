@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.commonview;
+package com.loyo.oa.v2.activity.setting;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.LoginActivity;
+import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
+import com.loyo.oa.v2.activity.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;

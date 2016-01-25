@@ -55,7 +55,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private int mIndex = -1,Identity;
     private float mRotation = 0;
 
-
     @AfterViews
     void initViews() {
         setTouchView(-1);
@@ -113,7 +112,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
             Bundle b = new Bundle();
             b.putInt("type", i + 1);
             BaseFragment fragment = (BaseFragment) Fragment.instantiate(this, AttendanceListFragment.class.getName(), b);
-
             fragments.add(fragment);
         }
         changeChild(0);
@@ -165,7 +163,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
         categoryAdapter = new CommonCategoryAdapter(this, Arrays.asList(ATTENDANCE_FILTER_STRS));
         categoryListView.setAdapter(categoryAdapter);
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
