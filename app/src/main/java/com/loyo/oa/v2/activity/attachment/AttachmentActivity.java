@@ -135,7 +135,7 @@ public class AttachmentActivity extends BaseActivity {
             adapter.setData(mListAttachment);
             adapter.notifyDataSetChanged();
         }
-        if (status == 3) {
+        if (status == 3 || status == 4) {
             adapter.setHasRights(false);
         }
     }
