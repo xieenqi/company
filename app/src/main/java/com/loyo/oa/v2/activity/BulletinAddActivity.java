@@ -168,7 +168,6 @@ public class BulletinAddActivity extends BaseActivity {
         });
         builder.setMessage("通知发送后不能修改和删除,是否确认发布?");
         builder.show();
-
     }
 
     /**
@@ -198,7 +197,6 @@ public class BulletinAddActivity extends BaseActivity {
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
-
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         Utils.uploadAttachment(mUuid, newFile).subscribe(new CommonSubscriber(this) {
@@ -311,5 +309,4 @@ public class BulletinAddActivity extends BaseActivity {
         }
         return newAttachment;
     }
-
 }
