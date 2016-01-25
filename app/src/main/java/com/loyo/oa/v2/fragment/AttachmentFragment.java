@@ -64,15 +64,14 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null && getArguments().containsKey("project")) {
             mProject = (HttpProject) getArguments().getSerializable("project");
         }
     }
 
     /**
-     *
      * 显示图片
+     *
      * @param mListAttachment
      */
     private void bindAttachment(final ArrayList<Attachment> mListAttachment) {
@@ -127,6 +126,9 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
 
             }
         }
+        if (mProject.status == 2) {
+            return false;
+        }
         return hasRights;
     }
 
@@ -177,6 +179,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
             mListViewAttachment = (SwipeListView) mView.findViewById(R.id.listView_attachment);
             layout_upload = (ViewGroup) mView.findViewById(R.id.layout_upload);
             layout_upload.setOnClickListener(this);
+
             getData();
         }
         return mView;
