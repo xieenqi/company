@@ -6,12 +6,12 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
@@ -34,7 +34,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -80,13 +79,12 @@ public class AttachmentActivity extends BaseActivity {
 
         if (status == 3 || status == 4) {
             tv_upload.setVisibility(View.GONE);
-        }else if(!isMyUser){
+        } else if (!isMyUser) {
             tv_upload.setVisibility(View.GONE);
         }
 
 
-
-        LogUtil.dll("权限:"+status);
+        LogUtil.d("权限:" + status);
         setTouchView(NO_SCROLL);
         getAttachments();
 
@@ -94,7 +92,7 @@ public class AttachmentActivity extends BaseActivity {
 
     /**
      * 获取附件列表信息
-     * */
+     */
     @UiThread
     void getAttachments() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
@@ -124,7 +122,7 @@ public class AttachmentActivity extends BaseActivity {
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList,goneBtn);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, goneBtn);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(Attachment attachment) {
@@ -141,8 +139,10 @@ public class AttachmentActivity extends BaseActivity {
             adapter.setData(mListAttachment);
             adapter.notifyDataSetChanged();
         }
+        if (status == 3) {
+            adapter.setHasRights(false);
+        }
     }
-
 
 
     @Override
@@ -152,13 +152,17 @@ public class AttachmentActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
-    /**返回*/
+    /**
+     * 返回
+     */
     @Click(R.id.img_title_left)
     void click() {
         finish();
     }
 
-    /**附件上传*/
+    /**
+     * 附件上传
+     */
     @Click(R.id.tv_upload)
     void addAttachment() {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);
