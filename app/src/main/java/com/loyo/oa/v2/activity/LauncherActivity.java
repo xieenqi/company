@@ -122,6 +122,7 @@ public class LauncherActivity extends BaseActivity {
 
                             iv_launcher_fade.setImageResource(R.drawable.white);
                             ll_root.post(finishRunner);
+
                         }
 
                         @Override

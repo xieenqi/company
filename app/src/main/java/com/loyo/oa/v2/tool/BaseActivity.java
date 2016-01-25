@@ -235,7 +235,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
                 confirm.Confirm();
             }
         });
@@ -302,12 +301,12 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     }
 
+    /*页面左滑手指监听*/
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        //        int i = app.diptoPx(200);
         if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            onBackPressed();
+            //onBackPressed();
         }
 
         return false;

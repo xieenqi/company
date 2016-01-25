@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
@@ -169,19 +170,19 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         switch (position) {
 
             case 0:
-                _class = TasksAddActivity_.class;
-                break;
-            case 1:
-                _class = WorkReportAddActivity_.class;
-                break;
-            case 2:
-                _class = WfInstanceAddActivity_.class;
-                break;
-            case 3:
                 _class = CustomerAddActivity_.class;
                 break;
-            case 4:
+            case 1:
                 _class = SignInActivity.class;
+                break;
+            case 2:
+                _class = TasksAddActivity_.class;
+                break;
+            case 3:
+                _class = WorkReportAddActivity_.class;
+                break;
+            case 4:
+                _class = WfInstanceAddActivity_.class;
                 break;
 
         }
@@ -196,7 +197,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     private static class MHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
-
         private MHandler(MainActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
@@ -366,19 +366,21 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         signin.setText("拜访签到");
         signin.setResource(R.drawable.icon_home_menu_signin);
 
+
         for (ClickItem clickItem : items) {
-            if (clickItem.title.contains("客户管理")) {
-                menuObjects.add(customer);
-            } else if (clickItem.title.contains("任务计划")) {
+            if (clickItem.title.contains("任务计划")) {
                 menuObjects.add(task);
-            } else if (clickItem.title.contains("审批流程")) {
-                menuObjects.add(wfinstance);
-            } else if (clickItem.title.contains("客户拜访")) {
-                menuObjects.add(signin);
             } else if (clickItem.title.contains("工作报告")) {
                 menuObjects.add(report);
+            } else if (clickItem.title.contains("审批流程")) {
+                menuObjects.add(wfinstance);
+            } else if (clickItem.title.contains("客户管理")) {
+                menuObjects.add(customer);
+            } else if (clickItem.title.contains("客户拜访")) {
+                menuObjects.add(signin);
             }
         }
+
 
         return menuObjects;
     }
@@ -813,33 +815,41 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
+        if(null == MainApp.user.avatar || MainApp.user.avatar.isEmpty()){
+            img_user.setImageResource(R.drawable.img_default_user);
+            Bitmap  bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
+            Bitmap blur = Utils.doBlur(bitmap, 50, false);
+            img_home_head.setImageResource(android.R.color.transparent);
+            container.setBackgroundDrawable(new BitmapDrawable(blur));
+        }else {
 
-            }
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
 
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                if (null != bitmap) {
-                    Bitmap blur = Utils.doBlur(bitmap, 50, false);
-                    img_home_head.setImageResource(android.R.color.transparent);
-                    container.setBackgroundDrawable(new BitmapDrawable(blur));
                 }
-            }
 
-            @Override
-            public void onLoadingCancelled(String s, View view) {
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
 
-            }
-        });
+                }
 
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    if (null != bitmap) {
+                        Bitmap blur = Utils.doBlur(bitmap, 50, false);
+                        img_home_head.setImageResource(android.R.color.transparent);
+                        container.setBackgroundDrawable(new BitmapDrawable(blur));
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
+        }
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
         testJurl();

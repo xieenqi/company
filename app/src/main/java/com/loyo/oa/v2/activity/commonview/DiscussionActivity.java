@@ -48,6 +48,7 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     @Extra("isMyUser") boolean isMyUser;
     @Extra("status") int status;
 
+
     @ViewById PullToRefreshListView listView_discussion;
     @ViewById TextView et_comment;
     private boolean isPullUp=false;
@@ -69,6 +70,8 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
 
         if(status == 3){
+            layout_comment.setVisibility(View.GONE);
+        }else if(!isMyUser){
             layout_comment.setVisibility(View.GONE);
         }
 
