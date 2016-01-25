@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.fragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,13 +22,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
@@ -337,7 +334,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
-        DialogHelp.showLoading(getActivity(),"");
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
@@ -347,7 +344,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                DialogHelp.cancelLoading();
                 attendanceList = result.records;
                 if (isPullDowne || page == 1) {
                     attendances = result.records.getAttendances();
@@ -364,7 +360,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                DialogHelp.cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
