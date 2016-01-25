@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.fragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,13 +22,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
@@ -117,7 +114,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         }
                         if (view.getLastVisiblePosition() == 0) {
                             Toast("到 顶部 啦");
-                            page=1;
+                            page = 1;
                             isPullDowne = true;
                         }
                     }
@@ -194,14 +191,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     case 1:
                         if (checkTime(qtime, app.df13)) {
                             nextMonth();
-                        }else{
+                        } else {
                             Toast("不能查看未来考勤！");
                         }
                         break;
                     case 2:
                         if (checkTime(qtime, app.df12)) {
                             nextDay();
-                        }else{
+                        } else {
                             Toast("不能查看未来考勤！");
                         }
 
@@ -337,7 +334,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取列表
      */
     private void getData(final int page) {
-        DialogHelp.showLoading(getActivity(),"");
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
@@ -347,9 +344,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                DialogHelp.cancelLoading();
                 attendanceList = result.records;
-                if (isPullDowne||page==1) {
+                if (isPullDowne || page == 1) {
                     attendances = result.records.getAttendances();
                 } else {
                     attendances.addAll(result.records.getAttendances());
@@ -364,7 +360,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                DialogHelp.cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -381,7 +376,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             attendance.setUser(MainApp.user);
         }
         Intent intent = new Intent(mActivity, PreviewAttendanceActivity_.class);
-        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut==1?attendance.getIn().getId():attendance.getOut().getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
         startActivityForResult(intent, FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE);
     }
@@ -393,7 +388,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             return;
         }
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
-            page=1;
+            page = 1;
             getData(page);
         }
     }

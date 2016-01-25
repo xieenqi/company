@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.LegworksListActivity_;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
-import com.loyo.oa.v2.adapter.SignInListAdapter;
 import com.loyo.oa.v2.beans.PaginationLegWork;
 import com.loyo.oa.v2.beans.TeamLegworkDetail;
 import com.loyo.oa.v2.beans.User;
@@ -149,7 +148,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     int resultTime = c1.compareTo(c2);
                     if (resultTime < 0) {
                         nextDay();
-                    }else{
+                    } else {
                         Toast("不能查看未来拜访数据!");
                     }
                 } catch (Exception e) {
@@ -219,10 +218,10 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
      */
     private void bindData() {
         if (null == adapter) {
-            if(null == legWorks || legWorks.size() == 0){
+            if (null == legWorks || legWorks.size() == 0) {
                 layout_nodata.setVisibility(View.VISIBLE);
                 lv.setVisibility(View.GONE);
-            }else{
+            } else {
                 layout_nodata.setVisibility(View.GONE);
                 lv.setVisibility(View.VISIBLE);
                 adapter = new TeamSignInListAdapter();
@@ -249,6 +248,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
      * //api/v2/statistics/visit/team?duration=2015-12-04
      */
     private void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
 //        map.put("userId", "");
 //        map.put("deptId", MainApp.user.depts.get(0).getShortDept().getId());
