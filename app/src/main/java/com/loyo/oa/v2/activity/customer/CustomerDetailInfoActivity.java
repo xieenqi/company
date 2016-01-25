@@ -134,12 +134,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(Customer customer, Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
+                LogUtil.dll("客户详情:"+MainApp.gson.toJson(customer));
                 ownErId = customer.owner.id;
                 isLock = customer.lock;
                 mCustomer = customer;
                 initData();
                 cancelLoading();
-
             }
 
             @Override

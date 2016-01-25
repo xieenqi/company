@@ -73,7 +73,6 @@ public class TasksInfoActivity extends BaseActivity {
     public static final int REQUEST_EDIT_DELETE = 500;
     public static final int REQUEST_CREATE_SUB = 600;
     public static final int REQUEST_EDIT_TASK = 740;
-
     public static final int MSG_ATTACHMENT = 700;
     public static final int MSG_DISCUSSION = 800;
 
@@ -200,7 +199,7 @@ public class TasksInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.GONE);
         }else if(IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED){
             img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//为参与人时
+        } else if (!IsResponsiblePerson() && !IsCreator()) {//参与人
             img_title_right.setVisibility(View.GONE);
         } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
             img_title_right.setVisibility(View.VISIBLE);
@@ -537,7 +536,10 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("edit", true);
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
-                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
+                    }else if(mTask.getStatus() == Task.STATUS_REVIEWING){
+                        intent.putExtra("delete", true);
+                        intent.putExtra("extra", "复制任务");
+                    }else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
                         intent.putExtra("delete", true);
                     }
                 }
@@ -659,7 +661,6 @@ public class TasksInfoActivity extends BaseActivity {
 
             /*选择完参与人后，回调*/
             case ExtraAndResult.request_Code:
-                LogUtil.dll("参与人选择回调");
                 String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
                 String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
                 if (cc_user_id != null && cc_user_name != null) {

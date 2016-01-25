@@ -71,8 +71,6 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
 
         if(status == 3){
             layout_comment.setVisibility(View.GONE);
-        }else if(!isMyUser){
-            layout_comment.setVisibility(View.GONE);
         }
 
         final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);

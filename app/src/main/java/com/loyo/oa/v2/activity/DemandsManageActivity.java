@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.DemandsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -22,10 +21,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -40,15 +37,12 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     private DemandsRadioListViewAdapter demandsRadioListViewAdapter;
     private ArrayList<Demand> lstData_Demand = new ArrayList<Demand>();
     private String customerId, customerName;
-
     private Intent mIntent;
     private Bundle bundle;
     private boolean isMyUser;
     private boolean isChanged;
     private boolean isTopAdd = true;
     private PaginationX<Demand> paginationX = new PaginationX<>(20);
-
-
     public static final int VIEW_DEMANDS = 200;
     public static final int CREATE_DEMANDS = 300;
 

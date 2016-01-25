@@ -125,8 +125,8 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 >
-
             </LinearLayout>
+
 <!-- 取消行业不做 20160119-->
             <LinearLayout
                 android:id="@+id/layout_customer_industry"
