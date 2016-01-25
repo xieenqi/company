@@ -25,8 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *【  任务管理】 界面
-  */
+ * 【  任务管理】 界面
+ */
 
 public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
     private int mJoinType = 0, mStatus = 0;
@@ -37,7 +37,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
 
     @Override
     public void GetData() {
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
@@ -73,7 +73,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
 
     /**
      * 任务管理跳转搜索
-     * */
+     */
     @Override
     public void openSearch() {
         Intent intent = new Intent();
@@ -140,7 +140,8 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
                     case 1:
                         mStatus = RowIndex;
                         break;
-                } onPullDownToRefresh(mExpandableListView);
+                }
+                onPullDownToRefresh(mExpandableListView);
             }
         });
     }

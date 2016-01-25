@@ -42,7 +42,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void initAdapter() {
-        reports=pagingGroupDatas.size();
+        reports = pagingGroupDatas.size();
         mAdapter = new CommonExpandableListAdapter(mActivity, pagingGroupDatas);
         mExpandableListView.getRefreshableView().setAdapter(mAdapter);
     }
@@ -60,7 +60,9 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
-    /**跳转搜索*/
+    /**
+     * 跳转搜索
+     */
     @Override
     public void openSearch() {
 
@@ -75,7 +77,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void GetData() {
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
@@ -87,7 +89,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         //map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         //map.put("endAt", System.currentTimeMillis() / 1000);
 
-        LogUtil.dll("客户端发送数据:"+ MainApp.gson.toJson(map));
+        LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReports(map, this);
     }
 

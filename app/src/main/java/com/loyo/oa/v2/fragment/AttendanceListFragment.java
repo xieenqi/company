@@ -123,7 +123,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         }
                         if (view.getLastVisiblePosition() == 0) {
                             Toast("到 顶部 啦");
-                            page=1;
+                            page = 1;
                             isPullDowne = true;
                         }
                     }
@@ -200,14 +200,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     case 1:
                         if (checkTime(qtime, app.df13)) {
                             nextMonth();
-                        }else{
+                        } else {
                             Toast("不能查看未来考勤！");
                         }
                         break;
                     case 2:
                         if (checkTime(qtime, app.df12)) {
                             nextDay();
-                        }else{
+                        } else {
                             Toast("不能查看未来考勤！");
                         }
 
@@ -355,7 +355,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
                 dg.dismiss();
                 attendanceList = result.records;
-                if (isPullDowne||page==1) {
+                if (isPullDowne || page == 1) {
                     attendances = result.records.getAttendances();
                 } else {
                     attendances.addAll(result.records.getAttendances());
@@ -387,7 +387,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             attendance.setUser(MainApp.user);
         }
         Intent intent = new Intent(mActivity, PreviewAttendanceActivity_.class);
-        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut==1?attendance.getIn().getId():attendance.getOut().getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
         startActivityForResult(intent, FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE);
     }
@@ -399,7 +399,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             return;
         }
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
-            page=1;
+            page = 1;
             getData(page);
         }
     }

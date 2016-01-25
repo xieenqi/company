@@ -245,7 +245,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-        LogUtil.d("项目、任务、报告、审批的统一界面 result:" + MainApp.gson.toJson(tPaginationX));
+        //LogUtil.d("项目、任务、报告、审批的统一界面 result:" + MainApp.gson.toJson(tPaginationX));
+        HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
 
     }
 

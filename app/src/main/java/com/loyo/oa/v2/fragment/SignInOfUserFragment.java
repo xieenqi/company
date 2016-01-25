@@ -16,7 +16,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
 import com.loyo.oa.v2.activity.signin.SignInfoActivity;
 import com.loyo.oa.v2.adapter.SignInListAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.User;
@@ -251,6 +250,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      * 获取列表
      */
     private void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", mUser.id);
         map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
