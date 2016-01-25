@@ -74,6 +74,10 @@ public class ExtraDataView extends LinearLayout {
             if (null == properties) {
                 continue;
             }
+            if(!properties.isEnabled()){
+                continue;
+            }
+
             View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_extra, null, false);
             extra.setEnabled(edit);
 
@@ -96,6 +100,7 @@ public class ExtraDataView extends LinearLayout {
             addView(extra);
             if (properties.isList()) {
                 LogUtil.dll("islist");
+                LogUtil.dll("islist enable:"+properties.isEnabled());
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
@@ -105,6 +110,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
             } else if ("long".equals(properties.getType())) {
                 LogUtil.dll("时间");
+                LogUtil.dll("long enable:"+properties.isEnabled());
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
                 tv_content.setFocusable(false);
@@ -113,6 +119,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
             } else if ("string".equals(properties.getType())) {
                 LogUtil.dll("string");
+                LogUtil.dll("string enable:"+properties.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -123,6 +130,7 @@ public class ExtraDataView extends LinearLayout {
                 //                tv_content.setHint(R.string.app_please_input);
             } else if ("int".equals(properties.getType())) {
                 LogUtil.dll("int");
+                LogUtil.dll("int enable:"+properties.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -133,6 +141,7 @@ public class ExtraDataView extends LinearLayout {
                 //                tv_content.setHint(R.string.app_please_input);
             } else if ("double".equals(properties.getType())) {
                 LogUtil.dll("double");
+                LogUtil.dll("double enable:"+properties.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
