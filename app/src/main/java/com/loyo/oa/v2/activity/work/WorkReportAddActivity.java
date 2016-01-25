@@ -545,6 +545,7 @@ public class WorkReportAddActivity extends BaseActivity {
                         @Override
                         public void success(ArrayList<WorkReportDyn> dyn, Response response) {
                             HttpErrorCheck.checkResponse(response);
+                            LogUtil.dll("动态工作返回："+MainApp.gson.toJson(dyn));
                             dynList = dyn;
                             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                         }

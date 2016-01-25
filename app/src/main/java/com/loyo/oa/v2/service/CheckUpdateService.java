@@ -75,16 +75,13 @@ public class CheckUpdateService extends Service {
             stopSelf();
             return START_REDELIVER_INTENT;
         }
-
         checkUpdate();
-
         return START_REDELIVER_INTENT;
     }
 
     void downloadApp() {
         if (enqueue == 0) {
             Global.Toast("正在下载");
-
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
                     .setDescription("下载" + mUpdateInfo.versionName)
@@ -121,7 +118,6 @@ public class CheckUpdateService extends Service {
             if (isToast) {
                 Toast.makeText(this, "没有网络连接", Toast.LENGTH_SHORT).show();
             }
-
             isChecking = false;
             stopSelf();
             return;

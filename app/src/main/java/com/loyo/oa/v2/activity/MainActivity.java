@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
@@ -939,7 +940,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 激光推送要跳转 的 页面
-     * buzzType 1，任务2，报告3，审批
+     * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
      */
     public void intentJpushInfo() {
         if (MainApp.jpushData != null) {
@@ -963,7 +964,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 19://通知公告
+                case 4:
+                    intent.setClass(MainActivity.this, ProjectInfoActivity.class);
+                    intent.putExtra("projectId", MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 5://通知公告
                     intent.setClass(MainActivity.this, BulletinManagerActivity_.class);
                     //intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
                     startActivity(intent);
