@@ -122,14 +122,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @Extra("Customer")
     Customer mCustomer;
-
     @Extra("isMyUser")
     boolean isMyUser;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     boolean isPublic;
     @Extra(ExtraAndResult.EXTRA_STATUS)
     boolean isMenber;
-
     @Extra("CustomerId")
     String mCustomerId;
 
@@ -174,6 +172,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     @Override
                     public void success(Customer customer, Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
+                        LogUtil.dll("客户信息:" + MainApp.gson.toJson(customer));
                         mCustomer = customer;
                         Utils.dialogDismiss();
                         initData();
@@ -448,7 +447,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                     @Override
                     public void failure(RetrofitError error) {
-                        LogUtil.dll("url:" + error.getUrl());
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
                         } else if (error.getResponse().getStatus() == 500) {

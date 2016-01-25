@@ -80,11 +80,7 @@ public class AttachmentActivity extends BaseActivity {
 
         if (status == 3 || status == 4) {
             tv_upload.setVisibility(View.GONE);
-        }else if(!isMyUser){
-            tv_upload.setVisibility(View.GONE);
         }
-
-
 
         LogUtil.dll("权限:"+status);
         setTouchView(NO_SCROLL);
