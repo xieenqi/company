@@ -53,7 +53,7 @@ public class JPushService extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 用户点击打开了通知");//buzzType 1，任务 2，报告 3，审批
+            Log.d(TAG, "[MyReceiver] 用户点击打开了通知");//buzzType 1，任务 2，报告 3，审批 4.项目 5.通知公告
 
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d(" 激光推送传递过来的数据： " + msg);

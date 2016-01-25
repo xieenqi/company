@@ -80,13 +80,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <!-- 启动欢迎页面 -->
         <activity
             android:name=".activity.WelcomeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
-
         <activity
             android:name=".activity.ResetPasswordActivity_"
             android:label="@string/app_name"
@@ -650,7 +650,6 @@
             </intent-filter>
         </receiver>
 
-
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data
             android:name="JPUSH_CHANNEL"
@@ -659,18 +658,9 @@
             android:name="JPUSH_APPKEY"
             android:value="f78e54766a8910db098ce699"/>
         <!--  </>值来自开发者平台取得的AppKey-->
-
-
         <activity
             android:name=".tool.MyLayoutUtils"
             android:label="@string/title_activity_my_layout_utils"/>
-        <!--屏幕适配-->
-        <supports-screens
-            android:anyDensity="true"
-            android:largeScreens="true"
-            android:normalScreens="true"
-            android:resizeable="true"
-            android:smallScreens="true"/>
-    </application>
 
+    </application>
 </manifest>
