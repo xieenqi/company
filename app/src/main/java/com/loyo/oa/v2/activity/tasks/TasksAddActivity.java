@@ -123,7 +123,6 @@ public class TasksAddActivity extends BaseActivity {
     @Extra(ExtraAndResult.EXTRA_NAME)
     String customerName;
 
-
     private AlertDialog dialog_Product;
     private SignInGridViewAdapter signInGridViewAdapter;
     private NewUser newUser;
@@ -133,12 +132,11 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private int remindTime;
-
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
     private int mRemind = 0;
     private boolean isCopy;
-    private boolean isState;
+    private boolean isState = true;
 
     @AfterViews
     void initUI() {
@@ -154,6 +152,7 @@ public class TasksAddActivity extends BaseActivity {
         depts = new ArrayList<>();
         members = new Members();
         strBuf = new StringBuffer();
+        switch_approve.setState(true);
 
         init_gridView_photo();
         setTouchView(-1);
@@ -189,7 +188,6 @@ public class TasksAddActivity extends BaseActivity {
         edt_content.setText(mTask.getContent());
         tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
         tv_toUsers.setText(strBuf.toString());
-        //tv_Project.setText();
         switch_approve.setState(true);
         isCopy = mTask != null ? true : false;
         members.users = mTask.getMembers().users; //参与人
@@ -197,20 +195,16 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     void getTempTask() {
+
         if (mTask == null) {
             return;
         }
 
-
-        switch_approve.setState(mTask.isReviewFlag());
-
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
-
             User u = new User();
             u.id = mTask.getResponsiblePersonId();
             u.realname = mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
-
         }
 
         //截至日期设置,需求没要求默认时间，暂注释
@@ -260,8 +254,6 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
-        LogUtil.d(" " +
-                "新建任务传递： " + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {

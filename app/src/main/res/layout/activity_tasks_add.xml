@@ -277,7 +277,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dimen_5"
                         android:layout_marginRight="@dimen/dimen_16"
-
                         />
 
                 </LinearLayout>
