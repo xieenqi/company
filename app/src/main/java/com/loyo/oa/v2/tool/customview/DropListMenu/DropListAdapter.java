@@ -17,7 +17,7 @@ public class DropListAdapter extends BaseAdapter {
 
     ArrayList<DropItem> mItems;
     Context mContext;
-    int mSelectIndex = -1;
+    int mSelectIndex = -1, selectItem;
 
     public DropListAdapter(Context context, ArrayList<DropItem> items) {
         if (items != null) {
@@ -61,21 +61,28 @@ public class DropListAdapter extends BaseAdapter {
         return position;
     }
 
+    public void setSelectItem(int items) {
+        selectItem = items;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         DropItem item = (DropItem) getItem(position);
-        View v = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item, parent, false);
-        TextView textView = (TextView) v.findViewById(R.id.tv_menu_item);
+        convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item, parent, false);
+        TextView textView = (TextView) convertView.findViewById(R.id.tv_menu_item);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         textView.setText(null == item ? "" : item.getName());
 
         if (mSelectIndex == position) {
-            ImageView imageView = (ImageView) v.findViewById(R.id.iv_menu_select);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             imageView.setVisibility(View.VISIBLE);
         }
-
-        return v;
+//        if (selectItem == position) {
+//            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
+//        } else {
+//            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+//        }
+        return convertView;
     }
 
     public void setSelectIndex(int selectIndex) {
