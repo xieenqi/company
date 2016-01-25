@@ -619,7 +619,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Background
     void checkUpdateService() {
         mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
-        mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
         startService(mIntentCheckUpdate);
     }
 
