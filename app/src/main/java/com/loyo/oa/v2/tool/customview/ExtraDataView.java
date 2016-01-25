@@ -24,6 +24,7 @@ import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -94,6 +95,7 @@ public class ExtraDataView extends LinearLayout {
 
             addView(extra);
             if (properties.isList()) {
+                LogUtil.dll("islist");
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
@@ -102,6 +104,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
             } else if ("long".equals(properties.getType())) {
+                LogUtil.dll("时间");
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
                 tv_content.setFocusable(false);
@@ -109,6 +112,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
             } else if ("string".equals(properties.getType())) {
+                LogUtil.dll("string");
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -118,6 +122,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                 //                tv_content.setHint(R.string.app_please_input);
             } else if ("int".equals(properties.getType())) {
+                LogUtil.dll("int");
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -127,6 +132,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
                 //                tv_content.setHint(R.string.app_please_input);
             } else if ("double".equals(properties.getType())) {
+                LogUtil.dll("double");
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
