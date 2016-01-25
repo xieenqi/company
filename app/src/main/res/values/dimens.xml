@@ -15,18 +15,22 @@
 
     <dimen name="text_margin_horizontal">8dp</dimen>
     <dimen name="text_margin_vertical">4dp</dimen>
-
-    <dimen name="textsize_wheelView">16sp</dimen>
-
     <!--每页的标题-->
     <!--<dimen name="textsize_title1">22sp</dimen>-->
     <dimen name="textsize_title1">20sp</dimen>
-
     <dimen name="textsize_content_label">18sp</dimen>
     <dimen name="textsize_content1">16sp</dimen>
     <dimen name="textsize_content2">14sp</dimen>
     <dimen name="textsize_content3">12sp</dimen>
-    <dimen name="textsize_title2">20sp</dimen>
+    <dimen name="text_sp22">22sp</dimen>
+    <dimen name="text_sp20">20sp</dimen>
+    <dimen name="text_sp18">18sp</dimen>
+    <dimen name="text_sp16">16sp</dimen>
+    <dimen name="text_sp14">14sp</dimen>
+    <dimen name="text_sp12">12sp</dimen>
+    <dimen name="text_sp11">11sp</dimen>
+    <dimen name="text_sp10">10sp</dimen>
+
 
     <!--新版标注-->
     <dimen name="view_first_margin_top">20dp</dimen>
