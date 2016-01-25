@@ -70,7 +70,12 @@ public class  SignInListAdapter extends BaseAdapter {
 
         }else if (mType==TYPE_LIST_OF_USER){
             view.findViewById(R.id.layout_name).setVisibility(View.VISIBLE);
-            tv_customer_name.setText(legWork.customerName);
+
+            if(null == legWork.customerName){
+                tv_customer_name.setText("无指定客户");
+            }else{
+                tv_customer_name.setText(legWork.customerName);
+            }
             tv_user_name.setText(legWork.creator.getName());
         }
         tv_address.setText("地址："+legWork.address);
