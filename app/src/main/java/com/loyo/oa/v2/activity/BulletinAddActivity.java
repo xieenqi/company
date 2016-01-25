@@ -66,7 +66,6 @@ public class BulletinAddActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("发布通知");
-
         init_gridView_photo();
     }
 
@@ -158,8 +157,6 @@ public class BulletinAddActivity extends BaseActivity {
                         super.failure(error);
                     }
                 });
-
-
             }
         });
 
