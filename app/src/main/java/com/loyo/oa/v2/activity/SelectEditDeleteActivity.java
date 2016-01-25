@@ -103,7 +103,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //删除
             case R.id.btn_delete:
-                super.ConfirmDialog("提示", "确认删除?", new ConfirmDialogInterface() {
+                ConfirmDialog("提示", "确认删除?", new ConfirmDialogInterface() {
                     @Override
                     public void Confirm() {
                         mIntent = new Intent();

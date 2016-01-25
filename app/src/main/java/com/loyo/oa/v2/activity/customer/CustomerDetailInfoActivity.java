@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DemandsManageActivity;
 import com.loyo.oa.v2.activity.SaleActivitiesManageActivity;
@@ -36,12 +37,15 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.Date;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -134,7 +138,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(Customer customer, Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
-                LogUtil.dll("客户详情:"+MainApp.gson.toJson(customer));
+                LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
                 ownErId = customer.owner.id;
                 isLock = customer.lock;
                 mCustomer = customer;
@@ -272,7 +276,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_child_delete_task:
-                    delete();
+                    ConfirmDialog("提示", "你确定要删除客户？", new ConfirmDialogInterface() {
+                        @Override
+                        public void Confirm() {
+                            delete();
+                        }
+                    });
+
                     break;
                 case R.id.btn_child_add_update:
                     ConfirmDialog("提示", "投入公海，相当于放弃此客户所有数据和管理权限，你确定要投入公海？", new ConfirmDialogInterface() {
