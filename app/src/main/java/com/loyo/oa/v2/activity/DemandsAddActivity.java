@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,8 +47,8 @@ import retrofit.client.Response;
  */
 
 public class DemandsAddActivity extends BaseActivity implements View.OnClickListener {
-    ViewGroup img_title_left, img_title_right;
 
+    private ViewGroup img_title_left, img_title_right;
     private EditText edt_num;
     private EditText edt_price;
     private EditText edt_actualNum;
@@ -66,6 +68,16 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private SaleStageDialogFragment saleStageDialogFragment;
     private Demand demand;
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
+
+    private final int UI_UPDATE = 0x01;
+    private Handler mHandler = new Handler(){
+
+        public void handleMessage(Message msg){
+            if(msg.what == UI_UPDATE){
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +106,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
      * 获取数据
      */
     private void getData() {
+        showLoading("");
         getProducts();
         getSaleStages();
     }
@@ -105,7 +118,15 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getProducts(new RCallback<ArrayList<Product>>() {
             @Override
             public void success(ArrayList<Product> products, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_Product.addAll(products);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                finish();
             }
         });
     }
@@ -117,6 +138,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
             @Override
             public void success(ArrayList<SaleStage> saleStages, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_SaleStage.addAll(saleStages);
                 if (saleStageDialogFragment == null) {
                     saleStageDialogFragment = new SaleStageDialogFragment(lstData_SaleStage, tv_salestages, layout_reason);
@@ -126,6 +148,13 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         tv_salestages.setText(demand.getSaleStage().getName());
                     }
                 }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                finish();
             }
         });
     }
@@ -144,10 +173,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
 
         edt_num.setText(String.valueOf(demand.getEstimatedNum()));
         edt_price.setText(String.valueOf(demand.getEstimatedPrice()));
-
         edt_actualNum.setText(String.valueOf(demand.getActualNum()));
         edt_actualPrice.setText(String.valueOf(demand.getActualPrice()));
-
         edt_memo.setText(demand.getMemo());
 
         //赢单
@@ -298,7 +325,11 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         productNameSelect = lstData_Product.get((int) id).getName();
                         tv_products.setText(lstData_Product.get((int) id).getName());
 
+                        edt_price.setHint("请输入单价("+lstData_Product.get(position).getUnid()+")");
+                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).getUnid()+")");
+
                         dialog_Product.dismiss();
+
                     }
                 });
                 break;

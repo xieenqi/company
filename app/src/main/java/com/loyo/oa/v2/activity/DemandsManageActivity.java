@@ -88,7 +88,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
      * 获取购买意向
      */
     private void getData() {
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
