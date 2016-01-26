@@ -83,12 +83,12 @@
 
         <!-- 启动欢迎页面 -->
         <activity
-            android:name=".activity.WelcomeActivity"
+            android:name=".activity.login.WelcomeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".activity.ResetPasswordActivity_"
+            android:name=".activity.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -129,12 +129,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.NearByCustomersActivity_"
+            android:name=".activity.customer.NearByCustomersActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.NearByCustomersMapActivity_"
+            android:name=".activity.customer.NearByCustomersMapActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
@@ -169,7 +169,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.PreviewAttendanceActivity_"
+            android:name=".activity.attendance.PreviewAttendanceActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
@@ -194,12 +194,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.LoginBQQActivity"
+            android:name=".activity.login.LoginBQQActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
@@ -254,16 +254,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.SaleActivitiesManageActivity"
+            android:name=".activity.customer.SaleActivitiesManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.DemandsManageActivity"
+            android:name=".activity.customer.DemandsManageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.DemandsAddActivity"
+            android:name=".activity.customer.DemandsAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
@@ -387,7 +387,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.SaleActivitiesAddActivity"
+            android:name=".activity.customer.SaleActivitiesAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
@@ -658,9 +658,6 @@
             android:name="JPUSH_APPKEY"
             android:value="f78e54766a8910db098ce699"/>
         <!--  </>值来自开发者平台取得的AppKey-->
-        <activity
-            android:name=".tool.MyLayoutUtils"
-            android:label="@string/title_activity_my_layout_utils"/>
 
     </application>
 </manifest>

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;

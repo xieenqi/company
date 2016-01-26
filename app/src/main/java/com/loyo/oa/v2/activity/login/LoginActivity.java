@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.login;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.MainActivity_;
+import com.loyo.oa.v2.activity.VerifyAccountActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;

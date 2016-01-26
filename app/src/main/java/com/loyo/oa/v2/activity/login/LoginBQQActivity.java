@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.login;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.BaseActivity;

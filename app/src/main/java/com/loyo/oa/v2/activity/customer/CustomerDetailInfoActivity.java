@@ -15,8 +15,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DemandsManageActivity;
-import com.loyo.oa.v2.activity.SaleActivitiesManageActivity;
 import com.loyo.oa.v2.activity.signin.SignInListActivity_;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;

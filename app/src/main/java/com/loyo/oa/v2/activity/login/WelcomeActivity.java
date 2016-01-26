@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity;
+package com.loyo.oa.v2.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.BaseActivity;
 

@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;

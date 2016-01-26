@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.LoginActivity;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.application.MainApp;
