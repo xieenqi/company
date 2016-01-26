@@ -17,5 +17,5 @@
         android:gravity="center"
         android:padding="@dimen/dimen_1.5"
         android:text="姓名"
-        android:textSize="@dimen/dimen_18"/>
+        android:textSize="@dimen/dimen_16"/>
 </LinearLayout>

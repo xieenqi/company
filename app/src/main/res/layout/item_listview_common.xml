@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_5"
         android:layout_marginTop="@dimen/dimen_5"
         android:orientation="horizontal">
@@ -36,7 +36,9 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginBottom="5dp"
+                >
 
                 <View
                     android:id="@+id/view_ack"
@@ -54,7 +56,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="标题"
-                    android:textSize="15sp"/>
+                    android:textSize="16sp"/>
 
             </RelativeLayout>
 
@@ -62,12 +64,13 @@
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="内容"
                 android:textColor="#8a8a8a"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:layout_marginBottom="5dp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

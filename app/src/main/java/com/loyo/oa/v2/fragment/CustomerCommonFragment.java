@@ -3,6 +3,7 @@ package com.loyo.oa.v2.fragment;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -117,22 +118,17 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
+
             mView = inflater.inflate(R.layout.fragment_customer_common, container, false);
-
             mDropMenu = (DropListMenu) mView.findViewById(R.id.droplist_menu);
-
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
             listView = (PullToRefreshListView) mView.findViewById(R.id.listView_customers);
-
-
             listView.setEmptyView(emptyView);
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
             layout_near_customers = (ViewGroup) mView.findViewById(R.id.layout_near_customers);
-
             layout_near_customers.setOnTouchListener(Global.GetTouch());
             layout_near_customers.setOnClickListener(this);
-
             btn_add.setOnTouchListener(Global.GetTouch());
             btn_add.setOnClickListener(this);
 
@@ -260,6 +256,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     dropItemTag.addSubDropItem(parentItem);
                 }
                 source.add(dropItemTag);
+                mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+                mDropMenu.setmMenuTitleTextSize(14);//Menu的文字大小
+                mDropMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
                 mDropMenu.setmMenuItems(source);
                 mDropMenu.setMenuSelectedListener(CustomerCommonFragment.this);
             }

@@ -343,7 +343,6 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-
         tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount() + "");
         tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount() + "");
 

@@ -13,7 +13,7 @@
         android:layout_marginTop="3dp"
         android:layout_marginLeft="@dimen/margin_side_edge"
         android:textColor="#383838"
-        android:textSize="15sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/img_customer_status"
