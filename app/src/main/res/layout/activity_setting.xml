@@ -85,11 +85,6 @@
             android:layout_marginTop="@dimen/view_first_margin_top"/>
 
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -207,9 +202,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_10"
         android:padding="@dimen/dimen_10"
-        android:text="包括更新组织架构,审批类型,客户信息(行业、地区、抱歉、参与人权限、动态字段)等数据"
+        android:text="包括更新组织架构,审批类型,客户信息(行业、地区、标签、参与人权限、动态字段)等数据"
         android:textColor="@color/text99"/>
-
+    <View
+        style="@style/view_split"
+        android:layout_width="match_parent"/>
     <LinearLayout
         android:id="@+id/btn_setting_exit"
         android:layout_width="match_parent"
