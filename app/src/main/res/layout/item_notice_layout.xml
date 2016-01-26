@@ -71,7 +71,7 @@
                     android:singleLine="false"
                     android:text=""
                     android:textColor="@color/text33"
-                    android:textSize="@dimen/text_sp16"/>
+                    android:textSize="@dimen/text_sp18"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                     android:lineSpacingExtra="1dp"
                     android:text=""
                     android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp12"/>
+                    android:textSize="@dimen/text_sp14"/>
 
                 <GridView
                     android:id="@+id/gv_notice_attachemnts"

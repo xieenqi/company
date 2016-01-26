@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.LoginActivity;
 import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
-import com.loyo.oa.v2.activity.setting.SettingPasswordActivity_;
 import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -145,10 +144,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             /*更新组织架构*/
             case R.id.layout_update:
-                if(Utils.isNetworkAvailable(this)){
+                if (Utils.isNetworkAvailable(this)) {
                     Global.Toast("开始更新");
                     initService();
-                }else{
+                } else {
                     Toast("请检查您的网络连接");
                 }
                 break;
@@ -172,11 +171,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
      * 获取个人资料
      */
     void updateUserinfp() {
-
+        showLoading("");
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-                HttpErrorCheck.checkResponse("获取个人资料修改",response);
+                HttpErrorCheck.checkResponse("获取个人资料修改", response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
                 DBManager.Instance().putUser(json);
