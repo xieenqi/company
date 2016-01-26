@@ -150,7 +150,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
-            img_bulletinStatus.setVisibility(View.VISIBLE);
+            switch (msg.what) {
+                case ExtraAndResult.MSG_WHAT_VISIBLE:
+                    img_bulletinStatus.setVisibility(View.VISIBLE);
+                    break;
+                case ExtraAndResult.MSG_WHAT_GONG:
+                    img_bulletinStatus.setVisibility(View.GONE);
+                    break;
+            }
+
         }
     };
 
@@ -485,23 +493,23 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        String timeOutStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getSetting().getCheckOutTime()/1000+"").substring(11,16), "HH时mm");
-        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime()+"").substring(11,16), "HH时mm");
+        String timeOutStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getSetting().getCheckOutTime() / 1000 + "").substring(11, 16), "HH时mm");
+        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime() + "").substring(11, 16), "HH时mm");
 
-        LogUtil.dll("分时时间戳 下班:"+Long.parseLong(timeOutStamp)/1000);
+        LogUtil.dll("分时时间戳 下班:" + Long.parseLong(timeOutStamp) / 1000);
         LogUtil.dll("分时时间戳 现在:" + Long.parseLong(timeNowStamp) / 1000);
 
-        if(Long.parseLong(timeOutStamp)/1000>Long.parseLong(timeNowStamp)/1000
+        if (Long.parseLong(timeOutStamp) / 1000 > Long.parseLong(timeNowStamp) / 1000
                 && validateInfo.getValids().get(1).isEnable()
-                && !validateInfo.getValids().get(0).isEnable()){
+                && !validateInfo.getValids().get(0).isEnable()) {
             attanceWorry();
-        }else{
+        } else {
             startAttanceLocation();
         }
     }
 
 
-    void startAttanceLocation(){
+    void startAttanceLocation() {
         showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
@@ -717,8 +725,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     extra = num.bizNum + "个外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if (num.bizType == 19) {
-                    if (!num.viewed)
-                        handler.sendEmptyMessage(12);
+                    if (!num.viewed) {
+                        handler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
+                    } else {
+                        handler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_GONG);
+                    }
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);
@@ -751,8 +762,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 早退提示
-     * */
-    public void attanceWorry(){
+     */
+    public void attanceWorry() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.app_attanceworry_message));
         builder.setTitle("提示");
@@ -972,6 +983,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     protected void onResume() {
         super.onResume();
         intentJpushInfo();
+        requestNumber();
     }
 
     /**

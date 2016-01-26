@@ -155,7 +155,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
                     int resultTime = c1.compareTo(c2);
                     if (resultTime < 0) {
                         nextDay();
-                    }else{
+                    } else {
                         Toast("不能查看未来拜访数据!");
                     }
                 } catch (Exception e) {
@@ -230,10 +230,10 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void bindData() {
         if (null == adapter) {
-            if(null == legWorks || legWorks.size() == 0){
+            if (null == legWorks || legWorks.size() == 0) {
                 layout_nodata.setVisibility(View.VISIBLE);
                 lv.setVisibility(View.GONE);
-            }else{
+            } else {
                 layout_nodata.setVisibility(View.GONE);
                 lv.setVisibility(View.VISIBLE);
                 adapter = new SignInListAdapter(mActivity, SignInListAdapter.TYPE_LIST_OF_USER, legWorks);

@@ -491,7 +491,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else {
                 tv_state.setText("未打卡");
                 tv_state.setTextColor(getResources().getColor(R.color.gray));
-                iv_recordIn_type.setVisibility(View.GONE);
+                iv_recordIn_type.setVisibility(View.INVISIBLE);
                 tv_time.setText("--:--");
             }
 
@@ -522,12 +522,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else {
                 tv_result.setTextColor(getResources().getColor(R.color.gray));
                 tv_result.setText("未打卡");
-                iv_recordOut_type.setVisibility(View.GONE);
+                iv_recordOut_type.setVisibility(View.INVISIBLE);
                 tv_time1.setText("--:--");
             }
 
             if (i == getCount() - 1) {
-                divider.setVisibility(View.GONE);
+                divider.setVisibility(View.INVISIBLE);
             } else {
                 divider.setVisibility(View.VISIBLE);
             }

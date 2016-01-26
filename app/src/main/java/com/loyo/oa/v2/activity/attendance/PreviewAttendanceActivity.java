@@ -145,11 +145,11 @@ public class PreviewAttendanceActivity extends BaseActivity {
         ImageLoader.getInstance().displayImage(attendance.user.avatar, iv_avartar);
         final User user = attendance.user;
         tv_name.setText(user.getRealname());
-        LogUtil.dll("考勤详情 员工信息:"+MainApp.gson.toJson(user));
+        LogUtil.dll("考勤详情 员工信息:" + MainApp.gson.toJson(user));
         String deptName = TextUtils.isEmpty(user.departmentsName) ?
                 Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
-        tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortPosition().getName())
-                ? "-" : user.depts.get(0).getShortPosition().getName()));
+        tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortDept().getName())
+                ? "-" : user.depts.get(0).getShortDept().title));
 
         if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
             iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
@@ -190,7 +190,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
      */
     private void initGridView() {
         if (null == adapter) {
-            adapter = new SignInGridViewAdapter(this, attachments, false, false,0);
+            adapter = new SignInGridViewAdapter(this, attachments, false, false, 0);
         } else {
             adapter.setDataSource(attachments);
         }
