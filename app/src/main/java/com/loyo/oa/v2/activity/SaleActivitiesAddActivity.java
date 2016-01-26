@@ -38,10 +38,10 @@ import retrofit.client.Response;
  * */
 public class SaleActivitiesAddActivity extends BaseActivity implements View.OnClickListener {
 
-    ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
-    EditText edt;
-    TextView tv_sale_action, tv_remain_time;
-    Customer mCustomer;
+    private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
+    private EditText edt;
+    private TextView tv_sale_action, tv_remain_time;
+    private Customer mCustomer;
     private String tagItemIds;
 
     @Override

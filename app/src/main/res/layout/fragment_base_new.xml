@@ -89,13 +89,12 @@
 
 
         <com.loyo.oa.v2.tool.customview.filterview.DropDownMenu
+            android:gravity="center_vertical"
             android:visibility="invisible"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:id="@+id/drop_menu"
             android:background="@color/white"
             android:layout_height="@dimen/dimen_50"/>
-
     </FrameLayout>
-
 </LinearLayout>

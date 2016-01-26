@@ -301,7 +301,7 @@
 
     <color name="iswrite">#2c9dfc</color>
     <color name="isteston">#bf73e6</color>
-    <color name="isfinish">#32bb9f</color>
+    <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
     <color name="activity_bg">#efeff4</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
