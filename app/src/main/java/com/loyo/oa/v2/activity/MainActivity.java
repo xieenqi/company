@@ -383,7 +383,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         }
 
-
         return menuObjects;
     }
 
