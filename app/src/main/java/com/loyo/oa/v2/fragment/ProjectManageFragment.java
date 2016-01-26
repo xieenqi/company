@@ -36,7 +36,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     private static final String[] FILTER_TYPE_ARRAY = new String[]{"全部类型", "我负责", "我创建", "我参与"};
     private static final int[] FILTER_TYPEID_ARRAY = new int[]{0, 3, 2, 1};
     private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
-
     private ProjectExpandableListAdapter adapter;
     private int type = 0;
     private int status = 0;

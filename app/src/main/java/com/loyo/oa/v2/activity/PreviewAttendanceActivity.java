@@ -29,6 +29,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -143,8 +144,8 @@ public class PreviewAttendanceActivity extends BaseActivity {
         //AttendanceRecord record = inOrOut == ValidateItem.ATTENDANCE_STATE_OUT ? attendance.getOut() : attendance.getIn();
         ImageLoader.getInstance().displayImage(attendance.user.avatar, iv_avartar);
         final User user = attendance.user;
-
         tv_name.setText(user.getRealname());
+        LogUtil.dll("考勤详情 员工信息:"+MainApp.gson.toJson(user));
         String deptName = TextUtils.isEmpty(user.departmentsName) ?
                 Common.getDepartment(user.depts.get(0).getShortDept().getId()).getName() : user.departmentsName;
         tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortPosition().getName())

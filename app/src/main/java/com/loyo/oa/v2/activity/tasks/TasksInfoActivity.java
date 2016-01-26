@@ -178,6 +178,7 @@ public class TasksInfoActivity extends BaseActivity {
         btn_complete.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
         allUsers = new ArrayList<>();
+
     }
 
     void updateUI() {
@@ -302,9 +303,6 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_status.setTextColor(getResources().getColor(R.color.red));
             }
             layout_test_Add_area.addView(mView);
-
-            tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount() + "");
-            tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount()+"");
         }
     }
 
@@ -344,6 +342,10 @@ public class TasksInfoActivity extends BaseActivity {
             tv_sub_title.setText(String.format("%s %s 提交", mTask.getCreator().getRealname(),
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
+
+
+        tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount() + "");
+        tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount() + "");
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
