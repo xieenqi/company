@@ -82,28 +82,6 @@
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/view_first_margin_top"/>
 
-        <LinearLayout
-            android:id="@+id/layout_update"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_h_title"
-            android:background="@color/white"
-            android:gravity="center_vertical">
-
-            <TextView
-                style="@style/text_item1"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_weight="1"
-                android:text="更新组织架构"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="center"
-                android:src="@drawable/right_arrow"/>
-
-        </LinearLayout>
 
         <View
             style="@style/view_split"
@@ -195,6 +173,36 @@
         style="@style/view_split"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/view_first_margin_top"/>
+
+    <LinearLayout
+        android:id="@+id/layout_update"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_item1"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_weight="1"
+            android:text="更新数据"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_10"
+        android:text="包括更新组织架构,审批类型,客户信息(行业、地区、抱歉、参与人权限、动态字段)等数据"
+        android:textColor="@color/text99"/>
 
     <LinearLayout
         android:id="@+id/btn_setting_exit"
