@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
@@ -173,12 +172,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         if (MainApp.getMainApp().isCutomerEdit) {
             getData();
         }
-
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
             //附近的客户
             case R.id.layout_near_customers:
                 Bundle bundle = new Bundle();
@@ -187,6 +186,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 bundle.putInt("type", customer_type);//团队与个人
                 app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
+
             case R.id.btn_add:
                 Intent intent = new Intent();
                 intent.setClass(mActivity, CustomerAddActivity_.class);
@@ -530,7 +530,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 获取数据,默认设置倒序
      */
     private void getData() {
-        showLoading("");
+
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);
