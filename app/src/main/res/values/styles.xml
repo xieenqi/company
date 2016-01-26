@@ -114,17 +114,19 @@
     </style>
 
     <style name="text_item1">
-        <item name="android:textSize">@dimen/textsize_content_label</item>
+        <item name="android:textSize">@dimen/text_sp16</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingTop">4dp</item>
+        <item name="android:textColorHint">@color/text99</item>
+        <item name="android:textColor">@color/text33</item>
         <item name="android:paddingBottom">4dp</item>
     </style>
 
     <style name="text_item2">
-        <item name="android:textSize">@dimen/textsize_content1</item>
+        <item name="android:textSize">@dimen/text_sp16</item>
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">4dp</item>
@@ -166,8 +168,9 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:background">@null</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColorHint">#c9c9c9</item>
+        <item name="android:textSize">@dimen/text_sp16</item>
+        <item name="android:textColorHint">@color/text99</item>
+        <item name="android:textColor">@color/text33</item>
     </style>
 
     <style name="textView_hint">
@@ -225,5 +228,14 @@
         <item name="android:background">@android:color/white</item>
         <item name="android:windowBackground">@null</item>
         <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="text_style99">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/text99</item>
+        <item name="android:textSize">@dimen/text_sp18</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_alignParentLeft">true</item>
     </style>
 </resources>

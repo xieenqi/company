@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
+
             android:hint="请输入反馈意见"
             android:minHeight="@dimen/dimen_160"
             android:padding="@dimen/dimen_16"/>
