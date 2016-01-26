@@ -346,4 +346,8 @@
     <color name="login">#b3b3b3</color>
     <color name="grayC9">#c9c9c9</color>
     <color name="graye9">#e9e9e9</color>
+    <color name="text33">#333333</color>
+    <color name="text99">#999999</color>
+    <color name="lineCC">#cccccc</color>
+    <color name="redE8">#e85840</color>
 </resources>
