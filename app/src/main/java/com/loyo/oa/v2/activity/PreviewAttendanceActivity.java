@@ -55,11 +55,10 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_attendance_info)
 public class PreviewAttendanceActivity extends BaseActivity {
+
     @ViewById ViewGroup layout_back;
     @ViewById TextView tv_title;
-
     @ViewById RoundImageView iv_avartar;
-
     @ViewById TextView tv_name;
     @ViewById TextView tv_role;
 

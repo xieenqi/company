@@ -10,6 +10,8 @@ import java.util.ArrayList;
  * 时间 : 15/9/15.
  */
 public class ValidateInfo implements Serializable {
+
+    private long serverTime;
     private TimeSetting setting;// (TimeSetting, optional): ,
     private ArrayList<ValidateItem> valids = new ArrayList<>();//array[ValidateItem], optional):
 
@@ -27,5 +29,13 @@ public class ValidateInfo implements Serializable {
 
     public void setSetting(TimeSetting setting) {
         this.setting = setting;
+    }
+
+    public long getServerTime() {
+        return serverTime;
+    }
+
+    public void setServerTime(long serverTime) {
+        this.serverTime = serverTime;
     }
 }

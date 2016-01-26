@@ -67,6 +67,7 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -410,9 +411,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("服务器连接失败,请检查网络" + error.getMessage());
                 super.failure(error);
-                cancelLoading();
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -428,7 +428,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     Toast("获取考勤信息失败");
                     return;
                 }
-
                 validateInfo = _validateInfo;
                 LogUtil.dll("考勤信息:" + MainApp.gson.toJson(_validateInfo));
 
@@ -485,17 +484,33 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
+
+        String timeOutStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getSetting().getCheckOutTime()/1000+"").substring(11,16), "HH时mm");
+        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime()+"").substring(11,16), "HH时mm");
+
+        LogUtil.dll("分时时间戳 下班:"+Long.parseLong(timeOutStamp)/1000);
+        LogUtil.dll("分时时间戳 现在:" + Long.parseLong(timeNowStamp) / 1000);
+
+        if(Long.parseLong(timeOutStamp)/1000>Long.parseLong(timeNowStamp)/1000
+                && validateInfo.getValids().get(1).isEnable()
+                && !validateInfo.getValids().get(0).isEnable()){
+            attanceWorry();
+        }else{
+            startAttanceLocation();
+        }
+    }
+
+
+    void startAttanceLocation(){
         showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
         }
         int type = validateItem.getType();
-
         map.clear();
         map.put("inorout", type);
         new LocationUtil(this, this);
-
     }
 
     /**
@@ -734,9 +749,30 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     }
 
+    /**
+     * 早退提示
+     * */
+    public void attanceWorry(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.app_attanceworry_message));
+        builder.setTitle("提示");
+        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startAttanceLocation();
+            }
+        });
+        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     @Override
     public void onBackPressed() {
-        app.logUtil.d("onBackPressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.app_exit_message));
         builder.setTitle("提示");

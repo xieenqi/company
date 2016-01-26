@@ -43,11 +43,10 @@ import java.util.ArrayList;
  */
 @EActivity(R.layout.activity_nearbycustomers_map)
 public class NearByCustomersMapActivity extends BaseActivity implements LocationUtil.AfterLocation {
+
     @ViewById ViewGroup layout_back;
     @ViewById TextView tv_title;
-
     @ViewById MapView mapview;
-
     @Extra ArrayList<Customer> customers;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     int customerType;
@@ -66,8 +65,6 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
         new LocationUtil(this, this);
-
-
         LogUtil.d(customerType + " 地图显示的客户数据： " + MainApp.gson.toJson(customers));
     }
 

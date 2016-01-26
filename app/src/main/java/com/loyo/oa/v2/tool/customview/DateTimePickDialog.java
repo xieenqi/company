@@ -118,8 +118,8 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 .setPositiveButton("完成", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
-                        if (Integer.parseInt(DateTool.getDataOne(timeFu))
-                                < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime()))) {
+                        if (Integer.parseInt(DateTool.getDataOne(timeFu,"yyyy-MM-dd HH:mm"))
+                                < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(),"yyyy-MM-dd HH:mm"))) {
                             Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
                         } else {
                             listener.onDateTimeChanged(years, month, day, hour, minutes);
