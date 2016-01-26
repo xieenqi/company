@@ -52,7 +52,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private CommonCategoryAdapter categoryAdapter;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
-    private int mIndex = -1,Identity;
+    private int mIndex = -1, Identity;
     private float mRotation = 0;
 
     @AfterViews
@@ -74,10 +74,10 @@ public class AttendanceActivity extends BaseFragmentActivity {
         initChildren();
 
         //获得权限
-        if(null!=MainApp.user.role){
+        if (null != MainApp.user.role) {
             Identity = MainApp.user.role.getDataRange();
         }
-        if(Identity==3){
+        if (Identity == 3) {
             imageArrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
@@ -87,7 +87,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                    changeCategoryView();
+                changeCategoryView();
                 break;
             case R.id.img_title_left:
                 onBackPressed();
@@ -166,10 +166,10 @@ public class AttendanceActivity extends BaseFragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    changeCategoryView();
-                    String content = ATTENDANCE_FILTER_STRS[position];
-                    tv_title_1.setText(content);
-                    changeChild(position);
+                changeCategoryView();
+                String content = ATTENDANCE_FILTER_STRS[position];
+                tv_title_1.setText(content);
+                changeChild(position);
             }
         });
     }

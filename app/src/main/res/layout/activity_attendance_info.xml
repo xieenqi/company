@@ -33,15 +33,15 @@
 
                 <com.loyo.oa.v2.tool.customview.RoundImageView
                     android:id="@+id/iv_avartar"
-                    android:layout_width="@dimen/dimen_65"
+                    android:layout_width="@dimen/dimen_48"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="@dimen/dimen_8"
                     android:layout_marginLeft="@dimen/dimen_8"
                     android:layout_marginTop="@dimen/dimen_8"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_contact_avatar"
-                    imagecontrol:border_inside_color="#a8d4e9"
-                    imagecontrol:border_outside_color="#a8d4e9"
+                    imagecontrol:border_inside_color="@color/white"
+                    imagecontrol:border_outside_color="@color/white60"
                     imagecontrol:border_thickness="1dp"/>
 
                 <TextView
@@ -51,6 +51,7 @@
                     android:layout_marginLeft="@dimen/dimen_5"
                     android:gravity="center"
                     android:text="方静"
+                    android:textColor="@color/text33"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -69,15 +70,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_attendance_rusult"
-                android:minHeight="@dimen/dimen_45"
+                android:minHeight="@dimen/dimen_30"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_type"
                     android:layout_width="@dimen/dimen_25"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/dimen_25"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginLeft="@dimen/dimen_10"
                     />
 
                 <TextView
@@ -100,14 +101,9 @@
                 android:layout_marginLeft="@dimen/dimen_25"
                 android:layout_marginTop="@dimen/dimen_8"
                 android:drawableLeft="@drawable/icon_attendance_explanation"
+                android:drawablePadding="@dimen/dimen_2"
                 android:text="说明"
-                />
-
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:textColor="@color/text99"
                 />
 
             <TextView
@@ -115,7 +111,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_15"
                 android:gravity="left|center"
                 android:minHeight="@dimen/dimen_55"
                 android:text="迟到原因"
@@ -126,7 +121,8 @@
                 android:id="@+id/gridView_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_marginRight="@dimen/dimen_10"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/activity_horizontal_margin"
                 android:listSelector="@android:color/transparent"
@@ -153,8 +149,8 @@
                     >
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_30"
-                        android:layout_height="@dimen/dimen_30"
+                        android:layout_width="@dimen/dimen_25"
+                        android:layout_height="@dimen/dimen_25"
                         android:src="@drawable/img_wfinstance_agree"
                         />
 
@@ -164,41 +160,41 @@
                         android:layout_marginLeft="@dimen/dimen_8"
                         android:text="确认外勤"
                         android:textColor="@color/lawngreen"
-                        android:textSize="20sp"
+                        android:textSize="@dimen/text_sp18"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_5"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_confirmDept"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="迟到原因"
+                        android:text=""
                         android:textColor="#999999"
-                        android:textSize="16sp"/>
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/tv_confirmName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_8"
-                        android:text="迟到原因"
+                        android:text=""
                         android:textColor="#999999"
-                        android:textSize="16sp"/>
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/tv_confirmTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_8"
-                        android:text="迟到原因"
+                        android:text=""
                         android:textColor="#999999"
-                        android:textSize="16sp"/>
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -208,7 +204,7 @@
                 android:id="@+id/btn_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_45"
-                android:layout_margin="@dimen/dimen_16"
+                android:layout_margin="@dimen/dimen_10"
                 android:background="@drawable/round_bg_shpe"
                 android:text="确认外勤"
                 android:textColor="@color/white"

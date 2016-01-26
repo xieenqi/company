@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/white"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -11,18 +11,19 @@
         >
 
         <LinearLayout
-            android:layout_marginLeft="@dimen/dimen_80"
             android:id="@+id/img_time_left"
-            android:gravity="center"
-            android:orientation="vertical"
             android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/dimen_55">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_select_time_left"
-            />
+            android:layout_height="@dimen/dimen_55"
+            android:layout_marginLeft="@dimen/dimen_80"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_select_time_left"
+                />
         </LinearLayout>
 
         <TextView
@@ -36,19 +37,20 @@
             />
 
         <LinearLayout
+            android:id="@+id/img_time_right"
+            android:layout_width="@dimen/dimen_55"
+            android:layout_height="@dimen/dimen_55"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/dimen_80"
-            android:id="@+id/img_time_right"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/dimen_55">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_select_time_right"
-            />
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_select_time_right"
+                />
 
         </LinearLayout>
 
@@ -59,23 +61,27 @@
         android:layout_height="wrap_content"
         android:background="@drawable/icon_attendance_rusult"
         android:minHeight="@dimen/dimen_45"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_10"
+        android:paddingRight="@dimen/dimen_10">
 
         <TextView
-            android:layout_weight="1"
             android:id="@+id/tv_count_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:gravity="left|center"
             android:text="本月总计:"
             android:textColor="#999999"
+            android:textSize="@dimen/text_sp14"
             />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -84,6 +90,7 @@
                 android:gravity="left|center"
                 android:text="迟到:"
                 android:textColor="#999999"
+                android:textSize="@dimen/text_sp14"
                 />
 
             <TextView
@@ -100,7 +107,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,6 +117,7 @@
                 android:gravity="left|center"
                 android:text="早退:"
                 android:textColor="#999999"
+                android:textSize="@dimen/text_sp14"
                 />
 
             <TextView
@@ -125,7 +134,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,6 +144,7 @@
                 android:gravity="left|center"
                 android:text="未打卡:"
                 android:textColor="#999999"
+                android:textSize="@dimen/text_sp14"
                 />
 
             <TextView
@@ -150,7 +161,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -159,6 +171,7 @@
                 android:gravity="left|center"
                 android:text="外勤:"
                 android:textColor="#999999"
+                android:textSize="@dimen/text_sp14"
                 />
 
             <TextView
@@ -175,11 +188,11 @@
     </LinearLayout>
 
     <ListView
-        android:clickable="false"
-        android:background="@color/white"
         android:id="@+id/listView_attendance"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="false"
         android:divider="@null">
     </ListView>
 
