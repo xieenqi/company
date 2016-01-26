@@ -486,10 +486,29 @@ public class DateTool {
     }
 
     /**
-     * yyyy-MM-dd HH:mm格式转时间戳
+     * 下班分时转时间戳
+     * */
+    public static String getOutDataOne(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
+                Locale.CHINA);
+        Date date;
+        String times = null;
+        try {
+            date = sdr.parse(time);
+            long l = date.getTime();
+            String stf = String.valueOf(l);
+            times = stf.substring(0, 8);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return times;
+    }
+
+    /**
+     *自定义格式转时间戳
      */
-    public static String getDataOne(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm",
+    public static String getDataOne(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
                 Locale.CHINA);
         Date date;
         String times = null;

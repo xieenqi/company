@@ -326,7 +326,7 @@ public class TasksAddActivity extends BaseActivity {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
                                 String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mDeadline = Long.parseLong(DateTool.getDataOne(str));
+                        mDeadline = Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm"));
                         LogUtil.dll("截至时间:" + mDeadline + "");
                     }
                 });

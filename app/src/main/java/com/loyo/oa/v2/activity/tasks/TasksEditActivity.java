@@ -351,8 +351,8 @@ public class TasksEditActivity extends BaseActivity {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
                                 String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str)));
-                        LogUtil.d("修改截至时间：" + Long.parseLong(DateTool.getDataOne(str)));
+                        mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
+                        LogUtil.d("修改截至时间：" + Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
                     }
                 });
                 break;
