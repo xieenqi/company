@@ -198,7 +198,7 @@
     <!-- 橄榄色 -->
     <color name="purple">#800080</color>
     <!-- 紫色 -->
-    <color name="maroon">#800000</color>
+    <color name="maroon">#807100</color>
     <!-- 粟色 -->
     <color name="aquamarine">#7FFFD4</color>
     <!-- 碧绿色 -->
@@ -288,7 +288,7 @@
     <!-- 绿色 -->
     <color name="darkgreen">#006400</color>
     <!-- 暗绿色 -->
-    <color name="blue">#0000FF</color>
+    <color name="blue">#0400ff</color>
     <!-- 蓝色 -->
     <color name="mediumblue">#0000CD</color>
     <!-- 中兰色 -->
