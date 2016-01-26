@@ -123,39 +123,41 @@ F
         android:layout_weight="1"
         android:gravity="center_horizontal|bottom"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dimen_10">
+        android:paddingBottom="@dimen/dimen_10"
+        >
 
-        <TextView
-            android:id="@+id/tv_resetPassword"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="忘记密码?"
-            android:textColor="@color/title_bg1"
-            android:textSize="14sp"/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+            <TextView
+                android:gravity="center"
+                android:id="@+id/tv_resetPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="忘记密码?"
+                android:textColor="@color/title_bg1"
+                android:textSize="14sp"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="@dimen/dimen_15"
-            android:layout_marginRight="@dimen/dimen_15"
-            android:background="@color/title_bg1"
-            />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="@dimen/dimen_15"
+                android:layout_marginRight="@dimen/dimen_15"
+                android:background="@color/title_bg1"
+                />
 
-        <TextView
-            android:id="@+id/tv_qqLogin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="企业QQ登录"
-            android:textColor="@color/title_bg1"
-            android:textSize="14sp"/>
+            <TextView
+                android:gravity="center"
+                android:id="@+id/tv_qqLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="企业QQ登录"
+                android:textColor="@color/title_bg1"
+                android:textSize="14sp"/>
 
+            </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>
