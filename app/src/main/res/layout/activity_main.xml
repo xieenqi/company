@@ -169,14 +169,14 @@
             android:shadowRadius="1"
             android:text="用户名"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_sp20"/>
 
         <LinearLayout
             android:id="@+id/layout_network"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/red"
+            android:background="@color/redE8"
             android:gravity="center"
             android:minHeight="@dimen/dimen_25"
             android:visibility="gone">

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  * 通讯录部门bean
- * */
+ */
 
 public class Department implements Serializable {
 
@@ -22,6 +22,7 @@ public class Department implements Serializable {
     private long updatedAt;
     private long createdAt;
     private boolean isIndex;
+    public String title = "";//职务名称
 
 
     public boolean isIndex() {
@@ -126,6 +127,7 @@ public class Department implements Serializable {
 
     /**
      * 获取首字母当作GroupName
+     *
      * @return
      */
     public String getGroupName() {
@@ -134,9 +136,9 @@ public class Department implements Serializable {
             return getFullPinyin().substring(0, 1).toUpperCase();
         } else if (!TextUtils.isEmpty(getSimplePinyin())) {
             return getSimplePinyin().substring(0, 1).toUpperCase();
-        }else if(TextUtils.isEmpty(getFullPinyin())||TextUtils.isEmpty(getSimplePinyin())){
+        } else if (TextUtils.isEmpty(getFullPinyin()) || TextUtils.isEmpty(getSimplePinyin())) {
             //LogUtil.d(" #ddd  "+getName());
-           return "# ";
+            return "# ";
         }
 
         return "";

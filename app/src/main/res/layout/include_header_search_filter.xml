@@ -9,15 +9,7 @@
         android:id="@+id/img_title_left"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center_vertical">
-
-        <TextView
-            style="@style/text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/dimen_5"
-            android:layout_toRightOf="@+id/img_back"
-            android:text="返回"/>
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/img_back"
@@ -30,6 +22,17 @@
             android:layout_marginTop="@dimen/dimen_15"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_toRightOf="@+id/img_back"
+            android:gravity="center"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sp16"/>
+
 
     </RelativeLayout>
 
