@@ -113,6 +113,7 @@
                     android:scaleType="center"
                     android:text="点击进入\n考勤详情"
                     />
+
             </RelativeLayout>
 
             <RelativeLayout

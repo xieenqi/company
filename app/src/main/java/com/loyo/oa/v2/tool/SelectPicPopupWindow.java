@@ -178,8 +178,8 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_PICK);
                     intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
 //                    intent.setType("image/*");
-//
 //                    //android 4.4
 //                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
 //                        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);

@@ -24,18 +24,14 @@ import org.androidannotations.annotations.ViewById;
 public class LegworksListActivity extends FragmentActivity {
 
     @ViewById ViewGroup img_title_left;
-
     @ViewById TextView tv_title_1;
-
     @Extra("data") User mUser;
-
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @AfterViews
     void initViews() {
         tv_title_1.setText(mUser.getRealname() + "的拜访记录");
         img_title_left.setOnTouchListener(Global.GetTouch());
-
         Bundle b = new Bundle();
         b.putSerializable("user", mUser);
         b.putBoolean("disabled", true);
