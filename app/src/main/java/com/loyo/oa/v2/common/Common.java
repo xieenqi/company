@@ -61,6 +61,7 @@ public final class Common {
     }
 
     public static ArrayList<UserGroupData> getLstUserGroupData() {
+
         if (MainApp.lstUserGroupData == null) {
             InitOrganizationFromDB();
         }
@@ -461,8 +462,12 @@ public final class Common {
         myUsers.clear();
         for (Department department : getLstDepartment()) {
             if (department.getXpath().contains(getLstDepartment().get(positions).getXpath())) {
-                for (User user : department.getUsers()) {
-                    myUsers.add(user);
+                try{
+                    for (User user : department.getUsers()) {
+                        myUsers.add(user);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
             }
         }

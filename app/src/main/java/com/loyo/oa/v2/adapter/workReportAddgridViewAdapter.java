@@ -22,6 +22,9 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
 
     private Context mContext;
     private ArrayList<WorkReportDyn> dynList;
+    private int[] redGroup = {0,3,6,9,12,15};
+    private int[] greenGroup = {1,4,7,10,13,16};
+    private int[] blueGroup = {2,5,8,11,14,17};
 
     public workReportAddgridViewAdapter(Context context,ArrayList<WorkReportDyn> dyn){
         this.mContext = context;
@@ -51,6 +54,7 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
+    LogUtil.dll("GridView Position:"+position);
     ViewHolder holder = null;
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_workreportgridview,null);
@@ -64,6 +68,24 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
 
         holder.name.setText(dynList.get(position).getName());
         holder.num.setText(dynList.get(position).getNum());
+
+        for(int i = 0;i<redGroup.length;i++){
+            if(position == redGroup[i]){
+                holder.num.setTextColor(mContext.getResources().getColor(R.color.red));
+            }
+        }
+
+        for(int i = 0;i<greenGroup.length;i++){
+            if(position == greenGroup[i]){
+                holder.num.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
+            }
+        }
+
+        for(int i = 0;i<blueGroup.length;i++){
+            if(position == blueGroup[i]){
+                holder.num.setTextColor(mContext.getResources().getColor(R.color.isfinish));
+            }
+        }
 
         return convertView;
     }

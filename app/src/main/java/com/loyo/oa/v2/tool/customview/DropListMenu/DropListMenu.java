@@ -213,7 +213,6 @@ public class DropListMenu extends LinearLayout {
                          * 展开后的右侧 二级ListView
                          * */
                         final DropListAdapter adapter = new DropListAdapter(mContext, menuItem.getSubDropItem().get(mRowSelected).getSubDropItem(), selectedItem);
-                        subMenuList.setBackgroundColor(getResources().getColor(R.color.lightgrey));
                         getSubMenuList().setAdapter(adapter);
                         getSubMenuList().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
