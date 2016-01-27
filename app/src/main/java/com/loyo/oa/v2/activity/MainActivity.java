@@ -285,7 +285,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
 
-        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2,R.color.title_bg1);
+        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
         //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -653,6 +653,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     public class ClickItemAdapter extends BaseAdapter {
+        LayoutInflater inflter;
+
+        public ClickItemAdapter() {
+            inflter = LayoutInflater.from(mContext);
+        }
+
         @Override
         public int getCount() {
             return items.size();
@@ -683,8 +689,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_main, null, false);
-
+                convertView = inflter.inflate(R.layout.item_main, null, false);
                 holder.img_item = (ImageView) convertView.findViewById(R.id.img_item);
                 holder.tv_item = (TextView) convertView.findViewById(R.id.tv_item);
                 holder.tv_extra = (TextView) convertView.findViewById(R.id.tv_extra);
