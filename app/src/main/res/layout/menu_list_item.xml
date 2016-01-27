@@ -20,7 +20,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ico_make"
+        android:src="@drawable/img_check1"
         android:visibility="gone"/>
 
     <View
