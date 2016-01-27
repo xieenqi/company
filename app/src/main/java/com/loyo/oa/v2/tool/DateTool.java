@@ -497,7 +497,7 @@ public class DateTool {
             date = sdr.parse(time);
             long l = date.getTime();
             String stf = String.valueOf(l);
-            times = stf.substring(0, 8);
+            times = stf.substring(0, stf.length());
         } catch (ParseException e) {
             e.printStackTrace();
         }

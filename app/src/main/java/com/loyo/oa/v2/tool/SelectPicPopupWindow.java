@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
  */
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
-    private String tag = "SelectPicPopupWindow";
     public static final int GET_IMG = 10;
+    private String tag = "SelectPicPopupWindow";
     private Button btn_take_photo;//拍照
     private Button btn_pick_photo;//从相册选
     private Button btn_cancel;//取消
@@ -47,7 +48,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         layout = (LinearLayout) findViewById(R.id.pop_layout);
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
         layout.setOnClickListener(new OnClickListener() {
-
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Toast.makeText(getApplicationContext(), "提示：点击窗口外部关闭窗口！",
@@ -59,7 +59,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         btn_pick_photo.setOnClickListener(this);
         btn_take_photo.setOnClickListener(this);
 
-       /**判断是直接调用相机，还是弹出选相框*/
+        /**判断是直接调用相机，还是弹出选相框*/
         if (getIntent() != null && getIntent().getExtras() != null) {
             boolean localpic = getIntent().getBooleanExtra("localpic", false);
             if (!localpic) {
@@ -82,6 +82,16 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         fileUri = savedInstanceState.getParcelable(RESTORE_FILEURI);
@@ -90,7 +100,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         if (fileUri != null) {
             outState.putParcelable(RESTORE_FILEURI, fileUri);
         }
@@ -106,10 +115,13 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(tag, "onActivityResult()");
-        Log.d(tag, " requestCode:" + requestCode);
-        Log.d(tag, " resultCode:" + resultCode);
+
+        LogUtil.dll("onActivityResult()");
+        LogUtil.dll(" requestCode:" + requestCode);
+        LogUtil.dll(" resultCode:" + resultCode);
+
         if (resultCode != RESULT_OK) {
+            finish();
             return;
         }
 
@@ -119,25 +131,21 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         if (requestCode == 1) {
             //拍照
             pickArray.add(new ImageInfo(fileUri.toString()));
-
             if (pickArray.isEmpty()) {
                 setResult(RESULT_CANCELED);
             } else {
                 i.putExtra("data", pickArray);
                 setResult(RESULT_OK, i);
             }
-        } else {
+        } else if(requestCode == 2){
             //选择文件
-
             if (data.getData() != null) {
                 pickArray.add(new ImageInfo(data.getData().toString()));
                 i.putExtra("data", pickArray);
                 setResult(RESULT_OK, i);
             }
         }
-
         finish();
-
         //选择完或者拍完照后会在这里处理，然后我们继续使用setResult返回Intent以便可以传递数据和调用
     }
 
@@ -191,5 +199,4 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 break;
         }
     }
-
 }
