@@ -295,8 +295,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         checkUpdateService();
         updateUser();
 
-
-
+        lv_main.setDropListener(onDrag);
+        adapter = new ClickItemAdapter();
+        lv_main.setAdapter(adapter);
+        lv_main.setDragEnabled(true);
     }
 
     /**
@@ -340,11 +342,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         for(ClickItem clickItem : items){
             LogUtil.dee("现在的数据:"+clickItem.title);
         }
-
-        lv_main.setDropListener(onDrag);
-        adapter = new ClickItemAdapter();
-        lv_main.setAdapter(adapter);
-        lv_main.setDragEnabled(true);
     }
 
     /**
@@ -911,6 +908,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         initBugly();
         testJurl();
         initPopupMenu();
+
     }
 
     @Background
@@ -944,7 +942,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
