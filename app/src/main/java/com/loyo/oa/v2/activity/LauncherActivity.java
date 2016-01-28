@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.baidu.mapapi.SDKInitializer;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.login.WelcomeActivity;
@@ -17,9 +19,11 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,6 +44,7 @@ public class LauncherActivity extends BaseActivity {
     void initVies() {
         setTouchView(NO_SCROLL);
         iv_launcher_adv.postDelayed(advRunner, 1000);
+
     }
 
     private Runnable finishRunner = new Runnable() {
