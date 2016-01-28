@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.StrictMode;
@@ -241,7 +242,9 @@ public class MainApp extends Application {
 //        }
         //        init_StrictMode();
 
-        SDKInitializer.initialize(this);//百度sdk初始化
+
+        SDKInitializer.initialize(getApplicationContext());
+
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();

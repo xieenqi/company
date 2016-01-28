@@ -56,14 +56,11 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private TextView tv_time;
     private Button btn_add;
 
-
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
     private long endAt;
     private Calendar cal;
-
     private View mView;
-
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
 
     private boolean isTopAdd;

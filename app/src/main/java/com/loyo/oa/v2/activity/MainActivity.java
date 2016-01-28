@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
@@ -128,7 +127,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private MHandler mHandler;
     private boolean mInitData;
     private boolean isSign;
-    private ArrayList<ClickItem> items = new ArrayList<>();
     private ClickItemAdapter adapter;
     private PopupMenu popupMenu;
     private ValidateInfo validateInfo;
@@ -141,12 +139,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
+                LogUtil.dll("进入主页广播回调 launch");
                 launch();
             }
         }
     };
+    private ArrayList<ClickItem>  items = new ArrayList<>();
+
     //显示通知公告红点
-    Handler handler = new Handler() {
+   public Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
@@ -277,13 +278,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class),
-                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
-                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
-                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
-                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+
 
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
         //首页刷新监听
@@ -299,12 +294,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
-        initPopupMenu();
 
-        lv_main.setDropListener(onDrag);
-        adapter = new ClickItemAdapter();
-        lv_main.setAdapter(adapter);
-        lv_main.setDragEnabled(true);
+
 
     }
 
@@ -345,6 +336,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         popupMenu.setMenuItems(getPopupMenus());
         popupMenu.setDismissListener(this);
         popupMenu.setListener(this);
+
+        for(ClickItem clickItem : items){
+            LogUtil.dee("现在的数据:"+clickItem.title);
+        }
+
+        lv_main.setDropListener(onDrag);
+        adapter = new ClickItemAdapter();
+        lv_main.setAdapter(adapter);
+        lv_main.setDragEnabled(true);
     }
 
     /**
@@ -353,6 +353,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * @return
      */
     private ArrayList<PopupMenuItem> getPopupMenus() {
+        LogUtil.dee("刷新右上角菜单");
         ArrayList<PopupMenuItem> menuObjects = new ArrayList<>();
 
         PopupMenuItem task = new PopupMenuItem(this);
@@ -440,8 +441,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
                 }
-                LogUtil.dll("是否打卡:" + isSign);
-                rotateInt();
+                    rotateInt();
             }
 
             @Override
@@ -547,7 +547,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
-                LogUtil.d("开始反转：" + value);
                 layout_avatar.setRotationY(value);
 
                 if (Math.round(value) >= 90) {
@@ -581,7 +580,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();
-                    LogUtil.d("反转回来：" + value);
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
@@ -862,6 +860,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     void updateUser() {
 
+        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
+                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class),
+                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
+                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
+                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+
         if (MainApp.user == null) {
             return;
         }
@@ -904,6 +910,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
         testJurl();
+        initPopupMenu();
     }
 
     @Background
@@ -924,10 +931,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
             try {
                 for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
+                    LogUtil.dee(modules.getName()+":"+modules.isEnable());
                     for (int k = 0; k < items.size(); k++) {
                         if (modules.getName().equals(items.get(k).title)) {
-                            if (modules.isEnable()) {
-                            } else {
+                            if (!modules.isEnable()) {
                                 items.remove(k);
                             }
                         }
@@ -937,8 +944,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 e.printStackTrace();
             }
         }
-    }
 
+    }
 
     /**
      * 企业QQ登录的用户绑定手机号码 权限待测试

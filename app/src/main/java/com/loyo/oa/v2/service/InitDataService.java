@@ -50,6 +50,7 @@ public class InitDataService extends IntentService {
                 HttpErrorCheck.checkResponse("获取user",response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
+                LogUtil.dee("权限：" + MainApp.gson.toJson(MainApp.user.permission.suites));
                 DBManager.Instance().putUser(json);//保存用户信息
                 sendDataChangeBroad(user);
             }
