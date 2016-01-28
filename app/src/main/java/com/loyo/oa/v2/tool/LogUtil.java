@@ -218,7 +218,5 @@ public class LogUtil {
         Log.d("LOG", str);
     }
 
-    public static void dee(String str){
-        Log.d("TOP",str);
-    }
+    public static void dee(String str) { Log.d("TOP", str); }
 }

@@ -41,6 +41,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -185,7 +186,9 @@ public class ContactInfoEditActivity extends BaseActivity {
                     app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
                 }
                 break;
+            /*设置头像*/
             case R.id.layout_set_avartar:
+                LogUtil.dee("点击设置头像");
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
                 // 是否显示拍摄图片
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
@@ -664,10 +667,12 @@ public class ContactInfoEditActivity extends BaseActivity {
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
 
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            LogUtil.dee("mSelectPath:"+ (mSelectPath==null));
             StringBuilder sb = new StringBuilder();
             for (String p : mSelectPath) {
                 sb.append(p);
             }
+            LogUtil.dee("sb.toString:"+ sb.toString());
 
             ImageLoader.getInstance().displayImage("file://" + sb.toString(), img_title_user);
             User.setImageUrl("file://" + sb.toString());

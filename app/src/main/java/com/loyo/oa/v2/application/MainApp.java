@@ -244,7 +244,6 @@ public class MainApp extends Application {
 
 
         SDKInitializer.initialize(getApplicationContext());
-
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();
