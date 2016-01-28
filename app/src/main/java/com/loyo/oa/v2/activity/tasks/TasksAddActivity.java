@@ -246,7 +246,7 @@ public class TasksAddActivity extends BaseActivity {
         }else if(switch_approve.getState() == 4){
             isState = true;
         }
-        //map.put("attachmentCount","1");
+        map.put("attachmentCount",1);
         map.put("reviewFlag", isState);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
@@ -254,6 +254,7 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
@@ -506,6 +507,11 @@ public class TasksAddActivity extends BaseActivity {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
                                     }
                                 });
                             }

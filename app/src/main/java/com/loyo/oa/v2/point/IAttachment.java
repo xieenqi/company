@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Contact;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public interface IAttachment {
      */
     @POST("/attachment/")
     @Multipart
-    Observable<Attachment> upload(@Part("uuid") TypedString uuid, @Part("attachments")TypedFile attachments);
+    Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("attachments")TypedFile attachments);
 
     Observable<Attachment> upload1(@Path("uuid") String uuid,@Part("sdf")TypedFile file);
 
