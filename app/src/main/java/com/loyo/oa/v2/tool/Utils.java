@@ -47,6 +47,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.mime.TypedFile;
@@ -133,7 +134,7 @@ public class Utils {
     public synchronized static Observable<Attachment> uploadAttachment(String uuid, File file) {
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedString = new TypedString(uuid);
-        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedString, typedFile);
+        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedString,typedFile);
     }
 
     /**

@@ -246,7 +246,7 @@ public class TasksAddActivity extends BaseActivity {
         }else if(switch_approve.getState() == 4){
             isState = true;
         }
-
+        //map.put("attachmentCount","1");
         map.put("reviewFlag", isState);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
@@ -260,7 +260,6 @@ public class TasksAddActivity extends BaseActivity {
                 //task.setAck(true);
 //                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 //不需要保存
-
                 cancelLoading();
                 isSave = false;
                 Intent intent = new Intent();

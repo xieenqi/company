@@ -223,7 +223,6 @@ public class AttachmentActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        Toast(e.getMessage());
                     }
                 });
     }

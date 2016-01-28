@@ -267,8 +267,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
-
-        LogUtil.dee("fuck me?");
         LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
@@ -339,10 +337,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         popupMenu.setMenuItems(getPopupMenus());
         popupMenu.setDismissListener(this);
         popupMenu.setListener(this);
-
-        for(ClickItem clickItem : items){
-            LogUtil.dee("现在的数据:"+clickItem.title);
-        }
     }
 
     /**
@@ -351,7 +345,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * @return
      */
     private ArrayList<PopupMenuItem> getPopupMenus() {
-        LogUtil.dee("刷新右上角菜单");
         ArrayList<PopupMenuItem> menuObjects = new ArrayList<>();
 
         PopupMenuItem task = new PopupMenuItem(this);
@@ -930,7 +923,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
             try {
                 for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
-                    LogUtil.dee(modules.getName()+":"+modules.isEnable());
+                    //LogUtil.dee(modules.getName()+":"+modules.isEnable());
                     for (int k = 0; k < items.size(); k++) {
                         if (modules.getName().equals(items.get(k).title)) {
                             if (!modules.isEnable()) {

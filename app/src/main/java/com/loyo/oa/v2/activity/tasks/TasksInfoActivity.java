@@ -494,6 +494,7 @@ public class TasksInfoActivity extends BaseActivity {
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
+                LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
                 HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
                 updateUI();
