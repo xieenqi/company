@@ -78,7 +78,7 @@
             android:inputType="textPassword"
             android:textColor="@color/login"
             android:textColorHint="@color/login"/>
-F
+        F
     </LinearLayout>
 
 
@@ -129,14 +129,15 @@ F
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             >
+
             <TextView
-                android:gravity="center"
                 android:id="@+id/tv_resetPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:gravity="center"
                 android:text="忘记密码?"
                 android:textColor="@color/title_bg1"
                 android:textSize="14sp"/>
@@ -150,14 +151,14 @@ F
                 />
 
             <TextView
-                android:gravity="center"
                 android:id="@+id/tv_qqLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:gravity="center"
                 android:text="企业QQ登录"
                 android:textColor="@color/title_bg1"
                 android:textSize="14sp"/>
 
-            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
@@ -506,7 +507,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
             @Override
             public void OnLocationFailed() {
-                Toast("获取附近客户信息失败！");
+                Toast("定位失败！");
             }
         });
     }

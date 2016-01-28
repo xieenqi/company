@@ -137,37 +137,13 @@
                 android:layout_marginRight="@dimen/dimen_8"
                 android:background="@drawable/rectangle_bj"
                 android:orientation="vertical"
-                android:padding="5dp"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:padding="@dimen/dimen_10"
                 android:visibility="gone">
-
-                <LinearLayout
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    >
-
-                    <ImageView
-                        android:layout_width="@dimen/dimen_25"
-                        android:layout_height="@dimen/dimen_25"
-                        android:src="@drawable/img_wfinstance_agree"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_8"
-                        android:text="确认外勤"
-                        android:textColor="@color/lawngreen"
-                        android:textSize="@dimen/text_sp18"
-                        android:textStyle="bold"/>
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_5"
                     android:orientation="horizontal">
 
                     <TextView
@@ -192,11 +168,48 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_8"
+                        android:layout_weight="1"
+                        android:gravity="right"
                         android:text=""
                         android:textColor="#999999"
                         android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_3"
+                    android:layout_marginBottom="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:background="@drawable/view_dashed_line"
+                    android:layerType="software"
+                    android:padding="@dimen/dimen_15"/>
+
+                <LinearLayout
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_25"
+                        android:layout_height="@dimen/dimen_25"
+                        android:src="@drawable/img_wfinstance_agree"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_8"
+                        android:text="确认外勤"
+                        android:textColor="@color/green51"
+                        android:textSize="@dimen/text_sp18"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
 

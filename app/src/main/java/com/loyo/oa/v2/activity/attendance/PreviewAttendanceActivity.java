@@ -2,21 +2,16 @@ package com.loyo.oa.v2.activity.attendance;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -214,43 +209,49 @@ public class PreviewAttendanceActivity extends BaseActivity {
      * 弹出外勤确认对话框
      */
     private void showConfirmOutAttendanceDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
-        ((TextView) dialogView.findViewById(R.id.tv_content)).setText("是否确定该员工的外勤?\r\n确认后将无法取消!");
-        dialogView.getBackground().setAlpha(150);
-        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-        dialog.setAnimationStyle(R.style.PopupAnimation);
-        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        dialog.showAtLocation(findViewById(R.id.tv_title), Gravity.BOTTOM, 0, 0);
-
-
-        TextView confirm = (TextView) dialogView.findViewById(R.id.btn_confirm);
-        TextView cancel = (TextView) dialogView.findViewById(R.id.btn_cancel);
-
-        confirm.setOnTouchListener(Global.GetTouch());
-        cancel.setOnTouchListener(Global.GetTouch());
-
-        dialogView.setOnTouchListener(new View.OnTouchListener() {
+        ConfirmDialog("提示", "是否确定该员工的外勤?\n确认后将无法取消！", new ConfirmDialogInterface() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                dialog.dismiss();
-                return false;
-            }
-        });
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+            public void Confirm() {
                 confirmOutAttendance();
             }
         });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+//        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
+//        ((TextView) dialogView.findViewById(R.id.tv_content)).setText("是否确定该员工的外勤?\r\n确认后将无法取消!");
+//        dialogView.getBackground().setAlpha(150);
+//        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
+//        dialog.setAnimationStyle(R.style.PopupAnimation);
+//        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
+//        dialog.showAtLocation(findViewById(R.id.tv_title), Gravity.BOTTOM, 0, 0);
+//
+//
+//        TextView confirm = (TextView) dialogView.findViewById(R.id.btn_confirm);
+//        TextView cancel = (TextView) dialogView.findViewById(R.id.btn_cancel);
+//
+//        confirm.setOnTouchListener(Global.GetTouch());
+//        cancel.setOnTouchListener(Global.GetTouch());
+//
+//        dialogView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                dialog.dismiss();
+//                return false;
+//            }
+//        });
+//
+//        confirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//                confirmOutAttendance();
+//            }
+//        });
+//
+//        cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//            }
+//        });
     }
 
     /**

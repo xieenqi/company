@@ -81,8 +81,9 @@ public class LocationUtil {
                 break;
         }
 
-        LoyoLog.e(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
-                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() + " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
+        LogUtil.d(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
+                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() +
+                " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
                 location.getRadius() + " available : " + available);
 
         mLocationClient.unRegisterLocationListener(mLocationListener);
@@ -109,7 +110,7 @@ public class LocationUtil {
 
         if (!TextUtils.isEmpty(address)) {
             app.logUtil.e("notifyLocation,address : " + address);
-            app.logUtil.e("location:"+location.getLatitude()+","+location.getLatitude());
+            app.logUtil.e("location:" + location.getLatitude() + "," + location.getLatitude());
             afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(), location.getRadius());
         } else {
             afterLocation.OnLocationFailed();
