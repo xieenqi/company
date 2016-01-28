@@ -214,7 +214,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
 
-
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
@@ -238,7 +237,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     Toast("提交失败" + response.getStatus());
                     legWork.creator = MainApp.user.toShortUser();
                 }
-
             }
 
             @Override
@@ -283,7 +281,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
          * */
         switch (requestCode) {
             case SelectPicPopupWindow.GET_IMG:
-
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {

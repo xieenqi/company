@@ -126,7 +126,6 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
             Global.setListViewHeightBasedOnChildren(listView_user);
 
             listView_user.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     UserListViewAdapter.Item_info item_info = (UserListViewAdapter.Item_info) view.getTag();

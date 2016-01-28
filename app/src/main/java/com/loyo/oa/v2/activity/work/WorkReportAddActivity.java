@@ -90,7 +90,6 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_PROJECT= 4; //项目创建报告
     public static final int UPDATE_SUCCESS = 0x01;
 
-
     @ViewById
     SwitchView crm_switch;
     @ViewById
@@ -256,7 +255,6 @@ public class WorkReportAddActivity extends BaseActivity {
         else if(type == TYPE_PROJECT){
             projectAddWorkReport();
         }
-
 
         getDefaultComment();
     }

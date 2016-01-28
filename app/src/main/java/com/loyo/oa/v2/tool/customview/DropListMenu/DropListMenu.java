@@ -209,16 +209,16 @@ public class DropListMenu extends LinearLayout {
                     mRowSelected = position;
                     if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
-                        //展示二级ListView
+                        /**
+                         * 展开后的右侧 二级ListView
+                         * */
                         final DropListAdapter adapter = new DropListAdapter(mContext, menuItem.getSubDropItem().get(mRowSelected).getSubDropItem(), selectedItem);
-                        subMenuList.setBackgroundColor(getResources().getColor(R.color.lightgrey));
                         getSubMenuList().setAdapter(adapter);
                         getSubMenuList().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
                                     // popupWindow.dismiss();
-
                                     // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                                     mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                                     mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
@@ -246,9 +246,7 @@ public class DropListMenu extends LinearLayout {
 
                                     adapter.notifyDataSetChanged();
                                     syncConfirmButton();
-
                                 }
-                                popupWindow.dismiss();
                             }
                         });
                     } else {
@@ -265,10 +263,8 @@ public class DropListMenu extends LinearLayout {
                                 mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                             }
                         }
-
                     }
                 }
-
             });
 
             RelativeLayout shadow = (RelativeLayout) viewPopWindow.findViewById(R.id.rl_menu_shadow);

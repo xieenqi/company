@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -203,6 +205,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
                 if (mListData.size() == 0) {
                     Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
@@ -211,11 +214,12 @@ public class SignInGridViewAdapter extends BaseAdapter {
                 } else {
                     Toast.makeText(mActivity, "只允许拍一张照片", Toast.LENGTH_SHORT).show();
                 }
-            } else if (mListData.size() <= 9) {
+            }
+            /*拜访签到*/
+            else if (mListData.size() <= 9) {
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
-            } else {
 
             }
         }

@@ -44,9 +44,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     ViewGroup img_title_right;
     EditText edt_name, edt_phone, edt_qq, edt_email, edt_memo, edt_wx, edt_wiretel;
     TextView edt_birth;
-
     ViewGroup layout_extra;
-
     Customer mCustomer;
     Contact mContact;
 
