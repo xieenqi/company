@@ -111,7 +111,8 @@ public class LocationUtil {
         if (!TextUtils.isEmpty(address)) {
             app.logUtil.e("notifyLocation,address : " + address);
             app.logUtil.e("location:" + location.getLatitude() + "," + location.getLatitude());
-            afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(), location.getRadius());
+            afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(),
+                    location.getRadius());
         } else {
             afterLocation.OnLocationFailed();
         }
