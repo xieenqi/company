@@ -1,10 +1,13 @@
 package com.loyo.oa.v2.point;
 
+import com.google.gson.JsonElement;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -15,6 +18,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -57,10 +61,16 @@ public interface IAttachment {
      * @param uuid
      * @param attachments
      */
-    @POST("/attachment/")
     @Multipart
-    Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("attachments")TypedFile attachments);
+    @POST("/attachment/")
+    //Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("attachments")TypedFile attachments);
+    Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments);
 
-    Observable<Attachment> upload1(@Path("uuid") String uuid,@Part("sdf")TypedFile file);
+    /**
+     * 上传附件 测试
+     * */
+    @Multipart
+    @POST("/attachment/")
+    void addLicenseInfo(@QueryMap Map<String, Object> map,Callback<Attachment> response);
 
 }

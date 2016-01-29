@@ -17,6 +17,7 @@ public class WorkReport extends BaseBeans {
     private Members members = new Members();
     private NewUser user = new NewUser();
     private Reviewer reviewer = new Reviewer(user);
+    private BizExtData bizExtData;
 
 
     private String attachmentUUId;//string, optional): ,
@@ -33,6 +34,13 @@ public class WorkReport extends BaseBeans {
     private long updatedAt;//&{time Time}, optional):
     private DiscussCounter discuss;
 
+    public BizExtData getBizExtData() {
+        return bizExtData;
+    }
+
+    public void setBizExtData(BizExtData bizExtData) {
+        this.bizExtData = bizExtData;
+    }
 
     public NewUser getUser() {
         return user;

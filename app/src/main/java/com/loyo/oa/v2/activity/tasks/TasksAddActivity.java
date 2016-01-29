@@ -246,7 +246,7 @@ public class TasksAddActivity extends BaseActivity {
         }else if(switch_approve.getState() == 4){
             isState = true;
         }
-        map.put("attachmentCount",1);
+        map.put("attachmentCount",lstData_Attachment.size());
         map.put("reviewFlag", isState);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
@@ -254,7 +254,7 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
-
+        LogUtil.dee("任务创建图片的数量:"+lstData_Attachment.size());
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
@@ -503,7 +503,7 @@ public class TasksAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid,2,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();

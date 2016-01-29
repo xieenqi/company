@@ -211,7 +211,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         } else {
             layout_memo.setVisibility(View.GONE);
         }
-
+        tv_attachment_count.setText("附件 ("+wfInstance.getBizExtData().getAttachmentCount()+")");
         switch (wfInstance.status) {
 
             case WfInstance.STATUS_NEW:
@@ -406,6 +406,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 bundle.putInt("fromPage", Common.WFIN_PAGE);
                 bundle.putInt("goneBtn",1);
                 bundle.putInt("status",wfInstance.status);
+                bundle.putInt("bizType",12);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
         }

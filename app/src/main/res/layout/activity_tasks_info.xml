@@ -177,7 +177,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="0"/>
+                        android:text="(0)"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -215,7 +215,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="0"/>
+                        android:text="(0)"/>
 
                     <ImageView
                         android:layout_width="wrap_content"

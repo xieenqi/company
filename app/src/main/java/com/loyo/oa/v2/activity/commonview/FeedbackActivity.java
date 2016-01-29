@@ -200,7 +200,7 @@ public class FeedbackActivity extends BaseActivity {
                         File newFile = Global.scal(this, uri);
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();

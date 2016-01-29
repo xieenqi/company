@@ -431,6 +431,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putSerializable("goneBtn", 1);
+                bundle.putInt("bizType",6);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;

@@ -677,7 +677,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid,1,newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         app.logUtil.e("onNext");

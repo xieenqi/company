@@ -39,7 +39,7 @@ public class WfInstance extends BaseBeans {
     public int nextExecutorId;//int, optional): ,
     public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     public BizForm bizForm;//&{bizform BizForm}, optional): ,
-
+    public BizExtData bizExtData;
     public boolean ack;
     public boolean candel;
 
@@ -54,6 +54,14 @@ public class WfInstance extends BaseBeans {
     @Override
     public String getId() {
         return id;
+    }
+
+    public BizExtData getBizExtData() {
+        return bizExtData;
+    }
+
+    public void setBizExtData(BizExtData bizExtData) {
+        this.bizExtData = bizExtData;
     }
 
     //    public String getDeptId() {

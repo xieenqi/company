@@ -298,9 +298,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
 
         tv_crm.setText(crmName);
+        tv_discussion_count.setText("讨论 ("+mWorkReport.getBizExtData().getDiscussCount()+")");
+        tv_attachment_count.setText("附件 ("+mWorkReport.getBizExtData().getAttachmentCount()+")");
 
         edt_workReport_title.setText(title.toString());
-
         webView_content.getSettings().setJavaScriptEnabled(true);
         webView_content.loadDataWithBaseURL(null, mWorkReport.getContent(), "text/html", "utf-8", null);
 
@@ -392,6 +393,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("fromPage", Common.WORK_PAGE);
         bundle.putInt("status",status);
+        bundle.putInt("bizType",1);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
 
@@ -404,6 +406,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
         bundle.putInt("status", status);
         bundle.putBoolean("isMyUser", isCreater());
+        bundle.putInt("bizType",1);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
@@ -536,7 +539,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 if (data == null || data.getExtras() == null) {
                     return;
                 }
-
                 mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
                 showDiscussion();
 
