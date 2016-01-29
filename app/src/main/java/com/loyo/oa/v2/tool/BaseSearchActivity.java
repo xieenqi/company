@@ -467,7 +467,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 }
                 //                ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
                 if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
-                    content.setText("负责: " + task.getResponsiblePerson().getRealname());
+                    content.setText("负责人: " + task.getResponsiblePerson().getRealname());
                 }
                 if (!TextUtils.isEmpty(task.getTitle())) {
                     title.setText(task.getTitle());

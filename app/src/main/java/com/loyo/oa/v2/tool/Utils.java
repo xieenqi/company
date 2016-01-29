@@ -47,8 +47,12 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -130,11 +134,12 @@ public class Utils {
      * @param uuid
      * @param file
      */
-    public synchronized static Observable<Attachment> uploadAttachment(String uuid, File file) {
+    public synchronized static Observable<Attachment> uploadAttachment(String uuid,int bizType,File file) {
         TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedString = new TypedString(uuid);
-        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedString, typedFile);
+        TypedString typedUuid = new TypedString(uuid);
+        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid,bizType,typedFile);
     }
+
 
     /**
      * 获取附件

@@ -291,7 +291,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 /**上传附件*/
-                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();

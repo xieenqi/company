@@ -487,7 +487,7 @@ public class TasksEditActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(mTask.getAttachmentUUId(), newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(mTask.getAttachmentUUId(),2,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();

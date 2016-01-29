@@ -343,8 +343,8 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-        tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount() + "");
-        tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount() + "");
+        tv_discussion_count.setText("("+mTask.getBizExtData().getDiscussCount() + ")");
+        tv_attachment_count.setText("("+mTask.getBizExtData().getAttachmentCount() + ")");
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
@@ -486,14 +486,17 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Background
     void getTask() {
+
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
             return;
         }
+
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
+                LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
                 HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
                 updateUI();
@@ -864,6 +867,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
         //bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status",mTask.getStatus());
+        bundle.putInt("bizType",2);
 
         ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getMembers() != null) {
@@ -885,7 +889,8 @@ public class TasksInfoActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
-        bundle.putInt("status",mTask.getStatus());
+        bundle.putInt("status", mTask.getStatus());
+        bundle.putInt("bizType",2);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 

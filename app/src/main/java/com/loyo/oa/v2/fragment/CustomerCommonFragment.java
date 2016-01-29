@@ -257,6 +257,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     dropItemTag.addSubDropItem(parentItem);
                 }
                 source.add(dropItemTag);
+                if(isAdded())
                 mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
                 mDropMenu.setmMenuTitleTextSize(14);//Menu的文字大小
                 mDropMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
