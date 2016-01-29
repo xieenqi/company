@@ -81,10 +81,10 @@ public class LocationUtil {
                 break;
         }
 
-        LogUtil.d(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
-                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() +
-                " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
-                location.getRadius() + " available : " + available);
+//        LogUtil.d(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
+//                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() +
+//                " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
+//                location.getRadius() + " available : " + available);
 
         mLocationClient.unRegisterLocationListener(mLocationListener);
         mLocationClient.stop();
