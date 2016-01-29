@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -27,7 +26,6 @@ import com.loyo.oa.v2.fragment.UserFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
