@@ -113,7 +113,7 @@ public class AMapService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         acquireWakeLock();
-        if (intent != null && intent.hasExtra("track")){
+        if (intent != null && intent.hasExtra("track")) {
             trackRule = (TrackRule) intent.getSerializableExtra("track");
         }
         return START_REDELIVER_INTENT;
@@ -179,6 +179,7 @@ public class AMapService extends Service {
 
     /**
      * 处理轨迹
+     *
      * @param aMapLocation
      * @param currentTime
      */
@@ -201,7 +202,7 @@ public class AMapService extends Service {
             combineAddress(aMapLocation.getRoad(), addressBuilder);
             combineAddress(aMapLocation.getPoiName(), addressBuilder);
 
-            LoyoLog.e(TAG,"源地址无效,组合的地址 : " + (TextUtils.isEmpty(addressBuilder.toString()) ? "NULL" : addressBuilder.toString()));
+            LoyoLog.e(TAG, "源地址无效,组合的地址 : " + (TextUtils.isEmpty(addressBuilder.toString()) ? "NULL" : addressBuilder.toString()));
             address = addressBuilder.toString();
         }
 
@@ -343,7 +344,7 @@ public class AMapService extends Service {
             LatLng newLatLng = new LatLng(latitude, longitude);
             double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);
             LoyoLog.e(TAG, "processLocation,distance ,distance : " + distance);
-            if (distance < MIN_SCAN_SPAN_DISTANCE-50) {
+            if (distance < MIN_SCAN_SPAN_DISTANCE - 50) {
                 return;
             }
         }
@@ -406,7 +407,7 @@ public class AMapService extends Service {
         final double longitude = location.getLongitude();
         final String address = location.getAddress();
 
-        ArrayList<TrackLog> trackLogs=new ArrayList<>(Arrays.asList(new TrackLog(address,longitude+","+latitude,System.currentTimeMillis()/1000)));
+        ArrayList<TrackLog> trackLogs = new ArrayList<>(Arrays.asList(new TrackLog(address, longitude + "," + latitude, System.currentTimeMillis() / 1000)));
         HashMap<String, Object> jsonObject = new HashMap<>();
         jsonObject.put("tracklogs", trackLogs);
 

@@ -25,7 +25,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
 
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class PublicCustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtil.AfterLocation {
+public class PublicCustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtilGD.AfterLocation {
 
     public static final int TYPE_FILTER_CUSTOMER_ID = 3;
     public static final int TYPE_FILTER_TAG_IDS = TYPE_FILTER_CUSTOMER_ID + 1;
@@ -58,7 +58,7 @@ public class PublicCustomerManageFragment extends BaseMainListFragment implement
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new LocationUtil(mActivity, this);
+        new LocationUtilGD(mActivity, this);
         GetData(true, false);
     }
 
@@ -211,8 +211,8 @@ public class PublicCustomerManageFragment extends BaseMainListFragment implement
 
 
     @Override
-    public void OnLocationSucessed(String _address, final double longitude, final double latitude, float radius) {
-//        app.getRestAdapter().create(ICustomer.class).getNearCustomer(String.valueOf(latitude), String.valueOf(longitude),
+    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+        //        app.getRestAdapter().create(ICustomer.class).getNearCustomer(String.valueOf(latitude), String.valueOf(longitude),
 //                new RCallback<ArrayList<Customer>>() {
 //                    @Override
 //                    public void success(ArrayList<Customer> customers, Response response) {
@@ -220,10 +220,11 @@ public class PublicCustomerManageFragment extends BaseMainListFragment implement
 ////                        initNearCustomer(customers, center);
 //                    }
 //                });
+
     }
 
     @Override
-    public void OnLocationFailed() {
+    public void OnLocationGDFailed() {
         Global.Toast("获取地址出错!");
     }
 
@@ -500,7 +501,7 @@ public class PublicCustomerManageFragment extends BaseMainListFragment implement
                 // fixes bug293 ykb 07-14 或许不需要同步一次全部数据
                 //GetData(true, false);
 
-                OnLocationSucessed("", app.longitude, app.latitude, 0);
+                OnLocationGDSucessed("", app.longitude, app.latitude, "0");
                 break;
             case REQUEST_REVIEW:
 

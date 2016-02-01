@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
@@ -30,7 +29,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -60,7 +59,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private String mAddress;
-    private String customerId="";
+    private String customerId = "";
     private String customerName;
     private SignInGridViewAdapter signInGridViewAdapter;
     private ImageView img_refresh_address;
@@ -129,9 +128,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mLocationFlag = false;
         tv_address.setText("获取当前位置中...");
 
-        new LocationUtil(this, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 img_refresh_address.clearAnimation();
                 animation.reset();
                 mLat = latitude;
@@ -139,20 +138,20 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 mAddress = address;
 
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
-                if (radius > 200 || !gpsOpen) {
-                    address = address.concat(" (GPS未开启)");
-                    if (!gpsOpen) {
-                        Global.ToastLong("建议开启GPS,重新定位");
-                    }
-                }
+//                if (radius > 200 || !gpsOpen) {
+//                    address = address.concat(" (GPS未开启)");
+//                    if (!gpsOpen) {
+//                        Global.ToastLong("建议开启GPS,重新定位");
+//                    }
+//                }
                 tv_address.setText(address);
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 img_refresh_address.clearAnimation();
                 animation.reset();
-                Toast.makeText(SignInActivity.this, "定位失败,请在网络和GPS信号良好时重试", Toast.LENGTH_LONG).show();
+                Toast("定位失败,请在网络和GPS信号良好时重试");
             }
         });
     }
@@ -161,7 +160,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 图片适配器绑定
      */
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -291,7 +290,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 /**上传附件*/
-                                Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();

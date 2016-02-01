@@ -37,7 +37,7 @@ import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -73,7 +73,7 @@ import retrofit.client.Response;
  * 时间 : 15/9/14.
  */
 @EActivity(R.layout.activity_attendance_add)
-public class AttendanceAddActivity extends BaseActivity implements LocationUtil.AfterLocation {
+public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation {
 
     //控件
     @ViewById ViewGroup img_title_left;
@@ -101,6 +101,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     private MHandler mHandler = new MHandler(this);
     private Animation animation;
     private AttendancePhoto attendancePhotos;
+
+    @Override
+    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+        iv_refresh_address.clearAnimation();
+        animation.reset();
+        tv_address.setText(address);
+        refreshLocation(longitude, latitude);
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        Toast("刷新位置失败");
+        iv_refresh_address.clearAnimation();
+        animation.reset();
+    }
 
     private static class MHandler extends Handler {
         private WeakReference<AttendanceAddActivity> mActivity;
@@ -140,9 +155,9 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
 
     /**
      * 请求是否要拍照打卡
-     * */
-    private void requestPhotoTest(){
-        Utils.dialogShow(this,"获取考勤信息中");
+     */
+    private void requestPhotoTest() {
+        Utils.dialogShow(this, "获取考勤信息中");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getAttendancePhoto(new Callback<AttendancePhoto>() {
             @Override
             public void success(AttendancePhoto attendancePhoto, Response response) {
@@ -230,7 +245,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     /**
      * 获取附件
      */
-    private void getAttachments(){
+    private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
@@ -262,7 +277,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 if (!check()) {
                     return;
                 }
-                if(attendancePhotos.isNeedPhoto() && attachments.size() == 0){
+                if (attendancePhotos.isNeedPhoto() && attachments.size() == 0) {
                     Toast("需要考勤照片，请拍照");
                     return;
                 }
@@ -274,7 +289,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 break;
             case R.id.iv_refresh_address:
                 iv_refresh_address.startAnimation(animation);
-                new LocationUtil(this, this);
+                new LocationUtilGD(this, this);
                 break;
         }
     }
@@ -417,7 +432,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 setResult(RESULT_OK, intent);
                 onBackPressed();
                 try {
-                    LogUtil.dll("result:"+Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -426,11 +441,10 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                if(error.getKind() == RetrofitError.Kind.NETWORK){
-                     Toast("请检查您的网络连接");
-                }
-                else if(error.getKind() == RetrofitError.Kind.HTTP){
-                    if(error.getResponse().getStatus() == 500){
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    if (error.getResponse().getStatus() == 500) {
                         Toast("网络异常500，请稍候再试");
                         try {
                             LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
@@ -453,30 +467,25 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
         }
         super.finish();
     }
-
-    @Override
-    public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-        iv_refresh_address.clearAnimation();
-        animation.reset();
-        tv_address.setText(address);
-        refreshLocation(longitude, latitude);
-    }
-
-    @Override
-    public void OnLocationFailed() {
-        Toast("刷新位置失败");
-        iv_refresh_address.clearAnimation();
-        animation.reset();
-    }
+//
+//    @Override
+//    public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+//
+//    }
+//
+//    @Override
+//    public void OnLocationFailed() {
+//
+//    }
 
     /*附件删除回调*/
     @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
     void onDealImageResult(Intent data) {
-        if(null==data){
+        if (null == data) {
             return;
         }
-        Utils.dialogShow(this,"请稍候");
-        final Attachment delAttachment=(Attachment)data.getSerializableExtra("delAtm");
+        Utils.dialogShow(this, "请稍候");
+        final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
@@ -508,7 +517,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
-                        Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
+                        Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                             @Override
                             public void onNext(Serializable serializable) {
                                 getAttachments();

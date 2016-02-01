@@ -30,19 +30,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_10">
 
-                    <ImageView
-                        style="@style/image_label"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_marginRight="@dimen/margin_side_edge"
-                        android:src="@drawable/img_sign_creator"/>
-
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="客户名称"/>
 
                     <EditText
                         android:id="@+id/edt_name"
@@ -50,8 +40,9 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:hint="客户名称"
-                        android:maxLength="50"/>
+                        android:hint="请输入客户名称"
+                        android:maxLength="50"
+                        android:paddingLeft="@dimen/dimen_1"/>
 
                     <TextView
                         android:id="@+id/tv_search"
@@ -76,19 +67,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_10">
 
-                    <ImageView
-                        style="@style/image_label"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_marginRight="@dimen/margin_side_edge"
-                        android:src="@drawable/img_sign_position"/>
 
                     <TextView
-                        android:layout_width="70dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="地址"/>
+                        android:text="地址"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp16"/>
 
                     <EditText
                         android:id="@+id/et_address"
@@ -97,7 +86,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:hint="地址获取中..."/>
+                        android:hint="地址获取中..."
+                        android:paddingLeft="@dimen/dimen_5"/>
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
@@ -119,19 +109,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_10">
 
-                    <ImageView
-                        style="@style/image_label"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_marginRight="@dimen/margin_side_edge"
-                        android:src="@drawable/img_sign_customer"/>
 
                     <TextView
                         android:layout_width="70dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="联系人"/>
+                        android:text="联系人"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp16"/>
 
                     <EditText
                         android:id="@+id/edt_contract"
@@ -139,6 +127,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right|center_vertical"
                         android:hint="请输入联系人姓名"
                         android:inputType="textPersonName"
                         android:maxLength="20"/>
@@ -155,19 +144,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_10">
 
-                    <ImageView
-                        style="@style/image_label"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_marginRight="@dimen/margin_side_edge"
-                        android:src="@drawable/img_customer_tel"/>
 
                     <TextView
                         android:layout_width="70dp"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="电话"/>
+                        android:text="电话"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp16"/>
 
                     <EditText
                         android:id="@+id/edt_contract_tel"
@@ -175,6 +162,7 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:gravity="right|center_vertical"
                         android:hint="请输入联系人手机号"
                         android:inputType="phone"
                         android:maxLength="20"/>
@@ -240,19 +228,17 @@
                     android:layout_height="@dimen/view_h_title"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_10">
 
-                    <ImageView
-                        style="@style/image_label"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_marginRight="@dimen/margin_other_view"
-                        android:src="@drawable/img_customer_label"/>
 
                     <TextView
                         style="@style/text_item1"
                         android:layout_width="80dp"
                         android:layout_height="fill_parent"
-                        android:text="标签"/>
+                        android:text="标签"
+                        android:textColor="@color/text33"
+                        android:textSize="@dimen/text_sp16"/>
 
                     <TextView
                         android:id="@+id/tv_labels"

@@ -24,7 +24,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -69,7 +69,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     }
 
 
-    public void initView(){
+    public void initView() {
 
         vs_nodata = findViewById(R.id.vs_nodata);
         //附近客户数据有问题，先屏蔽，默认展示我的所有客户，1-17
@@ -144,9 +144,9 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 获取附近客户数据
      */
     private void getNearCustomersInfo() {
-        new LocationUtil(this, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 LogUtil.dll("附近");
                 position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
                 String url = FinalVariables.QUERY_NEAR_CUSTOMERS_SELF;
@@ -159,9 +159,10 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 Toast("获取附近客户信息失败！");
             }
+
         });
     }
 
@@ -182,7 +183,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 请求体
      */
     void dataRequestvoid(String url, HashMap<String, Object> params) {
-        Utils.dialogShow(mContext,"请稍候");
+        Utils.dialogShow(mContext, "请稍候");
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
             public void success(PaginationX<Customer> customerPaginationX, Response response) {
@@ -317,7 +318,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
             time.setVisibility(View.VISIBLE);
             title.setText(customer.name);
-            time.setText(customer.distance!=null?"距离: "+customer.distance:"距离: 无");
+            time.setText(customer.distance != null ? "距离: " + customer.distance : "距离: 无");
 
             return convertView;
         }

@@ -26,7 +26,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.customview.DropListMenu.DropItem;
 import com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu;
 import com.loyo.oa.v2.tool.customview.DropListMenu.OnDropItemSelectedListener;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class MyCustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtil.AfterLocation {
+public class MyCustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtilGD.AfterLocation {
 
     public static final int TYPE_FILTER_CUSTOMER_ID = 3;
     public static final int TYPE_FILTER_TAG_IDS = TYPE_FILTER_CUSTOMER_ID + 1;
@@ -62,7 +62,7 @@ public class MyCustomerManageFragment extends BaseMainListFragment implements Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new LocationUtil(mActivity, this);
+        new LocationUtilGD(mActivity, this);
         GetData(true, false);
     }
 
@@ -263,9 +263,8 @@ public class MyCustomerManageFragment extends BaseMainListFragment implements Vi
 
 
     @Override
-    public void OnLocationSucessed(String _address, final double longitude, final double latitude, float radius) {
-
-//        app.getRestAdapter().create(ICustomer.class).getNearCustomer(String.valueOf(latitude), String.valueOf(longitude),
+    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+        //        app.getRestAdapter().create(ICustomer.class).getNearCustomer(String.valueOf(latitude), String.valueOf(longitude),
 //                new RCallback<ArrayList<Customer>>() {
 //                    @Override
 //                    public void success(ArrayList<Customer> customers, Response response) {
@@ -276,7 +275,7 @@ public class MyCustomerManageFragment extends BaseMainListFragment implements Vi
     }
 
     @Override
-    public void OnLocationFailed() {
+    public void OnLocationGDFailed() {
         Global.Toast("获取地址出错!");
     }
 
@@ -444,7 +443,7 @@ public class MyCustomerManageFragment extends BaseMainListFragment implements Vi
                 // fixes bug293 ykb 07-14 或许不需要同步一次全部数据
                 //GetData(true, false);
 
-                OnLocationSucessed("", app.longitude, app.latitude, 0);
+                OnLocationGDSucessed("", app.longitude, app.latitude, "0");
                 break;
             case REQUEST_REVIEW:
 

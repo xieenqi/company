@@ -47,12 +47,8 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -332,10 +328,9 @@ public class Utils {
      */
     public static void goWhere(final Context context, final double toLat, final double toLng) {
 
-        new LocationUtil(context, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 Uri uri;
                 if (hasMapApp(context)) {
                     uri = Uri.parse("geo: " + latitude + "," + longitude);
@@ -345,23 +340,28 @@ public class Utils {
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
-
-
-/*                Intent intent;
-                try {
-                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                    context.startActivity(intent); //启动调用
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }*/
-
-
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 Global.Toast("获取当前位置失败,无法规划路径");
             }
+
+//            @Override
+//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+///*                Intent intent;
+//                try {
+//                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+//                    context.startActivity(intent); //启动调用
+//                } catch (URISyntaxException e) {
+//                    e.printStackTrace();
+//                }*/
+//            }
+//
+//            @Override
+//            public void OnLocationFailed() {
+//
+//            }
         }
 
         );
