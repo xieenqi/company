@@ -59,14 +59,13 @@ public class DialogHelp {
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT,
                 LinearLayout.LayoutParams.FILL_PARENT));// 设置布局
-
+        loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.show();
     }
 
     public static void cancelLoading() {
         if (null != loadingDialog && loadingDialog.isShowing()) {
             loadingDialog.cancel();
-            LogUtil.d(" 取消logo22 ");
             loadingDialog = null;
         }
     }
