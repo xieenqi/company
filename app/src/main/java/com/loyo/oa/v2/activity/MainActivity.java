@@ -307,8 +307,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-
-
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
         //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -317,7 +315,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
                 //showLoading("");
-
             }
         });
 
@@ -936,7 +933,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         initBugly();
         testJurl();
         initPopupMenu();
-
     }
 
     @Background
@@ -951,13 +947,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 业务使用权限 判断设置
      */
     public void testJurl() {
+
         if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites) {
             return;
         }
+
         for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
             try {
                 for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
-                    //LogUtil.dee(modules.getName()+":"+modules.isEnable());
                     for (int k = 0; k < items.size(); k++) {
                         if (modules.getName().equals(items.get(k).title)) {
                             if (!modules.isEnable()) {
