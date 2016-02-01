@@ -27,6 +27,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewTag;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -49,6 +50,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.rest.Post;
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -96,6 +98,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ImageView img_refresh_address;
     private SignInGridViewAdapter signInGridViewAdapter;
     private Animation animation;
+    private PostBizExtData bizExtData;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<TagItem> items = new ArrayList<>();
@@ -252,7 +255,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     // jsonObject.put("address", customerAddress);
 
                     if (uuid != null && lstData_Attachment.size() > 0) {
+                        bizExtData = new PostBizExtData();
+                        bizExtData.setAttachmentCount(lstData_Attachment.size());
                         jsonObject.put("uuid", uuid);
+                        jsonObject.put("bizExtData",bizExtData);
                     }
 
                     JSONObject jsonLoc = new JSONObject();
@@ -264,42 +270,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     jsonObject.put("loc", jsonLoc);
                     jsonObject.put("pname", customerContract);
                     jsonObject.put("ptel", customerContractTel);
-                   /* JSONArray jsonArrayContacts = new JSONArray();
-                    for (Contact contact : mContacts) {
 
-                        JSONObject jo = new JSONObject();
-                        jo.put("id",contact.getId());
-                        jo.put("name", contact.getName());
-                        jo.put("tel", contact.getTel());
-                        jo.put("isDefault", contact.isDefault());
-
-                        jsonArrayContacts.put(jo);
-                    }
-
-
-                  if (!ListUtil.IsEmpty(mContacts)) {
-                        jsonObject.put("contacts", jsonArrayContacts);
-                    }*/
-
-                   /* if (customerAddress.equals(mGpsAddress)
-                            && !StringUtil.isEmpty(customerAddress)
-                            && !StringUtil.isEmpty(mGpsAddress)) {
-
-                        jsonObject.put("gpsAddress", mGpsAddress);
-                        jsonObject.put("gpsInfo", app.longitude + "," + app.latitude);
-                    }
-*/
                     if (tags != null && tags.size() > 0) {
                         JSONArray jsonArrayTagItems = new JSONArray();
                         for (NewTag tag : tags) {
-
                             JSONObject jo = new JSONObject();
                             jo.put("tId", tag.gettId());
                             jo.put("itemId", tag.getItemId());
                             jo.put("itemName", tag.getItemName());
                             jsonArrayTagItems.put(jo);
                         }
-
                         jsonObject.put("tags", jsonArrayTagItems);
                     }
 

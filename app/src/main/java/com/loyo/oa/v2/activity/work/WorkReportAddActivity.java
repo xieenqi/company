@@ -32,6 +32,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.User;
@@ -145,6 +146,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private ArrayList<NewUser> depts = new ArrayList<>();
     private ArrayList<WorkReportDyn> dynList;
     private StringBuffer joinUserId = new StringBuffer();
+    private PostBizExtData bizExtData;
 
     private Handler mHandler = new Handler(){
         public void handleMessage(Message msg){
@@ -460,6 +462,8 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 }
 
+                bizExtData = new PostBizExtData();
+                bizExtData.setAttachmentCount(lstData_Attachment.size());
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("content", content);
                 map.put("type", mSelectType);
@@ -469,6 +473,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("projectId", projectId);
                 }
                 map.put("attachmentUUId", uuid);
+                map.put("bizExtData",bizExtData);
                 map.put("reviewer", mReviewer);//点评人
                 map.put("members", members);//抄送人
 

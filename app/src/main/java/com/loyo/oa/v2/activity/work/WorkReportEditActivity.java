@@ -56,16 +56,16 @@ public class WorkReportEditActivity extends BaseActivity {
     @ViewById TextView tv_reviewer;
     @ViewById ImageView img_title_toUser;
 
-    String cc_user_id = null;
-    String cc_department_id = null;
-    String cc_user_name = null;
-    String cc_department_name = null;
+    private String cc_user_id = null;
+    private String cc_department_id = null;
+    private String cc_user_name = null;
+    private String cc_department_name = null;
 
-    String mBeginAt, mEndAt;
-    int mSelectType = 1;
+    private String mBeginAt, mEndAt;
+    private int mSelectType = 1;
 
-    NewUser user_reviewer;
-    WeeksDialog weeksDialog = null;
+    private NewUser user_reviewer;
+    private WeeksDialog weeksDialog = null;
 
     @Extra("mWorkReport")
     WorkReport mWorkReport;

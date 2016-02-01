@@ -29,6 +29,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
@@ -126,7 +127,6 @@ public class TasksEditActivity extends BaseActivity {
     private StringBuffer joinUser = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
-
     @AfterViews
         //类似onCreate方法执行入口
     void initUI() {
@@ -293,7 +293,6 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("attachmentUUId", uuid);
                 map.put("customerId", mTask.getCustomerId());
                 map.put("customerName", mTask.getCustomerName());
-
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
                     map.put("projectId", mTask.getProjectId());
                 }

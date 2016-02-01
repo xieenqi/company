@@ -26,9 +26,11 @@ import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.BizExtData;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
@@ -129,6 +131,7 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private StringBuffer strBuf;
     private Members members;
+    private PostBizExtData bizExtData;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private int remindTime;
@@ -230,6 +233,8 @@ public class TasksAddActivity extends BaseActivity {
 
     void requestCommitTask(String title, String content) {
         showLoading("");
+        bizExtData = new PostBizExtData();
+        bizExtData.setAttachmentCount(lstData_Attachment.size());
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -246,15 +251,17 @@ public class TasksAddActivity extends BaseActivity {
         }else if(switch_approve.getState() == 4){
             isState = true;
         }
-        map.put("attachmentCount",lstData_Attachment.size());
         map.put("reviewFlag", isState);
+        map.put("bizExtData",bizExtData);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
+
         LogUtil.dee("任务创建图片的数量:"+lstData_Attachment.size());
+        LogUtil.dee("任务创建 发送的数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
@@ -503,12 +510,12 @@ public class TasksAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
+                                LogUtil.dll("执行了");
                                 Utils.uploadAttachment(uuid,2,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
                                     }
-
                                     @Override
                                     public void onError(Throwable e) {
                                         super.onError(e);
