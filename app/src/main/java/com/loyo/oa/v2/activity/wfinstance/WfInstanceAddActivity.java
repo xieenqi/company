@@ -25,6 +25,7 @@ import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Parameters.WfInstanceAdd;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -120,6 +121,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     //选择流程
     private AlertDialog dialog_follow;
     private String mTemplateId;
+    private PostBizExtData bizExtData;
 
     @AfterViews
     void init() {
@@ -497,6 +499,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             }
         }
 
+        bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());   //表单Id
         map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
@@ -504,9 +507,10 @@ public class WfInstanceAddActivity extends BaseActivity {
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
         map.put("projectId", projectId);//项目Id
-
         if (uuid != null && lstData_Attachment.size() > 0) {
+            bizExtData.setAttachmentCount(lstData_Attachment.size());
             map.put("attachmentUUId", uuid);
+            map.put("bizExtData",bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
         LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));

@@ -106,6 +106,7 @@ public class AttachmentActivity extends BaseActivity {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
                 LogUtil.dee("获取附件信息:"+MainApp.gson.toJson(attachments));
+                LogUtil.dee("获取附件URL:"+response.getUrl());
                 HttpErrorCheck.checkResponse(response);
                 mListAttachment = attachments;
                 bindAttachment();
@@ -125,7 +126,6 @@ public class AttachmentActivity extends BaseActivity {
      * 绑定附件
      */
     void bindAttachment() {
-        LogUtil.dee("绑定附件");
         if (ListUtil.IsEmpty(mListAttachment)) {
             LogUtil.dee("没有附件 return");
             return;
@@ -256,7 +256,6 @@ public class AttachmentActivity extends BaseActivity {
      * 上传附件
      */
     private void uploadAttachment(File file) {
-        LogUtil.dll("任务 传过来的 BizType:"+bizType);
         Utils.uploadAttachment(uuid,bizType,file)
                 .subscribe(new CommonSubscriber(this) {
                     @Override
