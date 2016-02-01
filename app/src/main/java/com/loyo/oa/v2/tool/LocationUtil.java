@@ -109,8 +109,8 @@ public class LocationUtil {
         app.latitude = location.getLatitude();
 
         if (!TextUtils.isEmpty(address)) {
-            app.logUtil.e("notifyLocation,address : " + address);
-            app.logUtil.e("location:" + location.getLatitude() + "," + location.getLatitude());
+            LogUtil.d("定位notifyLocation,address : " + address);
+            LogUtil.d("定位location:" + location.getLatitude() + "," + location.getLatitude());
             afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(),
                     location.getRadius());
         } else {

@@ -17,7 +17,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
@@ -37,7 +36,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -138,20 +137,30 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     void startLocation() {
         img_refresh_address.startAnimation(animation);
 
-        new LocationUtil(this, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
                 img_refresh_address.clearAnimation();
             }
 
-
             @Override
-            public void OnLocationFailed() {
-                Toast.makeText(CustomerAddActivity.this, "定位失败,请在网络和GPS信号良好时重试", Toast.LENGTH_LONG).show();
+            public void OnLocationGDFailed() {
+                Toast("定位失败,请在网络和GPS信号良好时重试");
                 img_refresh_address.clearAnimation();
             }
+
+//            @Override
+//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+//
+//            }
+//
+//
+//            @Override
+//            public void OnLocationFailed() {
+//
+//            }
         });
     }
 
@@ -175,7 +184,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -227,10 +236,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Toast("请输入联系电话");
                     break;
                 }
-                if(!RegularCheck.isMobilePhone(customerContractTel)){
-                Toast("电话号码不正确");
-                return;
-            }
+                if (!RegularCheck.isMobilePhone(customerContractTel)) {
+                    Toast("电话号码不正确");
+                    return;
+                }
                 if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
                     Contact defaultContact;
                     defaultContact = new Contact();
@@ -417,7 +426,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this,"请稍候");
+                Utils.dialogShow(this, "请稍候");
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                     RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
