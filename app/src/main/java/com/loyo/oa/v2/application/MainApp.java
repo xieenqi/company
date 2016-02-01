@@ -5,13 +5,11 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CellInfo;
@@ -243,7 +241,7 @@ public class MainApp extends Application {
         //        init_StrictMode();
 
 
-        SDKInitializer.initialize(getApplicationContext());
+        // SDKInitializer.initialize(getApplicationContext());
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();

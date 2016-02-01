@@ -27,17 +27,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activity.login.LoginActivity;
-import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
-import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.login.LoginActivity;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
+import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
 import com.loyo.oa.v2.activity.signin.SignInManagerActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
@@ -68,7 +70,7 @@ import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -105,7 +107,7 @@ import retrofit.client.Response;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuDismissListener,
-        PopupMenu.OnPopupMenuItemClickListener, LocationUtil.AfterLocation {
+        PopupMenu.OnPopupMenuItemClickListener, LocationUtilGD.AfterLocation {
 
     @ViewById(R.id.tv_title_1)
     TextView tv_user_name;
@@ -144,10 +146,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         }
     };
-    private ArrayList<ClickItem>  items = new ArrayList<>();
+    private ArrayList<ClickItem> items = new ArrayList<>();
 
     //显示通知公告红点
-   public Handler handler = new Handler() {
+    public Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
@@ -205,6 +207,34 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @Override
     public void onPopupMenuItemLongClick(int position, PopupMenuItem item) {
+    }
+
+    //高德定位回调
+    @Override
+    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        map.put("originalgps", longitude + "," + latitude);
+        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+            @Override
+            public void success(AttendanceRecord attendanceRecord, Response response) {
+                cancelLoading();
+                attendanceRecord.setAddress(address);
+                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
+                intent.putExtra("mAttendanceRecord", attendanceRecord);
+                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        cancelLoading();
+        Toast("获取打卡位置失败");
     }
 
     private static class MHandler extends Handler {
@@ -287,6 +317,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
                 //showLoading("");
+
             }
         });
 
@@ -298,6 +329,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         adapter = new ClickItemAdapter();
         lv_main.setAdapter(adapter);
         lv_main.setDragEnabled(true);
+
     }
 
     /**
@@ -385,35 +417,36 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return menuObjects;
     }
 
-    /**
-     * 定位成功后，跳转新建考勤回调
-     */
-    @Override
-    public void OnLocationFailed() {
-        cancelLoading();
-        Toast("获取打卡位置失败");
-    }
 
-    @Override
-    public void OnLocationSucessed(final String address, double longitude, double latitude, float radius) {
-        map.put("originalgps", longitude + "," + latitude);
-        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-            @Override
-            public void success(AttendanceRecord attendanceRecord, Response response) {
-                cancelLoading();
-                attendanceRecord.setAddress(address);
-                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
-                intent.putExtra("mAttendanceRecord", attendanceRecord);
-                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
+//    /**
+//     * 定位成功后，跳转新建考勤回调
+//     */
+//    @Override
+//    public void OnLocationFailed() {
+//        cancelLoading();
+//        Toast("获取打卡位置失败");
+//    }
+//
+//    @Override
+//    public void OnLocationSucessed(final String address, double longitude, double latitude, float radius) {
+//        map.put("originalgps", longitude + "," + latitude);
+//        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+//            @Override
+//            public void success(AttendanceRecord attendanceRecord, Response response) {
+//                cancelLoading();
+//                attendanceRecord.setAddress(address);
+//                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
+//                intent.putExtra("mAttendanceRecord", attendanceRecord);
+//                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+//    }
 
     /**
      * 获取能否打卡的信息
@@ -432,7 +465,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 for (int i = 0; i < validateInfo.getValids().size(); i++) {
                     isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
                 }
-                    rotateInt();
+                rotateInt();
             }
 
             @Override
@@ -507,7 +540,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         int type = validateItem.getType();
         map.clear();
         map.put("inorout", type);
-        new LocationUtil(this, this);
+//        new LocationUtil(this, this);
+        new LocationUtilGD(MainActivity.this, this);
     }
 
     /**
@@ -985,6 +1019,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onResume();
         intentJpushInfo();
         requestNumber();
+
     }
 
     /**
@@ -1022,6 +1057,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 case 5://通知公告
                     intent.setClass(MainActivity.this, BulletinManagerActivity_.class);
                     //intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 6://客户详情
+                    intent.setClass(MainActivity.this, CustomerDetailInfoActivity_.class);
+                    intent.putExtra("Id", MainApp.jpushData.buzzId);
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;

@@ -40,7 +40,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -257,8 +257,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     dropItemTag.addSubDropItem(parentItem);
                 }
                 source.add(dropItemTag);
-                if(isAdded())
-                mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+                if (isAdded())
+                    mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
                 mDropMenu.setmMenuTitleTextSize(14);//Menu的文字大小
                 mDropMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
                 mDropMenu.setmMenuItems(source);
@@ -465,9 +465,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * http获取附近客户信息
      */
     private void getNearCustomersInfo() {
-        new LocationUtil(mActivity, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(mActivity, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 String url = "";
                 switch (customer_type) {
                     //团队客户
@@ -507,9 +507,19 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 Toast("定位失败！");
             }
+
+//            @Override
+//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+//
+//            }
+//
+//            @Override
+//            public void OnLocationFailed() {
+//
+//            }
         });
     }
 

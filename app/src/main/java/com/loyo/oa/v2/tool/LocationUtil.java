@@ -81,10 +81,10 @@ public class LocationUtil {
                 break;
         }
 
-        LogUtil.d(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
-                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() +
-                " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
-                location.getRadius() + " available : " + available);
+//        LogUtil.d(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
+//                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() +
+//                " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
+//                location.getRadius() + " available : " + available);
 
         mLocationClient.unRegisterLocationListener(mLocationListener);
         mLocationClient.stop();
@@ -109,9 +109,10 @@ public class LocationUtil {
         app.latitude = location.getLatitude();
 
         if (!TextUtils.isEmpty(address)) {
-            app.logUtil.e("notifyLocation,address : " + address);
-            app.logUtil.e("location:" + location.getLatitude() + "," + location.getLatitude());
-            afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(), location.getRadius());
+            LogUtil.d("定位notifyLocation,address : " + address);
+            LogUtil.d("定位location:" + location.getLatitude() + "," + location.getLatitude());
+            afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(),
+                    location.getRadius());
         } else {
             afterLocation.OnLocationFailed();
         }
