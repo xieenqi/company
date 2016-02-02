@@ -22,6 +22,7 @@ public class Department implements Serializable {
     private long updatedAt;
     private long createdAt;
     private boolean isIndex;
+    private ArrayList<User> users = new ArrayList<>();
     public String title = "";//职务名称
 
 
@@ -32,8 +33,6 @@ public class Department implements Serializable {
     public void setIsIndex(boolean isIndex) {
         this.isIndex = isIndex;
     }
-
-    private ArrayList<User> users = new ArrayList<>();
 
     public String getXpath() {
         return xpath;

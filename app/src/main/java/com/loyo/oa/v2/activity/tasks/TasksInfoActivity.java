@@ -198,7 +198,7 @@ public class TasksInfoActivity extends BaseActivity {
         allUsers.clear();
         if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
             img_title_right.setVisibility(View.GONE);
-        }else if(IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED){
+        } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED) {
             img_title_right.setVisibility(View.GONE);
         } else if (!IsResponsiblePerson() && !IsCreator()) {//参与人
             img_title_right.setVisibility(View.GONE);
@@ -229,7 +229,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
-        }else{
+        } else {
             tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
@@ -343,8 +343,8 @@ public class TasksInfoActivity extends BaseActivity {
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
 
-        tv_discussion_count.setText("("+mTask.getBizExtData().getDiscussCount() + ")");
-        tv_attachment_count.setText("("+mTask.getBizExtData().getAttachmentCount() + ")");
+        tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
+        tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
@@ -420,7 +420,10 @@ public class TasksInfoActivity extends BaseActivity {
                         }
                     }
                 });
-
+                //没有权限就不显示
+                if (!(IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId()))) {
+                    childCheckbox.setVisibility(View.INVISIBLE);
+                }
                 /**
                  * 子任务编辑跳转
                  * */
@@ -540,10 +543,10 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("edit", true);
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
-                    }else if(mTask.getStatus() == Task.STATUS_REVIEWING){
+                    } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
-                    }else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
+                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
                         intent.putExtra("delete", true);
                     }
                 }
@@ -614,9 +617,9 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if(mTask.getStatus() != Task.STATUS_PROCESSING){
+        if (mTask.getStatus() != Task.STATUS_PROCESSING) {
             Toast("当前状态不能添加子任务");
-        }else{
+        } else {
             if (IsResponsiblePerson() || IsCreator()) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Task", mTask);
@@ -866,8 +869,8 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
         //bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
-        bundle.putInt("status",mTask.getStatus());
-        bundle.putInt("bizType",2);
+        bundle.putInt("status", mTask.getStatus());
+        bundle.putInt("bizType", 2);
 
         ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getMembers() != null) {
@@ -890,7 +893,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status", mTask.getStatus());
-        bundle.putInt("bizType",2);
+        bundle.putInt("bizType", 2);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 

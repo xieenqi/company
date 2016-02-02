@@ -58,7 +58,8 @@ public class HttpErrorCheck {
             Toast(error.getMessage());
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
-            Toast(error.getMessage());
+            //Toast(error.getMessage());
+            Toast("服务端数据异常");
             e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
