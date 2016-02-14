@@ -82,6 +82,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     EditText edt_contract_tel;
     @ViewById
+    EditText edt_contract_telnum;
+    @ViewById
     EditText et_address;
     @ViewById
     TextView tv_labels;
@@ -225,6 +227,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 String customerAddress = et_address.getText().toString().trim();
                 String customerContract = edt_contract.getText().toString().trim();
                 String customerContractTel = edt_contract_tel.getText().toString().trim();
+                String customerWrietele = edt_contract_telnum.getText().toString().trim();
 
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称");
@@ -232,16 +235,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (customerAddress.isEmpty()) {
                     Toast("请输入的客户地址");
                     break;
-                } else if (customerContract.isEmpty()) {
-                    Toast("请输入联系人");
-                    break;
-                } else if (customerContractTel.isEmpty()) {
-                    Toast("请输入联系电话");
-                    break;
-                }
-                if (!RegularCheck.isMobilePhone(customerContractTel)) {
-                    Toast("电话号码不正确");
-                    return;
                 }
                 if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
                     Contact defaultContact;
@@ -279,6 +272,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     jsonObject.put("loc", jsonLoc);
                     jsonObject.put("pname", customerContract);
                     jsonObject.put("ptel", customerContractTel);
+                    jsonObject.put("wiretel",customerWrietele);
 
                     if (tags != null && tags.size() > 0) {
                         JSONArray jsonArrayTagItems = new JSONArray();

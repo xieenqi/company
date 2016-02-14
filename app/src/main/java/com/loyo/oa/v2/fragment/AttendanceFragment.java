@@ -27,7 +27,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
@@ -45,7 +45,7 @@ import retrofit.client.Response;
  * 时间 : 15/9/14.
  */
 
-public class AttendanceFragment extends BaseFragment implements LocationUtil.AfterLocation {
+public class AttendanceFragment extends BaseFragment implements LocationUtilGD.AfterLocation {
     private ListView lv_attendance_type;
     private TextView tv_time;
     private TextView tv_weekday;
@@ -154,17 +154,25 @@ public class AttendanceFragment extends BaseFragment implements LocationUtil.Aft
         progressDialog = new CustomProgressDialog(mActivity);
         progressDialog.setTitle("加载中,请稍后...");
         progressDialog.show();
-        new LocationUtil(mActivity, this);
+        new LocationUtilGD(mActivity, this);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK || null == data) {
+            return;
+        }
+        switch (requestCode) {
+            case FinalVariables.REQUEST_CHECKIN_ATTENDANCE:
+                getData();
+                break;
+        }
     }
 
     @Override
-    public void OnLocationFailed() {
-        Toast("获取打卡位置失败");
-        progressDialog.dismiss();
-    }
-
-    @Override
-    public void OnLocationSucessed(final String address, double longitude, double latitude, float radius) {
+    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
         map.put("originalgps", longitude + "," + latitude);
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
@@ -184,19 +192,12 @@ public class AttendanceFragment extends BaseFragment implements LocationUtil.Aft
         });
     }
 
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK || null == data) {
-            return;
-        }
-        switch (requestCode) {
-            case FinalVariables.REQUEST_CHECKIN_ATTENDANCE:
-                getData();
-                break;
-        }
+    public void OnLocationGDFailed() {
+        Toast("获取打卡位置失败");
+        progressDialog.dismiss();
     }
+
     private class MAdapter extends BaseAdapter {
         @Override
         public int getCount() {

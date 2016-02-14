@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.NearByCustomersMapActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NearCount;
@@ -21,6 +21,7 @@ import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -95,7 +96,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         bundle.putSerializable("customers", customers);
         bundle.putInt(ExtraAndResult.EXTRA_DATA, fragmentXes.get(0).getmCustomers().size());
         bundle.putInt(ExtraAndResult.EXTRA_TYPE, type);
-        app.startActivity(this, NearByCustomersMapActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
+        app.startActivity(this, NearByCustomersMapActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
     }
 
     /**

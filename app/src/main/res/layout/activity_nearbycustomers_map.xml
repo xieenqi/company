@@ -13,9 +13,12 @@
         <include layout="@layout/include_common_title_2"/>
     </LinearLayout>
 
-    <com.baidu.mapapi.map.MapView
+    <com.amap.api.maps2d.MapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        />
+
+
 
 </LinearLayout>

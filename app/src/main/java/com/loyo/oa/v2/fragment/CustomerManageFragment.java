@@ -50,6 +50,7 @@ import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
 import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
@@ -64,7 +65,7 @@ import java.util.List;
 import retrofit.client.Response;
 
 
-public class CustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtil.AfterLocation {
+public class CustomerManageFragment extends BaseMainListFragment implements View.OnClickListener, LocationUtilGD.AfterLocation {
 
     public static final int TYPE_FILTER_CUSTOMER_ID = 3;
     public static final int TYPE_FILTER_TAG_IDS = TYPE_FILTER_CUSTOMER_ID + 1;
@@ -95,7 +96,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new LocationUtil(mActivity, this);
+        new LocationUtilGD(mActivity, this);
         GetData(true, false);
     }
 
@@ -249,25 +250,6 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 params, AsyncHttpResponseHandler_customers_get_tagItemIds.class, lstParamInfo);
     }
 
-
-    @Override
-    public void OnLocationSucessed(String _address, final double longitude, final double latitude, float radius) {
-        app.getRestAdapter().create(ICustomer.class).getNearCustomers(String.valueOf(latitude), String.valueOf(longitude),
-                new RCallback<ArrayList<Customer>>() {
-                    @Override
-                    public void success(ArrayList<Customer> customers, Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        LatLng center = LocationUtil.convert(1, latitude, longitude);
-                        initNearCustomer(customers, center);
-                    }
-                });
-    }
-
-    @Override
-    public void OnLocationFailed() {
-        Global.Toast("获取地址出错!");
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -333,6 +315,24 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 startActivityForResult(intent, REQUEST_REVIEW);
             }
         });
+    }
+
+    @Override
+    public void OnLocationGDSucessed(String address, final double longitude, final double latitude, String radius) {
+        app.getRestAdapter().create(ICustomer.class).getNearCustomers(String.valueOf(latitude), String.valueOf(longitude),
+                new RCallback<ArrayList<Customer>>() {
+                    @Override
+                    public void success(ArrayList<Customer> customers, Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        LatLng center = LocationUtil.convert(1, latitude, longitude);
+                        initNearCustomer(customers, center);
+                    }
+                });
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        Global.Toast("获取地址出错!");
     }
 
     public class AsyncHttpResponseHandler_customers_get extends BaseAsyncHttpResponseHandler {
@@ -542,7 +542,7 @@ public class CustomerManageFragment extends BaseMainListFragment implements View
                 // fixes bug293 ykb 07-14 或许不需要同步一次全部数据
                 //GetData(true, false);
 
-                OnLocationSucessed("", app.longitude, app.latitude, 0);
+                OnLocationGDSucessed("", app.longitude, app.latitude, "0");
                 break;
             case REQUEST_REVIEW:
 

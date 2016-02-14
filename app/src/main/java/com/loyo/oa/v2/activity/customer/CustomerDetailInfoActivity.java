@@ -41,6 +41,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -84,6 +85,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     ViewGroup layout_send_sms;
     @ViewById
     ViewGroup layout_call;
+    @ViewById
+    ViewGroup layout_wiretel_call;
 
     @ViewById
     ViewGroup layout_sale_activity;
@@ -96,6 +99,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_attachment;
 
+    @ViewById
+    TextView customer_detail_wiretel;
     @ViewById
     TextView tv_sale_activity_date;
     @ViewById
@@ -200,12 +205,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != contact) {
             tv_contact_name.setText(contact.getName());
             tv_contact_tel.setText(contact.getTel());
+            customer_detail_wiretel.setText(contact.getWiretel());
         }
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
         tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
-
     }
 
     /**
@@ -336,7 +341,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment})
+            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment,R.id.layout_wiretel_call})
     void onClick(View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
@@ -396,6 +401,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_call:
                 Utils.call(this, mCustomer.contacts.get(0).getTel());
                 break;
+            case R.id.layout_wiretel_call:
+                Utils.call(this, mCustomer.contacts.get(0).getWiretel());
+                break;
+
             /*跟进动态*/
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);

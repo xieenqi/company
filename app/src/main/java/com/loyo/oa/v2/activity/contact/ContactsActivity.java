@@ -9,11 +9,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.fragment.ContactsInMyDeptFragment;
@@ -23,7 +24,8 @@ import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 
-/**通讯录 联系人 页面
+/**
+ * 通讯录 联系人 页面
  * com.loyo.oa.v2.activity
  * 描述 :
  * 作者 : ykb
@@ -61,6 +63,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         setTouchView(-1);
         getUserAndDepartmentSize();
 
+
         ((TextView) findViewById(R.id.tv_title_1)).setText("通讯录");
 
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
@@ -96,9 +99,16 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         myDepartmentContactsSize = Common.getMyUserDept().size();
         ArrayList<ContactsGroup> groups = Common.getContactsGroups(null);
 
-        if (!groups.isEmpty()) {
-            for (int i = 0; i < groups.size(); i++) {
-                departmentsSize += groups.get(i).getDepartments().size();
+//        if (!groups.isEmpty()) {//部门数量
+//            for (int i = 0; i < groups.size(); i++) {
+//                departmentsSize += groups.get(i).getDepartments().size();
+//            }
+//        }
+        if (MainApp.lstDepartment != null) {//公司所有的人员数量
+            for (Department element : MainApp.lstDepartment) {
+                if (element.getUsers() != null) {
+                    departmentsSize += element.getUsers().size();
+                }
             }
         }
     }
@@ -116,6 +126,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
                 break;
         }
     }
+
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
         private String[] titles = {"本部门(0)", "全公司(0)"};

@@ -33,7 +33,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 import com.loyo.oa.v2.tool.RCallback;
@@ -63,7 +63,7 @@ import retrofit.client.Response;
  * 【客户信息】 页面
  */
 @EActivity(R.layout.activity_customer_info)
-public class CustomerInfoActivity extends BaseFragmentActivity implements LocationUtil.AfterLocation {
+public class CustomerInfoActivity extends BaseFragmentActivity implements LocationUtilGD.AfterLocation {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -356,7 +356,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
 
             case R.id.img_refresh_address:
-                new LocationUtil(this, this);
+                new LocationUtilGD(this, this);
                 img_refresh_address.startAnimation(animation);
                 break;
 
@@ -463,25 +463,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
 
     @Override
-    public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-
-        img_refresh_address.clearAnimation();
-        animation.reset();
-        lat = latitude;
-        lng = longitude;
-        mLocate.addr = address;
-        mLocate.setLoc(new double[]{longitude,latitude});
-        tv_address.setText(address);
-
-    }
-
-    @Override
-    public void OnLocationFailed() {
-        img_refresh_address.clearAnimation();
-        animation.reset();
-    }
-
-    @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra(Customer.class.getName(), mCustomer);
@@ -551,5 +532,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
 
         }
+    }
+
+    @Override
+    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+
+        img_refresh_address.clearAnimation();
+        animation.reset();
+        lat = latitude;
+        lng = longitude;
+        mLocate.addr = address;
+        mLocate.setLoc(new double[]{longitude, latitude});
+        tv_address.setText(address);
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        img_refresh_address.clearAnimation();
+        animation.reset();
     }
 }

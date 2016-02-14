@@ -46,7 +46,6 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         map.put("endAt", System.currentTimeMillis() / 1000);
         map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(map, this);
-
     }
 
     @Override
