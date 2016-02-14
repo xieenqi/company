@@ -140,7 +140,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
 
-
         app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
     }
 
