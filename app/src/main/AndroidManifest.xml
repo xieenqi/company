@@ -6,7 +6,8 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="22"/>
+        android:targetSdkVersion="23"/>
+    
     <!-- 公用权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
@@ -652,7 +653,6 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="f78e54766a8910db098ce699"/>
-
 
         <!--高德定位相关 -->
         <service android:name="com.amap.api.location.APSService"/>
