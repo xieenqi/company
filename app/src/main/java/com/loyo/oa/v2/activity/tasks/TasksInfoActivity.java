@@ -212,6 +212,7 @@ public class TasksInfoActivity extends BaseActivity {
             realName = mTask.getResponsiblePerson().getName();
             tv_responsiblePerson.setText("负责人:" + realName);
             allUsers.add(mTask.getResponsiblePerson());
+            allUsers.add(mTask.getCreator());
         }
 
         if (mTask.members != null) {
