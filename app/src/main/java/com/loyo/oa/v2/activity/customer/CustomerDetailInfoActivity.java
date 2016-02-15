@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity.customer;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -366,7 +367,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
-
                 break;
 
             /*挑入*/
@@ -384,7 +384,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                         finish();
                     }
                 });
-
 
                 break;
             /*联系人*/
@@ -404,7 +403,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_wiretel_call:
                 Utils.call(this, mCustomer.contacts.get(0).getWiretel());
                 break;
-
             /*跟进动态*/
             case R.id.layout_sale_activity:
                 bundle.putBoolean("isMyUser", isMyUser);
@@ -482,17 +480,15 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK || null == data) {
-            return;
-        }
-
         switch (requestCode) {
-            case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
+          case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
             case FinalVariables.REQUEST_PREVIEW_DEMANDS:
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
+            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
+                getData();
+                break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
                 getData();
                 break;
