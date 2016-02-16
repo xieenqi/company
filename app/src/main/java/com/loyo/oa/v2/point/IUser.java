@@ -36,4 +36,7 @@ public interface IUser {
     @PUT("/")
     void updatePassword(@Body HashMap<String,Object> map,retrofit.Callback<Object> cb);
 
+    @PUT("/")
+    void rushHomeDate(retrofit.Callback<User> cb);
+
 }

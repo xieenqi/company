@@ -482,12 +482,9 @@ public class WfInstanceAddActivity extends BaseActivity {
             workflowValues.add(jsonMapValues);
         }
 
-            LogUtil.dll("postValue Size:"+postValue.size());
-            LogUtil.dll("是否必填 Size:"+mBizForm.getFields().size());
-
         for(int i = 0;i<mBizForm.getFields().size();i++){
-            LogUtil.dll("postValue:"+postValue.get(i).toString());
-            LogUtil.dll("是否必填:"+mBizForm.getFields().get(i).isRequired());
+/*          LogUtil.dll("postValue:"+postValue.get(i).toString());
+            LogUtil.dll("是否必填:"+mBizForm.getFields().get(i).isRequired());*/
             if(TextUtils.isEmpty(postValue.get(i).toString()) && mBizForm.getFields().get(i).isRequired()){
                 Toast("请填写\"必填项\"");
                 return;

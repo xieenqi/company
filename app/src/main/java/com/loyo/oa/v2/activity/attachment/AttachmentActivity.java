@@ -168,7 +168,7 @@ public class AttachmentActivity extends BaseActivity {
      */
     @Click(R.id.img_title_left)
     void click() {
-        finish();
+        onBackPressed();
     }
 
     /**
@@ -225,33 +225,6 @@ public class AttachmentActivity extends BaseActivity {
         }
     }
 
-
-
-    public void uploadAttachmentTest(File file) {
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedString = new TypedString(uuid);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("uuid",uuid);
-        map.put("bizType", 2);
-        map.put("attachments",file);
-
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).addLicenseInfo(map,new Callback<Attachment>() {
-            @Override
-            public void success(Attachment attachment, Response response) {
-                HttpErrorCheck.checkResponse(response);
-                LogUtil.dee("成功:" + response.getUrl());
-                getAttachments();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                    HttpErrorCheck.checkError(error);
-                LogUtil.dee("失败:" + error.getUrl());
-            }
-        });
-    }
-
-
     /**
      * 上传附件
      */
@@ -272,15 +245,5 @@ public class AttachmentActivity extends BaseActivity {
                         super.onError(e);
                     }
                 });
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-            finish();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }
