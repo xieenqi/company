@@ -66,13 +66,21 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_attendance_rusult"
                 android:minHeight="@dimen/dimen_30"
+                android:orientation="vertical"
+                >
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <ImageView
                     android:id="@+id/iv_type"
                     android:layout_width="@dimen/dimen_25"
@@ -80,20 +88,30 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/dimen_10"
                     />
+                <TextView
+                    android:id="@+id/tv_address_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:text="位置"
+                    android:textColor="@color/gray"
+                    />
+            </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_info"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimen_25"
-                    android:gravity="left|center"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginBottom="5dp"
                     android:singleLine="false"
                     android:text="迟到了,打卡时间"
                     android:textColor="@color/gray"
                     />
 
-            </LinearLayout>
+                </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
