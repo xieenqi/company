@@ -115,10 +115,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-
     private SignInGridViewAdapter signInGridViewAdapter;
     private String uuid = StringUtil.getUUID();
-
     //选择流程
     private AlertDialog dialog_follow;
     private String mTemplateId;
