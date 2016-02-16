@@ -229,7 +229,6 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             } else {
                 holder.gridView.setVisibility(View.GONE);
             }
-
         }
 
         @Override

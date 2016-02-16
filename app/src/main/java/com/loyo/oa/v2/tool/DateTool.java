@@ -77,9 +77,9 @@ public class DateTool {
     public static final String DATE_FORMATE_MINUTES = "yyyy-MM-dd_HH-mm-ss";
 
     /**
-     * dd/MM/yyyy, hh:mm
+     * dd-MM-yyyy, hh:mm
      */
-    public static final String DATE_FORMATE_TRANSACTION = "dd/MM/yyyy, hh:mm";
+    public static final String DATE_FORMATE_TRANSACTION = "dd-MM-yyyy, hh:mm";
     /**
      * MM/dd HH:mm
      */
@@ -530,8 +530,8 @@ public class DateTool {
      * @param time
      * @return
      */
-    public static String timet(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat(DATE_FORMATE_CUSTOM_2);
+    public static String timet(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs);
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
         int i = Integer.parseInt(time);
