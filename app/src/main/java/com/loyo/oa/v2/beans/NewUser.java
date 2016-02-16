@@ -17,6 +17,7 @@ public class NewUser implements Serializable {
     private String id;
     private String name;
     private String avatar;
+    private String xpath;
     private ArrayList<NewUser> users = new ArrayList<>();
 
 
@@ -42,6 +43,14 @@ public class NewUser implements Serializable {
             }
         }
         return sb.toString();
+    }
+
+    public String getXpath() {
+        return xpath;
+    }
+
+    public void setXpath(String xpath) {
+        this.xpath = xpath;
     }
 
     public String getAvatar() {
@@ -99,7 +108,6 @@ public class NewUser implements Serializable {
 
     public User toUser() {
         User user = new User();
-
         user.avatar=this.getAvatar();
         user.id=this.getId();
         user.realname=this.getName();

@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
@@ -31,6 +32,8 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
+import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -133,8 +136,10 @@ public class TasksInfoActivity extends BaseActivity {
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
-    public ArrayList<NewUser> allUsers;
-
+    public ArrayList<NewUser> childTastUsers = new ArrayList<>();
+    public ArrayList<NewUser> requestDepts = new ArrayList<>();
+    public ArrayList<User> aboutDepts = new ArrayList<>();
+    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -177,7 +182,6 @@ public class TasksInfoActivity extends BaseActivity {
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
-        allUsers = new ArrayList<>();
 
     }
 
@@ -195,7 +199,7 @@ public class TasksInfoActivity extends BaseActivity {
      */
     void updateUI_task_responsiblePerson() {
 
-        allUsers.clear();
+        childTastUsers.clear();
         if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
             img_title_right.setVisibility(View.GONE);
         } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED) {
@@ -211,8 +215,8 @@ public class TasksInfoActivity extends BaseActivity {
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
             tv_responsiblePerson.setText("负责人:" + realName);
-            allUsers.add(mTask.getResponsiblePerson());
-            allUsers.add(mTask.getCreator());
+            childTastUsers.add(mTask.getResponsiblePerson());
+            childTastUsers.add(mTask.getCreator());
         }
 
         if (mTask.members != null) {
@@ -222,7 +226,8 @@ public class TasksInfoActivity extends BaseActivity {
                     userNames.append(element.getName() + ",");
                 }
                 tv_toUsers.setText("参与人:" + userNames.toString());
-                allUsers.addAll(mTask.members.getAllData());
+                childTastUsers.addAll(mTask.members.users);
+                getAboutUser();
             } else {
                 tv_toUsers.setText("没有参与人");
             }
@@ -445,7 +450,7 @@ public class TasksInfoActivity extends BaseActivity {
                         Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
                         intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
                         intent.putExtra("TaskId", mTask.getId());
-                        intent.putExtra("allUsers", allUsers);
+                        intent.putExtra("allUsers", childTastUsers);
                         if (IsCreator() || IsResponsiblePerson()) {
                             intent.putExtra("isReponser", true);
                         } else {
@@ -490,7 +495,6 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Background
     void getTask() {
-
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
@@ -624,7 +628,7 @@ public class TasksInfoActivity extends BaseActivity {
             if (IsResponsiblePerson() || IsCreator()) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Task", mTask);
-                bundle.putSerializable("allUsers", allUsers);
+                bundle.putSerializable("allUsers", childTastUsers);
                 app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
             } else {
                 Toast("你没有创建子任务权限!");
@@ -673,7 +677,6 @@ public class TasksInfoActivity extends BaseActivity {
                 String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
                 if (cc_user_id != null && cc_user_name != null) {
                     setJoinUsers(cc_user_id, cc_user_name);
-
                 } else {
                     Toast("未选择相关人员");
                 }
@@ -905,7 +908,6 @@ public class TasksInfoActivity extends BaseActivity {
      */
     public boolean IsCreator() {
         return null != mTask.getCreator() ? mTask.getCreator().isCurrentUser() : false;
-        //return userId.equals(mTask.getCreator().getId()) ? true : false;
     }
 
     /**
@@ -915,6 +917,30 @@ public class TasksInfoActivity extends BaseActivity {
      */
     public boolean IsResponsiblePerson() {
         return null != mTask.getResponsiblePerson() ? mTask.getResponsiblePerson().isCurrentUser() : false;
-        //return !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
+    }
+
+
+    /**
+     * 参与人当中的部门，拆分成员工
+     * */
+    void getAboutUser(){
+
+        requestDepts.addAll(mTask.members.depts);
+
+        for(Department department : deptSource){
+            for(NewUser newUser : requestDepts){
+                try{
+                    if(department.getId().equals(newUser.getId())){
+                        aboutDepts.addAll(department.getUsers());
+                    }
+                }catch(NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        for(User user : aboutDepts){
+            childTastUsers.add(user.toShortUser());
+        }
     }
 }
