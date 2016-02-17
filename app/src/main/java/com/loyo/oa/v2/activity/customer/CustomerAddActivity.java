@@ -99,7 +99,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ImageView img_refresh_address;
     private SignInGridViewAdapter signInGridViewAdapter;
     private Animation animation;
-    private PostBizExtData bizExtData;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<Contact> mContacts = new ArrayList<>();
     private ArrayList<TagItem> items = new ArrayList<>();
@@ -255,12 +254,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 try {
                     jsonObject.put("name", customer_name);
                     // jsonObject.put("address", customerAddress);
-
                     if (uuid != null && lstData_Attachment.size() > 0) {
-                        bizExtData = new PostBizExtData();
-                        bizExtData.setAttachmentCount(lstData_Attachment.size());
                         jsonObject.put("uuid", uuid);
-                        jsonObject.put("bizExtData",bizExtData);
+                        jsonObject.put("attachmentCount",lstData_Attachment.size());
                     }
 
                     JSONObject jsonLoc = new JSONObject();
@@ -285,9 +281,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         }
                         jsonObject.put("tags", jsonArrayTagItems);
                     }
-
                     stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
-
+                    LogUtil.dll("新建客户 发送参数:"+MainApp.gson.toJson(jsonObject));
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }

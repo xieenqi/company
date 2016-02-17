@@ -94,7 +94,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
 
-        LogUtil.dll("时:"+calendar.get(Calendar.HOUR_OF_DAY));
+        LogUtil.dll("时:" + calendar.get(Calendar.HOUR_OF_DAY));
 
     }
 
@@ -118,11 +118,15 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 .setPositiveButton("完成", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
-                        if (Integer.parseInt(DateTool.getDataOne(timeFu,"yyyy-MM-dd HH:mm"))
-                                < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(),"yyyy-MM-dd HH:mm"))) {
-                            Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            listener.onDateTimeChanged(years, month, day, hour, minutes);
+                        try {
+                            if (Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
+                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"))) {
+                                Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                listener.onDateTimeChanged(years, month, day, hour, minutes);
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
                         }
                     }
                 })
