@@ -150,10 +150,11 @@ public class PreviewImageActivity extends Activity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            PhotoView photoView = new PhotoView(container.getContext());
 
+            PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
             File imgFile = attachment.getFile();
+
             if (imgFile != null) {
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {

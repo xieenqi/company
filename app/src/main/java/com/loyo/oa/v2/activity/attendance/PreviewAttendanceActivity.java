@@ -57,7 +57,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
     @ViewById RoundImageView iv_avartar;
     @ViewById TextView tv_name;
     @ViewById TextView tv_role;
-
+    @ViewById TextView tv_address_info;
     @ViewById ImageView iv_type;
 
     @ViewById TextView tv_info;
@@ -166,6 +166,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
         } else {
             tv_info.setText(content);
         }
+        tv_address_info.setText(attendance.address);
         tv_reason.setText(TextUtils.isEmpty(attendance.reason) ? "正常考勤" : attendance.reason);
         if (user.id.equals(MainApp.user.id)) {//自己不能确认外勤
             btn_confirm.setVisibility(View.GONE);

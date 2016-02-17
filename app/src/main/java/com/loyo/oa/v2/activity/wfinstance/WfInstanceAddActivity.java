@@ -103,6 +103,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     //要提交的数据的展示容器
     @ViewById LinearLayout wfinstance_data_container;
     WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
+    ArrayList postValue = new ArrayList<>();
 
     /**
      * 审批 内容 数据
@@ -114,10 +115,8 @@ public class WfInstanceAddActivity extends BaseActivity {
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-
     private SignInGridViewAdapter signInGridViewAdapter;
     private String uuid = StringUtil.getUUID();
-
     //选择流程
     private AlertDialog dialog_follow;
     private String mTemplateId;
@@ -462,6 +461,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         /**审批内容，装进Post数据的list中*/
+        postValue.clear();
         ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
         wfInstanceAdd.getWorkflowValuesAdd().wfInstanceValuesDatas.clear();
         for (int k = 0; k < submitData.size(); k++) {
@@ -472,6 +472,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     if (!TextUtils.equals(field.getId(), key)) {
                         continue;
                     }
+                    postValue.add(map_Values.get(key));
                     String value = (String) map_Values.get(key);
                     jsonMapValues.put(key, value);
                 }
@@ -479,23 +480,12 @@ public class WfInstanceAddActivity extends BaseActivity {
             workflowValues.add(jsonMapValues);
         }
 
-     /*     for (WfinstanceViewGroup element : WfinObj) {
-            workflowValues.add(element.getInfoData());
-        }*/
-
-        if (!(workflowValues.size() > 0)) {
-            Toast("请填写审批内容\"必填项\"");
-            return;
-        }
-
-        /**必填项判断是否为空*/
-        for (int i = 0; i < workflowValues.size(); i++) {
-            HashMap<String, Object> map = workflowValues.get(i);
-            for (Map.Entry<String, Object> entry : workflowValues.get(i).entrySet()) {
-                if (TextUtils.isEmpty((CharSequence) entry.getValue())) {
-                    Toast("请填写\"必填项\"");
-                    return;
-                }
+        for(int i = 0;i<mBizForm.getFields().size();i++){
+/*          LogUtil.dll("postValue:"+postValue.get(i).toString());
+            LogUtil.dll("是否必填:"+mBizForm.getFields().get(i).isRequired());*/
+            if(TextUtils.isEmpty(postValue.get(i).toString()) && mBizForm.getFields().get(i).isRequired()){
+                Toast("请填写\"必填项\"");
+                return;
             }
         }
 

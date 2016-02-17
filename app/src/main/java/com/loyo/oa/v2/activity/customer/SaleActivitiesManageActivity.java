@@ -227,7 +227,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
 
             if (saleActivity.getRemindAt() != 0) {
-                tv_timenow.setText(DateTool.timet(saleActivity.getRemindAt() + ""));
+                tv_timenow.setText(DateTool.timet(saleActivity.getRemindAt() + "",DateTool.DATE_FORMATE_CUSTOM_2));
             }else{
                 tv_timenow.setText("无");
             }

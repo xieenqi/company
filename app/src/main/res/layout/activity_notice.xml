@@ -27,5 +27,4 @@
             android:textColor="@color/white"/>
 
     </FrameLayout>
-
 </LinearLayout>

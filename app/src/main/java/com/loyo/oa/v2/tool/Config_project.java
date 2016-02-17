@@ -89,7 +89,6 @@ public class Config_project {
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-
         return isRelease ? Domain.account : IP + ":8080";
     }
     //产品预上线环境服务器 88端口  131的是8080

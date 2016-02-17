@@ -288,7 +288,7 @@ public class Utils {
      */
     public static void call(Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
-            Global.Toast("电话号码为空");
+            Global.Toast("号码为空");
             return;
         }
         Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));

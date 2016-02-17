@@ -845,11 +845,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 }
             });
 
+            /*导航按钮*/
             img_go_where.setOnTouchListener(Global.GetTouch());
             img_go_where.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast("kais 开始导航");
                     Utils.goWhere(mActivity, customer.loc.loc[1], customer.loc.loc[0]);
                 }
             });

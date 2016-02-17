@@ -193,6 +193,7 @@ public class ExtraDataView extends LinearLayout {
         }
     }
 
+    /*动态字段，时间选择监听*/
     class ValueOnClickListener_dateTime implements View.OnClickListener {
         private TextView textView;
         private ExtraData extra;
@@ -225,7 +226,8 @@ public class ExtraDataView extends LinearLayout {
 
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
-                        extra.setVal(DateTool.getDateToTimestamp(str, MainApp.getMainApp().df2) + "");
+                        //extra.setVal(DateTool.getDateToTimestamp(str, MainApp.getMainApp().df2) + "");
+                        extra.setVal(str);
                     }
                 });
             }

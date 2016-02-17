@@ -36,6 +36,7 @@ import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -155,7 +156,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public void openDynamic(String startTime,String endTime){
         HashMap<String,Object> map = new HashMap<>();
         map.put("startTime",startTime);
-        map.put("endTime",endTime);
+        map.put("endTime", endTime);
 
         LogUtil.dll("startTime:" + startTime);
         LogUtil.dll("endTime:" + endTime);
@@ -359,16 +360,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     void showAttachment() {
-        if (mWorkReport.getAttachments() != null && mWorkReport.getAttachments().size() > 0) {
-            tv_attachment_count.setHint("附件".concat("(" + String.valueOf(mWorkReport.getAttachments().size()) + ")"));
+        if (ListUtil.IsEmpty(mWorkReport.getAttachments())) {
+            return;
         }
+        tv_attachment_count.setText("附件 (" + (mWorkReport.getAttachments() == null ? 0 : mWorkReport.getAttachments().size()) + ")");
     }
 
-    @UiThread
     void showDiscussion() {
-        if (mPageDiscussion.getTotalRecords() > 0) {
-            tv_discussion_count.setHint("讨论".concat("(" +
-                    String.valueOf(mPageDiscussion.getTotalRecords()) + ")"));
+        if (!ListUtil.IsEmpty(mPageDiscussion.getRecords())) {
+            int count = mPageDiscussion.getRecords().size();
+            tv_discussion_count.setText("讨论 (" + count + ")");
         }
     }
 
@@ -527,7 +528,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_ATTACHMENT:
+                LogUtil.dll("MSG_ATTACHMENT");
                 if (data == null || data.getExtras() == null) {
+                    LogUtil.dll("MSG_ATTACHMENT return");
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
@@ -536,12 +539,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_DISCUSSION:
+                LogUtil.dll("MSG_DISCUSSION");
                 if (data == null || data.getExtras() == null) {
+                    LogUtil.dll("MSG_DISCUSSION return");
                     return;
                 }
                 mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
                 showDiscussion();
-
                 break;
         }
     }

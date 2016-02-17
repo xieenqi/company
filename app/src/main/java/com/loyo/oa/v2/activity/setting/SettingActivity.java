@@ -144,6 +144,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             /*更新组织架构*/
             case R.id.layout_update:
+                rushHomeData();
                 if (Utils.isNetworkAvailable(this)) {
                     Global.Toast("开始更新");
                     initService();
@@ -165,6 +166,24 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 updateUserinfp();
                 break;
         }
+    }
+
+    /**
+     * 刷新首页红点数据
+     * */
+    void rushHomeData(){
+        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
+            @Override
+            public void success(User user, Response response) {
+                HttpErrorCheck.checkResponse(response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     /**

@@ -179,6 +179,7 @@ public class RoundImageView extends ImageView {
         } else {
             scaledSrcBmp = squareBitmap;
         }
+
         Bitmap output = Bitmap.createBitmap(scaledSrcBmp.getWidth(),
                 scaledSrcBmp.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);

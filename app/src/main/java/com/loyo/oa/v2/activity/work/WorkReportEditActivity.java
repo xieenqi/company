@@ -60,13 +60,10 @@ public class WorkReportEditActivity extends BaseActivity {
     private String cc_department_id = null;
     private String cc_user_name = null;
     private String cc_department_name = null;
-
     private String mBeginAt, mEndAt;
     private int mSelectType = 1;
-
     private NewUser user_reviewer;
     private WeeksDialog weeksDialog = null;
-
     @Extra("mWorkReport")
     WorkReport mWorkReport;
 

@@ -144,12 +144,11 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.requestFocus();
                     value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 }
-                if (!bizFormFields.isRequired())
-                    value.setHint("");
-
-                value.setText((String) map_Values.get(bizFormFields.getId()));
-
                 label.setText(bizFormFields.getName() + "：");
+            }
+            if (!bizFormFields.isRequired()){
+                value.setHint("");
+                value.setText((String) map_Values.get(bizFormFields.getId()));
             }
             if(bizFormFields.isEnable()){
                 addView(convertView);

@@ -47,12 +47,24 @@ public class InitDataService extends IntentService {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-                HttpErrorCheck.checkResponse("获取user",response);
+                HttpErrorCheck.checkResponse("获取user", response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
-                LogUtil.dee("权限：" + MainApp.gson.toJson(MainApp.user.permission.suites));
                 DBManager.Instance().putUser(json);//保存用户信息
                 sendDataChangeBroad(user);
+
+            }
+        });
+    }
+
+    /**
+     * 刷新首页红点数据
+     * */
+    void rushHomeData(){
+        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
+            @Override
+            public void success(User user, Response response) {
+                HttpErrorCheck.checkResponse(response);
             }
         });
     }

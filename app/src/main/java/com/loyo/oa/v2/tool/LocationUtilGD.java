@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
@@ -103,7 +102,7 @@ public class LocationUtilGD {
 
         if (!TextUtils.isEmpty(address)) {
             LogUtil.d("定位notify高德Location,address : " + address);
-            LogUtil.d("定位l高德ocation:" + location.getLatitude() + "," + location.getLatitude());
+            LogUtil.d("定位l高德ocation:" + location.getLatitude() + "," + location.getLongitude());
             afterLocation.OnLocationGDSucessed(address, location.getLongitude(), location.getLatitude(),
                     location.getRoad());
         } else {
@@ -113,7 +112,6 @@ public class LocationUtilGD {
 
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
-
         void OnLocationGDFailed();
     }
 }
