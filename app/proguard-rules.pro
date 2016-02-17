@@ -31,6 +31,9 @@
 -keep class com.baidu.** {*;}
 -keep class vi.com.** {*;}
 -dontwarn com.baidu.**
-
-
-
+#高德的免混淆
+-keep class com.amap.api.maps2d.**{*;}
+-keep class com.amap.api.mapcore2d.**{*;}
+-keep class com.amap.api.location.**{*;}
+-keep class com.amap.api.fence.**{*;}
+-keep class com.autonavi.aps.amapapi.model.**{*;}
