@@ -147,8 +147,6 @@ public class SelectDetUserActivity extends BaseActivity {
         selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);
         totalSource = Common.getLstUserGroupData();
         deptSource = Common.getLstDepartment();
-
-
         members = new Members();
 
         /*header初始化*/

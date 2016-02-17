@@ -140,6 +140,8 @@ public class TasksAddActivity extends BaseActivity {
     private int mRemind = 0;
     private boolean isCopy;
     private boolean isState = true;
+    private StringBuffer joinName;
+    private StringBuffer joinUserId;
 
     @AfterViews
     void initUI() {
@@ -349,11 +351,21 @@ public class TasksAddActivity extends BaseActivity {
 
             //参与人选项
             case R.id.tv_toUsers:
-                Bundle bundle1 = new Bundle();
-                bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code, bundle1);
+
+
+                if(joinUserId != null){
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
+                    bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
+                }else{
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.request_Code, bundle1);
+                }
+
 
                 break;
 
@@ -483,15 +495,18 @@ public class TasksAddActivity extends BaseActivity {
                     if (null == members) {
                         tv_toUsers.setText("无参与人");
                     } else {
-                        StringBuffer joinName = new StringBuffer();
+                        joinName = new StringBuffer();
+                        joinUserId = new StringBuffer();
                         if (null != members.depts) {
                             for (NewUser newUser : members.depts) {
                                 joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
                         if (null != members.users) {
                             for (NewUser newUser : members.users) {
                                 joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
                         tv_toUsers.setText(joinName.toString());

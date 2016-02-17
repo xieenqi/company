@@ -145,8 +145,10 @@ public class WorkReportAddActivity extends BaseActivity {
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
     private ArrayList<WorkReportDyn> dynList;
-    private StringBuffer joinUserId = new StringBuffer();
+    private StringBuffer joinUserId;
+    private StringBuffer joinName;
     private PostBizExtData bizExtData;
+    private StringBuffer joinUser;
 
     private Handler mHandler = new Handler(){
         public void handleMessage(Message msg){
@@ -305,10 +307,11 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private String getMenberText() {
 
-        StringBuffer joinUser = new StringBuffer();
+        joinUser = new StringBuffer();
+        joinUserId = new StringBuffer();
 
         for (int i = 0; i < mWorkReport.getMembers().getAllData().size(); i++) {
-            joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName());
+            joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName() + ",");
             joinUserId.append(mWorkReport.getMembers().getAllData().get(i).getId() + ",");
 
         }
@@ -507,11 +510,19 @@ public class WorkReportAddActivity extends BaseActivity {
             /*抄送人*/
             case R.id.layout_toUser:
 
-                mBundle = new Bundle();
-                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
-                mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code, mBundle);
+                if(joinUserId != null) {
+                    mBundle = new Bundle();
+                    mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
+                    mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.request_Code, mBundle);
+                }else{
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.request_Code, bundle1);
+                }
 
                 break;
             case R.id.layout_del:
@@ -656,15 +667,18 @@ public class WorkReportAddActivity extends BaseActivity {
                     if (null == members) {
                         tv_toUser.setText("无参与人");
                     }else{
-                        StringBuffer joinName  = new StringBuffer();
+                        joinName  = new StringBuffer();
+                        joinUserId = new StringBuffer();
                         if(null != members.depts){
                             for(NewUser newUser : members.depts){
                                 joinName.append(newUser.getName()+",");
+                                joinUserId.append(newUser.getId()+",");
                             }
                         }
                         if(null != members.users){
                             for(NewUser newUser : members.users){
                                 joinName.append(newUser.getName()+",");
+                                joinUserId.append(newUser.getId()+",");
                             }
                         }
                         tv_toUser.setText(joinName.toString());
