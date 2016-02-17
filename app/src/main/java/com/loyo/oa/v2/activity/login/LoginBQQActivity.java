@@ -2,10 +2,13 @@ package com.loyo.oa.v2.activity.login;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.MainActivity_;
@@ -20,6 +23,7 @@ import com.loyo.oa.v2.tool.SharedUtil;
  */
 public class LoginBQQActivity extends BaseActivity {
     private WebView webView;
+    ProgressBar pb_progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,8 @@ public class LoginBQQActivity extends BaseActivity {
     }
 
     void initUI() {
+        showLoading("加载中...");
+        pb_progress = (ProgressBar) findViewById(R.id.pb_progress);
         webView = (WebView) findViewById(R.id.webView);
         webView.getSettings().setBlockNetworkImage(true);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -63,10 +69,22 @@ public class LoginBQQActivity extends BaseActivity {
                 if (blockLoadingNetworkImage) {
                     webView.getSettings().setBlockNetworkImage(false);
                 }
+
                 return true;
             }
-        });
 
+        });
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                pb_progress.setProgress(newProgress);
+                if (newProgress == 100) {
+                    pb_progress.setVisibility(View.GONE);
+                    cancelLoading();
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+        });
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
         WebSettings set = webView.getSettings();
         set.setSavePassword(false);

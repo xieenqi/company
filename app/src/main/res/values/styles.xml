@@ -239,4 +239,15 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>
+
+    <!-- 加载进度条-->
+    <style name="ProgressBarMini" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">50dip</item>
+        <item name="android:minHeight">5dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/shape_progressbar_mini</item>
+    </style>
 </resources>
