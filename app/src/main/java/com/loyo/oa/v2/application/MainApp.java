@@ -125,26 +125,7 @@ public class MainApp extends Application {
     }
 
 
-    public ArrayList<Province> mProvinces = new ArrayList<>();
     public ArrayList<Industry> mIndustries = new ArrayList<>();
-
-    /**
-     * xnq
-     * 加载地区编码
-     */
-    void loadAreaCodeTable() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
-            @Override
-            public void success(ArrayList<Province> provinces, Response response) {
-                mProvinces = provinces;
-                try {
-                    LogUtil.d("districts加载地区编码:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     void loadIndustryCodeTable() {
 
@@ -164,7 +145,6 @@ public class MainApp extends Application {
         super.onCreate();
         mainApp = this;
         init();
-        loadAreaCodeTable();
         loadIndustryCodeTable();
         //    getWindowWH();
         JPushInterface.setDebugMode(true);

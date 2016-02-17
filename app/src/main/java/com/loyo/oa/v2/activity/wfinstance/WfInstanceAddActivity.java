@@ -115,6 +115,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
+    private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
     private String uuid = StringUtil.getUUID();
     //选择流程
@@ -430,10 +431,10 @@ public class WfInstanceAddActivity extends BaseActivity {
             newValues.put(field.getId(), "");
         }
         submitData.add(newValues);
-
         WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
+        addIsRequired();
 
     }
 
@@ -442,6 +443,15 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            bizFormFieldsListViewAdapter.setEmpty();
 //            layout_edit.setVisibility(View.GONE);
 //        }
+
+
+    void addIsRequired(){
+        LogUtil.dll("执行 addIsRequired");
+        for(int i = 0;i<mBizForm.getFields().size();i++){
+            isRequiredList.add(mBizForm.getFields().get(i).isRequired());
+        }
+    }
+
 
     /**
      * 确认新建审批
@@ -480,10 +490,8 @@ public class WfInstanceAddActivity extends BaseActivity {
             workflowValues.add(jsonMapValues);
         }
 
-        for(int i = 0;i<mBizForm.getFields().size();i++){
-/*          LogUtil.dll("postValue:"+postValue.get(i).toString());
-            LogUtil.dll("是否必填:"+mBizForm.getFields().get(i).isRequired());*/
-            if(TextUtils.isEmpty(postValue.get(i).toString()) && mBizForm.getFields().get(i).isRequired()){
+        for(int i = 0;i<postValue.size();i++){
+            if(TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i)){
                 Toast("请填写\"必填项\"");
                 return;
             }
