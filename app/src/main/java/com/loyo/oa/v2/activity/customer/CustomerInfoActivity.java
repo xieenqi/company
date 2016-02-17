@@ -26,11 +26,13 @@ import com.loyo.oa.v2.beans.Locate;
 import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
@@ -138,6 +140,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private Industry industry = new Industry();
     private Animation animation;
 
+
     @AfterViews
     void initUI() {
         layout_rushpackger = (LinearLayout) findViewById(R.id.layout_rushpackger);
@@ -185,6 +188,34 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                         finish();
                     }
                 });
+    }
+
+    /**
+     * 加载地区编码
+     */
+    void loadAreaCodeTable() {
+        Utils.dialogShow(this,"请稍候");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
+            @Override
+            public void success(ArrayList<Province> provinces, Response response) {
+                HttpErrorCheck.checkResponse(response);
+                Utils.dialogDismiss();
+                new DialogFragmentAreaCast().show(provinces,getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
+                    @Override
+                    public void onMenuSelected(Object o) {
+                        regional = (CustomerRegional) o;
+                        tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
+                    }
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                Utils.dialogDismiss();
+            }
+        });
     }
 
     /**
@@ -379,13 +410,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
 
             case R.id.layout_customer_district:
-                new DialogFragmentAreaCast().show(getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
-                    @Override
-                    public void onMenuSelected(Object o) {
-                        regional = (CustomerRegional) o;
-                        tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
-                    }
-                });
+                loadAreaCodeTable();
                 break;
 
 //            case R.id.layout_customer_industry:

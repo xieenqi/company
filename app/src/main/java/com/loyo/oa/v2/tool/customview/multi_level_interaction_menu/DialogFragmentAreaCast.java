@@ -26,6 +26,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.City;
 import com.loyo.oa.v2.beans.County;
 import com.loyo.oa.v2.beans.CustomerRegional;
+import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public class DialogFragmentAreaCast extends DialogFragment {
     private MultiMenuExpandableListAdapter multiMenuExpandableListAdapter;
     private OnMenuSelectCallback callback;
     private CustomerRegional regional = new CustomerRegional();
-    ;
+    private ArrayList<Province> provinces;
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -71,7 +73,7 @@ public class DialogFragmentAreaCast extends DialogFragment {
                 return false;
             }
         });
-        multiMenuExpandableListAdapter = new MultiMenuExpandableListAdapter(getActivity());
+        multiMenuExpandableListAdapter = new MultiMenuExpandableListAdapter(getActivity(),provinces);
         mExpandableListViewOne.setAdapter(multiMenuExpandableListAdapter);
         mListViewTwo = (ListView) view.findViewById(R.id.list_two);
         mListViewTwo.setOnItemClickListener(new OnItemClickListener() {
@@ -104,8 +106,9 @@ public class DialogFragmentAreaCast extends DialogFragment {
         window.setGravity(Gravity.CENTER);
     }
 
-    public void show(FragmentManager manager, String tag, OnMenuSelectCallback callback) {
+    public void show(ArrayList<Province> provinces,FragmentManager manager, String tag, OnMenuSelectCallback callback) {
         this.callback = callback;
+        this.provinces = provinces;
         super.show(manager, tag);
     }
 
