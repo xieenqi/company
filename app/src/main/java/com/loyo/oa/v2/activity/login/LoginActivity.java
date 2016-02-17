@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
@@ -16,14 +17,16 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
+
 import org.json.JSONObject;
+
 import java.util.HashMap;
+
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -62,10 +65,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         edt_username.addTextChangedListener(nameWatcher);
         edt_password.addTextChangedListener(nameWatcher);
         layout_login.setOnClickListener(this);
-        if (Config_project.is_developer_mode) {
-            edt_username.setText("17780704580");
-            edt_password.setText("123456");
-        }
+//        if (Config_project.is_developer_mode) {
+//            edt_username.setText("17780704580");
+//            edt_password.setText("123456");
+//        }
     }
 
     TextWatcher nameWatcher = new TextWatcher() {
