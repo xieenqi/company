@@ -512,8 +512,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        String timeOutStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getSetting().getCheckOutTime() / 1000 + "",DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
-        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime() + "",DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
+        String timeOutStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getSetting().getCheckOutTime() / 1000 + "", DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
+        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime() + "", DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
 
         LogUtil.dll("分时时间戳 下班:" + Long.parseLong(timeOutStamp) / 1000);
         LogUtil.dll("分时时间戳 现在:" + Long.parseLong(timeNowStamp) / 1000);

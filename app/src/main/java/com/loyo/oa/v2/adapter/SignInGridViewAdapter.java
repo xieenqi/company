@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
@@ -105,42 +103,52 @@ public class SignInGridViewAdapter extends BaseAdapter {
         } else {
             item_info = (Item_info) convertView.getTag();
         }
+        item_info.setContent(position);
+        return convertView;
+    }
 
-        if (position == mListData.size()) {
-            if (mListData.size() <= 9) {
-                item_info.imageView.setImageResource(R.drawable.icon_add_file);
+    class Item_info {
+        ImageView imageView;
+        TextView textView;
+
+        public void setContent(int position) {
+
+            if (position == mListData.size()) {
+                if (mListData.size() <= 9) {
+                    imageView.setImageResource(R.drawable.icon_add_file);
+
+                } else {
+                    imageView.setVisibility(View.INVISIBLE);
+                }
+                if (isCreator) {
+                    imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
+                }
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
             } else {
-                item_info.imageView.setVisibility(View.INVISIBLE);
-            }
-            if (isCreator) {
-                item_info.imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
-            }
-            item_info.imageView.setScaleType(ImageView.ScaleType.CENTER);
-        } else {
 
-            final Attachment attachment = mListData.get(position);
-            final boolean isPic = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
+                final Attachment attachment = mListData.get(position);
+                final boolean isPic = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
-            if (isPic) {
-                ImageLoader.getInstance().loadImage(attachment.getUrl(), MainApp.options_3,
-                        new BitmapUtil.ImageLoadingListener_ClickShowImg(item_info.imageView, position,
-                                mListData, R.drawable.default_image, mIsAdd));
-            } else {
-                //                      显示文件
-                item_info.imageView.setImageResource(R.drawable.other_file);
-                item_info.textView.setText(attachment.getOriginalName());
+                if (isPic) {
+                    ImageLoader.getInstance().loadImage(mIsAdd ? attachment.getUrl() : setImgUrl(attachment.getUrl()), MainApp.options_3,
+                            new BitmapUtil.ImageLoadingListener_ClickShowImg(imageView, position,
+                                    mListData, R.drawable.default_image, mIsAdd));
+                } else {
+                    //                      显示文件
+                    imageView.setImageResource(R.drawable.other_file);
+                    textView.setText(attachment.getOriginalName());
 
-                item_info.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        LogUtil.dll(" 预览图片的URL：" + attachment.getUrl());
-                        //预览文件
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("data", attachment.getUrl());
-                        MainApp.getMainApp().startActivity(mActivity, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
-                    }
-                });
-            }
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            LogUtil.dll(" 预览图片的URL：" + attachment.getUrl());
+                            //预览文件
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("data", attachment.getUrl());
+                            MainApp.getMainApp().startActivity(mActivity, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                        }
+                    });
+                }
 //
 //            final File file = attachment.getFile();
 //            if (file == null) {
@@ -194,9 +202,9 @@ public class SignInGridViewAdapter extends BaseAdapter {
 //                    });
 //                }
 //            }
-        }
+            }
 
-        return convertView;
+        }
     }
 
     /**
@@ -225,10 +233,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
-    class Item_info {
-        ImageView imageView;
-        TextView textView;
-    }
 
     public static void setAdapter(GridView gv, SignInGridViewAdapter adapter) {
         gv.setAdapter(adapter);
@@ -237,5 +241,15 @@ public class SignInGridViewAdapter extends BaseAdapter {
         } else {
             ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
         }
+    }
+
+    public String setImgUrl(String url) {
+        //http://loyocloud-01.oss-cn-qingdao.aliyuncs.com/86bdfcb2-9a4e-4629-9f01-9d7f849ec6ae.png
+//loyocloud-01.img-cn-qingdao.aliyuncs.com
+        //@1e_1c_0o_0l_100h_100w_90q.src
+        String newUrl = url.replaceAll("loyocloud-01.oss-cn-qingdao.aliyuncs.com", "loyocloud-01.img-cn-qingdao.aliyuncs.com");
+        LogUtil.d("小图片的url：" + newUrl + "@1e_1c_0o_0l_300h_300w_60q.src");
+        return newUrl + "@1e_1c_0o_0l_200h_200w_70q.src";
+
     }
 }
