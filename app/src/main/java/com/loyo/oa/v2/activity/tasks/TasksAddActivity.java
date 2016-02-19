@@ -352,7 +352,6 @@ public class TasksAddActivity extends BaseActivity {
             //参与人选项
             case R.id.tv_toUsers:
 
-
                 if(joinUserId != null){
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);

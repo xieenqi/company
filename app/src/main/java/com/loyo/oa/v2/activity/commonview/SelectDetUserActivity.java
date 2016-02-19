@@ -91,12 +91,6 @@ public class SelectDetUserActivity extends BaseActivity {
 
 
     public Handler mHandler = new Handler() {
-//        public void handleMessage(Message msg) {
-//            if (msg.what == 0x01)
-//                mUserAdapter.notifyDataSetChanged();
-//            btnSure.setText("确定" + "(" + totalSize + ")");
-//        }
-
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
@@ -154,10 +148,10 @@ public class SelectDetUserActivity extends BaseActivity {
         headerView = mInflater.inflate(R.layout.item_header_selectdetuser, null);
         relAllcheck = (RelativeLayout) headerView.findViewById(R.id.selectdetuser_allcheck);
         checkBox = (CheckBox) headerView.findViewById(R.id.selectdetuser_checkbox);
-
         leftLv = (ListView) findViewById(R.id.lv_selectdetuser_left);
         rightLv = (ListView) findViewById(R.id.lv_selectdetuser_right);
-//横着的list
+
+        //横着的list
         lv_selectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
         selectDataAdapter = new SelectDataAdapter();
         lv_selectUser.setAdapter(selectDataAdapter);
@@ -320,8 +314,9 @@ public class SelectDetUserActivity extends BaseActivity {
                     mIntent.putExtras(mBundle);
                     app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
 
-                } else {
-
+                }
+                /*选参与人*/
+                else {
                     userList.get(position - 1).setIndex(userList.get(position - 1).isIndex() ? false : true);
                     statisticsTotalSize(position);
 
@@ -464,13 +459,6 @@ public class SelectDetUserActivity extends BaseActivity {
                 }
             }
         }
-    }
-
-    /**
-     * 检查 选的的人的相关操作
-     */
-    public void chooseUseerData(User user) {
-
     }
 
     /**

@@ -33,6 +33,8 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -420,11 +422,21 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             final AttendanceRecord recordIn = attendance.getIn();
             final AttendanceRecord recordOut = attendance.getOut();
 
-            ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);//上午
-            ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);//晚上
+            ViewGroup layout_overtime = ViewHolder.get(view,R.id.layout_overtime);//加班
+            ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);//上班
+            ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);//下班
             layout_recordIn.setOnTouchListener(Global.GetTouch());
             layout_recordOut.setOnTouchListener(Global.GetTouch());
 
+            /*加班*/
+            layout_overtime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
+            /*上班*/
             layout_recordIn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -434,6 +446,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 }
             });
 
+            /*下班*/
             layout_recordOut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -443,6 +456,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 }
             });
 
+            TextView tv_overtime = ViewHolder.get(view,R.id.overtime);//加班时间显示
             TextView tv_title = ViewHolder.get(view, R.id.tv_title);
             ImageView iv_extra = ViewHolder.get(view, R.id.iv_extra);
             iv_extra.setVisibility(View.INVISIBLE);
@@ -454,7 +468,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             TextView tv_result = ViewHolder.get(view, R.id.tv_result);
             TextView tv_time1 = ViewHolder.get(view, R.id.tv_time1);
-
             ImageView divider = ViewHolder.get(view, R.id.devider);
 
             //标题

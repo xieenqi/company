@@ -11,9 +11,21 @@ import java.util.ArrayList;
  */
 public class ValidateInfo implements Serializable {
 
+    private boolean needPhoto;
+    private boolean isPopup;
+    private int extraMins;
+    private long extraStartTime;
     private long serverTime;
-    private TimeSetting setting;// (TimeSetting, optional): ,
-    private ArrayList<ValidateItem> valids = new ArrayList<>();//array[ValidateItem], optional):
+    private ArrayList<TimeSetting> setting = new ArrayList<>();// (TimeSetting, optional): ,
+    public ArrayList<ValidateItem> valids = new ArrayList<>();//array[ValidateItem], optional):
+
+    public ArrayList<TimeSetting> getSetting() {
+        return setting;
+    }
+
+    public void setSetting(ArrayList<TimeSetting> setting) {
+        this.setting = setting;
+    }
 
     public ArrayList<ValidateItem> getValids() {
         return valids;
@@ -23,19 +35,43 @@ public class ValidateInfo implements Serializable {
         this.valids = valids;
     }
 
-    public TimeSetting getSetting() {
-        return setting;
-    }
-
-    public void setSetting(TimeSetting setting) {
-        this.setting = setting;
-    }
-
     public long getServerTime() {
         return serverTime;
     }
 
     public void setServerTime(long serverTime) {
         this.serverTime = serverTime;
+    }
+
+    public boolean isNeedPhoto() {
+        return needPhoto;
+    }
+
+    public void setNeedPhoto(boolean needPhoto) {
+        this.needPhoto = needPhoto;
+    }
+
+    public long getExtraStartTime() {
+        return extraStartTime;
+    }
+
+    public void setExtraStartTime(long extraStartTime) {
+        this.extraStartTime = extraStartTime;
+    }
+
+    public boolean isPopup() {
+        return isPopup;
+    }
+
+    public void setIsPopup(boolean isPopup) {
+        this.isPopup = isPopup;
+    }
+
+    public int getExtraMins() {
+        return extraMins;
+    }
+
+    public void setExtraMins(int extraMins) {
+        this.extraMins = extraMins;
     }
 }

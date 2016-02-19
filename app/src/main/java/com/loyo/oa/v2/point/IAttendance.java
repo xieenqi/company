@@ -6,6 +6,7 @@ import com.loyo.oa.v2.beans.AttendancePhoto;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.ValidateInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -27,7 +28,7 @@ public interface IAttendance {
 
 
     @GET("/attendance")
-    void getAttendancePhoto(Callback<AttendancePhoto> callback);
+    void getAttendancePhoto(Callback<ArrayList<AttendancePhoto>> callback);
 
     /**
      * 验证是否能打卡

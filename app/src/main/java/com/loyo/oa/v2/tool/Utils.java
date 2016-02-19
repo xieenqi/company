@@ -643,6 +643,22 @@ public class Utils {
         return sb.toString();
     }
 
+
+    /*取下班时间，最小值，最早下班时间*/
+    public static long minOutTime(ArrayList<Long> array){
+        long min = 0;
+        for(int i = 0;i<array.size();i++){
+            for(int k = i+1;k<array.size();k++){
+                if(array.get(i)<array.get(k)){
+                    min = array.get(k);
+                }else{
+                    min = array.get(i);
+                }
+            }
+        }
+        return min;
+    }
+
     /**
      * 服务是否在运行
      *
