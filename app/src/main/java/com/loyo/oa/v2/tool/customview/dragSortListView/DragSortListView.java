@@ -606,7 +606,7 @@ public class DragSortListView extends ListView {
     public void setAdapter(ListAdapter adapter) {
         if (adapter != null) {
             mAdapterWrapper = new AdapterWrapper(adapter);
-            adapter.registerDataSetObserver(mObserver);
+          //  adapter.registerDataSetObserver(mObserver);
 
             if (adapter instanceof DropListener) {
                 setDropListener((DropListener) adapter);

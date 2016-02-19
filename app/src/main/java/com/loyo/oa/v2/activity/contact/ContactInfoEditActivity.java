@@ -352,7 +352,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 编辑个人信息
      */
     private void updateProfile() {
-
+showLoading("");
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();
@@ -367,6 +367,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
+                cancelLoading();
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
@@ -379,9 +380,10 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast("修改个人信息失败");
+                cancelLoading();
+                // Toast("修改个人信息失败");
                 HttpErrorCheck.checkError(error);
-                finish();
+                // finish();
             }
         });
     }
@@ -553,7 +555,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
-                    String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
+                    String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth);
                     Utils.setContent(tv_birthday, str);
                     Utils.setContent(tv_age, age + "");
                 } else {
@@ -667,12 +669,12 @@ public class ContactInfoEditActivity extends BaseActivity {
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
 
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-            LogUtil.dee("mSelectPath:"+ (mSelectPath==null));
+            LogUtil.dee("mSelectPath:" + (mSelectPath == null));
             StringBuilder sb = new StringBuilder();
             for (String p : mSelectPath) {
                 sb.append(p);
             }
-            LogUtil.dee("sb.toString:"+ sb.toString());
+            LogUtil.dee("sb.toString:" + sb.toString());
 
             ImageLoader.getInstance().displayImage("file://" + sb.toString(), img_title_user);
             User.setImageUrl("file://" + sb.toString());

@@ -148,6 +148,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
                 LogUtil.dll("进入主页广播回调 launch");
                 launch();
+                testJurl();
             }
         }
     };
@@ -225,7 +226,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             mActivity.get().swipe_container.setRefreshing(false);
-            // cancelLoading();
         }
     }
 
@@ -274,6 +274,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
+        showLoading("加载中...");
         LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
         setTouchView(-1);
         Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
@@ -291,7 +292,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void onRefresh() {
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
-                //showLoading("");
+
             }
         });
 
@@ -301,8 +302,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         lv_main.setDropListener(onDrag);
         adapter = new ClickItemAdapter();
-        lv_main.setAdapter(adapter);
-        lv_main.setDragEnabled(true);
+
 
     }
 
@@ -330,6 +330,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 LogUtil.d(MainApp.user + " 激光的alias： " + s);
                 isQQLogin();
+
             }
         });
     }
@@ -976,6 +977,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+//        Map<String, Object> itemsData = new Hashtable<>();
+//        itemsData.put("客户拜访", R.drawable.icon_home_signin);
+//        itemsData.put("项目管理", ProjectManageActivity_.class);
 
         if (MainApp.user == null) {
             return;
@@ -987,6 +991,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Bitmap blur = Utils.doBlur(bitmap, 50, false);
             img_home_head.setImageResource(android.R.color.transparent);
             container.setBackgroundDrawable(new BitmapDrawable(blur));
+
         } else {
 
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
@@ -1007,6 +1012,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                         Bitmap blur = Utils.doBlur(bitmap, 50, false);
                         img_home_head.setImageResource(android.R.color.transparent);
                         container.setBackgroundDrawable(new BitmapDrawable(blur));
+                        testJurl();
                     }
                 }
 
@@ -1018,7 +1024,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
         tv_user_name.setText(MainApp.user.getRealname());
         initBugly();
-        testJurl();
         initPopupMenu();
     }
 
@@ -1034,30 +1039,33 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 业务使用权限 判断设置
      */
     public void testJurl() {
-
         if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    testJurl();
+                }
+            }, 5000);
             return;
         }
-
         for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
-            try {
+            for (int k = 0; k < items.size(); k++) {
                 for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
-                    for (int k = 0; k < items.size(); k++) {
-                        if (modules.getName().equals(items.get(k).title)) {
-                            if (!modules.isEnable()) {
-                                items.remove(k);
-                            }
-                        }
+                    if (items.get(k).title.equals(modules.getName()) && !modules.isEnable()) {
+                        items.remove(k);
+                        continue;
                     }
                 }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         }
+        lv_main.setAdapter(adapter);//为了业务使用权限
+        lv_main.setDragEnabled(true);
+        cancelLoading();
     }
 
     /**
-     * 企业QQ登录的用户绑定手机号码 权限待测试
+     * 企业QQ登录的用户绑定手机号码
      */
     public void isQQLogin() {
         if (app.isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
@@ -1081,7 +1089,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (MainApp.user.getRealname() != null) {
             info = info + "," + MainApp.user.getRealname();
         }
-
         //CrashReport.setUserId(info);//leak 的东西
 
     }
@@ -1101,9 +1108,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     protected void onResume() {
         super.onResume();
+
         intentJpushInfo();
         requestNumber();
-
     }
 
     /**

@@ -35,8 +35,8 @@ public class LoginBQQActivity extends BaseActivity {
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        app.logUtil.d("onKeyDown");
-        app.logUtil.d("((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()):" + ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()));
+        LogUtil.d("onKeyDown");
+        LogUtil.d("((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()):" + ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()));
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
             app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
             return true;
