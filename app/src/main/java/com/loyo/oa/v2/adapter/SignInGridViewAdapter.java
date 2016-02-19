@@ -141,7 +141,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            LogUtil.dll(" 预览图片的URL：" + attachment.getUrl());
+                            LogUtil.d(" 预览文件的URL：" + attachment.getUrl());
                             //预览文件
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("data", attachment.getUrl());
@@ -243,12 +243,18 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 替换缩略图的url
+     *
+     * @param url
+     * @return
+     */
     public String setImgUrl(String url) {
         //http://loyocloud-01.oss-cn-qingdao.aliyuncs.com/86bdfcb2-9a4e-4629-9f01-9d7f849ec6ae.png
 //loyocloud-01.img-cn-qingdao.aliyuncs.com
         //@1e_1c_0o_0l_100h_100w_90q.src
         String newUrl = url.replaceAll("loyocloud-01.oss-cn-qingdao.aliyuncs.com", "loyocloud-01.img-cn-qingdao.aliyuncs.com");
-        LogUtil.d("小图片的url：" + newUrl + "@1e_1c_0o_0l_300h_300w_60q.src");
+        //LogUtil.d("小图片的url：" + newUrl + "@1e_1c_0o_0l_300h_300w_60q.src");
         return newUrl + "@1e_1c_0o_0l_200h_200w_70q.src";
 
     }

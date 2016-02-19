@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +17,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -154,13 +152,15 @@ public class PreviewImageActivity extends Activity {
             PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
             File imgFile = attachment.getFile();
-
+            LogUtil.d("预览图片的url：" + attachment.getUrl());
             if (imgFile != null) {
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {
-                ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
-            }
 
+                ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+
+            }
+            LogUtil.d("预览 转换 的url：" + bigImagUrl(attachment.getUrl()));
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -179,4 +179,9 @@ public class PreviewImageActivity extends Activity {
 
     }
 
+    public String bigImagUrl(String url) {
+        String newUrl = url.replaceAll("loyocloud-01.img-cn-qingdao.aliyuncs.com", "loyocloud-01.oss-cn-qingdao.aliyuncs.com");
+
+        return newUrl.replaceAll("@1e_1c_0o_0l_200h_200w_70q.src", "");
+    }
 }

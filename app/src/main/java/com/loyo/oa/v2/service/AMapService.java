@@ -36,6 +36,7 @@ import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.LoyoLog;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -189,7 +190,7 @@ public class AMapService extends Service {
         String provider = aMapLocation.getProvider();
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
         boolean isCache = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
-        LoyoLog.e(TAG, "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " + (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() + " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache);
+        LogUtil.d("轨迹定位：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " + (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() + " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache);
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置
         if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) || (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || isCache) {
             return;
@@ -202,7 +203,7 @@ public class AMapService extends Service {
             combineAddress(aMapLocation.getRoad(), addressBuilder);
             combineAddress(aMapLocation.getPoiName(), addressBuilder);
 
-            LoyoLog.e(TAG, "源地址无效,组合的地址 : " + (TextUtils.isEmpty(addressBuilder.toString()) ? "NULL" : addressBuilder.toString()));
+            LogUtil.d("源地址无效,组合的地址 : " + (TextUtils.isEmpty(addressBuilder.toString()) ? "NULL" : addressBuilder.toString()));
             address = addressBuilder.toString();
         }
 

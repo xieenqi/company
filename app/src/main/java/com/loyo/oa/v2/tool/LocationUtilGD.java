@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
@@ -18,7 +19,7 @@ public class LocationUtilGD {
     /**
      * 请求定位的最小时间间隔
      */
-    private static final long MIN_SCAN_SPAN_MILLS = 1000;
+    private static final long MIN_SCAN_SPAN_MILLS = 500;
     /**
      * 请求定位的最小距离间隔
      */
@@ -112,6 +113,7 @@ public class LocationUtilGD {
 
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
+
         void OnLocationGDFailed();
     }
 }
