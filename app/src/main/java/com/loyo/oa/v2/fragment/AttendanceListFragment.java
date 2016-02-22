@@ -240,6 +240,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 前一天
      */
     private void previousDay() {
+
         if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMinimum(Calendar.DAY_OF_MONTH)) {
             if (cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
                 cal.set((cal.get(Calendar.YEAR) - 1), cal.getActualMaximum(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));

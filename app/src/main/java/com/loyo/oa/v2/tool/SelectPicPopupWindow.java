@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
@@ -28,9 +28,9 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     public static final int GET_IMG = 10;
     private String tag = "SelectPicPopupWindow";
-    private Button btn_take_photo;//拍照
-    private Button btn_pick_photo;//从相册选
-    private Button btn_cancel;//取消
+    private TextView btn_take_photo;//拍照
+    private TextView btn_pick_photo;//从相册选
+    private TextView btn_cancel;//取消
 
     private LinearLayout layout;
     private Uri fileUri;
@@ -41,9 +41,9 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         ExitActivity.getInstance().addActivity(this);
         setContentView(R.layout.dialog_get_img);
-        btn_take_photo = (Button) this.findViewById(R.id.btn_take_photo);
-        btn_pick_photo = (Button) this.findViewById(R.id.btn_pick_photo);
-        btn_cancel = (Button) this.findViewById(R.id.btn_cancel);
+        btn_take_photo = (TextView) this.findViewById(R.id.btn_take_photo);
+        btn_pick_photo = (TextView) this.findViewById(R.id.btn_pick_photo);
+        btn_cancel = (TextView) this.findViewById(R.id.btn_cancel);
 
         layout = (LinearLayout) findViewById(R.id.pop_layout);
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity

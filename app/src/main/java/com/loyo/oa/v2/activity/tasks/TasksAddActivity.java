@@ -285,7 +285,6 @@ public class TasksAddActivity extends BaseActivity {
                 super.failure(error);
                 cancelLoading();
                 HttpErrorCheck.checkError(error);
-
             }
         });
     }

@@ -88,7 +88,6 @@ public interface ICustomer {
     @PUT("/customer/{id}")
     void updateCustomer(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Customer> callback);
 
-
     /**
      * 获取客户标签
      *
