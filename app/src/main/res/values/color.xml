@@ -343,6 +343,7 @@
     <color name="default_menu_press_text">#000000</color>
     <color name="default_menu_text">#00cf9b</color>
     <color name="divider">#f1f1f1</color>
+
     <!-- 登录界面字体 线的颜色-->
     <color name="login">#b3b3b3</color>
     <color name="grayC9">#c9c9c9</color>

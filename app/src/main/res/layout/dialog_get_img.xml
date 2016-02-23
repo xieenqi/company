@@ -17,8 +17,8 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="选取照片"
@@ -35,8 +35,9 @@
             android:gravity="center"
             android:id="@+id/btn_take_photo"
             android:layout_width="fill_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:text="拍照"
+            android:textSize="18dp"
             android:textColor="@color/title_bg1"
             android:background="@drawable/photo_popwindow_selector"
             />
@@ -51,8 +52,9 @@
             android:gravity="center"
             android:id="@+id/btn_pick_photo"
             android:layout_width="fill_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:text="相册"
+            android:textSize="18dp"
             android:textColor="@color/title_bg1"
             android:background="@drawable/photo_popwindow_selector"
             />
@@ -67,8 +69,9 @@
             android:gravity="center"
             android:id="@+id/btn_cancel"
             android:layout_width="fill_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:text="取消"
+            android:textSize="18dp"
             android:textColor="@color/title_bg1"
             android:background="@drawable/photo_popwindow_selector"
             />

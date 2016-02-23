@@ -99,7 +99,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -303,7 +302,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         lv_main.setDropListener(onDrag);
         adapter = new ClickItemAdapter();
 
-
     }
 
     /**
@@ -393,40 +391,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
-//    /**
-//     * 定位成功后，跳转新建考勤回调
-//     */
-//    @Override
-//    public void OnLocationFailed() {
-//        cancelLoading();
-//        Toast("获取打卡位置失败");
-//    }
-//
-//    @Override
-//    public void OnLocationSucessed(final String address, double longitude, double latitude, float radius) {
-//        map.put("originalgps", longitude + "," + latitude);
-//        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-//            @Override
-//            public void success(AttendanceRecord attendanceRecord, Response response) {
-//                cancelLoading();
-//                attendanceRecord.setAddress(address);
-//                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
-//                intent.putExtra("mAttendanceRecord", attendanceRecord);
-//                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-//    }
-
     /**
      * 获取能否打卡的信息
      */
     private void getValidateInfo() {
+        showLoading("");
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(ValidateInfo _validateInfo, Response response) {
@@ -444,6 +413,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                         outEnable = validateItem.isEnable();
                     }
                 }
+                cancelLoading();
                 rotateInt();
             }
 

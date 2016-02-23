@@ -1,9 +1,7 @@
 package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
-
 import com.loyo.oa.v2.application.MainApp;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

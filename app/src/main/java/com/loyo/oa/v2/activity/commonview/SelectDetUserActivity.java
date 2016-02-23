@@ -59,14 +59,16 @@ public class SelectDetUserActivity extends BaseActivity {
     public SelectUserAdapter mUserAdapter;
     public Intent mIntent;
     public Bundle mBundle;
-
     public SelectDataAdapter selectDataAdapter;
-
     public ArrayList<User> localCacheUserList = new ArrayList<>(); //本地所有员工 缓存
     public ArrayList<User> userList = new ArrayList<>();
     public ArrayList<User> userAllList = new ArrayList<>(); //所有员工
     public ArrayList<Department> deptSource = new ArrayList<>();//部门数据源｀
     public ArrayList<UserGroupData> totalSource = new ArrayList<>(); //全部数据源
+    public ArrayList<Department> newDeptSource = new ArrayList<>();//部门新的顺序
+    public ArrayList<Department> deptHead = new ArrayList<>();//一级部门
+    public ArrayList<Department> deptOther = new ArrayList<>();//其他部门
+
 
     public boolean isAllCheck = false;
     public boolean popy; //当前列表 是否全选
@@ -78,17 +80,15 @@ public class SelectDetUserActivity extends BaseActivity {
 
     private ArrayList<String> selectDeptIds = new ArrayList<>();
     private ArrayList<String> selectUserIds = new ArrayList<>();
-
     private ArrayList<NewUser> usersList = new ArrayList<>();
     private ArrayList<NewUser> deptsList = new ArrayList<>();
-
     private ArrayList<User> selectUserList = new ArrayList<>();//横 list
-    public static ArrayList<Department> Data;//组织架构 的缓存
     private NewUser newUser;
     private Members members;
+    private Department companySource;
+    public static ArrayList<Department> Data;//组织架构 的缓存
     public static final int selectWhat = 130;
     public static final int SELECT_DETEL_WHAT = 140;
-
 
     public Handler mHandler = new Handler() {
         @Override
@@ -142,6 +142,7 @@ public class SelectDetUserActivity extends BaseActivity {
         totalSource = Common.getLstUserGroupData();
         deptSource = Common.getLstDepartment();
         members = new Members();
+        deptSort();
 
         /*header初始化*/
         mInflater = LayoutInflater.from(this);
@@ -155,7 +156,6 @@ public class SelectDetUserActivity extends BaseActivity {
         lv_selectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
         selectDataAdapter = new SelectDataAdapter();
         lv_selectUser.setAdapter(selectDataAdapter);
-
 
         btnSure = (Button) findViewById(R.id.btn_title_right);
         llback = (LinearLayout) findViewById(R.id.ll_back);
@@ -194,7 +194,7 @@ public class SelectDetUserActivity extends BaseActivity {
 
         btnSure.setText("确定" + "(" + totalSize + ")");
         /*左侧Lv初始化*/
-        mDetAdapter = new SelectDetAdapter(mContext, deptSource);
+        mDetAdapter = new SelectDetAdapter(mContext, newDeptSource);
         leftLv.setAdapter(mDetAdapter);
         lvOnClick();
         rightLv.addHeaderView(headerView);
@@ -207,9 +207,46 @@ public class SelectDetUserActivity extends BaseActivity {
     }
 
     /**
+     * 部门业务结构排序
+     * */
+    void deptSort(){
+        /*分别获取一级/其他级部门*/
+        for(Department department : deptSource){
+            if(department.getXpath().split("/").length == 2){
+                deptHead.add(department);
+            }
+            else if(!department.getXpath().contains("/")){
+                deptHead.add(department);
+            }else{
+                deptOther.add(department);
+            }
+        }
+
+        /*根据Xpath,把部门按照一级/二级顺序排序,排除掉公司数据*/
+        for(Department dept1 : deptHead){
+            newDeptSource.add(dept1);
+            for(Department dept2 : deptOther){
+                if(dept2.getXpath().contains(dept1.getXpath()) && dept1.getXpath().indexOf("/") != -1){
+                    newDeptSource.add(dept2);
+                }
+            }
+        }
+
+        /*把公司数据，移动到首位*/
+        for(int i = 0;i<newDeptSource.size();i++){
+            if(newDeptSource.get(i).getXpath().indexOf("/") == -1){
+                companySource = newDeptSource.get(i);
+                newDeptSource.remove(i);
+                break;
+            }
+        }
+        newDeptSource.add(0,companySource);
+    }
+
+    /**
      * 去掉人员重复数据
      */
-    private ArrayList RemoveSame(ArrayList<User> list) {
+    ArrayList RemoveSame(ArrayList<User> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = i + 1; j < list.size(); j++) {
                 if (list.get(i).getId().equals(list.get(j).getId())) {
@@ -230,7 +267,7 @@ public class SelectDetUserActivity extends BaseActivity {
         usersList.clear();
         deptsList.clear();
 
-        for (Department department : deptSource) {
+        for (Department department : newDeptSource) {
             for (int i = 0; i < selectDeptIds.size(); i++) {
                 if (selectDeptIds.get(i).equals(department.getId())) {
                     newUser = new NewUser();
@@ -260,6 +297,7 @@ public class SelectDetUserActivity extends BaseActivity {
 
 
     void lvOnClick() {
+
         /*横着ListView*/
         lv_selectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -275,6 +313,7 @@ public class SelectDetUserActivity extends BaseActivity {
 //                mUserAdapter.notifyDataSetChanged();
             }
         });
+
         /*左侧ListView*/
         leftLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -284,17 +323,6 @@ public class SelectDetUserActivity extends BaseActivity {
                 mHandler.sendEmptyMessage(0x01);
                 checkBox.setChecked(popy);
 
-                String xPath = null;
-                String classAName = null;
-                String classAId = null;
-                String[] xPathList;
-
-                for (Department department : deptSource) {
-                    if (department.getXpath().contains(deptSource.get(position).getXpath())
-                            && !deptSource.get(position).getXpath().equals(department.getXpath())) {
-                        LogUtil.dll("下级:" + department.getName());
-                    }
-                }
                 //选择部门的状态
                 mDetAdapter.setSelectedPosition(position);
                 mDetAdapter.notifyDataSetChanged();
@@ -338,7 +366,6 @@ public class SelectDetUserActivity extends BaseActivity {
                         msg.obj = userList.get(position - 1);
                         mHandler.sendMessage(msg);
                     }
-
                 }
             }
         });
@@ -433,7 +460,7 @@ public class SelectDetUserActivity extends BaseActivity {
         selectDeptIds.clear();
         selectUserIds.clear();
 
-        for (Department department : deptSource) {
+        for (Department department : newDeptSource) {
             try{
                 dealisAllSelect(department.getUsers());
             }catch(NullPointerException e){
@@ -499,8 +526,8 @@ public class SelectDetUserActivity extends BaseActivity {
      */
     void getInfoUser(int positions) {
         userList.clear();
-        for (Department department : deptSource) {
-            if (department.getXpath().contains(deptSource.get(positions).getXpath())) {
+        for (Department department : newDeptSource) {
+            if (department.getXpath().contains(newDeptSource.get(positions).getXpath())) {
                 try{
                     for (User user : department.getUsers()) {
                         userList.add(user);
