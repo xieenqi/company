@@ -873,8 +873,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Background
     void startTrack() {
         if (!Utils.isServiceRunning(AMapService.class.getName())) {
-            TrackRule.InitTrackRule();
         }
+        TrackRule.InitTrackRule();
     }
 
 

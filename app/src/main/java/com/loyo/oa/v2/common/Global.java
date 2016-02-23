@@ -137,8 +137,12 @@ public final class Global {
 //        return false;
 //    }
 
+    /**
+     * 检查是否有网络
+     *
+     * @return
+     */
     public static boolean isConnected() {
-//        if (context != null) {
 
         ConnectivityManager mConnectivityManager = (ConnectivityManager) MainApp.getMainApp()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -146,7 +150,6 @@ public final class Global {
         if (mNetworkInfo != null) {
             return mNetworkInfo.isAvailable();
         }
-//        }
         return false;
     }
 
@@ -272,43 +275,43 @@ public final class Global {
         long fileSize = outputFile.length();
         final long fileMaxSize = 100 * 1024;
 
-            if (fileSize >= fileMaxSize) {
-                LogUtil.dll("文件大小超限");
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(path, options);
-                int height = options.outHeight/3;
-                int width = options.outWidth/3;
+        if (fileSize >= fileMaxSize) {
+            LogUtil.dll("文件大小超限");
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options);
+            int height = options.outHeight / 3;
+            int width = options.outWidth / 3;
 
-                double scale = Math.sqrt((float) fileSize / fileMaxSize);
-                options.outHeight = (int) (height / scale);
-                options.outWidth = (int) (width / scale);
-                options.inSampleSize = (int) (scale + 0.5);
-                options.inJustDecodeBounds = false;
-                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+            double scale = Math.sqrt((float) fileSize / fileMaxSize);
+            options.outHeight = (int) (height / scale);
+            options.outWidth = (int) (width / scale);
+            options.inSampleSize = (int) (scale + 0.5);
+            options.inJustDecodeBounds = false;
+            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-                outputFile = getTempFile(context);
-                FileOutputStream fos = null;
-                fos = new FileOutputStream(outputFile);
+            outputFile = getTempFile(context);
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(outputFile);
 
-                if (degree > 0) {
-                    bitmap = rotaingImageView(degree, bitmap);
-                }
-
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
-
-                fos.close();
-
-                if (!bitmap.isRecycled()) {
-                    bitmap.recycle();
-                }
-
-            } else {
-                LogUtil.dll("文件大小未超限");
-                File tempFile = outputFile;
-                outputFile = getTempFile(context);
-                copyFileUsingFileChannels(tempFile, outputFile);
+            if (degree > 0) {
+                bitmap = rotaingImageView(degree, bitmap);
             }
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+
+            fos.close();
+
+            if (!bitmap.isRecycled()) {
+                bitmap.recycle();
+            }
+
+        } else {
+            LogUtil.dll("文件大小未超限");
+            File tempFile = outputFile;
+            outputFile = getTempFile(context);
+            copyFileUsingFileChannels(tempFile, outputFile);
+        }
 
         return outputFile;
 

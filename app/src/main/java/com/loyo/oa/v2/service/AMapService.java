@@ -10,6 +10,8 @@ import android.os.PowerManager;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
@@ -26,6 +28,7 @@ import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.ITrackLog;
@@ -77,6 +80,9 @@ public class AMapService extends Service {
     private boolean isCache;
     private RestAdapter mRestAdapter;
 
+    private static AMapLocationClient locationClient = null;
+    private static AMapLocationClientOption locationOption = null;
+
     public class LocalBinder extends Binder {
         public AMapService getService() {
             return AMapService.this;
@@ -102,7 +108,7 @@ public class AMapService extends Service {
                 .setLogLevel(RestAdapter.LogLevel.NONE)
                 .build();
 
-        // startLocate();
+        startLocate();
         super.onCreate();
     }
 
@@ -126,12 +132,30 @@ public class AMapService extends Service {
     /**
      * 开启定位
      */
-//    private void startLocate() {
+    private void startLocate() {
 //        mLocationManagerProxy = LocationManagerProxy.getInstance(this.getApplicationContext());
 //        maMapLocationListener = new MAMapLocationListener();
 //        mLocationManagerProxy.setGpsEnable(true);
 //        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, MIN_SCAN_SPAN_MILLS, MIN_SCAN_SPAN_DISTANCE, maMapLocationListener);
-//    }
+        maMapLocationListener = new MAMapLocationListener();
+        locationClient = new AMapLocationClient(app);
+        locationOption = new AMapLocationClientOption();
+        locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
+        //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
+        locationOption.setInterval(1000 * 60);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+        locationOption.setOnceLocation(false);//false持续定位 true单次定位
+        locationOption.setHttpTimeOut(10000);//设置联网超时时间
+        locationOption.setNeedAddress(true);
+        // 设置定位模式为高精度模式
+        locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+        // 设置定位监听
+        locationClient.setLocationListener(maMapLocationListener);
+        // 设置定位参数
+        locationClient.setLocationOption(locationOption);
+        // 启动定位
+        locationClient.startLocation();
+        locationClient.startAssistantLocation();
+    }
 
     /**
      * 位置变化回调接口
@@ -157,7 +181,7 @@ public class AMapService extends Service {
         public void onLocationChanged(AMapLocation aMapLocation) {
             LogUtil.d("=====onLocation轨迹Changed=====aMapLocation");
 
-            releaseWakeLock();
+            releaseWakeLock();//释放cpu
             if (!checkRule()) {
                 SharedUtil.remove(app, "lat");
                 SharedUtil.remove(app, "lng");
@@ -185,9 +209,13 @@ public class AMapService extends Service {
         String provider = aMapLocation.getProvider();
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
         boolean isCache = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
-        LogUtil.d("轨迹定位：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " + (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() + " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache);
+        LogUtil.d("轨迹定位：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
+                (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
+                " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache);
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置
-        if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) || (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || isCache) {
+        if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
+                (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 ||
+                accuracy > MIN_SCAN_SPAN_DISTANCE || isCache) {
             return;
         }
         if (isEmptyStr(address)) {
@@ -249,14 +277,15 @@ public class AMapService extends Service {
     }
 
     /**
-     * 检测轨迹规则
+     * 检测轨迹规则 后台是否产生轨迹
      *
      * @return
      */
     private boolean checkRule() {
         boolean unRuleable = trackRule == null || trackRule.getWeekdays() == null || trackRule.getWeekdays().length() != 7;
         if (unRuleable) {
-            LogUtil.d("checkRule,轨迹规则设置错误，trackRule is null ? : " + (trackRule == null) + " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
+            LogUtil.d("checkRule,轨迹规则【设置】错误，trackRule is null ? : " + (trackRule == null) +
+                    " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
         }
 
         int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
@@ -267,7 +296,7 @@ public class AMapService extends Service {
             unInDay = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
         }
         if (unInDay) {
-            LogUtil.d("checkRule,当日未设置上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
+            LogUtil.d("checkRule,当日未【设置】上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
         }
 
         boolean isInTime = false;
@@ -275,8 +304,8 @@ public class AMapService extends Service {
         String currentDate = sdf.format(new Date());
         try {
             Date currDate = sdf.parse(currentDate);
-            Date startDate = sdf.parse(trackRule.getStarttime());
-            Date endDate = sdf.parse(trackRule.getEndtime());
+            Date startDate = sdf.parse(trackRule.startTime);
+            Date endDate = sdf.parse(trackRule.endTime);
 
             if (currDate.after(startDate) && currDate.before(endDate)) {
                 isInTime = true;
@@ -286,7 +315,7 @@ public class AMapService extends Service {
             e.printStackTrace();
         }
         if (!isInTime) {
-            LogUtil.d("checkRule,该时间段内未设置上报轨迹");
+            LogUtil.d("checkRule,该时间段内未【设置】上报轨迹");
         }
 
         if (!unRuleable && !unInDay && isInTime) {
@@ -411,6 +440,7 @@ public class AMapService extends Service {
             @Override
             public void success(Object trackLog, Response response) {
                 LogUtil.d(TAG + "uploadLocation,轨迹上报成功,address : " + address);
+                HttpErrorCheck.checkResponse(response);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
 
                 SharedUtil.put(app, "lat", String.valueOf(latitude));
