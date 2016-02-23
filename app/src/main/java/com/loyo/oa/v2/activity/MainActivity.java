@@ -395,10 +395,16 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 获取能否打卡的信息
      */
     private void getValidateInfo() {
-        showLoading("");
+        showLoading("加载中...");
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(ValidateInfo _validateInfo, Response response) {
+                HttpErrorCheck.checkResponse(response);
+                if (null == _validateInfo) {
+                    Toast("获取考勤信息失败");
+                    return;
+                }
+
                 validateInfo = _validateInfo;
                 try {
                     LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
@@ -421,7 +427,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Toast("获取考勤信息失败" + error.getMessage());
             }
         });
     }
@@ -472,22 +477,24 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void success(AttendanceRecord attendanceRecord, Response response) {
                 cancelLoading();
-                LogUtil.dll("check:"+MainApp.gson.toJson(attendanceRecord));
+                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
                 attendanceRecord.setAddress(address);
                 Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
                 intent.putExtra("mAttendanceRecord", attendanceRecord);
-                intent.putExtra("needPhoto",validateInfo.isNeedPhoto());
-                intent.putExtra("outKind",outKind);
-                intent.putExtra("serverTime",validateInfo.getServerTime());
-                intent.putExtra("extraStartTime",validateInfo.getExtraStartTime());
+                intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
+                intent.putExtra("outKind", outKind);
+                intent.putExtra("serverTime", validateInfo.getServerTime());
+                intent.putExtra("extraStartTime", validateInfo.getExtraStartTime());
                 startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
             }
+
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
         });
+        LocationUtilGD.sotpLocation();
     }
 
 
@@ -930,8 +937,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Background
     void startTrack() {
         if (!Utils.isServiceRunning(AMapService.class.getName())) {
-            TrackRule.InitTrackRule();
         }
+        TrackRule.InitTrackRule();
     }
 
 
@@ -947,9 +954,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
-//        Map<String, Object> itemsData = new Hashtable<>();
-//        itemsData.put("客户拜访", R.drawable.icon_home_signin);
-//        itemsData.put("项目管理", ProjectManageActivity_.class);
 
         if (MainApp.user == null) {
             return;

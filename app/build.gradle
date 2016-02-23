@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+def AAVersion = '3.3.2'
 
 android {
     compileSdkVersion 22
@@ -42,7 +43,7 @@ android {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 2016012501
         versionName '1.0.0'
     }
@@ -67,7 +68,8 @@ android {
 //            }
             signingConfig signingConfigs.debug
             //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
-            resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
+            //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
+            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
         }
@@ -77,12 +79,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
             // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"
-//Q3aVfvUow9EL32m6IcGFecTf
+            //Q3aVfvUow9EL32m6IcGFecTf
             //resValue "string", "amaps_api_key", "6085830b754c86f0d9886b545f5b38f8"
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
         }
     }
+
     //多渠道打包的配置
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -100,12 +103,12 @@ android {
         compile files('libs/BaiduLBS_Android.jar')
         //高德地图
         compile files('libs/Android_Map_V2.5.0.jar')
-        compile files('libs/MapApiLocation_1.3.3.jar')
+        //compile files('libs/MapApiLocation_1.3.3.jar')
         compile files('libs/MapApiServices.jar')
 //    compile files('libs/AMap_2DMap_V2.8.0_20151231.jar')
 //    compile files('libs/AMap_Location_V2.2.0_20151222.jar')
 //    compile files('libs/AMap_Search_V2.8.0_20160105.jar')//最新高德地图jar包
-
+        compile files('libs/AMap_Location_v2.3.0_20160112.jar')//最新定位
 
         compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
         compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
@@ -128,6 +131,7 @@ android {
         //激光推送
         compile files('libs/jpush-android-2.0.5.jar')
         //compile 'com.android.support:multidex-1.0.1'
+        compile "org.androidannotations:androidannotations-api:$AAVersion"
 
     }
     productFlavors {
@@ -136,7 +140,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
 }
 
 
@@ -146,9 +149,7 @@ repositories {
     }
 }
 dependencies {
-    def AAVersion = '3.3.2'
     apt "org.androidannotations:androidannotations:$AAVersion"
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
 
 apt {

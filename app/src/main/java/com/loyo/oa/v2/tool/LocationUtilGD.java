@@ -1,34 +1,23 @@
 package com.loyo.oa.v2.tool;
 
 import android.content.Context;
-import android.location.Location;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationListener;
-import com.amap.api.location.LocationManagerProxy;
-import com.amap.api.location.LocationProviderProxy;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
 import com.loyo.oa.v2.application.MainApp;
 
 /**
  * Created by pj on 16/1/29.
  */
 public class LocationUtilGD {
-
-    /**
-     * 请求定位的最小时间间隔
-     */
-    private static final long MIN_SCAN_SPAN_MILLS = 500;
-    /**
-     * 请求定位的最小距离间隔
-     */
-    private static final float MIN_SCAN_SPAN_DISTANCE = 250f;
-
-    private LocationManagerProxy mLocationManagerProxy;
     private MAMapLocationListener maMapLocationListener;
     AfterLocation afterLocation;
     MainApp app;
+
+    private static AMapLocationClient locationClient = null;
+    private static AMapLocationClientOption locationOption = null;
 
     public LocationUtilGD(Context context, AfterLocation afterLocation) {
         app = (MainApp) context.getApplicationContext();
@@ -36,50 +25,38 @@ public class LocationUtilGD {
         this.afterLocation = afterLocation;
     }
 
-
     /**
      * 开启定位
      */
     private void startLocate(Context context) {
-        mLocationManagerProxy = LocationManagerProxy.getInstance(context.getApplicationContext());
         maMapLocationListener = new MAMapLocationListener();
-        mLocationManagerProxy.setGpsEnable(true);
-        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork,
-                MIN_SCAN_SPAN_MILLS, MIN_SCAN_SPAN_DISTANCE, maMapLocationListener);
+        locationClient = new AMapLocationClient(app);
+        locationOption = new AMapLocationClientOption();
+        locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
+        //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
+        locationOption.setInterval(1000 * 60);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+        locationOption.setOnceLocation(false);//false持续定位 true单次定位
+        locationOption.setHttpTimeOut(10000);//设置联网超时时间
+        locationOption.setNeedAddress(true);
+        // 设置定位模式为高精度模式
+        locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+        // 设置定位监听
+        locationClient.setLocationListener(maMapLocationListener);
+        // 设置定位参数
+        locationClient.setLocationOption(locationOption);
+        // 启动定位
+        locationClient.startLocation();
+        locationClient.startAssistantLocation();
     }
 
 
     /**
      * 位置变化回调接口
      */
-    private class MAMapLocationListener implements AMapLocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            LogUtil.d("高德所定的位置", location.toString());
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-            LogUtil.d("高德所定Status的位置", s);
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-            LogUtil.d("高德所Provider定的位置", s);
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-            LogUtil.d("高德所Enabled定的位置", s);
-        }
+    private class MAMapLocationListener implements com.amap.api.location.AMapLocationListener {
 
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
-            if (mLocationManagerProxy != null) {
-                mLocationManagerProxy.removeUpdates(maMapLocationListener);
-                mLocationManagerProxy.destroy();
-            }
-            mLocationManagerProxy = null;
             LogUtil.d(aMapLocation.getRoad() + " <高德所定的位置:> " + aMapLocation.getAddress());
             notifyLocation(aMapLocation);
         }
@@ -95,12 +72,10 @@ public class LocationUtilGD {
             afterLocation.OnLocationGDFailed();
             return;
         }
-
         String address = location.getAddress();
         app.address = address;
         app.longitude = location.getLongitude();
         app.latitude = location.getLatitude();
-
         if (!TextUtils.isEmpty(address)) {
             LogUtil.d("定位notify高德Location,address : " + address);
             LogUtil.d("定位l高德ocation:" + location.getLatitude() + "," + location.getLongitude());
@@ -114,6 +89,21 @@ public class LocationUtilGD {
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
         void OnLocationGDFailed();
+    }
+
+    /**
+     * 停止定位
+     */
+    public static void sotpLocation() {
+        if (null != locationClient) {
+            /**
+             * 如果AMapLocationClient是在当前Activity实例化的，
+             * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+             */
+            locationClient.onDestroy();
+            locationClient = null;
+            locationOption = null;
+        }
     }
 }
 

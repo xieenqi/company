@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="23"/>
-    
+
     <!-- 公用权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
@@ -28,7 +28,8 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <!-- 修改手机连接网路状态权限 -->
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>
     <!-- 激光推送 -->
     <permission
         android:name="com.loyo.oa.v2.permission.JPUSH_MESSAGE"
@@ -660,7 +661,7 @@
         <!-- 高德地图 //开发者申请的key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="@string/amaps_api_key"/>
+            android:value="2d8b80512b2c5a6110c177828b56bc01"/>
 
     </application>
 </manifest>

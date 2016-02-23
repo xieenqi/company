@@ -39,10 +39,10 @@ public class LocationUtil {
         option.setCoorType("gcj02");
         option.setScanSpan(1000);
         option.setIsNeedAddress(true);
-//        option.setOpenGps(true);
+        option.setOpenGps(true);
         option.setLocationNotify(true);
         option.setIsNeedLocationDescribe(true);
-//        option.setEnableSimulateGps(false);
+        option.setEnableSimulateGps(false);
         mLocationClient.setLocOption(option);
         mLocationClient.registerLocationListener(mLocationListener);
         mLocationClient.start();

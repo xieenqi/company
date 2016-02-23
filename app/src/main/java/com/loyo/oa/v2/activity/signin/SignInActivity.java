@@ -145,6 +145,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 //                    }
 //                }
                 tv_address.setText(address);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
@@ -152,6 +153,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 img_refresh_address.clearAnimation();
                 animation.reset();
                 Toast("定位失败,请在网络和GPS信号良好时重试");
+                LocationUtilGD.sotpLocation();
             }
         });
     }

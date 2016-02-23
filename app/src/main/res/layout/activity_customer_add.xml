@@ -99,6 +99,7 @@
 
                 </LinearLayout>
 
+
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
