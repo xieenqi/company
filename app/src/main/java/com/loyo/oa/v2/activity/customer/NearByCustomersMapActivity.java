@@ -140,11 +140,13 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     @Override
     public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
         initMap(latitude, longitude);
+        LocationUtilGD.sotpLocation();
     }
 
     @Override
     public void OnLocationGDFailed() {
         Toast("定位失败");
+        LocationUtilGD.sotpLocation();
     }
 
 

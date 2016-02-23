@@ -32,7 +32,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
@@ -570,11 +569,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         mLocate.addr = address;
         mLocate.setLoc(new double[]{longitude, latitude});
         tv_address.setText(address);
+        LocationUtilGD.sotpLocation();
     }
 
     @Override
     public void OnLocationGDFailed() {
         img_refresh_address.clearAnimation();
         animation.reset();
+        LocationUtilGD.sotpLocation();
     }
 }

@@ -152,12 +152,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
                 img_refresh_address.clearAnimation();
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
             public void OnLocationGDFailed() {
                 Toast("定位失败,请在网络和GPS信号良好时重试");
                 img_refresh_address.clearAnimation();
+                LocationUtilGD.sotpLocation();
             }
 
         });

@@ -108,6 +108,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         animation.reset();
         tv_address.setText(address);
         refreshLocation(longitude, latitude);
+        LocationUtilGD.sotpLocation();
     }
 
     @Override
@@ -115,6 +116,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         Toast("刷新位置失败");
         iv_refresh_address.clearAnimation();
         animation.reset();
+        LocationUtilGD.sotpLocation();
     }
 
     private static class MHandler extends Handler {

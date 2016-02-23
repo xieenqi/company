@@ -235,6 +235,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @Override
     public void OnLocationGDFailed() {
+        LocationUtilGD.sotpLocation();
         cancelLoading();
         Toast("获取打卡位置失败");
     }
@@ -450,9 +451,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 获取能否打卡的信息
      */
     private void getValidateInfo() {
+        showLoading("加载中...");
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(ValidateInfo _validateInfo, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
@@ -470,7 +473,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Toast("获取考勤信息失败" + error.getMessage());
             }
         });
     }

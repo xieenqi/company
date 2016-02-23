@@ -156,11 +156,13 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 params.put("position", position);
                 kalo = 0;
                 dataRequestvoid(url, params);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
             public void OnLocationGDFailed() {
                 Toast("获取附近客户信息失败！");
+                LocationUtilGD.sotpLocation();
             }
 
         });

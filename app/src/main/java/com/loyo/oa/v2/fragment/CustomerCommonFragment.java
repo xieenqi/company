@@ -468,6 +468,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         new LocationUtilGD(mActivity, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+                LocationUtilGD.sotpLocation();
                 String url = "";
                 switch (customer_type) {
                     //团队客户
@@ -508,18 +509,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
             @Override
             public void OnLocationGDFailed() {
+                LocationUtilGD.sotpLocation();
                 Toast("定位失败！");
             }
-
-//            @Override
-//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-//
-//            }
-//
-//            @Override
-//            public void OnLocationFailed() {
-//
-//            }
         });
     }
 
