@@ -1023,16 +1023,20 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }, 5000);
             return;
         }
+        ArrayList<ClickItem> itemsNew = new ArrayList<>();
         for (int i = 0; i < MainApp.user.permission.suites.size(); i++) {
             for (int k = 0; k < items.size(); k++) {
                 for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
-                    if (items.get(k).title.equals(modules.getName()) && !modules.isEnable()) {
-                        items.remove(k);
+                    if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
+                        itemsNew.add(items.get(k));
+                        //items.remove(k);
                         continue;
                     }
                 }
             }
         }
+        items.clear();
+        items = itemsNew;
         lv_main.setAdapter(adapter);//为了业务使用权限
         lv_main.setDragEnabled(true);
         cancelLoading();
