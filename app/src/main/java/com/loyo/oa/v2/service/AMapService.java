@@ -3,18 +3,14 @@ package com.loyo.oa.v2.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.location.LocationManagerProxy;
-import com.amap.api.location.LocationProviderProxy;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -37,7 +33,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.LoyoLog;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -72,7 +67,7 @@ public class AMapService extends Service {
 
     private PowerManager.WakeLock wakeLock;
     private PowerManager manager;
-    private LocationManagerProxy mLocationManagerProxy;
+    //    private LocationManagerProxy mLocationManagerProxy;
     private MAMapLocationListener maMapLocationListener;
     private MainApp app;
     private boolean stopped;
@@ -107,7 +102,7 @@ public class AMapService extends Service {
                 .setLogLevel(RestAdapter.LogLevel.NONE)
                 .build();
 
-        startLocate();
+        // startLocate();
         super.onCreate();
     }
 
@@ -123,7 +118,7 @@ public class AMapService extends Service {
     @Override
     public void onDestroy() {
         releaseWakeLock();
-        stopLocate();
+        //stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
         super.onDestroy();
     }
@@ -131,36 +126,36 @@ public class AMapService extends Service {
     /**
      * 开启定位
      */
-    private void startLocate() {
-        mLocationManagerProxy = LocationManagerProxy.getInstance(this.getApplicationContext());
-        maMapLocationListener = new MAMapLocationListener();
-        mLocationManagerProxy.setGpsEnable(true);
-        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, MIN_SCAN_SPAN_MILLS, MIN_SCAN_SPAN_DISTANCE, maMapLocationListener);
-    }
+//    private void startLocate() {
+//        mLocationManagerProxy = LocationManagerProxy.getInstance(this.getApplicationContext());
+//        maMapLocationListener = new MAMapLocationListener();
+//        mLocationManagerProxy.setGpsEnable(true);
+//        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, MIN_SCAN_SPAN_MILLS, MIN_SCAN_SPAN_DISTANCE, maMapLocationListener);
+//    }
 
     /**
      * 位置变化回调接口
      */
     private class MAMapLocationListener implements AMapLocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-        }
+//        @Override
+//        public void onLocationChanged(Location location) {
+//        }
+//
+//        @Override
+//        public void onStatusChanged(String s, int i, Bundle bundle) {
+//        }
+//
+//        @Override
+//        public void onProviderDisabled(String s) {
+//        }
+//
+//        @Override
+//        public void onProviderEnabled(String s) {
+//        }
 
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
-            app.logUtil.e("=====onLocationChanged=====aMapLocation");
+            LogUtil.d("=====onLocation轨迹Changed=====aMapLocation");
 
             releaseWakeLock();
             if (!checkRule()) {
@@ -172,7 +167,7 @@ public class AMapService extends Service {
             if (aMapLocation != null) {
                 getCurrentTime(aMapLocation);
             } else {
-                LoyoLog.e(TAG, "位置回调失败！");
+                LogUtil.d(TAG + "位置回调失败！");
             }
 
         }
@@ -261,7 +256,7 @@ public class AMapService extends Service {
     private boolean checkRule() {
         boolean unRuleable = trackRule == null || trackRule.getWeekdays() == null || trackRule.getWeekdays().length() != 7;
         if (unRuleable) {
-            app.logUtil.e("checkRule,轨迹规则设置错误，trackRule is null ? : " + (trackRule == null) + " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
+            LogUtil.d("checkRule,轨迹规则设置错误，trackRule is null ? : " + (trackRule == null) + " weekdays : " + (trackRule == null ? "NULL" : trackRule.getWeekdays().length()));
         }
 
         int day_of_week = DateTool.get_DAY_OF_WEEK(new Date());
@@ -272,7 +267,7 @@ public class AMapService extends Service {
             unInDay = '1' != (trackRule.getWeekdays().charAt(day_of_week - 1));
         }
         if (unInDay) {
-            app.logUtil.e("checkRule,当日未设置上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
+            LogUtil.d("checkRule,当日未设置上报轨迹,weekdays : " + trackRule.getWeekdays() + " dayofweek : " + day_of_week);
         }
 
         boolean isInTime = false;
@@ -291,7 +286,7 @@ public class AMapService extends Service {
             e.printStackTrace();
         }
         if (!isInTime) {
-            app.logUtil.e("checkRule,该时间段内未设置上报轨迹");
+            LogUtil.d("checkRule,该时间段内未设置上报轨迹");
         }
 
         if (!unRuleable && !unInDay && isInTime) {
@@ -332,7 +327,7 @@ public class AMapService extends Service {
      * @param aMapLocation
      */
     private void processLocation(AMapLocation aMapLocation) {
-        LoyoLog.e(TAG, "processLocation,最终地址 :  " + aMapLocation.getAddress());
+        LogUtil.d(TAG + " processLocation,最终地址 :  " + aMapLocation.getAddress());
         double latitude = aMapLocation.getLatitude();
         double longitude = aMapLocation.getLongitude();
         String lat = SharedUtil.get(app, "lat");
@@ -344,7 +339,7 @@ public class AMapService extends Service {
             LatLng lastLatLng = new LatLng(tempLat, tempLng);
             LatLng newLatLng = new LatLng(latitude, longitude);
             double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);
-            LoyoLog.e(TAG, "processLocation,distance ,distance : " + distance);
+            LogUtil.d(TAG + " processLocation,distance ,distance : " + distance);
             if (distance < MIN_SCAN_SPAN_DISTANCE - 50) {
                 return;
             }
@@ -391,7 +386,7 @@ public class AMapService extends Service {
         coder.setOnGetGeoCodeResultListener(listener);
         boolean result = coder.reverseGeoCode(new ReverseGeoCodeOption().location(tempLatLng));
         if (!result) {
-            LoyoLog.e(TAG, "convertAddressBMap,启动百度反地理编码失败");
+            LogUtil.d(TAG + "  convertAddressBMap,启动百度反地理编码失败");
             coder.destroy();
         }
 
@@ -415,7 +410,7 @@ public class AMapService extends Service {
         app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(jsonObject, new RCallback<Object>() {
             @Override
             public void success(Object trackLog, Response response) {
-                LoyoLog.e(TAG, "uploadLocation,轨迹上报成功,address : " + address);
+                LogUtil.d(TAG + "uploadLocation,轨迹上报成功,address : " + address);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
 
                 SharedUtil.put(app, "lat", String.valueOf(latitude));
@@ -424,7 +419,7 @@ public class AMapService extends Service {
 
             @Override
             public void failure(RetrofitError error) {
-                LoyoLog.e(TAG, "uploadLocation,轨迹上报失败");
+                LogUtil.d(TAG + " uploadLocation,轨迹上报失败");
                 LocateData data = buildLocateData(location);
                 ldbManager.addLocateData(data);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
@@ -505,16 +500,16 @@ public class AMapService extends Service {
     /**
      * 停止定位请求
      */
-    private void stopLocate() {
-        if (!stopped) {
-            stopped = true;
-            if (mLocationManagerProxy != null) {
-                mLocationManagerProxy.removeUpdates(maMapLocationListener);
-                mLocationManagerProxy.destroy();
-            }
-            mLocationManagerProxy = null;
-        }
-    }
+//    private void stopLocate() {
+//        if (!stopped) {
+//            stopped = true;
+//            if (mLocationManagerProxy != null) {
+//                mLocationManagerProxy.removeUpdates(maMapLocationListener);
+//                mLocationManagerProxy.destroy();
+//            }
+//            mLocationManagerProxy = null;
+//        }
+//    }
 
     /**
      * 唤醒cpu
@@ -554,7 +549,7 @@ public class AMapService extends Service {
      *
      * @return
      */
-    public AMapLocation getLastLocation() {
-        return mLocationManagerProxy.getLastKnownLocation(LocationProviderProxy.AMapNetwork);
-    }
+//    public AMapLocation getLastLocation() {
+//        return mLocationManagerProxy.getLastKnownLocation(LocationProviderProxy.AMapNetwork);
+//    }
 }

@@ -13,12 +13,15 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.service.TrackLogRecevier;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.client.Response;
 
@@ -35,7 +38,7 @@ public class TrackRule implements Serializable {
     private String endtime;
     private String groupIds;
     private String id;
-    private String starttime;
+    private String starttime;//上班时间
     private String updatedAt;
     private User user;
     private String userIds;
@@ -191,6 +194,14 @@ public class TrackRule implements Serializable {
      */
     public static void InitTrackRule() {
         if (TextUtils.isEmpty(MainApp.getToken())) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    LogUtil.d("定位 轨迹 空空");
+                    InitTrackRule();
+                }
+            }, 5000);
             return;
         }
 

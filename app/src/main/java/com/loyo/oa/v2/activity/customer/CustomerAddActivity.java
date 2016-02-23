@@ -26,11 +26,9 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewTag;
-import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
@@ -49,7 +47,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.rest.Post;
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -106,18 +103,24 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     private String uuid = null;
     private String tagItemIds;
-    private String mGpsAddress;
     private String myAddress;
     private boolean isFocused = false;
 
     private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public void dispatchMessage(Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
-                mGpsAddress = myAddress;
             }
         }
+
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if (msg.what == 0x01) {
+//                et_address.setText(myAddress);
+//                mGpsAddress = myAddress;
+//            }
+//        }
     };
 
 
@@ -135,13 +138,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    LocationUtilGD locationGd;
+
     /**
      * 获取定位
      */
     void startLocation() {
         img_refresh_address.startAnimation(animation);
-
-        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
+        et_address.setText(app.address);
+        locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 myAddress = address;
@@ -155,16 +160,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 img_refresh_address.clearAnimation();
             }
 
-//            @Override
-//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-//
-//            }
-//
-//
-//            @Override
-//            public void OnLocationFailed() {
-//
-//            }
         });
     }
 
@@ -256,7 +251,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     // jsonObject.put("address", customerAddress);
                     if (uuid != null && lstData_Attachment.size() > 0) {
                         jsonObject.put("uuid", uuid);
-                        jsonObject.put("attachmentCount",lstData_Attachment.size());
+                        jsonObject.put("attachmentCount", lstData_Attachment.size());
                     }
 
                     JSONObject jsonLoc = new JSONObject();
@@ -268,7 +263,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     jsonObject.put("loc", jsonLoc);
                     jsonObject.put("pname", customerContract);
                     jsonObject.put("ptel", customerContractTel);
-                    jsonObject.put("wiretel",customerWrietele);
+                    jsonObject.put("wiretel", customerWrietele);
 
                     if (tags != null && tags.size() > 0) {
                         JSONArray jsonArrayTagItems = new JSONArray();
@@ -282,7 +277,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         jsonObject.put("tags", jsonArrayTagItems);
                     }
                     stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
-                    LogUtil.dll("新建客户 发送参数:"+MainApp.gson.toJson(jsonObject));
+                    LogUtil.dll("新建客户 发送参数:" + MainApp.gson.toJson(jsonObject));
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -518,5 +513,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
         }
+
+        locationGd.sotpLocation();
     }
 }

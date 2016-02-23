@@ -10,13 +10,13 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
         }
     }
@@ -42,7 +42,7 @@ android {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 2016012501
         versionName '1.0.0'
     }
@@ -67,7 +67,8 @@ android {
 //            }
             signingConfig signingConfigs.debug
             //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
-            resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
+            //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
+            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
         }
@@ -100,12 +101,12 @@ android {
         compile files('libs/BaiduLBS_Android.jar')
         //高德地图
         compile files('libs/Android_Map_V2.5.0.jar')
-        compile files('libs/MapApiLocation_1.3.3.jar')
+        //compile files('libs/MapApiLocation_1.3.3.jar')
         compile files('libs/MapApiServices.jar')
 //    compile files('libs/AMap_2DMap_V2.8.0_20151231.jar')
 //    compile files('libs/AMap_Location_V2.2.0_20151222.jar')
 //    compile files('libs/AMap_Search_V2.8.0_20160105.jar')//最新高德地图jar包
-
+        compile files('libs/AMap_Location_v2.3.0_20160112.jar')//最新定位
 
         compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
         compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')

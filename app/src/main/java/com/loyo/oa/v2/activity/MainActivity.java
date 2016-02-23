@@ -230,6 +230,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 HttpErrorCheck.checkError(error);
             }
         });
+        LocationUtilGD.sotpLocation();
     }
 
     @Override
@@ -325,7 +326,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         lv_main.setDropListener(onDrag);
         adapter = new ClickItemAdapter();
-
 
     }
 
@@ -890,9 +890,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
-//        Map<String, Object> itemsData = new Hashtable<>();
-//        itemsData.put("客户拜访", R.drawable.icon_home_signin);
-//        itemsData.put("项目管理", ProjectManageActivity_.class);
 
         if (MainApp.user == null) {
             return;
