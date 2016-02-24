@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SelectDetAdapter;
 import com.loyo.oa.v2.adapter.SelectUserAdapter;
@@ -34,7 +33,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HorizontalScrollListView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,7 +66,6 @@ public class SelectDetUserActivity extends BaseActivity {
     public ArrayList<Department> newDeptSource = new ArrayList<>();//部门新的顺序
     public ArrayList<Department> deptHead = new ArrayList<>();//一级部门
     public ArrayList<Department> deptOther = new ArrayList<>();//其他部门
-
 
     public boolean isAllCheck = false;
     public boolean popy; //当前列表 是否全选
@@ -207,7 +204,7 @@ public class SelectDetUserActivity extends BaseActivity {
     }
 
     /**
-     * 部门业务结构排序
+     * 根据部门业务结构，对部门列表重新排序
      * */
     void deptSort(){
         /*分别获取一级/其他级部门*/
@@ -289,16 +286,16 @@ public class SelectDetUserActivity extends BaseActivity {
                 }
             }
         }
-
         members.depts = deptsList;
         members.users = usersList;
-
     }
 
-
+    /**
+     * ListView监听
+     * */
     void lvOnClick() {
 
-        /*横着ListView*/
+        /**横着ListView*/
         lv_selectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -314,7 +311,7 @@ public class SelectDetUserActivity extends BaseActivity {
             }
         });
 
-        /*左侧ListView*/
+        /**左侧ListView*/
         leftLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -329,7 +326,7 @@ public class SelectDetUserActivity extends BaseActivity {
             }
         });
 
-        /*右侧ListView 加入header后 下标要－1*/
+        /**右侧ListView 加入header后 下标要－1*/
         rightLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -371,7 +368,7 @@ public class SelectDetUserActivity extends BaseActivity {
         });
 
 
-        /*全选*/
+        /**全选*/
         relAllcheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -414,7 +411,7 @@ public class SelectDetUserActivity extends BaseActivity {
             }
         });
 
-        /*返回*/
+        /**返回*/
         llback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -422,7 +419,7 @@ public class SelectDetUserActivity extends BaseActivity {
             }
         });
 
-        /*确定*/
+        /**确定*/
         btnSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -436,11 +433,10 @@ public class SelectDetUserActivity extends BaseActivity {
                 }
                 mIntent.putExtras(mBundle);
                 app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-                LogUtil.d("选择的人数：" + mUserAdapter.getData().size());
             }
         });
 
-        /*搜索*/
+        /**搜索*/
         tv_selectdetuser_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

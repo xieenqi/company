@@ -40,6 +40,15 @@ public class AttendanceRecord implements Serializable {
     private int tagstate;// (int, optional): ,
     private long updatetime;// (int64, optional):
     private int remainTime;
+    private int extraTime;
+
+    public int getExtraTime() {
+        return extraTime;
+    }
+
+    public void setExtraTime(int extraTime) {
+        this.extraTime = extraTime;
+    }
 
     private User user;// (&{organization User}, optional):
 

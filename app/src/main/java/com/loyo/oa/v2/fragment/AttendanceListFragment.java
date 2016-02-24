@@ -14,7 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
@@ -32,16 +31,12 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
-
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -60,21 +55,25 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private TextView tv_count_title;
     private TextView tv_later;//迟到
     private TextView tv_leave_early;//早退
+    private TextView tv_leave_overtime;//加班
     private TextView tv_unattendance;//未打卡
     private TextView tv_field_work;//外勤
-    private int type;//我的考勤【1】 团队考勤【2】
     private AttendanceList attendanceList;
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private AttendanceListAdapter adapter;
+
     private int qtime, page = 1;
-    private Calendar cal;
+    private int type;//我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;//是否下拉刷新 默认是
+
+    private Calendar cal;
     private View mView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
+
             mView = inflater.inflate(R.layout.fragment_attendance_list, container, false);
             tv_time = (TextView) mView.findViewById(R.id.tv_time);
             tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
@@ -82,6 +81,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             tv_leave_early = (TextView) mView.findViewById(R.id.tv_leave_early);
             tv_unattendance = (TextView) mView.findViewById(R.id.tv_un_attendance);
             tv_field_work = (TextView) mView.findViewById(R.id.tv_field_work);
+            tv_leave_overtime = (TextView) mView.findViewById(R.id.tv_leave_overtime);
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
@@ -160,16 +160,17 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private void initStatistics() {
         switch (type) {
             case 1:
-                tv_count_title.setText("本月总计:");
+                tv_count_title.setText("总计:");
                 break;
             case 2:
-                tv_count_title.setText("本日总计:");
+                tv_count_title.setText("总计:");
                 break;
         }
         tv_later.setText(attendanceList.getLateCount() + "");
         tv_leave_early.setText(attendanceList.getEarlyCount() + "");
         tv_unattendance.setText(attendanceList.getNoreCcount() + "");
         tv_field_work.setText(attendanceList.getOutsidecount() + "");
+        tv_leave_overtime.setText(attendanceList.getExtraCount() + "");
     }
 
 
@@ -269,7 +270,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         } else {
             cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
         }
-
         refreshData();
     }
 
@@ -374,13 +374,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * @param inOrOut
      * @param attendance
      */
-    private void previewAttendance(int inOrOut, DayofAttendance attendance) {
+    private void previewAttendance(int inOrOut, DayofAttendance attendance,String overTime) {
         if (type == 1) {
             attendance.setUser(MainApp.user);
         }
         Intent intent = new Intent(mActivity, PreviewAttendanceActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
+        intent.putExtra("overTime", overTime);
         startActivityForResult(intent, FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE);
     }
 
@@ -429,35 +430,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             layout_recordIn.setOnTouchListener(Global.GetTouch());
             layout_recordOut.setOnTouchListener(Global.GetTouch());
 
-            /*加班*/
-            layout_overtime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                }
-            });
 
-            /*上班*/
-            layout_recordIn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null != recordIn) {
-                        previewAttendance(1, attendance);
-                    }
-                }
-            });
-
-            /*下班*/
-            layout_recordOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null != recordOut) {
-                        previewAttendance(2, attendance);
-                    }
-                }
-            });
-
-            TextView tv_overtime = ViewHolder.get(view,R.id.overtime);//加班时间显示
+            final TextView tv_overtime = ViewHolder.get(view,R.id.overtime);//加班时间显示
             TextView tv_title = ViewHolder.get(view, R.id.tv_title);
             ImageView iv_extra = ViewHolder.get(view, R.id.iv_extra);
             iv_extra.setVisibility(View.INVISIBLE);
@@ -470,6 +445,16 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             TextView tv_result = ViewHolder.get(view, R.id.tv_result);
             TextView tv_time1 = ViewHolder.get(view, R.id.tv_time1);
             ImageView divider = ViewHolder.get(view, R.id.devider);
+
+            //加班时间
+            if(attendance.getOut() != null){
+                int extraTime = attendance.getOut().getExtraTime();
+                if(extraTime > 60){
+                    tv_overtime.setText(extraTime/60+"小时"+extraTime%60+"分");
+                }else if(extraTime != 0){
+                    tv_overtime.setText(extraTime+"分钟");
+                }
+            }
 
             //标题
             if (type == 1) {
@@ -545,6 +530,36 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else {
                 divider.setVisibility(View.VISIBLE);
             }
+
+            /*加班*/
+            layout_overtime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordOut) {
+                        previewAttendance(3, attendance,tv_overtime.getText().toString());
+                    }
+                }
+            });
+
+            /*上班*/
+            layout_recordIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordIn) {
+                        previewAttendance(1, attendance,"");
+                    }
+                }
+            });
+
+            /*下班*/
+            layout_recordOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordOut) {
+                        previewAttendance(2, attendance,"");
+                    }
+                }
+            });
 
             return view;
         }

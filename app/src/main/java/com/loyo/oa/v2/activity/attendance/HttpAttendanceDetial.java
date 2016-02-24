@@ -14,6 +14,8 @@ public class HttpAttendanceDetial implements Serializable {
     public int inorout;
     public long createtime;
     public long updatetime;
+    public long extraWorkStartTime;
+    public long extraWorkEndTime;
 
     public String attachementuuid;
     public String originalgps;
@@ -23,6 +25,7 @@ public class HttpAttendanceDetial implements Serializable {
     public int state;
     public int outstate;
     public int tagstate;
+
 
     public long confirmtime;
     public User confirmuser;

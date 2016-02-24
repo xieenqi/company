@@ -130,9 +130,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private ClickItemAdapter adapter;
     private PopupMenu popupMenu;
     private ValidateInfo validateInfo = new ValidateInfo();
+    private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
-    private ArrayList<Long> outTimeList = new ArrayList();
-    private ArrayList<Long> intTimeList = new ArrayList<>();
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind;
@@ -390,6 +389,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return menuObjects;
     }
 
+    /*****************************考勤相关操作*****************************/
 
     /**
      * 获取能否打卡的信息
@@ -404,7 +404,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     Toast("获取考勤信息失败");
                     return;
                 }
-
                 validateInfo = _validateInfo;
                 try {
                     LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
@@ -419,7 +418,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                         outEnable = validateItem.isEnable();
                     }
                 }
-                cancelLoading();
                 rotateInt();
             }
 
@@ -447,7 +445,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return validateItem;
     }
 
-
     @Click(R.id.layout_is_attendance)
     void onClickIsAttendance() {
         Toast("您今天已经打卡完毕");
@@ -464,7 +461,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         int type = validateItem.getType();
         map.clear();
         map.put("inorout", type);
-//        new LocationUtil(this, this);
         new LocationUtilGD(MainActivity.this, this);
     }
 
@@ -477,15 +473,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void success(AttendanceRecord attendanceRecord, Response response) {
                 cancelLoading();
+                attendanceRecords = attendanceRecord;
                 LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
                 attendanceRecord.setAddress(address);
-                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
-                intent.putExtra("mAttendanceRecord", attendanceRecord);
-                intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
-                intent.putExtra("outKind", outKind);
-                intent.putExtra("serverTime", validateInfo.getServerTime());
-                intent.putExtra("extraStartTime", validateInfo.getExtraStartTime());
-                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+
+                if (attendanceRecord.getState() == 3) {
+                    attanceWorry();
+                }else{
+                    intentValue();
+                }
             }
 
             @Override
@@ -504,7 +500,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Toast("获取打卡位置失败");
     }
 
-    /*****************************考勤相关操作*****************************/
+    /**跳转考勤界面，封装数据*/
+    public void intentValue(){
+        Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
+        intent.putExtra("mAttendanceRecord", attendanceRecords);
+        intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
+        intent.putExtra("outKind", outKind);
+        intent.putExtra("serverTime", validateInfo.getServerTime());
+        intent.putExtra("extraStartTime", validateInfo.getExtraStartTime());
+        startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+    }
+
 
     /**
      * (翻转前)点击头像，获取能否打卡信息
@@ -523,57 +529,35 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (null == validateInfo) {
             return;
         }
+
         if (!Global.isConnected()) {
             Toast("没有网络连接，不能打卡");
             return;
         }
 
-        outTimeList.clear();
-        for(TimeSetting timeSetting : validateInfo.getSetting()){
-            String str = DateTool.getOutDataOne(DateTool.timet(timeSetting.getCheckOutTime() / 1000 + "", DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
-            outTimeList.add(Long.parseLong(str) / 1000);
-        }
-
-        /*当前时间*/
-        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime() + "",DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
-
-        LogUtil.dll("时分时间戳 下班:" + Utils.minOutTime(outTimeList));
-        LogUtil.dll("时分时间戳 现在:" + Long.parseLong(timeNowStamp) / 1000);
-
         /*判断是否为加班，是否弹窗*/
         if(validateInfo.isPopup() && !inEnable && outEnable){
-            popOutToast(timeNowStamp);
+            popOutToast();
         }
+
         /*正常下班*/
         else if(!inEnable && outEnable){
             outKind = 1;
-            if(!validateInfo.isPopup()){
-                isElaryOut(timeNowStamp);
-            }else{
-                startAttanceLocation();
-            }
+            startAttanceLocation();
         }
+
         /*上班打卡*/
         else if(inEnable && !outEnable){
+            outKind = 0;
             startAttanceLocation();
         }
-    }
 
-    /**
-     * 判断是否早退
-     * */
-    public void isElaryOut(String timeNowStamp){
-        if (Utils.minOutTime(outTimeList) > Long.parseLong(timeNowStamp) / 1000) {
-            attanceWorry();
-        } else {
-            startAttanceLocation();
-        }
     }
 
     /**
      * 加班提示框
      * */
-    public void popOutToast(final String timeNowStamp){
+    public void popOutToast(){
         final attenDancePopView popView = new attenDancePopView(this);
         popView.show();
         popView.setCanceledOnTouchOutside(false);
@@ -583,7 +567,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void onClick(View view) {
                 outKind = 1;
-                isElaryOut(timeNowStamp);
+                startAttanceLocation();
                 popView.dismiss();
             }
         });
@@ -619,7 +603,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startAttanceLocation();
+               intentValue();
             }
         });
 

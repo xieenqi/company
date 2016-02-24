@@ -67,12 +67,11 @@
 
         <TextView
             android:id="@+id/tv_count_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:gravity="left|center"
-            android:text="本月总计:"
+            android:text="总计:"
             android:textColor="#999999"
             android:textSize="@dimen/text_sp14"
             />
@@ -122,6 +121,34 @@
 
             <TextView
                 android:id="@+id/tv_leave_early"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:textColor="@color/red"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="left|center"
+                android:text="加班:"
+                android:textColor="#999999"
+                android:textSize="@dimen/text_sp14"
+                />
+
+            <TextView
+                android:id="@+id/tv_leave_overtime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"

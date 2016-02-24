@@ -304,13 +304,19 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     private boolean check() {
         if (layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())) {
-            if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
-                if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
-                    Toast("迟到原因不能为空");
-                } else {
-                    Toast("早退原因不能为空");
+            if(outKind == 2){
+                Toast("加班原因不能为空");
+            }else{
+                if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
+                    if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
+                        Toast("迟到原因不能为空");
+                    } else {
+                        Toast("早退原因不能为空");
+                    }
                 }
             }
+
+
             return false;
         }
 
@@ -425,6 +431,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("reason", reason);
         map.put("state", state);
         map.put("outstate", mAttendanceRecord.getOutstate());
+        map.put("extraWorkStartTime",extraStartTime);
+        map.put("extraWorkEndTime",serverTime);
 
         LogUtil.dll("提交考勤:"+MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.attendance;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -59,20 +61,19 @@ public class PreviewAttendanceActivity extends BaseActivity {
     @ViewById TextView tv_role;
     @ViewById TextView tv_address_info;
     @ViewById ImageView iv_type;
-
     @ViewById TextView tv_info;
     @ViewById TextView tv_reason;
-
     @ViewById GridView gridView_photo;
     @ViewById Button btn_confirm;
     @ViewById LinearLayout ll_confirm;
     @ViewById TextView tv_confirmDept;
     @ViewById TextView tv_confirmName;
     @ViewById TextView tv_confirmTime;
-
+    @ViewById TextView tv_explain;
 
     HttpAttendanceDetial attendance;
-    @Extra int inOrOut;
+    @Extra("overTime") String overTime;
+    @Extra("inOrOut") int inOrOut; // 1:上班 2:下班 3:加班
     @Extra(ExtraAndResult.EXTRA_ID) String attendanceId;
 
     private SignInGridViewAdapter adapter;
@@ -88,7 +89,11 @@ public class PreviewAttendanceActivity extends BaseActivity {
         getData();
     }
 
+    /**
+     * 获取考勤详情
+     * */
     public void getData() {
+        showLoading("");
         app.getRestAdapter().create(IAttendance.class).getAttendancesDetial(attendanceId, new RCallback<HttpAttendanceDetial>() {
             @Override
             public void success(HttpAttendanceDetial attend, Response response) {
@@ -136,7 +141,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
         if (null == attendance) {
             return;
         }
-        //AttendanceRecord record = inOrOut == ValidateItem.ATTENDANCE_STATE_OUT ? attendance.getOut() : attendance.getIn();
+
         ImageLoader.getInstance().displayImage(attendance.user.avatar, iv_avartar);
         final User user = attendance.user;
         tv_name.setText(user.getRealname());
@@ -154,18 +159,30 @@ public class PreviewAttendanceActivity extends BaseActivity {
         } else if (attendance.outstate == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
             iv_type.setImageResource(R.drawable.icon_office_work);
         }
-        String info = "";
-        if (attendance.state == AttendanceRecord.STATE_BE_LATE) {
-            info = "上班迟到, ";
-        } else if (attendance.state == AttendanceRecord.STATE_LEAVE_EARLY) {
-            info = "下班早退, ";
+
+         /*加班处理*/
+        if(attendance.state == 5 && inOrOut == 3){
+            String time = (DateTool.timet(attendance.extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
+                    +"-"+DateTool.timet(attendance.extraWorkEndTime+"",DateTool.DATE_FORMATE_TRANSACTION));
+            tv_info.setText("时间：" + time + " 共" + overTime);
+            tv_explain.setText("加班说明");
         }
-        String content = info + "打卡时间: " + app.df3.format(new Date(attendance.createtime * 1000));//
-        if (!TextUtils.isEmpty(info)) {
-            tv_info.setText(Utils.modifyTextColor(content, Color.RED, 2, 4));
-        } else {
-            tv_info.setText(content);
+        /*上班下班处理*/
+        else{
+            String info = "";
+            if (attendance.state == AttendanceRecord.STATE_BE_LATE) {
+                info = "上班迟到, ";
+            } else if (attendance.state == AttendanceRecord.STATE_LEAVE_EARLY) {
+                info = "下班早退, ";
+            }
+            String content = info + "打卡时间: " + app.df3.format(new Date(attendance.createtime * 1000));//
+            if (!TextUtils.isEmpty(info)) {
+                tv_info.setText(Utils.modifyTextColor(content, Color.RED, 2, 4));
+            } else {
+                tv_info.setText(content);
+            }
         }
+
         tv_address_info.setText(attendance.address);
         tv_reason.setText(TextUtils.isEmpty(attendance.reason) ? "正常考勤" : attendance.reason);
         if (user.id.equals(MainApp.user.id)) {//自己不能确认外勤
@@ -289,6 +306,4 @@ public class PreviewAttendanceActivity extends BaseActivity {
                     }
                 });
     }
-
-
 }
