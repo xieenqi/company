@@ -12,9 +12,9 @@ public class AttendanceRecord implements Serializable {
     /**内勤**/
     public static final int OUT_STATE_OFFICE_WORK=0;
     /**已确认的外勤**/
-    public static final int OUT_STATE_CONFIRMED_FIELD_WORK=OUT_STATE_OFFICE_WORK+1;
+    public static final int OUT_STATE_CONFIRMED_FIELD_WORK=1;
     /**未确认的外勤**/
-    public static final int OUT_STATE_FIELD_WORK=OUT_STATE_OFFICE_WORK+2;
+    public static final int OUT_STATE_FIELD_WORK=2;
 
     /**正常打卡**/
     public static final int STATE_NORMAL=1;
@@ -41,6 +41,15 @@ public class AttendanceRecord implements Serializable {
     private long updatetime;// (int64, optional):
     private int remainTime;
     private int extraTime;
+    private int extraState;
+
+    public int getExtraState() {
+        return extraState;
+    }
+
+    public void setExtraState(int extraState) {
+        this.extraState = extraState;
+    }
 
     public int getExtraTime() {
         return extraTime;

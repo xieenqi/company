@@ -152,10 +152,10 @@ public class PreviewAttendanceActivity extends BaseActivity {
                 ? "-" : user.depts.get(0).getShortDept().title));
 
         if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
-            iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+            iv_type.setImageResource(R.drawable.icon_field_work_confirm);
             btn_confirm.setVisibility(View.VISIBLE);
         } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
-            iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+            iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
         } else if (attendance.outstate == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
             iv_type.setImageResource(R.drawable.icon_office_work);
         }

@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
@@ -85,11 +86,13 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -99,6 +102,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -410,11 +414,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                for(ValidateItem validateItem : validateInfo.getValids()){
-                    if(validateItem.getType() == 1){
+                for (ValidateItem validateItem : validateInfo.getValids()) {
+                    if (validateItem.getType() == 1) {
                         inEnable = validateItem.isEnable();
-                    }
-                    else if(validateItem.getType() == 2){
+                    } else if (validateItem.getType() == 2) {
                         outEnable = validateItem.isEnable();
                     }
                 }
@@ -479,7 +482,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
-                }else{
+                } else {
                     intentValue();
                 }
             }
@@ -500,8 +503,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Toast("获取打卡位置失败");
     }
 
-    /**跳转考勤界面，封装数据*/
-    public void intentValue(){
+    /**
+     * 跳转考勤界面，封装数据
+     */
+    public void intentValue() {
         Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
@@ -535,29 +540,43 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
+        /*上班打卡*/
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
+
         /*判断是否为加班，是否弹窗*/
-        if(validateInfo.isPopup() && !inEnable && outEnable){
+        else if (validateInfo.isPopup()) {
             popOutToast();
         }
 
         /*正常下班*/
+        else if (outEnable) {
+            outKind = 1;
+            startAttanceLocation();
+        }
+
+/*        if(validateInfo.isPopup() && !inEnable && outEnable){
+            popOutToast();
+        }
+
         else if(!inEnable && outEnable){
             outKind = 1;
             startAttanceLocation();
         }
 
-        /*上班打卡*/
         else if(inEnable && !outEnable){
             outKind = 0;
             startAttanceLocation();
-        }
+        }*/
 
     }
 
     /**
      * 加班提示框
-     * */
-    public void popOutToast(){
+     */
+    public void popOutToast() {
         final attenDancePopView popView = new attenDancePopView(this);
         popView.show();
         popView.setCanceledOnTouchOutside(false);
@@ -603,7 +622,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               intentValue();
+                intentValue();
             }
         });
 
@@ -686,8 +705,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             objectAnimator.start();
         }
     };
-
-
 
 
     /**
