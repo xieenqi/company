@@ -58,6 +58,7 @@ proguard-project.txt
 
 captures/
 app/*.log
+build/
 
 app/build/**
 
