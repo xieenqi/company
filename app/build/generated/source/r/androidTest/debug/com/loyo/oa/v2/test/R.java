@@ -13,8 +13,5 @@ public final class R {
     public static final class string {
         public static final int amaps_api_key=0x7f020000;
         public static final int app_name=0x7f020001;
-        public static final int baidu_maps_api_key=0x7f020002;
-        public static final int xg_v2_access_id=0x7f020003;
-        public static final int xg_v2_access_key=0x7f020004;
     }
 }

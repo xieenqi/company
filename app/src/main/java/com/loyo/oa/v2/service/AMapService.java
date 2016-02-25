@@ -124,7 +124,7 @@ public class AMapService extends Service {
     @Override
     public void onDestroy() {
         releaseWakeLock();
-        //stopLocate();
+        stopLocate();
         TrackRule.StartTrackRule(10 * 1000);
         super.onDestroy();
     }
@@ -211,7 +211,8 @@ public class AMapService extends Service {
         boolean isCache = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
         LogUtil.d("轨迹定位：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
-                " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache);
+                " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache+
+                " 定位信息："+aMapLocation.getErrorInfo()+"--"+aMapLocation.getLocationDetail());
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置
         if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 ||
@@ -530,16 +531,20 @@ public class AMapService extends Service {
     /**
      * 停止定位请求
      */
-//    private void stopLocate() {
-//        if (!stopped) {
-//            stopped = true;
-//            if (mLocationManagerProxy != null) {
-//                mLocationManagerProxy.removeUpdates(maMapLocationListener);
-//                mLocationManagerProxy.destroy();
-//            }
-//            mLocationManagerProxy = null;
-//        }
-//    }
+    private void stopLocate() {
+        if (!stopped) {
+            stopped = true;
+            if (null != locationClient) {
+                /**
+                 * 如果AMapLocationClient是在当前Activity实例化的，
+                 * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+                 */
+                locationClient.onDestroy();
+                locationClient = null;
+                locationOption = null;
+            }
+        }
+    }
 
     /**
      * 唤醒cpu

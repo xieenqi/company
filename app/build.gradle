@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+def AAVersion = '3.3.2'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.0'
+    buildToolsVersion '23.0.2'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
 
@@ -20,24 +21,6 @@ android {
             keyPassword 'Loyo2012'
         }
     }
-//    sourceSets {
-//        main {
-//            jniLibs.srcDir 'src/mian/jniLibs'
-//            manifest.srcFile 'src/main/AndroidManifest.xml'
-//            java.srcDirs = ['src/main/java']
-//            resources.srcDirs = ['src/main/jniLibs']
-//            //aidl.srcDirs = ['src/main']
-//            //renderscript.srcDirs = ['src/main']
-//            res.srcDirs = ['src/main/res']
-//            //assets.srcDirs = ['src/main/assets']
-//        }
-//
-//        // Move the tests to tests/java, tests/res, etc...
-//        instrumentTest.setRoot('app')
-//
-//        debug.setRoot('build-types/debug')
-//        release.setRoot('build-types/release')
-//    }
     defaultConfig {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
@@ -77,10 +60,8 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
-            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"
-//Q3aVfvUow9EL32m6IcGFecTf
-            //resValue "string", "amaps_api_key", "6085830b754c86f0d9886b545f5b38f8"
-            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
+            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
+            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"// "6085830b754c86f0d9886b545f5b38f8"
             resValue "string", "app_name", "快启"
         }
     }
@@ -129,6 +110,8 @@ android {
         //激光推送
         compile files('libs/jpush-android-2.0.5.jar')
         //compile 'com.android.support:multidex-1.0.1'
+        compile "org.androidannotations:androidannotations-api:$AAVersion"
+
 
     }
     productFlavors {
@@ -147,9 +130,7 @@ repositories {
     }
 }
 dependencies {
-    def AAVersion = '3.3.2'
     apt "org.androidannotations:androidannotations:$AAVersion"
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
 
 apt {
@@ -157,14 +138,4 @@ apt {
         androidManifestFile variant.outputs[0].processResources.manifestFile
         resourcePackageName 'com.loyo.oa.v2'
     }
-//    sourceSets {
-//        main {
-//            java {
-//                srcDir 'src/java'
-//            }
-//            resources {
-//                srcDir 'src/jniLibs'
-//            }
-//        }
-//    }
 }

@@ -12,8 +12,5 @@ public final class Manifest {
         /**  激光推送 
          */
         public static final String JPUSH_MESSAGE="com.loyo.oa.v2.permission.JPUSH_MESSAGE";
-        /**  小米推送需要的权限 
-         */
-        public static final String MIPUSH_RECEIVE="com.loyo.oa.v2.permission.MIPUSH_RECEIVE";
     }
 }

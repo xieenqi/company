@@ -58,3 +58,11 @@ proguard-project.txt
 
 captures/
 app/*.log
+
+app/build/**
+
+wrapper/**
+
+gradle/wrapper/**
+
+.gradle/**

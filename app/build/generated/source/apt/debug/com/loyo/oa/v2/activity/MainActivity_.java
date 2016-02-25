@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R.id;
 import com.loyo.oa.v2.R.layout;
@@ -90,36 +91,40 @@ public final class MainActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        img_user = ((ImageView) hasViews.findViewById(id.img_title_left));
-        img_home_head = ((ImageView) hasViews.findViewById(id.img_home_head));
-        layout_network = ((ViewGroup) hasViews.findViewById(id.layout_network));
-        tv_user_name = ((TextView) hasViews.findViewById(id.tv_title_1));
-        lv_main = ((DragSortListView) hasViews.findViewById(id.lv_main));
         img_fast_add = ((ImageView) hasViews.findViewById(id.img_fast_add));
-        layout_attendance = ((ViewGroup) hasViews.findViewById(id.layout_attendance));
         layout_avatar = ((ViewGroup) hasViews.findViewById(id.layout_avatar));
+        layout_attendance = ((ViewGroup) hasViews.findViewById(id.layout_attendance));
+        group_home_relative = ((RelativeLayout) hasViews.findViewById(id.group_home_relative));
+        layout_is_attendance = ((ViewGroup) hasViews.findViewById(id.layout_is_attendance));
+        tv_user_name = ((TextView) hasViews.findViewById(id.tv_title_1));
+        img_bulletinStatus = ((ImageView) hasViews.findViewById(id.img_bulletinStatus));
+        img_user = ((ImageView) hasViews.findViewById(id.img_title_left));
+        lv_main = ((DragSortListView) hasViews.findViewById(id.lv_main));
+        layout_network = ((ViewGroup) hasViews.findViewById(id.layout_network));
+        container = ((ViewGroup) hasViews.findViewById(id.container));
+        img_home_head = ((ImageView) hasViews.findViewById(id.img_home_head));
         swipe_container = ((SwipeRefreshLayout) hasViews.findViewById(id.swipe_container));
-        if (img_user!= null) {
-            img_user.setOnClickListener(new OnClickListener() {
+        if (img_fast_add!= null) {
+            img_fast_add.setOnClickListener(new OnClickListener() {
 
 
                 @Override
                 public void onClick(View view) {
-                    MainActivity_.this.onClickAvatar();
+                    MainActivity_.this.onClickAdd();
                 }
 
             }
             );
         }
         {
-            View view = hasViews.findViewById(id.img_bulletin);
+            View view = hasViews.findViewById(id.img_setting);
             if (view!= null) {
                 view.setOnClickListener(new OnClickListener() {
 
 
                     @Override
                     public void onClick(View view) {
-                        MainActivity_.this.onClickBulletin();
+                        MainActivity_.this.onClickSetting();
                     }
 
                 }
@@ -141,21 +146,6 @@ public final class MainActivity_
                 );
             }
         }
-        {
-            View view = hasViews.findViewById(id.img_setting);
-            if (view!= null) {
-                view.setOnClickListener(new OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View view) {
-                        MainActivity_.this.onClickSetting();
-                    }
-
-                }
-                );
-            }
-        }
         if (layout_attendance!= null) {
             layout_attendance.setOnClickListener(new OnClickListener() {
 
@@ -168,37 +158,46 @@ public final class MainActivity_
             }
             );
         }
-        if (img_fast_add!= null) {
-            img_fast_add.setOnClickListener(new OnClickListener() {
+        {
+            View view = hasViews.findViewById(id.img_bulletin);
+            if (view!= null) {
+                view.setOnClickListener(new OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity_.this.onClickBulletin();
+                    }
+
+                }
+                );
+            }
+        }
+        if (img_user!= null) {
+            img_user.setOnClickListener(new OnClickListener() {
 
 
                 @Override
                 public void onClick(View view) {
-                    MainActivity_.this.onClickAdd();
+                    MainActivity_.this.onClickAvatar();
+                }
+
+            }
+            );
+        }
+        if (layout_is_attendance!= null) {
+            layout_is_attendance.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    MainActivity_.this.onClickIsAttendance();
                 }
 
             }
             );
         }
         init();
-    }
-
-    @Override
-    public void checkUpdateService() {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
-
-
-            @Override
-            public void execute() {
-                try {
-                    MainActivity_.super.checkUpdateService();
-                } catch (Throwable e) {
-                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-                }
-            }
-
-        }
-        );
     }
 
     @Override
@@ -228,6 +227,24 @@ public final class MainActivity_
             public void execute() {
                 try {
                     MainActivity_.super.initData();
+                } catch (Throwable e) {
+                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                }
+            }
+
+        }
+        );
+    }
+
+    @Override
+    public void checkUpdateService() {
+        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
+
+
+            @Override
+            public void execute() {
+                try {
+                    MainActivity_.super.checkUpdateService();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }

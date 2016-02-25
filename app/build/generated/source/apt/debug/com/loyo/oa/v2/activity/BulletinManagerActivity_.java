@@ -86,18 +86,6 @@ public final class BulletinManagerActivity_
         lv_notice = ((PullToRefreshRecycleView) hasViews.findViewById(id.lv_notice));
         tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
         btn_notice_add = ((Button) hasViews.findViewById(id.btn_notice_add));
-        if (img_title_left!= null) {
-            img_title_left.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    BulletinManagerActivity_.this.onClick(view);
-                }
-
-            }
-            );
-        }
         if (btn_notice_add!= null) {
             btn_notice_add.setOnClickListener(new OnClickListener() {
 
@@ -105,6 +93,18 @@ public final class BulletinManagerActivity_
                 @Override
                 public void onClick(View view) {
                     BulletinManagerActivity_.this.onAddNew();
+                }
+
+            }
+            );
+        }
+        if (img_title_left!= null) {
+            img_title_left.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    BulletinManagerActivity_.this.onClick(view);
                 }
 
             }

@@ -160,7 +160,7 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/halftransparent</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@+android:style/Animation.Translucent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 
 
@@ -250,4 +250,5 @@
         </item>
         <item name="android:progressDrawable">@drawable/shape_progressbar_mini</item>
     </style>
+
 </resources>

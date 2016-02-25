@@ -88,12 +88,12 @@ public final class VerifyAccountActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        btn_confirm = ((Button) hasViews.findViewById(id.btn_confirm));
-        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         tv_title_1 = ((TextView) hasViews.findViewById(id.tv_title_1));
+        et_account = ((EditText) hasViews.findViewById(id.et_account));
+        img_title_left = ((ViewGroup) hasViews.findViewById(id.img_title_left));
         et_code = ((EditText) hasViews.findViewById(id.et_code));
         btn_get_code = ((Button) hasViews.findViewById(id.btn_get_code));
-        et_account = ((EditText) hasViews.findViewById(id.et_account));
+        btn_confirm = ((Button) hasViews.findViewById(id.btn_confirm));
         if (img_title_left!= null) {
             img_title_left.setOnClickListener(new OnClickListener() {
 
@@ -106,18 +106,6 @@ public final class VerifyAccountActivity_
             }
             );
         }
-        if (btn_confirm!= null) {
-            btn_confirm.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    VerifyAccountActivity_.this.doNext();
-                }
-
-            }
-            );
-        }
         if (btn_get_code!= null) {
             btn_get_code.setOnClickListener(new OnClickListener() {
 
@@ -125,6 +113,18 @@ public final class VerifyAccountActivity_
                 @Override
                 public void onClick(View view) {
                     VerifyAccountActivity_.this.getCode();
+                }
+
+            }
+            );
+        }
+        if (btn_confirm!= null) {
+            btn_confirm.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    VerifyAccountActivity_.this.doNext();
                 }
 
             }

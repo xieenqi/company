@@ -75,10 +75,11 @@ public final class LauncherActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        iv_launcher_adv = ((ImageView) hasViews.findViewById(id.iv_launcher_adv));
         iv_launcher_bottom = ((ImageView) hasViews.findViewById(id.iv_launcher_bottom));
-        iv_launcher_fade = ((ImageView) hasViews.findViewById(id.iv_launcher_fade));
+        ll_root = ((ViewGroup) hasViews.findViewById(id.ll_root));
         layout_launcher_fade = ((ViewGroup) hasViews.findViewById(id.layout_launcher_fade));
+        iv_launcher_fade = ((ImageView) hasViews.findViewById(id.iv_launcher_fade));
+        iv_launcher_adv = ((ImageView) hasViews.findViewById(id.iv_launcher_adv));
         initVies();
     }
 

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@drawable/btn_style_alert_dialog_button_pressed" />
-    <item android:drawable="@drawable/btn_style_alert_dialog_button_normal" />
-</selector><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/drawable/btn_style_alert_dialog_button.xml -->
