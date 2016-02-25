@@ -23,3 +23,11 @@ Thumbs.db
 venv
 node_modules
 .sass-cache
+
+app/build/**
+
+wrapper/**
+
+gradle/wrapper/**
+
+.gradle/**
