@@ -304,7 +304,7 @@
     <color name="isteston">#bf73e6</color>
     <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
-
+    <color name="dialog_blue">#2693FB</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
     <color name="activity_split">#c8c7cc</color>
     <color name="title_bg1">#4db1fe</color>
@@ -354,4 +354,7 @@
     <color name="redE8">#e85840</color>
     <color name="activity_bg">#f2f2f2</color>
     <color name="green51">#51c055</color>
+    <color name="gray0990">#E7E7E7</color>
+
+
 </resources>

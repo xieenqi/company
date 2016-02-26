@@ -70,6 +70,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
     @ViewById TextView tv_confirmName;
     @ViewById TextView tv_confirmTime;
     @ViewById TextView tv_explain;
+    @ViewById TextView tv_message;
 
     HttpAttendanceDetial attendance;
     @Extra("overTime") String overTime;
@@ -78,6 +79,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
 
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
+    private String strMessage;
 
     @AfterViews
     void initViews() {
@@ -134,6 +136,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
                 Toast("获取附件失败");
             }
         });
+
     }
 
     /**
@@ -153,11 +156,22 @@ public class PreviewAttendanceActivity extends BaseActivity {
         tv_role.setText(deptName + " " + (TextUtils.isEmpty(user.depts.get(0).getShortDept().getName())
                 ? "-" : user.depts.get(0).getShortDept().title));
 
-        if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
-            iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+        /*确认加班*/
+        if(attendance.state == 5 && attendance.extraState == AttendanceRecord.OUT_STATE_FIELD_OVERTIME){
             btn_confirm.setVisibility(View.VISIBLE);
-        } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
-            iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+            btn_confirm.setText("确认加班");
+            strMessage = "是否确定该员工的加班?\n"+"确认后将无法取消！";
+        }
+        /*确认外勤*/
+        else {
+            if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
+                iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+                btn_confirm.setVisibility(View.VISIBLE);
+                btn_confirm.setText("确认外勤");
+                strMessage = "是否确定该员工的外勤?\n"+"确认后将无法取消！";
+            } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
+                iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+            }
         }
 
          /*加班处理*/
@@ -194,9 +208,11 @@ public class PreviewAttendanceActivity extends BaseActivity {
             tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
             tv_confirmName.setText(attendance.confirmuser.name);
             tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
+            if(attendance.state == 5){
+                tv_message.setText("确认加班");
+            }
         }
     }
-
 
     /**
      * 初始化附件
@@ -216,64 +232,27 @@ public class PreviewAttendanceActivity extends BaseActivity {
     }
 
     /**
-     * 确认外勤的点击监听
+     * 确认外勤(加班)的点击监听
      */
     @Click(R.id.btn_confirm)
     void confirmFieldWork() {
-        showConfirmOutAttendanceDialog();
+        showConfirmOutAttendanceDialog(strMessage);
     }
 
     /**
      * 弹出外勤确认对话框
      */
-    private void showConfirmOutAttendanceDialog() {
-        ConfirmDialog("提示", "是否确定该员工的外勤?\n确认后将无法取消！", new ConfirmDialogInterface() {
+    private void showConfirmOutAttendanceDialog(String str) {
+        ConfirmDialog("提示", str, new ConfirmDialogInterface() {
             @Override
             public void Confirm() {
                 confirmOutAttendance();
             }
         });
-//        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
-//        ((TextView) dialogView.findViewById(R.id.tv_content)).setText("是否确定该员工的外勤?\r\n确认后将无法取消!");
-//        dialogView.getBackground().setAlpha(150);
-//        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-//        dialog.setAnimationStyle(R.style.PopupAnimation);
-//        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-//        dialog.showAtLocation(findViewById(R.id.tv_title), Gravity.BOTTOM, 0, 0);
-//
-//
-//        TextView confirm = (TextView) dialogView.findViewById(R.id.btn_confirm);
-//        TextView cancel = (TextView) dialogView.findViewById(R.id.btn_cancel);
-//
-//        confirm.setOnTouchListener(Global.GetTouch());
-//        cancel.setOnTouchListener(Global.GetTouch());
-//
-//        dialogView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                dialog.dismiss();
-//                return false;
-//            }
-//        });
-//
-//        confirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialog.dismiss();
-//                confirmOutAttendance();
-//            }
-//        });
-//
-//        cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialog.dismiss();
-//            }
-//        });
     }
 
     /**
-     * 确认外勤
+     * 确认外勤(加班)
      */
     private void confirmOutAttendance() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
@@ -282,18 +261,9 @@ public class PreviewAttendanceActivity extends BaseActivity {
                     public void success(AttendanceRecord record, Response response) {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);
                         btn_confirm.setVisibility(View.GONE);
-                        //attendance.setIn(record);
-
-//                if (record.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
-//                    iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
-//                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                         iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-//                } else if (record.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-//                    iv_type.setImageResource(R.drawable.icon_office_work);
-//                }
 
                         Intent intent = new Intent();
-                        //intent.putExtra("data", attendance);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

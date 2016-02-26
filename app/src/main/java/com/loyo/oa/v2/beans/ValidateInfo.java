@@ -18,7 +18,15 @@ public class ValidateInfo implements Serializable {
     private boolean needExtra;
     private boolean needPhoto;
     private boolean isPopup;
+    private boolean isWorkDay;
 
+    public boolean isWorkDay() {
+        return isWorkDay;
+    }
+
+    public void setIsWorkDay(boolean isWorkDay) {
+        this.isWorkDay = isWorkDay;
+    }
 
     public boolean isNeedExtra() {
         return needExtra;

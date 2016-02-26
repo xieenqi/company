@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:background="@android:color/transparent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/black"
     >
 
     <LinearLayout
         android:id="@+id/pop_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/pohto_popupwindow"
+        android:layout_centerVertical="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/dialog_blue"
+        >
 
         <TextView
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="13dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="选取照片"
-            android:textColor="@color/grayC9"
+            android:text="添加附件"
+            android:textColor="@color/white"
+            android:textSize="20dp"
             />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="@color/grayC9"
+            android:background="@color/gray0990"
             />
 
         <TextView
             android:gravity="center"
             android:id="@+id/btn_take_photo"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:text="拍照"
-            android:textSize="18dp"
-            android:textColor="@color/title_bg1"
+            android:textSize="20dp"
+            android:textColor="@color/black"
             android:background="@drawable/photo_popwindow_selector"
             />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="@color/grayC9"
+            android:background="@color/gray0990"
             />
 
         <TextView
             android:gravity="center"
             android:id="@+id/btn_pick_photo"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:text="相册"
-            android:textSize="18dp"
-            android:textColor="@color/title_bg1"
+            android:textSize="20dp"
+            android:textColor="@color/black"
             android:background="@drawable/photo_popwindow_selector"
             />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="@color/grayC9"
+            android:background="@color/gray0990"
             />
 
         <TextView
             android:gravity="center"
             android:id="@+id/btn_cancel"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:text="取消"
-            android:textSize="18dp"
-            android:textColor="@color/title_bg1"
+            android:textSize="20dp"
+            android:textColor="@color/black"
             android:background="@drawable/photo_popwindow_selector"
             />
 

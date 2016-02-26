@@ -19,6 +19,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
@@ -26,11 +27,14 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import java.text.SimpleDateFormat;
@@ -336,6 +340,28 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     /**
+     * 获取团队集合数据
+     * */
+    private void getTeamData(){
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getTeamCount(new RCallback<AttendanceList>() {
+            @Override
+            public void success(AttendanceList attendanceLists, Response response) {
+                HttpErrorCheck.checkResponse(type + " 团队Count：", response);
+                attendanceList = attendanceLists;
+                initStatistics();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                Toast("团队统计数据，获取失败");
+                super.failure(error);
+            }
+        });
+    }
+
+
+    /**
      * 获取列表
      */
     private void getData(final int page) {
@@ -349,13 +375,18 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                attendanceList = result.records;
+                if(type == 1){
+                    attendanceList = result.records;
+                    initStatistics();
+                }else{
+                    getTeamData();
+                }
+
                 if (isPullDowne || page == 1) {
                     attendances = result.records.getAttendances();
                 } else {
                     attendances.addAll(result.records.getAttendances());
                 }
-                initStatistics();
                 bindData();
                 if (page != 1) {
                     adapter.notifyDataSetChanged();

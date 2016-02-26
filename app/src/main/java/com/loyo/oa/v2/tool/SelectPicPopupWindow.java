@@ -31,7 +31,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     private TextView btn_take_photo;//拍照
     private TextView btn_pick_photo;//从相册选
     private TextView btn_cancel;//取消
-
     private LinearLayout layout;
     private Uri fileUri;
     private static final String RESTORE_FILEURI = "fileUri";

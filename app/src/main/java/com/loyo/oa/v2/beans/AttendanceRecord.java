@@ -16,6 +16,13 @@ public class AttendanceRecord implements Serializable {
     /**未确认的外勤**/
     public static final int OUT_STATE_FIELD_WORK=2;
 
+    /**非加班**/
+    public static final int OUT_STATE_OFFICE_OVERTIME=0;
+    /**已确认的加班**/
+    public static final int OUT_STATE_CONFIRMED_FIELD_OVERTIME=1;
+    /**未确认的加班**/
+    public static final int OUT_STATE_FIELD_OVERTIME=2;
+
     /**正常打卡**/
     public static final int STATE_NORMAL=1;
     /**迟到**/

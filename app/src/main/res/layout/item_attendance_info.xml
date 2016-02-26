@@ -59,24 +59,22 @@
                     android:id="@+id/layout_morning"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="未打卡"
+                        android:text="未打"
                         android:textSize="14sp"
                         />
 
                     <TextView
                         android:id="@+id/tv_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="--"
+                        android:text="14:09"
                         android:textColor="@color/gray"
                         android:textSize="14sp"
                         />
@@ -116,24 +114,22 @@
                     android:id="@+id/layout_afternoon"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_result"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="未打卡"
+                        android:text="迟到"
                         android:textSize="14sp"
                         />
 
                     <TextView
                         android:id="@+id/tv_time1"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="--"
+                        android:text="14:09"
                         android:textColor="@color/gray"
                         android:textSize="14sp"
                         />

@@ -136,7 +136,6 @@ public class Utils {
         return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid,bizType,typedFile);
     }
 
-
     /**
      * 获取附件
      *

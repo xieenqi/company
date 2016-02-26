@@ -215,12 +215,12 @@ public class SignInGridViewAdapter extends BaseAdapter {
         public void onClick(View v) {
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
-                if (mListData.size() == 0) {
+                if (mListData.size() <= 3) {
                     Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                     intent.putExtra("localpic", localpic);
                     mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
                 } else {
-                    Toast.makeText(mActivity, "只允许拍一张照片", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "只允许拍三张照片", Toast.LENGTH_SHORT).show();
                 }
             }
             /*拜访签到*/

@@ -233,6 +233,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         tv_address.setText(mAttendanceRecord.getAddress());
 
         if(outKind == 2){
+
             et_reason.setHint("请输入加班原因");
             layout_reason.setVisibility(View.VISIBLE);
             String time = (DateTool.timet(extraStartTime+"",DateTool.DATE_FORMATE_TRANSACTION)
@@ -269,6 +270,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                 attachments = _attachments;
                 init_gridView_photo();
             }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                Toast("获取附件失败");
+            }
         });
     }
 
@@ -297,17 +304,13 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     return;
                 }
 
-                if(needExtra){
-                    Toast("请输入加班原因!");
-                    return;
-                }
-
                 if (NeedPhoto && attachments.size() == 0) {
                     Toast("需要考勤照片，请拍照");
                     return;
                 }
 
-                if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+                if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
+                        && mAttendanceRecord.getState() != 5) {
                         showOutAttendanceDialog();
                 } else {
                         commitAttendance();
@@ -328,19 +331,23 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * @return
      */
     private boolean check() {
-        if (layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())) {
-            if(outKind == 2){
+
+        if(outKind == 2 && needExtra){
+            if(layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())){
                 Toast("加班原因不能为空");
-            }else{
-                if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
+                return false;
+            }
+        }
+
+        else if(outKind != 2){
+            if(layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())){
                     if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
                         Toast("迟到原因不能为空");
                     } else {
                         Toast("早退原因不能为空");
                     }
-                }
+                    return false;
             }
-            return false;
         }
 
         if (TextUtils.isEmpty(tv_address.getText().toString())) {
@@ -547,6 +554,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                             @Override
                             public void onNext(Serializable serializable) {
                                 getAttachments();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                Toast("网络异常");
                             }
                         });
                     }

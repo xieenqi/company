@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
@@ -542,23 +541,70 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        /*上班打卡*/
-        if (inEnable) {
+
+        /*工作日*/
+        if(validateInfo.isWorkDay()){
+            /*加班*/
+            if(validateInfo.isPopup()){
+                popOutToast();
+            }
+            /*不加班*/
+            else{
+                dealInOutWork();
+            }
+        }
+        /*非工作日，下班状态*/
+        else if(!validateInfo.isWorkDay() && outEnable){
+            outKind = 2;
+            startAttanceLocation();
+        }
+        /*非工作日，上班状态*/
+        else if(!validateInfo.isWorkDay() && inEnable){
             outKind = 0;
             startAttanceLocation();
         }
 
-        /*判断是否为加班，是否弹窗*/
-        else if (validateInfo.isPopup()) {
-            popOutToast();
-        }
 
-        /*正常下班*/
+
+/*        *//*上班打卡*//*
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
+        *//*下班打卡*//*
+        else if (outEnable && !validateInfo.isPopup()) {
+            outKind = 1;
+            startAttanceLocation();
+        }
+        *//*工作日，加班要弹窗*//*
+        else if(validateInfo.isWorkDay()){
+            if(validateInfo.isPopup()){
+                popOutToast();
+            }
+        }
+        *//*非工作日，加班不弹窗*//*
+        else if(!validateInfo.isWorkDay()){
+                outKind = 2;
+                startAttanceLocation();
+        }*/
+    }
+
+    /**
+     * 判断上班下班
+     * */
+    public void dealInOutWork(){
+        /*上班*/
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
+        /*下班*/
         else if (outEnable) {
             outKind = 1;
             startAttanceLocation();
         }
     }
+
 
     /**
      * 加班提示框
@@ -566,7 +612,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public void popOutToast() {
         final attenDancePopView popView = new attenDancePopView(this);
         popView.show();
-        popView.setCanceledOnTouchOutside(false);
+        popView.setCanceledOnTouchOutside(true);
 
         /*正常下班*/
         popView.generalOutBtn(new View.OnClickListener() {

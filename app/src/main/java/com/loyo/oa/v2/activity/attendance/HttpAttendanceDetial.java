@@ -25,6 +25,7 @@ public class HttpAttendanceDetial implements Serializable {
     public int state;
     public int outstate;
     public int tagstate;
+    public int extraState;
 
 
     public long confirmtime;

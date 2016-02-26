@@ -2,6 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
+import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendancePhoto;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.ValidateInfo;
@@ -84,5 +85,12 @@ public interface IAttendance {
      */
     @GET("/attendance/{id}")
     void getAttendancesDetial(@Path("id") String id, Callback<HttpAttendanceDetial> callback);
+
+    /**
+     * 团队考勤列表，获取统计数据
+     * */
+    @GET("/attendance/team/count")
+    void getTeamCount(Callback<AttendanceList> callback);
+
 
 }
