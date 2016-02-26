@@ -114,9 +114,11 @@ public class PreviewAttendanceActivity extends BaseActivity {
      * 获取附件
      */
     private void getAttachments(String attachementuuid) {
+
         if (TextUtils.isEmpty(attachementuuid)) {//附件id为空
             return;
         }
+
         Utils.getAttachments(attachementuuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
@@ -156,8 +158,6 @@ public class PreviewAttendanceActivity extends BaseActivity {
             btn_confirm.setVisibility(View.VISIBLE);
         } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
             iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
-        } else if (attendance.outstate == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-            iv_type.setImageResource(R.drawable.icon_office_work);
         }
 
          /*加班处理*/

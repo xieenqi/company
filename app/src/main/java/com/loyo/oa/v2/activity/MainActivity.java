@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private HashMap<String, Object> map = new HashMap<>();
     private Boolean inEnable;
     private Boolean outEnable;
-    private int outKind;
+    private int outKind; //0上班  1下班  2加班
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -510,6 +510,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
+        intent.putExtra("needExtra",validateInfo.isNeedExtra());
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraStartTime", validateInfo.getExtraStartTime());
@@ -556,21 +557,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 1;
             startAttanceLocation();
         }
-
-/*        if(validateInfo.isPopup() && !inEnable && outEnable){
-            popOutToast();
-        }
-
-        else if(!inEnable && outEnable){
-            outKind = 1;
-            startAttanceLocation();
-        }
-
-        else if(inEnable && !outEnable){
-            outKind = 0;
-            startAttanceLocation();
-        }*/
-
     }
 
     /**

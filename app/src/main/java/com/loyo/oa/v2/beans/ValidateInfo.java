@@ -11,11 +11,23 @@ import java.util.ArrayList;
  */
 public class ValidateInfo implements Serializable {
 
-    private boolean needPhoto;
-    private boolean isPopup;
+
     private int extraMins;
     private long extraStartTime;
     private long serverTime;
+    private boolean needExtra;
+    private boolean needPhoto;
+    private boolean isPopup;
+
+
+    public boolean isNeedExtra() {
+        return needExtra;
+    }
+
+    public void setNeedExtra(boolean needExtra) {
+        this.needExtra = needExtra;
+    }
+
     private ArrayList<TimeSetting> setting = new ArrayList<>();// (TimeSetting, optional): ,
     public ArrayList<ValidateItem> valids = new ArrayList<>();//array[ValidateItem], optional):
 

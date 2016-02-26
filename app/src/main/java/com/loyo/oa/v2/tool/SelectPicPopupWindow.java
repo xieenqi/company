@@ -116,10 +116,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        LogUtil.dll("onActivityResult()");
-        LogUtil.dll(" requestCode:" + requestCode);
-        LogUtil.dll(" resultCode:" + resultCode);
-
         if (resultCode != RESULT_OK) {
             finish();
             return;

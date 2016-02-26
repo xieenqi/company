@@ -365,7 +365,6 @@ public class TasksAddActivity extends BaseActivity {
                             ExtraAndResult.request_Code, bundle1);
                 }
 
-
                 break;
 
             case R.id.layout_del:

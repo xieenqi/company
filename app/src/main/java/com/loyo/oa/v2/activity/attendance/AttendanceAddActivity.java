@@ -89,8 +89,9 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @ViewById ViewGroup layout_reason;
     @ViewById GridView gridView_photo;
     @Extra AttendanceRecord mAttendanceRecord;
+    @Extra("needExtra") boolean needExtra;
     @Extra("needPhoto") boolean NeedPhoto;
-    @Extra("outKind") int outKind; //判断是正常下班1 还是完成加班2
+    @Extra("outKind") int outKind; //0上班 1正常下班 2完成加班
     @Extra("serverTime") long serverTime;//当前时间
     @Extra("extraStartTime") long extraStartTime;//加班开始时间
 
@@ -151,16 +152,28 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
     @AfterViews
     void initViews() {
+
         setTouchView(NO_SCROLL);
-        if(outKind == 2){
-            state = 5;
-            tvTimeName = "加班时间:";
-            tv_title_1.setText("完成加班");
-        }else {
-            state = 1;
-            tvTimeName = "打卡时间:";
-            tv_title_1.setText("新建考勤");
+        switch (outKind){
+            case 0:
+                state = 1;
+                tvTimeName = "打卡时间:";
+                tv_title_1.setText("上班打卡");
+                break;
+
+            case 1:
+                state = 1;
+                tvTimeName = "打卡时间:";
+                tv_title_1.setText("下班打卡");
+                break;
+
+            case 2:
+                state = 5;
+                tvTimeName = "加班时间:";
+                tv_title_1.setText("加班打卡");
+                break;
         }
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         iv_refresh_address.setOnTouchListener(Global.GetTouch());
@@ -234,8 +247,10 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
                 if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
                     et_reason.setHint("请输入迟到原因");
+                    state = 2;
                 } else {
                     et_reason.setHint("请输入早退原因");
+                    state = 3;
                 }
                 layout_reason.setVisibility(View.VISIBLE);
             }
@@ -272,11 +287,18 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
     void onClick(View v) {
         switch (v.getId()) {
+
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+
             case R.id.img_title_right:
                 if (!check()) {
+                    return;
+                }
+
+                if(needExtra){
+                    Toast("请输入加班原因!");
                     return;
                 }
 
@@ -284,12 +306,15 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     Toast("需要考勤照片，请拍照");
                     return;
                 }
+
                 if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-                    showOutAttendanceDialog();
+                        showOutAttendanceDialog();
                 } else {
-                    commitAttendance();
+                        commitAttendance();
                 }
+
                 break;
+
             case R.id.iv_refresh_address:
                 iv_refresh_address.startAnimation(animation);
                 new LocationUtilGD(this, this);
@@ -315,8 +340,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     }
                 }
             }
-
-
             return false;
         }
 
@@ -377,6 +400,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 弹出外勤确认对话框
      */
     private void showOutAttendanceDialog() {
+
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
         dialogView.getBackground().setAlpha(150);
         final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
