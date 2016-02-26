@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:bottomLeftRadius="4dp" android:bottomRightRadius="4dp"/>
-    <solid android:color="@android:color/white"/>
-</shape><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/drawable/item_bg_buttom.xml -->

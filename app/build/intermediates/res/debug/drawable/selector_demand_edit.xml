@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-
-    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/icon_contact_edit_normal" />
-    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/icon_contact_edit_normal" />
-    <item android:state_focused="false" android:drawable="@drawable/icon_contact_edit_pressed" />
-
-</selector><!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/drawable/selector_demand_edit.xml -->

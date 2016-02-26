@@ -302,6 +302,7 @@
             android:name=".activity.contact.ContactInfoEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <!-- 子任务的添加-->
         <activity

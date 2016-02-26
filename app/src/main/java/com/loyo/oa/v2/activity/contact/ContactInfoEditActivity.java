@@ -40,7 +40,6 @@ import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
@@ -65,6 +64,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -352,7 +353,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 编辑个人信息
      */
     private void updateProfile() {
-showLoading("");
+        showLoading("");
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();
@@ -549,7 +550,8 @@ showLoading("");
      * 设置生日
      */
     private void selectBirthDay() {
-        DateTool.calendar = Calendar.getInstance();
+        // DateTool.calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -562,7 +564,7 @@ showLoading("");
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
             }
-        }, DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 

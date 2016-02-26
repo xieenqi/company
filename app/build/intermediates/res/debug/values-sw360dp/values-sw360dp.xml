@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/loyo_dev1/Desktop/workspace/android%20Project/develop-bug-fix2/app/src/main/res/values-sw360dp/dimens.xml -->
-    <eat-comment/>
-    <dimen name="folder_cover_size">72dp</dimen>
-    <dimen name="image_size">96dp</dimen>
-    <dimen name="space_size">2dp</dimen>
-</resources>
