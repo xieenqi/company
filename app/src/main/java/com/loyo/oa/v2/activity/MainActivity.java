@@ -499,6 +499,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @Override
     public void OnLocationGDFailed() {
+        LocationUtilGD.sotpLocation();
         cancelLoading();
         Toast("获取打卡位置失败");
     }

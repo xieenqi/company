@@ -339,11 +339,13 @@ public class Utils {
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
             public void OnLocationGDFailed() {
                 Global.Toast("获取当前位置失败,无法规划路径");
+                LocationUtilGD.sotpLocation();
             }
 
 //            @Override

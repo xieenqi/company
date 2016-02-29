@@ -203,14 +203,12 @@ public class PreviewAttendanceActivity extends BaseActivity {
             btn_confirm.setVisibility(View.GONE);
         }
         getAttachments(attendance.attachementuuid);
+        /*如果已经被确认，则显示确认状态栏*/
         if (null != attendance.confirmuser) {
             ll_confirm.setVisibility(View.VISIBLE);
             tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
             tv_confirmName.setText(attendance.confirmuser.name);
             tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
-            if(attendance.state == 5){
-                tv_message.setText("确认加班");
-            }
         }
     }
 
