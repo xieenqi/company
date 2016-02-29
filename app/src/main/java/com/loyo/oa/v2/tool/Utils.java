@@ -35,6 +35,7 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
 import com.loyo.oa.v2.beans.TagItem;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
 

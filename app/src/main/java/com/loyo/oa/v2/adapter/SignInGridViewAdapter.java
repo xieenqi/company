@@ -116,7 +116,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
             if (position == mListData.size()) {
                 if (mListData.size() <= 9) {
                     imageView.setImageResource(R.drawable.icon_add_file);
-                    imageView.setBackgroundResource(R.drawable.icon_add_file);
                 } else {
                     imageView.setVisibility(View.INVISIBLE);
                 }
@@ -149,61 +148,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                         }
                     });
                 }
-//
-//            final File file = attachment.getFile();
-//            if (file == null) {
-//                if (isPic) {
-//                    ImageLoader.getInstance().loadImage(attachment.getUrl(), MainApp.options_3, new BitmapUtil.ImageLoadingListener_ClickShowImg(item_info.imageView, position, mListData, R.drawable.default_image, mIsAdd));
-//                } else {
-//                    //                      显示文件
-//                    item_info.imageView.setImageResource(R.drawable.other_file);
-//                    item_info.textView.setText(attachment.getOriginalName());
-//                    item_info.imageView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            //预览文件
-//                            Bundle bundle = new Bundle();
-//                            bundle.putSerializable("data", attachment.getUrl());
-//                            MainApp.getMainApp().startActivity(mActivity, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
-//                        }
-//                    });
-//                }
-//            } else {
-//                InputStream is = null;
-//                try {
-//                    Uri uri = Uri.fromFile(file);
-//                    if (uri != null) {
-//                        is = mActivity.getContentResolver().openInputStream(uri);
-//                        Drawable d = Drawable.createFromStream(is, null);
-//                        item_info.imageView.setImageDrawable(d);
-//                    }
-//                } catch (Exception e) {
-//                    Log.e("SignInGridViewAdapter", "Unable to set ImageView from URI: " + e.toString());
-//                } finally {
-//                    if (is != null) {
-//                        try {
-//                            is.close();
-//                        } catch (Exception ex) {
-//                            Global.ProcException(ex);
-//                        }
-//                    }
-//                }
-//                if (isPic) {
-//                    item_info.imageView.setOnClickListener(new BitmapUtil.OnClickListener_showImg(mActivity, mListData, position, mIsAdd));
-//                } else {
-//                    item_info.imageView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            //预览文件
-//                            Bundle bundle = new Bundle();
-//                            bundle.putSerializable("data", attachment.getUrl());
-//                            MainApp.getMainApp().startActivity(mActivity, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
-//                        }
-//                    });
-//                }
-//            }
             }
-
         }
     }
 
@@ -213,23 +158,27 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+
+            LogUtil.dll("mListData Size:"+mListData.size());
+
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
-                if (mListData.size() <= 3) {
-                    Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
-                    intent.putExtra("localpic", localpic);
-                    mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
-                } else {
-                    Toast.makeText(mActivity, "只允许拍三张照片", Toast.LENGTH_SHORT).show();
+                if(mListData.size() == 3){
+                    Toast.makeText(mActivity, "最多只能上传3张考勤照片！", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
+                intent.putExtra("localpic", localpic);
+                mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
+
             /*拜访签到*/
             else if (mListData.size() <= 9) {
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
-
             }
+
         }
     }
 
