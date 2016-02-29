@@ -515,7 +515,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         intent.putExtra("needExtra",validateInfo.isNeedExtra());
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
-        intent.putExtra("extraStartTime", validateInfo.getExtraStartTime());
+        intent.putExtra("extraWorkStartTime",attendanceRecords.getExtraWorkStartTime());
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
@@ -565,30 +565,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 0;
             startAttanceLocation();
         }
-
-
-
-/*        *//*上班打卡*//*
-        if (inEnable) {
-            outKind = 0;
-            startAttanceLocation();
-        }
-        *//*下班打卡*//*
-        else if (outEnable && !validateInfo.isPopup()) {
-            outKind = 1;
-            startAttanceLocation();
-        }
-        *//*工作日，加班要弹窗*//*
-        else if(validateInfo.isWorkDay()){
-            if(validateInfo.isPopup()){
-                popOutToast();
-            }
-        }
-        *//*非工作日，加班不弹窗*//*
-        else if(!validateInfo.isWorkDay()){
-                outKind = 2;
-                startAttanceLocation();
-        }*/
     }
 
     /**

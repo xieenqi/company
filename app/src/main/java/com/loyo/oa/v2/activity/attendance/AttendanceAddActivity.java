@@ -93,7 +93,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     @Extra("needPhoto") boolean NeedPhoto;
     @Extra("outKind") int outKind; //0上班 1正常下班 2完成加班
     @Extra("serverTime") long serverTime;//当前时间
-    @Extra("extraStartTime") long extraStartTime;//加班开始时间
+    @Extra("extraWorkStartTime") long extraWorkStartTime;//加班开始时间
 
     //附件相关
     private SignInGridViewAdapter adapter;
@@ -236,7 +236,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
 
             et_reason.setHint("请输入加班原因");
             layout_reason.setVisibility(View.VISIBLE);
-            String time = (DateTool.timet(extraStartTime+"",DateTool.DATE_FORMATE_TRANSACTION)
+            String time = (DateTool.timet(extraWorkStartTime+"",DateTool.DATE_FORMATE_TRANSACTION)
                     +"-"+DateTool.timet(serverTime+"",DateTool.DATE_FORMATE_TRANSACTION));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
             tv_time.setText(tvTimeName+builder);
@@ -462,7 +462,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("reason", reason);
         map.put("state", state);
         map.put("outstate", mAttendanceRecord.getOutstate());
-        map.put("extraWorkStartTime",extraStartTime);
+        map.put("extraWorkStartTime",extraWorkStartTime);
         map.put("extraWorkEndTime",serverTime);
 
         LogUtil.dll("提交考勤:"+MainApp.gson.toJson(map));
