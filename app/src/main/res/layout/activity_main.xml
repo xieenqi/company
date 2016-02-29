@@ -210,7 +210,7 @@
             dslv:collapsed_height="@dimen/dimen_1"
             dslv:drag_enabled="true"
             dslv:drag_handle_id="@id/layout_drag"
-            dslv:drag_scroll_start="0.33"
+            dslv:drag_scroll_start="0.99"
             dslv:drag_start_mode="onLongPress"
             dslv:float_alpha="0.6"
             dslv:remove_enabled="false"

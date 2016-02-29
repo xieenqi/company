@@ -55,10 +55,9 @@ public class HttpErrorCheck {
             LogUtil.d("error接口URL：" + error.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
-            Toast(error.getMessage());
+           // Toast(error.getMessage());
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
-            //Toast(error.getMessage());
             Toast("服务端数据异常");
             e.printStackTrace();
         } catch (NullPointerException e) {
