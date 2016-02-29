@@ -144,15 +144,18 @@ public final class Common {
                     continue;
                 }
 
-                if ((department.getSuperiorId()).equals(companyId)) {
-                    String groupName_current = department.getGroupName();
-                    if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
-                        departments.add(department);
-                    } else if (TextUtils.isEmpty(groupName_current)) {
-                        departments.add(0, department);
+                try{
+                    if ((department.getSuperiorId()).equals(companyId)) {
+                        String groupName_current = department.getGroupName();
+                        if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
+                            departments.add(department);
+                        } else if (TextUtils.isEmpty(groupName_current)) {
+                            departments.add(0, department);
+                        }
                     }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
-
             }
             if (!departments.isEmpty()) {
                 maps.put(index, departments);
