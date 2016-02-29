@@ -35,16 +35,14 @@ import java.util.ArrayList;
  */
 @EActivity(R.layout.activity_childtask_info_layout)
 public class ChildTaskMnageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
+
     public static final int REQUEST_ADD_CHILD_TASK = 800;
     public static final int REQUEST_EDIT_CHILD_TASK = 900;
+    private ChildTaskInfoAdapter mAdapter;
 
     @ViewById(R.id.lv_child_task) PullToRefreshListView lv_child_task;
-
     @ViewById(R.id.iv_child_task_add) ImageView iv_child_task_add;
-
     @ViewById ViewGroup img_title_left;
-
-    private ChildTaskInfoAdapter mAdapter;
 
     @Extra("Task") Task mTask;
     /**

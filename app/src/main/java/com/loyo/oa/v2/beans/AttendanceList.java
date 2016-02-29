@@ -16,6 +16,15 @@ public class AttendanceList implements Serializable {
     private int listType;// (int, optional): ,
     private int noreCcount;// (int, optional): ,
     private int outsideCount;// (int, optional):
+    private int extraCount;
+
+    public int getExtraCount() {
+        return extraCount;
+    }
+
+    public void setExtraCount(int extraCount) {
+        this.extraCount = extraCount;
+    }
 
     public int getEarlyCount() {
         return earlyCount;

@@ -298,7 +298,7 @@
                     android:background="@drawable/layout_bg1"
                     android:orientation="vertical">
 
-                    <!-- <LinearLayout
+                    <!--<LinearLayout
                          android:layout_width="match_parent"
                          android:gravity="center_vertical"
                          android:layout_height="@dimen/view_h_title"

@@ -69,7 +69,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         OnDropItemSelectedListener {
 
     private static final String[] TIMES_TAG = new String[]{"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
-
     private View mView;
     private PullToRefreshListView listView;
     private Button btn_add;

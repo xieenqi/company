@@ -88,7 +88,6 @@ public class LocationUtilGD {
 
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
-
         void OnLocationGDFailed();
     }
 

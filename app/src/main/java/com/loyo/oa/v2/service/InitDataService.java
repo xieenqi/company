@@ -3,7 +3,6 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
@@ -17,11 +16,8 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import org.androidannotations.annotations.EIntentService;
-
 import java.util.ArrayList;
-
 import retrofit.client.Response;
 
 /**
@@ -77,6 +73,7 @@ public class InitDataService extends IntentService {
                 .create(IUser.class).getOrganization();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
+
             LogUtil.dll("更新 组织 架构 json：" + MainApp.gson.toJson(lstDepartment_current));
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));

@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
@@ -55,6 +54,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Modules;
+import com.loyo.oa.v2.beans.TimeSetting;
 import com.loyo.oa.v2.beans.Suites;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
@@ -78,6 +78,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RippleView;
+import com.loyo.oa.v2.tool.customview.attenDancePopView;
 import com.loyo.oa.v2.tool.customview.dragSortListView.DragSortListView;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenu;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenuItem;
@@ -92,6 +93,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -129,11 +131,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
     private boolean mInitData;
-    private boolean isSign;
     private ClickItemAdapter adapter;
     private PopupMenu popupMenu;
-    private ValidateInfo validateInfo;
+    private ValidateInfo validateInfo = new ValidateInfo();
+    private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
+    private Boolean inEnable;
+    private Boolean outEnable;
+    private int outKind; //0上班  1下班  2加班
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -209,36 +215,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @Override
     public void onPopupMenuItemLongClick(int position, PopupMenuItem item) {
-    }
-
-    //高德定位回调
-    @Override
-    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
-        map.put("originalgps", longitude + "," + latitude);
-        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-            @Override
-            public void success(AttendanceRecord attendanceRecord, Response response) {
-                cancelLoading();
-                attendanceRecord.setAddress(address);
-                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
-                intent.putExtra("mAttendanceRecord", attendanceRecord);
-                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-        LocationUtilGD.sotpLocation();
-    }
-
-    @Override
-    public void OnLocationGDFailed() {
-        LocationUtilGD.sotpLocation();
-        cancelLoading();
-        Toast("获取打卡位置失败");
     }
 
     private static class MHandler extends Handler {
@@ -418,36 +394,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return menuObjects;
     }
 
-
-//    /**
-//     * 定位成功后，跳转新建考勤回调
-//     */
-//    @Override
-//    public void OnLocationFailed() {
-//        cancelLoading();
-//        Toast("获取打卡位置失败");
-//    }
-//
-//    @Override
-//    public void OnLocationSucessed(final String address, double longitude, double latitude, float radius) {
-//        map.put("originalgps", longitude + "," + latitude);
-//        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-//            @Override
-//            public void success(AttendanceRecord attendanceRecord, Response response) {
-//                cancelLoading();
-//                attendanceRecord.setAddress(address);
-//                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
-//                intent.putExtra("mAttendanceRecord", attendanceRecord);
-//                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//            }
-//        });
-//    }
+    /*****************************考勤相关操作*****************************/
 
     /**
      * 获取能否打卡的信息
@@ -463,10 +410,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     return;
                 }
                 validateInfo = _validateInfo;
-                LogUtil.dll("考勤信息:" + MainApp.gson.toJson(_validateInfo));
-
-                for (int i = 0; i < validateInfo.getValids().size(); i++) {
-                    isSign = validateInfo.getValids().get(i).isEnable() ? true : false;
+                try {
+                    LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                for (ValidateItem validateItem : validateInfo.getValids()) {
+                    if (validateItem.getType() == 1) {
+                        inEnable = validateItem.isEnable();
+                    } else if (validateItem.getType() == 2) {
+                        outEnable = validateItem.isEnable();
+                    }
                 }
                 rotateInt();
             }
@@ -495,43 +449,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return validateItem;
     }
 
-
     @Click(R.id.layout_is_attendance)
     void onClickIsAttendance() {
         Toast("您今天已经打卡完毕");
         Intent intent = new Intent(MainActivity.this, AttendanceActivity_.class);
         startActivity(intent);
     }
-
-    /**
-     * 点击打卡,准备跳转新建考勤
-     */
-    @Click(R.id.layout_attendance)
-    void onClickAttendance() {
-
-        if (null == validateInfo) {
-            return;
-        }
-        if (!Global.isConnected()) {
-            Toast("没有网络连接，不能打卡");
-            return;
-        }
-
-        String timeOutStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getSetting().getCheckOutTime() / 1000 + "", DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
-        String timeNowStamp = DateTool.getOutDataOne(DateTool.timet(validateInfo.getServerTime() + "", DateTool.DATE_FORMATE_CUSTOM_2).substring(11, 16), "HH时mm");
-
-        LogUtil.dll("分时时间戳 下班:" + Long.parseLong(timeOutStamp) / 1000);
-        LogUtil.dll("分时时间戳 现在:" + Long.parseLong(timeNowStamp) / 1000);
-
-        if (Long.parseLong(timeOutStamp) / 1000 > Long.parseLong(timeNowStamp) / 1000
-                && validateInfo.getValids().get(1).isEnable()
-                && !validateInfo.getValids().get(0).isEnable()) {
-            attanceWorry();
-        } else {
-            startAttanceLocation();
-        }
-    }
-
 
     void startAttanceLocation() {
         showLoading("");
@@ -542,16 +465,210 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         int type = validateItem.getType();
         map.clear();
         map.put("inorout", type);
-//        new LocationUtil(this, this);
         new LocationUtilGD(MainActivity.this, this);
     }
 
+    //高德定位回调
+    @Override
+    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        map.put("originalgps", longitude + "," + latitude);
+        LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
+        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+            @Override
+            public void success(AttendanceRecord attendanceRecord, Response response) {
+                cancelLoading();
+                attendanceRecords = attendanceRecord;
+                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
+                attendanceRecord.setAddress(address);
+
+                if (attendanceRecord.getState() == 3) {
+                    attanceWorry();
+                } else {
+                    intentValue();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+        LocationUtilGD.sotpLocation();
+    }
+
+
+    @Override
+    public void OnLocationGDFailed() {
+        LocationUtilGD.sotpLocation();
+        cancelLoading();
+        Toast("获取打卡位置失败");
+    }
+
     /**
-     * 点击头像，获取能否打卡信息
+     * 跳转考勤界面，封装数据
+     */
+    public void intentValue() {
+        Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
+        intent.putExtra("mAttendanceRecord", attendanceRecords);
+        intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
+        intent.putExtra("needExtra",validateInfo.isNeedExtra());
+        intent.putExtra("outKind", outKind);
+        intent.putExtra("serverTime", validateInfo.getServerTime());
+        intent.putExtra("extraStartTime", validateInfo.getExtraStartTime());
+        startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+    }
+
+
+    /**
+     * (翻转前)点击头像，获取能否打卡信息
      */
     @Click(R.id.img_title_left)
     void onClickAvatar() {
         getValidateInfo();
+    }
+
+    /**
+     * (翻转后)点击打卡,准备跳转新建考勤
+     */
+    @Click(R.id.layout_attendance)
+    void onClickAttendance() {
+
+        if (null == validateInfo) {
+            return;
+        }
+
+        if (!Global.isConnected()) {
+            Toast("没有网络连接，不能打卡");
+            return;
+        }
+
+
+        /*工作日*/
+        if(validateInfo.isWorkDay()){
+            /*加班*/
+            if(validateInfo.isPopup()){
+                popOutToast();
+            }
+            /*不加班*/
+            else{
+                dealInOutWork();
+            }
+        }
+        /*非工作日，下班状态*/
+        else if(!validateInfo.isWorkDay() && outEnable){
+            outKind = 2;
+            startAttanceLocation();
+        }
+        /*非工作日，上班状态*/
+        else if(!validateInfo.isWorkDay() && inEnable){
+            outKind = 0;
+            startAttanceLocation();
+        }
+
+
+
+/*        *//*上班打卡*//*
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
+        *//*下班打卡*//*
+        else if (outEnable && !validateInfo.isPopup()) {
+            outKind = 1;
+            startAttanceLocation();
+        }
+        *//*工作日，加班要弹窗*//*
+        else if(validateInfo.isWorkDay()){
+            if(validateInfo.isPopup()){
+                popOutToast();
+            }
+        }
+        *//*非工作日，加班不弹窗*//*
+        else if(!validateInfo.isWorkDay()){
+                outKind = 2;
+                startAttanceLocation();
+        }*/
+    }
+
+    /**
+     * 判断上班下班
+     * */
+    public void dealInOutWork(){
+        /*上班*/
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
+        /*下班*/
+        else if (outEnable) {
+            outKind = 1;
+            startAttanceLocation();
+        }
+    }
+
+
+    /**
+     * 加班提示框
+     */
+    public void popOutToast() {
+        final attenDancePopView popView = new attenDancePopView(this);
+        popView.show();
+        popView.setCanceledOnTouchOutside(true);
+
+        /*正常下班*/
+        popView.generalOutBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                outKind = 1;
+                startAttanceLocation();
+                popView.dismiss();
+            }
+        });
+
+       /*完成加班*/
+        popView.finishOutBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                outKind = 2;
+                startAttanceLocation();
+                popView.dismiss();
+            }
+        });
+
+        /*取消*/
+        popView.cancels(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popView.dismiss();
+            }
+        });
+    }
+
+
+    /**
+     * 早退提示
+     */
+    public void attanceWorry() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.app_attanceworry_message));
+        builder.setTitle("提示");
+        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                intentValue();
+            }
+        });
+
+        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
     }
 
 
@@ -578,7 +695,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
-                    if (isSign) {
+                    if (inEnable || outEnable) {
                         layout_is_attendance.setVisibility(View.INVISIBLE);
                         layout_attendance.setVisibility(View.VISIBLE);
                     } else {
@@ -610,7 +727,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
-                        if (isSign) {
+                        if (inEnable || outEnable) {
                             layout_is_attendance.setVisibility(View.INVISIBLE);
                             layout_attendance.setVisibility(View.INVISIBLE);
                         } else {
@@ -623,6 +740,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             objectAnimator.start();
         }
     };
+
 
     /**
      * 到 【通讯录】  页面
@@ -788,28 +906,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     }
 
-    /**
-     * 早退提示
-     */
-    public void attanceWorry() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.app_attanceworry_message));
-        builder.setTitle("提示");
-        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startAttanceLocation();
-            }
-        });
-        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
-
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -971,6 +1067,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 for (Modules modules : MainApp.user.permission.suites.get(i).getModules()) {
                     if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
                         itemsNew.add(items.get(k));
+                        //items.remove(k);
                         continue;
                     }
                 }

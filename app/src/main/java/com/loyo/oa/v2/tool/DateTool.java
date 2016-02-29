@@ -79,7 +79,7 @@ public class DateTool {
     /**
      * dd-MM-yyyy, hh:mm
      */
-    public static final String DATE_FORMATE_TRANSACTION = "dd-MM-yyyy, hh:mm";
+    public static final String DATE_FORMATE_TRANSACTION = "MM.dd HH:mm";
     /**
      * MM/dd HH:mm
      */

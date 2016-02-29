@@ -192,6 +192,7 @@
     <!-- 天蓝色 -->
 
 
+    <color name="graypy">#EFEFEF</color>
     <color name="gray">#808080</color>
     <!-- 灰色 -->
     <color name="olive">#808000</color>
@@ -303,7 +304,7 @@
     <color name="isteston">#bf73e6</color>
     <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
-
+    <color name="dialog_blue">#2693FB</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
     <color name="activity_split">#c8c7cc</color>
     <color name="title_bg1">#4db1fe</color>
@@ -342,6 +343,7 @@
     <color name="default_menu_press_text">#000000</color>
     <color name="default_menu_text">#00cf9b</color>
     <color name="divider">#f1f1f1</color>
+
     <!-- 登录界面字体 线的颜色-->
     <color name="login">#b3b3b3</color>
     <color name="grayC9">#c9c9c9</color>
@@ -352,4 +354,7 @@
     <color name="redE8">#e85840</color>
     <color name="activity_bg">#f2f2f2</color>
     <color name="green51">#51c055</color>
+    <color name="gray0990">#E7E7E7</color>
+
+
 </resources>

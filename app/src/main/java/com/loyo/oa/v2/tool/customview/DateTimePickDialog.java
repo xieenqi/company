@@ -8,14 +8,10 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -51,7 +47,6 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     private Context mContext;
     private String defaultFromat="yyyy年MM月dd日 HH:mm";
 
-
     /**
      * 设置默认日期格式
      * @param fromat 格式字符串
@@ -72,7 +67,6 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     public DateTimePickDialog(Context context, String initDateTime) {
         mContext= context;
         this.initDateTime = initDateTime;
-
     }
 
     public void init(DatePicker datePicker, TimePicker timePicker) {
@@ -93,9 +87,6 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 calendar.get(Calendar.DAY_OF_MONTH), this);
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
-
-        LogUtil.dll("时:" + calendar.get(Calendar.HOUR_OF_DAY));
-
     }
 
     /**
@@ -105,6 +96,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      * @return
      */
     public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener) {
+
         LinearLayout dateTimeLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.date_pick_layout, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
         timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.timepicker);
@@ -161,6 +153,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
 
         dateTime = sdf.format(calendar.getTime());
         ad.setTitle(dateTime);
+
     }
 
     /**

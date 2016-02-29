@@ -65,6 +65,7 @@ android {
             resValue "string", "app_name", "快启"
         }
     }
+
     //多渠道打包的配置
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -112,7 +113,6 @@ android {
         //compile 'com.android.support:multidex-1.0.1'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
 
-
     }
     productFlavors {
     }
@@ -120,7 +120,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
 }
 
 

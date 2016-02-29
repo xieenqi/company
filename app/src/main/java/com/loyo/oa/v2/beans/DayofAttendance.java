@@ -15,6 +15,7 @@ public class DayofAttendance implements Serializable {
     private AttendanceRecord out;// (AttendanceRecord, optional): ,
     private User user;// (&{organization User}, optional):
 
+
     public User getUser() {
         return user;
     }

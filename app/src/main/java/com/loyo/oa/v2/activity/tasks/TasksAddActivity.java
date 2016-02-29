@@ -211,7 +211,6 @@ public class TasksAddActivity extends BaseActivity {
             u.realname = mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
         }
-
         //截至日期设置,需求没要求默认时间，暂注释
         /*  if (mTask.getPlanEndAt() > 0) {
             mDeadline = mTask.getPlanEndAt();
@@ -222,6 +221,7 @@ public class TasksAddActivity extends BaseActivity {
             tv_Project.setText(projectTitle);
         }
         getBundle();
+
     }
 
     void init_gridView_photo() {
@@ -234,6 +234,7 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask(String title, String content) {
+
         showLoading("");
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(lstData_Attachment.size());
@@ -250,9 +251,11 @@ public class TasksAddActivity extends BaseActivity {
 
         if(switch_approve.getState() == 1){
             isState = false;
-        }else if(switch_approve.getState() == 4){
+        }
+        else if(switch_approve.getState() == 4){
             isState = true;
         }
+
         map.put("reviewFlag", isState);
         map.put("bizExtData",bizExtData);
         map.put("attachmentUUId", uuid);
@@ -285,7 +288,6 @@ public class TasksAddActivity extends BaseActivity {
                 super.failure(error);
                 cancelLoading();
                 HttpErrorCheck.checkError(error);
-
             }
         });
     }
@@ -322,9 +324,7 @@ public class TasksAddActivity extends BaseActivity {
                 }
 
                 requestCommitTask(title, content);
-
                 break;
-
 
             //截至时间
             case R.id.layout_deadline:
@@ -352,7 +352,6 @@ public class TasksAddActivity extends BaseActivity {
             //参与人选项
             case R.id.tv_toUsers:
 
-
                 if(joinUserId != null){
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
@@ -365,7 +364,6 @@ public class TasksAddActivity extends BaseActivity {
                     app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.request_Code, bundle1);
                 }
-
 
                 break;
 

@@ -65,7 +65,7 @@ public class ScanningImageView extends ImageView {
         mPaint.setShader(linearGradient);
 //        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, CHANGE_BOUNDS, mHeight, mPaint);
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, 108, mPaint);
-        LogUtil.d("宽度：" + getWidth());
+        //LogUtil.d("宽度：" + getWidth());
         if (mHeight >= getHeight()) {
             mHeight = 0;
         }

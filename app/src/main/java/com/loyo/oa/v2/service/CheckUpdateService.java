@@ -81,7 +81,7 @@ public class CheckUpdateService extends Service {
 
     void downloadApp() {
         if (enqueue == 0) {
-            Global.Toast("正在下载");
+            Global.Toast("版本更新");
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
                     .setDescription("下载" + mUpdateInfo.versionName)

@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,6 @@ public class SelectDetAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(mContext);
     }
 
-
-    public class ViewHolder {
-        TextView detName;
-    }
-
     @Override
     public int getCount() {
         return listDepartment.size();
@@ -57,23 +53,20 @@ public class SelectDetAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
-        ViewHolder holder = null;
+        convertView = mInflater.inflate(R.layout.item_selectcustomer_left_lv, null);
+        TextView detName = (TextView) convertView.findViewById(R.id.item_selectdu_left_tv);
 
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.item_selectcustomer_left_lv, null);
-            holder.detName = (TextView) convertView.findViewById(R.id.item_selectdu_left_tv);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+        if(listDepartment.get(position).getXpath().split("/").length > 2){
+            detName.setTextColor(Color.parseColor("#c9c9c9"));
         }
 
-        holder.detName.setText(listDepartment.get(position).getName());
+        detName.setText(listDepartment.get(position).getName());
         if (position == selectedPosition) {
             convertView.setBackgroundResource(R.color.beogray);
         } else {
             convertView.setBackgroundResource(R.color.white);
         }
+
         return convertView;
     }
 }
