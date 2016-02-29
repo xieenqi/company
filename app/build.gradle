@@ -4,20 +4,20 @@ def AAVersion = '3.3.2'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '22.0.0'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
 
     }
     signingConfigs {
         debug {
-            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
         }
     }
@@ -26,8 +26,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016012501
-        versionName '1.0.0'
+        versionCode 2016022601
+        versionName '1.0.1'
     }
 
     buildTypes {
