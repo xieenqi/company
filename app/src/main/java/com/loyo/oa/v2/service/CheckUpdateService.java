@@ -18,6 +18,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
@@ -116,7 +117,7 @@ public class CheckUpdateService extends Service {
         //应该仅在wifi下升级
         if (!Global.isConnected()) {
             if (isToast) {
-                Toast.makeText(this, "没有网络连接", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "没有网络连接，仅在有WiFi升级", Toast.LENGTH_SHORT).show();
             }
             isChecking = false;
             stopSelf();
@@ -127,14 +128,15 @@ public class CheckUpdateService extends Service {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_CHECK_UPDATE).create(IMain.class).checkUpdate(new RCallback<UpdateInfo>() {
             @Override
             public void success(UpdateInfo updateInfo, Response response) {
-                HttpErrorCheck.checkResponse("版本跟新",response);
+                LogUtil.d("版本更新信息!");
+                HttpErrorCheck.checkResponse(response);
                 mUpdateInfo = updateInfo;
 
                 if (updateInfo.versionCode > Global.getVersion()) {
                     //有新版本
                     MainApp.getMainApp().hasNewVersion = true;
 
-                    if (updateInfo.autoUpdate) {
+                    if (updateInfo.autoUpdate) {//后台自动更新
                         downloadApp();
                     } else if (updateInfo.forceUpdate || isToast) {
                         //当服务端需要强制更新版本时，或手动点击更新时，弹出升级提示
