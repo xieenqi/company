@@ -22,7 +22,7 @@ import retrofit.client.Response;
  */
 public class HttpErrorCheck {
     private static Toast mCurrentToast;
-    private static String TAG = "";
+    private static String TAG = "LogoServerV2";
 
     private static void Toast(String msg) {
         if (null != mCurrentToast) {

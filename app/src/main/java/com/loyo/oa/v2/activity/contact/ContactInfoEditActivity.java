@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -65,7 +66,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -175,6 +175,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_mobile.setOnTouchListener(Global.GetTouch());
         //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
+
     }
 
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
@@ -368,7 +369,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-                cancelLoading();
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
@@ -381,7 +381,6 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 // Toast("修改个人信息失败");
                 HttpErrorCheck.checkError(error);
                 // finish();
@@ -539,8 +538,6 @@ public class ContactInfoEditActivity extends BaseActivity {
                 super.failure(error);
                 dialog.dismiss();
                 Toast("修改手机号码失败" + error.getMessage());
-
-
             }
         });
     }
@@ -551,7 +548,8 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void selectBirthDay() {
         // DateTool.calendar = Calendar.getInstance();
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        LogUtil.d(" 主题样式： " + calendar.getTimeZone().getDisplayName());
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

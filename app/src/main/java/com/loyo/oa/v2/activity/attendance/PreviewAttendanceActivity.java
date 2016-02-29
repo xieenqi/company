@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity.attendance;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;

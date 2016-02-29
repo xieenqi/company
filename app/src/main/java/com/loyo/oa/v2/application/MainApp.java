@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
@@ -15,7 +16,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CellInfo;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Industry;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -43,7 +43,6 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -219,7 +218,9 @@ public class MainApp extends Application {
 //            }
 //        }
         //        init_StrictMode();
-
+        Configuration config = getResources().getConfiguration();
+        config.locale= Locale.CHINA;
+        getBaseContext().getResources().updateConfiguration(config, null);
 
         // SDKInitializer.initialize(getApplicationContext());
         logUtil = LogUtil.lLog();
