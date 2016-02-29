@@ -72,6 +72,9 @@ public class ContactInfoActivity extends BaseActivity {
     @Extra
     User user;
 
+    private StringBuffer myDeptName;
+
+
     @AfterViews
     void initViews() {
         layout_call.setOnTouchListener(Global.GetTouch());
@@ -134,13 +137,28 @@ public class ContactInfoActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        if (null == user)
+        if (null == user){
             return;
+        }
+
+        myDeptName = new StringBuffer();
+
+        /*获取部门名字和职位名字，包括多部门情况下*/
+        for(int i = 0;i<user.getDepts().size();i++){
+            myDeptName.append(user.getDepts().get(i).getShortDept().getName());
+            if(!user.getDepts().get(i).getTitle().isEmpty()
+                    && user.getDepts().get(i).getTitle().length() >0){
+                myDeptName.append(" | "+user.getDepts().get(i).getTitle());
+            }
+            if(i != user.getDepts().size()-1){
+                myDeptName.append(" ; ");
+            }
+        }
+
         ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         LogUtil.dll("头像地址:"+user.getAvatar());
         Utils.setContent(tv_realname, user.getRealname());
-        String dept = user.depts.get(0).getShortDept().getName() + " - " + user.getRealname();
-        Utils.setContent(tv_deptname, dept);
+        Utils.setContent(tv_deptname, myDeptName.toString());
 
         Utils.setContent(tv_phone, user.mobile);
         String gender = "";
@@ -169,13 +187,6 @@ public class ContactInfoActivity extends BaseActivity {
             return;
         }
         getUserInfo();
-    }
-
-    /**
-     * 更新组织架构
-     */
-    private void updateOrganization() {
-        InitDataService_.intent(this).start();
     }
 
     /**

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@android:color/black"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
     >
 
     <LinearLayout
@@ -22,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="添加附件"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="16sp"
             />
 
         <View
@@ -35,9 +36,9 @@
             android:gravity="center"
             android:id="@+id/btn_take_photo"
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:text="拍照"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textColor="@color/black"
             android:background="@drawable/photo_popwindow_selector"
             />
@@ -52,9 +53,9 @@
             android:gravity="center"
             android:id="@+id/btn_pick_photo"
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:text="相册"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textColor="@color/black"
             android:background="@drawable/photo_popwindow_selector"
             />
@@ -69,10 +70,10 @@
             android:gravity="center"
             android:id="@+id/btn_cancel"
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:text="取消"
-            android:textSize="20dp"
-            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textColor="#666666"
             android:background="@drawable/photo_popwindow_selector"
             />
 

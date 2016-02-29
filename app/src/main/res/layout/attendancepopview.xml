@@ -7,7 +7,7 @@
     >
 
     <LinearLayout
-        android:layout_width="320dp"
+        android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
@@ -22,7 +22,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="已进入加班时间段，请选择:"
-        android:textSize="17sp"
+        android:textSize="16sp"
         android:background="@color/dialog_blue"
         android:textColor="@color/white"
         />
@@ -35,7 +35,7 @@
     <LinearLayout
         android:id="@+id/attendance_generalout"
         android:layout_width="fill_parent"
-        android:layout_height="55dp"
+        android:layout_height="58dp"
         android:gravity="center"
         android:background="@drawable/attendance_popview_selector"
         >
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="正常下班"
             android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textSize="16sp"
             />
     </LinearLayout>
     <View
@@ -56,7 +56,7 @@
     <LinearLayout
         android:id="@+id/attendance_finishout"
         android:layout_width="fill_parent"
-        android:layout_height="55dp"
+        android:layout_height="58dp"
         android:gravity="center"
         android:background="@drawable/attendance_popview_selector"
         >
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:text="完成加班"
             android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textSize="16sp"
             />
     </LinearLayout>
     <View
@@ -77,7 +77,7 @@
     <LinearLayout
         android:id="@+id/attendance_cancel"
         android:layout_width="fill_parent"
-        android:layout_height="55dp"
+        android:layout_height="58dp"
         android:gravity="center"
         android:background="@drawable/attendance_popview_selector"
         >
@@ -86,8 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="取消"
-            android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textColor="#666666"
+            android:textSize="16sp"
             />
     </LinearLayout>
     </LinearLayout>

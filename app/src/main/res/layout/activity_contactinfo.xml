@@ -17,7 +17,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
+                android:layout_height="240dp"
                 android:background="@drawable/icon_contactinfo_bg">
 
                 <include layout="@layout/include_common_title_2"/>
@@ -51,6 +51,8 @@
                         android:textSize="20sp"/>
 
                     <TextView
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
                         android:id="@+id/tv_deptname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
