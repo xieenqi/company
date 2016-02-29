@@ -34,7 +34,7 @@ public class LocationUtilGD {
         locationOption = new AMapLocationClientOption();
         locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
         //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
-        locationOption.setInterval(1000 * 60);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+        locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
         locationOption.setOnceLocation(false);//false持续定位 true单次定位
         locationOption.setHttpTimeOut(10000);//设置联网超时时间
         locationOption.setNeedAddress(true);

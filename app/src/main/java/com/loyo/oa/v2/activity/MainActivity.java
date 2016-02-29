@@ -329,6 +329,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         lv_main.setDropListener(onDrag);
         adapter = new ClickItemAdapter();
 
+
     }
 
     /**
