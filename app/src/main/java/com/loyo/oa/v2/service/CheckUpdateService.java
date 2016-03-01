@@ -82,13 +82,13 @@ public class CheckUpdateService extends Service {
 
     void downloadApp() {
         if (enqueue == 0) {
-            Global.Toast("版本更新");
+            Global.Toast("正在更新最新版..");
+            LogUtil.dll("版本更新地址:"+mUpdateInfo.apkUrl);
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
                     .setDescription("下载" + mUpdateInfo.versionName)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mUpdateInfo.apkName())
                     .setVisibleInDownloadsUi(true);
-
             try {
                 enqueue = downloadManager.enqueue(request);
             } catch (Exception ex) {
@@ -128,20 +128,20 @@ public class CheckUpdateService extends Service {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_CHECK_UPDATE).create(IMain.class).checkUpdate(new RCallback<UpdateInfo>() {
             @Override
             public void success(UpdateInfo updateInfo, Response response) {
-                LogUtil.d("版本更新信息!");
                 HttpErrorCheck.checkResponse(response);
                 mUpdateInfo = updateInfo;
+                LogUtil.dll("版本更新信息:"+MainApp.gson.toJson(updateInfo));
 
                 if (updateInfo.versionCode > Global.getVersion()) {
                     //有新版本
                     MainApp.getMainApp().hasNewVersion = true;
 
                     if (updateInfo.autoUpdate) {//后台自动更新
+                        deleteFile();
                         downloadApp();
                     } else if (updateInfo.forceUpdate || isToast) {
                         //当服务端需要强制更新版本时，或手动点击更新时，弹出升级提示
                         deleteFile();
-
                         Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
                         intentUpdateTipActivity.putExtra("data", updateInfo);
                         intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -153,7 +153,6 @@ public class CheckUpdateService extends Service {
                     if (isToast) {
                         Global.Toast("你的软件已经是最新版本");
                     }
-
                     stopSelf();
                 }
 
@@ -170,9 +169,11 @@ public class CheckUpdateService extends Service {
         });
     }
 
+    /**
+     * 删除APK
+     * */
     private void deleteFile() {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
         File file = new File(path, mUpdateInfo.apkName());
         if (file.exists()) {
             file.delete();
@@ -213,22 +214,13 @@ public class CheckUpdateService extends Service {
     }
 
     public static class UpdateInfo implements Serializable {
-        public UpdateInfo(JSONObject response) {
-            //兼容2.9.2以前的版本
-            versionCode = response.optInt("versionCode", 1);
-            appDescription = response.optString("appDescription", "请更新至最新版本");
-            forceUpdate = response.optBoolean("forceUpdate", false);
-            autoUpdate = response.optBoolean("autoUpdate", false);
-            apkUrl = response.optString("apkUrl", "http://361loyofiles.oss-cn-qingdao.aliyuncs.com/LeShare.apk");
-            versionName = response.optString("versionName");
-        }
 
-        public int versionCode;
         public String versionName;
         public String appDescription;
+        public String apkUrl;
         public boolean forceUpdate;
         public boolean autoUpdate;
-        public String apkUrl;
+        public int versionCode;
 
         public String apkName() {
             return apkUrl.substring(apkUrl.lastIndexOf("/") + 1);

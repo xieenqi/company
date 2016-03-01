@@ -21,13 +21,14 @@ android {
             keyPassword 'Loyo2012'
         }
     }
+
     defaultConfig {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016022601
-        versionName '1.0.1'
+        versionCode 2016030101
+        versionName '1.0.2'
     }
 
     buildTypes {

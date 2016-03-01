@@ -240,8 +240,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         btnUpdate.setText("投入公海");
         btn_child_delete_task.setText("删除");
-        //btn_child_delete_task.setVisibility(View.GONE);
-
+        /*超级管理员 才能删除客户*/
+        if(!MainApp.user.isSuperUser()){
+            btn_child_delete_task.setVisibility(View.GONE);
+        }
         btn_child_delete_task.setOnTouchListener(Global.GetTouch());
         btnCancel.setOnTouchListener(Global.GetTouch());
         btnUpdate.setOnTouchListener(Global.GetTouch());

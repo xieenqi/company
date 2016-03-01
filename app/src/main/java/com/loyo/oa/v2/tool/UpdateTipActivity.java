@@ -21,7 +21,6 @@ public class UpdateTipActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_tip);
-
         mUpdateInfo = (CheckUpdateService.UpdateInfo) getIntent().getSerializableExtra("data");
         showNoticeDialog();
     }
@@ -59,7 +58,6 @@ public class UpdateTipActivity extends Activity {
                 finish();
             }
         });
-
     }
 
     private void startUpdateService(int request) {
