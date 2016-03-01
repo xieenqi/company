@@ -309,7 +309,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
 
         path = user.getAvatar();
-        //Utils.setContent(tv_title, user.getRealname());
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         if (user.gender == 2) {
@@ -326,9 +325,11 @@ public class ContactInfoEditActivity extends BaseActivity {
             Utils.setContent(tv_birthday, user.birthDay);
             Utils.setContent(tv_age, Utils.getAge(user.birthDay.substring(0, 4)) + "");
         }
+
+        /*获取职位与部门名字*/
         if (null != user.depts && !user.depts.isEmpty()) {
             StringBuilder departments = new StringBuilder();
-            StringBuilder positions = new StringBuilder();
+            StringBuilder posiName = new StringBuilder();
             for (int i = 0; i < user.depts.size(); i++) {
                 UserInfo info = user.depts.get(i);
                 if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
@@ -337,15 +338,15 @@ public class ContactInfoEditActivity extends BaseActivity {
                     }
                     departments.append(info.getShortDept().getName());
                 }
-                if (null != info.getShortPosition() && !TextUtils.isEmpty(info.getShortPosition().getName())) {
-                    if (!TextUtils.isEmpty(positions)) {
-                        positions.append("|");
+                if (null != info.getTitle() && !TextUtils.isEmpty(info.getTitle())) {
+                    if (!TextUtils.isEmpty(posiName)) {
+                        posiName.append("|");
                     }
-                    positions.append(info.getShortPosition().getName());
+                    posiName.append(info.getTitle());
                 }
             }
             tv_departments.setText(departments);
-            tv_positions.setText(positions);
+            tv_positions.setText(posiName);
         }
     }
 
