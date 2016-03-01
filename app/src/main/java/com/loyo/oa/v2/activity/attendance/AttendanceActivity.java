@@ -100,14 +100,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
      */
     private void initChildren() {
         for (int i = 0; i < ATTENDANCE_FILTER_STRS.length; i++) {
-            //            BaseFragment fragment = null;
-            //            if (i == 0) {
-            //                fragment = (BaseFragment) Fragment.instantiate(this, AttendanceFragment.class.getName());
-            //            }  else {
-            //                Bundle b = new Bundle();
-            //                b.putInt("type", i);
-            //                fragment = (BaseFragment) Fragment.instantiate(this, AttendanceListFragment.class.getName(), b);
-            //            }
             //初始化 fragment 列表
             Bundle b = new Bundle();
             b.putInt("type", i + 1);

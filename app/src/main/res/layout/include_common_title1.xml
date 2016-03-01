@@ -37,7 +37,9 @@
         style="@style/text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="afafa"/>
+        android:text="afafa"
+        android:textSize="18sp"
+        />
 
     <RelativeLayout
         android:id="@+id/img_title_right"

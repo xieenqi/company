@@ -593,7 +593,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
 
             /**按键监听*/
-
             /*加班*/
                 layout_overtime.setOnClickListener(new View.OnClickListener() {
                     @Override
