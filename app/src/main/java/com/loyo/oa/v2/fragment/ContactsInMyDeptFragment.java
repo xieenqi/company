@@ -22,6 +22,7 @@ import com.loyo.oa.v2.common.PinyinComparator;
 import com.loyo.oa.v2.common.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,22 +83,10 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         deptInfoTv = (TextView)headView.findViewById(R.id.tv_position);
         catalogTv = (TextView)headView.findViewById(R.id.catalog);
         item_medleft_top = (LinearLayout)headView.findViewById(R.id.item_medleft_top);
-
         pinyinComparator = new PinyinComparator();
         characterParser = CharacterParser.getInstance();
 
-        /*获取部门名字和职位名字，包括多部门情况下*/
-        for(int i = 0;i<myDepts.size();i++){
-            myDeptBuffer.append(myDepts.get(i).getShortDept().getName());
-            if(!myDepts.get(i).getTitle().isEmpty()
-                    && myDepts.get(i).getTitle().length() >0){
-                myDeptBuffer.append(" | "+myDepts.get(i).getTitle());
-            }
-            if(i != myDepts.size()-1){
-                myDeptBuffer.append(" ; ");
-            }
-        }
-
+        Utils.getDeptName(myDeptBuffer,myDepts);
         nameTv.setText(MainApp.user.getRealname());
         deptInfoTv.setText(myDeptBuffer.toString());
         catalogTv.setText("我");

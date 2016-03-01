@@ -35,6 +35,7 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
 import com.loyo.oa.v2.beans.TagItem;
+import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
@@ -660,6 +661,26 @@ public class Utils {
         }
         return min;
     }
+
+    /**
+     * 获取部门名字和职位名字，包括多部门情况下
+     * */
+    public static StringBuffer getDeptName(StringBuffer stringBuffer,ArrayList<UserInfo> list){
+
+        for(int i = 0;i<list.size();i++){
+            stringBuffer.append(list.get(i).getShortDept().getName());
+            if(!list.get(i).getTitle().isEmpty()
+                    && list.get(i).getTitle().length() >0){
+                stringBuffer.append(" | "+list.get(i).getTitle());
+            }
+            if(i != list.size()-1){
+                stringBuffer.append(" ; ");
+            }
+        }
+
+        return stringBuffer;
+    }
+
 
     /**
      * 服务是否在运行

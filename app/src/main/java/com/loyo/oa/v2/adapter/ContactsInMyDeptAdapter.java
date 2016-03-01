@@ -20,6 +20,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -73,28 +74,9 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
             viewHolder.tvLetter.setVisibility(View.GONE);
         }
 
-/*        for(UserInfo userInfo : list.get(position).getDepts()){
-            deptName = new StringBuffer();
-            deptName.append(userInfo.getShortDept().getName());
-            if(!userInfo.getTitle().isEmpty() && userInfo.getTitle().length()>0){
-                deptName.append(" | "+userInfo.getTitle());
-            }
-        }*/
-
-        /*获取部门/职位名字，多部门情况下*/
         User user = list.get(position);
-        for(int i = 0;i<user.getDepts().size();i++){
-            deptName = new StringBuffer();
-            deptName.append(user.getDepts().get(i).getShortDept().getName());
-            if(!user.getDepts().get(i).getTitle().isEmpty()
-                    && user.getDepts().get(i).getTitle().length() > 0){
-                deptName.append(" | " + user.getDepts().get(i).getTitle());
-            }
-            if(i != user.getDepts().size()-1){
-                deptName.append(" ; ");
-            }
-        }
-
+        deptName = new StringBuffer();
+        Utils.getDeptName(deptName,user.getDepts());
         viewHolder.name.setText(this.list.get(position).getRealname());
         viewHolder.deptInf.setText(deptName.toString());
         ImageLoader.getInstance().displayImage(this.list.get(position).getAvatar(), viewHolder.img);
