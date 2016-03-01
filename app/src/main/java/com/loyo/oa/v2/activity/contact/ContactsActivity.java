@@ -32,17 +32,14 @@ import java.util.ArrayList;
  * 时间 : 15/8/24.
  */
 public class ContactsActivity extends BaseFragmentActivity implements View.OnClickListener {
-    ViewGroup img_title_left;
-    ViewGroup img_title_right;
-
-    ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
-    ContactsInMyDeptFragment userFragment;         //本部门  人员frag
-
-    PagerSlidingTabStrip tabs;
-    ViewPager pager;
-    MyPagerAdapter adapter;
-
-    MainApp app = MainApp.getMainApp();
+    private ViewGroup img_title_left;
+    private ViewGroup img_title_right;
+    private ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
+    private ContactsInMyDeptFragment userFragment;         //本部门  人员frag
+    private PagerSlidingTabStrip tabs;
+    private ViewPager pager;
+    private MyPagerAdapter adapter;
+    private MainApp app = MainApp.getMainApp();
 
     private int departmentsSize;
     private int myDepartmentContactsSize;
