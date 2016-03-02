@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -105,32 +107,21 @@ public class BulletinAddActivity extends BaseActivity {
             Global.ToastLong("通知人员不能为空");
             return;
         }
-        //提示确认发布
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("确认");
-        builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
+
+
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_bulletin_message),true);
+        generalPopView.show();
+        generalPopView.setCanceledOnTouchOutside(true);
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View view) {
+
+                generalPopView.dismiss();
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("title", title);
                 map.put("content", content);
                 map.put("attachmentUUId", mUuid);
-                //        map.put("isPublic",false);
-
-//                ArrayList<BulletinViewer> viewers = new ArrayList<>();
-//                if (!TextUtils.isEmpty(cc_user_id)) {
-//                    for (String user_id : cc_user_id.split(",")) {
-//                        viewers.add(new BulletinViewer(null, user_id));
-//                    }
-//                }
-//
-//                if (!TextUtils.isEmpty(cc_department_id)) {
-//                    for (String dept_id : cc_department_id.split(",")) {
-//                        viewers.add(new BulletinViewer(dept_id, null));
-//                    }
-//                }
-
                 map.put("members", member);
                 map.put("attachments", newData());
                 LogUtil.d(" 通知 传递数据： " + MainApp.gson.toJson(map));
@@ -157,17 +148,16 @@ public class BulletinAddActivity extends BaseActivity {
                         super.failure(error);
                     }
                 });
-            }
-        });
 
-        builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
             }
         });
-        builder.setMessage("通知发送后不能修改和删除,是否确认发布?");
-        builder.show();
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
     }
 
     /**

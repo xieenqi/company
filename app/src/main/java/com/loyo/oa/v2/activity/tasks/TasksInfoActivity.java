@@ -868,7 +868,9 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-
+        if(null == mTask){
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
@@ -893,6 +895,9 @@ public class TasksInfoActivity extends BaseActivity {
     /*讨论*/
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
+        if(null == mTask){
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);

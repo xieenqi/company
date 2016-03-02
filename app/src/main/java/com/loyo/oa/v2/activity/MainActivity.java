@@ -76,8 +76,9 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RippleView;
-import com.loyo.oa.v2.tool.customview.attenDancePopView;
+import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.dragSortListView.DragSortListView;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenu;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenuItem;
@@ -587,7 +588,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 加班提示框
      */
     public void popOutToast() {
-        final attenDancePopView popView = new attenDancePopView(this);
+        final AttenDancePopView popView = new AttenDancePopView(this);
         popView.show();
         popView.setCanceledOnTouchOutside(true);
 
@@ -626,24 +627,24 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     public void attanceWorry() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.app_attanceworry_message));
-        builder.setTitle("提示");
-        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_attanceworry_message),true);
+        generalPopView.setCanceledOnTouchOutside(false);
+        generalPopView.show();
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 intentValue();
             }
         });
-
-        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
             }
         });
-        builder.create().show();
-
     }
 
 
@@ -884,15 +885,21 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     }
 
+    /**
+     * 退出应用
+     * */
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.app_exit_message));
-        builder.setTitle("提示");
-        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_exit_message),true);
+        generalPopView.show();
+        generalPopView.setCanceledOnTouchOutside(true);
+
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 //android 5.0以后不能隐式启动或关闭服务
                 if (mIntentCheckUpdate != null) {
                     try {
@@ -905,13 +912,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
-        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
             }
         });
-        builder.create().show();
+
     }
 
     @Override
@@ -1063,10 +1071,22 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     public void isQQLogin() {
         if (app.isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
-            ConfirmDialog("企业QQ绑定手机号码", "为了你的账号安全,请立即绑定手机号,绑定后可以使用手机号登录", new ConfirmDialogInterface() {
+            final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_homeqq_message),true);
+            generalPopView.setCanceledOnTouchOutside(false);
+            generalPopView.show();
+            //确认
+            generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
-                public void Confirm() {
+                public void onClick(View view) {
+                    generalPopView.dismiss();
                     app.startActivity(MainActivity.this, ActivityEditUserMobile.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            });
+            //取消
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    generalPopView.dismiss();
                 }
             });
         }

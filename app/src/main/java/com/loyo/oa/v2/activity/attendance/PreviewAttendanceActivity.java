@@ -29,6 +29,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -251,13 +252,26 @@ public class PreviewAttendanceActivity extends BaseActivity {
     }
 
     /**
-     * 弹出外勤确认对话框
+     * 弹出外勤(加班)确认对话框
      */
     private void showConfirmOutAttendanceDialog(String str) {
-        ConfirmDialog("提示", str, new ConfirmDialogInterface() {
+        final GeneralPopView generalPopView = new GeneralPopView(this,str,true);
+        generalPopView.setCanceledOnTouchOutside(false);
+        generalPopView.show();
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void Confirm() {
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 confirmOutAttendance();
+            }
+        });
+
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
             }
         });
     }

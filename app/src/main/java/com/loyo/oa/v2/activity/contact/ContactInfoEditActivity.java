@@ -47,6 +47,7 @@ import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -280,20 +281,26 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("系统提示").
-                setMessage("您有数据未提交,是否提交?").setPositiveButton("提交", new DialogInterface.OnClickListener() {
+
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_userinfoedt_message),true);
+        generalPopView.setCanceledOnTouchOutside(false);
+        generalPopView.show();
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 updateProfile();
             }
-        }).setNegativeButton("不提交", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
             }
-        }).create();
-        dialog.show();
+        });
     }
 
     /**

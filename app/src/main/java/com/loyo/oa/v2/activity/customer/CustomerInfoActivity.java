@@ -41,6 +41,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ExtraDataView;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.multi_level_interaction_menu.DialogFragmentAreaCast;
 
 import org.androidannotations.annotations.AfterViews;
@@ -336,26 +337,27 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").
-                setMessage("负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？").
-                setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        dialogInterface.dismiss();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                        app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class,
-                                MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
-
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_userdetalis_message),true);
+        generalPopView.setCanceledOnTouchOutside(true);
+        generalPopView.show();
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+                Bundle bundle = new Bundle();
+                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
+                app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
             }
-        }).create();
-        dialog.show();
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
     }
 
 

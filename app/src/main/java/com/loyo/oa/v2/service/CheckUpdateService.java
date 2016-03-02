@@ -135,12 +135,10 @@ public class CheckUpdateService extends Service {
                 if (updateInfo.versionCode > Global.getVersion()) {
                     //有新版本
                     MainApp.getMainApp().hasNewVersion = true;
-
                     if (updateInfo.autoUpdate) {//后台自动更新
                         deleteFile();
                         downloadApp();
-                    } else if (updateInfo.forceUpdate || isToast) {
-                        //当服务端需要强制更新版本时，或手动点击更新时，弹出升级提示
+                    } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
                         deleteFile();
                         Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
                         intentUpdateTipActivity.putExtra("data", updateInfo);
@@ -149,13 +147,13 @@ public class CheckUpdateService extends Service {
                     } else {
                         stopSelf();
                     }
+                    
                 } else {
                     if (isToast) {
                         Global.Toast("你的软件已经是最新版本");
                     }
                     stopSelf();
                 }
-
                 isChecking = false;
             }
 
