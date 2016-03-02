@@ -18,6 +18,12 @@
     <string name="app_share">分享</string>
     <string name="app_exit_title">退出</string>
     <string name="app_exit_message">确定退出应用?</string>
+    <string name="app_bulletin_message">通知发送后不能修改和删除,是否确认发布?</string>
+    <string name="app_userinfoedt_message">您有数据未提交,是否提交?</string>
+    <string name="app_userdetalis_message">负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？</string>
+    <string name="app_homeqq_message">企业QQ绑定手机号码", "为了你的账号安全,请立即绑定手机号,绑定后可以使用手机号登录</string>
+    <string name="app_attendance_out_message">您当前的位置不在考勤范围内,本次打卡将记作外勤,是否确认打卡?</string>
+    <string name="app_attendance_outtime_message">打卡操作超时,请重新打卡</string>
     <string name="app_attanceworry_message">还未到下班时间，现在下班将视为早退。</string>
     <string name="app_list_header_refresh_down">下拉刷新</string>
     <string name="app_list_header_refreshing">正在刷新</string>

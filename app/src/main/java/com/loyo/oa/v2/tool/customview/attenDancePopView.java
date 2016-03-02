@@ -13,10 +13,10 @@ import com.loyo.oa.v2.R;
  * 加班提示框
  * Created by yyy on 16/2/19.
  */
-public class attenDancePopView extends Dialog{
+public class AttenDancePopView extends Dialog{
 
 
-    public attenDancePopView(Context context) {
+    public AttenDancePopView(Context context) {
         super(context);
     }
 

@@ -17,6 +17,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -50,27 +51,7 @@ public class PreviewImageActivity extends Activity {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //删除
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PreviewImageActivity.this);
-                    builder.setTitle("确认");
-                    builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Intent intent = new Intent();
-                            intent.putExtra("delAtm", mNewAttachments.get(mPosition));
-                            MainApp.getMainApp().finishActivity(PreviewImageActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
-                        }
-                    });
-
-                    builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setMessage("是否删除附件?");
-                    builder.show();
+                    dialogToast();
                 }
             });
         }
@@ -124,18 +105,34 @@ public class PreviewImageActivity extends Activity {
 
             }
         });
+    }
 
-//        if (getIntent().hasExtra("position")) {
-//            int position = getIntent().getIntExtra("position", 0);
-//            if (position < mNewAttachments.size()) {
-//                mViewPager.setCurrentItem(position);
-//            }
-//        }
+    /**
+     * 删除提示框
+     * */
+    public void dialogToast(){
+        final GeneralPopView generalPopView = new GeneralPopView(this,"是否删除附件?",true);
+        generalPopView.setCanceledOnTouchOutside(true);
+        generalPopView.show();
 
-//        if (savedInstanceState != null) {
-//            boolean isLocked = savedInstanceState.getBoolean(ISLOCKED_ARG, false);
-//            ((HackyViewPager) mViewPager).setLocked(isLocked);
-//        }
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+                Intent intent = new Intent();
+                intent.putExtra("delAtm", mNewAttachments.get(mPosition));
+                MainApp.getMainApp().finishActivity(PreviewImageActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+            }
+        });
+
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
 
     }
 

@@ -45,6 +45,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -231,17 +232,17 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         String result = mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK ? "您已超出内勤范围,本次打卡将记作外勤!" : "";
         tv_result.setText(result);
         tv_address.setText(mAttendanceRecord.getAddress());
-
+        /*完成加班*/
         if(outKind == 2){
-
             et_reason.setHint("请输入加班原因");
-            layout_reason.setVisibility(View.VISIBLE);
             String time = (DateTool.timet(extraWorkStartTime+"",DateTool.DATE_FORMATE_TRANSACTION)
                     +"-"+DateTool.timet(serverTime+"",DateTool.DATE_FORMATE_TRANSACTION));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
             tv_time.setText(tvTimeName+builder);
             tv_time.setTextColor(Color.GREEN);
-        }else {
+        }
+        /*正常上下班*/
+        else {
             String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
             tv_time.setText(builder);
@@ -253,7 +254,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     et_reason.setHint("请输入早退原因");
                     state = 3;
                 }
-                layout_reason.setVisibility(View.VISIBLE);
             }
         }
         init_gridView_photo();
@@ -333,14 +333,15 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     private boolean check() {
 
         if(outKind == 2 && needExtra){
-            if(layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())){
+            if(mAttendanceRecord.getState() == 5 && TextUtils.isEmpty(et_reason.getText().toString())){
                 Toast("加班原因不能为空");
                 return false;
             }
         }
 
         else if(outKind != 2){
-            if(layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())){
+            LogUtil.dll("state:"+mAttendanceRecord.getState());
+            if(mAttendanceRecord.getState() != AttendanceRecord.STATE_NORMAL && TextUtils.isEmpty(et_reason.getText().toString())){
                     if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
                         Toast("迟到原因不能为空");
                     } else {
@@ -378,29 +379,17 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 显示打卡超时对话框
      */
     private void showTimeOutDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
-        dialogView.findViewById(R.id.layout_btn).setVisibility(View.GONE);
-        ((TextView) dialogView.findViewById(R.id.tv_content)).setText("打卡操作超时,请重新打卡");
-        dialogView.getBackground().setAlpha(150);
-        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-        dialog.setAnimationStyle(R.style.PopupAnimation);
-        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        dialog.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
 
-        dialogView.setOnTouchListener(new View.OnTouchListener() {
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_attendance_outtime_message),false);
+        generalPopView.setCanceledOnTouchOutside(false);
+        generalPopView.show();
+        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                dialog.dismiss();
-                return false;
-            }
-        });
-
-        dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
+            public void onClick(View view) {
                 onBackPressed();
             }
         });
+
     }
 
     /**
@@ -408,39 +397,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     private void showOutAttendanceDialog() {
 
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
-        dialogView.getBackground().setAlpha(150);
-        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-        dialog.setAnimationStyle(R.style.PopupAnimation);
-        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        dialog.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
-
-        TextView confirm = (TextView) dialogView.findViewById(R.id.btn_confirm);
-        TextView cancel = (TextView) dialogView.findViewById(R.id.btn_cancel);
-
-        confirm.setOnTouchListener(Global.GetTouch());
-        cancel.setOnTouchListener(Global.GetTouch());
-
-        dialogView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                dialog.dismiss();
-                return false;
-            }
-        });
-
-        confirm.setOnClickListener(new View.OnClickListener() {
+        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_attendance_out_message),true);
+        generalPopView.setCanceledOnTouchOutside(true);
+        generalPopView.show();
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                generalPopView.dismiss();
                 commitAttendance();
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                generalPopView.dismiss();
             }
         });
     }

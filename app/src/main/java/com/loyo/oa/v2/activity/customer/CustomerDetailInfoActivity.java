@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -277,31 +278,47 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         PopuOnClickListener(PopupWindow window) {
             mWindow = window;
         }
-
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_child_delete_task:
-                    ConfirmDialog("提示", "你确定要删除客户？", new ConfirmDialogInterface() {
-                        @Override
-                        public void Confirm() {
-                            delete();
-                        }
-                    });
-
+                    setPopView(true);
                     break;
                 case R.id.btn_child_add_update:
-                    ConfirmDialog("提示", "投入公海，相当于放弃此客户所有数据和管理权限，你确定要投入公海？", new ConfirmDialogInterface() {
-                        @Override
-                        public void Confirm() {
-                            toPublic();
-                        }
-                    });
+                    setPopView(false);
                     break;
             }
             mWindow.dismiss();
         }
     }
+
+    /**
+     * 提示弹出框
+     * */
+    private void setPopView(final boolean isKind){
+       final GeneralPopView generalPopView = new GeneralPopView(this,"你确定要删除客户？",true);
+        generalPopView.setCanceledOnTouchOutside(true);
+        generalPopView.show();
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isKind){
+                    delete();
+                }else{
+                    toPublic();
+                }
+            }
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
+    }
+
 
     /**
      * 删除客户

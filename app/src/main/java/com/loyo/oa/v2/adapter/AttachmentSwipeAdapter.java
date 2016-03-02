@@ -28,6 +28,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -197,12 +198,13 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //删除
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("确认");
-                    builder.setPositiveButton(mContext.getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
+                    final GeneralPopView generalPopView = new GeneralPopView(mContext,"是否删除附件?",true);
+                    generalPopView.setCanceledOnTouchOutside(true);
+                    generalPopView.show();
+                    //确定
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View view) {
                             Utils.dialogShow(mContext,"请稍候");
                             RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
                                 @Override
@@ -223,18 +225,16 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                                 }
                             });
 
-                            dialog.dismiss();
+                            generalPopView.dismiss();
                         }
                     });
-
-                    builder.setNegativeButton(mContext.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+                    //取消
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                        public void onClick(View view) {
+                            generalPopView.dismiss();
                         }
                     });
-                    builder.setMessage("是否删除附件?");
-                    builder.show();
                 }
             });
         }

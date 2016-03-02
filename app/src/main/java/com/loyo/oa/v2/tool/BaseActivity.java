@@ -32,6 +32,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 /**
  * activity 基类
@@ -246,7 +247,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             }
         });
         builder.create().show();
-
     }
 
     protected interface ConfirmDialogInterface {

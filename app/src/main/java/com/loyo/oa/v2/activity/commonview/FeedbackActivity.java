@@ -28,6 +28,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -138,38 +139,18 @@ public class FeedbackActivity extends BaseActivity {
     private void showSuccessDialog() {
         hideInputKeyboard(et_content);
 
-        //View dialogView = getLayoutInflater().inflate(R.layout.dialog_send_feedback, null, false);
-//        dialogView.getBackground().setAlpha(150);
-//        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-//        dialog.setAnimationStyle(R.style.PopupAnimation);
-//        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-//        dialog.showAtLocation(findViewById(R.id.tv_title), Gravity.BOTTOM, 0, 0);
-//
-//        dialogView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                dialog.dismiss();
-//                return false;
-//            }
-//        });
-//
-//        dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-//                finish();
-//            }
-//        });
-//        ConfirmDialog(, , new ConfirmDialogInterface() {
-//            @Override
-//            public void Confirm() {
-//                finish();
-//            }
-//        });
+        String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快";
+        final GeneralPopView generalPopView = new GeneralPopView(this,message,false);
+        generalPopView.setCanceledOnTouchOutside(false);
+        generalPopView.show();
 
-        final AlertDialog.Builder feedDialog = new AlertDialog.Builder(mContext);
-        feedDialog.setMessage("感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快");
-        feedDialog.setTitle("提示");
-        feedDialog.create().show();
+        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -181,7 +162,7 @@ public class FeedbackActivity extends BaseActivity {
                     }
                 });
             }
-        }, 1000);
+        }, 3000);
     }
 
     @Override
