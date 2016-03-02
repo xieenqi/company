@@ -755,6 +755,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
+    /**
+     * 版本更新检查
+     * */
     @Background
     void checkUpdateService() {
         mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);

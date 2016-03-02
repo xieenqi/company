@@ -40,12 +40,14 @@
         android:layout_height="23dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
+        android:maxEms="11"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="标题"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_sp20"
-        android:visibility="gone"/>
+        android:textSize="@dimen/text_sp18"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/tv_edit"
@@ -57,7 +59,7 @@
         android:gravity="center_vertical"
         android:text="编辑"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_sp20"
+        android:textSize="@dimen/text_sp16"
         android:visibility="gone"/>
 
     <ImageView

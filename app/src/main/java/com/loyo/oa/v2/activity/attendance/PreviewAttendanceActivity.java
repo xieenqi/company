@@ -202,13 +202,27 @@ public class PreviewAttendanceActivity extends BaseActivity {
             btn_confirm.setVisibility(View.GONE);
         }
         getAttachments(attendance.attachementuuid);
-        /*如果已经被确认，则显示确认状态栏*/
-        if (null != attendance.confirmuser) {
+
+        if(null != attendance.confirmuser){
+        /*已确认的外勤*/
+        if(attendance.state != 4 && attendance.state != 5 &&
+                attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK){
+                ll_confirm.setVisibility(View.VISIBLE);
+                tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
+                tv_confirmName.setText(attendance.confirmuser.name);
+                tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
+            }
+        /*已确认的加班*/
+        else if(attendance.state == 5 &&
+                attendance.extraState == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_OVERTIME){
             ll_confirm.setVisibility(View.VISIBLE);
+            tv_message.setText("确认加班");
             tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
             tv_confirmName.setText(attendance.confirmuser.name);
             tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
+             }
         }
+
     }
 
     /**
@@ -259,7 +273,6 @@ public class PreviewAttendanceActivity extends BaseActivity {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);
                         btn_confirm.setVisibility(View.GONE);
                         iv_type.setImageResource(R.drawable.icon_field_work_confirm);
-
                         Intent intent = new Intent();
                         setResult(RESULT_OK, intent);
                         finish();
@@ -269,7 +282,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
-                        Toast("确认外勤失败");
+                        Toast("操作失败！");
                     }
                 });
     }
