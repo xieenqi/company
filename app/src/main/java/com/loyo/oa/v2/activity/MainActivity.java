@@ -303,9 +303,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         updateUser();
 
         lv_main.setDropListener(onDrag);
-        lv_main.setMaxScrollSpeed(10f);
+        lv_main.setMaxScrollSpeed(100f);
         adapter = new ClickItemAdapter();
-
 
     }
 
@@ -513,10 +512,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
-        intent.putExtra("needExtra",validateInfo.isNeedExtra());
+        intent.putExtra("needExtra", validateInfo.isNeedExtra());
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
-        intent.putExtra("extraWorkStartTime",attendanceRecords.getExtraWorkStartTime());
+        intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
@@ -546,23 +545,23 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
 
         /*工作日*/
-        if(validateInfo.isWorkDay()){
+        if (validateInfo.isWorkDay()) {
             /*加班*/
-            if(validateInfo.isPopup()){
+            if (validateInfo.isPopup()) {
                 popOutToast();
             }
             /*不加班*/
-            else{
+            else {
                 dealInOutWork();
             }
         }
         /*非工作日，下班状态*/
-        else if(!validateInfo.isWorkDay() && outEnable){
+        else if (!validateInfo.isWorkDay() && outEnable) {
             outKind = 2;
             startAttanceLocation();
         }
         /*非工作日，上班状态*/
-        else if(!validateInfo.isWorkDay() && inEnable){
+        else if (!validateInfo.isWorkDay() && inEnable) {
             outKind = 0;
             startAttanceLocation();
         }
@@ -570,8 +569,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 判断上班下班
-     * */
-    public void dealInOutWork(){
+     */
+    public void dealInOutWork() {
         /*上班*/
         if (inEnable) {
             outKind = 0;
