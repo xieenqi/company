@@ -109,9 +109,7 @@ public class BulletinAddActivity extends BaseActivity {
         }
 
 
-        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_bulletin_message),true);
-        generalPopView.show();
-        generalPopView.setCanceledOnTouchOutside(true);
+        showGeneralDialog(true,true,getString(R.string.app_bulletin_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override

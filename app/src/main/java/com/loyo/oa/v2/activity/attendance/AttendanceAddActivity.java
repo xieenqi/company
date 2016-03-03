@@ -332,24 +332,24 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      */
     private boolean check() {
 
-        if(outKind == 2 && needExtra){
-            if(mAttendanceRecord.getState() == 5 && TextUtils.isEmpty(et_reason.getText().toString())){
+    if(TextUtils.isEmpty(et_reason.getText().toString())) {
+        int state = mAttendanceRecord.getState();
+        if(state == AttendanceRecord.STATE_OVERWORK){
+            if (needExtra) {
                 Toast("加班原因不能为空");
                 return false;
             }
         }
-
-        else if(outKind != 2){
-            LogUtil.dll("state:"+mAttendanceRecord.getState());
-            if(mAttendanceRecord.getState() != AttendanceRecord.STATE_NORMAL && TextUtils.isEmpty(et_reason.getText().toString())){
-                    if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
-                        Toast("迟到原因不能为空");
-                    } else {
-                        Toast("早退原因不能为空");
-                    }
-                    return false;
-            }
+        else if(state == AttendanceRecord.STATE_LEAVE_EARLY){
+            Toast("早退原因不能为空");
+            return false;
         }
+
+        else if(state == AttendanceRecord.STATE_BE_LATE){
+            Toast("迟到原因不能为空");
+            return false;
+        }
+    }
 
         if (TextUtils.isEmpty(tv_address.getText().toString())) {
             Toast("地址不能为空");
@@ -379,10 +379,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 显示打卡超时对话框
      */
     private void showTimeOutDialog() {
-
-        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_attendance_outtime_message),false);
-        generalPopView.setCanceledOnTouchOutside(false);
-        generalPopView.show();
+        showGeneralDialog(false, false, getString(R.string.app_attendance_outtime_message));
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -396,10 +393,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
      * 弹出外勤确认对话框
      */
     private void showOutAttendanceDialog() {
-
-        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_attendance_out_message),true);
-        generalPopView.setCanceledOnTouchOutside(true);
-        generalPopView.show();
+        showGeneralDialog(true, true, getString(R.string.app_attendance_out_message));
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

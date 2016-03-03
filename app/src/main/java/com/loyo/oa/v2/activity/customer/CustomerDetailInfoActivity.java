@@ -296,9 +296,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 提示弹出框
      * */
     private void setPopView(final boolean isKind,String message){
-       final GeneralPopView generalPopView = new GeneralPopView(this,message,true);
-        generalPopView.setCanceledOnTouchOutside(true);
-        generalPopView.show();
+
+        showGeneralDialog(true, true, message);
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override

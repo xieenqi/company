@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
@@ -29,7 +30,7 @@ import uk.co.senab.photoview.PhotoView;
 /**
  * 预览图片
  */
-public class PreviewImageActivity extends Activity {
+public class PreviewImageActivity extends BaseActivity {
 
     private ViewPager mViewPager;
     private ArrayList<Attachment> mNewAttachments = null;
@@ -111,10 +112,7 @@ public class PreviewImageActivity extends Activity {
      * 删除提示框
      * */
     public void dialogToast(){
-        final GeneralPopView generalPopView = new GeneralPopView(this,"是否删除附件?",true);
-        generalPopView.setCanceledOnTouchOutside(true);
-        generalPopView.show();
-
+        showGeneralDialog(true,true,"是否删除附件?");
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override

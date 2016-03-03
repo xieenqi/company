@@ -12,7 +12,6 @@
 
     </style>
 
-
     <!--FragmentActivity的样式，目前主要是用到ActionBar的地方-->
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 

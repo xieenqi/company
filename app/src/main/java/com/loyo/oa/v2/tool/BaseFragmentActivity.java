@@ -22,12 +22,14 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
     protected MainApp app;
     protected Context mContext;
     private Toast mCurrentToast;
     private int mTouchViewGroupId = -1;
+    public GeneralPopView generalPopView;
 
     final String Tag = "BaseFragmentActivity";
 
@@ -262,5 +264,15 @@ public class BaseFragmentActivity extends FragmentActivity {
         mCurrentToast = Toast.makeText(app.getBaseContext(), msg, Toast.LENGTH_SHORT);
         mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
         mCurrentToast.show();
+    }
+
+    /**
+     * 通用提示弹出框init
+     * */
+    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
+        generalPopView = new GeneralPopView(this,isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
     }
 }

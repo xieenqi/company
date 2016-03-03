@@ -140,10 +140,7 @@ public class FeedbackActivity extends BaseActivity {
         hideInputKeyboard(et_content);
 
         String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快";
-        final GeneralPopView generalPopView = new GeneralPopView(this,message,false);
-        generalPopView.setCanceledOnTouchOutside(false);
-        generalPopView.show();
-
+        showGeneralDialog(false,false,message);
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

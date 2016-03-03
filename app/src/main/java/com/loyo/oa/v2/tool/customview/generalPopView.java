@@ -16,12 +16,10 @@ import com.loyo.oa.v2.R;
 public class GeneralPopView extends Dialog{
 
     private TextView tv_message;
-    private String message;
     private boolean kind;
 
-    public GeneralPopView(Context context,String Message,boolean kind) {
+    public GeneralPopView(Context context,boolean kind) {
         super(context);
-        this.message = Message;
         this.kind = kind;
     }
 
@@ -31,7 +29,7 @@ public class GeneralPopView extends Dialog{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_generalpopview);
         tv_message = (TextView) findViewById(R.id.dialog_generalpopview_message);
-        tv_message.setText(message);
+
         if(!kind){
             findViewById(R.id.dialog_generalpopview_ll).setVisibility(View.GONE);
             findViewById(R.id.dialog_nocancelpopview_ll).setVisibility(View.VISIBLE);
@@ -40,6 +38,10 @@ public class GeneralPopView extends Dialog{
             findViewById(R.id.dialog_generalpopview_ll).setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void setMessage(String strMessage){
+        tv_message.setText(strMessage);
     }
 
     public void setSureOnclick(View.OnClickListener listener){
