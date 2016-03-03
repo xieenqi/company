@@ -3,10 +3,8 @@ package com.loyo.oa.v2.activity;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -76,9 +74,9 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RippleView;
-import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.dragSortListView.DragSortListView;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenu;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenuItem;
@@ -755,7 +753,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 版本更新检查
-     * */
+     */
     @Background
     void checkUpdateService() {
         mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
@@ -884,7 +882,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     /**
      * 退出应用
-     * */
+     */
     @Override
     public void onBackPressed() {
         showGeneralDialog(true,true,getString(R.string.app_exit_message));

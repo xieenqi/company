@@ -1,7 +1,7 @@
 <resources>
     <!-- 防止黑屏的主题-->
     <style name="AppStartLoadTranslucent" parent="android:Theme.Holo.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"></style>
