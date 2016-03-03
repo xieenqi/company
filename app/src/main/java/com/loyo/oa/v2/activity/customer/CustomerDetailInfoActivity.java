@@ -282,10 +282,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_child_delete_task:
-                    setPopView(true);
+                    setPopView(true,"你确定要删除客户?");
                     break;
                 case R.id.btn_child_add_update:
-                    setPopView(false);
+                    setPopView(false,"投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
                     break;
             }
             mWindow.dismiss();
@@ -295,8 +295,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     /**
      * 提示弹出框
      * */
-    private void setPopView(final boolean isKind){
-       final GeneralPopView generalPopView = new GeneralPopView(this,"你确定要删除客户？",true);
+    private void setPopView(final boolean isKind,String message){
+       final GeneralPopView generalPopView = new GeneralPopView(this,message,true);
         generalPopView.setCanceledOnTouchOutside(true);
         generalPopView.show();
         //确定
