@@ -47,6 +47,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected static final int NO_SCROLL = -1;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
+    public GeneralPopView generalPopView;
 
     /**
      * 搜索跳转分类
@@ -229,6 +230,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
     }
 
+
+    /**
+     * 老版弹出框
+     * */
     protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(message);
@@ -348,7 +353,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
-    //加载loading的方法
+    /**
+     * 加载loading的方法
+     * */
     public void showLoading(String msg) {
         DialogHelp.showLoading(this, msg, true);
     }
@@ -359,5 +366,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     public static void cancelLoading() {
         DialogHelp.cancelLoading();
+    }
+
+
+    /**
+     * 通用提示弹出框init
+     * */
+    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
+        generalPopView = new GeneralPopView(this,isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
     }
 }

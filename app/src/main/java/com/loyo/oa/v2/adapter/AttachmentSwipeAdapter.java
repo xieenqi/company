@@ -198,9 +198,10 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final GeneralPopView generalPopView = new GeneralPopView(mContext,"是否删除附件?",true);
-                    generalPopView.setCanceledOnTouchOutside(true);
+                    final GeneralPopView generalPopView = new GeneralPopView(mContext,true);
                     generalPopView.show();
+                    generalPopView.setMessage("是否删除附件?");
+                    generalPopView.setCanceledOnTouchOutside(true);
                     //确定
                     generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override

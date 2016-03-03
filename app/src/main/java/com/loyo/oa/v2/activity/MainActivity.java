@@ -624,10 +624,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 早退提示
      */
     public void attanceWorry() {
-
-        final GeneralPopView generalPopView = new GeneralPopView(this, getString(R.string.app_attanceworry_message), true);
-        generalPopView.setCanceledOnTouchOutside(false);
-        generalPopView.show();
+        showGeneralDialog(false,true,getString(R.string.app_attanceworry_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -888,11 +885,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Override
     public void onBackPressed() {
-
-        final GeneralPopView generalPopView = new GeneralPopView(this, getString(R.string.app_exit_message), true);
-        generalPopView.show();
-        generalPopView.setCanceledOnTouchOutside(true);
-
+        showGeneralDialog(true,true,getString(R.string.app_exit_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -917,7 +910,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 generalPopView.dismiss();
             }
         });
-
     }
 
     @Override
@@ -1069,9 +1061,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     public void isQQLogin() {
         if (app.isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
-            final GeneralPopView generalPopView = new GeneralPopView(this, getString(R.string.app_homeqq_message), true);
-            generalPopView.setCanceledOnTouchOutside(false);
-            generalPopView.show();
+            showGeneralDialog(false,true,getString(R.string.app_homeqq_message));
             //确认
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override

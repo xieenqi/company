@@ -270,6 +270,9 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                     }
                 }
                 break;
+            /**
+             * 附件上传回调
+             * */
             case SelectPicPopupWindow.GET_IMG:
                 List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 for (String p : mSelectPath) {
@@ -278,6 +281,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                         if (newFile != null && newFile.length() > 0) {
                             RequestParams params = new RequestParams();
                             params.put("uuid", mProject.attachmentUUId);
+                            params.put("bizType",5);
 
                             if (newFile.exists()) {
                                 params.put("attachments", newFile, "image/jpeg");

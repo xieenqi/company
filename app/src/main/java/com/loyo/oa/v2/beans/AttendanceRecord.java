@@ -30,6 +30,8 @@ public class AttendanceRecord implements Serializable {
     /**早退**/
     public static final int STATE_LEAVE_EARLY=STATE_NORMAL+2;
 
+    public static final int STATE_OVERWORK = 5;
+
 
     private String address;// (string, optional): ,
     private String attachementuuid;// (string, optional): ,

@@ -337,9 +337,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_userdetalis_message),true);
-        generalPopView.setCanceledOnTouchOutside(true);
-        generalPopView.show();
+        showGeneralDialog(true,true,getString(R.string.app_userdetalis_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override

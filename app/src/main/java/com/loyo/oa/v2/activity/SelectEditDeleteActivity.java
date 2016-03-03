@@ -104,9 +104,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //删除
             case R.id.btn_delete:
-                final GeneralPopView generalPopView = new GeneralPopView(this,"确认删除?",true);
-                generalPopView.setCanceledOnTouchOutside(true);
-                generalPopView.show();
+                showGeneralDialog(true,true,"确认删除?");
                 //确定
                 generalPopView.setSureOnclick(new OnClickListener() {
                     @Override

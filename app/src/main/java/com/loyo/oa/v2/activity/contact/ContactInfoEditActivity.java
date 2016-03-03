@@ -282,9 +282,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void showLeaveDialog() {
 
-        final GeneralPopView generalPopView = new GeneralPopView(this,getString(R.string.app_userinfoedt_message),true);
-        generalPopView.setCanceledOnTouchOutside(false);
-        generalPopView.show();
+        showGeneralDialog(false,true,getString(R.string.app_userinfoedt_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override

@@ -255,9 +255,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
      * 弹出外勤(加班)确认对话框
      */
     private void showConfirmOutAttendanceDialog(String str) {
-        final GeneralPopView generalPopView = new GeneralPopView(this,str,true);
-        generalPopView.setCanceledOnTouchOutside(false);
-        generalPopView.show();
+        showGeneralDialog(false,true,str);
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
