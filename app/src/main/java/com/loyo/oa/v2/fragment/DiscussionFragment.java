@@ -37,7 +37,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :讨论页面
+ * 描述 :项目讨论页面
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
@@ -186,6 +186,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         HashMap<String, Object> body = new HashMap<>();
         body.put("attachmentUUId", project.attachmentUUId);
         body.put("content", comment);
+        body.put("bizType",5);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
             @Override

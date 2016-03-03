@@ -150,7 +150,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     }
 
     /**
-     * 初始化数据
+     * 初始化数据(绑定页面 任务 报告 审批...)
      */
     private void initData(HttpProject project) {
         if (null == project) {
@@ -161,7 +161,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     project.archiveData.approval, project.archiveData.attachment, project.archiveData.discuss};
             for (int i = 0; i < TITLES.length; i++) {
                 TITLES[i] += "(" + sizes[i] + ")";
-                // LogUtil.d("栏目-> size : "+sizes[i]);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("project", project);
                 BaseFragment fragmentX = null;
