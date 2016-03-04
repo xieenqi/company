@@ -11,7 +11,7 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -27,8 +27,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016030101
-        versionName '1.0.2'
+        versionCode 2016030401
+        versionName '1.0.3'
     }
 
     buildTypes {
