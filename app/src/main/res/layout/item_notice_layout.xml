@@ -102,6 +102,7 @@
                     android:listSelector="@android:color/transparent"
                     android:numColumns="3"
                     android:verticalSpacing="3dp"
+                    android:scrollbars="none"
                     />
 
             </LinearLayout>

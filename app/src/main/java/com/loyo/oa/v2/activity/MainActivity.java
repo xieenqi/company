@@ -75,7 +75,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.AttenDancePopView;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RippleView;
 import com.loyo.oa.v2.tool.customview.dragSortListView.DragSortListView;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenu;
@@ -540,8 +539,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             Toast("没有网络连接，不能打卡");
             return;
         }
-
-
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
@@ -624,7 +621,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 早退提示
      */
     public void attanceWorry() {
-        showGeneralDialog(false,true,getString(R.string.app_attanceworry_message));
+        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -885,7 +882,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Override
     public void onBackPressed() {
-        showGeneralDialog(true,true,getString(R.string.app_exit_message));
+        showGeneralDialog(true, true, getString(R.string.app_exit_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -1061,7 +1058,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     public void isQQLogin() {
         if (app.isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
-            showGeneralDialog(false,true,getString(R.string.app_homeqq_message));
+            showGeneralDialog(false, true, getString(R.string.app_homeqq_message));
             //确认
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
