@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -24,9 +25,9 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -40,9 +41,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private EditText edt_username, edt_password;
     private WaveView layout_login;
     private TextView tv_resetPassword, tv_qqLogin;
-    private HashMap<String, String> wxUnionIds = new HashMap<>();
-    private JSONObject jsObj;
-    private int codes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,20 +111,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     Toast("密码不能为空!");
                     return;
                 }
-                layout_login.setText("登录中");
+                layout_login.setText("登录中...");
                 changeColor(-1, R.color.lightgreen);
                 HashMap<String, Object> body = new HashMap<String, Object>();
                 body.put("username", username);
                 body.put("password", password);
-                if (!wxUnionIds.isEmpty()) {
-                    String wxUninoId = wxUnionIds.get(username);
-                    if (TextUtils.isEmpty(wxUninoId))
-                        wxUninoId = wxUnionIds.get("bind");
-                    if (!TextUtils.isEmpty(wxUninoId))
-                        body.put("wxUnionId", wxUninoId);
-                }
-                login(body, 2);
-
+                login(body);
                 break;
             case R.id.tv_qqLogin://企业qq登陆
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
@@ -162,12 +152,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 登陆
      *
      * @param body 表单
-     * @param type 1，微信登录；2，普通登录
+     *             、 @param type 1，微信登录；2，普通登录
      *             <p/>
      *             成功 getStatus 状态码
      *             失败 getKind 状态码
      */
-    private void login(HashMap<String, Object> body, final int type) {
+    private void login(HashMap<String, Object> body) {
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(FinalVariables.GET_TOKEN) //URL
                 .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
@@ -175,58 +165,70 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         adapter.create(ILogin.class).login(body, new RCallback<Token>() {
             @Override
             public void success(Token token, Response response) {
-                HttpErrorCheck.checkResponse("登录", response);
+                HttpErrorCheck.checkResponse(response);
                 if (null == token || TextUtils.isEmpty(token.access_token)) {
-
-                    Toast(type == 1 ? "微信登录失败,请先填写账号、密码，点击登录按钮绑定微信号" : "登录失败");
-                    if (type == 2) {
-                        layout_login.setText("登录失败");
-                        changeColor(R.color.title_bg1, R.color.red);
-                    }
+                    loginFial();
                     return;
-                }
-                if (2 == type)
+                } else {
+                    loginSuccess(token);
                     layout_login.setText("登录成功");
-
-                //登录成功
-                MainApp.setToken(token.getAccess_token());
-                SharedUtil.put(mContext, FinalVariables.TOKEN, token.getAccess_token());
-                app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
-                layout_login.setText("登录失败");
-                changeColor(R.color.title_bg1, R.color.red);
-
+                loginFial();
             }
         });
     }
 
+    /**
+     * 登录失败
+     */
+    private void loginFial() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeColor(R.color.title_bg1, R.color.red);
+                        layout_login.setText("登录失败");
+                    }
+                });
+            }
+        }, 500);
+    }
+
+    /**
+     * 登录失败
+     */
+    private void loginSuccess(final Token token) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //登录成功
+                        MainApp.setToken(token.access_token);
+                        SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
+                        SharedUtil.putBoolean(LoginActivity.this, ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
+                        app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                    }
+                });
+            }
+        }, 200);
+
+    }
 
     public class Token {
-
-        private String access_token;
-
-        private String error;
-
-        public String getAccess_token() {
-            return access_token;
-        }
-
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public void setError(String error) {
-            this.error = error;
-        }
+        public String access_token;
+        public String error;
     }
 
     @Override
