@@ -4,24 +4,32 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/default_menu_back"
-    android:orientation="horizontal">
+    >
 
-    <TextView
-        android:id="@+id/tv_menu_title"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="111"
-        android:textColor="@color/default_menu_text"
-        android:textSize="15sp"/>
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/iv_menu_arrow"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="3dp"
-        android:layout_toRightOf="@+id/tv_menu_title"/>
+        <TextView
+            android:id="@+id/tv_menu_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginRight="@dimen/dimen_20"
+            android:text="111"
+            android:textColor="@color/default_menu_text"
+            android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/iv_menu_arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_menu_title"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_divider"

@@ -143,7 +143,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 case Customer.CUSTOMER_TYPE_NEAR_MINE:
                 case Customer.CUSTOMER_TYPE_NEAR_TEAM:
                 case Customer.CUSTOMER_TYPE_NEAR_COMPANY:
-                    listView.setMode(PullToRefreshBase.Mode.DISABLED);
+                    listView.setOnRefreshListener(this);
+                    listView.setMode(PullToRefreshBase.Mode.BOTH);
                     break;
             }
         }

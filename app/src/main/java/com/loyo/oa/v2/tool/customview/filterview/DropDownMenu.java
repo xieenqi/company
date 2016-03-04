@@ -326,7 +326,7 @@ public class DropDownMenu extends LinearLayout{
                 mIvMenuArrow.add(iv);
                 mIvMenuArrow.get(i).setImageResource(mDownArrow);
 
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) iv.getLayoutParams();
                 params.leftMargin = mArrowMarginTitle;
                 iv.setLayoutParams(params);
 

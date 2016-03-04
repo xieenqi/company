@@ -91,7 +91,7 @@ public class LauncherActivity extends BaseActivity {
         public void run() {
              //iv_launcher_fade.setY(layout_launcher_fade.getTop() + 200);
             ObjectAnimator animator = ObjectAnimator.ofFloat(iv_launcher_fade, "translationY",
-                    (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), -700.0f);
+                    (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), -750.0f);
             animator.setDuration(500);
             animator.setInterpolator(new AccelerateInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -104,7 +104,7 @@ public class LauncherActivity extends BaseActivity {
                         LogUtil.d("动画进度在v " + value);
                         iv_white.setVisibility(View.VISIBLE);
                     }
-                    if (Math.round(value) == -700) {
+                    if (Math.round(value) == -750) {
                         intentActivity();
                     }
                 }

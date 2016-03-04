@@ -9,7 +9,7 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
 public class ViewUtil {
-    private static String TAG = "ViewUtil 视图工具";
+    private static String TAG = "ViewUtil";
     public static final int DATE_NULL = 0;
 
 //    public class OnTouchListener_button_drawableTop implements View.OnTouchListener {

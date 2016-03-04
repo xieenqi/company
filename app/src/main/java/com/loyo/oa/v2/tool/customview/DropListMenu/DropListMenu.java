@@ -413,7 +413,7 @@ public class DropListMenu extends LinearLayout {
                 mIvMenuArrow.add(iv);
                 mIvMenuArrow.get(i).setImageResource(mDownArrow);
 
-                final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) iv.getLayoutParams();
                 params.leftMargin = mArrowMarginTitle;
                 iv.setLayoutParams(params);
 
