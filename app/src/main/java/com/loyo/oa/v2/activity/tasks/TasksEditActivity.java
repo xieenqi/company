@@ -504,7 +504,10 @@ public class TasksEditActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                HashMap<String,Object> map = new HashMap<String, Object>();
+                map.put("bizType",2);
+                map.put("uuid", uuid);
+                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                     @Override
                     public void success(Attachment attachment, Response response) {
                         Utils.dialogDismiss();

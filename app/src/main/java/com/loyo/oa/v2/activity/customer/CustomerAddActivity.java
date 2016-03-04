@@ -54,6 +54,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -101,7 +102,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<TagItem> items = new ArrayList<>();
     private ArrayList<NewTag> tags;
 
-    private String uuid = null;
+    private String uuid = StringUtil.getUUID();
     private String tagItemIds;
     private String myAddress;
     private boolean isFocused = false;
@@ -251,7 +252,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 try {
                     jsonObject.put("name", customer_name);
                     // jsonObject.put("address", customerAddress);
-                    if (uuid != null && lstData_Attachment.size() > 0) {
+                    if (lstData_Attachment.size() > 0) {
                         jsonObject.put("uuid", uuid);
                         jsonObject.put("attachmentCount", lstData_Attachment.size());
                     }
@@ -369,9 +370,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                         if (newFile != null && newFile.length() > 0) {
                             RequestParams params = new RequestParams();
-                            if (uuid == null) {
-                                uuid = StringUtil.getUUID();
-                            }
                             params.put("uuid", uuid);
 
                             if (newFile.exists()) {
@@ -395,8 +393,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 Utils.dialogShow(this, "请稍候");
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+                    uuid = StringUtil.getUUID();
+                    HashMap<String,Object> map = new HashMap<String, Object>();
+                    map.put("bizType",6);
+                    map.put("uuid", uuid);
+
                     RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map,
                             new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment attachment, Response response) {

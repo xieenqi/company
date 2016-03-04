@@ -21,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
@@ -64,6 +66,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -132,6 +135,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
+    private String[] mounthArr = {"1", "2", "3","4", "5", "6","7", "8", "9","10", "11", "12"};
 
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
@@ -549,16 +553,40 @@ public class ContactInfoEditActivity extends BaseActivity {
     }
 
 
+    private DatePicker findDatePicker(ViewGroup group) {
+        if (group != null) {
+            for (int i = 0, j = group.getChildCount(); i < j; i++) {
+                View child = group.getChildAt(i);
+                if (child instanceof DatePicker) {
+                    return (DatePicker) child;
+                } else if (child instanceof ViewGroup) {
+                    DatePicker result = findDatePicker((ViewGroup) child);
+                    if (result != null)
+                        return result;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * 设置生日
      */
     private void selectBirthDay() {
-        // DateTool.calendar = Calendar.getInstance();
-        Calendar calendar = Calendar.getInstance();
-        LogUtil.d(" 主题样式： " + calendar.getTimeZone().getDisplayName());
+
+        Calendar calendar = Calendar.getInstance(Locale.CHINA);
+        Date date = new Date();
+        calendar.setTime(date);
+
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                //((NumberPicker)((ViewGroup) ((ViewGroup) view.getChildAt(0)).getChildAt(0)).getChildAt(1)).setDisplayedValues(mounthArr);
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
                     String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth);
@@ -567,8 +595,9 @@ public class ContactInfoEditActivity extends BaseActivity {
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
+
             }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        }, year,month,day);
         datePickerDialog.show();
     }
 

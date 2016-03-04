@@ -57,7 +57,7 @@ public class BulletinAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_recevier;
     @ViewById TextView tv_recevier;
 
-    String mUuid = StringUtil.getUUID();
+    String uuid = StringUtil.getUUID();
     String cc_user_id, cc_department_id, cc_user_name, cc_department_name;
     SignInGridViewAdapter mGridViewAdapter;
     ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
@@ -119,7 +119,7 @@ public class BulletinAddActivity extends BaseActivity {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("title", title);
                 map.put("content", content);
-                map.put("attachmentUUId", mUuid);
+                map.put("attachmentUUId", uuid);
                 map.put("members", member);
                 map.put("attachments", newData());
                 LogUtil.d(" 通知 传递数据： " + MainApp.gson.toJson(map));
@@ -129,7 +129,7 @@ public class BulletinAddActivity extends BaseActivity {
                         HttpErrorCheck.checkResponse("add通知", response);
                         if (bulletin != null) {
                             if (mAttachment != null) {
-                                bulletin.attachmentUUId = mUuid;
+                                bulletin.attachmentUUId = uuid;
                                 bulletin.attachments = mAttachment;
                             }
                             Intent intent = new Intent();
@@ -162,7 +162,7 @@ public class BulletinAddActivity extends BaseActivity {
      * 获取附件
      */
     private void getAttachments() {
-        Utils.getAttachments(mUuid, new RCallback<ArrayList<Attachment>>() {
+        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
                 mAttachment = attachments;
@@ -187,7 +187,7 @@ public class BulletinAddActivity extends BaseActivity {
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
-                        Utils.uploadAttachment(mUuid,0,newFile).subscribe(new CommonSubscriber(this) {
+                        Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
                             @Override
                             public void onNext(Serializable serializable) {
                                 getAttachments();
@@ -207,8 +207,10 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
         final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-        LogUtil.d("删除附件id " + delAttachment.getId());
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), new RCallback<Attachment>() {
+        HashMap<String,Object> map = new HashMap<String, Object>();
+        map.put("bizType",0);
+        map.put("uuid", uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(),map, new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
                 Toast("删除附件成功!");

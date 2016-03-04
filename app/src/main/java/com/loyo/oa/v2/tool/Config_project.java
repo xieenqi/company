@@ -21,7 +21,7 @@ public class Config_project {
 
     //public static String IP = "http://ukuaiqi.com";        //网站产品正式环境
 
-    //public static String IP = "http://192.168.31.136";
+    //public static String testIP = "http://192.168.31.136";
 
     /**
      * 正式产品的域名
@@ -52,16 +52,6 @@ public class Config_project {
          */
         public static String statistics = "http://stat.ukuaiqi.com";
 
-//        private String value = "";
-//
-//        private Domain(String value) {
-//            this.value = value;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return String.valueOf(value);
-//        }
     }
 
     /**
@@ -90,6 +80,7 @@ public class Config_project {
      */
     public static String SERVER_URL_LOGIN() {
         return isRelease ? Domain.account : IP + ":8080";
+
     }
     //产品预上线环境服务器 88端口  131的是8080
 
