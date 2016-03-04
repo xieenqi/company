@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,11 +23,13 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -34,9 +37,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedString;
 
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
@@ -48,18 +54,22 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
     private AttachmentAction mAction;
     private OnRightClickCallback callback;
     private int goneBtn; //隐藏对应的按钮 1:权限 2:删除
+    private int bizType;
+    private String uuid;
     private boolean hasRights = true;
 
     public interface OnRightClickCallback {
         void onRightClick(Bundle b);
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int _goneBtn) {
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int _goneBtn, int bizType,String uuid) {
         super();
         mAttachments = _attachments;
         mContext = _context;
         app = (MainApp) _context.getApplicationContext();
         this.goneBtn = _goneBtn;
+        this.bizType = bizType;
+        this.uuid = uuid;
 
         if (_users != null) {
             users = _users;
@@ -67,8 +77,8 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback, boolean hasRights, int _goneBtn) {
-        this(_context, _attachments, _users, _goneBtn);
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback, boolean hasRights, int _goneBtn,int _bizType,String _uuid) {
+        this(_context, _attachments, _users, _goneBtn,_bizType,_uuid);
         this.hasRights = hasRights;
         callback = _callback;
     }
@@ -206,16 +216,18 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Utils.dialogShow(mContext,"请稍候");
-                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
+                            Utils.dialogShow(mContext, "请稍候");
+                            HashMap<String,Object> map = new HashMap<String, Object>();
+                            map.put("bizType",bizType);
+                            map.put("uuid",uuid);
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), map, new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment att, Response response) {
-
+                                    HttpErrorCheck.checkResponse(response);
                                     if (mAction != null) {
                                         mAction.afterDelete(attachment);
                                     }
                                     Utils.dialogDismiss();
-
                                 }
 
                                 @Override

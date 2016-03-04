@@ -9,7 +9,6 @@
     <style name="noTitle" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <!--<item name="android:windowFullscreen">true</item>-->
-
     </style>
 
     <!--FragmentActivity的样式，目前主要是用到ActionBar的地方-->

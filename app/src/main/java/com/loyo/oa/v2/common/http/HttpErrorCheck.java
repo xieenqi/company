@@ -36,6 +36,8 @@ public class HttpErrorCheck {
     public static void checkError(RetrofitError error) {
         DialogHelp.cancelLoading();
         LogUtil.d("网络异常" + error.getMessage());
+        LogUtil.d("error接口URL：" + error.getUrl());
+
         try {
             String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
             LogUtil.d("error获得的：", msg);
@@ -52,7 +54,6 @@ public class HttpErrorCheck {
                 Toast(job.getString("error"));
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
-            LogUtil.d("error接口URL：" + error.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
            // Toast(error.getMessage());

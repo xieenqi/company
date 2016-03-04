@@ -716,7 +716,10 @@ public class WorkReportAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                    HashMap<String,Object> map = new HashMap<String, Object>();
+                    map.put("bizType",1);
+                    map.put("uuid", uuid);
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                         @Override
                         public void success(Attachment attachment, Response response) {
                             Toast("删除附件成功!");

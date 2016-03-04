@@ -8,6 +8,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -39,8 +40,12 @@ public interface IAttachment {
     void pub(@Path("id") String id,@Path("isopen") int isOpen, retrofit.Callback<Attachment> cb);
 
     //删除附件
+/*    @DELETE("/attachment/{id}")
+    void remove(@Path("id") String id, retrofit.Callback<Attachment> cb);*/
+
+    //删除附件(新加入UUID)
     @DELETE("/attachment/{id}")
-    void remove(@Path("id") String id, retrofit.Callback<Attachment> cb);
+    void remove(@Path("id") String id,@QueryMap HashMap<String,Object> map, retrofit.Callback<Attachment> cb);
 
     @GET("/attachment/uuid/{uuid}")
     void getAttachments(@Path("uuid") String uuid, Callback<ArrayList<Attachment>> cb);
@@ -63,14 +68,6 @@ public interface IAttachment {
      */
     @Multipart
     @POST("/attachment/")
-    //Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("attachments")TypedFile attachments);
     Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments);
-
-    /**
-     * 上传附件 测试
-     * */
-    @Multipart
-    @POST("/attachment/")
-    void addLicenseInfo(@QueryMap Map<String, Object> map,Callback<Attachment> response);
 
 }

@@ -4,11 +4,17 @@ def AAVersion = '3.3.2'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.0'
+    buildToolsVersion '22.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
 
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     signingConfigs {
         debug {
             storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
@@ -33,22 +39,6 @@ android {
 
     buildTypes {
         debug {
-//            applicationIdSuffix '.debug'
-//            versionNameSuffix '.debug'
-//
-//            android.applicationVariants.all { variant ->
-//                def buildType = variant.buildType
-//                def encoding = java.nio.charset.Charset.defaultCharset().toString()
-//                if (buildType.applicationIdSuffix) {
-//                    variant.mergeResources.doLast {
-//                        def f = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
-//                        String content = f.getText(encoding)
-//                        content = content.replaceAll('乐享云办公', '乐享云(测试)')
-//                        f.write(content, encoding)
-//
-//                    }
-//                }
-//            }
             signingConfig signingConfigs.debug
             //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
             //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"

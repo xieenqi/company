@@ -484,7 +484,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         }
         Utils.dialogShow(this, "请稍候");
         final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+        HashMap<String,Object> map = new HashMap<String, Object>();
+        map.put("bizType",0);
+        map.put("uuid", uuid);
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
                 Utils.dialogDismiss();
