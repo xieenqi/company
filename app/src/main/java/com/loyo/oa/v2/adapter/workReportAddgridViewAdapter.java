@@ -1,14 +1,12 @@
 package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -66,8 +64,8 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(dynList.get(position).getName());
-        holder.num.setText(dynList.get(position).getNum());
+        holder.name.setText(dynList.get(position).name);
+        holder.num.setText(dynList.get(position).num+"");
 
         for(int i = 0;i<redGroup.length;i++){
             if(position == redGroup[i]){

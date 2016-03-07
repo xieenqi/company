@@ -16,16 +16,14 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -41,7 +39,6 @@ import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.NoScroolGridView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorkReport;
@@ -67,12 +64,10 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -88,7 +83,7 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_CREATE = 1; //报告创建
     public static final int TYPE_EDIT = 2; //报告编辑
     public static final int TYPE_CREATE_FROM_COPY = 3; //报告复制
-    public static final int TYPE_PROJECT= 4; //项目创建报告
+    public static final int TYPE_PROJECT = 4; //项目创建报告
     public static final int UPDATE_SUCCESS = 0x01;
 
     @ViewById
@@ -150,17 +145,18 @@ public class WorkReportAddActivity extends BaseActivity {
     private PostBizExtData bizExtData;
     private StringBuffer joinUser;
 
-    private Handler mHandler = new Handler(){
-        public void handleMessage(Message msg){
-            if(msg.what == UPDATE_SUCCESS){
-                if(null == dynList || dynList.size() == 0){
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_SUCCESS) {
+                if (null == dynList || dynList.size() == 0) {
                     no_dysndata_workreports.setVisibility(View.VISIBLE);
                     gridview_workreports.setVisibility(View.GONE);
-                }else{
+                } else {
                     no_dysndata_workreports.setVisibility(View.GONE);
                     gridview_workreports.setVisibility(View.VISIBLE);
-                    workGridViewAdapter = new workReportAddgridViewAdapter(mContext,dynList);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
                     gridview_workreports.setAdapter(workGridViewAdapter);
+                    layout_crm.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -207,16 +203,18 @@ public class WorkReportAddActivity extends BaseActivity {
             LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
-            }
-            if (type == TYPE_EDIT) {
                 uuid = mWorkReport.getAttachmentUUId();
+                dynList = mWorkReport.getCrmDatas();
+                crm_switch.setState(null == dynList ? false : true);
+//                crm_switch.setVisibility(View.INVISIBLE);
+                mHandler.sendEmptyMessage(UPDATE_SUCCESS);
             }
 
-            try{
+            try {
                 mReviewer = mWorkReport.getReviewer();
                 members = mWorkReport.getMembers();
                 projectId = mWorkReport.getProject().getId();
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -255,8 +253,7 @@ public class WorkReportAddActivity extends BaseActivity {
             rb3.setEnabled(false);
             getEditAttachments();
 
-        }
-        else if(type == TYPE_PROJECT){
+        } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
         }
 
@@ -286,8 +283,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 });
     }
-
-
 
 
     /**
@@ -368,8 +363,8 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void crmSwitch(boolean b) {
         /*获取日报 工作动态*/
-        if(b){
-            openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
+        if (b) {
+            openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
         }
         layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
         SharedUtil.putBoolean(this, "showCrmData", b);
@@ -384,7 +379,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
-        openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
+        openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
         tv_crm.setText("本日工作动态统计");
         beginAt = DateTool.getBeginAt_ofDay();
         endAt = DateTool.getEndAt_ofDay();
@@ -400,7 +395,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
-        openDynamic(DateTool.getBeginAt_ofWeek()/1000+"",DateTool.getEndAt_ofWeek()/1000+"");
+        openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
         beginAt = DateTool.getBeginAt_ofWeek();
         endAt = DateTool.getEndAt_ofWeek();
@@ -418,7 +413,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
-        openDynamic(DateTool.getBeginAt_ofMonthMills()/1000+"",DateTool.getEndAt_ofMonth()/1000+"");
+        openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
         beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
         endAt = DateTool.getEndAt_ofMonth();
@@ -434,7 +429,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (lstData_Attachment == null) {
             lstData_Attachment = new ArrayList<>();
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -476,14 +471,17 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("projectId", projectId);
                 }
                 map.put("attachmentUUId", uuid);
-                map.put("bizExtData",bizExtData);
+                map.put("bizExtData", bizExtData);
                 map.put("reviewer", mReviewer);//点评人
                 map.put("members", members);//抄送人
+                if (null != dynList) {
+                    map.put("crmDatas", dynList);//工作动态统计
+                }
 
                 if (type != TYPE_EDIT) {
                     map.put("isDelayed", tv_time.getText().toString().contains("补签") ? true : false);
                 }
-
+                LogUtil.d(" 报告参数   " + app.gson.toJson(map));
                 /*报告新建／编辑*/
                 if (type == TYPE_EDIT) {
                     updateReport(map);
@@ -510,13 +508,13 @@ public class WorkReportAddActivity extends BaseActivity {
             /*抄送人*/
             case R.id.layout_toUser:
 
-                if(joinUserId != null) {
+                if (joinUserId != null) {
                     mBundle = new Bundle();
                     mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
                     mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
                     app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.request_Code, mBundle);
-                }else{
+                } else {
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
@@ -545,31 +543,31 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 开启动态统计数据
-     * */
-    public void openDynamic(String startTime,String endTime){
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("startTime",startTime);
-        map.put("endTime",endTime);
+     */
+    public void openDynamic(String startTime, String endTime) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
 
-        LogUtil.dll("startTime:"+startTime);
-        LogUtil.dll("endTime:"+endTime);
+        LogUtil.dll("startTime:" + startTime);
+        LogUtil.dll("endTime:" + endTime);
 
-            RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
-                    .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
-                        @Override
-                        public void success(ArrayList<WorkReportDyn> dyn, Response response) {
-                            HttpErrorCheck.checkResponse(response);
-                            LogUtil.dll("动态工作返回："+MainApp.gson.toJson(dyn));
-                            dynList = dyn;
-                            mHandler.sendEmptyMessage(UPDATE_SUCCESS);
-                        }
+        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
+                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
+                    @Override
+                    public void success(ArrayList<WorkReportDyn> dyn, Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        LogUtil.dll("动态工作返回：" + MainApp.gson.toJson(dyn));
+                        dynList = dyn;
+                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+                    }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            super.failure(error);
-                            HttpErrorCheck.checkError(error);
-                        }
-                    });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     /**
@@ -580,15 +578,14 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
-                cancelLoading();
                 dealResult(workReport);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -602,15 +599,14 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                cancelLoading();
                 dealResult(workReport);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -666,19 +662,19 @@ public class WorkReportAddActivity extends BaseActivity {
                     members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
                     if (null == members) {
                         tv_toUser.setText("无参与人");
-                    }else{
-                        joinName  = new StringBuffer();
+                    } else {
+                        joinName = new StringBuffer();
                         joinUserId = new StringBuffer();
-                        if(null != members.depts){
-                            for(NewUser newUser : members.depts){
-                                joinName.append(newUser.getName()+",");
-                                joinUserId.append(newUser.getId()+",");
+                        if (null != members.depts) {
+                            for (NewUser newUser : members.depts) {
+                                joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
-                        if(null != members.users){
-                            for(NewUser newUser : members.users){
-                                joinName.append(newUser.getName()+",");
-                                joinUserId.append(newUser.getId()+",");
+                        if (null != members.users) {
+                            for (NewUser newUser : members.users) {
+                                joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
                         tv_toUser.setText(joinName.toString());
@@ -696,7 +692,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid,1,newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 1, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         app.logUtil.e("onNext");
@@ -716,10 +712,10 @@ public class WorkReportAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String,Object> map = new HashMap<String, Object>();
-                    map.put("bizType",1);
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", 1);
                     map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                         @Override
                         public void success(Attachment attachment, Response response) {
                             Toast("删除附件成功!");

@@ -1022,7 +1022,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 业务使用权限 判断设置
      */
     public void testJurl() {
-        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites) {
+        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
+                0 == MainApp.user.permission.suites.size()) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -1030,6 +1031,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     testJurl();
                 }
             }, 5000);
+            LogUtil.d("没有配置权限");
             return;
         }
 

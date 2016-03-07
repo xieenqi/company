@@ -204,7 +204,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     /**
-     * 登录失败
+     * 登录cg
      */
     private void loginSuccess(final Token token) {
         Timer timer = new Timer();
@@ -217,7 +217,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         //登录成功
                         MainApp.setToken(token.access_token);
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
-                        SharedUtil.putBoolean(LoginActivity.this, ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
+                        SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                         app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                     }
                 });

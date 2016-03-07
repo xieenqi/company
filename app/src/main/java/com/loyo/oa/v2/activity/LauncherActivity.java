@@ -45,6 +45,7 @@ public class LauncherActivity extends BaseActivity {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
             }
+
             @Override
             public void OnLocationGDFailed() {
 
@@ -89,7 +90,7 @@ public class LauncherActivity extends BaseActivity {
     private Runnable rocketRunner = new Runnable() {
         @Override
         public void run() {
-             //iv_launcher_fade.setY(layout_launcher_fade.getTop() + 200);
+            //iv_launcher_fade.setY(layout_launcher_fade.getTop() + 200);
             ObjectAnimator animator = ObjectAnimator.ofFloat(iv_launcher_fade, "translationY",
                     (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), -750.0f);
             animator.setDuration(500);
@@ -116,12 +117,12 @@ public class LauncherActivity extends BaseActivity {
     };
 
     public void intentActivity() {
-        isWelcom = SharedUtil.getBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY);
+        isWelcom = SharedUtil.getBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY);
         LogUtil.d("wlecom: " + isWelcom);
         Intent intent = new Intent();
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
-            SharedUtil.putBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY, true);
+            SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         } else {
             intent.setClass(LauncherActivity.this,
                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
