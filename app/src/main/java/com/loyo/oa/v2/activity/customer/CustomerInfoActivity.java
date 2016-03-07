@@ -21,6 +21,7 @@ import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerRegional;
+import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.Locate;
 import com.loyo.oa.v2.beans.Member;
@@ -173,7 +174,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     @Override
                     public void success(Customer customer, Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
-                        LogUtil.dll("客户信息:" + MainApp.gson.toJson(customer));
                         mCustomer = customer;
                         Utils.dialogDismiss();
                         initData();
@@ -200,7 +200,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             public void success(ArrayList<Province> provinces, Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Utils.dialogDismiss();
-                new DialogFragmentAreaCast().show(provinces,getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
+                new DialogFragmentAreaCast().show(provinces, getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
                     @Override
                     public void onMenuSelected(Object o) {
                         regional = (CustomerRegional) o;
@@ -358,6 +358,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         });
     }
 
+    /**
+     * 验证必填动态字段是否填写*/
+
+    private boolean testDynamicword(){
+        for(ExtraData extDatas: mCustomer.extDatas){
+            if(extDatas.getProperties().isRequired()){
+                if(extDatas.getVal().isEmpty() || null == extDatas.getVal()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label,
             R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users,
@@ -371,7 +385,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                 if (tv_district.getText().toString().isEmpty()) {
                     Toast("地区不能为空");
-                } else {
+                }
+                else if(!testDynamicword()){
+                    Toast("请填写必填选项");
+                }
+                else {
                     updateCustomer();
                 }
                 break;
@@ -453,7 +471,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("loc", mLocate);
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
-        //map.put("industry", industry);
 
         LogUtil.dll("提交客户信息，发送的数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).

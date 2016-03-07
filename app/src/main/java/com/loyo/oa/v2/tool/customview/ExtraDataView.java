@@ -100,7 +100,7 @@ public class ExtraDataView extends LinearLayout {
             addView(extra);
             if (properties.isList()) {
                 LogUtil.dll("islist");
-                LogUtil.dll("islist enable:"+properties.isEnabled());
+                LogUtil.dll("islist enable:" + properties.isEnabled());
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
@@ -108,6 +108,10 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
+                if(properties.isRequired()){
+                    tv_content.setHint("必填");
+                }
+
             } else if ("long".equals(properties.getType())) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:"+properties.isEnabled());
@@ -117,9 +121,12 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
+                if(properties.isRequired()){
+                    tv_content.setHint("必填");
+                }
             } else if ("string".equals(properties.getType())) {
                 LogUtil.dll("string");
-                LogUtil.dll("string enable:"+properties.isEnabled());
+                LogUtil.dll("string enable:" + properties.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -127,7 +134,9 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                //                tv_content.setHint(R.string.app_please_input);
+                if(properties.isRequired()){
+                    tv_content.setHint("必填");
+                }
             } else if ("int".equals(properties.getType())) {
                 LogUtil.dll("int");
                 LogUtil.dll("int enable:"+properties.isEnabled());
@@ -138,7 +147,9 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
-                //                tv_content.setHint(R.string.app_please_input);
+                if(properties.isRequired()){
+                    tv_content.setHint("必填");
+                }
             } else if ("double".equals(properties.getType())) {
                 LogUtil.dll("double");
                 LogUtil.dll("double enable:"+properties.isEnabled());
@@ -149,7 +160,9 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                //                tv_content.setHint(R.string.app_please_input);
+                if(properties.isRequired()){
+                    tv_content.setHint("必填");
+                }
             }
         }
     }
@@ -163,7 +176,6 @@ public class ExtraDataView extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            Log.e(getClass().getSimpleName(), "afterTextChanged, s : " + s.toString());
             extra.setVal(s.toString());
         }
 
