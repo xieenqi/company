@@ -201,7 +201,7 @@
                                 android:layout_gravity="center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="无法获取数据"
+                                android:text="暂无统计数据"
                                 android:textColor="@color/gray"
                                 />
 
@@ -245,6 +245,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_10"
+                        android:layout_marginLeft="@dimen/dimen_10"
+                        android:layout_marginRight="@dimen/dimen_10"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"

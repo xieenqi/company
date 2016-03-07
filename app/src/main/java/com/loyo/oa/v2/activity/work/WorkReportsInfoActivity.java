@@ -8,7 +8,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -16,10 +15,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -35,23 +35,23 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -104,8 +104,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     EditText edt_workReport_title;
     @ViewById
     EditText edt_content;
-    @ViewById
-    WebView webView_content;
+    //    @ViewById
+//    WebView webView_content;
     @ViewById
     RatingBar ratingBar_workReport;
     @ViewById
@@ -126,16 +126,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
     private workReportAddgridViewAdapter workGridViewAdapter;
 
     private ArrayList<WorkReportDyn> dynList;
-    private Handler mHandler = new Handler(){
-        public void handleMessage(Message msg){
-            if(msg.what == UPDATE_SUCCESS){
-                if(null == dynList || dynList.size() == 0){
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_SUCCESS) {
+                if (null == dynList || dynList.size() == 0) {
                     no_dysndata_workreports.setVisibility(View.VISIBLE);
                     info_gridview_workreports.setVisibility(View.GONE);
-                }else{
+                } else {
                     no_dysndata_workreports.setVisibility(View.GONE);
                     info_gridview_workreports.setVisibility(View.VISIBLE);
-                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(),dynList);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(), dynList);
                     info_gridview_workreports.setAdapter(workGridViewAdapter);
                 }
             }
@@ -151,37 +151,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
     }
 
     /**
-     * 开启动态统计数据
-     * */
-    public void openDynamic(String startTime,String endTime){
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("startTime",startTime);
-        map.put("endTime", endTime);
-
-        LogUtil.dll("startTime:" + startTime);
-        LogUtil.dll("endTime:" + endTime);
-
-        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
-                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
-                    @Override
-                    public void success(ArrayList<WorkReportDyn> dyn, Response response) {
-                        cancelLoading();
-                        HttpErrorCheck.checkResponse(response);
-                        dynList = dyn;
-                        LogUtil.dll("返回的数据 动态:" + MainApp.gson.toJson(dyn));
-                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        cancelLoading();
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-    /**
      * 获取报告详情
      */
     @Background
@@ -194,7 +163,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
-                HttpErrorCheck.checkResponse("报告详情", response);
+                HttpErrorCheck.checkResponse(response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -202,7 +171,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -277,19 +245,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 reportType = " 日报";
                 crmName = "本日工作动态统计";
                 reportDate = app.df4.format(new Date(mWorkReport.getBeginAt() * 1000));
-                openDynamic(DateTool.getCurrentMoringMillis()/1000+"",DateTool.getNextMoringMillis()/1000+"");
                 break;
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
                 reportDate = app.df4.format(new Date(mWorkReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(mWorkReport.getEndAt() * 1000));
-                openDynamic(DateTool.getBeginAt_ofWeek()/1000+"",DateTool.getEndAt_ofWeek()/1000+"");
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
                 reportDate = app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
-                openDynamic(DateTool.getBeginAt_ofMonthMills()/1000+"",DateTool.getEndAt_ofMonth()/1000+"");
                 break;
 
         }
@@ -299,17 +264,25 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
 
         tv_crm.setText(crmName);
-        tv_discussion_count.setText("讨论 ("+mWorkReport.getBizExtData().getDiscussCount()+")");
-        tv_attachment_count.setText("附件 ("+mWorkReport.getBizExtData().getAttachmentCount()+")");
+        tv_discussion_count.setText("讨论 (" + mWorkReport.getBizExtData().getDiscussCount() + ")");
+        tv_attachment_count.setText("附件 (" + mWorkReport.getBizExtData().getAttachmentCount() + ")");
 
         edt_workReport_title.setText(title.toString());
-        webView_content.getSettings().setJavaScriptEnabled(true);
-        webView_content.loadDataWithBaseURL(null, mWorkReport.getContent(), "text/html", "utf-8", null);
-
+//        webView_content.getSettings().setJavaScriptEnabled(true);
+//        webView_content.loadDataWithBaseURL(null, mWorkReport.getContent(), "text/html", "utf-8", null);
+        /**
+         * 工作动态统计
+         */
+        if (null != mWorkReport.getCrmDatas()) {
+            dynList = mWorkReport.getCrmDatas();
+            mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+        } else {
+            mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+        }
         NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
 
         tv_reviewer.setText(mWorkReport.getReviewer().getUser().getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty()?"无抄送人":getJoinUserNames());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "无抄送人" : getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
@@ -337,7 +310,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
 
         } else {
-            status  = 0;
+            status = 0;
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
 
@@ -393,8 +366,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("fromPage", Common.WORK_PAGE);
-        bundle.putInt("status",status);
-        bundle.putInt("bizType",1);
+        bundle.putInt("status", status);
+        bundle.putInt("bizType", 1);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
     }
 
@@ -407,7 +380,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
         bundle.putInt("status", status);
         bundle.putBoolean("isMyUser", isCreater());
-        bundle.putInt("bizType",1);
+        bundle.putInt("bizType", 1);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
@@ -461,15 +434,15 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public String getJoinUserNames() {
         StringBuilder result = new StringBuilder();
         if (mWorkReport.getMembers().users != null || mWorkReport.getMembers().depts != null) {
-            if(mWorkReport.getMembers().users != null){
+            if (mWorkReport.getMembers().users != null) {
                 for (int i = 0; i < mWorkReport.getMembers().users.size(); i++) {
-                    result.append(mWorkReport.getMembers().users.get(i).getName()+",");
+                    result.append(mWorkReport.getMembers().users.get(i).getName() + ",");
                 }
             }
 
-            if(mWorkReport.getMembers().depts != null){
+            if (mWorkReport.getMembers().depts != null) {
                 for (int i = 0; i < mWorkReport.getMembers().depts.size(); i++) {
-                    result.append(mWorkReport.getMembers().depts.get(i).getName()+",");
+                    result.append(mWorkReport.getMembers().depts.get(i).getName() + ",");
                 }
             }
             return result.toString();
@@ -480,9 +453,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 判断是否是创建人
-     * */
-    public boolean isCreater(){
-        return mWorkReport.getCreator().getId().equals(MainApp.user.getId())?true:false;
+     */
+    public boolean isCreater() {
+        return mWorkReport.getCreator().getId().equals(MainApp.user.getId()) ? true : false;
     }
 
 

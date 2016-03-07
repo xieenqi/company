@@ -34,7 +34,7 @@ import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
 import com.loyo.oa.v2.activity.login.LoginActivity;
-import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
@@ -1139,7 +1139,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     MainApp.jpushData = null;
                     break;
                 case 4:
-                    intent.setClass(MainActivity.this, ProjectInfoActivity.class);
+                    intent.setClass(MainActivity.this, ProjectInfoActivity_.class);
                     intent.putExtra("projectId", MainApp.jpushData.buzzId);
                     startActivity(intent);
                     MainApp.jpushData = null;

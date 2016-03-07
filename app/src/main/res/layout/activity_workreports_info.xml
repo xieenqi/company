@@ -34,18 +34,18 @@
                     android:layout_marginRight="@dimen/margin_side_edge">
 
                     <EditText
-                        android:singleLine="false"
-                        android:layout_marginRight="@dimen/dimen_4"
-                        android:layout_toLeftOf="@+id/img_workreport_status"
                         android:id="@+id/edt_workReport_title"
                         style="@style/text_item1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="@dimen/dimen_4"
                         android:layout_marginTop="4dp"
+                        android:layout_toLeftOf="@+id/img_workreport_status"
                         android:background="@android:color/transparent"
                         android:focusable="false"
+                        android:singleLine="false"
                         android:textColor="@color/text1"/>
 
                     <TextView
@@ -78,16 +78,16 @@
                     android:layerType="software"
                     android:padding="@dimen/dimen_15"/>
 
-                <WebView
-                    android:id="@+id/webView_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:background="@android:color/transparent"
-                    android:minHeight="80dp"/>
+                <!--  <WebView
+                      android:id="@+id/webView_content"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="8dp"
+                      android:layout_marginLeft="@dimen/margin_side_edge"
+                      android:layout_marginRight="@dimen/margin_side_edge"
+                      android:layout_marginTop="@dimen/dimen_10"
+                      android:background="@android:color/transparent"
+                      android:minHeight="80dp"/>-->
 
             </LinearLayout>
 
@@ -215,42 +215,42 @@
                             android:layerType="software"/>
 
                         <com.loyo.oa.v2.common.NoScroolGridView
-                            android:layout_marginBottom="10dp"
                             android:id="@+id/info_gridview_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:numColumns="3"
+                            android:layout_marginBottom="10dp"
                             android:listSelector="@android:color/transparent"
+                            android:numColumns="3"
                             />
 
                         <LinearLayout
-                            android:visibility="gone"
                             android:id="@+id/no_dysndata_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:background="@color/beogray"
+                            android:orientation="vertical"
+                            android:visibility="gone"
                             >
 
                             <ImageView
-                                android:layout_marginTop="10dp"
-                                android:layout_gravity="center"
                                 android:layout_width="50dp"
                                 android:layout_height="60dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
                                 android:background="@drawable/icon_dysn_nodata"
                                 />
 
                             <TextView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="10dp"
-                                android:layout_gravity="center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="无法获取数据"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="5dp"
+                                android:text="暂无统计数据"
                                 android:textColor="@color/gray"
                                 />
 
-                            </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -394,12 +394,12 @@
                             android:layerType="software"/>
 
                         <LinearLayout
-                            android:layout_marginLeft="@dimen/dimen_10"
-                            android:layout_marginRight="@dimen/dimen_10"
-                            android:layout_marginBottom="@dimen/dimen_5"
                             android:id="@+id/layout_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dimen_5"
+                            android:layout_marginLeft="@dimen/dimen_10"
+                            android:layout_marginRight="@dimen/dimen_10"
                             android:background="@color/white"
                             android:orientation="vertical">
 
@@ -429,6 +429,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+
                 <Button
                     android:id="@+id/btn_workreport_review"
                     android:layout_width="match_parent"
