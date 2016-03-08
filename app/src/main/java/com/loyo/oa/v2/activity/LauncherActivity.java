@@ -110,7 +110,6 @@ public class LauncherActivity extends BaseActivity {
 
             });
             animator.start();
-
         }
     };
 

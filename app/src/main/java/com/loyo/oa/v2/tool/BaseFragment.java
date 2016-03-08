@@ -29,13 +29,13 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        //        if (activity instanceof BaseActivity){
-        //            mActivity = (BaseActivity)activity;
+        //        if (activity instanceof CityBaseActivity){
+        //            mActivity = (CityBaseActivity)activity;
         //            app = mActivity.app;
         ////            mActivity.app.logUtil;
         //        } else {
         //            //TODO:提示错误
-        //            Toast.makeText(this.getActivity(),"This is not BaseActivity!",Toast.LENGTH_SHORT).show();
+        //            Toast.makeText(this.getActivity(),"This is not CityBaseActivity!",Toast.LENGTH_SHORT).show();
         //        }
     }
 

@@ -9,11 +9,6 @@ android {
         exclude 'assets/lineDashTexture.png'
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
     signingConfigs {
         debug {
             storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')

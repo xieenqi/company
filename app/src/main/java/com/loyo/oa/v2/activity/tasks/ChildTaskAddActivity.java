@@ -350,7 +350,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 //     * 时间 : 15/8/28.
 //     */
 //     @EActivity(R.layout.activity_notice)
-//    public static class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2 {
+//    public static class BulletinManagerActivity extends CityBaseActivity implements PullToRefreshListView.OnRefreshListener2 {
 //        @ViewById ViewGroup img_title_left;
 //        @ViewById TextView tv_title_1;
 //
