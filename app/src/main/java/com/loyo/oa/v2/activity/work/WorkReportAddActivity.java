@@ -50,7 +50,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -156,7 +155,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     gridview_workreports.setVisibility(View.VISIBLE);
                     workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
                     gridview_workreports.setAdapter(workGridViewAdapter);
-                    layout_crm.setVisibility(View.VISIBLE);
+
                 }
             }
         }
@@ -208,6 +207,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 crm_switch.setState(null == dynList ? false : true);
 //                crm_switch.setVisibility(View.INVISIBLE);
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+                layout_crm.setVisibility(View.VISIBLE);
             }
 
             try {
@@ -367,7 +367,7 @@ public class WorkReportAddActivity extends BaseActivity {
             openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
         }
         layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
-        SharedUtil.putBoolean(this, "showCrmData", b);
+        //SharedUtil.putBoolean(this, "showCrmData", b);
     }
 
 
