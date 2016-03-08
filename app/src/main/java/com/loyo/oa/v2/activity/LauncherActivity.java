@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.login.WelcomeActivity;
@@ -19,7 +18,6 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -33,7 +31,6 @@ import org.androidannotations.annotations.ViewById;
 @EActivity(R.layout.activity_launcher)
 public class LauncherActivity extends BaseActivity {
     @ViewById ImageView iv_launcher_adv, iv_launcher_fade, iv_white;//小微企业工作台、火箭
-    //@ViewById ImageView iv_launcher_bottom;
     @ViewById ViewGroup ll_root, layout_launcher_fade;
     private boolean isWelcom = false;
 
@@ -44,6 +41,7 @@ public class LauncherActivity extends BaseActivity {
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+
             }
             @Override
             public void OnLocationGDFailed() {
@@ -89,7 +87,7 @@ public class LauncherActivity extends BaseActivity {
     private Runnable rocketRunner = new Runnable() {
         @Override
         public void run() {
-             //iv_launcher_fade.setY(layout_launcher_fade.getTop() + 200);
+            //iv_launcher_fade.setY(layout_launcher_fade.getTop() + 200);
             ObjectAnimator animator = ObjectAnimator.ofFloat(iv_launcher_fade, "translationY",
                     (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), -750.0f);
             animator.setDuration(500);
@@ -117,7 +115,6 @@ public class LauncherActivity extends BaseActivity {
 
     public void intentActivity() {
         isWelcom = SharedUtil.getBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY);
-        LogUtil.d("wlecom: " + isWelcom);
         Intent intent = new Intent();
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
@@ -128,6 +125,5 @@ public class LauncherActivity extends BaseActivity {
         }
         startActivity(intent);
         finish();
-        //overridePendingTransition(R.anim.enter_in, R.anim.enter_out);
     }
 }

@@ -67,11 +67,10 @@
 
         <activity
             android:name=".activity.LauncherActivity_"
-            android:configChanges="locale"
             android:label="@string/app_name"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:theme="@style/noTitle"
+            android:theme="@style/AppStartLoadTranslucent"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
