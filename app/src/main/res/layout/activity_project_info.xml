@@ -3,7 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/activity_split"
+              android:background="#fafafa"
               android:orientation="vertical"
     >
     <include layout="@layout/include_common_title_edit"/>
@@ -75,17 +75,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginTop="@dimen/dimen_10"
         android:background="@color/white"
         android:orientation="vertical">
 
         <com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="30dp"
             android:background="@android:color/white"
             app:pstsIndicatorColor="@color/title_bg1"
-            app:pstsIndicatorHeight="3dp"
+            app:pstsIndicatorHeight="1.5dp"
             app:pstsShouldExpand="true"
             app:pstsTabPaddingLeftRight="1dp"
             app:pstsUnderlineHeight="0.5dp"/>

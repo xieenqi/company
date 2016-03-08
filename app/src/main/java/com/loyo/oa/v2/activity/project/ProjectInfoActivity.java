@@ -184,7 +184,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 callbacks.add(fragmentX);
                 fragmentXes.add(fragmentX);
             }
-            tabs.setTextSize(app.spTopx(18));
+            tabs.setTextSize(app.spTopx(13));
+            tabs.setDividerColor(getResources().getColor(R.color.white));//间隔条的颜色
             adapter = new MyPagerAdapter(getSupportFragmentManager());
             pager.setAdapter(adapter);
         } else {
