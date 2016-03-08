@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray0990"
-    android:orientation="vertical">
-
-    <include layout="@layout/include_common_title_edit" />
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#fafafa"
+              android:orientation="vertical"
+    >
+    <include layout="@layout/include_common_title_edit"/>
 
     <LinearLayout
         android:id="@+id/layout_project_des"
@@ -85,10 +85,10 @@
         <com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="30dp"
             android:background="@android:color/white"
             app:pstsIndicatorColor="@color/title_bg1"
-            app:pstsIndicatorHeight="3dp"
+            app:pstsIndicatorHeight="1.5dp"
             app:pstsShouldExpand="true"
             app:pstsTabPaddingLeftRight="1dp"
             app:pstsUnderlineHeight="0.5dp" />

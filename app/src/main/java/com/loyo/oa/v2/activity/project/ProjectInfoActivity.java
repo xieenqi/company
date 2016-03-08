@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity;
@@ -28,7 +29,6 @@ import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
@@ -181,7 +181,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 callbacks.add(fragmentX);
                 fragmentXes.add(fragmentX);
             }
-            tabs.setTextSize(app.spTopx(18));
+            tabs.setTextSize(app.spTopx(13));
+            tabs.setDividerColor(getResources().getColor(R.color.white));//间隔条的颜色
             adapter = new MyPagerAdapter(getSupportFragmentManager());
             pager.setAdapter(adapter);
         } else {
