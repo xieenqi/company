@@ -64,7 +64,7 @@ public class HttpErrorCheck {
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
-            Toast("请检查您的网络连接");
+            Toast("连接服务器失败");
         }
 
 

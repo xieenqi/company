@@ -43,6 +43,7 @@ public class LauncherActivity extends BaseActivity {
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
 
             }
+
             @Override
             public void OnLocationGDFailed() {
 
@@ -118,7 +119,7 @@ public class LauncherActivity extends BaseActivity {
         Intent intent = new Intent();
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
-            SharedUtil.putBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY, true);
+            SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         } else {
             intent.setClass(LauncherActivity.this,
                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
