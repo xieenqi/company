@@ -1051,7 +1051,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         }
 
-
         items.clear();
         items = itemsNew;
         lv_main.setAdapter(adapter);//为了业务使用权限
