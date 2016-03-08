@@ -37,15 +37,31 @@
             android:layout_height="@dimen/dimen_45"
             android:background="@color/whitesmoke">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/view_h_title"
-                android:layout_centerInParent="true"
-                android:drawableLeft="@drawable/icon_common_add"
-                android:gravity="center"
-                android:text="新增拜访签到"
-                android:textColor="@color/title_bg1"/>
-        </RelativeLayout>
 
+            <LinearLayout
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_common_add"
+                    android:layout_marginRight="5dp"
+                    />
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="新增拜访签到"
+                    android:textSize="15sp"
+                    android:textColor="@color/title_bg1"/>
+                </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

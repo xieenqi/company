@@ -64,15 +64,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById TextView tv_project_title;
     @ViewById TextView tv_project_extra;
     @ViewById ImageView img_project_status;
-
     @Extra("projectId") String projectId;
     HttpProject project;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
-
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
-
 
     @AfterViews
     void initViews() {
@@ -229,7 +226,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     @Override
     public void onLoadSuccess(int id, int size) {
-        LogUtil.d("项目 table ->id : " + id + " size : " + size);
         int idexS = TITLES[id].indexOf("(");
         int idexE = TITLES[id].lastIndexOf(")");
         String c = TITLES[id].substring(idexS + 1, idexE);

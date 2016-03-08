@@ -73,8 +73,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-
-
     /**
      * 显示图片
      *
@@ -279,6 +277,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                     }
                 }
                 break;
+
             /**
              * 附件上传回调
              * */

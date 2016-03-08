@@ -30,7 +30,7 @@
                 <EditText
                     android:id="@+id/tv_customer_name"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="55dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="left|center"
@@ -48,17 +48,21 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="57dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <EditText
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:paddingLeft="16dp"
+                        android:background="@null"
                         android:id="@+id/tv_address"
-                        style="@style/edtText_normal"
-                        android:layout_width="0px"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:hint="地址"
+                        android:textSize="15sp"
                         android:singleLine="false"/>
 
                     <LinearLayout
