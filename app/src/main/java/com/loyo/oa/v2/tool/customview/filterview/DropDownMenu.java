@@ -132,7 +132,7 @@ public class DropDownMenu extends LinearLayout{
         mArrowMarginTitle=10;
         mShowCheck=true;
         mShowDivider=true;
-        mCheckIcon=R.drawable.ico_make;
+        mCheckIcon=R.drawable.img_check1;
         mUpArrow=R.drawable.arrow_up;
         mDownArrow=R.drawable.arrow_down;
 
@@ -326,7 +326,7 @@ public class DropDownMenu extends LinearLayout{
                 mIvMenuArrow.add(iv);
                 mIvMenuArrow.get(i).setImageResource(mDownArrow);
 
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) iv.getLayoutParams();
                 params.leftMargin = mArrowMarginTitle;
                 iv.setLayoutParams(params);
 

@@ -17,13 +17,14 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ContactsDepartmentActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
@@ -31,20 +32,21 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :部门列表页
+ * 描述 :【公司 的 部门】   列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
  */
 public class ContactsDepartmentFragment extends BaseFragment {
-    View view;
-    ExpandableListView expandableListView_user;
-    ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
-    ArrayList<ContactsGroup> lstUserGroupData;
-    MyLetterListView letterView;
-    AlphabetIndexer index;
-    ViewGroup layout_toast;
-    TextView tv_toast;
-    String mIndex;
+
+    private View view;
+    private ExpandableListView expandableListView_user;
+    private ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
+    private ArrayList<ContactsGroup> lstUserGroupData;
+    private MyLetterListView letterView;
+    private AlphabetIndexer index;
+    private ViewGroup layout_toast;
+    private TextView tv_toast;
+    private String mIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         StringBuffer sb = null;
 
         for (int i = 0; i < lstUserGroupData.size(); i++) {
+
             if (sb == null) {
                 sb = new StringBuffer();
             }
@@ -65,7 +68,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         if (sb == null) {
             mIndex = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         } else {
-            mIndex = "#".concat(sb.toString());
+            mIndex = "".concat(sb.toString());
         }
     }
 
@@ -81,7 +84,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
             index = new AlphabetIndexer(cursor, 0, mIndex);
 
             letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
-            letterView.setKeyword(mIndex);
+            //letterView.setKeyword(mIndex);
             letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
 
                 @Override
@@ -90,16 +93,16 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
                     switch (state) {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                            layout_toast.setVisibility(View.VISIBLE);
+                            //layout_toast.setVisibility(View.VISIBLE);
                             tv_toast.setText(sectionLetter);
-                            scroll(position);
+                            scroll(position -1);
                             break;
                         case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
                             tv_toast.setText(sectionLetter);
-                            scroll(position);
+                            scroll(position -1);
                             break;
                         case MyLetterListView.FINGER_ACTION_UP:
-                            layout_toast.setVisibility(View.GONE);// 手指离开
+                            //layout_toast.setVisibility(View.GONE);// 手指离开
                             break;
                         default:
                             break;
@@ -358,7 +361,11 @@ public class ContactsDepartmentFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 初始化列表 信息
+     */
     void init_expandableListView_user() {
+
         if (lstUserGroupData == null) {
             return;
         }
@@ -455,11 +462,13 @@ public class ContactsDepartmentFragment extends BaseFragment {
             if (null != group.getDepartments() && !group.getDepartments().isEmpty()) {
                 Department department = group.getDepartments().get(childPosition);
                 if (null != department) {
+
                     String departmentName = department.getName();
                     int userSize = Common.getUsersByDeptId(department.getId(), new ArrayList<User>()).size();
                     String members = "(" + userSize + "人)";
                     departmentName = departmentName.concat(members);
                     tv_content.setText(departmentName);
+
                 }
             }
             if (childPosition == getChildrenCount(groupPosition) - 1)

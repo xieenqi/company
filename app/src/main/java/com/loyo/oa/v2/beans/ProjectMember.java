@@ -2,6 +2,7 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.tool.ListUtil;
 
 import java.util.ArrayList;
@@ -14,100 +15,136 @@ import java.util.ArrayList;
  */
 public class ProjectMember extends BaseBeans {
 
+    public ProjectMember() {
+
+    }
+
     public ProjectMember(String userId, boolean canreadall) {
         this.userId = userId;
-        this.canreadall = canreadall;
+        this.canReadAll = canreadall;
     }
 
-    private boolean canreadall;// (bool, optional): ,
-    private String id;// (int64, optional): ,
-    private boolean ismanager; //(bool, optional): ,
-    private long projectId;// (int64, optional): ,
-    private User user;// (&{organization User}, optional): ,
-    private String  userId;// (int, optional):
+    public boolean canReadAll;// (bool, optional): ,
+    public String id;// (int64, optional): ,
+    public boolean ismanager; //(bool, optional): ,
+    public long projectId;// (int64, optional): ,
+    public User user;// (&{organization User}, optional): ,
+    public String userId;// (int, optional):
+    public Department dept;
 
-    public String getUserId() {
-        return userId;
-    }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+//    public class Dept {
+//        public String id;
+//        public String xpath;
+//        public String name;
+//    }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
-    }
-
-    public boolean ismanager() {
-        return ismanager;
-    }
-
-    public void setIsmanager(boolean ismanager) {
-        this.ismanager = ismanager;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public boolean isCanreadall() {
-        return canreadall;
-    }
-
-    public void setCanreadall(boolean canreadall) {
-        this.canreadall = canreadall;
-    }
-
-    public static String GetUserIds(ArrayList<ProjectMember> memberList) {
+    public static String GetMenberUserIds(ArrayList<HttpProject.ProjectMember> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
             return "";
         }
 
         StringBuffer sb = null;
-        for (ProjectMember member : memberList) {
+        for (HttpProject.ProjectMember member : memberList) {
             if (sb == null) {
                 sb = new StringBuffer();
             } else {
                 sb.append(",");
             }
 
-            sb.append(TextUtils.isEmpty(member.getUserId()) ? member.getUserId() : member.getUser().getId());
+            if(member.user!=null){
+                sb.append(member.user.id);
+            }
         }
 
         return sb == null ? "" : sb.toString();
     }
-
-    public static String GetUserNames(ArrayList<ProjectMember> memberList) {
+    public static String GetMnagerUserIds(ArrayList<HttpProject.ProjectManaer> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
             return "";
         }
 
         StringBuffer sb = null;
-        for (ProjectMember member : memberList) {
+        for (HttpProject.ProjectManaer member : memberList) {
             if (sb == null) {
                 sb = new StringBuffer();
             } else {
                 sb.append(",");
             }
 
-            if (member.getUser() != null) {
-                sb.append(member.getUser().getRealname());
+            sb.append(TextUtils.isEmpty(member.user.id) ? member.user.id : member.user.id);
+        }
+
+        return sb == null ? "" : sb.toString();
+    }
+
+    public static String GetUserNames(ArrayList<HttpProject.ProjectMember> memberList) {
+        if (ListUtil.IsEmpty(memberList)) {
+            return "";
+        }
+
+        StringBuffer sb = null;
+        for (HttpProject.ProjectMember member : memberList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+            } else {
+                sb.append(",");
+            }
+
+            if (member.user != null) {
+                sb.append(member.user.getRealname());
             }
         }
 
         return sb == null ? "" : sb.toString();
+    }
+
+
+    public static String getManagersName(ArrayList<HttpProject.ProjectManaer> memberList) {
+        if (ListUtil.IsEmpty(memberList)) {
+            return "";
+        }
+
+        StringBuffer sb = null;
+        for (HttpProject.ProjectManaer member : memberList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+            } else {
+                sb.append(",");
+            }
+
+            if (member.user != null) {
+                sb.append(member.user.getRealname());
+            }
+        }
+
+        return sb == null ? "" : sb.toString();
+    }
+
+    public static String getMembersName(ArrayList<HttpProject.ProjectMember> memberList) {
+        if (ListUtil.IsEmpty(memberList)) {
+            return "";
+        }
+
+        StringBuffer sb = null;
+        for (HttpProject.ProjectMember member : memberList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+            } else {
+                sb.append(",");
+            }
+
+            if (member.user != null) {
+                sb.append(member.user.getRealname());
+            }
+
+            if (member.dept != null) {
+                sb.append(member.dept.name);
+            }
+        }
+
+        return sb == null ? "" : sb.toString();
+
     }
 
     @Override
@@ -129,6 +166,8 @@ public class ProjectMember extends BaseBeans {
             return true;
         }
 
-        return this.getUserId() == ((ProjectMember) o).getUserId();
+        return this.userId == ((ProjectMember) o).userId;
     }
+
+
 }

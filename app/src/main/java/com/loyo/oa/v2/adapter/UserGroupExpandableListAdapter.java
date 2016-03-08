@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 人员选择适配器
+ * */
+
 public class UserGroupExpandableListAdapter extends BaseExpandableListAdapter {
 
     private DepartmentUserActivity departmentUserActivity;
@@ -115,7 +119,7 @@ public class UserGroupExpandableListAdapter extends BaseExpandableListAdapter {
 
         User user = lstUserGroupData.get(groupPosition).getLstUser().get(childPosition);
         item_info.tv_title.setText(user.getRealname());
-        item_info.tv_content.setText(user.getDepartmentsName());
+        item_info.tv_content.setText(user.departmentsName);
 
         switch (departmentUserActivity.select_type) {
             case DepartmentUserActivity.TYPE_SELECT_SINGLE:

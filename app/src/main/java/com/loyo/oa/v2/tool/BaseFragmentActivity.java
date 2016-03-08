@@ -9,24 +9,27 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
-
-import java.util.ArrayList;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
     protected MainApp app;
     protected Context mContext;
+    private Toast mCurrentToast;
+    private int mTouchViewGroupId = -1;
+    public GeneralPopView generalPopView;
 
     final String Tag = "BaseFragmentActivity";
 
@@ -51,6 +54,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     /**
      * 网络状态变化回调方法
+     *
      * @param available
      */
     protected void onNetworkChanged(boolean available) {
@@ -93,19 +97,20 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void onSaveInstanceState(Bundle outState) {
-        app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():begin");
+        LogUtil.d(this.getClass().getName() + "-onSaveInstanceState():开始");
 
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
-        outState.putSerializable("subUsers", MainApp.subUsers);
 
-        app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
+        //outState.putSerializable("subUsers", MainApp.subUsers);
+
+        LogUtil.d(this.getClass().getName() + "-onSaveInstanceState():完成");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:begin");
+        LogUtil.d(this.getClass().getName() + "-恢复实例状态: 开始");
         super.onRestoreInstanceState(savedInstanceState);
 
         if (StringUtil.isEmpty(MainApp.getToken())) {
@@ -116,11 +121,11 @@ public class BaseFragmentActivity extends FragmentActivity {
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
 
-        if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
+        /*if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
             MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
-        }
+        }*/
 
-        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
+        LogUtil.d(this.getClass().getName() + "-恢复实例状态: 完成");
     }
 
     DrawerLayout main_layout;
@@ -143,15 +148,15 @@ public class BaseFragmentActivity extends FragmentActivity {
         getWindow().getDecorView().setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
         if (MainApp.user == null) {
-            Log.d(Tag, "user is null");
+            LogUtil.d(" 用户为空 ");
             MainApp.user = DBManager.Instance().getUser();
         }
 
-        if (MainApp.subUsers == null) {
+        /*if (MainApp.subUsers == null) {
             Log.d(Tag, "subUsers is null");
             MainApp.subUsers = DBManager.Instance().getSubordinates();
             Log.d(Tag, "subUsers size" + MainApp.subUsers.size());
-        }
+        }*/
 
         super.onResume();
     }
@@ -188,7 +193,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 //                    if (main_layout != null && f != null && main_layout.isDrawerOpen(f)) {
 //                        main_layout.closeDrawers();
 //                    } else if (mTouchViewGroupId == 0) {
-                        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
 //                    }
 
                 }
@@ -199,12 +204,11 @@ public class BaseFragmentActivity extends FragmentActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    int mTouchViewGroupId;
 
     public void setTouchView(int _touchViewGroupId) {
         mTouchViewGroupId = _touchViewGroupId;
-
         if (mTouchViewGroupId <= 0) {
+
             return;
         }
 
@@ -232,11 +236,12 @@ public class BaseFragmentActivity extends FragmentActivity {
 //                            if (curX > xLast && xDistance > yDistance && xDistance > 150) {
 //                            app.finishActivity((FragmentActivity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                             onBackPressed();
+
                         }
                         xLast = curX;
                         yLast = curY;
                 }
-
+                Toast("返回了  啊啊"+mTouchViewGroupId);
                 return true;
             }
         });
@@ -248,5 +253,26 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    protected void Toast(String msg) {
+        if (null != mCurrentToast) {
+            mCurrentToast.cancel();
+        }
+
+        mCurrentToast = Toast.makeText(app.getBaseContext(), msg, Toast.LENGTH_SHORT);
+        mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
+        mCurrentToast.show();
+    }
+
+    /**
+     * 通用提示弹出框init
+     * */
+    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
+        generalPopView = new GeneralPopView(this,isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
     }
 }

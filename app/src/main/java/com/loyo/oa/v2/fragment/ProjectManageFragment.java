@@ -6,16 +6,18 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ProjectAddActivity_;
-import com.loyo.oa.v2.activity.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.ProjectSearchActivity;
+import com.loyo.oa.v2.activity.project.ProjectAddActivity_;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.point.IProject;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
 
@@ -34,7 +36,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     private static final String[] FILTER_TYPE_ARRAY = new String[]{"全部类型", "我负责", "我创建", "我参与"};
     private static final int[] FILTER_TYPEID_ARRAY = new int[]{0, 3, 2, 1};
     private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
-
     private ProjectExpandableListAdapter adapter;
     private int type = 0;
     private int status = 0;
@@ -46,6 +47,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void GetData() {
+        showLoading("");
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -60,6 +62,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         params.put("endAt", System.currentTimeMillis()/1000);
         params.put("startAt", DateTool.getDateToTimestamp("2014-01-01",app.df5)/1000);
 
+        LogUtil.d(" 项目管理列表请求： "+ MainApp.gson.toJson(params));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IProject.class).getProjects(params,this);
     }
 
@@ -77,13 +80,13 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         mMenu.setmMenuCount(2);//Menu的个数
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
-        mMenu.setmMenuTitleTextSize(16);//Menu的文字大小
-        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.title_bg1));//Menu的文字颜色
-        mMenu.setmMenuListTextSize(16);//Menu展开list的文字大小
-        mMenu.setmMenuListTextColor(Color.BLUE);//Menu展开list的文字颜色
+        mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
+        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+        mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
+        mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
         mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
         mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.white));//Menu按下的背景颜色
-        mMenu.setmCheckIcon(R.drawable.ico_make);//Menu展开list的勾选图片
+        mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
         mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态"});//默认未选择任何过滤的Menu title
@@ -133,11 +136,16 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
+    /**
+     * 点击 item的 操作
+     * @param groupPosition
+     * @param childPosition
+     */
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectInfoActivity_.class);
-        intent.putExtra("project", (Project) adapter.getChild(groupPosition, childPosition));
+        intent.putExtra("projectId", ((Project)adapter.getChild(groupPosition, childPosition)).id);
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 
@@ -151,9 +159,12 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         initDropMenu();
     }
 
+    /**跳转搜索*/
     @Override
     public void openSearch() {
-        app.startActivity(getActivity(), ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+        Bundle mBundle = new Bundle();
+        mBundle.putInt("from", BaseActivity.PEOJECT_MANAGE);
+        app.startActivity(getActivity(), ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
     }
 
     @Override

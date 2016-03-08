@@ -12,6 +12,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+
 /**
  * com.loyo.oa.v2.tool.customview
  * 描述 :带扫描线的ImageView
@@ -35,14 +36,17 @@ public class ScanningImageView extends ImageView {
 
     public ScanningImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setClipToOutline(true);//设置绘制的覆盖物不能超出背景的轮廓
         }
+
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.TRANSPARENT);
         mPaint.setAlpha(255);
+
     }
 
     @Override
@@ -54,15 +58,16 @@ public class ScanningImageView extends ImageView {
             mPath.addCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, Path.Direction.CCW);
             canvas.clipPath(mPath, Region.Op.REPLACE);
         }
-        LinearGradient linearGradient = new LinearGradient(0, mHeight - CHANGE_BOUNDS, 0, mHeight, new int[]{Color.TRANSPARENT, Color.WHITE}, null, Shader.TileMode.CLAMP);
+        LinearGradient linearGradient = new LinearGradient(0, mHeight - CHANGE_BOUNDS, 0, mHeight,
+                new int[]{Color.parseColor("#10ffffff"), Color.parseColor("#ffffff"), Color.parseColor("#10ffffff")}, null, Shader.TileMode.CLAMP);
         mPaint.setShader(linearGradient);
-        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, getWidth(), mHeight, mPaint);
-
+//        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, CHANGE_BOUNDS, mHeight, mPaint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getResources().getDisplayMetrics().widthPixels / 7, mPaint);
+        //LogUtil.d("宽度：" + getWidth());
         if (mHeight >= getHeight()) {
             mHeight = 0;
         }
-        postInvalidateDelayed(40);
-
+        postInvalidateDelayed(80);
         super.onDraw(canvas);
     }
 }

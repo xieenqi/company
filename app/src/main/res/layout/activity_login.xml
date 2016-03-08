@@ -2,35 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#f2f2f2"
+              android:background="@drawable/login_bj"
               android:orientation="vertical">
 
     <ImageView
-        android:layout_width="@dimen/dimen_80"
-        android:layout_height="120dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimen_55"
+        android:layout_marginTop="@dimen/dimen_50"
         android:scaleType="fitXY"
         android:src="@drawable/icon_login_logo"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1"
-        android:layout_marginTop="47dp"
-        android:background="#e7e7e7"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/whitesmoke"
+        android:layout_marginTop="@dimen/dimen_45"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginLeft="@dimen/dimen_30"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_phone"/>
 
@@ -43,8 +38,9 @@
             android:background="@null"
             android:gravity="center_vertical"
             android:hint="请输入帐号"
-            android:textColor="@color/login_text"
-            android:textColorHint="@color/login_text"
+            android:textColor="@color/login"
+            android:textColorHint="@color/login"
+            android:singleLine="true"
             android:textCursorDrawable="@color/login_text"/>
 
     </LinearLayout>
@@ -52,21 +48,22 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1"
-        android:layout_marginLeft="@dimen/dimen_16"
-        android:background="#e7e7e7"/>
+        android:layout_marginLeft="@dimen/dimen_30"
+        android:layout_marginRight="@dimen/dimen_30"
+        android:background="@color/login"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/whitesmoke"
+        android:layout_marginTop="@dimen/dimen_20"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginLeft="@dimen/dimen_30"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_password"/>
 
@@ -80,23 +77,26 @@
             android:gravity="center_vertical"
             android:hint="请输入密码"
             android:inputType="textPassword"
-            android:textColor="@color/login_text"
-            android:textColorHint="@color/login_text"/>
-
+            android:textColor="@color/login"
+            android:singleLine="true"
+            android:textColorHint="@color/login"/>
+        F
     </LinearLayout>
 
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1"
-        android:background="#e7e7e7"/>
+        android:layout_marginLeft="@dimen/dimen_30"
+        android:layout_marginRight="@dimen/dimen_30"
+        android:background="@color/login"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_40"
-        android:layout_marginLeft="@dimen/dimen_16"
-        android:layout_marginRight="@dimen/dimen_16"
-        android:layout_marginTop="@dimen/dimen_30">
+        android:layout_height="@dimen/dimen_45"
+        android:layout_marginLeft="@dimen/dimen_30"
+        android:layout_marginRight="@dimen/dimen_30"
+        android:layout_marginTop="@dimen/dimen_40">
 
         <com.loyo.oa.v2.tool.customview.WaveView
             android:id="@+id/layout_login"
@@ -107,7 +107,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center"
-            android:text="登  录"
+            android:text="登录"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:wave_alpha="255"
@@ -115,120 +115,52 @@
             app:wave_color="@color/lightgray"
             app:wave_duration="25"
             app:wave_mode="spread"
-            app:wave_response_touch="false">
-        </com.loyo.oa.v2.tool.customview.WaveView>
+            app:wave_response_touch="false"/>
 
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/layout_reset_password"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
-        android:layout_marginTop="@dimen/dimen_20"
-        android:gravity="center"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="忘记密码"
-            android:textColor="#999999"
-            android:textSize="18sp"/>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dimen_10"
+        >
 
-    <LinearLayout
-        android:id="@+id/tv_bqq_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dimen_70"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="@dimen/dimen_65"
-            android:layout_height="@dimen/dimen_65"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_bqq"/>
-
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10"
             android:gravity="center"
-            android:text="企业 QQ 登陆"
-            android:textColor="#999999"
-            android:textSize="20sp"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_third_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="47dp"
-            android:background="@drawable/btn_login_qq">
-
-            <!--<ImageView-->
-            <!--android:id="@+id/img_arrow"-->
-            <!--android:layout_width="7dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/img_login_qq_arrow"/>-->
+            android:orientation="horizontal"
+            >
 
             <TextView
+                android:id="@+id/tv_resetPassword"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="忘记密码?"
+                android:textColor="@color/title_bg1"
+                android:textSize="14sp"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="@dimen/dimen_15"
+                android:layout_marginRight="@dimen/dimen_15"
+                android:background="@color/title_bg1"
+                />
+
+            <TextView
+                android:id="@+id/tv_qqLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:gravity="center"
                 android:text="企业QQ登录"
                 android:textColor="@color/title_bg1"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
 
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/tv_bwx_login"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:background="@drawable/btn_login_qq">
-
-            <!--<ImageView-->
-            <!--android:id="@+id/img_arrowwx"-->
-            <!--android:layout_width="7dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:src="@drawable/img_login_qq_arrow"/>-->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="微信账号登录"
-                android:textColor="@color/title_bg1"
-                android:textSize="16sp"/>
-
-        </RelativeLayout>
-
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

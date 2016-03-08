@@ -2,17 +2,15 @@ package com.loyo.oa.v2.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,18 +22,45 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
+import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsActivity;
+import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.login.LoginActivity;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
+import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
+import com.loyo.oa.v2.activity.setting.SettingActivity;
+import com.loyo.oa.v2.activity.signin.SignInActivity;
+import com.loyo.oa.v2.activity.signin.SignInManagerActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
-import com.loyo.oa.v2.beans.HomeNumber;
+import com.loyo.oa.v2.beans.HttpMainRedDot;
+import com.loyo.oa.v2.beans.Modules;
+import com.loyo.oa.v2.beans.Suites;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.AMapService;
@@ -43,10 +68,13 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.RippleView;
 import com.loyo.oa.v2.tool.customview.dragSortListView.DragSortListView;
 import com.loyo.oa.v2.tool.customview.popumenu.PopupMenu;
@@ -55,10 +83,6 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.tencent.android.tpush.XGIOperateCallback;
-import com.tencent.android.tpush.XGPushConfig;
-import com.tencent.android.tpush.XGPushManager;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -66,35 +90,52 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuDismissListener, PopupMenu.OnPopupMenuItemClickListener, LocationUtil.AfterLocation {
+public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuDismissListener,
+        PopupMenu.OnPopupMenuItemClickListener, LocationUtilGD.AfterLocation {
 
-    @ViewById(R.id.tv_title_1) TextView tv_user_name;
-    @ViewById(R.id.img_title_left) ImageView img_user;
-    @ViewById DragSortListView lv_main;
-    @ViewById SwipeRefreshLayout swipe_container;
-    @ViewById ViewGroup layout_network, layout_attendance, layout_avatar;
-    @ViewById ImageView img_home_head, img_fast_add;
-    @ViewById TextView tv_attendance_out_time, tv_attendance_in_time;
+    @ViewById(R.id.tv_title_1)
+    TextView tv_user_name;
+    @ViewById(R.id.img_title_left)
+    ImageView img_user;
+    @ViewById
+    DragSortListView lv_main;
+    @ViewById
+    SwipeRefreshLayout swipe_container;
+    @ViewById
+    ViewGroup layout_network, layout_attendance, layout_avatar, layout_is_attendance, container;
+    @ViewById
+    ImageView img_home_head, img_fast_add, img_bulletinStatus;
+    @ViewById
+    RelativeLayout group_home_relative;
 
     private Intent mIntentCheckUpdate;
-    private ArrayList<HomeNumber> mItemNumbers = new ArrayList<>();
+    private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
     private boolean mInitData;
-    private ArrayList<ClickItem> items = new ArrayList<>();
     private ClickItemAdapter adapter;
-
     private PopupMenu popupMenu;
-    private ValidateInfo validateInfo;
+    private ValidateInfo validateInfo = new ValidateInfo();
+    private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
+    private Boolean inEnable;
+    private Boolean outEnable;
+    private int outKind; //0上班  1下班  2加班
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -104,8 +145,28 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
+                LogUtil.dll("进入主页广播回调 launch");
                 launch();
+                testJurl();
             }
+        }
+    };
+    private ArrayList<ClickItem> items = new ArrayList<>();
+
+    //显示通知公告红点
+    public Handler handler = new Handler() {
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            switch (msg.what) {
+                case ExtraAndResult.MSG_WHAT_VISIBLE:
+                    img_bulletinStatus.setVisibility(View.VISIBLE);
+                    break;
+                case ExtraAndResult.MSG_WHAT_GONG:
+                    img_bulletinStatus.setVisibility(View.GONE);
+                    break;
+            }
+
         }
     };
 
@@ -114,27 +175,39 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         img_fast_add.setImageResource(R.drawable.icon_home_add);
     }
 
+    /**
+     * 主界面弹窗  新建任务  提交报告 审批申请 添加客户 拜访签到
+     * xnq
+     *
+     * @param position
+     * @param item
+     */
     @Override
     public void onPopupMenuItemClick(int position, PopupMenuItem item) {
+
         Class<?> _class = null;
         switch (position) {
+
             case 0:
-                _class = TasksAddActivity_.class;
-                break;
-            case 1:
-                _class = WorkReportAddActivity_.class;
-                break;
-            case 2:
-                _class = WfInstanceAddActivity_.class;
-                break;
-            case 3:
                 _class = CustomerAddActivity_.class;
                 break;
-            case 4:
+            case 1:
                 _class = SignInActivity.class;
                 break;
+            case 2:
+                _class = TasksAddActivity_.class;
+                break;
+            case 3:
+                _class = WorkReportAddActivity_.class;
+                break;
+            case 4:
+                _class = WfInstanceAddActivity_.class;
+                break;
+
         }
+
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+
     }
 
     @Override
@@ -178,6 +251,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         mHandler = new MHandler(this);
     }
 
+    //刷新数据
     private void onRefresh() {
         if (!StringUtil.isEmpty(MainApp.getToken())) {
             requestNumber();
@@ -191,7 +265,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public void drop(int from, int to) {
             if (from != to) {
                 ClickItem item = adapter.getItem(from);
-                app.logUtil.e("name : " + item.title + " from : " + from + " to : " + to);
                 adapter.remove(from);
                 adapter.insert(item, to);
             }
@@ -200,32 +273,65 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     @AfterViews
     void init() {
+        showLoading("加载中...");
+        LogUtil.d(" 获得main现有的token：" + MainApp.getToken());
         setTouchView(-1);
-        Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin), findViewById(R.id.img_setting), findViewById(R.id.img_fast_add));
+        Global.SetTouchView(findViewById(R.id.img_contact), findViewById(R.id.img_bulletin),
+                findViewById(R.id.img_setting),
+                findViewById(R.id.img_fast_add));
         if (StringUtil.isEmpty(MainApp.getToken())) {
             app.toActivity(LoginActivity.class);
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class), new ClickItem(R.drawable.icon_home_signin, "客戶拜访", SignInManagerActivity_.class), new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class), new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class), new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class), new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class), new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
-        initPopupMenu();
-
-        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.aquamarine);
+        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
+        //首页刷新监听
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
+
             }
         });
-        lv_main.setDropListener(onDrag);
-        adapter = new ClickItemAdapter();
-        lv_main.setAdapter(adapter);
-        lv_main.setDragEnabled(true);
 
         handlerEvent();
         checkUpdateService();
         updateUser();
+
+        lv_main.setDropListener(onDrag);
+        lv_main.setMaxScrollSpeed(100f);
+        adapter = new ClickItemAdapter();
+
+    }
+
+    /**
+     * 给激光推送 设置别名
+     */
+    public void setJpushAlias() {
+        //给激光推送 设置别名
+        if (null == MainApp.user) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    LogUtil.d(" Jpush user kongkong 空空");
+                    setJpushAlias();
+                }
+            }, 5000);
+            return;
+        }
+        JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                if (i != 0) {
+                    setJpushAlias();
+                }
+                LogUtil.d(MainApp.user + " 激光的alias： " + s);
+                isQQLogin();
+
+            }
+        });
     }
 
     /**
@@ -267,83 +373,59 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         signin.setText("拜访签到");
         signin.setResource(R.drawable.icon_home_menu_signin);
 
-        menuObjects.add(task);
-        menuObjects.add(report);
-        menuObjects.add(wfinstance);
-        menuObjects.add(customer);
-        menuObjects.add(signin);
+
+        for (ClickItem clickItem : items) {
+            if (clickItem.title.contains("任务计划")) {
+                menuObjects.add(task);
+            } else if (clickItem.title.contains("工作报告")) {
+                menuObjects.add(report);
+            } else if (clickItem.title.contains("审批流程")) {
+                menuObjects.add(wfinstance);
+            } else if (clickItem.title.contains("客户管理")) {
+                menuObjects.add(customer);
+            } else if (clickItem.title.contains("客户拜访")) {
+                menuObjects.add(signin);
+            }
+        }
 
         return menuObjects;
     }
 
-    @Override
-    public void OnLocationFailed() {
-        Toast("获取打卡位置失败");
-    }
-
-    @Override
-    public void OnLocationSucessed(final String address, double longitude, double latitude, float radius) {
-        map.put("originalgps", longitude + "," + latitude);
-        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
-            @Override
-            public void success(AttendanceRecord attendanceRecord, Response response) {
-                attendanceRecord.setAddress(address);
-                Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
-                intent.putExtra("mAttendanceRecord", attendanceRecord);
-                startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast("服务器连接失败,请检查网络");
-                super.failure(error);
-            }
-        });
-    }
+    /*****************************考勤相关操作*****************************/
 
     /**
      * 获取能否打卡的信息
      */
     private void getValidateInfo() {
+        showLoading("加载中...");
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(ValidateInfo _validateInfo, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
                 }
                 validateInfo = _validateInfo;
-
-                ValidateItem validateItem = availableValidateItem();
-                if (null != validateItem) {
-                    int type = validateItem.getType();
-                    switch (type) {
-                        case ValidateItem.ATTENDANCE_STATE_IN:
-                            tv_attendance_in_time.setText("上班打卡");
-                            tv_attendance_out_time.setText("");
-                            break;
-
-                        case ValidateItem.ATTENDANCE_STATE_OUT:
-                            tv_attendance_out_time.setText("下班打卡");
-                            tv_attendance_in_time.setText(validateItem.getReason());
-                            break;
-                    }
-                } else {
-                    if (null == validateInfo.getValids() || validateInfo.getValids().isEmpty()) {
-                        tv_attendance_out_time.setText("");
-                        tv_attendance_in_time.setText("");
-                    } else {
-                        tv_attendance_out_time.setText(validateInfo.getValids().get(1).getReason());
-                        tv_attendance_in_time.setText(validateInfo.getValids().get(0).getReason());
+                try {
+                    LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                for (ValidateItem validateItem : validateInfo.getValids()) {
+                    if (validateItem.getType() == 1) {
+                        inEnable = validateItem.isEnable();
+                    } else if (validateItem.getType() == 2) {
+                        outEnable = validateItem.isEnable();
                     }
                 }
-                onClickAvatar();
+                rotateInt();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Toast("获取考勤信息失败");
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -364,71 +446,230 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         return validateItem;
     }
 
+    @Click(R.id.layout_is_attendance)
+    void onClickIsAttendance() {
+        Toast("您今天已经打卡完毕");
+        Intent intent = new Intent(MainActivity.this, AttendanceActivity_.class);
+        startActivity(intent);
+    }
 
-    /**
-     * 打考勤
-     */
-    private void attendance() {
+    void startAttanceLocation() {
+        showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
         }
-        final int type = validateItem.getType();
-        checkAttendance(type);
+        int type = validateItem.getType();
+        map.clear();
+        map.put("inorout", type);
+        new LocationUtilGD(MainActivity.this, this);
+    }
+
+    //高德定位回调
+    @Override
+    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        map.put("originalgps", longitude + "," + latitude);
+        LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
+        app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+            @Override
+            public void success(AttendanceRecord attendanceRecord, Response response) {
+                cancelLoading();
+                attendanceRecords = attendanceRecord;
+                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
+                attendanceRecord.setAddress(address);
+
+                if (attendanceRecord.getState() == 3) {
+                    attanceWorry();
+                } else {
+                    intentValue();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+        LocationUtilGD.sotpLocation();
+    }
+
+
+    @Override
+    public void OnLocationGDFailed() {
+        LocationUtilGD.sotpLocation();
+        cancelLoading();
+        Toast("获取打卡位置失败");
     }
 
     /**
-     * 新增考勤
-     *
-     * @param inOrOut
+     * 跳转考勤界面，封装数据
      */
-    private void checkAttendance(int inOrOut) {
-        map.clear();
-        map.put("inorout", inOrOut);
-        new LocationUtil(this, this);
+    public void intentValue() {
+        Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
+        intent.putExtra("mAttendanceRecord", attendanceRecords);
+        intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
+        intent.putExtra("needExtra", validateInfo.isNeedExtra());
+        intent.putExtra("outKind", outKind);
+        intent.putExtra("serverTime", validateInfo.getServerTime());
+        intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
+        startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
+
+    /**
+     * (翻转前)点击头像，获取能否打卡信息
+     */
+    @Click(R.id.img_title_left)
+    void onClickAvatar() {
+        getValidateInfo();
+    }
+
+    /**
+     * (翻转后)点击打卡,准备跳转新建考勤
+     */
     @Click(R.id.layout_attendance)
     void onClickAttendance() {
+
         if (null == validateInfo) {
             return;
         }
+
         if (!Global.isConnected()) {
             Toast("没有网络连接，不能打卡");
             return;
         }
-        attendance();
+        /*工作日*/
+        if (validateInfo.isWorkDay()) {
+            /*加班*/
+            if (validateInfo.isPopup()) {
+                popOutToast();
+            }
+            /*不加班*/
+            else {
+                dealInOutWork();
+            }
+        }
+        /*非工作日，下班状态*/
+        else if (!validateInfo.isWorkDay() && outEnable) {
+            outKind = 2;
+            startAttanceLocation();
+        }
+        /*非工作日，上班状态*/
+        else if (!validateInfo.isWorkDay() && inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
     }
 
-    @Click(R.id.img_title_left)
-    void onClickAvatar() {
-        //如果未获取考勤信息或考勤信息不是今天的，重新获取考勤信息
-        //        || validateInfo.getSetting().getCheckInTime() < (int)DateTool.getBeginAt_ofDay()/1000
-        if (null == validateInfo) {
-            getValidateInfo();
-            return;
+    /**
+     * 判断上班下班
+     */
+    public void dealInOutWork() {
+        /*上班*/
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
         }
+        /*下班*/
+        else if (outEnable) {
+            outKind = 1;
+            startAttanceLocation();
+        }
+    }
 
+
+    /**
+     * 加班提示框
+     */
+    public void popOutToast() {
+        final AttenDancePopView popView = new AttenDancePopView(this);
+        popView.show();
+        popView.setCanceledOnTouchOutside(true);
+
+        /*正常下班*/
+        popView.generalOutBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                outKind = 1;
+                startAttanceLocation();
+                popView.dismiss();
+            }
+        });
+
+       /*完成加班*/
+        popView.finishOutBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                outKind = 2;
+                startAttanceLocation();
+                popView.dismiss();
+            }
+        });
+
+        /*取消*/
+        popView.cancels(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popView.dismiss();
+            }
+        });
+    }
+
+
+    /**
+     * 早退提示
+     */
+    public void attanceWorry() {
+        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+                intentValue();
+            }
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
+    }
+
+
+    /**
+     * 头像翻转
+     */
+    private void rotateInt() {
         //为什么参数必须为小数才可以？
         //解决翻转过后文本也被翻转
-        ViewHelper.setPivotX(layout_attendance, layout_attendance.getWidth()/2);
-        ViewHelper.setPivotY(layout_attendance, layout_attendance.getHeight()/2);
+        ViewHelper.setPivotX(layout_attendance, layout_attendance.getWidth() / 2);
+        ViewHelper.setPivotY(layout_attendance, layout_attendance.getHeight() / 2);
         ViewHelper.setRotationY(layout_attendance, 180f);
 
-        layout_avatar.setPivotX(layout_avatar.getWidth()/2);
-        layout_avatar.setPivotY(layout_avatar.getHeight()/2);
+        layout_avatar.setPivotX(layout_avatar.getWidth() / 2);
+        layout_avatar.setPivotY(layout_avatar.getHeight() / 2);
 
-        ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(img_user, "rotationY", 0f, 180f).setDuration(500);
+        ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(img_user, "rotationY", 0f, 180f).setDuration(300);
         objectAnimator.setInterpolator(new LinearInterpolator());
         objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
                 layout_avatar.setRotationY(value);
-                app.logUtil.e("CurrentPlayTime = " + valueAnimator.getCurrentPlayTime()+" value : "+value);
+
                 if (Math.round(value) >= 90) {
                     img_user.setVisibility(View.INVISIBLE);
-                    layout_attendance.setVisibility(View.VISIBLE);
+                    if (inEnable || outEnable) {
+                        layout_is_attendance.setVisibility(View.INVISIBLE);
+                        layout_attendance.setVisibility(View.VISIBLE);
+                    } else {
+                        layout_attendance.setVisibility(View.INVISIBLE);
+                        layout_is_attendance.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (Math.round(value) == 180) {
                     mHandler.postDelayed(rotateRunner, 5000);
@@ -442,10 +683,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void run() {
             //为什么参数必须为小数才可以？
-            layout_avatar.setPivotX(layout_avatar.getWidth()/2);
-            layout_avatar.setPivotY(layout_avatar.getHeight()/2);
+            layout_avatar.setPivotX(layout_avatar.getWidth() / 2);
+            layout_avatar.setPivotY(layout_avatar.getHeight() / 2);
 
-            ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(500);
+            ObjectAnimator objectAnimator = new ObjectAnimator().ofFloat(layout_attendance, "rotationY", 0f, -180f).setDuration(300);
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -454,7 +695,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
                         img_user.setVisibility(View.VISIBLE);
-                        layout_attendance.setVisibility(View.INVISIBLE);
+                        if (inEnable || outEnable) {
+                            layout_is_attendance.setVisibility(View.INVISIBLE);
+                            layout_attendance.setVisibility(View.INVISIBLE);
+                        } else {
+                            layout_attendance.setVisibility(View.INVISIBLE);
+                            layout_is_attendance.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
             });
@@ -462,28 +709,48 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     };
 
+
+    /**
+     * 到 【通讯录】  页面
+     */
     @Click(R.id.img_contact)
     void onClickContact() {
-        app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+        if (null != MainApp.lstDepartment) {
+            app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+        } else {
+            Toast("组织架构缺损，请重新拉去");
+        }
     }
 
+    /**
+     * 到 【公告通知】 页面
+     */
     @Click(R.id.img_bulletin)
     void onClickBulletin() {
         app.startActivity(this, BulletinManagerActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
     }
 
+    /**
+     * 添加 【popu弹窗】窗口
+     */
     @Click(R.id.img_fast_add)
     void onClickAdd() {
         popupMenu.showAt(findViewById(R.id.img_fast_add));
         img_fast_add.setImageResource(R.drawable.icon_home_menu_close);
     }
 
+    /**
+     * 到 【设置】 页面8
+     */
     @Click(R.id.img_setting)
     void onClickSetting() {
         app.startActivity(this, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
     }
 
 
+    /**
+     * 版本更新检查
+     */
     @Background
     void checkUpdateService() {
         mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
@@ -496,9 +763,16 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         TextView tv_item;
         TextView tv_extra;
         ImageView view_number;
+        TextView tv_num;
     }
 
     public class ClickItemAdapter extends BaseAdapter {
+        LayoutInflater inflter;
+
+        public ClickItemAdapter() {
+            inflter = LayoutInflater.from(mContext);
+        }
+
         @Override
         public int getCount() {
             return items.size();
@@ -529,43 +803,62 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_main, parent, false);
-
+                convertView = inflter.inflate(R.layout.item_main, null, false);
                 holder.img_item = (ImageView) convertView.findViewById(R.id.img_item);
                 holder.tv_item = (TextView) convertView.findViewById(R.id.tv_item);
                 holder.tv_extra = (TextView) convertView.findViewById(R.id.tv_extra);
                 holder.layout_item = (RippleView) convertView.findViewById(R.id.layout_item);
                 holder.view_number = (ImageView) convertView.findViewById(R.id.view_number);
+                holder.tv_num = (TextView) convertView.findViewById(R.id.tv_num);
                 convertView.setTag(holder);
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             final ClickItem item = getItem(position);
 
-            for (HomeNumber num : mItemNumbers) {
+            for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
-                if ((item.title.equals("工作报告") && num.getBiz_name().toLowerCase().equals("workreport"))) {
-                    extra = num.getNumber() + "个待点评";
-                } else if ((item.title.equals("任务计划") && num.getBiz_name().toLowerCase().equals("task"))) {
-                    extra = num.getNumber() + "个待处理";
-                } else if ((item.title.equals("审批流程") && num.getBiz_name().toLowerCase().equals("approval"))) {
-                    extra = num.getNumber() + "个待审核";
-                } else if (item.title.equals("项目管理")) {
-                    extra = num.getNumber() + "个进行中";
-                } else if (item.title.equals("客户管理")) {
-                    extra = num.getNumber() + "个将掉公海";
-                } else if (item.title.equals("客户拜访")) {
-                    extra = num.getNumber() + "个需拜访";
-                } else if (item.title.equals("考勤管理")) {
-                    extra = "未打卡";
+                if ((item.title.equals("工作报告") && num.bizType == 1)) {
+                    extra = num.bizNum + "个待点评";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
+                    extra = num.bizNum + "个待处理";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
+                    extra = num.bizNum + "个待审批";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
+                    extra = num.bizNum + "个进行中";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
+                    extra = num.bizNum + "个将掉公海";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
+                    extra = num.bizNum + "个需拜访";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
+                    extra = num.bizNum + "个外勤";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if (num.bizType == 19) {
+                    if (!num.viewed) {
+                        handler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
+                    } else {
+                        handler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_GONG);
+                    }
                 }
                 if (!TextUtils.isEmpty(extra)) {
                     holder.tv_extra.setText(extra);
-                    holder.view_number.setVisibility(num.getNumber() <= 0 ? View.GONE : View.VISIBLE);
-                } else {
-                    holder.view_number.setVisibility(View.GONE);
                 }
+            }
+
+            if (item.title.equals("工作报告")) {
+                holder.tv_num.setVisibility(View.VISIBLE);
+                SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String date = sDateFormat.format(new java.util.Date());
+                String dayNum = date.substring(8, 10);
+                holder.tv_num.setText(dayNum);
             }
 
             holder.layout_item.setRippleDuration(100);
@@ -584,17 +877,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
     }
 
+    /**
+     * 退出应用
+     */
     @Override
     public void onBackPressed() {
-        app.logUtil.d("onBackPressed");
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.app_exit_message));
-        builder.setTitle("提示");
-        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
+        showGeneralDialog(true, true, getString(R.string.app_exit_message));
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 //android 5.0以后不能隐式启动或关闭服务
                 if (mIntentCheckUpdate != null) {
                     try {
@@ -607,32 +900,33 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
-        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
             }
         });
-        builder.create().show();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         //判断登陆是否失效
-        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.getId())) {
+        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
             if (StringUtil.isEmpty(MainApp.getToken())) {
                 Toast.makeText(this, "您的登陆已经失效,请重新登陆!", Toast.LENGTH_SHORT).show();
                 app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
                 return;
             }
         }
+        //初始化 用户数据
         if (!mInitData) {
             initData();
             mInitData = true;
         }
     }
+
 
     void launch() {
         updateUser();
@@ -652,76 +946,155 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Background
     void startTrack() {
         if (!Utils.isServiceRunning(AMapService.class.getName())) {
-            TrackRule.InitTrackRule();
         }
+        TrackRule.InitTrackRule();
     }
 
-    //显示用户名字和部门的名字,同时注册信鸽推送和Bugly
+
+    /**
+     * 显示用户名字和部门的名字,头像，高斯模糊背景处理
+     */
     void updateUser() {
+
+        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
+                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class),
+                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
+                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
+                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+
         if (MainApp.user == null) {
             return;
         }
-        ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), img_user, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
 
-            }
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty()) {
+            img_user.setImageResource(R.drawable.img_default_user);
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
+            Bitmap blur = Utils.doBlur(bitmap, 50, false);
+            img_home_head.setImageResource(android.R.color.transparent);
+            container.setBackgroundDrawable(new BitmapDrawable(blur));
 
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
+        } else {
 
-            }
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String s, View view) {
 
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                Bitmap blur = Utils.blurBitmap(bitmap);
-                img_home_head.setImageBitmap(blur);
-            }
+                }
 
-            @Override
-            public void onLoadingCancelled(String s, View view) {
+                @Override
+                public void onLoadingFailed(String s, View view, FailReason failReason) {
 
-            }
-        });
-        Global.setHeadImage(img_user, MainApp.user.getAvatar());
+                }
+
+                @Override
+                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                    if (null != bitmap) {
+                        Bitmap blur = Utils.doBlur(bitmap, 50, false);
+                        img_home_head.setImageResource(android.R.color.transparent);
+                        container.setBackgroundDrawable(new BitmapDrawable(blur));
+                        testJurl();
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(String s, View view) {
+
+                }
+            });
+        }
         tv_user_name.setText(MainApp.user.getRealname());
-        //注册信鸽,同时绑定帐号,绑号为用户的Id
-        XGPushConfig.enableDebug(this, Config_project.is_developer_mode);
-        String uid = String.valueOf(MainApp.user.getId());
-        XGPushManager.registerPush(getApplicationContext(), uid, new XGIOperateCallback() {
-            @Override
-            public void onSuccess(Object o, int i) {
-                app.logUtil.e("信鸽绑定成功,绑定ID=" + MainApp.user.getId() + ",Token=" + o);
-            }
-
-            @Override
-            public void onFail(Object o, int i, String s) {
-                app.logUtil.e("信鸽绑定失败,绑定ID=" + MainApp.user.getId() + ",Token=" + o + ",errCode=" + i + ",msg=" + s);
-            }
-        });
-
         initBugly();
+        initPopupMenu();
     }
 
     @Background
     void initData() {
         Intent intent = new Intent(mContext, InitDataService_.class);
         startService(intent);
+        setJpushAlias();
+        requestNumber();
+    }
+
+    /**
+     * 业务使用权限 判断设置
+     */
+    public void testJurl() {
+        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
+                0 == MainApp.user.permission.suites.size()) {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    testJurl();
+                }
+            }, 5000);
+            LogUtil.d("没有配置权限");
+            return;
+        }
+
+        ArrayList<ClickItem> itemsNew = new ArrayList<>();
+        ArrayList<Suites> suitesNew = new ArrayList<>();
+        suitesNew.add(MainApp.user.permission.suites.get(1));
+        suitesNew.add(MainApp.user.permission.suites.get(0));
+        suitesNew.add(MainApp.user.permission.suites.get(2));
+        for (int i = 0; i < suitesNew.size(); i++) {
+            for (int k = 0; k < items.size(); k++) {
+                for (Modules modules : suitesNew.get(i).getModules()) {
+                    if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
+                        itemsNew.add(items.get(k));
+                        continue;
+                    }
+                }
+            }
+        }
+
+        items.clear();
+        items = itemsNew;
+        lv_main.setAdapter(adapter);//为了业务使用权限
+        lv_main.setDragEnabled(true);
+        cancelLoading();
+    }
+
+    /**
+     * 企业QQ登录的用户绑定手机号码
+     */
+    public void isQQLogin() {
+        if (app.isQQLogin && TextUtils.isEmpty(MainApp.user.mobile)) {
+            showGeneralDialog(false, true, getString(R.string.app_homeqq_message));
+            //确认
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    generalPopView.dismiss();
+                    app.startActivity(MainActivity.this, ActivityEditUserMobile.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                }
+            });
+            //取消
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    generalPopView.dismiss();
+                }
+            });
+        }
+        app.isQQLogin = false;
     }
 
     @Background
     void initBugly() {
-        String info = "companyId=" + MainApp.user.getCompany_id();
-        if (MainApp.user.getDepartmentsName() != null) {
-            info = info + "," + MainApp.user.getDepartmentsName();
+        String info = "companyId=" + MainApp.user.company_id;
+        if (MainApp.user.departmentsName != null) {
+            info = info + "," + MainApp.user.departmentsName;
         }
 
         if (MainApp.user.getRealname() != null) {
             info = info + "," + MainApp.user.getRealname();
         }
+        //CrashReport.setUserId(info);//leak 的东西
 
-        CrashReport.setUserId(info);
     }
 
     public class ClickItem {
@@ -734,7 +1107,63 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             title = _title;
             cls = _cls;
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        intentJpushInfo();
+        requestNumber();
+    }
+
+    /**
+     * 激光推送要跳转 的 页面
+     * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
+     */
+    public void intentJpushInfo() {
+        if (MainApp.jpushData != null) {
+            Intent intent = new Intent();
+            switch (MainApp.jpushData.buzzType) {
+                case 1:
+                    intent.setClass(MainActivity.this, TasksInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 2:
+                    intent.setClass(MainActivity.this, WorkReportsInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 3:
+                    intent.setClass(MainActivity.this, WfinstanceInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 4:
+                    intent.setClass(MainActivity.this, ProjectInfoActivity_.class);
+                    intent.putExtra("projectId", MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 5://通知公告
+                    intent.setClass(MainActivity.this, BulletinManagerActivity_.class);
+                    //intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 6://客户详情
+                    intent.setClass(MainActivity.this, CustomerDetailInfoActivity_.class);
+                    intent.putExtra("Id", MainApp.jpushData.buzzId);
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+            }
+        }
     }
 
     @Override
@@ -743,10 +1172,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onDestroy();
     }
 
+    /**
+     * 获取首页红点数据
+     */
     void requestNumber() {
-        app.getRestAdapter().create(IMain.class).getNumber(new RCallback<ArrayList<HomeNumber>>() {
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
             @Override
-            public void success(ArrayList<HomeNumber> homeNumbers, Response response) {
+            public void success(ArrayList<HttpMainRedDot> homeNumbers, Response response) {
+                HttpErrorCheck.checkResponse("首页红点", response);
                 mItemNumbers = homeNumbers;
                 adapter.notifyDataSetChanged();
                 mHandler.sendEmptyMessageDelayed(0, 500);
@@ -754,10 +1187,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 mHandler.sendEmptyMessageDelayed(0, 500);
             }
         });
     }
-
 }

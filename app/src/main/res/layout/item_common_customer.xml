@@ -12,21 +12,43 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         >
-        <TextView
-            android:id="@+id/tv_title"
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left|center"
-            android:textColor="#383838"
-            android:textSize="16sp"
-            />
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:textColor="@color/text33"
+                android:textSize="16sp"
+                android:text="1"
+                />
+
+            <ImageView
+                android:id="@+id/iv_win"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dimen_8"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_win"
+                android:visibility="gone"
+                />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            >
 
             <ImageView
                 android:id="@+id/img_1"
@@ -42,8 +64,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10"
                 android:gravity="left|center"
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
+                android:textColor="@color/diseditable"
+                android:textSize="12sp"
+                android:text="2"
+                />
 
         </LinearLayout>
 
@@ -51,7 +75,6 @@
             android:id="@+id/layout_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -69,8 +92,10 @@
                 android:layout_marginLeft="@dimen/dimen_10"
                 android:gravity="left|center"
                 android:singleLine="false"
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
+                android:textColor="@color/diseditable"
+                android:textSize="12sp"
+                android:text="3"
+                />
 
         </LinearLayout>
 

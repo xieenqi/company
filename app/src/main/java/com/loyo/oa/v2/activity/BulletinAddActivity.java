@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -15,19 +16,23 @@ import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
-import com.loyo.oa.v2.beans.BulletinViewer;
+import com.loyo.oa.v2.beans.Members;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -52,23 +57,31 @@ public class BulletinAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_recevier;
     @ViewById TextView tv_recevier;
 
-    String mUuid = StringUtil.getUUID();
+    String uuid = StringUtil.getUUID();
     String cc_user_id, cc_department_id, cc_user_name, cc_department_name;
     SignInGridViewAdapter mGridViewAdapter;
-    ArrayList<Attachment> mAttachment = new ArrayList<>();
+    ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
+    private ArrayList<NewUser> userss = new ArrayList<>();
+    private ArrayList<NewUser> depts = new ArrayList<>();
+    private Members member = new Members();
 
     @AfterViews
     void init() {
         super.setTitle("发布通知");
-
         init_gridView_photo();
     }
 
+    /**
+     * 添加 图片 附件
+     */
     void init_gridView_photo() {
-        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true);
+        mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
     }
 
+    /**
+     * 通知谁看
+     */
     @Click(R.id.layout_recevier)
     void receiverClick() {
         app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
@@ -76,7 +89,8 @@ public class BulletinAddActivity extends BaseActivity {
 
     @Click(R.id.img_title_left)
     void close() {
-        onBackPressed();
+        //onBackPressed();
+        finish();
     }
 
     @Click(R.id.img_title_right)
@@ -93,83 +107,72 @@ public class BulletinAddActivity extends BaseActivity {
             Global.ToastLong("通知人员不能为空");
             return;
         }
-        //提示确认发布
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("确认");
-        builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener()
-        {
+
+
+        showGeneralDialog(true,true,getString(R.string.app_bulletin_message));
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
+            public void onClick(View view) {
+
+                generalPopView.dismiss();
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("title", title);
                 map.put("content", content);
-                map.put("attachmentUUId", mUuid);
-                //        map.put("isPublic",false);
-
-                ArrayList<BulletinViewer> viewers = new ArrayList<>();
-                if (!TextUtils.isEmpty(cc_user_id)) {
-                    for (String user_id : cc_user_id.split(",")) {
-                        viewers.add(new BulletinViewer(null, user_id));
-                    }
-                }
-
-                if (!TextUtils.isEmpty(cc_department_id)) {
-                    for (String dept_id : cc_department_id.split(",")) {
-                        viewers.add(new BulletinViewer(dept_id, null));
-                    }
-                }
-
-                map.put("viewers", viewers);
-
+                map.put("attachmentUUId", uuid);
+                map.put("members", member);
+                map.put("attachments", newData());
+                LogUtil.d(" 通知 传递数据： " + MainApp.gson.toJson(map));
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
                     @Override
                     public void success(Bulletin bulletin, Response response) {
+                        HttpErrorCheck.checkResponse("add通知", response);
                         if (bulletin != null) {
                             if (mAttachment != null) {
-                                bulletin.setAttachmentUUId(mUuid);
-                                bulletin.setAttachments(mAttachment);
+                                bulletin.attachmentUUId = uuid;
+                                bulletin.attachments = mAttachment;
                             }
-
                             Intent intent = new Intent();
                             intent.putExtra("data", bulletin);
                             setResult(RESULT_OK, intent);
                         }
+                        finish();
+                        // onBackPressed();
+                    }
 
-                        onBackPressed();
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
                     }
                 });
+
             }
         });
-
-        builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener()
-        {
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
             }
         });
-        builder.setMessage("通知发送后不能修改和删除,是否确认发布?");
-        builder.show();
-
     }
 
     /**
      * 获取附件
      */
-    private void getAttachments(){
-        Utils.getAttachments(mUuid, new RCallback<ArrayList<Attachment>>() {
+    private void getAttachments() {
+        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
-                mAttachment=attachments;
+                mAttachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
             }
         });
@@ -182,10 +185,9 @@ public class BulletinAddActivity extends BaseActivity {
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
-
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
-                        Utils.uploadAttachment(mUuid,newFile).subscribe(new CommonSubscriber(this) {
+                        Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
                             @Override
                             public void onNext(Serializable serializable) {
                                 getAttachments();
@@ -205,7 +207,10 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
         final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), new RCallback<Attachment>() {
+        HashMap<String,Object> map = new HashMap<String, Object>();
+        map.put("bizType",0);
+        map.put("uuid", uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(),map, new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
                 Toast("删除附件成功!");
@@ -244,5 +249,54 @@ public class BulletinAddActivity extends BaseActivity {
         if (cc != null) {
             tv_recevier.setText(cc);
         }
+
+        setJoinUsers(cc_user_id, cc_user_name, cc_department_id, cc_department_name);
+    }
+
+
+    private void setJoinUsers(String joinedUserIds, String joinedUserName, String departIds, String departName) {
+        userss.clear();
+        depts.clear();
+        if (!TextUtils.isEmpty(joinedUserIds) && !TextUtils.isEmpty(joinedUserName)) {
+            String[] userIds = joinedUserIds.split(",");
+            String[] userNames = joinedUserName.split(",");
+            for (int i = 0; i < userIds.length; i++) {
+                NewUser newUser = new NewUser();
+                newUser.setName(userNames[i]);
+                newUser.setId(userIds[i]);
+                userss.add(newUser);
+            }
+            if (userss != null && userss.size() > 0) {
+                member.users = userss;
+            }
+        }
+        if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
+            String[] dpIds = departIds.split(",");
+            String[] dpNames = departName.split(",");
+            for (int i = 0; i < dpIds.length; i++) {
+                NewUser newUser = new NewUser();
+                newUser.setName(dpNames[i]);
+                newUser.setId(dpIds[i]);
+                depts.add(newUser);
+            }
+            if (depts != null && depts.size() > 0) {
+                member.depts = depts;
+            }
+        }
+    }
+
+    /**
+     * 过滤 图片数据、
+     */
+    private ArrayList<Attachment> newData() {
+        ArrayList<Attachment> newAttachment = new ArrayList<Attachment>();
+        for (Attachment element : mAttachment) {
+            Attachment obj = new Attachment();
+            obj.setMime(element.getMime());
+            obj.setOriginalName(element.getOriginalName());
+            obj.setName(element.getName());
+            newAttachment.add(obj);
+        }
+        return newAttachment;
     }
 }

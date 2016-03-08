@@ -39,14 +39,14 @@ public class Attachment implements Serializable {
     @DatabaseField
     public String localPath;
 
-    String size;
-    String humanizeSize;
-    String mime;
-    String createdAt;
-    String updatedAt;
-    File file;
-    Boolean isPublic;
-    ArrayList<User> viewers=new ArrayList<>();
+    public String size;
+    public String humanizeSize;
+    public String mime;
+    public String createdAt;
+    public String updatedAt;
+    public File file;
+    public Boolean isPublic;
+    public ArrayList<NewUser> viewers=new ArrayList<>();
 
     public String getLocalPath() {
         return localPath;
@@ -64,13 +64,13 @@ public class Attachment implements Serializable {
         isPublic = b;
     }
 
-    public ArrayList<User> getViewers() {
+    public ArrayList<NewUser> getViewers() {
         if(null==viewers)
-            setViewers(new ArrayList<User>());
+            setViewers(new ArrayList<NewUser>());
         return viewers;
     }
 
-    public void setViewers(ArrayList<User> users) {
+    public void setViewers(ArrayList<NewUser> users) {
         viewers = users;
     }
 
@@ -185,7 +185,7 @@ public class Attachment implements Serializable {
         }
 
         Attachment attachment = (Attachment) o;
-        return this.getId().equals(attachment.getId());
+        return attachment.url.equals(this.url);
     }
 
     public AttachmentType getAttachmentType() {

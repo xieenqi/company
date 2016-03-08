@@ -17,11 +17,17 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateTool {
-    /** 1s==1000ms */
+    /**
+     * 1s==1000ms
+     */
     private final static int TIME_MILLISECONDS = 1000;
-    /** 时间中的分、秒最大值均为60 */
+    /**
+     * 时间中的分、秒最大值均为60
+     */
     private final static int TIME_SECONDS = 60;
-    /** 时间中的小时最大值 */
+    /**
+     * 时间中的小时最大值
+     */
     private final static int TIME_HOURSES = 24;
 
     public static final long MINUTE_MILLIS = TIME_SECONDS * TIME_MILLISECONDS;
@@ -55,6 +61,11 @@ public class DateTool {
     public static final String DATE_FORMATE_CUSTOM_1 = "yyyy年MM月dd日";
 
     /**
+     * yyyy年MM月dd日HH时mm分
+     */
+    public static final String DATE_FORMATE_CUSTOM_2 = "yyyy年MM月dd日HH时mm分";
+
+    /**
      * yyyy-MM-dd HH:mm:ss 2010-05-11 17:22:26
      */
     public static final String DATE_FORMATE_ALL = "yyyy-MM-dd HH:mm:ss";
@@ -66,9 +77,9 @@ public class DateTool {
     public static final String DATE_FORMATE_MINUTES = "yyyy-MM-dd_HH-mm-ss";
 
     /**
-     * dd/MM/yyyy, hh:mm
+     * dd-MM-yyyy, hh:mm
      */
-    public static final String DATE_FORMATE_TRANSACTION = "dd/MM/yyyy, hh:mm";
+    public static final String DATE_FORMATE_TRANSACTION = "MM.dd HH:mm";
     /**
      * MM/dd HH:mm
      */
@@ -85,8 +96,8 @@ public class DateTool {
 
     public static Calendar calendar;
 
-    public static String toDateStr(long time,String dateFormat){
-        SimpleDateFormat format=new SimpleDateFormat(dateFormat,Locale.getDefault());
+    public static String toDateStr(long time, String dateFormat) {
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.getDefault());
         return format.format(new Date(time));
     }
 
@@ -95,7 +106,7 @@ public class DateTool {
         try {
             timestamp = sdfOut.parse(strTime).getTime();
         } catch (Exception e) {
-//            Global.ProcException(e);
+            Global.ProcException(e);
         }
         return timestamp;
     }
@@ -189,33 +200,29 @@ public class DateTool {
         return cal.get(Calendar.DAY_OF_WEEK);
 
     }
+
     /**
      * 获取当前时间距离指定日期时差的大致表达形式
      *
-     * @param  date 日期
+     * @param date 日期
      * @return 时差的大致表达形式
-     * */
-    public static String getDiffTime(long date)
-    {
-        SimpleDateFormat format=null;
+     */
+    public static String getDiffTime(long date) {
+        SimpleDateFormat format = null;
         String strTime = "";
         // 今天午夜00:00:00的毫秒数-日期毫秒数
         long time = Math.abs(getCurrentMoringMillis() + DAY_MILLIS - date);
         // 一天内
-        if (time <= DAY_MILLIS)
-        {
-            format=new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE,Locale.getDefault());
+        if (time <= DAY_MILLIS) {
+            format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
             strTime = "今天".concat(format.format(new Date(date)));
         }
         // 昨天
-        else if (time <= 2 * DAY_MILLIS)
-        {
-            format=new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE,Locale.getDefault());
+        else if (time <= 2 * DAY_MILLIS) {
+            format = new SimpleDateFormat(DATE_FORMATE_HOUR_MINUTE, Locale.getDefault());
             strTime = "昨天  ".concat(format.format(new Date(date)));
-        }
-        else
-        {
-            format=new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT,Locale.getDefault());
+        } else {
+            format = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT, Locale.getDefault());
             strTime = format.format(new Date(date));
         }
 
@@ -228,8 +235,7 @@ public class DateTool {
      *
      * @return
      */
-    public static long getCurrentMoringMillis()
-    {
+    public static long getCurrentMoringMillis() {
         Calendar calendar = Calendar.getInstance(Locale.CHINESE);
         calendar.set(Calendar.HOUR_OF_DAY, 24);
         calendar.set(Calendar.MINUTE, 0);
@@ -245,8 +251,7 @@ public class DateTool {
      *
      * @return
      */
-    public static long getNextMoringMillis()
-    {
+    public static long getNextMoringMillis() {
         Calendar calendar = Calendar.getInstance(Locale.CHINESE);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -256,6 +261,7 @@ public class DateTool {
         long millis = calendar.getTimeInMillis();
         return millis;
     }
+
     /**
      * @param sdfOut
      * @return 当前月开始时间
@@ -270,6 +276,7 @@ public class DateTool {
         calendar.set(Calendar.SECOND, 0);
         return sdfOut.format(calendar.getTime());
     }
+
     /**
      * @return 当前月开始时间描述
      */
@@ -280,8 +287,9 @@ public class DateTool {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        return (int)(calendar.getTime().getTime()/1000);
+        return (int) (calendar.getTime().getTime() / 1000);
     }
+
     /**
      * @return 当前月开时间毫秒数
      */
@@ -298,7 +306,7 @@ public class DateTool {
     /**
      * @return 当前月结束时间
      */
-    public static long getEndAt_ofMonth( ) {
+    public static long getEndAt_ofMonth() {
         Calendar calendar = Calendar.getInstance();
         //        calendar.setTime(new Date());
         calendar.set(Calendar.DAY_OF_MONTH,
@@ -400,7 +408,7 @@ public class DateTool {
     /**
      * @return 当天开始时间
      */
-    public static long getBeginAt_ofDay( ) {
+    public static long getBeginAt_ofDay() {
         //TODO:服务端会蛋疼的减8个小时，所以这里先+8个小时
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -410,6 +418,7 @@ public class DateTool {
 
         return calendar.getTime().getTime();
     }
+
     /**
      * @param sdfOut
      * @return 当天结束时间
@@ -441,8 +450,7 @@ public class DateTool {
      * @param millSecons
      * @return
      */
-    public static String getWeek(long millSecons)
-    {
+    public static String getWeek(long millSecons) {
         Date dd = new Date(millSecons);
         Calendar c = Calendar.getInstance();
         c.setTime(dd);
@@ -456,40 +464,90 @@ public class DateTool {
      * @param millSecons
      * @return
      */
-    public static String getWeekStr(long millSecons)
-    {
+    public static String getWeekStr(long millSecons) {
         String str = "";
         str = getWeek(millSecons);
-        if ("1".equals(str))
-        {
+        if ("1".equals(str)) {
             str = "星期天";
-        }
-        else if ("2".equals(str))
-        {
+        } else if ("2".equals(str)) {
             str = "星期一";
-        }
-        else if ("3".equals(str))
-        {
+        } else if ("3".equals(str)) {
             str = "星期二";
-        }
-        else if ("4".equals(str))
-        {
+        } else if ("4".equals(str)) {
             str = "星期三";
-        }
-        else if ("5".equals(str))
-        {
+        } else if ("5".equals(str)) {
             str = "星期四";
-        }
-        else if ("6".equals(str))
-        {
+        } else if ("6".equals(str)) {
             str = "星期五";
-        }
-        else if ("7".equals(str))
-        {
+        } else if ("7".equals(str)) {
             str = "星期六";
         }
         return str;
     }
+
+    /**
+     * 下班分时转时间戳
+     * */
+    public static String getOutDataOne(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
+                Locale.CHINA);
+        Date date;
+        String times = null;
+        try {
+            date = sdr.parse(time);
+            long l = date.getTime();
+            String stf = String.valueOf(l);
+            times = stf.substring(0, stf.length());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return times;
+    }
+
+    /**
+     *自定义格式转时间戳
+     */
+    public static String getDataOne(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
+                Locale.CHINA);
+        Date date;
+        String times = null;
+        try {
+            date = sdr.parse(time);
+            long l = date.getTime();
+            String stf = String.valueOf(l);
+            times = stf.substring(0, 10);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return times;
+    }
+
+
+    /**
+     * 时间戳转时间
+     *
+     * @param time
+     * @return
+     */
+    public static String timet(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs);
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+        int i = Integer.parseInt(time);
+        String times = sdr.format(new Date(i * 1000L));
+        return times;
+
+    }
+
+    /**
+     * 获取当前时间
+     */
+    public static String getNowTime() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES);
+        return sDateFormat.format(new java.util.Date());
+    }
+
 
 
     public static class DateSetListener_Datetool implements

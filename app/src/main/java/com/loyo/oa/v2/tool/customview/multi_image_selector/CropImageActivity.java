@@ -11,6 +11,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.crop.ClipSquareImageView;
 
@@ -59,6 +60,9 @@ public class CropImageActivity extends BaseActivity
 
    }
 
+    /**
+     * 裁减图片 确定
+     * */
     @Click({R.id.layout_back,R.id.tv_edit})
     void onClick(View v){
         switch (v.getId()){
@@ -70,7 +74,7 @@ public class CropImageActivity extends BaseActivity
                 int index=imgPath.lastIndexOf("/");
                 String name=imgPath.substring(index+1);
                 imgPath=imgPath.replace(name,"temp_"+name);
-                Utils.writeImage(bitmap,imgPath,100);
+                Utils.writeImage(bitmap,imgPath,50); //不压缩就填100 压缩率是(100-参数)%
                 Intent intent=new Intent();
                 intent.putExtra("imgPath",imgPath);
                 app.finishActivity(this,MainApp.ENTER_TYPE_TOP,RESULT_OK,intent);

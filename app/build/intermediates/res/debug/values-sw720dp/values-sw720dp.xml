@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/values-sw720dp/dimens.xml -->
-    <eat-comment/>
-    <dimen name="folder_cover_size">82dp</dimen>
-    <dimen name="image_size">120dp</dimen>
-    <dimen name="space_size">3dp</dimen>
-</resources>

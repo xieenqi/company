@@ -9,31 +9,31 @@ import java.io.Serializable;
  * 时间 : 15/9/30.
  */
 public class CustomerRegional implements Serializable {
-    private String province;
-    private String city;
-    private String county;
+    public String province;
+    public String city;
+    public String county;
 
-    public String getCounty() {
-        return county;
-    }
-
-    public void setCounty(String county) {
-        this.county = county;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
+//    public String getCounty() {
+//        return county;
+//    }
+//
+//    public void setCounty(String county) {
+//        this.county = county;
+//    }
+//
+//    public String getCity() {
+//        return city;
+//    }
+//
+//    public void setCity(String city) {
+//        this.city = city;
+//    }
+//
+//    public String getProvince() {
+//        return province;
+//    }
+//
+//    public void setProvince(String province) {
+//        this.province = province;
+//    }
 }

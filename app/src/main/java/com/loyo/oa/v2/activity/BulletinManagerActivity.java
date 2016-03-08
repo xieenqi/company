@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -16,11 +17,10 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.GridViewUtils;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.tool.customview.MyGridView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -42,27 +42,24 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * com.loyo.oa.v2.activity
  * 描述 :通知公告页
+ * com.loyo.oa.v2.activity
  * 作者 : ykb
  * 时间 : 15/8/28.
  */
 @EActivity(R.layout.activity_notice)
 public class BulletinManagerActivity extends BaseActivity implements PullToRefreshListView.OnRefreshListener2 {
+
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
-
     @ViewById PullToRefreshRecycleView lv_notice;
     @ViewById Button btn_notice_add;
-
     private ArrayList<Bulletin> bulletins = new ArrayList<>();
     protected PaginationX<Bulletin> mPagination = new PaginationX(20);
     private int mIndex = 1;
     private boolean isTopAdd = true;
     private NoticeAdapter adapter;
-
     public final static int REQUEST_NEW = 1;
-
     private LinearLayoutManager layoutManager;
 
     @AfterViews
@@ -86,12 +83,14 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
      */
     @UiThread
     void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(PaginationX<Bulletin> pagination, Response response) {
+                HttpErrorCheck.checkResponse(" 通知公告的数据： ", response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
@@ -105,15 +104,14 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 } else {
                     Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
                 }
-
                 lv_notice.onRefreshComplete();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 lv_notice.onRefreshComplete();
-                Toast("获取通知失败");
             }
         });
     }
@@ -125,6 +123,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         if (null == adapter) {
             adapter = new NoticeAdapter(bulletins);
             lv_notice.getRefreshableView().setAdapter(adapter);
+
         } else {
             adapter.setmDatas(bulletins);
         }
@@ -136,6 +135,10 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
+
+    /**
+     * 添加 通知 公告
+     */
     @Click(R.id.btn_notice_add)
     void onAddNew() {
         app.startActivityForResult(this, BulletinAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_NEW, null);
@@ -175,7 +178,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         private TextView tv_content;
         private TextView tv_name;
         private RoundImageView iv_avatar;
-        private MyGridView gridView;
+        private GridView gridView;
 
         public BulletinViewHolder(View itemView) {
             super(itemView);
@@ -184,7 +187,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             tv_content = (TextView) itemView.findViewById(R.id.tv_notice_content);
             tv_name = (TextView) itemView.findViewById(R.id.tv_notice_publisher);
             iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_notice_publisher_avatar);
-            gridView = (MyGridView) itemView.findViewById(R.id.gv_notice_attachemnts);
+            gridView = (GridView) itemView.findViewById(R.id.gv_notice_attachemnts);
         }
     }
 
@@ -209,23 +212,23 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         @Override
         public void onBindViewHolder(BulletinViewHolder holder, int position) {
             final Bulletin bulletin = mBulletins.get(position);
-            holder.tv_time.setText(app.df3.format(new Date(bulletin.getCreatedAt() * 1000)));
-            holder.tv_title.setText(bulletin.getTitle());
-            holder.tv_content.setText(bulletin.getContent());
-            holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.getDeptName() + " " + bulletin.getPosition());
-            ImageLoader.getInstance().displayImage(bulletin.getCreator().getAvatar(), holder.iv_avatar);
-            ArrayList<Attachment> attachments = bulletin.getAttachments();
-            if (null != attachments && !attachments.isEmpty()) {
+            holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
+            holder.tv_title.setText(bulletin.title);
+            holder.tv_content.setText(bulletin.content);
+            holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.creator.depts.get(0).getShortDept().getName()
+                    + " " + bulletin.creator.depts.get(0).getShortDept().title);
 
+            ImageLoader.getInstance().displayImage(bulletin.creator.avatar, holder.iv_avatar);
+            ArrayList<Attachment> attachments = bulletin.attachments;
+            if (null != attachments && !attachments.isEmpty()) {
                 holder.gridView.setVisibility(View.VISIBLE);
-                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true);
-                //                SignInGridViewAdapter.setAdapter(holder.gridView,adapter);
-                holder.gridView.setAdapter(adapter);
-                GridViewUtils.updateGridViewLayoutParams(holder.gridView, 3);
+                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true, true, 0);
+                SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
+                //holder.gridView.setAdapter(adapter);
+                //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);
             } else {
                 holder.gridView.setVisibility(View.GONE);
             }
-
         }
 
         @Override

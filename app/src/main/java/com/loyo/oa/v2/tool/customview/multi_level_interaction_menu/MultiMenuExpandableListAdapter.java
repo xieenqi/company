@@ -23,11 +23,12 @@ import java.util.ArrayList;
  */
 public class MultiMenuExpandableListAdapter extends BaseExpandableListAdapter {
     private LayoutInflater mLayoutInflater;
-    private ArrayList<Province> provinces= MainApp.getMainApp().mProvinces;
+    private ArrayList<Province> provinces;
     private int[] selectPostion = new int[]{-1, -1};
 
-    public MultiMenuExpandableListAdapter(Context context) {
+    public MultiMenuExpandableListAdapter(Context context,ArrayList<Province> provinces) {
         mLayoutInflater = LayoutInflater.from(context);
+        this.provinces = provinces;
     }
 
     @Override

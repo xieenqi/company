@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:background="@color/white"
+    >
 
     <include layout="@layout/include_item_title"/>
 
@@ -16,7 +18,7 @@
             <LinearLayout
 
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_45"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -25,27 +27,39 @@
                     android:layout_marginLeft="@dimen/dimen_16"
                     android:src="@drawable/icon_attendance_time"
                     />
+
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
                 <TextView
                     android:id="@+id/tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_8"
+                    android:layout_marginLeft="@dimen/dimen_10"
                     android:gravity="center"
-                    android:text=""
+                    android:text="14:20"
                     android:textColor="#383838"
                     android:textSize="16sp"
                     />
 
-                <TextView
-                    android:id="@+id/tv_count_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_10"
-                    android:gravity="center"
-                    android:text=""
-                    android:textColor="#383838"
-                    android:textSize="16sp"
-                    />
+                    <TextView
+                        android:id="@+id/tv_count_time"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_10"
+                        android:gravity="center"
+                        android:text="36000000000-00000"
+                        android:textColor="#383838"
+                        android:textSize="16sp"
+                        />
+
+                    </LinearLayout>
 
             </LinearLayout>
 
@@ -106,7 +120,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/layout_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,6 +141,7 @@
                     android:background="@null"
                     android:minHeight="@dimen/dimen_75"
                     android:textSize="16sp"
+                    android:hint="备注"
                     />
 
             </LinearLayout>
@@ -151,5 +165,4 @@
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

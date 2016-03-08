@@ -24,8 +24,8 @@ public interface IUser {
     @GET("/user/subordinates")
     ArrayList<User> getSubordinates();
 
-    @PUT("/api/v2/user/{id}/profile")
-    void updateProfile(@Path("id") String id,@Body HashMap<String ,Object> map,Callback<User> callback);
+    @PUT("/api/v2/user/{userId}/profile")
+    void updateProfile(@Path("userId") String id,@Body HashMap<String ,Object> map,Callback<User> callback);
 
     @GET("/user/{id}")
     void getUserById(@Path("id") String id,Callback<User> callback);
@@ -35,5 +35,8 @@ public interface IUser {
 
     @PUT("/")
     void updatePassword(@Body HashMap<String,Object> map,retrofit.Callback<Object> cb);
+
+    @PUT("/")
+    void rushHomeDate(retrofit.Callback<User> cb);
 
 }

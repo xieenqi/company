@@ -31,6 +31,7 @@
                 android:background="@null"
                 android:gravity="left|center_vertical"
                 android:hint="通知标题"
+                android:maxLength="50"
                 android:paddingLeft="@dimen/margin_other_view"/>
 
             <View
@@ -47,13 +48,14 @@
                 android:background="@color/white"
                 android:gravity="left|top"
                 android:hint="请输入通知内容"
+                android:maxLength="500"
                 android:minHeight="180dp"
                 android:padding="10dp"/>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                          android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <GridView
                     android:id="@+id/gridView_photo"
@@ -104,6 +106,12 @@
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_30"
+                android:background="@color/activity_bg"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

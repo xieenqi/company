@@ -4,50 +4,21 @@ import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2014/12/27 0027.
+ *
+ * 工作报告
+ *
  */
 public class WorkReport extends BaseBeans {
     public static final int DAY = 1, WEEK = 2, MONTH = 3;
 
-    private ArrayList<CRMData> crmDatas;
+    private ArrayList<WorkReportDyn> crmDatas;
     private boolean isDelayed ;
-    private ArrayList<Member> members;
     private ArrayList<Reviewer> reviewers;
+    private Members members = new Members();
+    private NewUser user = new NewUser();
+    private Reviewer reviewer = new Reviewer(user);
+    private BizExtData bizExtData;
 
-    public ArrayList<Reviewer> getReviewers() {
-        return reviewers;
-    }
-
-    public void setReviewers(ArrayList<Reviewer> reviewers) {
-        this.reviewers = reviewers;
-    }
-
-    public ArrayList<Member> getMembers() {
-        return members;
-    }
-
-    public void setMembers(ArrayList<Member> members) {
-        this.members = members;
-    }
-
-    public boolean isDelayed() {
-        return isDelayed;
-    }
-
-    public void setIsDelayed(boolean isDelayed) {
-        this.isDelayed = isDelayed;
-    }
-
-    public void setEndAt(long endAt) {
-        this.endAt = endAt;
-    }
-
-    public ArrayList<CRMData> getCrmDatas() {
-        return crmDatas;
-    }
-
-    public void setCrmDatas(ArrayList<CRMData> crmDatas) {
-        this.crmDatas = crmDatas;
-    }
 
     private String attachmentUUId;//string, optional): ,
     private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
@@ -63,21 +34,60 @@ public class WorkReport extends BaseBeans {
     private long updatedAt;//&{time Time}, optional):
     private DiscussCounter discuss;
 
-    public DiscussCounter getDiscuss() {
-        return discuss;
+    public BizExtData getBizExtData() {
+        return bizExtData;
     }
 
-    public void setDiscuss(DiscussCounter discuss) {
-        this.discuss = discuss;
+    public void setBizExtData(BizExtData bizExtData) {
+        this.bizExtData = bizExtData;
+    }
+
+    public NewUser getUser() {
+        return user;
+    }
+
+    public void setUser(NewUser user) {
+        this.user = user;
+    }
+
+    public void setReviewer(Reviewer reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    public void setMembers(Members members) {
+        this.members = members;
+    }
+
+    public Members getMembers(){
+        return members;
+    }
+
+    public ArrayList<Reviewer> getReviewers() {
+        return reviewers;
+    }
+
+
+    public boolean isDelayed() {
+        return isDelayed;
+    }
+
+    public void setEndAt(long endAt) {
+        this.endAt = endAt;
+    }
+
+    public ArrayList<WorkReportDyn> getCrmDatas() {
+        return crmDatas;
+    }
+
+
+
+    public DiscussCounter getDiscuss() {
+        return discuss;
     }
 
     @Override
     String getOrderStr() {
         return getCreatedAt()+"";
-    }
-
-    public boolean isAck() {
-        return ack;
     }
 
     public void setAck(boolean ack) {
@@ -104,10 +114,6 @@ public class WorkReport extends BaseBeans {
 
     public long getBeginAt() {
         return beginAt;
-    }
-
-    public void setBeginAt(long beginAt) {
-        this.beginAt = beginAt;
     }
 
     public String getContent() {
@@ -179,7 +185,7 @@ public class WorkReport extends BaseBeans {
     }
 
     public Reviewer getReviewer() {
-        return null==getReviewers()||getReviewers().isEmpty()?null:getReviewers().get(0);
+        return reviewer;
     }
 
     @Override
@@ -194,26 +200,4 @@ public class WorkReport extends BaseBeans {
     public boolean isReviewed(){
         return null!=getReviewer()&&getReviewer().isReviewed()?true:false;
     }
-
-    /**
-     * 获取参与人
-     * @return
-     */
-    public String getJoinUserNames(){
-        if(null==members||members.isEmpty()){
-            return "";
-        }
-        StringBuilder result=new StringBuilder();
-        for (int i = 0; i <members.size() ; i++) {
-            if(null!=members.get(i).getUser()) {
-                result.append(members.get(i).getUser().getName());
-            }
-            if(i<members.size()-1){
-                result.append(",");
-            }
-        }
-
-        return result.toString();
-    }
-
 }

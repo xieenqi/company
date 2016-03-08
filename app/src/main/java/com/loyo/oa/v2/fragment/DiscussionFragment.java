@@ -10,10 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -35,7 +37,7 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :讨论页面
+ * 描述 :项目讨论页面
  * 作者 : ykb
  * 时间 : 15/9/8.
  */
@@ -47,7 +49,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     protected PaginationX<Discussion> mPagination = new PaginationX(20);
     private boolean isTopAdd = true;
     private DiscussionAdapter adapter;
-    private Project project;
+    private HttpProject project;
     private LayoutInflater mInflater;
     private EditText et_comment;
     private TextView tv_send;
@@ -58,14 +60,14 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey("project")) {
-            project = (Project) getArguments().getSerializable("project");
+            project = (HttpProject) getArguments().getSerializable("project");
         }
     }
 
     @Override
     public void onProjectChange(int status) {
         if(null!=project){
-            project.setStatus(status);
+            project.status=status;
         }
         if(layout_discuss_action==null){
             return;
@@ -95,7 +97,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
      */
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("attachmentUUId", project.getAttachmentUUId());
+        map.put("attachmentUUId", project.attachmentUUId);
         map.put("pageIndex", mPagination.getPageIndex());
         map.put("pageSize", isTopAdd ? discussions.size() >= 20 ? discussions.size() : 20 : 20);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).getDiscussions(map, new RCallback<PaginationX<Discussion>>() {
@@ -103,7 +105,6 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             public void success(PaginationX<Discussion> pagination, Response response) {
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Discussion> lstData_bulletin_current = pagination.getRecords();
-
                     mPagination = pagination;
                     if (isTopAdd) {
                         discussions.clear();
@@ -117,6 +118,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 lv_discuss.onRefreshComplete();
             }
@@ -164,7 +166,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (project != null && project.getStatus() == Project.STATUS_FINISHED) {
+        if (project != null && project.status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
         } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
@@ -182,8 +184,9 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         }
 
         HashMap<String, Object> body = new HashMap<>();
-        body.put("attachmentUUId", project.getAttachmentUUId());
+        body.put("attachmentUUId", project.attachmentUUId);
         body.put("content", comment);
+        body.put("bizType",5);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
             @Override
@@ -246,9 +249,9 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
             time.setText(app.df9.format(new Date(discussion.getCreatedAt()*1000)));
-            name.setText(discussion.getCreator().getName());
+            name.setText(discussion.getCreator().name);
             content.setText(discussion.getContent());
-            ImageLoader.getInstance().displayImage(discussion.getCreator().getAvatar(), iv);
+            ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, iv);
 
             return view;
         }

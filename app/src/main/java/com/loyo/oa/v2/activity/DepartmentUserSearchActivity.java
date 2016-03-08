@@ -16,7 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
@@ -27,18 +27,19 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
+
+/**
+ * 通讯录搜索
+ * */
 
 public class DepartmentUserSearchActivity extends Activity {
 
-    EditText edt_search;
-    PullToRefreshListView listView;
-    ArrayList<User> data = new ArrayList<>();
-    ArrayList<User> resultData = new ArrayList<>();
-
-    ViewGroup img_title_left;
-
+    private EditText edt_search;
+    private PullToRefreshListView listView;
+    private ArrayList<User> data = new ArrayList<>();
+    private ArrayList<User> resultData = new ArrayList<>();
+    private ViewGroup img_title_left;
     private int type = -1;
 
     @Override
@@ -54,6 +55,7 @@ public class DepartmentUserSearchActivity extends Activity {
             data.addAll(d.getLstUser());
         }
 
+        //data = MainApp.selectAllUsers;
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.addTextChangedListener(new TextWatcher() {
 
@@ -116,6 +118,10 @@ public class DepartmentUserSearchActivity extends Activity {
 
     String key;
 
+    /**
+     * 搜索操作
+     * */
+
     void doSearch() {
         key = edt_search.getText().toString().trim();
         if (StringUtil.isEmpty(key)) {
@@ -134,10 +140,10 @@ public class DepartmentUserSearchActivity extends Activity {
             } else if (u.getRealname() != null && u.getRealname().contains(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.getFullPinyin() != null && u.getFullPinyin().contains(key)) {
+            } else if (u.fullPinyin != null && u.fullPinyin.contains(key)) {
                 resultData.add(u);
                 continue;
-            } else if (u.getSimplePinyin() != null && u.getSimplePinyin().contains(key)) {
+            } else if (u.simplePinyin != null && u.simplePinyin.contains(key)) {
                 resultData.add(u);
                 continue;
             }
@@ -147,6 +153,10 @@ public class DepartmentUserSearchActivity extends Activity {
             adapter.notifyDataSetChanged();
         }
     }
+
+    /**
+     * 适配器
+     * */
 
     BaseAdapter adapter = new BaseAdapter() {
         @Override
@@ -175,12 +185,27 @@ public class DepartmentUserSearchActivity extends Activity {
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             tv_content.setText(user.getRealname());
-            String departmentName = user.getDepartmentsName();
-            if (null != user && null != user.getShortPosition() && !TextUtils.isEmpty(user.getShortPosition().getName())) {
-                tv_position.setText(departmentName + " | " + user.getShortPosition().getName());
+
+            String deptName,workName;
+
+            try{
+                deptName = user.depts.get(0).getShortDept().getName();
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                deptName = "无";
             }
-            if (!TextUtils.isEmpty(user.getAvatar())) {
-                ImageLoader.getInstance().displayImage(user.getAvatar(), img);
+
+            try{
+                workName = user.role.name;
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                workName = "无";
+            }
+
+            tv_position.setText(deptName+"  "+workName);
+
+            if (!TextUtils.isEmpty(user.avatar)) {
+                ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
             if (position == resultData.size() - 1) {

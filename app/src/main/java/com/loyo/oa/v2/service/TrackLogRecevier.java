@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
+import com.loyo.oa.v2.tool.LogUtil;
 
 public class TrackLogRecevier extends BroadcastReceiver {
     TrackRule trackRule;
@@ -17,7 +18,7 @@ public class TrackLogRecevier extends BroadcastReceiver {
         if (intent != null) {
             mContext = context;
             if (intent.hasExtra("track")) {
-                MainApp.getMainApp().logUtil.e("onReceive, hasExtra");
+                LogUtil.d("收到, hasExtra");
                 trackRule = (TrackRule) intent.getSerializableExtra("track");
                 startAMapService(trackRule);
                 TrackRule.StartTrackRule(trackRule, MainApp.getMainApp());

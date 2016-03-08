@@ -298,7 +298,6 @@ public class SwipeListView extends ListView {
         touchListener.resetItems();
         if (null != adapter) {
             adapter.registerDataSetObserver(new DataSetObserver() {
-
                 @Override
                 public void onChanged() {
                     super.onChanged();

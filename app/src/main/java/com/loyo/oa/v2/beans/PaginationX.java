@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PaginationX<T> implements Serializable {
-    int pageIndex;
-    int pageSize;
-    ArrayList<T> records = new ArrayList<>();
-    int totalRecords;
+    public int pageIndex;
+    public int pageSize;
+    public int totalRecords;
+    public ArrayList<T> records = new ArrayList<>();
 
     public PaginationX() {
         pageIndex = 1;
@@ -44,7 +44,7 @@ public class PaginationX<T> implements Serializable {
     }
 
     public void setTotalRecords(int t) {
-        totalRecords =  t;
+        totalRecords = t;
     }
 
     public static boolean isEmpty(PaginationX pagination) {

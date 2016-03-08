@@ -41,30 +41,31 @@ public class MyLetterListView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (showBkg) {
-            canvas.drawColor(Color.parseColor("#454545"));
+            canvas.drawColor(Color.parseColor("#000000"));
         }
 
         int height = getHeight();
         int width = getWidth();
-        int count=keyword.length;
-        if(count<14){
-            count=14;
+        int count = keyword.length;
+        if (count < 14) {
+            count = 14;
         }
-        float singleHeight = height /count;
+        float singleHeight = height / count;
         for (int i = 0; i < keyword.length; i++) {
             //			paint.setColor(Color.WHITE);	//设置字体的颜色
             //            paint.setColor(getResources().getColor(R.color.gray_));
             paint.setColor(getResources().getColor(R.color.title_bg1));
             paint.setTypeface(Typeface.DEFAULT_BOLD);
             //			paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.navigation_fontsize));//设置字体的大小
-            paint.setTextSize(16 * density);//设置字体的大小
+            //paint.setTextSize(16 * density);//设置字体的大小
+            paint.setTextSize(25);//设置字体的大小
             paint.setAntiAlias(true);
             if (i == choose) {
                 paint.setColor(Color.parseColor("#3399ff"));
                 paint.setFakeBoldText(true);
             }
             float xPos = width / 2 - paint.measureText(keyword[i]) / 2;
-            float yPos = singleHeight * i +singleHeight;
+            float yPos = singleHeight * i + singleHeight;
             canvas.drawText(keyword[i], xPos, yPos, paint);
             paint.reset();
         }

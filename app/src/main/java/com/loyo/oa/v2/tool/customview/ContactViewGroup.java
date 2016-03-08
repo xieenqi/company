@@ -10,13 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.CustomerContactManageActivity;
-import com.loyo.oa.v2.activity.CustomerContractAddActivity;
-import com.loyo.oa.v2.activity.CustomerInfoActivity;
+import com.loyo.oa.v2.activity.customer.CustomerContactManageActivity;
+import com.loyo.oa.v2.activity.customer.CustomerContractAddActivity;
+import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -26,7 +28,7 @@ import com.loyo.oa.v2.tool.Utils;
  */
 public class ContactViewGroup extends LinearLayout {
 
-    public interface OnContactProcessCallback{
+    public interface OnContactProcessCallback {
         public void onDel(Contact contact);
         public void onSetDefault(Contact contact);
     }
@@ -42,12 +44,12 @@ public class ContactViewGroup extends LinearLayout {
         context = c;
     }
 
-    public ContactViewGroup(Context _context, Customer customer, Contact contact,OnContactProcessCallback callback) {
+    public ContactViewGroup(Context _context, Customer customer, Contact contact, OnContactProcessCallback callback) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setOrientation(LinearLayout.VERTICAL);
-        contactProcessCallback=callback;
+        contactProcessCallback = callback;
         mCustomer = customer;
         mContact = contact;
     }
@@ -58,7 +60,7 @@ public class ContactViewGroup extends LinearLayout {
      * @param id     视图id
      * @param parent 视图父容器
      */
-    public void bindView(final int id, final ViewGroup parent) {
+    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber) {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -67,8 +69,8 @@ public class ContactViewGroup extends LinearLayout {
             view.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
             view.setLayoutParams(new ViewGroup.LayoutParams(-1, app.spTopx(10)));
             addView(view);
-
         }
+
         //加载删除条目
         if (getId() > 0) {
             inflater.inflate(R.layout.item_customer_contact_edit, this, true);
@@ -77,39 +79,47 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
+            LogUtil.dll("isMyUser:"+isMyUser);
+            /*判断是否有操作权限*/
+            if (!isMyUser) {
+                LogUtil.dll("进入!isMyUser");
+                edit.setVisibility(View.GONE);
+                del.setVisibility(View.GONE);
+                default_.setVisibility(View.GONE);
+            }
+
             ViewGroup call = (ViewGroup) findViewById(R.id.layout_call);
             ViewGroup callwire = (ViewGroup) findViewById(R.id.layout_call_wiretel);
-            ViewGroup sendsms=(ViewGroup) findViewById(R.id.layout_send_sms);
+            ViewGroup sendsms = (ViewGroup) findViewById(R.id.layout_send_sms);
 
             call.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.call(context,mContact.getTel());
+                    Utils.call(context, mContact.getTel());
                 }
             });
             callwire.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.call(context,mContact.getWiretel());
+                    Utils.call(context, mContact.getWiretel());
                 }
             });
 
             sendsms.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.sendSms(context,mContact.getTel());
+                    Utils.sendSms(context, mContact.getTel());
                 }
             });
 
-            TextView tv_name=(TextView) findViewById(R.id.tv_name);
-            TextView tv_tel=(TextView) findViewById(R.id.tv_phone);
-            TextView tv_wiletel=(TextView) findViewById(R.id.tv_wiletel);
-            TextView tv_qq=(TextView) findViewById(R.id.tv_qq);
-            TextView tv_birthday=(TextView) findViewById(R.id.tv_birthday);
-            TextView tv_wx=(TextView) findViewById(R.id.tv_wx);
-            TextView tv_email=(TextView) findViewById(R.id.tv_email);
-            TextView tv_memo=(TextView) findViewById(R.id.tv_memo);
-
+            TextView tv_name = (TextView) findViewById(R.id.tv_name);
+            TextView tv_tel = (TextView) findViewById(R.id.tv_phone);
+            TextView tv_wiletel = (TextView) findViewById(R.id.tv_wiletel);
+            TextView tv_qq = (TextView) findViewById(R.id.tv_qq);
+            TextView tv_birthday = (TextView) findViewById(R.id.tv_birthday);
+            TextView tv_wx = (TextView) findViewById(R.id.tv_wx);
+            TextView tv_email = (TextView) findViewById(R.id.tv_email);
+            TextView tv_memo = (TextView) findViewById(R.id.tv_memo);
 
             tv_name.setText(mContact.getName());
             tv_tel.setText(mContact.getTel());
@@ -130,17 +140,17 @@ public class ContactViewGroup extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     Bundle b = new Bundle();
-                    b.putSerializable("customer",mCustomer);
+                    b.putSerializable("customer", mCustomer);
                     b.putSerializable("contract", mContact);
                     app.startActivityForResult((CustomerContactManageActivity) context, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT, b);
                 }
             });
 
-            //设置默认联系人
+            /*设置默认联系人*/
             default_.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(null!=contactProcessCallback&&!mContact.isDefault()){
+                    if (null != contactProcessCallback && !mContact.isDefault()) {
                         contactProcessCallback.onSetDefault(mContact);
                     }
                 }
@@ -148,17 +158,18 @@ public class ContactViewGroup extends LinearLayout {
 
             title.setText("联系人" + getId());
 
+            /*删除条目*/
             del.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(null!=contactProcessCallback){
+                    if (null != contactProcessCallback) {
                         contactProcessCallback.onDel(mContact);
                     }
                 }
             });
         }
 
-        addView(new ExtraDataView(context,mContact.getExtDatas(),false,R.color.diseditable,14));
+        addView(new ExtraDataView(context, mContact.getExtDatas(), false, R.color.diseditable, 14));
         //加载子条目
         parent.addView(this);
     }

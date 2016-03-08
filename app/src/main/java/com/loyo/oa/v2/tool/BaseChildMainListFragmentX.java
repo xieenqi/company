@@ -12,22 +12,25 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.TasksAddActivity_;
-import com.loyo.oa.v2.activity.TasksInfoActivity_;
-import com.loyo.oa.v2.activity.WfInstanceAddActivity_;
-import com.loyo.oa.v2.activity.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.WorkReportAddActivity_;
-import com.loyo.oa.v2.activity.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportAddActivity;
+import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
-import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
 
 import java.io.Serializable;
@@ -40,13 +43,13 @@ import retrofit.client.Response;
 
 /**
  * com.loyo.oa.v2.tool
- * 描述 :项目下子内容共用页
+ * 描述 :项目下子内容共用页【任务 报告 审批】
  * 作者 : ykb
  * 时间 : 15/9/7.
  */
 public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implements AbsListView.OnScrollListener {
     private CommonExpandableListAdapter adapter;
-    private Project mProject;
+    private HttpProject mProject;
     private int type;
 
     private FrameLayout indicatorGroup;
@@ -60,7 +63,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 type = getArguments().getInt("type");
             }
             if (getArguments().containsKey("project")) {
-                mProject = (Project) getArguments().getSerializable("project");
+                mProject = (HttpProject) getArguments().getSerializable("project");
             }
         }
         super.onCreate(savedInstanceState);
@@ -69,7 +72,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     @Override
     public void onProjectChange(int status) {
         if (null != mProject) {
-            mProject.setStatus(status);
+            mProject.status = status;
         }
         if (layout_add == null) {
             return;
@@ -84,14 +87,14 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     @Override
     public void onViewCreated(View view, Bundle b) {
         super.onViewCreated(view, b);
-        if(null==indicatorGroup){
+        if (null == indicatorGroup) {
             indicatorGroup = (FrameLayout) view.findViewById(R.id.topGroup);
             indicatorGroup.getBackground().setAlpha(150);
             mExpandableListView.getRefreshableView().setOnScrollListener(this);
             mInflater.inflate(R.layout.item_sign_show_group, indicatorGroup, true);
         }
 
-        if (mProject != null && mProject.getStatus() == Project.STATUS_FINISHED) {
+        if (mProject != null && mProject.status == Project.STATUS_FINISHED) {
             layout_add.setVisibility(View.GONE);
         } else {
             layout_add.setVisibility(View.VISIBLE);
@@ -110,6 +113,8 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         }
     }
 
+    int pageIndex;
+
     @Override
     public void GetData(final Boolean isTopAdd, final Boolean isBottomAdd) {
         if (null == mProject) {
@@ -119,22 +124,23 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         if (lstData == null) {
             lstData = new ArrayList();
         }
-        int pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
+        pageIndex = isBottomAdd ? (pagination.getPageIndex() + 1) : 1;
         int pageSize = isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : pagination.getPageSize();
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
 
-        app.logUtil.e("GetData,type : " + type + " projectId : " + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
+        LogUtil.d("获取项目详情的任务，报告，审批：GetData,type : " + type + " projectId : "
+                + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
         app.getRestAdapter().create(IProject.class).getProjectSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
+                LogUtil.d("获取项目详情的任务，报告，审批json: " + MainApp.gson.toJson(paginationx));
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
                     ArrayList lstDataTemp = GetTData(paginationx);
                     pagination.setPageIndex(paginationx.getPageIndex());
                     pagination.setPageSize(paginationx.getPageSize());
-
                     if (isTopAdd) {
                         lstData.clear();
                     }
@@ -143,11 +149,17 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                     pagingGroupDatas = PagingGroupData_.convertGroupData(lstData);
                     changeAdapter();
                     expand();
+                } else {
+                    if (!(paginationx.getRecords().size() > 0) && pageIndex == 1) {
+                        pagingGroupDatas.clear();
+                        changeAdapter();
+                    }
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 mExpandableListView.onRefreshComplete();
             }
@@ -172,6 +184,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * 新建 一个任务 ，报告，审批
+     */
     @Override
     public void addNewItem() {
         switch (type) {
@@ -194,7 +209,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
      */
     private void goToCreatePage(Class<?> _class) {
         Intent intent = new Intent(mActivity, _class);
-        intent.putExtra("project", mProject);
+        intent.putExtra("projectId", mProject.id);
+        intent.putExtra("projectTitle", mProject.title);
+        intent.putExtra("type", WorkReportAddActivity.TYPE_PROJECT);
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
@@ -209,17 +226,23 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         startActivityForResult(intent, REQUEST_REVIEW);
     }
 
+    /**
+     * 相当于 item 监听
+     *
+     * @param groupPosition
+     * @param childPosition
+     */
     @Override
     public void openItem(int groupPosition, int childPosition) {
         switch (type) {
             case 1:
-                goToReviewPage(WorkReportsInfoActivity_.class, "workreport", (WorkReport) adapter.getChild(groupPosition, childPosition));
+                goToReviewPage(WorkReportsInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WorkReport) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 2:
-                goToReviewPage(TasksInfoActivity_.class, "task", (Task) adapter.getChild(groupPosition, childPosition));
+                goToReviewPage(TasksInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((Task) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 12:
-                goToReviewPage(WfinstanceInfoActivity_.class, "data", (WfInstance) adapter.getChild(groupPosition, childPosition));
+                goToReviewPage(WfinstanceInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WfInstance) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
         }
     }
@@ -239,34 +262,36 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         Type type = null;
         switch (this.type) {
             case 1:
-                type = new TypeToken<ArrayList<WorkReport>>() {}.getType();
+                type = new TypeToken<ArrayList<WorkReport>>() {
+                }.getType();
                 break;
             case 2:
-                type = new TypeToken<ArrayList<Task>>() {}.getType();
+                type = new TypeToken<ArrayList<Task>>() {
+                }.getType();
                 break;
             case 12:
-                type = new TypeToken<ArrayList<WfInstance>>() {}.getType();
+                type = new TypeToken<ArrayList<WfInstance>>() {
+                }.getType();
                 break;
         }
         return MainApp.gson.fromJson(MainApp.gson.toJson(p.getRecords()), type);
     }
 
     @Override
-    public void filterGetData(Intent intent) {}
+    public void filterGetData(Intent intent) {
+    }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState)
-    {
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                         int totalItemCount)
-    {
+                         int totalItemCount) {
         //防止三星,魅族等手机第一个条目可以一直往下拉,父条目和悬浮同时出现的问题
-        if(firstVisibleItem==0){
+        if (firstVisibleItem == 0) {
             indicatorGroup.setVisibility(View.GONE);
         }
         final ExpandableListView listView = (ExpandableListView) view;
@@ -277,33 +302,29 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         if (npos == AdapterView.INVALID_POSITION) {// 如果第一个位置值无效
             return;
         }
-        long pos = listView.getExpandableListPosition(npos+firstVisibleItem);
+        long pos = listView.getExpandableListPosition(npos + firstVisibleItem);
         int childPos = ExpandableListView.getPackedPositionChild(pos);// 获取第一行child的id
         int groupPos = ExpandableListView.getPackedPositionGroup(pos);// 获取第一行group的id
-        if (childPos == AdapterView.INVALID_POSITION)
-        {// 第一行不是显示child,就是group,此时没必要显示指示器
+        if (childPos == AdapterView.INVALID_POSITION) {// 第一行不是显示child,就是group,此时没必要显示指示器
             View groupView = listView.getChildAt(npos - listView.getFirstVisiblePosition());// 第一行的view
             indicatorGroupHeight = groupView.getHeight();// 获取group的高度
             indicatorGroup.setVisibility(View.GONE);// 隐藏指示器
-        }
-        else
-        {
+        } else {
             TextView tv_title = (TextView) indicatorGroup.findViewById(R.id.tv_title);
-            PagingGroupData_<BaseBeans> data=( PagingGroupData_<BaseBeans>)pagingGroupDatas.get(groupPos);
+            PagingGroupData_<BaseBeans> data = (PagingGroupData_<BaseBeans>) pagingGroupDatas.get(groupPos);
             if (data != null && data.getOrderStr() != null) {
-                if(data.getOrderStr().contains("已")){
+                if (data.getOrderStr().contains("已")) {
                     tv_title.setTextColor(getResources().getColor(R.color.green));
-                }else {
+                } else {
                     tv_title.setTextColor(getResources().getColor(R.color.title_bg1));
                 }
-                tv_title.setText(data.getRecords().size()+data.getOrderStr());
+                tv_title.setText(data.getRecords().size() + data.getOrderStr());
             }
 
             indicatorGroup.setVisibility(View.VISIBLE);// 滚动到第一行是child，就显示指示器
         }
         // get an error data, so return now
-        if (indicatorGroupHeight == 0)
-        {
+        if (indicatorGroupHeight == 0) {
             return;
         }
         // update the data of indicator group view
@@ -328,8 +349,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         }
         long pos2 = listView.getExpandableListPosition(nEndPos);
         int groupPos2 = ExpandableListView.getPackedPositionGroup(pos2);// 获取第二个group的id
-        if (groupPos2 != indicatorGroupId)
-        {// 如果不等于指示器当前的group
+        if (groupPos2 != indicatorGroupId) {// 如果不等于指示器当前的group
             View viewNext = listView.getChildAt(nEndPos - listView.getFirstVisiblePosition());
             showHeight = viewNext.getTop();
         }

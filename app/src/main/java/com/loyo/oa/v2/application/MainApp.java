@@ -4,26 +4,25 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.StrictMode;
-import android.util.Log;
+import android.support.multidex.MultiDex;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
-import com.loyo.oa.v2.BuildConfig;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CellInfo;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Industry;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ExitActivity;
@@ -42,13 +41,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.xiaomi.channel.commonutils.logger.LoggerInterface;
-import com.xiaomi.mipush.sdk.Logger;
-import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -60,7 +54,8 @@ import retrofit.client.Response;
 
 
 public class MainApp extends Application {
-    public static final String TAG = "com.loyo.oa.v2";
+
+    public static final String TAG = "com.loyo.oa.v2app";
     public static final int ENTER_TYPE_TOP = 1;
     public static final int ENTER_TYPE_BUTTOM = 2;
     public static final int ENTER_TYPE_LEFT = 3;
@@ -70,6 +65,8 @@ public class MainApp extends Application {
 
     private static MainApp mainApp;
     public static Gson gson;
+    public static HttpJpushNotification jpushData;
+    public boolean isCutomerEdit = false;//客户信息是否编辑过
 
     public DisplayImageOptions options_rounded;
     public static DisplayImageOptions options_3;
@@ -87,6 +84,7 @@ public class MainApp extends Application {
     public SimpleDateFormat df11;//设置日期格式
     public SimpleDateFormat df12;//设置日期格式
     public SimpleDateFormat df13;//设置日期格式
+    public SimpleDateFormat df14;//设置日期格式
     public SimpleDateFormat df_api;//服务器返回的时间格式
     public SimpleDateFormat df_api_get;
     public SimpleDateFormat df_api_get2;
@@ -97,17 +95,18 @@ public class MainApp extends Application {
     public double longitude = -1;
     public double latitude = -1;
     public String address;
-
+    public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
 
 
     //-------这些数据需要保存在本地-------------
     //下属
-    public static ArrayList<User> subUsers = new ArrayList<>();
     public static ArrayList<UserGroupData> lstUserGroupData;
-    public static ArrayList<Department> lstDepartment;
+    public static ArrayList<Department> lstDepartment;//组织架构 的缓存
+    public static ArrayList<User> selectAllUsers; //选人功能 所有人员缓存
+
     static String token;
-    public static User user;
+    public static User user;//InitDataService 在这里负值
     public CellInfo cellInfo;
 
     public static String getToken() {
@@ -119,31 +118,24 @@ public class MainApp extends Application {
     }
 
     public static void setToken(String _token) {
+        JPushInterface.resumePush(mainApp);
         token = _token;
         SharedUtil.put(getMainApp().getBaseContext(), FinalVariables.TOKEN, token);
     }
 
 
-    public ArrayList<Province> mProvinces=new ArrayList<>();
-    public ArrayList<Industry> mIndustries=new ArrayList<>();
-
-    void loadAreaCodeTable() {
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
-                @Override
-                public void success(ArrayList<Province> provinces, Response response) {
-                    mProvinces=provinces;
-                }
-            });
-    }
+    public ArrayList<Industry> mIndustries = new ArrayList<>();
 
     void loadIndustryCodeTable() {
 
-            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getIndustry(new RCallback<ArrayList<Industry>>() {
-                @Override
-                public void success(ArrayList<Industry> industries, Response response) {
-                    mIndustries=industries;
-                }
-            });
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getIndustry(new RCallback<ArrayList<Industry>>() {
+            @Override
+            public void success(ArrayList<Industry> industries, Response response) {
+                mIndustries = industries;
+
+            }
+        });
+
     }
     //-------这些数据需要保存在本地-------------
 
@@ -152,12 +144,11 @@ public class MainApp extends Application {
         super.onCreate();
         mainApp = this;
         init();
-        initXiaomi();
-        loadAreaCodeTable();
         loadIndustryCodeTable();
-        //        getWindowWH();
+        //    getWindowWH();
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+
     }
 
     static RestAdapter restAdapter = null;
@@ -171,6 +162,8 @@ public class MainApp extends Application {
             RequestInterceptor requestInterceptor = new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {
+                    //System.out.print(" 获取的token ："+String.format("Bearer %s", MainApp.getToken()));
+
                     request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
                     request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
                     request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
@@ -180,67 +173,56 @@ public class MainApp extends Application {
                 }
             };
 
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.API_URL()).
+                    setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
         }
 
         return restAdapter;
     }
 
-    /**
-     * 初始化小米推送服务
-     */
-    private void initXiaomi() {
-        //初始化push推送服务
-        try {
-            MiPushClient.checkManifest(this);
-        } catch (Exception e) {
-            Log.e(TAG, "小米Manifest配置错误 ");
-            e.printStackTrace();
+    public RestAdapter getRestAdapter(int mode) {
+        if (restAdapter != null) {
+            if (cellInfo == null) {
+                cellInfo = Utils.getCellInfo();
+            }
+            RequestInterceptor requestInterceptor = new RequestInterceptor() {
+                @Override
+                public void intercept(RequestFacade request) {
+                    request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
+                    request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
+                    request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());
+                    request.addHeader("LoyoOSVersion", cellInfo.getLoyoOSVersion());
+                    request.addHeader("LoyoVersionName", Global.getVersionName());
+                    request.addHeader("LoyoVersionCode", String.valueOf(Global.getVersion()));
+                }
+            };
+
+            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
         }
-        boolean shouldInitXm = Utils.shouldInitXm(this);
-        Log.e(TAG, "shouldInitXm : " + shouldInitXm);
-        if (shouldInitXm) {
-            MiPushClient.registerPush(this, FinalVariables.XM_APP_ID, FinalVariables.XM_APP_KEY);
-            MiPushClient.setAlias(this, FinalVariables.XM_APP_ALIAS, null);
-        }
-        //打开Log
-        LoggerInterface newLogger = new LoggerInterface() {
 
-            @Override
-            public void setTag(String tag) {
-                // ignore
-            }
-
-            @Override
-            public void log(String content, Throwable t) {
-                Log.e(TAG, content, t);
-            }
-
-            @Override
-            public void log(String content) {
-                Log.e(TAG, content);
-            }
-        };
-        Logger.setLogger(this, newLogger);
+        return restAdapter;
     }
 
+
     void init() {
-        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
-        SDKInitializer.initialize(this);
-
-        if (BuildConfig.DEBUG) {
-            try {
-                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");
-                Method m = c.getMethod("install", Application.class);
-                if (m != null) {
-                    m.invoke(null, this);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+//        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
+//        if (BuildConfig.DEBUG) {
+//            try {
+//                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");
+//                Method m = c.getMethod("install", Application.class);
+//                if (m != null) {
+//                    m.invoke(null, this);
+//                }
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
         //        init_StrictMode();
+        Configuration config = getResources().getConfiguration();
+        config.locale= Locale.CHINA;
+        getBaseContext().getResources().updateConfiguration(config, null);
 
+        // SDKInitializer.initialize(getApplicationContext());
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();
@@ -259,6 +241,7 @@ public class MainApp extends Application {
         df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式
         df12 = new SimpleDateFormat("yyyy年M月dd日", Locale.getDefault());//设置日期格式
         df13 = new SimpleDateFormat("yyyy年M月", Locale.getDefault());//设置日期格式
+        df14 = new SimpleDateFormat("yyyy年M月dd日 HH:mm:ss", Locale.getDefault());//设置日期格式
         df_api = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());//设置日期格式
         df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
         df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
@@ -267,10 +250,11 @@ public class MainApp extends Application {
         DBManager.init(this);
 
         try {
-            user = DBManager.Instance().getUser();
-            subUsers = DBManager.Instance().getSubordinates();
+            //user = DBManager.Instance().getUser();
+            // subUsers = DBManager.Instance().getSubordinates();
         } catch (Exception ex) {
             Global.ProcDebugException(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -435,7 +419,14 @@ public class MainApp extends Application {
         }
     }
 
-    public void startActivity(Activity activity, Class<?> cls, int enterType, boolean isFinish, Bundle bundle, boolean FLAG_ACTIVITY_FORWARD_RESULT) {
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    public void startActivity(Activity activity, Class<?> cls, int enterType, boolean isFinish,
+                              Bundle bundle, boolean FLAG_ACTIVITY_FORWARD_RESULT) {
         Intent intent = new Intent();
         intent.setClass(this, cls);
         if (bundle != null) {
@@ -489,6 +480,8 @@ public class MainApp extends Application {
     }
 
     /**
+     * 页面跳转的方式  动画
+     *
      * @param activity
      * @param cls
      * @param enterType
@@ -513,13 +506,6 @@ public class MainApp extends Application {
                 break;
             case ENTER_TYPE_RIGHT:
                 activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                //                break;
-                //            case ENTER_TYPE_ZOOM_IN:
-                //                activity.overridePendingTransition(R.anim.enter_zoom_in, R.anim.enter_zoom_in);
-                //                break;
-                //            case ENTER_TYPE_ZOOM_OUT:
-                //                activity.overridePendingTransition(R.anim.enter_zoom_out, R.anim.enter_zoom_out);
-                //                break;
             default:
                 break;
         }

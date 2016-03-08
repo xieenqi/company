@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.renderscript.Allocation;
@@ -32,13 +35,17 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
 import com.loyo.oa.v2.beans.TagItem;
+import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +62,11 @@ import rx.Observable;
  * 时间 : 15/8/6.
  */
 public class Utils {
+
+    static ProgressDialog progressDialog;
+    static ProgressDialog progressDialogAtt;
+
+
     /**
      * 高斯模糊图片
      *
@@ -66,45 +78,48 @@ public class Utils {
 
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
         Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
         //Instantiate a new Renderscript
         RenderScript rs = RenderScript.create(MainApp.getMainApp());
+        try {
+            //Create an Intrinsic Blur Script using the Renderscript
+            ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 
-        //Create an Intrinsic Blur Script using the Renderscript
-        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+            //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
+            Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
+            Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
 
-        //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
-        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
-        Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
+            //Set the radius of the blur
+            blurScript.setRadius(50.f);
 
-        //Set the radius of the blur
-        blurScript.setRadius(25.f);
+            //Perform the Renderscript
+            blurScript.setInput(allIn);
+            blurScript.forEach(allOut);
 
-        //Perform the Renderscript
-        blurScript.setInput(allIn);
-        blurScript.forEach(allOut);
+            //Copy the final bitmap created by the out Allocation to the outBitmap
+            allOut.copyTo(outBitmap);
 
-        //Copy the final bitmap created by the out Allocation to the outBitmap
-        allOut.copyTo(outBitmap);
+            //recycle the original bitmap
 
-        //recycle the original bitmap
-//        bitmap.recycle();
-
-        //After finishing everything, we destroy the Renderscript.
-        rs.destroy();
-
+            bitmap.recycle();
+            //After finishing everything, we destroy the Renderscript.
+            rs.destroy();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            LogUtil.d("高斯模糊Bitmap转换参数异常");
+        }
         return outBitmap;
     }
 
     /**
      * 解决视图比屏幕大时无法builddrawingcache的bug
+     *
      * @param v
      * @return
      */
     public static Bitmap loadBitmapFromView(View v) {
         final int width = v.getMeasuredWidth();
         final int height = v.getMeasuredHeight();
-        Bitmap b = Bitmap.createBitmap( width, height, Bitmap.Config.RGB_565);
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
         Canvas c = new Canvas(b);
         v.draw(c);
@@ -117,10 +132,10 @@ public class Utils {
      * @param uuid
      * @param file
      */
-    public synchronized static Observable<Attachment> uploadAttachment(String uuid, File file) {
+    public synchronized static Observable<Attachment> uploadAttachment(String uuid, int bizType, File file) {
         TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedString = new TypedString(uuid);
-        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedString, typedFile);
+        TypedString typedUuid = new TypedString(uuid);
+        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid, bizType, typedFile);
     }
 
     /**
@@ -211,13 +226,14 @@ public class Utils {
         return members;
     }
 
+
     /**
      * 找出默认联系人
      *
      * @return
      */
     public static Contact findDeault(Customer customer) {
-        ArrayList<Contact> contacts = customer.getContacts();
+        ArrayList<Contact> contacts = customer.contacts;
         if (null == contacts || contacts.isEmpty()) {
             return null;
         }
@@ -228,6 +244,23 @@ public class Utils {
             }
         }
         return contacts.get(0);
+    }
+
+    /**
+     * 等待进度条
+     */
+    public static void dialogShow(Context ct, String info) {
+        progressDialog = new ProgressDialog(ct);
+        progressDialog.setMessage(info);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public static void dialogDismiss() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     /**
@@ -256,7 +289,7 @@ public class Utils {
      */
     public static void call(Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
-            Global.Toast("电话号码为空");
+            Global.Toast("号码为空");
             return;
         }
         Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
@@ -271,14 +304,14 @@ public class Utils {
      * @return
      */
     public static String getTagItems(Customer customer) {
-        if (null == customer || null == customer.getTags() || customer.getTags().isEmpty()) {
+        if (null == customer || null == customer.tags || customer.tags.isEmpty()) {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < customer.getTags().size(); i++) {
-            String tag = !TextUtils.isEmpty(customer.getTags().get(i).getItemName()) ? customer.getTags().get(i).getItemName() : "";
+        for (int i = 0; i < customer.tags.size(); i++) {
+            String tag = !TextUtils.isEmpty(customer.tags.get(i).getItemName()) ? customer.tags.get(i).getItemName() : "";
             if (!TextUtils.isEmpty(tag)) {
-                if (i != customer.getTags().size() - 1) {
+                if (i != customer.tags.size() - 1) {
                     tag = tag.concat(",");
                 }
                 builder.append(tag);
@@ -296,25 +329,42 @@ public class Utils {
      */
     public static void goWhere(final Context context, final double toLat, final double toLng) {
 
-        new LocationUtil(context, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 Uri uri;
                 if (hasMapApp(context)) {
                     uri = Uri.parse("geo: " + latitude + "," + longitude);
-
                 } else {
                     uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(from)&to=" + toLat + "," + toLng + "(to)");
                 }
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 Global.Toast("获取当前位置失败,无法规划路径");
+                LocationUtilGD.sotpLocation();
             }
+
+//            @Override
+//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+///*                Intent intent;
+//                try {
+//                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+//                    context.startActivity(intent); //启动调用
+//                } catch (URISyntaxException e) {
+//                    e.printStackTrace();
+//                }*/
+//            }
+//
+//            @Override
+//            public void OnLocationFailed() {
+//
+//            }
         }
 
         );
@@ -362,9 +412,12 @@ public class Utils {
      * @return
      */
     public static boolean hasRights() {
-        Role role = MainApp.user.getRole();
+        if (MainApp.user == null) {
+            return false;
+        }
+        Role role = MainApp.user.role;
         if (null != role) {
-            if (role.getDataRange() != Role.SELF || role.getDataRange()!=Role.NONE) {
+            if (role.getDataRange() != Role.SELF) {
                 return true;
             }
         }
@@ -403,24 +456,6 @@ public class Utils {
         return cellInfo;
     }
 
-    /**
-     * 是否初始化小米推送
-     *
-     * @param context
-     * @return
-     */
-    public static boolean shouldInitXm(Context context) {
-        ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
-        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-        String mainProcessName = context.getApplicationContext().getPackageName();
-        int myPid = android.os.Process.myPid();
-        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
@@ -533,6 +568,27 @@ public class Utils {
     }
 
     /**
+     * 判断网络连接是否可用
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) {
+        } else {
+            NetworkInfo[] info = cm.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * 设置内容
      *
      * @param tv
@@ -559,6 +615,75 @@ public class Utils {
     }
 
     /**
+     * InputStream转String
+     */
+
+    public static String convertStreamToString(InputStream is) {
+
+        /*
+          * To convert the InputStream to String we use the BufferedReader.readLine()
+          * method. We iterate until the BufferedReader return null which means
+          * there's no more data to read. Each line will appended to a StringBuilder
+          * and returned as String.
+          */
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return sb.toString();
+    }
+
+
+    /*取下班时间，最小值，最早下班时间*/
+    public static long minOutTime(ArrayList<Long> array){
+        long min = 0;
+        for(int i = 0;i<array.size();i++){
+            for(int k = i+1;k<array.size();k++){
+                if(array.get(i)<array.get(k)){
+                    min = array.get(k);
+                }else{
+                    min = array.get(i);
+                }
+            }
+        }
+        return min;
+    }
+
+    /**
+     * 获取部门名字和职位名字，包括多部门情况下
+     * */
+    public static StringBuffer getDeptName(StringBuffer stringBuffer,ArrayList<UserInfo> list){
+
+        for(int i = 0;i<list.size();i++){
+            stringBuffer.append(list.get(i).getShortDept().getName());
+            if(!list.get(i).getTitle().isEmpty()
+                    && list.get(i).getTitle().length() >0){
+                stringBuffer.append(" | "+list.get(i).getTitle());
+            }
+            if(i != list.size()-1){
+                stringBuffer.append(" ; ");
+            }
+        }
+
+        return stringBuffer;
+    }
+
+
+    /**
      * 服务是否在运行
      *
      * @param name
@@ -578,5 +703,218 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * 高斯模糊图片算法
+     */
+    public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
+
+        Bitmap bitmap = null;
+        if (canReuseInBitmap) {
+            bitmap = sentBitmap;
+        } else {
+            if (null != sentBitmap.getConfig()) {
+                bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+            } else {
+                LogUtil.d("高斯错误");
+                return sentBitmap;
+            }
+        }
+
+        if (radius < 1) {
+            return (null);
+        }
+
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        int[] pix = new int[w * h];
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+
+        int wm = w - 1;
+        int hm = h - 1;
+        int wh = w * h;
+        int div = radius + radius + 1;
+
+        int r[] = new int[wh];
+        int g[] = new int[wh];
+        int b[] = new int[wh];
+        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int vmin[] = new int[Math.max(w, h)];
+
+        int divsum = (div + 1) >> 1;
+        divsum *= divsum;
+        int dv[] = new int[256 * divsum];
+        for (i = 0; i < 256 * divsum; i++) {
+            dv[i] = (i / divsum);
+        }
+
+        yw = yi = 0;
+
+        int[][] stack = new int[div][3];
+        int stackpointer;
+        int stackstart;
+        int[] sir;
+        int rbs;
+        int r1 = radius + 1;
+        int routsum, goutsum, boutsum;
+        int rinsum, ginsum, binsum;
+
+        for (y = 0; y < h; y++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            for (i = -radius; i <= radius; i++) {
+                p = pix[yi + Math.min(wm, Math.max(i, 0))];
+                sir = stack[i + radius];
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                rbs = r1 - Math.abs(i);
+                rsum += sir[0] * rbs;
+                gsum += sir[1] * rbs;
+                bsum += sir[2] * rbs;
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+            }
+            stackpointer = radius;
+
+            for (x = 0; x < w; x++) {
+
+                r[yi] = dv[rsum];
+                g[yi] = dv[gsum];
+                b[yi] = dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+
+                if (y == 0) {
+                    vmin[x] = Math.min(x + radius + 1, wm);
+                }
+                p = pix[yw + vmin[x]];
+
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[(stackpointer) % div];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+
+                yi++;
+            }
+            yw += w;
+        }
+        for (x = 0; x < w; x++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            yp = -radius * w;
+            for (i = -radius; i <= radius; i++) {
+                yi = Math.max(0, yp) + x;
+
+                sir = stack[i + radius];
+
+                sir[0] = r[yi];
+                sir[1] = g[yi];
+                sir[2] = b[yi];
+
+                rbs = r1 - Math.abs(i);
+
+                rsum += r[yi] * rbs;
+                gsum += g[yi] * rbs;
+                bsum += b[yi] * rbs;
+
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+
+                if (i < hm) {
+                    yp += w;
+                }
+            }
+            yi = x;
+            stackpointer = radius;
+            for (y = 0; y < h; y++) {
+                // Preserve alpha channel: ( 0xff000000 & pix[yi] )
+                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+
+                if (x == 0) {
+                    vmin[y] = Math.min(y + r1, hm) * w;
+                }
+                p = x + vmin[y];
+
+                sir[0] = r[p];
+                sir[1] = g[p];
+                sir[2] = b[p];
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[stackpointer];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+
+                yi += w;
+            }
+        }
+        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+        return (bitmap);
     }
 }

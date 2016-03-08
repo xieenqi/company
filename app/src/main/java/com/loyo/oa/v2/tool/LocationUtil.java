@@ -39,10 +39,10 @@ public class LocationUtil {
         option.setCoorType("gcj02");
         option.setScanSpan(1000);
         option.setIsNeedAddress(true);
-//        option.setOpenGps(true);
+        option.setOpenGps(true);
         option.setLocationNotify(true);
         option.setIsNeedLocationDescribe(true);
-//        option.setEnableSimulateGps(false);
+        option.setEnableSimulateGps(false);
         mLocationClient.setLocOption(option);
         mLocationClient.registerLocationListener(mLocationListener);
         mLocationClient.start();
@@ -81,9 +81,10 @@ public class LocationUtil {
                 break;
         }
 
-        LoyoLog.e(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
-                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() + " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
-                location.getRadius() + " available : " + available);
+//        LogUtil.d(getClass().getSimpleName(), "locateType : " + location.getLocType() + " " +
+//                type + " " + location.getNetworkLocationType() + " time : " + location.getTime() +
+//                " 卫星数 : " + location.getSatelliteNumber() + " radius : " +
+//                location.getRadius() + " available : " + available);
 
         mLocationClient.unRegisterLocationListener(mLocationListener);
         mLocationClient.stop();
@@ -108,8 +109,10 @@ public class LocationUtil {
         app.latitude = location.getLatitude();
 
         if (!TextUtils.isEmpty(address)) {
-            app.logUtil.e("notifyLocation,address : " + address);
-            afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(), location.getRadius());
+            LogUtil.d("定位notifyLocation,address : " + address);
+            LogUtil.d("定位location:" + location.getLatitude() + "," + location.getLatitude());
+            afterLocation.OnLocationSucessed(address, location.getLongitude(), location.getLatitude(),
+                    location.getRadius());
         } else {
             afterLocation.OnLocationFailed();
         }

@@ -2,8 +2,6 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.application.MainApp;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,7 +15,7 @@ public class Contact implements Serializable {
     private String id;
     private String name;
     private String tel;
-    private long birth;
+    private String birth;
     private String qq;
     private String wx;
     private String wiretel;
@@ -83,14 +81,14 @@ public class Contact implements Serializable {
     }
 
     public String getBirthStr() {
-        return birth<=0?"": MainApp.getMainApp().df4.format(birth*1000);
-    }
-
-    public long getBirth() {
         return birth;
     }
 
-    public void setBirth(long birth) {
+    public String getBirth() {
+        return birth;
+    }
+
+    public void setBirth(String  birth) {
         this.birth = birth;
     }
 

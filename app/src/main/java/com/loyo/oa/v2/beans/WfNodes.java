@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class WfNodes implements Serializable {
     public static final int ACTIVE_STATUS_WAIT=1;
-    public static final int ACTIVE_STATUS_PROCESSING=ACTIVE_STATUS_WAIT+1;
-    public static final int ACTIVE_STATUS_PROCESSED=ACTIVE_STATUS_WAIT+2;
+    public static final int ACTIVE_STATUS_PROCESSING=2;
+    public static final int ACTIVE_STATUS_PROCESSED=3;
 
     private int active ;//bool, optional): ,
     private boolean approveFlag ;//bool, optional): ,

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/toggle_bg_off_n" android:state_checked="false"/>
-    <item android:drawable="@drawable/toggle_bg_on_n" android:state_checked="true"/>
-
-</selector><!-- From: file:/Users/ykb/Desktop/MyProject/android_360loyo/loyocloud-android-2.0/app/src/main/res/drawable/toggle_selector.xml -->

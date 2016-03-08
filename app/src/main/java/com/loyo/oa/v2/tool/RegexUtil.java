@@ -12,7 +12,7 @@ public class RegexUtil
 {
     private static final String regexkEmaiL = "\\w+@\\w+\\.[a-z]+(\\.[a-z]+)?";
     private static final String regexkIdCard = "[1-9]\\d{13,16}[a-zA-Z0-9]{1}";
-    private static final String regexkMobileL = "(\\+\\d+)?1[3458]\\d{9}$";
+    private static final String regexkMobileL = "(\\+\\d+)?1[34578]\\d{9}$";
     private static final String regexkPhone = "(\\+\\d+)?(\\d{3,4}\\-?)?\\d{7,8}$";
     ;
     private static final String regexkDigit = "\\-?[1-9]\\d+";
@@ -27,7 +27,7 @@ public class RegexUtil
     ;
     private static final String regexkPostcode = "[1-9]\\d{5}";
     private static final String regexkIp = "\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b";
-    private static final String regexkWx = "^[a-zA-Z\\d_]{5,}$";
+    private static final String regexkWx = "^[a-zA-Z\\d_]{6,}$";
 
     public enum StringType
     {

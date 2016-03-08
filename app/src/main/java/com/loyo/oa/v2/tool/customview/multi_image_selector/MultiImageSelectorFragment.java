@@ -69,7 +69,6 @@ public class MultiImageSelectorFragment extends Fragment {
     // 请求加载系统照相机
     private static final int REQUEST_CAMERA = 100;
 
-
     // 结果数据
     private ArrayList<String> resultList = new ArrayList<>();
     // 文件夹数据
@@ -78,10 +77,8 @@ public class MultiImageSelectorFragment extends Fragment {
     // 图片Grid
     private GridView mGridView;
     private Callback mCallback;
-
     private ImageGridAdapter mImageAdapter;
     private FolderAdapter mFolderAdapter;
-
     private ListPopupWindow mFolderPopupWindow;
 
     // 时间线
@@ -170,7 +167,7 @@ public class MultiImageSelectorFragment extends Fragment {
         });
 
         mPreviewBtn = (Button) view.findViewById(R.id.preview);
-        // 初始化，按钮状态初始化
+        // 初始化，按钮状态初始化˚˚
         if(resultList == null || resultList.size()<=0){
             mPreviewBtn.setText(R.string.preview);
             mPreviewBtn.setEnabled(false);
@@ -346,7 +343,6 @@ public class MultiImageSelectorFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         Log.d(TAG, "on change");
-
         if(mFolderPopupWindow != null){
             if(mFolderPopupWindow.isShowing()){
                 mFolderPopupWindow.dismiss();

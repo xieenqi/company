@@ -9,22 +9,8 @@ import java.io.Serializable;
  * 时间 : 15/10/29.
  */
 public class TeamLegworkDetail implements Serializable {
-    private NewUser user;
-    private int visitcount;
+    public NewUser user;//暂时没有用
+    public int visitNum;
+    public int customerNum;
 
-    public NewUser getUser() {
-        return user;
-    }
-
-    public void setUser(NewUser user) {
-        this.user = user;
-    }
-
-    public int getVisitCount() {
-        return visitcount;
-    }
-
-    public void setVisitCount(int visitCount) {
-        this.visitcount = visitCount;
-    }
 }

@@ -25,10 +25,15 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.tool.customview.MyLetterListView;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
 import java.util.ArrayList;
+
+/**
+ * 员工通讯录Fragment
+ * */
 
 @SuppressLint("ValidFragment")
 public class UserFragment extends BaseFragment {
@@ -310,10 +315,10 @@ public class UserFragment extends BaseFragment {
                 for (User u : d.getLstUser()) {
                     if (count == position) {
 
-                        if (u.getFullPinyin() != null && u.getFullPinyin().length() > 0) {
-                            return u.getFullPinyin().substring(0, 1).toUpperCase();
-                        } else if (u.getSimplePinyin() != null && u.getSimplePinyin().length() > 0) {
-                            return u.getSimplePinyin().substring(0, 1).toUpperCase();
+                        if (u.fullPinyin != null && u.fullPinyin.length() > 0) {
+                            return u.fullPinyin.substring(0, 1).toUpperCase();
+                        } else if (u.simplePinyin != null && u.simplePinyin.length() > 0) {
+                            return u.simplePinyin.substring(0, 1).toUpperCase();
                         } else {
                             return "";
                         }
@@ -420,11 +425,14 @@ public class UserFragment extends BaseFragment {
                 item_info.cBox.toggle();
 
                 switch (departmentUserActivity.select_type) {
+                    //单选
                     case DepartmentUserActivity.TYPE_SELECT_SINGLE:
+
                         Intent data = new Intent();
                         data.putExtra(User.class.getName(), (User) userGroupExpandableListAdapter.getChild(groupPosition, childPosition));
                         app.finishActivity((Activity) v.getContext(), MainApp.ENTER_TYPE_LEFT, Activity.RESULT_OK, data);
                         break;
+                    //多选
                     case DepartmentUserActivity.TYPE_SELECT_MULTUI:
                         if (item_info.cBox.isChecked()) {
                             userGroupExpandableListAdapter.isSelected_radio_group = groupPosition;
@@ -440,12 +448,12 @@ public class UserFragment extends BaseFragment {
                         }
 
 //                        if (user.getId() == -1) {
-                        if (user.getId().equals("-1")) {
+                        if ("-1".equals(user.id)) {
                             //选择全体人员,先删除已经选择人员,再全选
                             DepartmentUserActivity.sendCleanUsers(v.getContext());
 
                         } else {
-                            DepartmentUserActivity.sendMultiSelectUsers(v.getContext(), user.getId(), user.getRealname(), "", null, item_info.cBox.isChecked());
+                            DepartmentUserActivity.sendMultiSelectUsers(v.getContext(), user.id, user.getRealname(), "", null, item_info.cBox.isChecked());
                         }
 
                         break;

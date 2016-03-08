@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -15,16 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 客户拜访列表 的adapter  xnq
  * com.loyo.oa.v2.adapter
- * 描述 :
- * 作者 : ykb
- * 时间 : 15/9/14.
  */
 public class CommonCategoryAdapter extends BaseAdapter {
 
 
     private LayoutInflater layoutInflater;
-    public List<String> lstData=new ArrayList<>();
+    public List<String> lstData = new ArrayList<>();
     private int selectPosition = -1;
 
     public CommonCategoryAdapter(Context context, List<String> lstData) {
@@ -59,17 +58,22 @@ public class CommonCategoryAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.item_wf_category_layout, parent, false);
         }
         TextView tv = ViewHolder.get(convertView, R.id.item_wf_category_tv);
-
+        ImageView iv = ViewHolder.get(convertView, R.id.iv_head);
         String content = lstData.get(position);
         if (!TextUtils.isEmpty(content)) {
             tv.setText(content);
         }
         if (position == 0) {
-            convertView.setBackgroundResource(R.drawable.item_bg_top);
-        } else if (position == lstData.size() - 1) {
-            convertView.setBackgroundResource(R.drawable.item_bg_buttom);
-        } else {
-            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.white));
+            iv.setBackgroundResource(R.drawable.icon_my);
+        } else if (position == 1) {
+            if (lstData.get(1).contains("团队")) {
+                iv.setBackgroundResource(R.drawable.icon_team);
+            } else {
+                iv.setBackgroundResource(R.drawable.icon_public);
+            }
+
+        } else if (position == 2) {
+            iv.setBackgroundResource(R.drawable.icon_public);
         }
         return convertView;
     }

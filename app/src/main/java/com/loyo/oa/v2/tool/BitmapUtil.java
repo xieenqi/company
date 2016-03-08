@@ -3,6 +3,10 @@ package com.loyo.oa.v2.tool;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -348,19 +352,19 @@ public class BitmapUtil {
 //            this(imageView, 0, 0, 0, 0);
 //        }
 
-        public ImageLoadingListener_ClickShowImg(ImageView imageView, int _postion, ArrayList<Attachment> _attachments, int def_rid,boolean isEdit) {
-            this(imageView, def_rid, def_rid, def_rid, def_rid,isEdit);
+        public ImageLoadingListener_ClickShowImg(ImageView imageView, int _postion, ArrayList<Attachment> _attachments, int def_rid, boolean isEdit) {
+            this(imageView, def_rid, def_rid, def_rid, def_rid, isEdit);
             attachments = _attachments;
             postion = _postion;
         }
 
-        public ImageLoadingListener_ClickShowImg(ImageView imageView, int def_rid, int cancelled_rid, int failed_rid, int started_rid,boolean isEdit) {
+        public ImageLoadingListener_ClickShowImg(ImageView imageView, int def_rid, int cancelled_rid, int failed_rid, int started_rid, boolean isEdit) {
             this.imageView = imageView;
             this.def_rid = def_rid;
             this.cancelled_rid = cancelled_rid;
             this.failed_rid = failed_rid;
             this.started_rid = started_rid;
-            this.isEdit=isEdit;
+            this.isEdit = isEdit;
         }
 
         @Override
@@ -435,6 +439,33 @@ public class BitmapUtil {
         }
     }
 
+    /**
+     * Drawable转化为Bitmap
+     */
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);
+        return bitmap;
+
+    }
+
+    /**
+     * Bitmap to Drawable
+     *
+     * @param bitmap
+     * @param mcontext
+     * @return
+     */
+    public static Drawable bitmapToDrawble(Bitmap bitmap, Context mcontext) {
+        Drawable drawable = new BitmapDrawable(mcontext.getResources(), bitmap);
+        return drawable;
+    }
+
+
     public static class OnClickListener_showImg implements OnClickListener {
         ArrayList<Attachment> attachments;
         Context mContext;
@@ -465,13 +496,12 @@ public class BitmapUtil {
 
                 newAttachment.add(attachment);
             }
-            for (int i=0;i<newAttachment.size();i++){
-                if (attachments.get(position).equals(newAttachment.get(i))){
+            for (int i = 0; i < newAttachment.size(); i++) {
+                if (newAttachment.get(i).equals(attachments.get(position))) {
                     newPosistion = i;
                 }
+                LogUtil.d("yula预览的图片：" + newAttachment.get(i).url);
             }
-
-//
 //            Bundle bundle = new Bundle();
 //            bundle.putSerializable("data", newAttachment);
 //            bundle.putInt("position", newPosistion);
@@ -482,7 +512,8 @@ public class BitmapUtil {
             bundle.putInt("position", newPosistion);
             bundle.putBoolean("isEdit", isEdit);
 //            MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
-            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
+            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageActivity.class,
+                    MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 
 
         }

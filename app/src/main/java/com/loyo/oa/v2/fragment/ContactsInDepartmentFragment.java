@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ContactInfoActivity_;
-import com.loyo.oa.v2.activity.ContactsDepartmentActivity_;
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
@@ -35,27 +35,28 @@ import java.util.List;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :部门联系人列表页
+ * 描述 :【本部门】人员列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
  */
-public class ContactsInDepartmentFragment extends BaseFragment
-{
-    ExpandableListView expandableListView_user;
-    ContactsExpandableListAdapter userGroupExpandableListAdapter;
-    ArrayList<CommonItem> listDatas = new ArrayList<>();
-    MyLetterListView letterView;
-    AlphabetIndexer index;
-    ViewGroup layout_toast;
-    TextView tv_toast;
-    String mIndex;
-    String depId;
+public class ContactsInDepartmentFragment extends BaseFragment {
+
+    public ExpandableListView expandableListView_user;
+    public ContactsExpandableListAdapter userGroupExpandableListAdapter;
+    public ArrayList<CommonItem> listDatas = new ArrayList<>();
+    public MyLetterListView letterView;
+    public AlphabetIndexer index;
+    public ViewGroup layout_toast;
+    public TextView tv_toast;
+    public String mIndex;
+    public String depId;
+    public boolean isMyDept;
+
     //必须大于adapter的viewType
-    private int itemCount=2;
+    private int itemCount = 2;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
     }
@@ -63,26 +64,28 @@ public class ContactsInDepartmentFragment extends BaseFragment
     /**
      * 初始化数据
      */
-    private int initData()
-    {
-        depId = (null == getArguments() ||!getArguments().containsKey("depId"))? "": getArguments().getString("depId");
+    private int initData() {
 
-        if (TextUtils.isEmpty(depId)) {
-            depId = MainApp.user.getDepts().get(0).getShortDept().getId();
+        depId = (null == getArguments() || !getArguments().containsKey("depId")) ? "" : getArguments().getString("depId");
+
+        if (TextUtils.isEmpty(depId) && depId.length() == 0) {
+            depId = MainApp.user.depts.get(0).getShortDept().getId();
         }
-        boolean isMyDept=TextUtils.equals(depId, MainApp.user.getDepts().get(0).getShortDept().getId());
 
-        app.logUtil.e(" depId : " + depId);
+        if (MainApp.user.depts.size() != 0) {
+            isMyDept = TextUtils.equals(depId, MainApp.user.depts.get(0).getShortDept().getId());
+        }
 
-        List<Department> departments =isMyDept?null: Common.getLstDepartment(depId);
-        List<User> users = isMyDept?Common.getUsersByDeptId(depId,new ArrayList<User>()):Common.getListUser(depId);
-        CommonItem tempItem=new CommonItem();
-        tempItem.tag="";
+        List<Department> departments = isMyDept ? null : Common.getLstDepartment(depId);
+        List<User> users = isMyDept ? Common.getUsersByDeptId(depId, new ArrayList<User>()) : Common.getListUser(depId);
+
+        CommonItem tempItem = new CommonItem();
+        tempItem.tag = "";
 
         for (char i = 'A'; i <= 'Z'; i += (char) 1) {
             CommonItem item = new CommonItem();
             item.tag = String.valueOf(i);
-            if(null!=departments&&!departments.isEmpty()) {
+            if (null != departments && !departments.isEmpty()) {
                 for (int j = 0; j < departments.size(); j++) {
                     Department department = departments.get(j);
                     String names = TextUtils.isEmpty(department.getFullPinyin()) ? "" : department.getFullPinyin();
@@ -97,15 +100,16 @@ public class ContactsInDepartmentFragment extends BaseFragment
                     }
                 }
             }
-            if(null!=users&&!users.isEmpty()) {
-                if(itemCount==2)
-                    itemCount=3;
+
+            if (null != users && !users.isEmpty()) {
+                if (itemCount == 2)
+                    itemCount = 3;
 
                 for (int k = 0; k < users.size(); k++) {
                     User user = users.get(k);
                     if (isMyDept && user.isCurrentUser()) continue;
-                    String names = TextUtils.isEmpty(user.getFullPinyin()) ? "" : user.getFullPinyin();
-                    names = TextUtils.isEmpty(names) ? user.getSimplePinyin() : names;
+                    String names = TextUtils.isEmpty(user.fullPinyin) ? "" : user.fullPinyin;
+                    names = TextUtils.isEmpty(names) ? user.fullPinyin : names;
                     if (!TextUtils.isEmpty(names)) {
                         char name = names.toUpperCase().charAt(0);
                         if (i == name) {
@@ -122,11 +126,11 @@ public class ContactsInDepartmentFragment extends BaseFragment
         }
 
         //加载没有tag的人员
-        if(!tempItem.datas.isEmpty())
+        if (!tempItem.datas.isEmpty())
             listDatas.add(0, tempItem);
-        if(isMyDept) {
+        if (isMyDept) {
             //加载自己
-            CommonItem itemMe=new CommonItem();
+            CommonItem itemMe = new CommonItem();
             itemMe.tag = "我";
             itemMe.datas.add(MainApp.user);
             listDatas.add(0, itemMe);
@@ -148,7 +152,7 @@ public class ContactsInDepartmentFragment extends BaseFragment
             mIndex = "#".concat(sb.toString());
         }
 
-        return  1;
+        return 1;
     }
 
     /**
@@ -156,8 +160,7 @@ public class ContactsInDepartmentFragment extends BaseFragment
      *
      * @param view
      */
-    private void bindViewData(View view)
-    {
+    private void bindViewData(View view) {
         layout_toast = (ViewGroup) view.findViewById(R.id.layout_toast);
         tv_toast = (TextView) view.findViewById(R.id.tv_toast);
 
@@ -166,12 +169,10 @@ public class ContactsInDepartmentFragment extends BaseFragment
 
         letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
         letterView.setKeyword(mIndex);
-        letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener()
-        {
+        letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
 
             @Override
-            public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state)
-            {
+            public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state) {
                 int position = index.getPositionForSection(selectionIndex);
 
                 switch (state) {
@@ -197,20 +198,17 @@ public class ContactsInDepartmentFragment extends BaseFragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bindViewData(view);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
-    void scroll(int position)
-    {
+    void scroll(int position) {
         int count = 0, groupPosition = 0;
         for (CommonItem d : listDatas) {
             for (int i = 0; i < d.datas.size(); i++) {
@@ -223,171 +221,143 @@ public class ContactsInDepartmentFragment extends BaseFragment
         }
     }
 
-    class IndexCursor implements Cursor
-    {
+    class IndexCursor implements Cursor {
 
         ArrayList<CommonItem> data;
 
-        public IndexCursor(ArrayList<CommonItem> _data)
-        {
+        public IndexCursor(ArrayList<CommonItem> _data) {
             this.data = _data;
         }
 
         private int position;
 
         @Override
-        public void copyStringToBuffer(int columnIndex, CharArrayBuffer buffer)
-        {
+        public void copyStringToBuffer(int columnIndex, CharArrayBuffer buffer) {
 
         }
 
         @Override
-        public short getShort(int columnIndex)
-        {
+        public short getShort(int columnIndex) {
             return 0;
         }
 
         @Override
-        public void unregisterContentObserver(ContentObserver observer)
-        {
+        public void unregisterContentObserver(ContentObserver observer) {
 
         }
 
         @Override
-        public void registerDataSetObserver(DataSetObserver observer)
-        {
+        public void registerDataSetObserver(DataSetObserver observer) {
 
         }
 
         @Override
-        public void unregisterDataSetObserver(DataSetObserver observer)
-        {
+        public void unregisterDataSetObserver(DataSetObserver observer) {
 
         }
 
         @Override
-        public void setNotificationUri(ContentResolver cr, Uri uri)
-        {
+        public void setNotificationUri(ContentResolver cr, Uri uri) {
 
         }
 
         @Override
-        public Uri getNotificationUri()
-        {
+        public Uri getNotificationUri() {
             return null;
         }
 
         @Override
-        public boolean getWantsAllOnMoveCalls()
-        {
+        public boolean getWantsAllOnMoveCalls() {
             return false;
         }
 
         @Override
-        public Bundle getExtras()
-        {
+        public Bundle getExtras() {
             return null;
         }
 
         @Override
-        public Bundle respond(Bundle extras)
-        {
+        public Bundle respond(Bundle extras) {
             return null;
         }
 
         @Override
-        public int getInt(int columnIndex)
-        {
+        public int getInt(int columnIndex) {
             return 0;
         }
 
         @Override
-        public long getLong(int columnIndex)
-        {
+        public long getLong(int columnIndex) {
             return 0;
         }
 
         @Override
-        public float getFloat(int columnIndex)
-        {
+        public float getFloat(int columnIndex) {
             return 0;
         }
 
         @Override
-        public double getDouble(int columnIndex)
-        {
+        public double getDouble(int columnIndex) {
             return 0;
         }
 
         @Override
-        public int getType(int columnIndex)
-        {
+        public int getType(int columnIndex) {
             return 0;
         }
 
         @Override
-        public boolean isNull(int columnIndex)
-        {
+        public boolean isNull(int columnIndex) {
             return false;
         }
 
         @Override
-        public void deactivate()
-        {
+        public void deactivate() {
 
         }
 
         @Override
-        public boolean requery()
-        {
+        public boolean requery() {
             return false;
         }
 
         @Override
-        public boolean isAfterLast()
-        {
+        public boolean isAfterLast() {
             return false;
         }
 
         @Override
-        public int getColumnIndex(String columnName)
-        {
+        public int getColumnIndex(String columnName) {
             return 0;
         }
 
         @Override
-        public int getColumnIndexOrThrow(String columnName) throws IllegalArgumentException
-        {
+        public int getColumnIndexOrThrow(String columnName) throws IllegalArgumentException {
             return 0;
         }
 
         @Override
-        public String getColumnName(int columnIndex)
-        {
+        public String getColumnName(int columnIndex) {
             return null;
         }
 
         @Override
-        public String[] getColumnNames()
-        {
+        public String[] getColumnNames() {
             return new String[0];
         }
 
         @Override
-        public int getColumnCount()
-        {
+        public int getColumnCount() {
             return 0;
         }
 
         @Override
-        public byte[] getBlob(int columnIndex)
-        {
+        public byte[] getBlob(int columnIndex) {
             return new byte[0];
         }
 
         @Override
-        public String getString(int columnIndex)
-        {
+        public String getString(int columnIndex) {
             int count = 0;
             for (CommonItem d : listDatas) {
                 for (Object o : d.datas) {
@@ -400,8 +370,8 @@ public class ContactsInDepartmentFragment extends BaseFragment
                             simplePinyin = d1.getSimplePinyin();
                         } else {
                             User u = (User) o;
-                            fullPinyin = u.getFullPinyin();
-                            simplePinyin = u.getSimplePinyin();
+                            fullPinyin = u.fullPinyin;
+                            simplePinyin = u.fullPinyin;
                         }
                         if (!TextUtils.isEmpty(fullPinyin)) {
                             return fullPinyin.substring(0, 1).toUpperCase();
@@ -418,26 +388,22 @@ public class ContactsInDepartmentFragment extends BaseFragment
         }
 
         @Override
-        public void close()
-        {
+        public void close() {
 
         }
 
         @Override
-        public boolean isClosed()
-        {
+        public boolean isClosed() {
             return false;
         }
 
         @Override
-        public void registerContentObserver(ContentObserver observer)
-        {
+        public void registerContentObserver(ContentObserver observer) {
 
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             int count = 0;
             for (CommonItem d : listDatas) {
                 count += d.datas.size();
@@ -447,69 +413,58 @@ public class ContactsInDepartmentFragment extends BaseFragment
         }
 
         @Override
-        public int getPosition()
-        {
+        public int getPosition() {
             return position;
         }
 
         @Override
-        public boolean move(int offset)
-        {
+        public boolean move(int offset) {
             return false;
         }
 
         @Override
-        public boolean moveToPosition(int position)
-        {
+        public boolean moveToPosition(int position) {
             this.position = position;
             return true;
         }
 
         @Override
-        public boolean moveToFirst()
-        {
+        public boolean moveToFirst() {
             return false;
         }
 
         @Override
-        public boolean moveToLast()
-        {
+        public boolean moveToLast() {
             return false;
         }
 
         @Override
-        public boolean moveToNext()
-        {
+        public boolean moveToNext() {
             return false;
         }
 
         @Override
-        public boolean moveToPrevious()
-        {
+        public boolean moveToPrevious() {
             return false;
         }
 
         @Override
-        public boolean isFirst()
-        {
+        public boolean isFirst() {
             return false;
         }
 
         @Override
-        public boolean isLast()
-        {
+        public boolean isLast() {
             return false;
         }
 
         @Override
-        public boolean isBeforeFirst()
-        {
+        public boolean isBeforeFirst() {
             return false;
         }
     }
 
-    void init_expandableListView_user()
-    {
+    void init_expandableListView_user() {
         if (listDatas == null) {
             return;
         }
@@ -518,11 +473,9 @@ public class ContactsInDepartmentFragment extends BaseFragment
         userGroupExpandableListAdapter = new ContactsExpandableListAdapter();
         expandableListView_user.setAdapter(userGroupExpandableListAdapter);
         expandableListView_user.setGroupIndicator(null);
-        expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
-        {
+        expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
-            {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 final Object o = listDatas.get(groupPosition).datas.get(childPosition);
                 if (o instanceof User) {
                     User user = (User) o;
@@ -547,72 +500,60 @@ public class ContactsInDepartmentFragment extends BaseFragment
             expandableListView_user.expandGroup(i);
         }
 
-        expandableListView_user.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
-        {
+        expandableListView_user.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
-            {
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 return true;
             }
         });
     }
 
-    //-------------------------------------------------------适配器---------------------------------------------
-    private class ContactsExpandableListAdapter extends BaseExpandableListAdapter
-    {
+    //--------------------------------------------适配器---------------------------------------------
+    private class ContactsExpandableListAdapter extends BaseExpandableListAdapter {
         LayoutInflater layoutInflater;
 
-        public ContactsExpandableListAdapter()
-        {
+        public ContactsExpandableListAdapter() {
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
-        public int getGroupCount()
-        {
+        public int getGroupCount() {
             return listDatas.size();
         }
 
         @Override
-        public int getChildrenCount(int groupPosition)
-        {
+        public int getChildrenCount(int groupPosition) {
             return listDatas.get(groupPosition).datas.size();
         }
 
         @Override
-        public CommonItem getGroup(int groupPosition)
-        {
+        public CommonItem getGroup(int groupPosition) {
             return listDatas.get(groupPosition);
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition)
-        {
+        public Object getChild(int groupPosition, int childPosition) {
 
             return listDatas.get(groupPosition).datas.get(childPosition);
         }
 
         @Override
-        public long getGroupId(int groupPosition)
-        {
+        public long getGroupId(int groupPosition) {
             return groupPosition;
         }
 
         @Override
-        public long getChildId(int groupPosition, int childPosition)
-        {
+        public long getChildId(int groupPosition, int childPosition) {
             return childPosition;
         }
 
         @Override
-        public boolean hasStableIds()
-        {
+        public boolean hasStableIds() {
             return false;
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
-        {
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = layoutInflater.inflate(R.layout.item_usergroup_group, null);
             }
@@ -623,9 +564,9 @@ public class ContactsInDepartmentFragment extends BaseFragment
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
-        {
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             final Object o = getChild(groupPosition, childPosition);
+
             if (convertView == null) {
                 if (o instanceof User) {
                     convertView = layoutInflater.inflate(R.layout.item_contacts_child, null, false);
@@ -640,22 +581,29 @@ public class ContactsInDepartmentFragment extends BaseFragment
                 TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
                 tv_content.setText(user.getRealname());
-                String departmentName = ((User) getChild(groupPosition, childPosition)).getDepartmentsName();
-                if (null != user.getShortPosition() && !TextUtils.isEmpty(user.getShortPosition().getName())) {
-                    departmentName =departmentName.concat(" | " + user.getShortPosition().getName());
-                }
-                tv_position.setText(departmentName);
 
-                if (!TextUtils.isEmpty(user.getAvatar())) {
-                    ImageLoader.getInstance().displayImage(user.getAvatar(), img);
+                /*部门名*/
+                String departmentName = ((User) getChild(groupPosition, childPosition)).departmentsName;
+                /*职位*/
+                String jobName = ((User) getChild(groupPosition, childPosition)).role.name;
+
+                if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
+                    departmentName = departmentName.concat(" | " + user.shortPosition.getName());
                 }
+
+                tv_position.setText(departmentName + "  " + jobName);
+
+                if (!TextUtils.isEmpty(user.avatar)) {
+                    ImageLoader.getInstance().displayImage(user.avatar, img);
+                }
+
             } else {
                 Department d = (Department) o;
                 TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
                 String departmentName = d.getName();
-                int userSize=Common.getUsersByDeptId(d.getId(),new ArrayList<User>()).size();
-                String members = "(" +userSize + "人"+ ")";
-                departmentName=departmentName.concat(members);
+                int userSize = Common.getUsersByDeptId(d.getId(), new ArrayList<User>()).size();
+                String members = "(" + userSize + "人" + ")";
+                departmentName = departmentName.concat(members);
                 tv_content.setText(departmentName);
             }
 
@@ -669,28 +617,24 @@ public class ContactsInDepartmentFragment extends BaseFragment
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition)
-        {
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
 
         @Override
-        public int getChildTypeCount()
-        {
+        public int getChildTypeCount() {
             return itemCount;
         }
 
         @Override
-        public int getChildType(int groupPosition, int childPosition)
-        {
+        public int getChildType(int groupPosition, int childPosition) {
             Object o = getChild(groupPosition, childPosition);
 
             return o instanceof Department ? 1 : 0;
         }
     }
 
-    public class CommonItem
-    {
+    public class CommonItem {
         public String tag;
         public ArrayList<Object> datas = new ArrayList<>();
     }

@@ -9,33 +9,10 @@ import java.util.ArrayList;
  * 时间 : 15/10/29.
  */
 public class TeamLegwork extends BaseBeans {
-    private int CustNum;
-    private int VistNum;
-    private ArrayList<TeamLegworkDetail>  Detail=new ArrayList<>();
+    public int visitTotalNum;
+    public int customerTotalNum;
+    public ArrayList<TeamLegworkDetail> data;
 
-    public ArrayList<TeamLegworkDetail>  getDetail() {
-        return Detail;
-    }
-
-    public void setDetail(ArrayList<TeamLegworkDetail>  detail) {
-        Detail = detail;
-    }
-
-    public int getCustNum() {
-        return CustNum;
-    }
-
-    public void setCustNum(int custNum) {
-        CustNum = custNum;
-    }
-
-    public int getVisitNum() {
-        return VistNum;
-    }
-
-    public void setVisitNum(int visitNum) {
-        VistNum = visitNum;
-    }
 
     @Override
     String getOrderStr() {

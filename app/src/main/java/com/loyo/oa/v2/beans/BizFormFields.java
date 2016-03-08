@@ -3,20 +3,22 @@ package com.loyo.oa.v2.beans;
 import java.io.Serializable;
 
 public class BizFormFields implements Serializable {
-    private String bizformId;
-    private boolean canUpdate;
+
     private long createdAt;
-    private String dbtype;
-    private String defaultvalue;
-    private boolean enable;
+    private long order;
+    private String bizformId;
+    private String name;
+    private String regularExpress;
+    private String value;
+    private String dbType;
+    private String defaultValue;
     private String id;
     private boolean isList;
-    private String name;
-    private long order;
-    private String regularExpress;
     private boolean required;
+    private boolean enable;
+    private boolean canUpdate;
+
     private long updatedAt;
-    private String value;
 
     public String getValue() {
         return value;
@@ -51,19 +53,19 @@ public class BizFormFields implements Serializable {
     }
 
     public String getDbtype() {
-        return dbtype;
+        return dbType;
     }
 
-    public void setDbtype(String dbtype) {
-        this.dbtype = dbtype;
+    public void setDbtype(String dbType) {
+        this.dbType = dbType;
     }
 
     public String getDefaultvalue() {
-        return defaultvalue == null ? "" : defaultvalue;
+        return defaultValue == null ? "" : defaultValue;
     }
 
     public void setDefaultvalue(String defaultvalue) {
-        this.defaultvalue = defaultvalue;
+        this.defaultValue = defaultvalue;
     }
 
     public boolean isEnable() {

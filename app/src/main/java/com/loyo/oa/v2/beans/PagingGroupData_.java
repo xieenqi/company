@@ -62,56 +62,64 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
 
         for (T item : records) {
             String order = "";
+            /*项目*/
             if (item instanceof Project) {
                 Project p = (Project) item;
-                switch (p.getStatus()) {
+                switch (p.status) {
                     case 1:
-                        order = "个项目进行中";
+                        order = "进行中";
                         break;
-                    case 0:
-                        order = "个项目已结束";
+                    case 2:
+                        order = "已结束";
                         break;
                 }
 
-            } else if (item instanceof Task) {
+            }
+            /*任务*/
+            else if (item instanceof Task) {
                 Task task = (Task) item;
                 switch (task.getStatus()) {
                     case 1:
-                        order = "个任务进行中";
+                        order = "进行中";
                         break;
                     case 2:
-                        order = "个任务待审核";
+                        order = "待审核";
                         break;
                     case 3:
-                        order = "个任务已完成";
+                        order = "已完成";
                         break;
                 }
-            } else if (item instanceof WfInstance) {
+            }
+            /*审批
+            * 状态4,5暂时都归类为 已通过
+            * */
+            else if (item instanceof WfInstance) {
                 WfInstance wfInstance = (WfInstance) item;
-                switch (wfInstance.getStatus()) {
+                switch (wfInstance.status) {
                     case WfInstance.STATUS_NEW:
-                        order = "个待审批";
+                        order = "待审批";
                         break;
                     case WfInstance.STATUS_PROCESSING:
-                        order = "个审批中";
+                        order = "审批中";
                         break;
                     case WfInstance.STATUS_ABORT:
-                        order = "个审批未通过";
-                        break;
-                    case WfInstance.STATUS_APPROVED:
-                        order = "个审批已通过";
+                        order = "未通过";
                         break;
                     case WfInstance.STATUS_FINISHED:
-                        order = "个审批已办结";
+                        order = "已通过";
+
+                    case WfInstance.STATUS_APPROVED:
+                        order = "已通过";
                         break;
                 }
-
-            } else if (item instanceof WorkReport) {
+            }
+            /*报告*/
+            else if (item instanceof WorkReport) {
                 WorkReport workReport = (WorkReport) item;
                 if (workReport.isReviewed()) {
-                    order = "个报告已点评";
+                    order = "已点评";
                 } else {
-                    order = "个报告待点评";
+                    order = "待点评";
                 }
             }
 
@@ -119,7 +127,6 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
             for (PagingGroupData_ group : groupData) {
                 if (group.getOrderStr().equals(order)) {
                     isExist = true;
-
                     group.getRecords().add(item);
                 }
             }

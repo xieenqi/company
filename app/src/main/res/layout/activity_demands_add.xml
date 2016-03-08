@@ -189,7 +189,9 @@
                         android:background="@android:color/transparent"
                         android:gravity="right|center_vertical"
                         android:inputType="numberDecimal"
-                        android:paddingRight="@dimen/margin_side_edge"/>
+                        android:paddingRight="@dimen/margin_side_edge"
+                        android:hint="请输入预估数量"
+                        />
 
                 </LinearLayout>
 
@@ -226,7 +228,9 @@
                         android:background="@android:color/transparent"
                         android:gravity="right|center_vertical"
                         android:inputType="numberDecimal"
-                        android:paddingRight="@dimen/margin_side_edge"/>
+                        android:paddingRight="@dimen/margin_side_edge"
+                        android:hint="请输入单价"
+                        />
 
                 </LinearLayout>
 
@@ -247,7 +251,7 @@
                     android:layout_height="@dimen/view_h_title"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_weight="1"
-                    android:text="实际"
+                    android:text="成交"
                     android:textColor="#999999"/>
 
                 <View
@@ -282,7 +286,9 @@
                         android:background="@android:color/transparent"
                         android:gravity="right|center_vertical"
                         android:inputType="numberDecimal"
-                        android:paddingRight="@dimen/margin_side_edge"/>
+                        android:paddingRight="@dimen/margin_side_edge"
+                        android:hint="请输入预估数量"
+                        />
 
                 </LinearLayout>
 
@@ -320,7 +326,9 @@
                         android:background="@android:color/transparent"
                         android:gravity="right|center_vertical"
                         android:inputType="numberDecimal"
-                        android:paddingRight="@dimen/margin_side_edge"/>
+                        android:paddingRight="@dimen/margin_side_edge"
+                        android:hint="请输入单价"
+                        />
 
                 </LinearLayout>
 

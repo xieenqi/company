@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:text="首字母"
-        android:textStyle="bold"
         android:layout_marginLeft="20dp"
+        android:textStyle="bold"
         android:textSize="@dimen/textsize_content_label" />
 
 </RelativeLayout>

@@ -19,42 +19,63 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.LoginActivity;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
-import com.tencent.android.tpush.XGPushManager;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
-import java.util.ArrayList;
-
+/**
+ * activity 基类
+ */
 
 public class BaseActivity extends Activity implements GestureDetector.OnGestureListener {
-    protected MainApp app;
-    public CustomProgressDialog customProgressDialog;
 
+    public CustomProgressDialog customProgressDialog;
+    protected MainApp app;
     protected boolean isNeedLogin = true;
     protected Context mContext;
-
     protected static final int NO_SCROLL = -1;
+    private int mTouchViewGroupId;
+    private GestureDetector mDetector;
+    public GeneralPopView generalPopView;
+
+    /**
+     * 搜索跳转分类
+     */
+    public static final int TASKS_ADD = 0X01;//新建任务 编辑任务
+    public static final int TASKS_ADD_CUSTOMER = 0X10;//新建任务关联客户
+    public static final int SIGNIN_ADD = 0X02;//新建拜访
+    public static final int WORK_ADD = 0X03; //新建工作报告
+    public static final int WFIN_ADD = 0X08;   //新建审批
+
+    public static final int CUSTOMER_MANAGE = 0X04;//客户管理
+    public static final int TASKS_MANAGE = 0X05;//任务管理
+    public static final int WORK_MANAGE = 0X06;//工作报告管理
+    public static final int PEOJECT_MANAGE = 0x07; //项目管理
+    public static final int WFIN_MANAGE = 0x09; //审批列表
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-        registerBaseReceiver();
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
             customProgressDialog.setCancelable(false);
         }
+        registerBaseReceiver();
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -104,7 +125,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
-        outState.putSerializable("subUsers", MainApp.subUsers);
 
         app.logUtil.d(this.getClass().getName() + "-onSaveInstanceState():end");
     }
@@ -122,16 +142,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
 
-        if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
-            MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
-        }
-
         app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
     }
 
     @Override
     protected void onResume() {
-        XGPushManager.onActivityStarted(this);
         getWindow().getDecorView().setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
         if (MainApp.user == null) {
@@ -143,7 +158,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     protected void onPause() {
-        XGPushManager.onActivityStoped(this);
         super.onPause();
     }
 
@@ -216,6 +230,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
     }
 
+
+    /**
+     * 老版弹出框
+     * */
     protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(message);
@@ -224,7 +242,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
                 confirm.Confirm();
             }
         });
@@ -235,7 +252,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             }
         });
         builder.create().show();
-
     }
 
     protected interface ConfirmDialogInterface {
@@ -245,8 +261,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     //当控件Id>0的时候，是指定ViewGroup的ID
     // = 0的时候是Activity使用手势。
     // = -1的时候是Activity不使用手势。
-    int mTouchViewGroupId;
-
     protected void setTouchView(int _touchViewGroupId) {
         if (_touchViewGroupId <= 0) {
             mTouchViewGroupId = _touchViewGroupId;
@@ -264,7 +278,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         });
     }
 
-    GestureDetector mDetector;
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -291,12 +304,12 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     }
 
+    /*页面左滑手指监听*/
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        //        int i = app.diptoPx(200);
         if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            onBackPressed();
+            //onBackPressed();
         }
 
         return false;
@@ -330,5 +343,39 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 关闭软键盘
+     */
+    public void hideInputKeyboard(EditText et) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    /**
+     * 加载loading的方法
+     * */
+    public void showLoading(String msg) {
+        DialogHelp.showLoading(this, msg, true);
+    }
+
+    public void showLoading(String msg, boolean Cancelable) {
+        DialogHelp.showLoading(this, msg, Cancelable);
+    }
+
+    public static void cancelLoading() {
+        DialogHelp.cancelLoading();
+    }
+
+
+    /**
+     * 通用提示弹出框init
+     * */
+    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
+        generalPopView = new GeneralPopView(this,isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
     }
 }

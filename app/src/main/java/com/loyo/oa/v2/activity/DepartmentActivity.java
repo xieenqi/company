@@ -69,6 +69,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
     @Override
     protected void onResume() {
+        
         super.onResume();
         syncButton();
     }
@@ -125,7 +126,6 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
             Global.setListViewHeightBasedOnChildren(listView_user);
 
             listView_user.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     UserListViewAdapter.Item_info item_info = (UserListViewAdapter.Item_info) view.getTag();
@@ -135,20 +135,23 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
                     if (user == null) {
                         return;
                     }
-                    //发送广播
+
+                    //发送广播,返回负责人姓名
                     if (select_type == DepartmentUserActivity.TYPE_SELECT_SINGLE) {
+
                         Intent intent = new Intent();
                         intent.putExtra(User.class.getName(), user);
                         app.finishActivity(DepartmentActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     } else if (select_type == DepartmentUserActivity.TYPE_SELECT_MULTUI) {
 
                         DepartmentUserActivity.sendMultiSelectUsers(view.getContext(),
-                                user.getId(), user.getRealname(), "", null, item_info.cBox.isChecked());
+                                user.id, user.getRealname(), "", null, item_info.cBox.isChecked());
                         if(item_info.cBox.isChecked())
                             count++;
                         else
                             count--;
                         syncButton();
+
                     }
                 }
             });

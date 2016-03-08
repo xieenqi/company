@@ -26,6 +26,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.City;
 import com.loyo.oa.v2.beans.County;
 import com.loyo.oa.v2.beans.CustomerRegional;
+import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public class DialogFragmentAreaCast extends DialogFragment {
     private MultiMenuExpandableListAdapter multiMenuExpandableListAdapter;
     private OnMenuSelectCallback callback;
     private CustomerRegional regional = new CustomerRegional();
-    ;
+    private ArrayList<Province> provinces;
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -63,22 +65,22 @@ public class DialogFragmentAreaCast extends DialogFragment {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 int[] selectPosition = multiMenuExpandableListAdapter.getSelectPostion();
                 if (selectPosition[0] != groupPosition || selectPosition[1] != childPosition) {
-                    regional.setProvince(multiMenuExpandableListAdapter.getGroup(groupPosition).getName());
-                    regional.setCity(multiMenuExpandableListAdapter.getChild(groupPosition, childPosition).getName());
+                    regional.province=multiMenuExpandableListAdapter.getGroup(groupPosition).getName();
+                    regional.city=multiMenuExpandableListAdapter.getChild(groupPosition, childPosition).getName();
                     mAreaThreeMenuAdapter.notifyDataSetChanged(multiMenuExpandableListAdapter.getChild(groupPosition, childPosition));
                     multiMenuExpandableListAdapter.setSelectPostion(groupPosition, childPosition);
                 }
                 return false;
             }
         });
-        multiMenuExpandableListAdapter = new MultiMenuExpandableListAdapter(getActivity());
+        multiMenuExpandableListAdapter = new MultiMenuExpandableListAdapter(getActivity(),provinces);
         mExpandableListViewOne.setAdapter(multiMenuExpandableListAdapter);
         mListViewTwo = (ListView) view.findViewById(R.id.list_two);
         mListViewTwo.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (null != callback) {
-                    regional.setCounty(mAreaThreeMenuAdapter.getItem(position).getName());
+                    regional.county=mAreaThreeMenuAdapter.getItem(position).getName();
                     callback.onMenuSelected(regional);
                 }
                 dismiss();
@@ -104,8 +106,9 @@ public class DialogFragmentAreaCast extends DialogFragment {
         window.setGravity(Gravity.CENTER);
     }
 
-    public void show(FragmentManager manager, String tag, OnMenuSelectCallback callback) {
+    public void show(ArrayList<Province> provinces,FragmentManager manager, String tag, OnMenuSelectCallback callback) {
         this.callback = callback;
+        this.provinces = provinces;
         super.show(manager, tag);
     }
 

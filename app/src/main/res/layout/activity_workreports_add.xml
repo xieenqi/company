@@ -12,6 +12,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -148,123 +149,67 @@
                             android:text="工作动态统计"
                             android:textSize="18sp"/>
 
-                        <ToggleButton
-                            android:id="@+id/crm_toggle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dimen_30"
+
+                        <com.loyo.oa.v2.activity.commonview.SwitchView
+                            android:id="@+id/crm_switch"
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/dimen_5"
                             android:layout_marginRight="@dimen/dimen_16"
-                            android:background="@drawable/toggle_selector"
-                            android:checked="true"
-                            android:minWidth="@dimen/dimen_40"
-                            android:padding="@dimen/dimen_5"
-                            android:textColor="@color/white"
-                            android:textOff=""
-                            android:textOn=""/>
+                            android:layout_marginTop="6dp"
+                            />
+
 
                     </RelativeLayout>
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        />
-
                     <LinearLayout
                         android:id="@+id/layout_crm"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_80"
-                        android:orientation="horizontal">
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <com.loyo.oa.v2.common.NoScroolGridView
+                            android:id="@+id/gridview_workreports"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginBottom="10dp"
+                            android:listSelector="@android:color/transparent"
+                            android:numColumns="3"
+                            />
 
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:id="@+id/no_dysndata_workreports"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/beogray"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            >
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="60dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/icon_dysn_nodata"
+                                />
 
                             <TextView
-                                android:id="@+id/tv_new_customers_num"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="0"
-                                android:textColor="#ff5959"
-                                android:textSize="28sp"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="新增客戶"/>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="5dp"
+                                android:text="暂无统计数据"
+                                android:textColor="@color/gray"
+                                />
 
                         </LinearLayout>
 
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="@dimen/dimen_0.5"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/dimen_10"
-                            android:layout_marginTop="@dimen/dimen_10"/>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_new_visit_num"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="0"
-                                android:textColor="#59b80c"
-                                android:textSize="28sp"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="拜访签到"/>
-
-                        </LinearLayout>
-
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="@dimen/dimen_0.5"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/dimen_10"
-                            android:layout_marginTop="@dimen/dimen_10"/>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_visit_customers_num"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="0"
-                                android:textColor="#4db1fe"
-                                android:textSize="28sp"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="拜访客戶"/>
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -286,6 +231,7 @@
                     android:background="@color/white"
                     android:gravity="left|top"
                     android:hint="请输入报告内容"
+                    android:maxLength="500"
                     android:minHeight="100dp"
                     android:padding="10dp"/>
 
@@ -296,12 +242,13 @@
                     android:background="@drawable/layout_bg1"
                     android:orientation="vertical">
 
-
                     <GridView
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="@dimen/dimen_10"
+                        android:layout_marginRight="@dimen/dimen_10"
                         android:layout_marginTop="@dimen/dimen_10"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
@@ -439,12 +386,12 @@
 
                     <TextView
                         android:id="@+id/tv_project"
-                        android:hint="无"
                         style="@style/text_item2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
+                        android:hint="无"
                         android:textColor="@color/title_bg1"/>
 
                     <ImageView

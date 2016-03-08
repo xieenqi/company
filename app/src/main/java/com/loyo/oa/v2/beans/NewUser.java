@@ -3,6 +3,7 @@ package com.loyo.oa.v2.beans;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,25 +13,26 @@ import java.util.List;
  * 时间 : 15/9/30.
  */
 public class NewUser implements Serializable {
-    private String id;// "5600ff1f54418940bf233261",
-    private String name;// "测试负责人",
+
+    private String id;
+    private String name;
     private String avatar;
-//    private String deptId;
-//
-//    public String getDeptId() {
-//        return deptId;
-//    }
-//
-//    public NewUser setDeptId(String deptId) {
-//        this.deptId = deptId;
-//        return this;
-//    }
+    private String xpath;
+    private ArrayList<NewUser> users = new ArrayList<>();
+
+
+    public ArrayList<NewUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<NewUser> users) {
+        this.users = users;
+    }
 
     public static String GetNewUserNames(List<NewUser> users) {
         if (users == null || users.isEmpty()){
             return "";
         }
-
         StringBuffer sb = null;
         for (NewUser user : users) {
             if (sb == null) {
@@ -41,6 +43,14 @@ public class NewUser implements Serializable {
             }
         }
         return sb.toString();
+    }
+
+    public String getXpath() {
+        return xpath;
+    }
+
+    public void setXpath(String xpath) {
+        this.xpath = xpath;
     }
 
     public String getAvatar() {
@@ -80,7 +90,7 @@ public class NewUser implements Serializable {
             return true;
         }
         if (o instanceof User) {
-            return id.equals(((User) o).getId());
+                return ((User) o).id.equals(id);
         }
 
         if (!(o instanceof NewUser)) {
@@ -89,7 +99,7 @@ public class NewUser implements Serializable {
 
         NewUser user = (NewUser) o;
 
-        return id.equals(user.id);
+        return (user.id).equals(id);
     }
 
     public boolean isCurrentUser() {
@@ -98,10 +108,10 @@ public class NewUser implements Serializable {
 
     public User toUser() {
         User user = new User();
-        user.setAvatar(avatar);
-        user.setId(id);
-        user.setRealname(name);
-        user.setName(name);
+        user.avatar=this.getAvatar();
+        user.id=this.getId();
+        user.realname=this.getName();
+        user.name=this.getName();
 
         return user;
     }

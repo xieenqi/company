@@ -11,50 +11,59 @@ import java.util.ArrayList;
  */
 public class AttendanceList implements Serializable {
     private ArrayList<DayofAttendance> attendances = new ArrayList<>();// (array[DayOfAttendance], optional): ,
-    private int earlycount;// (int, optional): ,
-    private int latecount;// (int, optional): ,
-    private int listtype;// (int, optional): ,
-    private int noreccount;// (int, optional): ,
-    private int outsidecount;// (int, optional):
+    private int earlyCount;// (int, optional): ,
+    private int lateCount;// (int, optional): ,
+    private int listType;// (int, optional): ,
+    private int noreCcount;// (int, optional): ,
+    private int outsideCount;// (int, optional):
+    private int extraCount;
 
-    public int getOutsidecount() {
-        return outsidecount;
+    public int getExtraCount() {
+        return extraCount;
+    }
+
+    public void setExtraCount(int extraCount) {
+        this.extraCount = extraCount;
+    }
+
+    public int getEarlyCount() {
+        return earlyCount;
+    }
+
+    public void setEarlyCount(int earlyCount) {
+        this.earlyCount = earlyCount;
     }
 
     public void setOutsidecount(int outsidecount) {
-        this.outsidecount = outsidecount;
+        this.outsideCount = outsidecount;
     }
 
-    public int getNoreccount() {
-        return noreccount;
+    public int getNoreCcount() {
+        return noreCcount;
     }
 
-    public void setNoreccount(int noreccount) {
-        this.noreccount = noreccount;
+    public void setNoreCcount(int noreCcount) {
+        this.noreCcount = noreCcount;
     }
 
-    public int getListtype() {
-        return listtype;
+    public int getListType() {
+        return listType;
     }
 
-    public void setListtype(int listtype) {
-        this.listtype = listtype;
+    public void setListType(int listType) {
+        this.listType = listType;
     }
 
-    public int getLatecount() {
-        return latecount;
+    public int getLateCount() {
+        return lateCount;
     }
 
-    public void setLatecount(int latecount) {
-        this.latecount = latecount;
+    public void setLateCount(int lateCount) {
+        this.lateCount = lateCount;
     }
 
-    public int getEarlycount() {
-        return earlycount;
-    }
-
-    public void setEarlycount(int earlycount) {
-        this.earlycount = earlycount;
+    public int getOutsidecount() {
+        return outsideCount;
     }
 
     public ArrayList<DayofAttendance> getAttendances() {

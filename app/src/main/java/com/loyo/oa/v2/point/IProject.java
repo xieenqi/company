@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.ProjectAddActivity;
+import com.loyo.oa.v2.activity.project.ProjectAddActivity;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
@@ -28,12 +29,12 @@ public interface IProject {
     void getProjects(@QueryMap HashMap<String, Object> map, Callback<PaginationX<Project>> callback);
 
     @GET("/project/{id}")
-    void getProjectById(@Path("id") String id, Callback<Project> callback);
+    void getProjectById(@Path("id") String id, Callback<HttpProject> callback);
 
     @PUT("/project/{id}")
     void Update(@Path("id") String id, @Body ProjectAddActivity.ProjectTransObj body, Callback<Project> callback);
 
-    @GET("/project/{id}/records/{bizType}")
+    @GET("/project/{id}/records/{bizType}")//1:工作报告, 2:任务, 12:快捷审批
     void getProjectSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map, Callback<Pagination> callback);
 
     @POST("/project")

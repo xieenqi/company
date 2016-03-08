@@ -6,13 +6,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.SignInOfUserFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -26,18 +24,14 @@ import org.androidannotations.annotations.ViewById;
 public class LegworksListActivity extends FragmentActivity {
 
     @ViewById ViewGroup img_title_left;
-
     @ViewById TextView tv_title_1;
-
     @Extra("data") User mUser;
-
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @AfterViews
     void initViews() {
         tv_title_1.setText(mUser.getRealname() + "的拜访记录");
         img_title_left.setOnTouchListener(Global.GetTouch());
-
         Bundle b = new Bundle();
         b.putSerializable("user", mUser);
         b.putBoolean("disabled", true);
@@ -47,7 +41,7 @@ public class LegworksListActivity extends FragmentActivity {
 
     @Click({R.id.img_title_left})
     void onClick() {
-        onBackPressed();
+        //onBackPressed();
+        finish();
     }
-
 }

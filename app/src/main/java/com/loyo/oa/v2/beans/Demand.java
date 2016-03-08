@@ -20,20 +20,18 @@ public class Demand extends BaseBeans {
     private String customerId;//&{customer Customer}, optional): ,
     private User editor;//&{organization User}, optional): ,
     private String id;//int64, optional): ,
-
     private float estimatedNum;//float32, optional): ,
     private float estimatedPrice;//float32, optional): ,
 
-    private Product product;//&{product Product}, optional): ,
+    private Product product;//&{product Product}, optional): 产品,
     private SaleStage saleStage;//&{setting SaleStage}, optional): ,
     private User seller;//&{organization User}, optional): ,
     private String spec;//string, optional): ,
     private String updatedAt;//&{time Time}, optional):
     private String memo;
-
-
     private float actualPrice;
     private float actualNum;
+
 
     public int getWfState() {
         return wfState;

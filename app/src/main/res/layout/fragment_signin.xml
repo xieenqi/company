@@ -9,7 +9,7 @@
         android:id="@+id/layout_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10">
+        >
 
         <LinearLayout
             android:id="@+id/img_time_left"
@@ -18,6 +18,7 @@
             android:layout_marginLeft="@dimen/dimen_80"
             android:gravity="center"
             android:orientation="vertical">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
             android:layout_marginRight="@dimen/dimen_80"
             android:gravity="center"
             android:orientation="vertical">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,11 +57,16 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/grayC9"
+        />
+
     <LinearLayout
         android:id="@+id/layout_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_30"
         android:background="@drawable/icon_attendance_rusult"
         android:minHeight="@dimen/dimen_45"
         android:orientation="horizontal"
@@ -74,6 +81,7 @@
             android:gravity="left|center"
             android:text=""
             android:textColor="#999999"
+            android:textSize="@dimen/text_sp14"
             />
 
         <TextView
@@ -84,6 +92,7 @@
             android:gravity="left|center"
             android:text=""
             android:textColor="#999999"
+            android:textSize="@dimen/text_sp14"
             />
     </LinearLayout>
 
@@ -91,6 +100,37 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/layout_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="22dp"
+                    android:src="@drawable/img_nodata"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="没有相关数据"
+                    android:textColor="#878787"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/listView_legworks"
@@ -115,5 +155,4 @@
             android:textColor="@color/white"/>
 
     </FrameLayout>
-
 </LinearLayout>

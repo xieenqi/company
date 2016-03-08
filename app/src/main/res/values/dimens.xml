@@ -1,7 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">10dp</dimen>
-    <dimen name="activity_vertical_margin">10dp</dimen>
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
 
     <!--<dimen name="view_h_title">50dp</dimen>-->
 
@@ -13,20 +13,24 @@
     <dimen name="view_h_item2">46dp</dimen>
     <dimen name="view_img_h1">54dp</dimen>
 
-    <dimen name="text_margin_horizontal">10dp</dimen>
+    <dimen name="text_margin_horizontal">8dp</dimen>
     <dimen name="text_margin_vertical">4dp</dimen>
-
-    <dimen name="textsize_wheelView">16sp</dimen>
-
     <!--每页的标题-->
     <!--<dimen name="textsize_title1">22sp</dimen>-->
     <dimen name="textsize_title1">20sp</dimen>
-
     <dimen name="textsize_content_label">18sp</dimen>
     <dimen name="textsize_content1">16sp</dimen>
     <dimen name="textsize_content2">14sp</dimen>
     <dimen name="textsize_content3">12sp</dimen>
-    <dimen name="textsize_title2">20sp</dimen>
+    <dimen name="text_sp22">22sp</dimen>
+    <dimen name="text_sp20">20sp</dimen>
+    <dimen name="text_sp18">18sp</dimen>
+    <dimen name="text_sp16">16sp</dimen>
+    <dimen name="text_sp14">14sp</dimen>
+    <dimen name="text_sp12">12sp</dimen>
+    <dimen name="text_sp11">11sp</dimen>
+    <dimen name="text_sp10">10sp</dimen>
+
 
     <!--新版标注-->
     <dimen name="view_first_margin_top">20dp</dimen>
@@ -52,6 +56,7 @@
     <dimen name="dimen_4">4dp</dimen>
     <dimen name="dimen_120">120dp</dimen>
     <dimen name="dimen_110">110dp</dimen>
+    <dimen name="dimen_100">100dp</dimen>
     <dimen name="dimen_80">80dp</dimen>
     <dimen name="dimen_75">75dp</dimen>
     <dimen name="dimen_70">70dp</dimen>
@@ -61,7 +66,9 @@
     <dimen name="dimen_3">3dp</dimen>
     <dimen name="dimen_5">5dp</dimen>
     <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_9">9dp</dimen>
     <dimen name="dimen_10">10dp</dimen>
+    <dimen name="dimen_12">12dp</dimen>
     <dimen name="dimen_15">15dp</dimen>
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_18">18dp</dimen>

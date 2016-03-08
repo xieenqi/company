@@ -1,16 +1,58 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Task extends BaseBeans {
+public class Task extends BaseBeans implements Serializable{
+
     public static final int STATUS_PROCESSING = 1;  //进行中
     public static final int STATUS_REVIEWING = 2;   //审核中
     public static final int STATUS_FINISHED = 3;    //已完成
 
     public static final List<String> RemindList = Arrays.asList("不提醒", "截止前10分钟", "截止前30分钟", "截止前1小时", "截止前3小时", "截止前1天");
     public static final List<Integer> RemindListSource = Arrays.asList(0, 10, 30, 60, 180, 1440);
+    public String attachmentUUId;
+    public String content;
+    public long createdAt;
+    public long planendAt;
+
+    public String title;
+    public String id;
+    public String projectId;
+    public String customerName;
+    public String customerId;
+    public boolean remindflag;
+    public boolean reviewFlag;
+    public int score;
+    public int status;
+    public int remindtime;
+
+    private BizExtData bizExtData;
+    public Project ProjectInfo;
+    public ArrayList<Attachment> attachments;
+    public ArrayList<TaskCheckPoint> checklists;
+    public ArrayList<TaskReviewComment> reviewComments;
+    public Members members = new Members();
+    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
+    public NewUser responsiblePerson;
+    public NewUser creator;
+    public ArrayList<Reviewer> reviewers = new ArrayList<>();
+
+    /*保存本地使用*/
+    public String responsiblePersonId;
+    public String responsiblePersonName;
+    public String TaskComment;
+
+
+    public ArrayList<Reviewer> getReviewers() {
+        return reviewers;
+    }
+
+    public void setReviewers(ArrayList<Reviewer> reviewers) {
+        this.reviewers = reviewers;
+    }
 
     public static final String GetRemindText(int remind) {
         int index = RemindListSource.indexOf(remind);
@@ -20,41 +62,38 @@ public class Task extends BaseBeans {
         return "";
     }
 
-    private long actualendAt;
-    private String attachmentUUId;
-    private String content;
-    private long createdAt;
-    private String customerIds;
-    private String id;
-    private long planendAt;
-    private String projectId;
-    private boolean remindflag;
-    private int remindtime;
-    private boolean reviewFlag;
-    private int score;
-    private boolean reviewed;
-    private long reviewedAt;
-    private int status;
-    private String title;
-    private long updatedAt;
-    private Project ProjectInfo;
+    public BizExtData getBizExtData() {
+        return bizExtData;
+    }
 
-    private NewUser creator;
+    public void setBizExtData(BizExtData bizExtData) {
+        this.bizExtData = bizExtData;
+    }
 
-    private int discusscount;
-    private int attachmentcount;
 
-    private ArrayList<Attachment> attachments;
-    private ArrayList<TaskCheckPoint> checklists;
-    private ArrayList<TaskReviewComment> reviewComments;
-    private ArrayList<Reviewer> members = new ArrayList<>();
-    private ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
+    public String getCustomerId() {
+        return customerId;
+    }
 
-    //    <!--保存本地使用-->
-    private String responsiblePersonId;
-    private String responsiblePersonName;
-    private String TaskComment;
-//    <!--保存本地使用-->
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public Members getMembers() {
+        return members;
+    }
+
+    public void setMembers(Members members) {
+        this.members = members;
+    }
 
 
     public Project getProject() {
@@ -65,39 +104,12 @@ public class Task extends BaseBeans {
         this.ProjectInfo = project;
     }
 
-    public int getDiscusscount() {
-        return discusscount;
-    }
-
-    public void setDiscusscount(int discusscount) {
-        this.discusscount = discusscount;
-    }
-
-    public int getAttachmentcount() {
-        return attachmentcount;
-    }
-
-    public void setAttachmentcount(int attachmentcount) {
-        this.attachmentcount = attachmentcount;
-    }
-
     public String getProjectId() {
         return projectId;
     }
 
     public void setProjectId(String projectId) {
         this.projectId = projectId;
-    }
-
-    public ArrayList<Reviewer> getMembers() {
-        if (members == null){
-            members = new ArrayList<>();
-        }
-        return members;
-    }
-
-    public void setMembers(ArrayList<Reviewer> members) {
-        this.members = members;
     }
 
     public String getTaskComment() {
@@ -135,12 +147,6 @@ public class Task extends BaseBeans {
             }
         }
 
-        for (Reviewer member : members) {
-            if (member.getUser() != null && member.getUser().isCurrentUser()) {
-                return member.isViewed();
-            }
-        }
-
         return true;
     }
 
@@ -149,14 +155,6 @@ public class Task extends BaseBeans {
             NewUser u = responsiblePersons.get(i).getUser();
             if (u != null && u.isCurrentUser()) {
                 responsiblePersons.get(i).setViewed(ack);
-                return;
-            }
-        }
-
-        for (int i = 0; i < members.size(); i++) {
-            NewUser u = members.get(i).getUser();
-            if (u != null && u.isCurrentUser()) {
-                members.get(i).setViewed(ack);
                 return;
             }
         }
@@ -171,14 +169,6 @@ public class Task extends BaseBeans {
     @Override
     String getOrderStr() {
         return String.valueOf(getCreatedAt());
-    }
-
-    public long getActualEndAt() {
-        return actualendAt;
-    }
-
-    public void setActualEndAt(long actualEndAt) {
-        this.actualendAt = actualEndAt;
     }
 
     public String getAttachmentUUId() {
@@ -209,10 +199,6 @@ public class Task extends BaseBeans {
         return checklists;
     }
 
-    public void setchecklists(ArrayList<TaskCheckPoint> checkList) {
-        this.checklists = checkList;
-    }
-
     public String getContent() {
         return content == null ? "" : content;
     }
@@ -232,20 +218,13 @@ public class Task extends BaseBeans {
         this.createdAt = createdAt;
     }
 
+
     public NewUser getCreator() {
         return creator;
     }
 
     public void setCreator(NewUser creator) {
         this.creator = creator;
-    }
-
-    public String getCustomerIds() {
-        return customerIds;
-    }
-
-    public void setCustomerIds(String customerIds) {
-        this.customerIds = customerIds;
     }
 
     public String getId() {
@@ -268,10 +247,6 @@ public class Task extends BaseBeans {
         return remindflag;
     }
 
-    public void setRemindFlag(boolean remindFlag) {
-        this.remindflag = remindFlag;
-    }
-
     public int getRemindTime() {
         return remindtime;
     }
@@ -281,15 +256,12 @@ public class Task extends BaseBeans {
     }
 
     public NewUser getResponsiblePerson() {
-        if (responsiblePersons != null && responsiblePersons.size() > 0) {
-            return responsiblePersons.get(0).getUser();
-        }
 
-        return null;
+        return responsiblePerson;
     }
 
     public void setResponsiblePerson(NewUser responsiblePerson) {
-        responsiblePersons = new ArrayList<>(Arrays.asList(new Reviewer(responsiblePerson)));
+        this.responsiblePerson = responsiblePerson;
     }
 
     public ArrayList<TaskReviewComment> getReviewComments() {
@@ -316,14 +288,6 @@ public class Task extends BaseBeans {
         this.score = score;
     }
 
-    public boolean isReviewed() {
-        return reviewed;
-    }
-
-    public void setReviewed(boolean reviewed) {
-        this.reviewed = reviewed;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -342,17 +306,7 @@ public class Task extends BaseBeans {
 
     @Override
     public String getOrderStr2() {
-        return status+"";
-    }
-
-    public ArrayList<NewUser> getJoinedUsers() {
-        ArrayList<NewUser> user = new ArrayList<>();
-
-        for (Reviewer reviewer : getMembers()) {
-            user.add(reviewer.getUser());
-        }
-
-        return user;
+        return status + "";
     }
 
     @Override

@@ -6,22 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.Global;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TaskManagerFilterFragment extends Fragment implements View.OnClickListener {
 
@@ -65,7 +55,7 @@ public class TaskManagerFilterFragment extends Fragment implements View.OnClickL
             cb5 = (CheckBox) view.findViewById(R.id.cb5);
             cb6 = (CheckBox) view.findViewById(R.id.cb6);
 
-            if (Common.getSubUsers().size() > 0) {
+            /*if (Common.getSubUsers().size() > 0) {
                 lv_subordinates = (ListView) view.findViewById(R.id.lv_subordinates);
 
                 final List<Map<String, Object>> userList = new ArrayList<>();
@@ -99,7 +89,7 @@ public class TaskManagerFilterFragment extends Fragment implements View.OnClickL
                 lv_subordinates.setFocusable(false);
 
                 Global.setListViewHeightBasedOnChildren(lv_subordinates);
-            }
+            }*/
 
             btn_task_filter_confirm = (Button) view.findViewById(R.id.btn_task_filter_confirm);
             btn_task_filter_confirm.setOnClickListener(new View.OnClickListener() {

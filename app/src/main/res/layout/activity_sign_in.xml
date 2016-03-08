@@ -35,20 +35,21 @@
                     android:textColor="#999999"/>
 
                 <TextView
-                    android:gravity="left|center"
                     android:id="@+id/tv_address"
                     style="@style/text_item1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="left|center"
                     android:singleLine="false"
-                    android:textColor="#383838"/>
+                    android:textColor="#383838"
+                    android:textSize="@dimen/textsize_content2"/>
 
                 <ImageView
-                    android:layout_marginRight="@dimen/dimen_5"
                     android:id="@+id/img_refresh_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_5"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_refresh"/>
 
@@ -111,16 +112,16 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:layout_marginLeft="@dimen/dimen_5"
-                    android:layout_marginRight="@dimen/dimen_5"
-                    android:textSize="16sp"
                     android:id="@+id/edt_memo"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5"
+                    android:layout_marginRight="@dimen/dimen_5"
                     android:gravity="left"
                     android:hint="备注"
                     android:minHeight="@dimen/dimen_110"
+                    android:textSize="16sp"
                     />
 
                 <LinearLayout
@@ -139,12 +140,9 @@
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

@@ -9,7 +9,9 @@ public class LogUtil {
         return Config_project.is_developer_mode;
     }
 
-    public static String tag = "[AppName]";
+    public static String tag = "LogoServerV2";
+    public static boolean LogoStatus = Config_project.is_developer_mode;
+
     private static int logLevel = Log.DEBUG;//Log.ERROR
     private static Hashtable<String, LogUtil> sLoggerTable = new Hashtable<String, LogUtil>();
     private String mClassName;
@@ -20,6 +22,22 @@ public class LogUtil {
         mClassName = name;
         if (!Config_project.is_developer_mode) {
             logLevel = Log.ERROR;
+        }
+    }
+
+    /** 用于 输出 日志 方便
+     *xnq
+     * @param text
+     */
+    public static void d(String text) {
+        if (LogoStatus) {
+            Log.d("LogoServerV2", text);
+        }
+    }
+
+    public static void d(String TAG,String text) {
+        if (LogoStatus) {
+            Log.d(TAG, text);
         }
     }
 
@@ -45,7 +63,7 @@ public class LogUtil {
      */
     public static LogUtil lLog() {
         if (llog == null) {
-            llog = new LogUtil("@姚进泽@ ");
+            llog = new LogUtil("@x n q@ ");
         }
         return llog;
     }
@@ -195,4 +213,10 @@ public class LogUtil {
                     + "[" + mClassName + line + ":] " + log + "\n", tr);
         }
     }
+
+    public static void dll(String str) {
+        Log.d("LOG", str);
+    }
+
+    public static void dee(String str) { Log.d("TOP", str); }
 }

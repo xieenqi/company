@@ -13,28 +13,24 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BizForm;
 
 import java.util.ArrayList;
-
+/** xnq
+ * 【审批 类型 选择】adapter
+ */
 public class WfInstanceTypeSelectListViewAdapter extends BaseAdapter {
-    //    private MainApp mainApp;
     private LayoutInflater layoutInflater;
     public ArrayList<BizForm> lstData;
     private Item_info item_info;
-    private boolean showArrow=true;
-//    private Context context;
+    private boolean showArrow = true;
 
-    public WfInstanceTypeSelectListViewAdapter(Context context,
-                                               ArrayList<BizForm> lstData) {
-//        mainApp = MainApp.getMainApp();
+    public WfInstanceTypeSelectListViewAdapter(Context context, ArrayList<BizForm> lstData) {
         this.lstData = lstData;
-//        this.context = context;
         layoutInflater = LayoutInflater.from(context);
 
     }
 
-    public WfInstanceTypeSelectListViewAdapter(Context context,
-                                               ArrayList<BizForm> lstData,boolean isShowArrow) {
-       this(context,lstData);
-        showArrow=isShowArrow;
+    public WfInstanceTypeSelectListViewAdapter(Context context, ArrayList<BizForm> lstData, boolean isShowArrow) {
+        this(context, lstData);
+        showArrow = isShowArrow;
     }
 
     @Override
@@ -54,32 +50,32 @@ public class WfInstanceTypeSelectListViewAdapter extends BaseAdapter {
         return position;
     }
 
+    /**外部获取list数据
+     * xnq
+     * @return
+     */
+    public ArrayList<BizForm> getData(){
+        return lstData;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //mainTasksInfoActivity.logger.d( "getView() position:" + position);
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_listview_bizform, null);
             item_info = new Item_info();
-            item_info.tv = (TextView) convertView
-                    .findViewById(R.id.tv);
-
-            item_info.img_right = (ImageView) convertView
-                    .findViewById(R.id.img_right);
+            item_info.tv = (TextView) convertView.findViewById(R.id.tv);
+            item_info.img_right = (ImageView) convertView.findViewById(R.id.img_right);
             convertView.setTag(item_info);
         } else {
             item_info = (Item_info) convertView.getTag();
         }
-        item_info.img_right.setVisibility(showArrow?View.VISIBLE:View.GONE);
+        item_info.img_right.setVisibility(showArrow ? View.VISIBLE : View.GONE);
 
         BizForm bizForm = lstData.get(position);
         if (bizForm != null) {
-//            if (bizForm.getResponsiblePerson() != null) {
-//                ImageLoader.getInstance().loadImage(bizForm.getResponsiblePerson().getAvatar(),
-//                        app.options_3,
-//                        new BitmapUtil.ImageLoadingListener_ClickShowImg(item_info.img_left, R.drawable.user1));
-//            }
             item_info.tv.setText(bizForm.getName());
         }
+
         if (position == 0) {
             convertView.setBackgroundResource(R.drawable.item_bg_top);
         } else if (position == lstData.size() - 1) {
@@ -89,7 +85,6 @@ public class WfInstanceTypeSelectListViewAdapter extends BaseAdapter {
         }
         return convertView;
     }
-
 
     class Item_info {
         TextView tv;

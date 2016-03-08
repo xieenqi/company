@@ -3,6 +3,7 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.LegWork;
@@ -45,7 +46,6 @@ public interface ICustomer {
     @GET("/")
     void queryNearCount(@Query("position") String position, Callback<NearCount> cb);
 
-
     @GET("/customers")
     void Query(@QueryMap Map<String, Object> params, retrofit.Callback<PaginationX<Customer>> cb);
 
@@ -87,7 +87,6 @@ public interface ICustomer {
      */
     @PUT("/customer/{id}")
     void updateCustomer(@Path("id") String id, @Body HashMap<String, Object> map, Callback<Customer> callback);
-
 
     /**
      * 获取客户标签
@@ -253,7 +252,7 @@ public interface ICustomer {
      * @param map
      * @param callback
      */
-    @POST("/visit/")
+    @POST("/visit")
     void addSignIn(@Body HashMap<String, Object> map, Callback<LegWork> callback);
 
     @GET("/visit/bycustId")
@@ -267,5 +266,12 @@ public interface ICustomer {
 
     @GET("/customer/regional")
     void getDistricts(Callback<ArrayList<Province>> callback);
+
+
+
+    /**新建客户，查重*/
+    @GET("/customer/search")
+    void getSerachRepeat(@QueryMap Map<String, Object> params,Callback<PaginationX<CustomerRepeatList>> callback);
+
 
 }

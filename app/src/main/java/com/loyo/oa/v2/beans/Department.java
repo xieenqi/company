@@ -1,22 +1,36 @@
 package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
-
 import com.loyo.oa.v2.application.MainApp;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * 通讯录部门bean
+ */
 
 public class Department implements Serializable {
-    private long createdAt;
-    private String fullPinyin;
+
     private String id;
+    private String xpath;
     private String name;
-    private String simplePinyin;
     private String superiorId;
+    private String fullPinyin;
+    private String simplePinyin;
     private long updatedAt;
+    private long createdAt;
+    private boolean isIndex;
     private ArrayList<User> users = new ArrayList<>();
+    public String title = "";//职务名称
+
+
+    public boolean isIndex() {
+        return isIndex;
+    }
+
+    public void setIsIndex(boolean isIndex) {
+        this.isIndex = isIndex;
+    }
 
     public String getXpath() {
         return xpath;
@@ -25,8 +39,6 @@ public class Department implements Serializable {
     public void setXpath(String xpath) {
         this.xpath = xpath;
     }
-
-    private String xpath;
 
     public long getCreatedAt() {
         return createdAt;
@@ -93,7 +105,7 @@ public class Department implements Serializable {
     }
 
     public boolean isMyDept() {
-        return TextUtils.equals(getId(), MainApp.user.getDepts().get(0).getShortDept().getId());
+        return TextUtils.equals(getId(), MainApp.user.depts.get(0).getShortDept().getId());
     }
 
     @Override
@@ -112,13 +124,18 @@ public class Department implements Serializable {
 
     /**
      * 获取首字母当作GroupName
+     *
      * @return
      */
     public String getGroupName() {
+
         if (!TextUtils.isEmpty(getFullPinyin())) {
             return getFullPinyin().substring(0, 1).toUpperCase();
         } else if (!TextUtils.isEmpty(getSimplePinyin())) {
             return getSimplePinyin().substring(0, 1).toUpperCase();
+        } else if (TextUtils.isEmpty(getFullPinyin()) || TextUtils.isEmpty(getSimplePinyin())) {
+            //LogUtil.d(" #ddd  "+getName());
+            return "# ";
         }
 
         return "";

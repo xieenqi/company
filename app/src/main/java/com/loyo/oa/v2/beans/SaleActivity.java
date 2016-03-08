@@ -17,6 +17,7 @@ public class SaleActivity extends BaseBeans implements Serializable {
     private String tagItemIds;//string, optional): ,
     private CommonTag type;//array[&{tag TagItem}], optional): ,
     private long updatedAt;//&{time Time}, optional):
+    private long remindAt;
 
     @Override
     String getOrderStr() {
@@ -29,6 +30,14 @@ public class SaleActivity extends BaseBeans implements Serializable {
 
     public void setAttachments(ArrayList<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public long getRemindAt() {
+        return remindAt;
+    }
+
+    public void setRemindAt(long remindAt) {
+        this.remindAt = remindAt;
     }
 
     public String getContent() {

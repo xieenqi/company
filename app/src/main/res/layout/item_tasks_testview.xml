@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/layout_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_task_tester"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_marginTop="10dp"
+                android:text="审核人:"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_reviewer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/tv_task_tester"
+                android:text="XXX" />
+
+            <TextView
+                android:id="@+id/tv_reviewtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="2015-2-21" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/item_tasks_sorece"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginLeft="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="任务评分"
+                android:textSize="15sp"
+                />
+
+            <RatingBar
+                android:id="@+id/ratingBar_Task"
+                style="@style/roomRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="30dp"
+                android:isIndicator="true"
+                android:max="100"
+                android:numStars="5"
+                android:stepSize="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_task_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="status"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_marginBottom="@dimen/dimen_5"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_task_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:text="content"
+                android:layout_marginBottom="5dp"
+                />
+
+        </LinearLayout>
+
+        <View
+            style="@style/view_split"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/margin_side_edge" />
+
+    </LinearLayout>
+</LinearLayout>

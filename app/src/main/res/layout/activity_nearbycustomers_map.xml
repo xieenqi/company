@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:background="@color/title_bg1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/title_bg1"
+        android:orientation="horizontal">
+
         <include layout="@layout/include_common_title_2"/>
     </LinearLayout>
 
-    <com.baidu.mapapi.map.MapView
+    <com.amap.api.maps2d.MapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.baidu.mapapi.map.MapView>
+        android:layout_height="match_parent"
+        />
+
+
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.HomeNumber;
+import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.ServerTime;
 import com.loyo.oa.v2.service.CheckUpdateService;
 
@@ -15,18 +15,22 @@ import retrofit.http.Query;
 
 public interface IMain {
 
-    @GET("/home")
-    void getNumber(retrofit.Callback<ArrayList<HomeNumber>> cb);
+    @GET("/feed")
+    void getNumber(retrofit.Callback<ArrayList<HttpMainRedDot>> cb);
 
-    @GET("/checkupdate/")
+    @GET("/checkupdate/android")
     void checkUpdate(retrofit.Callback<CheckUpdateService.UpdateInfo> cb);
 
     @GET("/gettime")
     void getServerTime(retrofit.Callback<ServerTime> cb);
 
     @PUT("/")
-    void resetPassword(@Body HashMap<String,Object> map,retrofit.Callback<Object> cb);
+    void resetPassword(@Body HashMap<String, Object> map, retrofit.Callback<Object> cb);
 
     @GET("/forgetpwd/")
     void verifyPhone(@Query("tel") String tel, Callback<Object> callback);
+
+    //绑定手机获取验证码
+    @GET("/newphonenum")
+    void getVerificationCode(@Query("tel") String tel, Callback<Object> callback);
 }

@@ -1,72 +1,109 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+def AAVersion = '3.3.2'
 
 android {
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
-
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     signingConfigs {
         debug {
-            storeFile file('/Users/ykb/Desktop/MyProject/loyo_share.keystore')
+            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/ykb/Desktop/MyProject/loyo_android_v2.jks')
+            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
         }
     }
-    compileSdkVersion 22
-    buildToolsVersion "21.1.2"
+
     defaultConfig {
         multiDexEnabled = true
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 36
-        versionName '3.2.0'
+        targetSdkVersion 23
+        versionCode 2016030401
+        versionName '1.0.3'
     }
+
     buildTypes {
         debug {
-//            applicationIdSuffix '.debug'
-//            versionNameSuffix '.debug'
-//
-//            android.applicationVariants.all { variant ->
-//                def buildType = variant.buildType
-//                def encoding = java.nio.charset.Charset.defaultCharset().toString()
-//                if (buildType.applicationIdSuffix) {
-//                    variant.mergeResources.doLast {
-//                        def f = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
-//                        String content = f.getText(encoding)
-//                        content = content.replaceAll('乐享云办公', '乐享云(测试)')
-//                        f.write(content, encoding)
-//
-//                    }
-//                }
-//            }
             signingConfig signingConfigs.debug
-
-            resValue "string", "xg_v2_access_id", "2100125711"
-            resValue "string", "xg_v2_access_key", "AW5982UB8VET"
-            resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
-            resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
-            resValue "string", "app_name", "乐享云(测试)"
-    }
-
+            //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
+            //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
+            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
+            resValue "string", "app_name", "快启"
+            jniDebuggable true
+        }
         release {
             minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
-
-            resValue "string", "xg_v2_access_id", "2100127751"
-            resValue "string", "xg_v2_access_key", "AQ4Q6AP2P46N"
-            resValue "string", "baidu_maps_api_key", "Q3aVfvUow9EL32m6IcGFecTf"
-            resValue "string", "amaps_api_key", "6085830b754c86f0d9886b545f5b38f8"
-            resValue "string", "app_name", "乐享云办公"
+            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
+            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
+// "6085830b754c86f0d9886b545f5b38f8"
+            resValue "string", "app_name", "快启"
         }
+    }
+
+    //多渠道打包的配置
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        compile 'com.android.support:appcompat-v7:22.1.1'
+        compile 'com.android.support:recyclerview-v7:22.1.1'
+        compile 'com.google.code.gson:gson:2.3'
+        compile 'com.squareup.retrofit:retrofit:1.9.0'
+        compile files('libs/android-async-http-1.4.6.jar')
+        compile files('libs/universal-image-loader-1.9.3.jar')
+        compile files('libs/android-viewbadger.jar')
+        compile files('libs/bugly_1.2.3.6_release.jar')
+        // debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+        //releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+        //百度地图
+        compile files('libs/BaiduLBS_Android.jar')
+        //高德地图
+        compile files('libs/Android_Map_V2.5.0.jar')
+        //compile files('libs/MapApiLocation_1.3.3.jar')
+        compile files('libs/MapApiServices.jar')
+//    compile files('libs/AMap_2DMap_V2.8.0_20151231.jar')
+//    compile files('libs/AMap_Location_V2.2.0_20151222.jar')
+//    compile files('libs/AMap_Search_V2.8.0_20160105.jar')//最新高德地图jar包
+        compile files('libs/AMap_Location_v2.3.0_20160112.jar')//最新定位
+
+        compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
+        compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
+        compile files('libs/loyo-annotation.jar')
+        compile 'com.github.chrisbanes.photoview:library:1.2.3'
+
+        //微信
+        compile files('libs/wup-1.0.0-SNAPSHOT.jar')
+        compile files('libs/jg_filter_sdk_1.1.jar')
+        compile 'com.nineoldandroids:library:2.4.0'
+        compile 'joda-time:joda-time:2.3'
+        //图片选择
+        //    compile files('libs/imgselect_release.aar')
+        //    compile(name: 'imgselect_release', ext: 'aar')
+        compile 'com.squareup.picasso:picasso:2.5.2'
+        compile 'io.reactivex:rxjava:1.0.14'
+        compile 'io.reactivex:rxandroid:1.0.1'
+        //菜单
+        compile 'com.yalantis:contextmenu:1.0.4'
+        //激光推送
+        compile files('libs/jpush-android-2.0.5.jar')
+        //compile 'com.android.support:multidex-1.0.1'
+        compile "org.androidannotations:androidannotations-api:$AAVersion"
+
     }
     productFlavors {
     }
@@ -76,67 +113,14 @@ android {
     }
 }
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.1.1'
-    compile 'com.android.support:recyclerview-v7:22.1.1'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile files('libs/android-async-http-1.4.6.jar')
-    compile files('libs/universal-image-loader-1.9.3.jar')
-    compile files('libs/android-viewbadger.jar')
-    compile files('libs/bugly_1.2.3.6_release.jar')
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
-    //百度地图
-    //    compile files('libs/locSDK_5.0.jar')
-    //    compile files('libs/baidumapapi_v3_4_0.jar')
-    compile files('libs/BaiduLBS_Android.jar')
-    //高德地图
-    compile files('Android_Map_V2.5.0.jar')
-    compile files('MapApiLocation_1.3.3.jar')
-    compile files('MapApiServices.jar')
-    compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
-    compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
-    compile files('libs/loyo-annotation.jar')
-    compile 'com.github.chrisbanes.photoview:library:1.2.3'
-    //微信
-    compile files('libs/libammsdk.jar')
-    //小米
-    compile files('MiPush_SDK_Client_2_2_16.jar')
-    //信鸽
-    compile files('libs/Xg_sdk_v2.38_20150616_1057.jar')
-    compile files('libs/wup-1.0.0-SNAPSHOT.jar')
-    compile files('libs/mid-sdk-2.20.jar')
-    compile files('libs/jg_filter_sdk_1.1.jar')
-    //信鸽
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'joda-time:joda-time:2.3'
-    //图片选择
-    //    compile files('libs/imgselect_release.aar')
-    //    compile(name: 'imgselect_release', ext: 'aar')
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'io.reactivex:rxjava:1.0.14'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    //菜单
-    compile 'com.yalantis:contextmenu:1.0.4'
-
-    //激光推送
-   compile files('libs/jpush-android-2.0.5.jar')
-
-
-}
 
 repositories {
     flatDir {
         dirs 'libs'
     }
 }
-
 dependencies {
-    def AAVersion = '3.3.2'
     apt "org.androidannotations:androidannotations:$AAVersion"
-    compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
 
 apt {

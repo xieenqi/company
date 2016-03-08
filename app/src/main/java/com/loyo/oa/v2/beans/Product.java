@@ -11,7 +11,7 @@ public class Product implements Serializable {
     private String name ;
     private String prunit;
     private String unitPrice;
-    private String uuid ;
+    private String unit ;
     private String memo;//string, optional): ,
     private String id ;//int64, optional): ,
 
@@ -23,12 +23,12 @@ public class Product implements Serializable {
         this.unitPrice = unitPrice;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getUnid() {
+        return unit;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUnid(String uuid) {
+        this.unit = uuid;
     }
 
     public String getPrunit() {

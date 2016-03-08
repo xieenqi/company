@@ -15,57 +15,57 @@
             android:layout_width="@dimen/dimen_50"
             android:layout_height="match_parent"
             android:layout_below="@+id/tv_discuss_sender"
+            android:layout_marginBottom="@dimen/dimen_5"
             android:layout_marginLeft="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_5"
-            android:layout_marginBottom="@dimen/dimen_5"
             android:src="@drawable/img_default_user"
             imagecontrol:border_inside_color="#a8d4e9"
             imagecontrol:border_outside_color="#a8d4e9"
             imagecontrol:border_thickness="0dp"/>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_weight="1"
                 android:id="@+id/tv_name"
-                android:layout_marginLeft="10dp"
-                android:textSize="16sp"
                 android:layout_width="wrap_content"
-                android:gravity="center_vertical"
                 android:layout_height="0dp"
-                android:text="" />
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textSize="16sp"/>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_weight="1"
                     android:id="@+id/tv_visitnum"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="15sp"
                     android:layout_width="0dp"
-                    android:gravity="center_vertical"
-                    android:textColor="#999999"
                     android:layout_height="match_parent"
-                    android:text="" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="15sp"/>
 
 
-            <TextView
-                android:layout_weight="1"
-                android:id="@+id/tv_visitcustomers"
-                android:layout_marginLeft="10dp"
-                android:textSize="15sp"
-                android:layout_width="0dp"
-                android:gravity="center_vertical"
-                android:textColor="#999999"
-                android:layout_height="34dp"
-                android:text="" />
+                <TextView
+                    android:id="@+id/tv_visitcustomers"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="15sp"/>
             </LinearLayout>
 
         </LinearLayout>

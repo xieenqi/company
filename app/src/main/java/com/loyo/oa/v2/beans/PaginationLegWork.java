@@ -9,10 +9,10 @@ import java.io.Serializable;
  * 时间 : 15/10/29.
  */
 public class PaginationLegWork implements Serializable {
-    int pageIndex;
-    int pageSize;
-    TeamLegwork records;
-    int totalRecords;
+    public int pageIndex;
+    public int pageSize;
+    public int totalRecords;
+    public TeamLegwork records;
 
     public PaginationLegWork() {
         pageIndex = 1;
@@ -24,32 +24,5 @@ public class PaginationLegWork implements Serializable {
         pageSize = _pageSize;
     }
 
-    public int getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public TeamLegwork getRecords() {
-        return records;
-    }
-
-    public int getTotalRecords() {
-        return totalRecords;
-    }
-
-    public void setTotalRecords(int t) {
-        totalRecords = t;
-    }
 
 }

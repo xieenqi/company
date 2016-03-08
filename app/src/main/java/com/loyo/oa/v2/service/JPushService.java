@@ -1,12 +1,17 @@
 package com.loyo.oa.v2.service;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.loyo.oa.v2.activity.MainActivity;
+import com.loyo.oa.v2.activity.MainActivity_;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.jpush.HttpJpushNotification;
+import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,22 +22,25 @@ import cn.jpush.android.api.JPushInterface;
 
 /**
  * 自定义接收器
- *
+ * <p/>
  * 如果不定义这个 Receiver，则：
  * 1) 默认用户会打开主界面
  * 2) 接收不到自定义消息
  */
 public class JPushService extends BroadcastReceiver {
     private static final String TAG = "JPush";
+    NotificationManager manger = null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        manger = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
 
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+            LogUtil.d(" 激光推送RegistrationId： " + regId);
             //send the Registration Id to your server...
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
@@ -45,14 +53,23 @@ public class JPushService extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
+            Log.d(TAG, "[MyReceiver] 用户点击打开了通知");//buzzType 1，任务 2，报告 3，审批 4.项目 5.通知公告
 
-            //打开自定义的Activity
-            Intent i = new Intent(context, MainActivity.class);
-            i.putExtras(bundle);
-            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            context.startActivity(i);
+            String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            LogUtil.d(" 激光推送传递过来的数据： " + msg);
+            HttpJpushNotification pushData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
+            // 打开自定义的Activity
+            MainApp.jpushData = pushData;// 给这个创建一个对象就可以了可以到相应的页面
+//、            if (pushData==null||pushData.Id <= 0)
+//                App.notiflyNews = null;
+            ExitActivity.getInstance().finishAllActivity();
+            Intent in = new Intent();
+            in.setClass(context,MainActivity_.class);
+            in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            context.startActivity(in);
+            //清除所有通知
+            if (manger != null)
+                manger.cancelAll();
 
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -122,4 +139,5 @@ public class JPushService extends BroadcastReceiver {
     //        }
     //    }
     //}
+
 }

@@ -17,9 +17,15 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Customer;
@@ -28,7 +34,9 @@ import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.fragment.TaskManagerFragment;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -40,6 +48,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 搜索的 基类
+ *
+ * @param <T>
+ */
 public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivity implements PullToRefreshListView.OnRefreshListener2, Callback {
     public static final int REQUEST_SEARCH = 1100;
 
@@ -47,22 +60,45 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     protected EditText edt_search;
     protected TextView tv_search;
     protected View vs_nodata;
+    protected View headerView;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<T> lstData = new ArrayList<>();
     protected CommonSearchAdapter adapter;
-    protected boolean isTopAdd = true;
-    protected boolean isSelect;
     protected PaginationX paginationX = new PaginationX(20);
+    public Customer customer;
+    public Bundle mBundle;
+    public LayoutInflater mInflater;
+    public RelativeLayout headerViewBtn;
+
+    protected int customerType;
+    protected int befromPage;
+    protected boolean isTopAdd = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
-        if (null != getIntent() && getIntent().hasExtra("isSelect")) {
-            isSelect = getIntent().getBooleanExtra("isSelect", false);
-        }
+        initView();
+    }
 
+    /**
+     * 初始化
+     * */
+    void initView(){
         vs_nodata = findViewById(R.id.vs_nodata);
+        mBundle = getIntent().getExtras();
+        mInflater = LayoutInflater.from(this);
+        headerView = mInflater.inflate(R.layout.item_baseserach_null, null);
+        headerViewBtn = (RelativeLayout) headerView.findViewById(R.id.item_baseserach_btn);
+
+        customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
+        befromPage = mBundle.getInt("from");
+        switchPage(befromPage);
+        if (befromPage == SIGNIN_ADD || befromPage == TASKS_ADD || befromPage == TASKS_ADD_CUSTOMER ||
+                befromPage == WFIN_ADD || befromPage == WORK_ADD) {
+            getData();
+        }
 
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +117,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     doSearch();
                 }
-
                 return false;
             }
         });
@@ -107,7 +142,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             }
         });
         edt_search.requestFocus();
-
         findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,32 +155,121 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
         ListView expandableListView = expandableListView_search.getRefreshableView();
         adapter = new CommonSearchAdapter();
-        expandableListView_search.setAdapter(adapter);
-        expandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        expandableListView.setAdapter(adapter);
+        expandableListView.addHeaderView(headerView);
+
+        /**列表监听器*/
+        expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    if (isSelect) {
-                        returnData((int) l);
-                    } else {
-                        openDetail((int) l);
-                    }
-                } catch (Exception e) {
-                    Global.ProcException(e);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent mIntent;
+                switch (befromPage) {
+                    //新建审批
+                    case WFIN_ADD:
+                        mIntent = new Intent();
+                        mIntent.putExtra("data", lstData.get(position - 2));
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        break;
+                    //新建任务 所属项目
+                    case TASKS_ADD:
+                        mIntent = new Intent();
+                        mIntent.putExtra("data", lstData.get(position - 2));
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        break;
+                    //新建任务 关联客户
+                    case TASKS_ADD_CUSTOMER:
+                        returnData(position - 2);
+                        break;
+                    //新建拜访
+                    case SIGNIN_ADD:
+                        returnData(position - 2);
+                        break;
+                    //新建报告
+                    case WORK_ADD:
+                        mIntent = new Intent();
+                        mIntent.putExtra("data", lstData.get(position - 2));
+                        app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, mIntent);
+                        break;
+                    //客户管理
+                    case CUSTOMER_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
+                        mIntent.putExtra("Id", lstData.get(position - 2).getId());
+                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE,customerType);
+                        startActivity(mIntent);
+                        break;
+                    //任务管理
+                    case TASKS_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), TasksInfoActivity_.class);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        startActivity(mIntent);
+                        break;
+                    //工作报告管理
+                    case WORK_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), WorkReportsInfoActivity_.class);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        startActivity(mIntent);
+                        break;
+                    //项目管理
+                    case PEOJECT_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), ProjectInfoActivity_.class);
+                        mIntent.putExtra("projectId", lstData.get(position - 2).getId());
+                        startActivity(mIntent);
+                        break;
+                    //审批管理
+                    case WFIN_MANAGE:
+                        mIntent = new Intent(getApplicationContext(), WfinstanceInfoActivity_.class);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_ID, lstData.get(position - 2).getId());
+                        startActivity(mIntent);
+                        break;
                 }
+                hideInputKeyboard(edt_search);
             }
         });
-        getData();
+
+        /**
+         * 返回"无"
+         * */
+        headerViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                app.finishActivity(BaseSearchActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, new Intent());
+            }
+        });
     }
 
-
-    void doSearch() {
+    /**
+     * 搜索操作
+     * */
+    public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         if (strSearch.length() > 0) {
             isTopAdd = true;
             getData();
         } else {
             onBackPressed();
+        }
+    }
+
+    /**
+     * 根据业务 展示"无"Item
+     * */
+    public void switchPage(int befromPage){
+        switch (befromPage){
+            case WFIN_ADD:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case TASKS_ADD:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case TASKS_ADD_CUSTOMER:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
+
+            case WORK_ADD:
+                headerViewBtn.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
@@ -199,8 +322,19 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         }
     }
 
+
+    protected void returnData(int position) {
+        Intent intent = new Intent();
+        intent.putExtra("data", adapter.getItem(position));
+        setResult(RESULT_OK, intent);
+        onBackPressed();
+    }
+
+
     @Override
     public void success(Object o, Response response) {
+        Utils.dialogDismiss();
+        HttpErrorCheck.checkResponse(response);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -232,18 +366,14 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         }
         vs_nodata.setVisibility(View.GONE);
         changeAdapter();
+
     }
 
-    protected void returnData(int position) {
-        Intent intent = new Intent();
-        intent.putExtra("data", adapter.getItem(position));
-        setResult(RESULT_OK, intent);
-        onBackPressed();
-    }
 
     @Override
     public void failure(RetrofitError error) {
-        Toast("搜索失败");
+        Utils.dialogDismiss();
+        HttpErrorCheck.checkError(error);
     }
 
     protected void changeAdapter() {
@@ -252,9 +382,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     protected abstract void openDetail(int position);
 
-    protected abstract void getData();
+    public abstract void getData();
 
-    protected class CommonSearchAdapter extends BaseAdapter {
+    public class CommonSearchAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -291,16 +421,16 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //审批
             if (o instanceof WfInstance) {
                 WfInstance wfInstance = (WfInstance) o;
-                if (wfInstance.getTitle() != null) {
-                    title.setText(wfInstance.getTitle());
+                if (wfInstance.title != null) {
+                    title.setText(wfInstance.title);
                 }
-                time.setText("提交时间: " + app.df3.format(new Date(wfInstance.getCreatedAt() * 1000)));
-                if (wfInstance.getCreator() != null) {
-                    content.setText(String.format("申请人 %s", wfInstance.getCreator().getRealname()));
+                time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+                if (wfInstance.creator != null) {
+                    content.setText(String.format("申请人 %s", wfInstance.creator.getRealname()));
                 }
                 //                ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
-                switch (wfInstance.getStatus()) {
+                switch (wfInstance.status) {
                     case WfInstance.STATUS_NEW:
                         status.setImageResource(R.drawable.img_wfinstance_list_status1);
                         break;
@@ -317,7 +447,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                         status.setImageResource(R.drawable.img_wfinstance_list_status5);
                         break;
                 }
-            } else if (o instanceof Task) {
+            }
+            //任务
+            else if (o instanceof Task) {
                 Task task = (Task) o;
                 if (task.getStatus() == Task.STATUS_PROCESSING) {
                     status.setImageResource(R.drawable.task_status_1);
@@ -335,7 +467,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 }
                 //                ack.setVisibility(task.isAck() ? View.GONE : View.VISIBLE);
                 if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
-                    content.setText("负责: " + task.getResponsiblePerson().getRealname());
+                    content.setText("负责人: " + task.getResponsiblePerson().getRealname());
                 }
                 if (!TextUtils.isEmpty(task.getTitle())) {
                     title.setText(task.getTitle());
@@ -348,7 +480,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 if (null != workReport.getReviewer() && null != workReport.getReviewer().getUser() && !TextUtils.isEmpty(workReport.getReviewer().getUser().getName())) {
                     content.setText("点评: " + workReport.getReviewer().getUser().getName());
                 }
-                StringBuilder reportTitle = new StringBuilder(workReport.getCreator().getName() + "提交 ");
+                StringBuilder reportTitle = new StringBuilder(workReport.getCreator().name + "提交 ");
                 String reportDate = "";
                 String reportType = "";
                 switch (workReport.getType()) {
@@ -382,7 +514,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //项目
             else if (o instanceof Project) {
                 Project project = (Project) o;
-                if (project.getStatus() == 1) {
+                if (project.status == 1) {
                     status.setImageResource(R.drawable.task_status_1);
                 } else {
                     status.setImageResource(R.drawable.img_project_complete);
@@ -394,19 +526,33 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     Global.ProcException(e);
                 }
 
-                content.setText(project.getContent());
+                content.setText(project.content);
                 ack.setVisibility(View.GONE);
-                title.setText(project.getTitle());
+                title.setText(project.title);
             }
             //客户
             else if (o instanceof Customer) {
-                Customer customer = (Customer) o;
-                time.setVisibility(View.GONE);
-                title.setText(customer.getName());
-                content.setText("距离：" + customer.getDistance());
+
+                customer = (Customer) o;
+                time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
+                title.setText(customer.name);
+                content.setText("标签"+Utils.getTagItems(customer));
+
+              /*  if (!TextUtils.isEmpty(customer.distance)) {
+                    content.setText("距离：" + customer.distance);
+                } else {
+                    content.setVisibility(View.GONE);
+                }*/
             }
 
             return convertView;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LogUtil.dll("销毁");
+        hideInputKeyboard(edt_search);
     }
 }

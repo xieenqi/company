@@ -1,12 +1,15 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activity.work.HttpDefaultComment;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.beans.WorkReportTpl;
 import com.loyo.oa.v2.beans.WorkreportLastUsers;
 import com.loyo.oa.v2.common.FinalVariables;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -23,6 +26,7 @@ import retrofit.http.QueryMap;
  * Created by pj on 15/5/11.
  */
 public interface IWorkReport {
+
     @GET("/discussions?bizType=1")
     void getDiscussions(@Query("bizId") String id, retrofit.Callback<PaginationX<Discussion>> cb);
 
@@ -40,8 +44,19 @@ public interface IWorkReport {
     @GET(FinalVariables.workreports + "lastusers")
     void getLastUsers(Callback<WorkreportLastUsers> cb);
 
+
+    /**
+     * 获取动态工作报告
+     *
+     * @param map
+     * @param cb
+     * */
+    @GET("/statistics/process/number")
+    void getDynamic(@QueryMap HashMap<String,Object> map, Callback<ArrayList<WorkReportDyn>> cb);
+
     /**
      * 根据ID获取报告详情
+     *
      * @param id
      * @param cb
      */
@@ -50,37 +65,48 @@ public interface IWorkReport {
 
     /**
      * 根据筛选条件获取报告列表
+     *
      * @param map
      * @param cb
      */
     @GET("/wreport/")
-    void getWorkReports(@QueryMap HashMap<String ,Object> map,Callback<PaginationX<WorkReport>> cb);
+    void getWorkReports(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReport>> cb);
 
     /**
      * 点评报告
+     *
      * @param id
      * @param map
      * @param cb
      */
     @PUT("/wreport/{id}/review")
-    void reviewWorkReport(@Path("id") String id,@Body HashMap<String ,Object> map,Callback<WorkReport> cb);
+    void reviewWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
 
     /**
      * 创建报告
+     *
      * @param map
      * @param cb
      */
     @POST("/wreport/")
-    void createWorkReport(@Body HashMap<String ,Object> map,Callback<WorkReport> cb);
+    void createWorkReport(@Body HashMap<String, Object> map, Callback<WorkReport> cb);
 
     /**
      * 删除报告
+     *
      * @param id
      * @param cb
      */
-    @POST("/wreport/{id}")
-    void deleteWorkReport(@Path("id") String  id,Callback<WorkReport> cb);
+    @DELETE("/wreport/{id}")
+    void deleteWorkReport(@Path("id") String id, Callback<WorkReport> cb);
 
     @PUT("/wreport/{id}")
-    void updateWorkReport(@Path("id") String id,@Body HashMap<String ,Object> map,Callback<WorkReport> cb);
+    void updateWorkReport(@Path("id") String id, @Body HashMap<String, Object> map, Callback<WorkReport> cb);
+
+    /**
+     * 获取默认的点评人
+     * @param cb
+     */
+    @GET("/wreport/latest")
+    void defaultComment(Callback<HttpDefaultComment> cb);
 }

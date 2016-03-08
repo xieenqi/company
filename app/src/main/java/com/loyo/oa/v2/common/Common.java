@@ -4,11 +4,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -17,58 +16,52 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public final class Common {
 
-    public static ArrayList<User> getUsersByProject(Project project) {
+    public static final int CUSTOMER_PAGE = 0;
+    public static final int TASK_PAGE = 1;
+    public static final int WORK_PAGE = 2;
+    public static final int WFIN_PAGE = 3;
+
+    public static ArrayList<User> getUsersByProject(HttpProject project) {
         if (null == project) {
             return new ArrayList<>();
         }
 
         ArrayList<User> users = new ArrayList<>();
-        ArrayList<ProjectMember> managers = project.getManagers();
-        ArrayList<ProjectMember> members = project.getMembers();
+        ArrayList<HttpProject.ProjectManaer> managers = project.managers;
+        ArrayList<HttpProject.ProjectMember> members = project.members;
 
         if (null == managers) {
             managers = new ArrayList<>();
         }
-        if (null != members && !members.isEmpty()) {
-            managers.addAll(members);
-        }
-//        if (null == managers) {
-//            managers = new ArrayList<>();
-//            if (null != members && !members.isEmpty()) {
-//                managers.addAll(members);
-//            }
-//        } else {
-//            if (managers.isEmpty()) {
-//                if (null != members && !members.isEmpty()) {
-//                    managers.addAll(members);
-//                } else {
-//                    for (int i = 0; i < members.size(); i++) {
-//                        ProjectMember member = members.get(i);
-//                        if (!managers.contains(member)) {
-//                            managers.add(member);
-//                        }
-//                    }
-//                }
-//            }
-//        }
+
         if (!managers.isEmpty()) {
             for (int i = 0; i < managers.size(); i++) {
-                User member = managers.get(i).getUser();
+                User member = managers.get(i).user;
                 if (null != member) {
                     users.add(member);
                 }
             }
         }
+        if (null != members && !members.isEmpty()) {
+            for (int i = 0; i < members.size(); i++) {
+                User member = members.get(i).user;
+                if (null != member) {
+                    users.add(member);
+                }
+            }
+        }
+
         return users;
+
     }
 
     public static ArrayList<UserGroupData> getLstUserGroupData() {
+
         if (MainApp.lstUserGroupData == null) {
             InitOrganizationFromDB();
         }
@@ -122,23 +115,46 @@ public final class Common {
         return result;
     }
 
+    public static String companyId;
+
+    /**
+     * 获取 本部门 的人员信息  xnq
+     *
+     * @param deptId
+     * @return
+     */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
-        List<Department> departmentList = getLstDepartment(deptId);
+
+
+        List<Department> departmentList = getLstDepartment(deptId);//全部 组织 架构
         if (departmentList == null || departmentList.isEmpty()) {
             return new ArrayList<>();
         }
 
-        SparseArray<ArrayList<Department>> maps = new SparseArray<>();
+        SparseArray<ArrayList<Department>> maps = new SparseArray<>();//相当于 map 全部字母表 下的部门列表
         ArrayList<ContactsGroup> contactsGroups = new ArrayList<>();
-        for (char index = 'A'; index <= 'Z'; index += (char) 1) {
-            ArrayList<Department> departments = new ArrayList<>();
-            for (Department department : departmentList) {
+        for (char index = '#'; index <= 'Z'; index += (char) 1) {
+            ArrayList<Department> departments = new ArrayList<>();//相同首字母 部门集合
+            for (Department department : departmentList) {//遍历组织架构
                 if (department == null) {
                     continue;
                 }
-                String groupName_current = department.getGroupName();
-                if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
-                    departments.add(department);
+                if (department.getId().equals(department.getSuperiorId())) {
+                    companyId = department.getId();
+                    continue;
+                }
+
+                try{
+                    if ((department.getSuperiorId()).equals(companyId)) {
+                        String groupName_current = department.getGroupName();
+                        if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
+                            departments.add(department);
+                        } else if (TextUtils.isEmpty(groupName_current)) {
+                            departments.add(0, department);
+                        }
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
             }
             if (!departments.isEmpty()) {
@@ -166,25 +182,9 @@ public final class Common {
         if (MainApp.lstDepartment == null) {
             Global.ProcException(new Exception("部门为空!"));
         }
-
         return MainApp.lstDepartment == null ? new ArrayList<Department>() : MainApp.lstDepartment;
     }
 
-    public static ArrayList<User> getSubUsers() {
-        if (MainApp.subUsers == null) {
-            MainApp.subUsers = DBManager.Instance().getSubordinates();
-        }
-
-        if (MainApp.subUsers == null) {
-            Global.ProcException(new Exception("下属为空!"));
-        }
-
-        return MainApp.subUsers == null ? new ArrayList<User>() : MainApp.subUsers;
-    }
-
-//    public static void setSubUsers(ArrayList<User> subUsers) {
-//        MainApp.subUsers = subUsers;
-//    }
 
     public static void InitOrganizationFromDB() {
         //根据当前 token到DB中获取
@@ -196,6 +196,12 @@ public final class Common {
         setLstDepartment(DBManager.Instance().getOrganization());
     }
 
+
+    /**
+     * 组装组织架构
+     *
+     * @param departmentList
+     */
     static void setOrganization(ArrayList<Department> departmentList) {
         if (departmentList == null) {
             return;
@@ -209,8 +215,9 @@ public final class Common {
             }
 
             for (User user : department.getUsers()) {
-                if (TextUtils.isEmpty(user.getDepartmentsName())) {
-                    user.setDepartmentsName(department.getName());
+
+                if (TextUtils.isEmpty(user.departmentsName)) {
+                    user.departmentsName = department.getName();
                 }
 
                 Department deptInUser = new Department();
@@ -218,13 +225,11 @@ public final class Common {
                 deptInUser.setSuperiorId(department.getSuperiorId());
                 deptInUser.setName(department.getName());
 
-                UserInfo userInfo = new UserInfo();
+/*              UserInfo userInfo = new UserInfo();
                 userInfo.setShortDept(department);
-
-                user.setDepts(new ArrayList<>(Arrays.asList(userInfo)));
+                user.depts=new ArrayList<>(Arrays.asList(userInfo));*/
 
                 String groupName_current = user.getGroupName();
-
                 Boolean isContainsGroupName = false;
                 UserGroupData userGroupData_current;
 
@@ -242,7 +247,6 @@ public final class Common {
                         if (!isContainsUser) {
                             userGroupData_current.getLstUser().add(user);
                         }
-
                         break;
                     }
                 }
@@ -252,7 +256,6 @@ public final class Common {
                     userGroupData_current.setGroupName(groupName_current);
                     userGroupData_current.getLstUser().add(user);
                     userGroupData_current.setDepartmentId(department.getId());
-
                     lstUserGroupData_current.add(userGroupData_current);
                 }
             }
@@ -269,7 +272,13 @@ public final class Common {
         Common.setLstUserGroupData(lstUserGroupData_current);
     }
 
+    /**
+     * 缓存 组织 架构 信息 xnq
+     *
+     * @param _lstDepartment
+     */
     public static void setLstDepartment(ArrayList<Department> _lstDepartment) {
+
         if (_lstDepartment == null) {
             return;
         }
@@ -280,7 +289,6 @@ public final class Common {
             MainApp.lstDepartment.clear();
             MainApp.lstDepartment.addAll(_lstDepartment);
         }
-
         setOrganization(_lstDepartment);
     }
 
@@ -345,11 +353,11 @@ public final class Common {
             for (User user : groupData.getLstUser()) {
                 boolean isAdd = false;
 
-                if (user.getDepts() == null) {
+                if (user.depts == null) {
                     continue;
                 }
 
-                for (UserInfo d : user.getDepts()) {
+                for (UserInfo d : user.depts) {
                     //如果已经填加过人员，就不能重复添加。主要是因为一个人有多个部门的情况。
                     if (!isAdd && TextUtils.equals(d.getShortDept().getId(), DeptId)) {
                         users.add(user);
@@ -390,7 +398,7 @@ public final class Common {
             for (UserGroupData userGroup : getLstUserGroupData()) {
                 for (User u : userGroup.getLstUser()) {
                     for (String userId : users) {
-                        if (userId.equals(u.getId())) {
+                        if (userId.equals(u.id)) {
                             if (sb == null) {
                                 sb = new StringBuilder();
                                 sb.append(u.getRealname());
@@ -410,7 +418,7 @@ public final class Common {
 
     public static User getSuper() {
         User superior = new User();
-        superior.setId(MainApp.user.getSuperiorId());
+        superior.id = MainApp.user.superiorId;
 
         for (UserGroupData userGroup : getLstUserGroupData()) {
 
@@ -419,7 +427,54 @@ public final class Common {
                 return userGroup.getLstUser().get(index);
             }
         }
-
         return new User();
+    }
+
+
+    /**
+     * 获取当前账号，本部门通讯录人员
+     */
+    public static ArrayList<User> getMyUserDept() {
+
+        ArrayList<User> myUsers = new ArrayList<>();
+        ArrayList<User> userAllList = new ArrayList<>();
+        int positions = 0;
+
+        /*全部人员获取*/
+        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
+            try{
+                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                }
+            }catch(NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+
+        /*获取我的部门下标*/
+        for (int i = 0; i < getLstDepartment().size(); i++) {
+            for (int j = 0; j < MainApp.user.depts.size(); j++) {
+                if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {
+                    positions = i;
+                    break;
+                }
+            }
+        }
+
+        /*获取我的部门下 所有人员*/
+        myUsers.clear();
+        for (Department department : getLstDepartment()) {
+            if (department.getXpath().contains(getLstDepartment().get(positions).getXpath())) {
+                try{
+                    for (User user : department.getUsers()) {
+                        myUsers.add(user);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return myUsers;
     }
 }

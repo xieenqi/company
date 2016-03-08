@@ -12,9 +12,16 @@ public class AttendanceRecord implements Serializable {
     /**内勤**/
     public static final int OUT_STATE_OFFICE_WORK=0;
     /**已确认的外勤**/
-    public static final int OUT_STATE_CONFIRMED_FIELD_WORK=OUT_STATE_OFFICE_WORK+1;
+    public static final int OUT_STATE_CONFIRMED_FIELD_WORK=1;
     /**未确认的外勤**/
-    public static final int OUT_STATE_FIELD_WORK=OUT_STATE_OFFICE_WORK+2;
+    public static final int OUT_STATE_FIELD_WORK=2;
+
+    /**非加班**/
+    public static final int OUT_STATE_OFFICE_OVERTIME=0;
+    /**已确认的加班**/
+    public static final int OUT_STATE_CONFIRMED_FIELD_OVERTIME=1;
+    /**未确认的加班**/
+    public static final int OUT_STATE_FIELD_OVERTIME=2;
 
     /**正常打卡**/
     public static final int STATE_NORMAL=1;
@@ -22,6 +29,8 @@ public class AttendanceRecord implements Serializable {
     public static final int STATE_BE_LATE=STATE_NORMAL+1;
     /**早退**/
     public static final int STATE_LEAVE_EARLY=STATE_NORMAL+2;
+
+    public static final int STATE_OVERWORK = 5;
 
 
     private String address;// (string, optional): ,
@@ -40,6 +49,43 @@ public class AttendanceRecord implements Serializable {
     private int tagstate;// (int, optional): ,
     private long updatetime;// (int64, optional):
     private int remainTime;
+    private int extraTime;
+    private int extraState;
+    private long extraWorkStartTime;
+
+    public long getExtraWorkStartTime() {
+        return extraWorkStartTime;
+    }
+
+    public void setExtraWorkStartTime(long extraWorkStartTime) {
+        this.extraWorkStartTime = extraWorkStartTime;
+    }
+
+    public int getExtraState() {
+        return extraState;
+    }
+
+    public void setExtraState(int extraState) {
+        this.extraState = extraState;
+    }
+
+    public int getExtraTime() {
+        return extraTime;
+    }
+
+    public void setExtraTime(int extraTime) {
+        this.extraTime = extraTime;
+    }
+
+    private User user;// (&{organization User}, optional):
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public int getRemainTime() {
         return remainTime;

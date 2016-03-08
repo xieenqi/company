@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="white60">#4dffffff</color>
+    <color name="white95">#e6ffffff</color>
     <color name="white">#FFFFFF</color>
     <!-- 白色 -->
     <color name="ivory">#FFFFF0</color>
@@ -62,6 +64,7 @@
     <color name="magenta">#FF00FF</color>
     <!-- 红紫色 -->
     <color name="red">#FF0000</color>
+    <color name="red1">#f5625a</color>
     <!-- 红色 -->
     <color name="oldlace">#FDF5E6</color>
     <!-- 老花色 -->
@@ -187,13 +190,16 @@
     <!-- 亮天蓝色 -->
     <color name="skyblue">#87CEEB</color>
     <!-- 天蓝色 -->
+
+
+    <color name="graypy">#EFEFEF</color>
     <color name="gray">#808080</color>
     <!-- 灰色 -->
     <color name="olive">#808000</color>
     <!-- 橄榄色 -->
     <color name="purple">#800080</color>
     <!-- 紫色 -->
-    <color name="maroon">#800000</color>
+    <color name="maroon">#807100</color>
     <!-- 粟色 -->
     <color name="aquamarine">#7FFFD4</color>
     <!-- 碧绿色 -->
@@ -220,6 +226,10 @@
     <color name="dimgrey">#696969</color>
     <!-- 暗灰色 -->
     <color name="mediumaquamarine">#66CDAA</color>
+    <!-- 帅气灰 -->
+    <color name="suodesilei">#666666</color>
+    <!-- 美丽灰 -->
+    <color name="beogray">#F0F0F0</color>
     <!-- 中绿色 -->
     <color name="cornflowerblue">#6495ED</color>
     <!-- 菊兰色 -->
@@ -279,7 +289,7 @@
     <!-- 绿色 -->
     <color name="darkgreen">#006400</color>
     <!-- 暗绿色 -->
-    <color name="blue">#0000FF</color>
+    <color name="blue">#0400ff</color>
     <!-- 蓝色 -->
     <color name="mediumblue">#0000CD</color>
     <!-- 中兰色 -->
@@ -290,9 +300,11 @@
     <color name="black">#000000</color>
     <!-- 黑色 -->
 
-
+    <color name="iswrite">#2c9dfc</color>
+    <color name="isteston">#bf73e6</color>
+    <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
-    <color name="activity_bg">#efeff4</color>
+    <color name="dialog_blue">#2693FB</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
     <color name="activity_split">#c8c7cc</color>
     <color name="title_bg1">#4db1fe</color>
@@ -331,5 +343,18 @@
     <color name="default_menu_press_text">#000000</color>
     <color name="default_menu_text">#00cf9b</color>
     <color name="divider">#f1f1f1</color>
+
+    <!-- 登录界面字体 线的颜色-->
+    <color name="login">#b3b3b3</color>
+    <color name="grayC9">#c9c9c9</color>
+    <color name="graye9">#e9e9e9</color>
+    <color name="text33">#333333</color>
+    <color name="text99">#999999</color>
+    <color name="lineCC">#cccccc</color>
+    <color name="redE8">#e85840</color>
+    <color name="activity_bg">#f2f2f2</color>
+    <color name="green51">#51c055</color>
+    <color name="gray0990">#E7E7E7</color>
+
 
 </resources>
