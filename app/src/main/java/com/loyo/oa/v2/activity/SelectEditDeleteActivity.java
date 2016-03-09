@@ -27,7 +27,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
     private Intent intent;
     private Intent mIntent;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

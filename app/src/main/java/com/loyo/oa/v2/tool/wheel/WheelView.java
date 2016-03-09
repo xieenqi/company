@@ -35,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.wheel.adapters.WheelViewAdapter;
 

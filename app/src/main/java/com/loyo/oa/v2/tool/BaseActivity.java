@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
+
+import java.util.Locale;
 
 /**
  * activity 基类
@@ -70,6 +73,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
+
+        /*强制设置系统语言为中文*/
+        Locale locale = new Locale("zh");
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, null);
+
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
