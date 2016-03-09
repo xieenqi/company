@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,7 +16,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
@@ -65,7 +63,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -197,10 +194,10 @@ public class TasksAddActivity extends BaseActivity {
         isCopy = mTask != null ? true : false;
         members.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();  //负责人
+
     }
 
     void getTempTask() {
-
         if (mTask == null) {
             return;
         }

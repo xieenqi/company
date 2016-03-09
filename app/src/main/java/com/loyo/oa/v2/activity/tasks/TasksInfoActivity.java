@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
@@ -48,7 +47,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -56,11 +54,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -84,6 +80,10 @@ public class TasksInfoActivity extends BaseActivity {
     public String realName;
     public String isTest;
     public String beProjects;
+
+    private String taskId;  //任务ID
+    private String userId;
+    private String uuid = StringUtil.getUUID();
 
     @ViewById
     ViewGroup img_title_left;
@@ -126,9 +126,8 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
-    private String taskId;  //任务ID
-    private String userId;
-    private String uuid = StringUtil.getUUID();
+
+    private boolean isOver;
     private int statusSize;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
@@ -868,14 +867,20 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
+
         if(null == mTask){
             return;
         }
+
+        /*任务Status: 1-进行中 2-待点评 3-完成*/
+        if(mTask.getStatus() == 2 || mTask.getStatus() == 3){
+            isOver = true;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
-        //bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
-        bundle.putInt("status", mTask.getStatus());
+        bundle.putBoolean("isOver", isOver);
         bundle.putInt("bizType", 2);
 
         ArrayList<NewUser> users = new ArrayList<>();

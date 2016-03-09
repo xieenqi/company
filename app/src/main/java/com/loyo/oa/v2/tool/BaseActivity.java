@@ -389,4 +389,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
     }
+
+    /*重启当前Activity*/
+    public void restartActivity(){
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
 }
