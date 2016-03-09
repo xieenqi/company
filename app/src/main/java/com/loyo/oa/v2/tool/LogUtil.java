@@ -215,8 +215,8 @@ public class LogUtil {
     }
 
     public static void dll(String str) {
-        Log.d("LOG", str);
+        Log.d(tag, str);
     }
 
-    public static void dee(String str) { Log.d("TOP", str); }
+    public static void dee(String str) { Log.d(tag, str); }
 }
