@@ -80,7 +80,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
-        LogUtil.dll("语言:" + Locale.getDefault().getLanguage());
 
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
