@@ -74,7 +74,7 @@ public class InitDataService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
 
-            LogUtil.dll("更新 组织 架构 json：" + MainApp.gson.toJson(lstDepartment_current));
+            LogUtil.d("更新 组织 架构 json：" + MainApp.gson.toJson(lstDepartment_current));
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
             //设置缓存

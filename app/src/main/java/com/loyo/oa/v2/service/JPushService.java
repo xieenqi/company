@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -35,7 +36,7 @@ public class JPushService extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         manger = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bundle bundle = intent.getExtras();
-        Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
+        LogUtil.d("[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
 
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
@@ -44,8 +45,19 @@ public class JPushService extends BroadcastReceiver {
             //send the Registration Id to your server...
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+            Log.d(TAG, "[MyReceiver] 接收到推送下来的【自定义消息】: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             //processCustomMessage(context, bundle);
+            //Global.Toast("自定义消息:\n"+bundle.getString(JPushInterface.EXTRA_MESSAGE));
+            String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            LogUtil.d("【自定义msg】键值数据： " + msg);
+            HttpJpushNotification pushMsgData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
+            /**
+             * 轨迹改变 收到推送重新获取轨迹规则
+             */
+            if(7==pushMsgData.buzzType){
+                TrackRule.InitTrackRule();
+            }
+
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -53,11 +65,12 @@ public class JPushService extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            Log.d(TAG, "[MyReceiver] 用户点击打开了通知");//buzzType 1，任务 2，报告 3，审批 4.项目 5.通知公告
+            Log.d(TAG, "[MyReceiver] 用户点击打开了【通知】");//buzzType 1，任务 2，报告 3，审批 4.项目 5.通知公告
 
             String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
             LogUtil.d(" 激光推送传递过来的数据： " + msg);
             HttpJpushNotification pushData = MainApp.gson.fromJson(msg, HttpJpushNotification.class);
+            LogUtil.d(" 键值数据： " + pushData);
             // 打开自定义的Activity
             MainApp.jpushData = pushData;// 给这个创建一个对象就可以了可以到相应的页面
 //、            if (pushData==null||pushData.Id <= 0)
