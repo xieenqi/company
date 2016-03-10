@@ -37,7 +37,6 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
     //部门Id
     public String deptId;
     String DeptName;
-
     MainApp app = MainApp.getMainApp();
 
     ListView listView_user, listView_department;

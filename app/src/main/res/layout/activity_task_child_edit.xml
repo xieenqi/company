@@ -2,21 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    >
 
     <include layout="@layout/include_common_title1"/>
 
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/img_bg_home_textview"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/et_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_margin="@dimen/dimen_5"
                 android:background="@color/white"
                 android:gravity="top"
@@ -26,14 +29,21 @@
                 android:textColor="@color/black"/>
         </LinearLayout>
 
+    <View
+        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray0990"
+        />
+
         <LinearLayout
             android:id="@+id/ll_responser"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_48"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/img_bg_home_textview"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/white"
+            >
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -42,11 +52,11 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:layout_marginLeft="10dp"
                     style="@style/textView_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical|left"
-                    android:layout_toRightOf="@+id/img_child_label"
                     android:textColor="@color/black"
                     android:text="负责人"
                     />
@@ -56,15 +66,23 @@
             <TextView
                 android:id="@+id/tv_responser"
                 style="@style/textView_hint"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
-                android:layout_weight="0.5"
+                android:layout_weight="0.1"
                 android:drawableRight="@drawable/right_arrow"
                 android:gravity="center"
+                android:textColor="@color/title_bg1"
                 android:text="点击添加负责人"
                 />
+
         </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray0990"
+        />
 
     <Button
         android:id="@+id/btn_delete"
