@@ -320,10 +320,12 @@ public class TasksInfoActivity extends BaseActivity {
 
             if (mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
                 //负责人提交
+                btn_complete.setVisibility(View.VISIBLE);
                 btn_complete.setText("提交完成");
             } else if (mTask.getStatus() == Task.STATUS_REVIEWING
                     && IsCreator()
                     && !mTask.getCreator().getId().equals(mTask.getResponsiblePerson().getId())) {
+                btn_complete.setVisibility(View.VISIBLE);
                 btn_complete.setText("审 核");
             } else {
                 btn_complete.setVisibility(View.GONE);
@@ -757,9 +759,12 @@ public class TasksInfoActivity extends BaseActivity {
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mTask.setAttachments(attachments);
-                showAttachment();
-
+                try{
+                    mTask.setAttachments(attachments);
+                    showAttachment();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
                 break;
 
             case MSG_DISCUSSION:

@@ -73,7 +73,6 @@ public class UserFragment extends BaseFragment {
         departmentUserActivity = (DepartmentUserActivity) getActivity();
 
         StringBuffer sb = null;
-//        boolean isAddAllmate = false;
 
         for (int i = 0; i < lstUserGroupData.size(); i++) {
             if (sb == null) {
@@ -83,12 +82,6 @@ public class UserFragment extends BaseFragment {
             UserGroupData ugd = lstUserGroupData.get(i);
             sb.append(ugd.getGroupName().toUpperCase());
 
-            //在最上面增加全体成员
-//            if (StringUtil.isEmpty(ugd.getGroupName())
-//                    && departmentUserActivity.select_type == DepartmentUserActivity.TYPE_SELECT_MULTUI){
-//                isAddAllmate = true;
-//                addAllUserMate(ugd);
-//            }
         }
 
         if (sb == null) {
@@ -96,26 +89,7 @@ public class UserFragment extends BaseFragment {
         } else {
             mIndex = "#".concat(sb.toString());
         }
-
-//        if (!isAddAllmate && departmentUserActivity.select_type == DepartmentUserActivity.TYPE_SELECT_MULTUI) {
-//            UserGroupData ugd = new UserGroupData();
-//            addAllUserMate(ugd);
-//            lstUserGroupData.add(0,ugd);
-//        }
     }
-
-//    void addAllUserMate(UserGroupData ugd) {
-//        boolean isHas = false;
-//        for (User u : ugd.getLstUser()){
-//            isHas = (u.getId() == -1);
-//
-//            if (isHas) break;
-//        }
-//
-//        if (!isHas){
-//            ugd.getLstUser().add(0,new User(-1,"全体成员"));
-//        }
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -138,7 +112,7 @@ public class UserFragment extends BaseFragment {
 
                     switch (state) {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                            layout_toast.setVisibility(View.VISIBLE);
+                            //layout_toast.setVisibility(View.VISIBLE); 禁用拼音检索的 当前拼音显示
                             tv_toast.setText(sectionLetter);
                             scroll(position);
                             break;
