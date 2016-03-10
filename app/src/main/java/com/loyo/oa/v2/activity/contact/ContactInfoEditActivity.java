@@ -129,7 +129,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private String[] mounthArr = {"1", "2", "3","4", "5", "6","7", "8", "9","10", "11", "12"};
+    private String[] mounthArr = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
 
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
@@ -280,7 +280,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void showLeaveDialog() {
 
-        showGeneralDialog(false,true,getString(R.string.app_userinfoedt_message));
+        showGeneralDialog(false, true, getString(R.string.app_userinfoedt_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -590,7 +590,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
             }
-        }, year,month,day);
+        }, year, month, day);
 //        datePickerDialog.setButton("确定", new DialogInterface.OnClickListener() {
 //            @Override
 //            public void onClick(DialogInterface dialog, int which) {
