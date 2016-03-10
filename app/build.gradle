@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
 
 android {
@@ -123,4 +124,20 @@ apt {
         androidManifestFile variant.outputs[0].processResources.manifestFile
         resourcePackageName 'com.loyo.oa.v2'
     }
+//代码规范
+    check.dependsOn 'checkstyle'
+    task checkstyle(type: Checkstyle) {
+        source 'src'
+        configFile file("src/config/checkstyle.xml")
+        include '**/*.java'
+        exclude '**/gen/**'
+//        ignoreFailures true
+        classpath = files()
+
+        def configProps = ['proj.module.dir': projectDir.absolutePath]
+        configProperties configProps
+    }
+
+
+
 }

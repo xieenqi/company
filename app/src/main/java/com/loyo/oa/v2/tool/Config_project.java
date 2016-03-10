@@ -7,7 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = false; //是否是正式产品
+    public static final Boolean isRelease = true; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
@@ -83,7 +83,6 @@ public class Config_project {
 
     }
     //产品预上线环境服务器 88端口  131的是8080
-
 
     /**
      * oa 系统
