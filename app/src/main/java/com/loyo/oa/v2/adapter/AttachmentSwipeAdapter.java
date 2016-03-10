@@ -177,9 +177,15 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         if (!MainApp.user.id.equals(attachment.getCreator().getId())) {
                 holder.layout_action_delete.setVisibility(View.INVISIBLE);
         } else {
+            /*未结束*/
            if(!isOver){
                if(holder.layout_action_delete.getVisibility() == View.INVISIBLE){
                    holder.layout_action_delete.setVisibility(View.VISIBLE);
+               }
+               /*已结束*/
+           }else{
+               if(holder.layout_action_delete.getVisibility() == View.VISIBLE){
+                   holder.layout_action_delete.setVisibility(View.INVISIBLE);
                }
            }
             /**权限设置*/

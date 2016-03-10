@@ -118,8 +118,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
-    public int status;
-    private boolean isOver;
+    private boolean isOver = false;
     private workReportAddgridViewAdapter workGridViewAdapter;
 
     private ArrayList<WorkReportDyn> dynList;
@@ -290,7 +289,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
-            status = 3;
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
@@ -305,7 +303,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
 
         } else {
-            status = 0;
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
 
@@ -357,10 +354,11 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Click(R.id.layout_attachment)
     void clickAttachment() {
 
-        if(status == 3){
+        if(mWorkReport.getReviewer().getStatus().equals("1")){
             isOver = true;
         }
-
+        LogUtil.dll("status:"+mWorkReport.getReviewer().getStatus());
+        LogUtil.dll("isOver:"+isOver);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
@@ -375,10 +373,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
-
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
-        bundle.putInt("status", status);
+        bundle.putInt("status",Integer.parseInt(mWorkReport.getReviewer().getStatus()));
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);

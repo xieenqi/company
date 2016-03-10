@@ -128,7 +128,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private RadioButton rb2;
     private RadioButton rb3;
     private long beginAt, endAt;
-    private int mSelectType = 1;
+    private int mSelectType = WorkReport.DAY;
     private WeeksDialog weeksDialog = null;
     private SignInGridViewAdapter signInGridViewAdapter;
     private workReportAddgridViewAdapter workGridViewAdapter;
@@ -155,7 +155,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     gridview_workreports.setVisibility(View.VISIBLE);
                     workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
                     gridview_workreports.setAdapter(workGridViewAdapter);
-
                 }
             }
         }
@@ -205,7 +204,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 uuid = mWorkReport.getAttachmentUUId();
                 dynList = mWorkReport.getCrmDatas();
                 crm_switch.setState(null == dynList ? false : true);
-//                crm_switch.setVisibility(View.INVISIBLE);
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                 layout_crm.setVisibility(View.VISIBLE);
             }
@@ -310,7 +308,6 @@ public class WorkReportAddActivity extends BaseActivity {
             joinUserId.append(mWorkReport.getMembers().getAllData().get(i).getId() + ",");
 
         }
-
         return joinUser.toString();
 
     }
@@ -362,12 +359,22 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param b
      */
     private void crmSwitch(boolean b) {
-        /*获取日报 工作动态*/
         if (b) {
-            openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+            switch (mSelectType){
+            case WorkReport.DAY:
+                openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+                break;
+
+            case WorkReport.WEEK:
+                openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
+                break;
+
+            case WorkReport.MONTH:
+                openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
+                break;
+            }
         }
         layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
-        //SharedUtil.putBoolean(this, "showCrmData", b);
     }
 
 
@@ -545,17 +552,15 @@ public class WorkReportAddActivity extends BaseActivity {
      * 开启动态统计数据
      */
     public void openDynamic(String startTime, String endTime) {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
         map.put("endTime", endTime);
-
-        LogUtil.dll("startTime:" + startTime);
-        LogUtil.dll("endTime:" + endTime);
-
         RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
                 .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
                     @Override
                     public void success(ArrayList<WorkReportDyn> dyn, Response response) {
+                        cancelLoading();
                         HttpErrorCheck.checkResponse(response);
                         LogUtil.dll("动态工作返回：" + MainApp.gson.toJson(dyn));
                         dynList = dyn;
@@ -565,6 +570,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     @Override
                     public void failure(RetrofitError error) {
                         super.failure(error);
+                        cancelLoading();
                         HttpErrorCheck.checkError(error);
                     }
                 });
