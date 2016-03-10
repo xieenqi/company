@@ -89,5 +89,4 @@ public class ProjectDescriptionActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_TOP, 0, null);
     }
 
-
 }

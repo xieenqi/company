@@ -169,16 +169,19 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             }
         });
 
-        /*是自己的附件，才能设置权限\删除*/
-        if (!MainApp.user.equals(attachment.getCreator())) {
-            holder.layout_action_delete.setVisibility(View.INVISIBLE);
-        } else {
+        /**
+         * 是自己的附件，才能设置权限\删除
+           非开启/进行中/待点评/待审批/不通过状态下，不允许删除附件
+         */
 
-            /*非开启/进行中/待点评/待审批/不通过状态下，不允许删除附件*/
-            if(isOver){
+        if (!MainApp.user.id.equals(attachment.getCreator().getId())) {
                 holder.layout_action_delete.setVisibility(View.INVISIBLE);
-            }
-
+        } else {
+           if(!isOver){
+               if(holder.layout_action_delete.getVisibility() == View.INVISIBLE){
+                   holder.layout_action_delete.setVisibility(View.VISIBLE);
+               }
+           }
             /**权限设置*/
             holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
                 @Override
