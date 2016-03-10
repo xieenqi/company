@@ -39,10 +39,6 @@ public interface IAttachment {
     @PUT("/attachment/{id}/public/{isopen}")
     void pub(@Path("id") String id,@Path("isopen") int isOpen, retrofit.Callback<Attachment> cb);
 
-    //删除附件
-/*    @DELETE("/attachment/{id}")
-    void remove(@Path("id") String id, retrofit.Callback<Attachment> cb);*/
-
     //删除附件(新加入UUID)
     @DELETE("/attachment/{id}")
     void remove(@Path("id") String id,@QueryMap HashMap<String,Object> map, retrofit.Callback<Attachment> cb);

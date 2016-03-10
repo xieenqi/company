@@ -104,25 +104,22 @@ public class WorkReportsInfoActivity extends BaseActivity {
     EditText edt_workReport_title;
     @ViewById
     EditText edt_content;
-    //    @ViewById
-//    WebView webView_content;
     @ViewById
     RatingBar ratingBar_workReport;
     @ViewById
     ViewGroup no_dysndata_workreports;
-    //统计数据
     @ViewById
     TextView tv_crm;
     @ViewById
     GridView info_gridview_workreports;
-    //@Extra("workreport")
-    WorkReport mWorkReport;
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String workReportId;//推送的id
 
+    public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
     public int status;
+    private boolean isOver;
     private workReportAddgridViewAdapter workGridViewAdapter;
 
     private ArrayList<WorkReportDyn> dynList;
@@ -218,8 +215,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("报告详情");
-
-        //info_gridview_workreports = (GridView) findViewById(R.id.info_gridview_workreports);
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
@@ -361,14 +356,18 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
+
+        if(status == 3){
+            isOver = true;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", isCreater());
-        bundle.putInt("fromPage", Common.WORK_PAGE);
-        bundle.putInt("status", status);
         bundle.putInt("bizType", 1);
+        bundle.putBoolean("isOver",isOver);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
+
     }
 
     /**
@@ -376,6 +375,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
+
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
         bundle.putInt("status", status);

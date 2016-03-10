@@ -63,6 +63,7 @@ public class LauncherActivity extends BaseActivity {
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
+
                 }
 
                 @Override

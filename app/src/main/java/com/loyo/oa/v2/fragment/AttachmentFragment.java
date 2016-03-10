@@ -60,10 +60,8 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private ArrayList<Attachment> mAttachments = new ArrayList<>();
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
-    private int goneBtn = 1;
     private int bizType = 5;
-
-    private Handler mHandler = null;
+    private boolean isOver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,16 +83,18 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         onLoadSuccess(mListAttachment.size());
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
         ArrayList<User> users = Common.getUsersByProject(mProject);
-        boolean hasRights = checkRights();
+        LogUtil.dll("project status:"+mProject.status);
+
+        if(mProject.status == 2){
+            isOver = true;
+        }
 
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights, goneBtn,bizType,mProject.attachmentUUId);
-
+            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this,bizType,mProject.attachmentUUId,isOver);
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);
             adapter.setUsers(users);
-            adapter.setHasRights(hasRights);
             adapter.notifyDataSetChanged();
         }
 
@@ -182,7 +182,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
             mListViewAttachment = (SwipeListView) mView.findViewById(R.id.listView_attachment);
             layout_upload = (ViewGroup) mView.findViewById(R.id.layout_upload);
             layout_upload.setOnClickListener(this);
-
             getData();
         }
         return mView;
