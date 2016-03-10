@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_grey_200"
+    tools:context="com.loyo.oa.v2.activity.discussDet.ActivityDiscussDet">
+
+    <include
+        android:id="@+id/actionbar"
+        layout="@layout/include_common_title_2"></include>
+
+    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView
+        android:id="@+id/lv_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_edit"
+        android:layout_below="@+id/actionbar"
+        android:clickable="false" />
+
+    <LinearLayout
+        android:id="@+id/ll_edit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_48"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginRight="@dimen/dimen_4"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/et_discuss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:hint="请输入讨论内容"
+                android:singleLine="true"
+                android:textColor="@color/text_black_1"
+                android:textColorHint="@color/text_black_3" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1"
+                android:layout_below="@+id/et_discuss"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:background="#d5d5d5"></View>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_send"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dimen_4"
+            android:paddingRight="@dimen/dimen_8"
+            android:text="发送"
+            android:textSize="@dimen/text_sp18"
+            android:textColor="@color/col_discuss_send"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

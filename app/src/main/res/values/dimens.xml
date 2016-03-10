@@ -87,5 +87,6 @@
     <dimen name="dimen_150">150dp</dimen>
     <dimen name="dimen_160">160dp</dimen>
     <dimen name="dimen_200">200dp</dimen>
+    <dimen name="dimen_7">7dp</dimen>
 
 </resources>

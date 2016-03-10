@@ -553,7 +553,7 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
@@ -649,7 +649,9 @@
             android:name="com.amap.api.v2.apikey"
             android:value="2d8b80512b2c5a6110c177828b56bc01" />
 
-        <activity android:name=".activity.discuss.ActivityMyDiscuss"></activity>
+        <activity android:name=".activity.discuss.ActivityMyDiscuss" />
+        <activity android:name=".activity.hait.ActivityHait" />
+        <activity android:name=".activity.discussDet.ActivityDiscussDet"></activity>
     </application>
 
 </manifest>

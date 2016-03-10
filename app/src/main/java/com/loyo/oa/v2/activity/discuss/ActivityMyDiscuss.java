@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.discuss;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.discussDet.ActivityDiscussDet;
+import com.loyo.oa.v2.activity.hait.ActivityHait;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -51,7 +54,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_mydiscuss);
         initData();
         initView();
-        listener();
+        initListener();
     }
 
     private void initData() {
@@ -80,11 +83,13 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         lvNotice.getRefreshableView().setAdapter(adapter);
     }
 
-    private void listener() {
+    private void initListener() {
         layoutBack.setOnClickListener(this);
         tvEdit.setOnClickListener(this);
 
         lvNotice.setOnRefreshListener(this);
+
+
     }
 
     @Override
@@ -92,7 +97,9 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         if (v == layoutBack) {
             finish();
         } else if (v == tvEdit) {
-            Toast("@我的");
+//            Toast("@我的");
+            Intent intent = new Intent(this, ActivityHait.class);
+            startActivity(intent);
         }
     }
 
@@ -116,7 +123,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         }, 2000);
     }
 
-    private static class DiscussViewHolder extends RecyclerView.ViewHolder {
+    private class DiscussViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivIcon;
         private View viewMsgpoint;
         private TextView tvTitle;
@@ -131,6 +138,12 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
             tvContent = (TextView) itemView.findViewById(R.id.tv_content);
             itemView.setTag(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityDiscussDet.startThisActivity(ActivityMyDiscuss.this);
+                }
+            });
         }
     }
 
