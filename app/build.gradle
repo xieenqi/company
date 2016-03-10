@@ -137,7 +137,4 @@ apt {
         def configProps = ['proj.module.dir': projectDir.absolutePath]
         configProperties configProps
     }
-
-
-
 }
