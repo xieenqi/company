@@ -67,6 +67,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtil.err("当前activity -- " + getClass().getSimpleName() + " -- " + getClass().getPackage());
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);

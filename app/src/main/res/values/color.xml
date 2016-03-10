@@ -357,4 +357,8 @@
     <color name="gray0990">#E7E7E7</color>
 
 
+    <color name="text_black_1">#dd020202</color>
+    <color name="text_black_2">#98020202</color>
+    <color name="text_black_3">#56020202</color>
+
 </resources>

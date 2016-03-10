@@ -25,8 +25,10 @@ public class LogUtil {
         }
     }
 
-    /** 用于 输出 日志 方便
-     *xnq
+    /**
+     * 用于 输出 日志 方便
+     * xnq
+     *
      * @param text
      */
     public static void d(String text) {
@@ -35,7 +37,7 @@ public class LogUtil {
         }
     }
 
-    public static void d(String TAG,String text) {
+    public static void d(String TAG, String text) {
         if (LogoStatus) {
             Log.d(TAG, text);
         }
@@ -218,5 +220,11 @@ public class LogUtil {
         Log.d("LOG", str);
     }
 
-    public static void dee(String str) { Log.d("TOP", str); }
+    public static void dee(String str) {
+        Log.d("TOP", str);
+    }
+
+    public static void err(String str) {
+        Log.e("TOP", str);
+    }
 }

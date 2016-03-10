@@ -33,6 +33,7 @@ import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
@@ -52,8 +53,6 @@ import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
-import com.loyo.oa.v2.beans.Modules;
-import com.loyo.oa.v2.beans.Suites;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
@@ -962,7 +961,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
-                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class),
+                // TODO: 添加我的讨论界面
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class)));
 
         if (MainApp.user == null) {
             return;
@@ -1022,37 +1023,37 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 业务使用权限 判断设置
      */
     public void testJurl() {
-        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
-                0 == MainApp.user.permission.suites.size()) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    testJurl();
-                }
-            }, 5000);
-            LogUtil.d("没有配置权限");
-            return;
-        }
-
-        ArrayList<ClickItem> itemsNew = new ArrayList<>();
-        ArrayList<Suites> suitesNew = new ArrayList<>();
-        suitesNew.add(MainApp.user.permission.suites.get(1));
-        suitesNew.add(MainApp.user.permission.suites.get(0));
-        suitesNew.add(MainApp.user.permission.suites.get(2));
-        for (int i = 0; i < suitesNew.size(); i++) {
-            for (int k = 0; k < items.size(); k++) {
-                for (Modules modules : suitesNew.get(i).getModules()) {
-                    if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
-                        itemsNew.add(items.get(k));
-                        continue;
-                    }
-                }
-            }
-        }
-
-        items.clear();
-        items = itemsNew;
+//        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
+//                0 == MainApp.user.permission.suites.size()) {
+//            Timer timer = new Timer();
+//            timer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    testJurl();
+//                }
+//            }, 5000);
+//            LogUtil.d("没有配置权限");
+//            return;
+//        }
+//
+//        ArrayList<ClickItem> itemsNew = new ArrayList<>();
+//        ArrayList<Suites> suitesNew = new ArrayList<>();
+//        suitesNew.add(MainApp.user.permission.suites.get(1));
+//        suitesNew.add(MainApp.user.permission.suites.get(0));
+//        suitesNew.add(MainApp.user.permission.suites.get(2));
+//        for (int i = 0; i < suitesNew.size(); i++) {
+//            for (int k = 0; k < items.size(); k++) {
+//                for (Modules modules : suitesNew.get(i).getModules()) {
+//                    if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
+//                        itemsNew.add(items.get(k));
+//                        continue;
+//                    }
+//                }
+//            }
+//        }
+//
+//        items.clear();
+//        items = itemsNew;
         lv_main.setAdapter(adapter);//为了业务使用权限
         lv_main.setDragEnabled(true);
         cancelLoading();
