@@ -95,7 +95,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
 
-    public boolean isOver;
+    public boolean isOver = false;
     public String userId;
     public WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
     public ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();

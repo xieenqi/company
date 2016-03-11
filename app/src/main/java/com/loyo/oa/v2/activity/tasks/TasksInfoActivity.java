@@ -127,7 +127,7 @@ public class TasksInfoActivity extends BaseActivity {
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
 
-    private boolean isOver;
+    private boolean isOver = false;
     private int statusSize;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
@@ -872,7 +872,6 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-
         if(null == mTask){
             return;
         }

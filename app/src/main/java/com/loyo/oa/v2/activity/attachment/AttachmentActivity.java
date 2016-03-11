@@ -71,7 +71,6 @@ public class AttachmentActivity extends BaseActivity {
         }
         setTouchView(NO_SCROLL);
         getAttachments();
-
     }
 
     /**
