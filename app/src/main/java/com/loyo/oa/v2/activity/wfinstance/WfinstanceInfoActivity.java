@@ -95,13 +95,12 @@ public class WfinstanceInfoActivity extends BaseActivity {
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
 
+    public boolean isOver = false;
     public String userId;
     public WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
     public ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
     public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
     public ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
-
-    //@Extra("data")
     public WfInstance wfInstance;
 
     @Extra(ExtraAndResult.EXTRA_ID)
@@ -399,16 +398,18 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             /*附件上传*/
             case R.id.layout_AttachFile:
+
+                if(wfInstance.status == 2 || wfInstance.status == 4 || wfInstance.status == 5){
+                    isOver = true;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("data", wfInstance.attachments);
                 bundle.putSerializable("uuid", wfInstance.attachmentUUId);
-                bundle.putBoolean("isMyUser", isCreater());
-                bundle.putInt("fromPage", Common.WFIN_PAGE);
-                bundle.putInt("goneBtn",1);
-                bundle.putInt("status",wfInstance.status);
+                bundle.putBoolean("isOver",isOver);
                 bundle.putInt("bizType",12);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
+
         }
     }
 

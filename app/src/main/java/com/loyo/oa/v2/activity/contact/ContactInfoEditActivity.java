@@ -1,11 +1,8 @@
 package com.loyo.oa.v2.activity.contact;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -21,7 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -42,14 +38,12 @@ import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -135,7 +129,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private String[] mounthArr = {"1", "2", "3","4", "5", "6","7", "8", "9","10", "11", "12"};
+    private String[] mounthArr = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
 
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
@@ -286,7 +280,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void showLeaveDialog() {
 
-        showGeneralDialog(false,true,getString(R.string.app_userinfoedt_message));
+        showGeneralDialog(false, true, getString(R.string.app_userinfoedt_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -595,9 +589,20 @@ public class ContactInfoEditActivity extends BaseActivity {
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
-
             }
-        }, year,month,day);
+        }, year, month, day);
+//        datePickerDialog.setButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
+//        datePickerDialog.setButton2("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
         datePickerDialog.show();
     }
 

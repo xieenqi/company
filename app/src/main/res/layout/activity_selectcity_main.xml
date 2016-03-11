@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/dialog_blue"
+         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="地区选择"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <com.loyo.oa.v2.tool.wheel.WheelView
+            android:id="@+id/id_province"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+        </com.loyo.oa.v2.tool.wheel.WheelView>
+
+        <com.loyo.oa.v2.tool.wheel.WheelView
+            android:id="@+id/id_city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </com.loyo.oa.v2.tool.wheel.WheelView>
+
+        <com.loyo.oa.v2.tool.wheel.WheelView
+            android:id="@+id/id_district"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </com.loyo.oa.v2.tool.wheel.WheelView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dimen_1"
+        android:background="@color/gray0990"
+        />
+
+    <TextView
+        android:id="@+id/btn_confirm"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="确定"
+        android:textColor="@color/dialog_blue"
+        android:background="@drawable/attendance_popview_selector"
+        />
+</LinearLayout>

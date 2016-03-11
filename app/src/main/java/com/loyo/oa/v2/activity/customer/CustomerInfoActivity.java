@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.activity.customer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -27,7 +24,6 @@ import com.loyo.oa.v2.beans.Locate;
 import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -37,14 +33,11 @@ import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ExtraDataView;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
-import com.loyo.oa.v2.tool.customview.multi_level_interaction_menu.DialogFragmentAreaCast;
-
+import com.loyo.oa.v2.tool.customview.SelectCityView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -53,12 +46,10 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -191,29 +182,22 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     /**
-     * 加载地区编码
+     * 显示地区选择Dialog
      */
     void loadAreaCodeTable() {
-        Utils.dialogShow(this,"请稍候");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
-            @Override
-            public void success(ArrayList<Province> provinces, Response response) {
-                HttpErrorCheck.checkResponse(response);
-                Utils.dialogDismiss();
-                new DialogFragmentAreaCast().show(provinces, getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
-                    @Override
-                    public void onMenuSelected(Object o) {
-                        regional = (CustomerRegional) o;
-                        tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
-                    }
-                });
-            }
 
+        final SelectCityView selectCityView = new SelectCityView(this);
+        selectCityView.setCanceledOnTouchOutside(true);
+        selectCityView.show();
+        selectCityView.setOnclickselectCity(new View.OnClickListener() {
             @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-                Utils.dialogDismiss();
+            public void onClick(View view) {
+                String cityArr[] = selectCityView.getResult();
+                tv_district.setText(cityArr[0]+" "+cityArr[1]+" "+cityArr[2]);
+                regional.province = cityArr[0];
+                regional.city = cityArr[1];
+                regional.county = cityArr[2];
+                selectCityView.dismiss();
             }
         });
     }
@@ -302,7 +286,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
         // }
         if (regional.province != null) {
-            tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
+            tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
         tv_industry.setText(industry.getName());
         edt_customer_memo.setText(mCustomer.summary);

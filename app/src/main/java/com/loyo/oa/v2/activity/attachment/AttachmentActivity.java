@@ -49,20 +49,11 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("uuid")
     String uuid;
 
-    @Extra("isMyUser")
-    boolean isMyUser;
-
-    @Extra("fromPage")
-    int fromPage;
-
-    @Extra("goneBtn")
-    int goneBtn;
-
-    @Extra("status")
-    int status;
-
     @Extra("bizType")
     int bizType;
+
+    @Extra("isOver")
+    boolean isOver; //当前业务已经结束
 
     @ViewById(R.id.listView_attachment)
     SwipeListView mListViewAttachment;
@@ -75,14 +66,11 @@ public class AttachmentActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("附件");
-
-        if (status == 3 || status == 4) {
+        if (isOver) {
             tv_upload.setVisibility(View.GONE);
         }
-        LogUtil.d("权限:" + status);
         setTouchView(NO_SCROLL);
         getAttachments();
-
     }
 
     /**
@@ -121,7 +109,7 @@ public class AttachmentActivity extends BaseActivity {
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, goneBtn,bizType,uuid);
+            adapter = new AttachmentSwipeAdapter(mContext,mListAttachment,mUserList,bizType,uuid,isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(Attachment attachment) {
@@ -137,9 +125,6 @@ public class AttachmentActivity extends BaseActivity {
         } else {
             adapter.setData(mListAttachment);
             adapter.notifyDataSetChanged();
-        }
-        if (status == 3 || status == 4) {
-            adapter.setHasRights(false);
         }
     }
 

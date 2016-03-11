@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="province_line_border">#C7C7C7</color>
     <color name="white60">#4dffffff</color>
     <color name="white95">#e6ffffff</color>
     <color name="white">#FFFFFF</color>

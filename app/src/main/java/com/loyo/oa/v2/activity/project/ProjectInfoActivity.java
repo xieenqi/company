@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -64,15 +66,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById TextView tv_project_title;
     @ViewById TextView tv_project_extra;
     @ViewById ImageView img_project_status;
-
     @Extra("projectId") String projectId;
     HttpProject project;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
-
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
-
 
     @AfterViews
     void initViews() {
@@ -86,9 +85,11 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目 详细数据
      */
     private void getProject() {
+        DialogHelp.showLoading(this,"",true);
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
             public void success(HttpProject _project, Response response) {
+                DialogHelp.cancelLoading();
                 HttpErrorCheck.checkResponse("项目详情 ", response);
                 project = _project;
                 img_title_right.setEnabled(true);
@@ -98,8 +99,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                DialogHelp.cancelLoading();
                 HttpErrorCheck.checkError(error);
-                //Global.Toast("获取项目失败");
             }
         });
     }
@@ -154,6 +155,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     private void initData(HttpProject project) {
         if (null == project) {
+            LogUtil.dll("return 了");
             return;
         }
         if (adapter == null) {
@@ -184,7 +186,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 callbacks.add(fragmentX);
                 fragmentXes.add(fragmentX);
             }
-            tabs.setTextSize(app.spTopx(18));
+            tabs.setTextSize(app.spTopx(13));//tab文字大小
+            tabs.setDividerColor(getResources().getColor(R.color.white));//间隔条的颜色
             adapter = new MyPagerAdapter(getSupportFragmentManager());
             pager.setAdapter(adapter);
         } else {
@@ -229,7 +232,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     @Override
     public void onLoadSuccess(int id, int size) {
-        LogUtil.d("项目 table ->id : " + id + " size : " + size);
         int idexS = TITLES[id].indexOf("(");
         int idexE = TITLES[id].lastIndexOf(")");
         String c = TITLES[id].substring(idexS + 1, idexE);
@@ -279,8 +281,10 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
                     app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
                             TasksInfoActivity.REQUEST_EDIT, bundle);
-                } else if (data.getBooleanExtra("delete", false)) {
-                    //删除
+                }
+
+                /*删除回调*/
+                else if (data.getBooleanExtra("delete", false)) {
                     app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
                         @Override
                         public void success(Project o, Response response) {
@@ -294,24 +298,28 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                             HttpErrorCheck.checkError(error);
                         }
                     });
-                } else if (data.getBooleanExtra("extra", false)) {
-                    //结束任务或重启任务
+                }
+
+                /*结束任务或重启任务*/
+                else if (data.getBooleanExtra("extra", false)) {
+                    DialogHelp.showLoading(this, "", true);
                     app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
                         @Override
                         public void success(Project o, Response response) {
+                            DialogHelp.cancelLoading();
                             HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                             project.status = (project.status == 1 ? 0 : 1);
-                            initViews();
+                            restartActivity();//重启Activity
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
+                            DialogHelp.cancelLoading();
                             Toast("有任务未结束,不能结束项目!");
                             HttpErrorCheck.checkError(error);
                         }
                     });
                 }
-
                 break;
         }
     }

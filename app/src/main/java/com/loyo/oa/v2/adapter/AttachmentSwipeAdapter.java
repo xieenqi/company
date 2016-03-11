@@ -53,23 +53,22 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
     private MainApp app;
     private AttachmentAction mAction;
     private OnRightClickCallback callback;
-    private int goneBtn; //隐藏对应的按钮 1:权限 2:删除
     private int bizType;
+    private boolean isOver;
     private String uuid;
-    private boolean hasRights = true;
 
     public interface OnRightClickCallback {
         void onRightClick(Bundle b);
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int _goneBtn, int bizType,String uuid) {
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int bizType,String uuid,boolean isOver) {
         super();
         mAttachments = _attachments;
         mContext = _context;
         app = (MainApp) _context.getApplicationContext();
-        this.goneBtn = _goneBtn;
         this.bizType = bizType;
         this.uuid = uuid;
+        this.isOver = isOver;
 
         if (_users != null) {
             users = _users;
@@ -77,14 +76,9 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback, boolean hasRights, int _goneBtn,int _bizType,String _uuid) {
-        this(_context, _attachments, _users, _goneBtn,_bizType,_uuid);
-        this.hasRights = hasRights;
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback,int _bizType,String _uuid,boolean _isOver) {
+        this(_context, _attachments, _users,_bizType,_uuid,_isOver);
         callback = _callback;
-    }
-
-    public void setHasRights(boolean hasRights) {
-        this.hasRights = hasRights;
     }
 
     public void setData(ArrayList<Attachment> attachments) {
@@ -175,20 +169,25 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             }
         });
 
-        /*只有附件的上传人是自已，才可以设置权限*/
-        if (!MainApp.user.equals(attachment.getCreator())) {
-            holder.layout_action_update.setVisibility(View.INVISIBLE);
-            holder.layout_action_delete.setVisibility(View.INVISIBLE);
+        /**
+         * 是自己的附件，才能设置权限\删除
+           非开启/进行中/待点评/待审批/不通过状态下，不允许删除附件
+         */
+
+        if (!MainApp.user.id.equals(attachment.getCreator().getId())) {
+                holder.layout_action_delete.setVisibility(View.INVISIBLE);
         } else {
-            /*暂时弃用附件权限*/
-            /*holder.layout_action_update.setVisibility(View.VISIBLE);
-            holder.layout_action_delete.setVisibility(View.VISIBLE);*/
-
-            /*客户管理里面，没有权限功能，需禁用*/
-            if (goneBtn == 1) {
-                holder.layout_action_update.setVisibility(View.INVISIBLE);
-            }
-
+            /*未结束*/
+           if(!isOver){
+               if(holder.layout_action_delete.getVisibility() == View.INVISIBLE){
+                   holder.layout_action_delete.setVisibility(View.VISIBLE);
+               }
+               /*已结束*/
+           }else{
+               if(holder.layout_action_delete.getVisibility() == View.VISIBLE){
+                   holder.layout_action_delete.setVisibility(View.INVISIBLE);
+               }
+           }
             /**权限设置*/
             holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
                 @Override

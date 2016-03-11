@@ -237,18 +237,21 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_children_task"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_row_margin_top"
-                android:background="@color/white"
-                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:orientation="horizontal">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="15dp"
+                android:background="@color/activity_bg"
+                />
+
+            <LinearLayout
+                android:id="@+id/layout_child_add_action"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@drawable/attendance_popview_selector"
+                >
 
                     <TextView
                         style="@style/text_item1"
@@ -264,26 +267,25 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="0"/>
+                        android:text=""/>
 
-                    <LinearLayout
-                        android:id="@+id/layout_child_add_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical">
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="25dp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="@dimen/dimen_20"
                             android:layout_marginRight="@dimen/dimen_20"
                             android:scaleType="centerInside"
                             android:src="@drawable/img_add"/>
 
-                    </LinearLayout>
+            </LinearLayout>
 
-                </LinearLayout>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/beogray"
+                    />
 
                 <LinearLayout
                     android:id="@+id/layout_child_Add_area"
@@ -299,12 +301,6 @@
                     android:visibility="gone"
                     >
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="10dp"
-                        android:background="@color/beogray"
-                        />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -319,13 +315,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"/>
-
                 </LinearLayout>
 
-            </LinearLayout>
 
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/btn_complete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

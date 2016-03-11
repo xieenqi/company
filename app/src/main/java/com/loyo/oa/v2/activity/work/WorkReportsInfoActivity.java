@@ -104,25 +104,21 @@ public class WorkReportsInfoActivity extends BaseActivity {
     EditText edt_workReport_title;
     @ViewById
     EditText edt_content;
-    //    @ViewById
-//    WebView webView_content;
     @ViewById
     RatingBar ratingBar_workReport;
     @ViewById
     ViewGroup no_dysndata_workreports;
-    //统计数据
     @ViewById
     TextView tv_crm;
     @ViewById
     GridView info_gridview_workreports;
-    //@Extra("workreport")
-    WorkReport mWorkReport;
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String workReportId;//推送的id
 
+    public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
-    public int status;
+    private boolean isOver = false;
     private workReportAddgridViewAdapter workGridViewAdapter;
 
     private ArrayList<WorkReportDyn> dynList;
@@ -218,8 +214,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("报告详情");
-
-        //info_gridview_workreports = (GridView) findViewById(R.id.info_gridview_workreports);
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
@@ -295,7 +289,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
-            status = 3;
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
@@ -310,7 +303,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
 
         } else {
-            status = 0;
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
 
@@ -361,14 +353,19 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
+
+        if(mWorkReport.getReviewer().getStatus().equals("1")){
+            isOver = true;
+        }
+        LogUtil.dll("status:"+mWorkReport.getReviewer().getStatus());
+        LogUtil.dll("isOver:"+isOver);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", isCreater());
-        bundle.putInt("fromPage", Common.WORK_PAGE);
-        bundle.putInt("status", status);
         bundle.putInt("bizType", 1);
+        bundle.putBoolean("isOver",isOver);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
+
     }
 
     /**
@@ -378,7 +375,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
-        bundle.putInt("status", status);
+        bundle.putInt("status",Integer.parseInt(mWorkReport.getReviewer().getStatus()));
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);

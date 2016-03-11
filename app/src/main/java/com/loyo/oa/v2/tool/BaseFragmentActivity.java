@@ -138,7 +138,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
 //        main_layout = (DrawerLayout) findViewById(R.id.main_layout);
 //        f = this.findViewById(R.id.navigation_drawer);
     }
@@ -174,31 +173,26 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     public boolean dispatchTouchEvent(MotionEvent event) {
-        //如果筛选弹出
-
         switch (event.getAction()) {
+
+            /*获取手指触点左边*/
             case MotionEvent.ACTION_DOWN:
                 xDistance = yDistance = 0f;
                 xLast = event.getX();
                 yLast = event.getY();
                 break;
-            case MotionEvent.ACTION_MOVE:
-                final float curX = event.getX();
-                final float curY = event.getY();
 
+            /*禁用左滑finish*/
+            case MotionEvent.ACTION_MOVE:
+/*              final float curX = event.getX();
+                final float curY = event.getY();
                 xDistance += Math.abs(curX - xLast);
                 yDistance += Math.abs(curY - yLast);
                 if (curX > xLast && xDistance > yDistance && xDistance > 180) {
-
-//                    if (main_layout != null && f != null && main_layout.isDrawerOpen(f)) {
-//                        main_layout.closeDrawers();
-//                    } else if (mTouchViewGroupId == 0) {
                     app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-//                    }
-
                 }
                 xLast = curX;
-                yLast = curY;
+                yLast = curY;*/
         }
 
         return super.dispatchTouchEvent(event);
@@ -241,7 +235,6 @@ public class BaseFragmentActivity extends FragmentActivity {
                         xLast = curX;
                         yLast = curY;
                 }
-                Toast("返回了  啊啊"+mTouchViewGroupId);
                 return true;
             }
         });
@@ -274,5 +267,15 @@ public class BaseFragmentActivity extends FragmentActivity {
         generalPopView.show();
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
+    }
+
+    /*重启当前Activity*/
+    public void restartActivity(){
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 }

@@ -32,6 +32,7 @@ import java.util.ArrayList;
  * 时间 : 15/8/24.
  */
 public class ContactsActivity extends BaseFragmentActivity implements View.OnClickListener {
+
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
     private ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
@@ -40,7 +41,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     private ViewPager pager;
     private MyPagerAdapter adapter;
     private MainApp app = MainApp.getMainApp();
-
     private int departmentsSize;
     private int myDepartmentContactsSize;
 
@@ -89,9 +89,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      * 获取部门数量和本部门人员数量
      */
     void getUserAndDepartmentSize() {
-
         myDepartmentContactsSize = Common.getMyUserDept().size();
-
         if (MainApp.lstDepartment != null) {//公司所有的人员数量
             for (Department element : MainApp.lstDepartment) {
                 if (element.getUsers() != null) {

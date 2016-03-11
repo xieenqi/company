@@ -863,7 +863,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
             holder.layout_item.setRippleDuration(100);
             holder.layout_item.setRippleColor(R.color.title_bg1);
-
             holder.img_item.setImageDrawable(getResources().getDrawable(item.imageViewRes));
             holder.tv_item.setText(item.title);
             holder.layout_item.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
