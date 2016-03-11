@@ -347,8 +347,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 赢单审批 信息
+     * @param wfData
+     */
     private void wfData(WfInstance wfData) {
         List<String> wfList = new ArrayList<>();
+        wfList.add("产品名称：" + wfData.demand.productName);
         wfList.add("预估：数量 " + wfData.demand.estimatedNum + "   单价：" + wfData.demand.estimatedPrice + " 元/" + wfData.demand.unit);
         wfList.add("预估：数量 " + wfData.demand.actualNum + "   单价：" + wfData.demand.actualPrice + " 元/" + wfData.demand.unit);
         for (String text : wfList) {
