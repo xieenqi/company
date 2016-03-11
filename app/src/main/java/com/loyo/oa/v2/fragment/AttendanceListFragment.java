@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
@@ -37,12 +38,14 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -67,7 +70,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private AttendanceList attendanceList;
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private AttendanceListAdapter adapter;
-
     private int qtime, page = 1;
     private int type;//我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;//是否下拉刷新 默认是
@@ -177,6 +179,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         tv_unattendance.setText(attendanceList.getNoreCcount() + "");
         tv_field_work.setText(attendanceList.getOutsidecount() + "");
         tv_leave_overtime.setText(attendanceList.getExtraCount() + "");
+
     }
 
 
@@ -324,6 +327,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 绑定数据
      */
     private void bindData() {
+
         if (null == adapter) {
             adapter = new AttendanceListAdapter();
             lv.setAdapter(adapter);
@@ -341,8 +345,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
     /**
      * 获取团队集合数据
-     * */
-    private void getTeamData(){
+     */
+    private void getTeamData() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getTeamCount(new RCallback<AttendanceList>() {
             @Override
             public void success(AttendanceList attendanceLists, Response response) {
@@ -375,10 +379,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                if(type == 1){
+                if (type == 1) {
                     attendanceList = result.records;
                     initStatistics();
-                }else{
+                } else {
                     getTeamData();
                 }
 
@@ -407,7 +411,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * @param inOrOut
      * @param attendance
      */
-    private void previewAttendance(int inOrOut, DayofAttendance attendance,String overTime) {
+    private void previewAttendance(int inOrOut, DayofAttendance attendance, String overTime) {
         if (type == 1) {
             attendance.setUser(MainApp.user);
         }
@@ -424,6 +428,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
+
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
             page = 1;
             getData(page);
@@ -454,17 +459,20 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 view = LayoutInflater.from(mActivity).inflate(R.layout.item_attendance_info, viewGroup, false);
             }
 
+            int inTagstate = 0;
+            int outTagstate = 0;
+
             final DayofAttendance attendance = (DayofAttendance) getItem(i);
             final AttendanceRecord recordIn = attendance.getIn();
             final AttendanceRecord recordOut = attendance.getOut();
 
-            ViewGroup layout_overtime = ViewHolder.get(view,R.id.layout_overtime);//加班
+            ViewGroup layout_overtime = ViewHolder.get(view, R.id.layout_overtime);//加班
             ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);//上班
             ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);//下班
             layout_recordIn.setOnTouchListener(Global.GetTouch());
             layout_recordOut.setOnTouchListener(Global.GetTouch());
 
-            final TextView tv_overtime = ViewHolder.get(view,R.id.overtime);//加班时间显示
+            final TextView tv_overtime = ViewHolder.get(view, R.id.overtime);//加班时间显示
             TextView tv_title = ViewHolder.get(view, R.id.tv_title);
             TextView tv_result = ViewHolder.get(view, R.id.tv_result);
             TextView tv_time1 = ViewHolder.get(view, R.id.tv_time1);
@@ -476,26 +484,26 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             ImageView iv_recordOut_type = ViewHolder.get(view, R.id.iv_record_out_type);
             ImageView divider = ViewHolder.get(view, R.id.devider);
 
-            iv_extra.setVisibility(View.INVISIBLE);
-
             boolean isHasOut = true;
             boolean isHasIn = true;
             String overTimes = "--";
             int color = getActivity().getResources().getColor(R.color.gray);
 
             //加班时间
-            if(recordOut != null){
+            if (recordOut != null) {
+                outTagstate = recordOut.getTagstate();
+                LogUtil.dll("Out TagState:"+outTagstate);
+
                 int extraTime = recordOut.getExtraTime();
-                if(extraTime > 60){
-                    overTimes = extraTime/60+"小时"+extraTime%60+"分";
-                }else if(extraTime != 0){
-                    overTimes = extraTime+"分钟";
+                if (extraTime > 60) {
+                    overTimes = extraTime / 60 + "小时" + extraTime % 60 + "分";
+                } else if (extraTime != 0) {
+                    overTimes = extraTime + "分钟";
                 }
 
-                if(recordOut.getExtraState() == 1){
+                if (recordOut.getExtraState() == 1) {
                     color = getActivity().getResources().getColor(R.color.gray);
-                }
-                else if(recordOut.getExtraState() == 2){
+                } else if (recordOut.getExtraState() == 2) {
                     color = getActivity().getResources().getColor(R.color.red);
                 }
             }
@@ -515,6 +523,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             /**上班卡*/
             if (null != recordIn) {
+                inTagstate = recordIn.getTagstate();
+                LogUtil.dll("In TagState:"+inTagstate);
                 isHasIn = true;
                 String moring = "未打卡";
                 if (recordIn.getState() == AttendanceRecord.STATE_BE_LATE) {
@@ -536,7 +546,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     iv_recordIn_type.setImageResource(R.drawable.icon_field_work_unconfirm);
                 }
                  /*内勤*/
-                else if(recordIn.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK){
+                else if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
                     iv_recordIn_type.setVisibility(View.INVISIBLE);
                 }
             } else {
@@ -545,7 +555,20 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 tv_time.setText("--");
             }
 
-            tv_state.setVisibility(isHasIn?View.VISIBLE:View.GONE);
+            int image = 0;
+
+            /**
+             * 请假 出差判断
+             * */
+            if (outTagstate == 1 || inTagstate == 1) {
+                LogUtil.dll("TagState:"+outTagstate+","+inTagstate);
+                image = R.drawable.icon_ask_overwork;
+            } else if (outTagstate == 2 || inTagstate == 2) {
+                image = R.drawable.icon_ask_for_leave;
+            }
+
+            iv_extra.setBackgroundResource(image);
+            tv_state.setVisibility(isHasIn ? View.VISIBLE : View.GONE);
 
             /**下班卡*/
             if (null != recordOut && recordOut.getState() != 5) {
@@ -574,7 +597,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     iv_recordOut_type.setImageResource(R.drawable.icon_field_work_unconfirm);
                 }
                 /*内勤*/
-                else if(recordOut.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK){
+                else if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
                     iv_recordOut_type.setVisibility(View.INVISIBLE);
                 }
 
@@ -583,7 +606,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 iv_recordOut_type.setVisibility(View.INVISIBLE);
                 tv_time1.setText("--");
             }
-            tv_result.setVisibility(isHasOut?View.VISIBLE:View.GONE);
+            tv_result.setVisibility(isHasOut ? View.VISIBLE : View.GONE);
 
             if (i == getCount() - 1) {
                 divider.setVisibility(View.INVISIBLE);
@@ -594,21 +617,21 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             /**按键监听*/
             /*加班*/
-                layout_overtime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (null != recordOut && recordOut.getExtraTime() != 0) {
-                            previewAttendance(3, attendance, tv_overtime.getText().toString());
-                        }
+            layout_overtime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordOut && recordOut.getExtraTime() != 0) {
+                        previewAttendance(3, attendance, tv_overtime.getText().toString());
                     }
-                });
+                }
+            });
 
             /*上班*/
             layout_recordIn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (null != recordIn) {
-                        previewAttendance(1, attendance,"");
+                        previewAttendance(1, attendance, "");
                     }
                 }
             });
@@ -618,7 +641,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 @Override
                 public void onClick(View view) {
                     if (null != recordOut && recordOut.getState() != 5) {
-                        previewAttendance(2, attendance,"");
+                        previewAttendance(2, attendance, "");
                     }
                 }
             });

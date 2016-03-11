@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
