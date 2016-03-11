@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.discussDet;
+package com.loyo.oa.v2.activity.discuss;
 
 import java.io.Serializable;
 

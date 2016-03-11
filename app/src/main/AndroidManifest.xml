@@ -650,8 +650,8 @@
             android:value="2d8b80512b2c5a6110c177828b56bc01" />
 
         <activity android:name=".activity.discuss.ActivityMyDiscuss" />
-        <activity android:name=".activity.hait.ActivityHait" />
-        <activity android:name=".activity.discussDet.ActivityDiscussDet"></activity>
+        <activity android:name=".activity.discuss.hait.ActivityHait" />
+        <activity android:name=".activity.discuss.ActivityDiscussDet"></activity>
     </application>
 
 </manifest>

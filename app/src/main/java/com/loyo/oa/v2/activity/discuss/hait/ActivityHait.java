@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.hait;
+package com.loyo.oa.v2.activity.discuss.hait;
 
 import android.graphics.Color;
 import android.os.Bundle;

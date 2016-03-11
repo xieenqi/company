@@ -88,5 +88,6 @@
     <dimen name="dimen_160">160dp</dimen>
     <dimen name="dimen_200">200dp</dimen>
     <dimen name="dimen_7">7dp</dimen>
+    <dimen name="dimen_24">24dp</dimen>
 
 </resources>
