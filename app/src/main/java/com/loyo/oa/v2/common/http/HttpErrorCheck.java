@@ -23,6 +23,7 @@ import retrofit.client.Response;
 public class HttpErrorCheck {
     private static Toast mCurrentToast;
     private static String TAG = "LogoServerV2";
+    private static String MSG = "msg";
 
     private static void Toast(String msg) {
         if (null != mCurrentToast) {
@@ -56,7 +57,7 @@ public class HttpErrorCheck {
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
         } catch (IOException e) {
             e.printStackTrace();
-           // Toast(error.getMessage());
+            // Toast(error.getMessage());
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
             Toast("服务端数据异常");
@@ -77,7 +78,7 @@ public class HttpErrorCheck {
 
     public static void checkResponse(String tag, Response response) {
         DialogHelp.cancelLoading();
-        TAG = tag;
+        MSG = tag;
         checkResponse(response);
     }
 
@@ -85,8 +86,8 @@ public class HttpErrorCheck {
         DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(TAG + " 接口成功result：" + result);
-            LogUtil.d(TAG + " 接口成功URL：" + response.getUrl());
+            LogUtil.d(MSG + " 接口成功result：" + result);
+            LogUtil.d(MSG + " 接口成功URL：" + response.getUrl());
         } catch (IOException e) {
 
         } catch (NullPointerException e) {

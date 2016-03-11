@@ -79,7 +79,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
             tv_customer_name.setText(TextUtils.isEmpty(demand.getProduct().getName()) ? "无" : demand.getProduct().getName());
         }
 
-        tv_phase.setText("阶段：" + demand.getSaleStage().getName());
+        tv_phase.setText("阶段：" + demand.getSaleStage().getName()+wfStatusText(demand.getWfState()));
         tv_content_plan.setText("预估：\t数量\t\t" + demand.getEstimatedNum() + "\t\t\t\t单价\t\t" + demand.getEstimatedPrice()+demand.getProduct().getUnid());
         tv_content_act.setText("成交：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice()+demand.getProduct().getUnid());
         if (demand.getSaleStage().getProb() == 0) {
@@ -101,8 +101,10 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
 
         tv_memo.setText("备注：" + demand.getMemo());
 
-        if (!isMyUser) {
+        if (!isMyUser||1==demand.getWfState()||2==demand.getWfState()||4==demand.getWfState()||5==demand.getWfState()) {
             img_edit_damand.setVisibility(View.GONE);
+        }else if(3==demand.getWfState()||isMyUser){
+            img_edit_damand.setVisibility(View.VISIBLE);
         }
 
         img_edit_damand.setOnClickListener(new View.OnClickListener() {
@@ -111,9 +113,12 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
                 editDemand(demand);
             }
         });
-        if (demand.getWfState() == WfInstance.STATUS_PROCESSING) {
-            tv_phase.setOnTouchListener(Global.GetTouch());
-            tv_phase.setOnClickListener(new View.OnClickListener() {
+        /**
+         * 赢单状态可以看审批详情
+         */
+        if (0!=demand.getWfState()) {
+            convertView.setOnTouchListener(Global.GetTouch());
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     goWfInstance(demand.getWfId());
@@ -130,7 +135,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
      */
     private void goWfInstance(String wFInstanceId) {
         Bundle b = new Bundle();
-        b.putString("id", wFInstanceId);
+        b.putString(ExtraAndResult.EXTRA_ID, wFInstanceId);
         MainApp.getMainApp().startActivityForResult((DemandsManageActivity) mContext, WfinstanceInfoActivity_.class, 0, BaseMainListFragment.REQUEST_REVIEW, b);
     }
 
@@ -146,5 +151,20 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
         MainApp.getMainApp().startActivityForResult((Activity) mContext, DemandsAddActivity.class,
                 MainApp.ENTER_TYPE_BUTTOM, DemandsManageActivity.VIEW_DEMANDS, bundle);
+    }
+    private String wfStatusText(int index){
+        switch (index){
+            case WfInstance.STATUS_NEW:
+                return "(待审核)";
+            case WfInstance.STATUS_PROCESSING:
+                return "(审核中)";
+            case WfInstance.STATUS_ABORT:
+                return "(未通过)";
+            case WfInstance.STATUS_APPROVED:
+                return "(已通过)";
+            case WfInstance.STATUS_FINISHED:
+                return "(已完结)";
+        }
+        return "";
     }
 }

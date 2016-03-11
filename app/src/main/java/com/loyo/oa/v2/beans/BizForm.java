@@ -14,6 +14,7 @@ public class BizForm implements Serializable {
     private String id;//int64, optional): ,
     private String name;//string, optional): ,
     private long updatedAt;//&{time Time}, optional):
+    public int bizCode;
 
 
     public long getCreatedAt() {
