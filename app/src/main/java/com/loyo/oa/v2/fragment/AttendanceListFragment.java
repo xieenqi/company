@@ -428,6 +428,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
+
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
             page = 1;
             getData(page);
