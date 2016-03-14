@@ -524,7 +524,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             /**上班卡*/
             if (null != recordIn) {
                 inTagstate = recordIn.getTagstate();
-                LogUtil.dll("In TagState:"+inTagstate);
                 isHasIn = true;
                 String moring = "未打卡";
                 if (recordIn.getState() == AttendanceRecord.STATE_BE_LATE) {
@@ -533,10 +532,18 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 } else if (recordIn.getState() == AttendanceRecord.STATE_NORMAL) {
                     tv_state.setTextColor(getResources().getColor(R.color.black));
                     moring = "已打卡";
+                } else if(recordIn.getState() == 0){
+                    isHasIn = false;
+                    iv_recordIn_type.setVisibility(View.INVISIBLE);
+                    tv_time.setText("--");
                 }
-                tv_state.setText(moring);
-                tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
-                iv_recordIn_type.setVisibility(View.VISIBLE);
+
+                if(recordIn.getState() != 0){
+                    tv_state.setText(moring);
+                    tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
+                    iv_recordIn_type.setVisibility(View.VISIBLE);
+                }
+
                 /*外勤未确认*/
                 if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                     iv_recordIn_type.setImageResource(R.drawable.icon_field_work_confirm);
@@ -566,7 +573,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else if (outTagstate == 2 || inTagstate == 2) {
                 image = R.drawable.icon_ask_for_leave;
             }
-
             iv_extra.setBackgroundResource(image);
             tv_state.setVisibility(isHasIn ? View.VISIBLE : View.GONE);
 
@@ -583,10 +589,17 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         tv_result.setTextColor(getResources().getColor(R.color.red));
                         result = "早退";
                         break;
+                    case AttendanceRecord.STATE_MASTER:
+                        isHasOut = false;
+                        iv_recordOut_type.setVisibility(View.INVISIBLE);
+                        tv_time1.setText("--");
+                        break;
                 }
-                tv_result.setText(result);//打卡类型
-                tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
-                iv_recordOut_type.setVisibility(View.VISIBLE);
+                if(recordOut.getState() != 0){
+                    tv_result.setText(result);//打卡类型
+                    tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
+                    iv_recordOut_type.setVisibility(View.VISIBLE);
+                }
 
                 /*未确认的外勤*/
                 if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
@@ -613,7 +626,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else {
                 divider.setVisibility(View.VISIBLE);
             }
-
 
             /**按键监听*/
             /*加班*/

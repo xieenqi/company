@@ -508,13 +508,13 @@ public class WfInstanceAddActivity extends BaseActivity {
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
         map.put("projectId", projectId);//项目Id
+        map.put("bizCode", mBizForm.getBizCode());//流程类型
         if (uuid != null && lstData_Attachment.size() > 0) {
             bizExtData.setAttachmentCount(lstData_Attachment.size());
             map.put("attachmentUUId", uuid);
             map.put("bizExtData",bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
@@ -522,7 +522,6 @@ public class WfInstanceAddActivity extends BaseActivity {
                 cancelLoading();
                 if (wfInstance != null) {
                     isSave = false;
-                    //如果不clear,会提示java.io.NotSerializableException
                     wfInstance.ack = true;
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
@@ -537,6 +536,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 super.failure(error);
             }
         });
+        LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
     }
 
     boolean isSave = true;
@@ -544,9 +544,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         DBManager.Instance().deleteWfInstance();
-
         WfInstance wfInstance = new WfInstance();
         wfInstance.attachments = null;
         wfInstance.creator = null;
