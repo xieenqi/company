@@ -17,6 +17,14 @@ public class BizForm implements Serializable {
     public int bizCode;
 
 
+    public int getBizCode() {
+        return bizCode;
+    }
+
+    public void setBizCode(int bizCode) {
+        this.bizCode = bizCode;
+    }
+
     public long getCreatedAt() {
         return createdAt;
     }
