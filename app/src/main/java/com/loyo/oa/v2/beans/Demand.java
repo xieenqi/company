@@ -11,8 +11,8 @@ public class Demand extends BaseBeans {
 
 
     private ArrayList<CommonTag> loseReason = new ArrayList<>();
-    private String wfId;
-    private int wfState;
+    private String wfId; //赢单审批 id
+    private int wfState;//赢单审批状态 1.待审核 2.审核中 3.未通过 4.审批通过 5.审批完结  0.非赢单状态
     private float amount;//float32, optional): ,
     private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     private long createdAt;//&{time Time}, optional): ,
