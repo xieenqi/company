@@ -1017,7 +1017,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     /**
-     * 业务使用权限 判断设置
+     * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
         if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
@@ -1035,9 +1035,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         ArrayList<ClickItem> itemsNew = new ArrayList<>();
         ArrayList<Suites> suitesNew = new ArrayList<>();
-        suitesNew.add(MainApp.user.permission.suites.get(1));
-        suitesNew.add(MainApp.user.permission.suites.get(0));
-        suitesNew.add(MainApp.user.permission.suites.get(2));
+        for(Suites stuites : MainApp.user.permission.suites){
+            suitesNew.add(stuites);
+        }
         for (int i = 0; i < suitesNew.size(); i++) {
             for (int k = 0; k < items.size(); k++) {
                 for (Modules modules : suitesNew.get(i).getModules()) {
