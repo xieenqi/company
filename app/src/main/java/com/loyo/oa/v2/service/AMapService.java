@@ -15,12 +15,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
 import com.loyo.oa.v2.beans.ServerTime;
@@ -34,7 +28,6 @@ import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LocationUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -218,11 +211,7 @@ public class AMapService extends Service {
 
         if (Global.isConnected()) {
             if (isEmptyStr(address)) {
-                if (convertAddressBMap(aMapLocation)) {
-                    return;
-                } else {
                     aMapLocation.setAddress("未知地址");
-                }
             }
         } else {
             aMapLocation.setAddress("未知地址(离线)");
@@ -373,40 +362,40 @@ public class AMapService extends Service {
         uploadLocation(aMapLocation);
     }
 
-    /**
-     * 百度反地理编码获取地址
-     *
-     * @param aMapLocation
-     */
-    private boolean convertAddressBMap(final AMapLocation aMapLocation) {
-        com.baidu.mapapi.model.LatLng tempLatLng = LocationUtil.convert(1, aMapLocation.getLatitude(), aMapLocation.getLongitude());
-        final GeoCoder coder = GeoCoder.newInstance();
-        OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
-            @Override
-            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-
-            }
-
-            @Override
-            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-                coder.destroy();
-                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                    aMapLocation.setAddress("未知地址");
-                } else {
-                    aMapLocation.setAddress(reverseGeoCodeResult.getAddress());
-                }
-                processLocation(aMapLocation);
-            }
-        };
-        coder.setOnGetGeoCodeResultListener(listener);
-        boolean result = coder.reverseGeoCode(new ReverseGeoCodeOption().location(tempLatLng));
-        if (!result) {
-            LogUtil.d(TAG + "  convertAddressBMap,启动百度反地理编码失败");
-            coder.destroy();
-        }
-
-        return result;
-    }
+//    /**
+//     * 百度反地理编码获取地址
+//     *
+//     * @param aMapLocation
+//     */
+//    private boolean convertAddressBMap(final AMapLocation aMapLocation) {
+//        com.baidu.mapapi.model.LatLng tempLatLng = LocationUtil.convert(1, aMapLocation.getLatitude(), aMapLocation.getLongitude());
+//        final GeoCoder coder = GeoCoder.newInstance();
+//        OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
+//            @Override
+//            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+//
+//            }
+//
+//            @Override
+//            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+//                coder.destroy();
+//                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+//                    aMapLocation.setAddress("未知地址");
+//                } else {
+//                    aMapLocation.setAddress(reverseGeoCodeResult.getAddress());
+//                }
+//                processLocation(aMapLocation);
+//            }
+//        };
+//        coder.setOnGetGeoCodeResultListener(listener);
+//        boolean result = coder.reverseGeoCode(new ReverseGeoCodeOption().location(tempLatLng));
+//        if (!result) {
+//            LogUtil.d(TAG + "  convertAddressBMap,启动百度反地理编码失败");
+//            coder.destroy();
+//        }
+//
+//        return result;
+//    }
 
     /**
      * 上传轨迹
