@@ -106,7 +106,7 @@ public class BulletinAddActivity extends BaseActivity {
         }
 
 
-        showGeneralDialog(true,true,getString(R.string.app_bulletin_message));
+        showGeneralDialog(true, true, getString(R.string.app_bulletin_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -184,7 +184,7 @@ public class BulletinAddActivity extends BaseActivity {
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
-                        Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
+                        Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                             @Override
                             public void onNext(Serializable serializable) {
                                 getAttachments();
@@ -204,10 +204,10 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
         final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-        HashMap<String,Object> map = new HashMap<String, Object>();
-        map.put("bizType",0);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("bizType", 0);
         map.put("uuid", uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(),map, new RCallback<Attachment>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), map, new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
                 Toast("删除附件成功!");
