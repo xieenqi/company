@@ -109,7 +109,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     private Handler mHandler = new Handler() {
         @Override
-        public void dispatchMessage(Message msg) {
+        public void dispatchMessage(final Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
             }
@@ -149,7 +149,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         et_address.setText(app.address);
         locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
                 img_refresh_address.clearAnimation();
@@ -192,7 +192,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
             R.id.layout_customer_label, R.id.img_refresh_address})
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
 
             /*刷新地址*/
@@ -300,11 +300,13 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             /*case R.id.btn_add_new_contract:
                 app.startActivityForResult((Activity) mContext, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_NEW_CONTRACT, null);
                 break;*/
+            default:
+                break;
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -402,14 +404,14 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map,
                             new RCallback<Attachment>() {
                                 @Override
-                                public void success(Attachment attachment, Response response) {
+                                public void success(final Attachment attachment, final Response response) {
                                     Utils.dialogDismiss();
                                     lstData_Attachment.remove(delAttachment);
                                     signInGridViewAdapter.notifyDataSetChanged();
                                 }
 
                                 @Override
-                                public void failure(RetrofitError error) {
+                                public void failure(final RetrofitError error) {
                                     Utils.dialogDismiss();
                                     HttpErrorCheck.checkError(error);
                                     Toast("删除附件失败!");
@@ -420,12 +422,15 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Global.ProcException(e);
                 }
                 break;
+            default:
+
+                break;
 
         }
     }
 
 
-    void setContract(Contact c) {
+    void setContract(final Contact c) {
         if (c == null) return;
 
         mContacts.add(c);
@@ -445,7 +450,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     public class AsyncAddCustomer extends BaseActivityAsyncHttpResponseHandler {
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
             try {
                 Customer retCustomer = MainApp.gson.fromJson(getStr(arg2), Customer.class);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
@@ -468,12 +473,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
         File file;
 
-        public void setBitmap(File imageFile) {
+        public void setBitmap(final File imageFile) {
             file = imageFile;
         }
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
             try {
                 Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
                 attachment.saveFile(file);
