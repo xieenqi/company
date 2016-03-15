@@ -44,7 +44,7 @@ public class DepartmentUserSearchActivity extends Activity {
     private int type = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_search);
         Intent intent = getIntent();
@@ -61,16 +61,16 @@ public class DepartmentUserSearchActivity extends Activity {
         edt_search.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            public void onTextChanged(final CharSequence arg0, final int arg1, final int arg2, final int arg3) {
 
             }
 
             @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            public void beforeTextChanged(final CharSequence arg0, final int arg1, final int arg2, final int arg3) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
                 doSearch();
             }
         });
@@ -81,7 +81,7 @@ public class DepartmentUserSearchActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 User user = resultData.get((int) id);
                 if (type == 1) {
                     Bundle b = new Bundle();
@@ -99,7 +99,7 @@ public class DepartmentUserSearchActivity extends Activity {
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 //关闭键盘
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm.isActive()) {
@@ -112,7 +112,7 @@ public class DepartmentUserSearchActivity extends Activity {
         /*取消监听*/
         findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onBackPressed();
             }
         });
@@ -175,17 +175,17 @@ public class DepartmentUserSearchActivity extends Activity {
         }
 
         @Override
-        public Object getItem(int position) {
+        public Object getItem(final int position) {
             return resultData.get(position);
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return position;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             if (null == convertView) {
                 convertView = LayoutInflater.from(DepartmentUserSearchActivity.this).inflate(R.layout.item_contacts_child, null, false);
             }

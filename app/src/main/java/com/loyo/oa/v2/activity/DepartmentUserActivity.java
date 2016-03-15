@@ -69,14 +69,14 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     MainApp app = MainApp.getMainApp();
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         if (StringUtil.isEmpty(MainApp.getToken())) {
@@ -89,7 +89,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_user);
         if (getIntent() != null) {
@@ -149,7 +149,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -160,6 +160,10 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
             case R.id.img_title_search_right:
                 app.startActivityForResult(this, DepartmentUserSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
                         DepartmentActivity.RESULT_ON_ACTIVITY_RETURN, null);
+                break;
+
+            default:
+
                 break;
         }
     }
@@ -177,7 +181,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK
@@ -250,12 +254,12 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
 
         private final String[] TITLES = {"部门", "员工"};
 
-        public MyPagerAdapter(FragmentManager fm) {
+        public MyPagerAdapter(final FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(final int position) {
             return TITLES[position];
         }
 
@@ -265,7 +269,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             return (position == 0) ? departmentFragment : userFragment;
         }
 
@@ -274,7 +278,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     class MultiUserReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
 
             boolean clean = intent.getBooleanExtra("clean", false);
 
@@ -328,7 +332,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     public static int SelectNumbers = 0;
 
     //新增用户=true,删除用户=false;
-    public static void sendMultiSelectUsers(Context context, String ccUserId, String ccUserName, String ccDeptId, String ccDeptName, boolean type) {
+    public static void sendMultiSelectUsers(final Context context, final String ccUserId, final String ccUserName, final String ccDeptId, final String ccDeptName, final boolean type) {
 //        if (ccUserId > 0) {
 //            SelectNumbers += type ? 1 : -1;
 //        }
@@ -360,7 +364,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
         LocalBroadcastManager.getInstance(context).sendBroadcastSync(intent);
     }
 
-    public static void sendCleanUsers(Context context) {
+    public static void sendCleanUsers(final Context context) {
         SelectNumbers = 0;
 
         Intent intent = new Intent();

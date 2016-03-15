@@ -110,7 +110,7 @@ public class BulletinAddActivity extends BaseActivity {
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 generalPopView.dismiss();
                 HashMap<String, Object> map = new HashMap<>();
@@ -122,7 +122,7 @@ public class BulletinAddActivity extends BaseActivity {
                 LogUtil.d(" 通知 传递数据： " + MainApp.gson.toJson(map));
                 app.getRestAdapter().create(INotice.class).publishNotice(map, new RCallback<Bulletin>() {
                     @Override
-                    public void success(Bulletin bulletin, Response response) {
+                    public void success(final Bulletin bulletin, final Response response) {
                         HttpErrorCheck.checkResponse("add通知", response);
                         if (bulletin != null) {
                             if (mAttachment != null) {
@@ -138,7 +138,7 @@ public class BulletinAddActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                     }
@@ -149,7 +149,7 @@ public class BulletinAddActivity extends BaseActivity {
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -161,13 +161,13 @@ public class BulletinAddActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> attachments, Response response) {
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
                 mAttachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
@@ -176,7 +176,7 @@ public class BulletinAddActivity extends BaseActivity {
     }
 
     @OnActivityResult(SelectPicPopupWindow.GET_IMG)
-    void onPhotoResult(Intent data) {
+    void onPhotoResult(final Intent data) {
         try {
             ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
@@ -186,7 +186,7 @@ public class BulletinAddActivity extends BaseActivity {
                     if (newFile.exists()) {
                         Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                             @Override
-                            public void onNext(Serializable serializable) {
+                            public void onNext(final Serializable serializable) {
                                 getAttachments();
                             }
                         });
@@ -199,7 +199,7 @@ public class BulletinAddActivity extends BaseActivity {
     }
 
     @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
-    void onDeletePhotoResult(int resultCode, Intent data) {
+    void onDeletePhotoResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
@@ -209,7 +209,7 @@ public class BulletinAddActivity extends BaseActivity {
         map.put("uuid", uuid);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), map, new RCallback<Attachment>() {
             @Override
-            public void success(Attachment attachment, Response response) {
+            public void success(final Attachment attachment, final Response response) {
                 Toast("删除附件成功!");
                 mAttachment.remove(delAttachment);
                 mGridViewAdapter.setDataSource(mAttachment);
@@ -217,7 +217,7 @@ public class BulletinAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("删除附件失败!");
                 super.failure(error);
             }
@@ -225,7 +225,7 @@ public class BulletinAddActivity extends BaseActivity {
     }
 
     @OnActivityResult(DepartmentUserActivity.request_Code)
-    void onDepartmentUserResult(int resultCode, Intent data) {
+    void onDepartmentUserResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
@@ -251,7 +251,7 @@ public class BulletinAddActivity extends BaseActivity {
     }
 
 
-    private void setJoinUsers(String joinedUserIds, String joinedUserName, String departIds, String departName) {
+    private void setJoinUsers(final String joinedUserIds, final String joinedUserName, final String departIds, final String departName) {
         userss.clear();
         depts.clear();
         if (!TextUtils.isEmpty(joinedUserIds) && !TextUtils.isEmpty(joinedUserName)) {

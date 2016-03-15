@@ -59,7 +59,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     private int mIndex = 1;
     private boolean isTopAdd = true;
     private NoticeAdapter adapter;
-    public final static int REQUEST_NEW = 1;
+    public final int REQUEST_NEW = 1;
     private LinearLayoutManager layoutManager;
 
     @AfterViews
@@ -89,7 +89,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         map.put("pageSize", isTopAdd ? mPagination.getPageSize() >= 20 ? mPagination.getPageSize() : 20 : 20);
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
-            public void success(PaginationX<Bulletin> pagination, Response response) {
+            public void success(final PaginationX<Bulletin> pagination, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
@@ -108,7 +108,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
                 lv_notice.onRefreshComplete();
@@ -131,7 +131,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
 
     @Click(R.id.img_title_left)
-    void onClick(View v) {
+    void onClick(final View v) {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
@@ -145,21 +145,21 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
         mPagination.setPageIndex(1);
         getData();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         mPagination.setPageIndex(mPagination.getPageIndex() + 1);
         getData();
     }
 
     @OnActivityResult(REQUEST_NEW)
-    void onCreateResult(int resultCode, Intent data) {
+    void onCreateResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
@@ -180,7 +180,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         private RoundImageView iv_avatar;
         private GridView gridView;
 
-        public BulletinViewHolder(View itemView) {
+        public BulletinViewHolder(final View itemView) {
             super(itemView);
             tv_time = (TextView) itemView.findViewById(R.id.tv_notice_time);
             tv_title = (TextView) itemView.findViewById(R.id.tv_notice_title);
@@ -194,23 +194,23 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     private class NoticeAdapter extends RecyclerView.Adapter<BulletinViewHolder> {
         private ArrayList<Bulletin> mBulletins;
 
-        public NoticeAdapter(ArrayList<Bulletin> bulletins) {
+        public NoticeAdapter(final ArrayList<Bulletin> bulletins) {
             mBulletins = bulletins;
         }
 
-        private void setmDatas(ArrayList<Bulletin> bulletins) {
+        private void setmDatas(final ArrayList<Bulletin> bulletins) {
             mBulletins = bulletins;
             notifyDataSetChanged();
         }
 
         @Override
-        public BulletinViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BulletinViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             View view = LayoutInflater.from(BulletinManagerActivity.this).inflate(R.layout.item_notice_layout, parent, false);
             return new BulletinViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(BulletinViewHolder holder, int position) {
+        public void onBindViewHolder(final BulletinViewHolder holder, final int position) {
             final Bulletin bulletin = mBulletins.get(position);
             holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
             holder.tv_title.setText(bulletin.title);
