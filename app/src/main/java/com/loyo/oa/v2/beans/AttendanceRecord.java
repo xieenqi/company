@@ -23,6 +23,8 @@ public class AttendanceRecord implements Serializable {
     /**未确认的加班**/
     public static final int OUT_STATE_FIELD_OVERTIME=2;
 
+    /**请假或出差**/
+    public static final int STATE_MASTER = 0;
     /**正常打卡**/
     public static final int STATE_NORMAL=1;
     /**迟到**/

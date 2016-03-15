@@ -52,18 +52,6 @@
         android:theme="@style/AppStartLoadTranslucent"
         android:windowSoftInputMode="adjustUnspecified|stateHidden">
 
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="dw2iAmSRNacThaGXEpv2GIOs"/>
-
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2"/>
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".activity.LauncherActivity_"

@@ -374,9 +374,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
         map.put("type", type);
-
         LogUtil.dll("请求内容:" + MainApp.gson.toJson(map));
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance_current, Response response) {

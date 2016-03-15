@@ -4,7 +4,7 @@
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-    <module name="SuppressionFilter">
+    <module name="SuppressionFilter"><!--抑制过滤器-->
         <property name="file" value="${proj.module.dir}/src/config/checkstyle-suppression.xml"/>
     </module>
     <module name="FileLength"/>
@@ -16,7 +16,7 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
 
-    <module name="TreeWalker">
+    <module name="TreeWalker"><!--FileSetCheck TreeWalker会检查单个的Java源码文件，并且定义了适用于检查这种文件的属性-->
         <property name="cacheFile" value="bin/cachefile"/>
 
         <!-- Checks for Javadoc comments.                     -->
@@ -26,26 +26,28 @@
         <!--module name="JavadocVariable"/-->
         <!--<module name="JavadocStyle"/>-->
 
-
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <module name="ConstantName"/>
-        <module name="LocalFinalVariableName"/>
-        <module name="LocalVariableName"/>
-        <module name="MemberName"/>
-        <module name="MethodName"/>
-        <module name="PackageName"/>
-        <module name="ParameterName"/>
-        <module name="StaticVariableName"/>
-        <module name="TypeName"/>
 
+        <!--<module name="ConstantName"/>-->
+        <!--<module name="LocalFinalVariableName"/>-->
+        <!--<module name="LocalVariableName"/>-->
+        <!--<module name="MemberName"/>-->
+        <!--<module name="MethodName"/>-->
+        <!--<module name="PackageName"/>-->
+        <!--<module name="ParameterName"/>-->
+        <!--<module name="StaticVariableName"/>-->
+        <!--<module name="TypeName"/>-->
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
         <!--<module name="AvoidStarImport"/>-->
-        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <!--<module name="IllegalImport"/>-->
+        <!-- 非法导入 -->
         <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
+        <!--多余导入-->
+        <!--<module name="UnusedImports"/>-->
+        <!-- 未使用导入-->
 
 
         <!-- Checks for Size Violations.                    -->
@@ -58,73 +60,94 @@
         <module name="ParameterNumber"/>
 
 
-        <!-- Checks for whitespace                               -->
+        <!-- Checks for whitespace   空格检查                            -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
-        <module name="GenericWhitespace"/>
-        <module name="EmptyForIteratorPad"/>
-        <module name="MethodParamPad"/>
-        <module name="NoWhitespaceAfter"/>
-        <module name="NoWhitespaceBefore"/>
-        <module name="OperatorWrap"/>
-        <module name="ParenPad"/>
-        <module name="TypecastParenPad"/>
-        <module name="WhitespaceAfter"/>
-        <module name="WhitespaceAround"/>
+        <!--<module name="GenericWhitespace"/>&lt;!&ndash;范型标记空格&ndash;&gt;-->
+        <!--<module name="EmptyForIteratorPad"/>&lt;!&ndash;空白for初始化语句填充符&ndash;&gt;-->
+        <!--<module name="MethodParamPad"/>&lt;!&ndash;空白for迭代器填充符&ndash;&gt;-->
+        <!--<module name="NoWhitespaceAfter"/>-->
+        <!--<module name="NoWhitespaceBefore"/>-->
+        <!--<module name="OperatorWrap"/>-->
+        <!--<module name="ParenPad"/>-->
+        <!--<module name="TypecastParenPad"/>-->
+        <!--<module name="WhitespaceAfter"/>-->
+        <!--<module name="WhitespaceAround"/>-->
 
 
-        <!-- Modifier Checks                                    -->
+        <!-- Modifier Checks   修饰符                                 -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-        <!--<module name="ModifierOrder"/>-->
-        <!--<module name="RedundantModifier"/>-->
+        <module name="ModifierOrder"/>
+        <!--修饰符顺序-->
+        <module name="RedundantModifier"/>
+        <!--修饰符顺序-->
 
 
-        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- Checks for blocks. You know, those {}'s   代码块的检查       -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <!--<module name="AvoidNestedBlocks"/>-->
         <!--module name="EmptyBlock"/-->
         <module name="LeftCurly"/>
-        <!--module name="NeedBraces"/-->
+        <!--左花括号位置-->
+        <!--module name="NeedBraces"/--><!--需要花括号 的地方-->
         <module name="RightCurly"/>
+        <!--右花括号位置-->
 
 
-        <!-- Checks for common coding problems               -->
+        <!-- Checks for common coding problems  编码问题的检查            -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <!--module name="AvoidInlineConditionals"/-->
         <module name="CovariantEquals"/>
+        <!--共变equals方法-->
         <module name="EmptyStatement"/>
+        <!--空语句 也就是单独的;符号-->
         <module name="EqualsAvoidNull"/>
+        <!--避免调用空引用的equals方法-->
         <module name="EqualsHashCode"/>
+        <!--equals方法和hashCode方法 必须同时覆盖-->
         <!--module name="HiddenField"/-->
         <module name="IllegalInstantiation"/>
+        <!--非法实例化-->
         <module name="InnerAssignment"/>
-        <module name="MagicNumber">
+        <!--非法内部赋值-->
+        <module name="MagicNumber"><!--幻数-->
             <property name="severity" value="warning"/>
         </module>
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows">
+        <!--缺少switch默认分支-->
+        <module name="RedundantThrows"><!--多余的throws-->
             <property name="allowUnchecked" value="true"/>
             <property name="allowSubclasses" value="true"/>
             <property name="suppressLoadErrors" value="true"/>
         </module>
         <module name="SimplifyBooleanExpression"/>
+        <!--简化布尔表达式 是否有复杂布尔表达式-->
         <module name="SimplifyBooleanReturn"/>
+        <!--检查是否有过于复杂的布尔类型return语句-->
 
-        <!-- Checks for class design                         -->
+        <!-- Checks for class design   类设计的检查                      -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!--module name="DesignForExtension"/-->
-        <module name="FinalClass">
+        <module name="FinalClass"><!--检查一个只有私有构造器的类是否被声明为final。-->
             <property name="severity" value="warning"/>
         </module>
         <module name="HideUtilityClassConstructor"/>
+        <!--确保工具类（在API中只有静态方法和字段的类）没有任何公有构造器。-->
         <module name="InterfaceIsType"/>
-        <!--module name="VisibilityModifier"/-->
+        <!--接口是类型的检查-->
 
 
-        <!-- Miscellaneous other checks.                   -->
+
+        <!-- Miscellaneous other checks. 杂项其它项检查                  -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <!--module name="FinalParameters"/-->
+        <!--数组类型风格-->
+        <module name="FinalParameters"/>
+        <!--final参数-->
         <!--module name="TodoComment"/-->
         <module name="UpperEll"/>
+        <!--大写“L”-->
     </module>
+
+    <!--module name="VisibilityModifier"/--><!--检查类成员的可见性-->
+    <module name="StrictDuplicateCode"/><!--严格重复代码-->
 </module>

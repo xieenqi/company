@@ -68,6 +68,13 @@ public class LocationUtilGD {
      * @param location
      */
     void notifyLocation(AMapLocation location) {
+        LogUtil.d("手动试试定位：" + "时间 : " + location.getTime() +
+                " 模式 : " + location.getProvider()
+                + " 地址是否有效 : " + (!TextUtils.isEmpty(location.getAddress()))
+                + " 纬度 : " + location.getLatitude()
+                + " 经度 : " + location.getLongitude()
+                + " 精度 : " + location.getAccuracy()
+                + " 定位结果信息：" + location.getErrorInfo() + "--" + location.getLocationDetail());
         if (null == location) {
             afterLocation.OnLocationGDFailed();
             return;
@@ -88,6 +95,7 @@ public class LocationUtilGD {
 
     public interface AfterLocation {
         void OnLocationGDSucessed(String address, double longitude, double latitude, String radius);
+
         void OnLocationGDFailed();
     }
 

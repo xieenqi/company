@@ -221,8 +221,6 @@ public class MainApp extends Application {
         Configuration config = getResources().getConfiguration();
         config.locale= Locale.CHINA;
         getBaseContext().getResources().updateConfiguration(config, null);
-
-        // SDKInitializer.initialize(getApplicationContext());
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();
