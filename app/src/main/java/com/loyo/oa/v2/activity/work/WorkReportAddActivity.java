@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +19,23 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
+import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -45,7 +50,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
@@ -78,8 +82,11 @@ public class WorkReportAddActivity extends BaseActivity {
     public static final int TYPE_CREATE = 1; //报告创建
     public static final int TYPE_EDIT = 2; //报告编辑
     public static final int TYPE_CREATE_FROM_COPY = 3; //报告复制
-    public static final int TYPE_PROJECT= 4; //项目创建报告
+    public static final int TYPE_PROJECT = 4; //项目创建报告
+    public static final int UPDATE_SUCCESS = 0x01;
 
+    @ViewById
+    SwitchView crm_switch;
     @ViewById
     ViewGroup img_title_left, img_title_right;
     @ViewById
@@ -87,32 +94,25 @@ public class WorkReportAddActivity extends BaseActivity {
     @ViewById
     RadioGroup rg;//工作 动态
     @ViewById
-    ToggleButton crm_toggle;
-    @ViewById
     ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
     @ViewById
     TextView tv_crm;
     @ViewById
-    TextView tv_new_customers_num;
-    @ViewById
-    TextView tv_new_visit_num;
-    @ViewById
-    TextView tv_visit_customers_num;
-    @ViewById
     TextView tv_project;
-
     @ViewById
     TextView tv_time, tv_toUser;
     @ViewById
     TextView tv_reviewer, tv_resignin;
-
     @ViewById
     ViewGroup layout_del;
     @ViewById
     ImageView img_title_toUser;
-
     @ViewById
     GridView gridView_photo;
+    @ViewById
+    GridView gridview_workreports;
+    @ViewById
+    ViewGroup no_dysndata_workreports;
 
     @Extra
     String projectId;
@@ -128,16 +128,37 @@ public class WorkReportAddActivity extends BaseActivity {
     private RadioButton rb2;
     private RadioButton rb3;
     private long beginAt, endAt;
-    private int mSelectType = 1;
+    private int mSelectType = WorkReport.DAY;
     private WeeksDialog weeksDialog = null;
     private SignInGridViewAdapter signInGridViewAdapter;
+    private workReportAddgridViewAdapter workGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
     private ArrayList<NewUser> users = new ArrayList<>();
     private ArrayList<NewUser> depts = new ArrayList<>();
-    private StringBuffer joinUserId = new StringBuffer();
+    private ArrayList<WorkReportDyn> dynList;
+    private StringBuffer joinUserId;
+    private StringBuffer joinName;
+    private PostBizExtData bizExtData;
+    private StringBuffer joinUser;
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_SUCCESS) {
+                if (null == dynList || dynList.size() == 0) {
+                    no_dysndata_workreports.setVisibility(View.VISIBLE);
+                    gridview_workreports.setVisibility(View.GONE);
+                } else {
+                    no_dysndata_workreports.setVisibility(View.GONE);
+                    gridview_workreports.setVisibility(View.VISIBLE);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
+                    gridview_workreports.setAdapter(workGridViewAdapter);
+                }
+            }
+        }
+    };
 
     @SuppressLint("WrongViewCast")
     @AfterViews
@@ -160,28 +181,38 @@ public class WorkReportAddActivity extends BaseActivity {
             weeksDialog = new WeeksDialog(tv_time);
         }
 
-        crm_toggle.setChecked(SharedUtil.getBoolean(this, "showCrmData"));
-        layout_crm.setVisibility(crm_toggle.isChecked() ? View.VISIBLE : View.GONE);
-        crm_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /**动态统计开关*/
+        crm_switch.setState(false);
+        crm_switch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                crmSwitch(b);
+            public void toggleToOn() {
+                crm_switch.setState(true);
+                crmSwitch(true);
+            }
+
+            @Override
+            public void toggleToOff() {
+                crm_switch.setState(false);
+                crmSwitch(false);
             }
         });
+
         if (null != mWorkReport) {
             LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
-            }
-            if (type == TYPE_EDIT) {
                 uuid = mWorkReport.getAttachmentUUId();
+                dynList = mWorkReport.getCrmDatas();
+                crm_switch.setState(null == dynList ? false : true);
+                mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+                layout_crm.setVisibility(View.VISIBLE);
             }
 
-            try{
+            try {
                 mReviewer = mWorkReport.getReviewer();
                 members = mWorkReport.getMembers();
                 projectId = mWorkReport.getProject().getId();
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -195,11 +226,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 case WorkReport.MONTH:
                     rg.check(R.id.rb3);
                     break;
-            }
-            if (null != mWorkReport.getCrmDatas() && mWorkReport.getCrmDatas().size() > 2) {
-                tv_new_customers_num.setText(mWorkReport.getCrmDatas().get(0).getContent());
-                tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
-                tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
             }
             NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer()
                     .getUser() ? mWorkReport.getReviewer().getUser() : null;
@@ -225,10 +251,10 @@ public class WorkReportAddActivity extends BaseActivity {
             rb3.setEnabled(false);
             getEditAttachments();
 
-        }
-        else if(type == TYPE_PROJECT){
+        } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
         }
+
         getDefaultComment();
     }
 
@@ -256,6 +282,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 });
     }
 
+
     /**
      * 项目 过来创建 工作报告
      */
@@ -273,14 +300,14 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private String getMenberText() {
 
-        StringBuffer joinUser = new StringBuffer();
+        joinUser = new StringBuffer();
+        joinUserId = new StringBuffer();
 
         for (int i = 0; i < mWorkReport.getMembers().getAllData().size(); i++) {
-            joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName());
+            joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName() + ",");
             joinUserId.append(mWorkReport.getMembers().getAllData().get(i).getId() + ",");
 
         }
-
         return joinUser.toString();
 
     }
@@ -332,11 +359,22 @@ public class WorkReportAddActivity extends BaseActivity {
      * @param b
      */
     private void crmSwitch(boolean b) {
-        layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
-        SharedUtil.putBoolean(this, "showCrmData", b);
-        if (crm_toggle.isChecked() != b) {
-            crm_toggle.setChecked(b);
+        if (b) {
+            switch (mSelectType){
+            case WorkReport.DAY:
+                openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+                break;
+
+            case WorkReport.WEEK:
+                openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
+                break;
+
+            case WorkReport.MONTH:
+                openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
+                break;
+            }
         }
+        layout_crm.setVisibility(b ? View.VISIBLE : View.GONE);
     }
 
 
@@ -348,12 +386,12 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
         tv_crm.setText("本日工作动态统计");
         beginAt = DateTool.getBeginAt_ofDay();
         endAt = DateTool.getEndAt_ofDay();
         tv_time.setText(app.df4.format(beginAt));
         mSelectType = WorkReport.DAY;
-
     }
 
     /**
@@ -364,6 +402,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
         beginAt = DateTool.getBeginAt_ofWeek();
         endAt = DateTool.getEndAt_ofWeek();
@@ -381,6 +420,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
         beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
         endAt = DateTool.getEndAt_ofMonth();
@@ -396,7 +436,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (lstData_Attachment == null) {
             lstData_Attachment = new ArrayList<>();
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -427,6 +467,8 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 }
 
+                bizExtData = new PostBizExtData();
+                bizExtData.setAttachmentCount(lstData_Attachment.size());
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("content", content);
                 map.put("type", mSelectType);
@@ -436,13 +478,17 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("projectId", projectId);
                 }
                 map.put("attachmentUUId", uuid);
+                map.put("bizExtData", bizExtData);
                 map.put("reviewer", mReviewer);//点评人
                 map.put("members", members);//抄送人
+                if (null != dynList) {
+                    map.put("crmDatas", dynList);//工作动态统计
+                }
 
                 if (type != TYPE_EDIT) {
                     map.put("isDelayed", tv_time.getText().toString().contains("补签") ? true : false);
                 }
-
+                LogUtil.d(" 报告参数   " + app.gson.toJson(map));
                 /*报告新建／编辑*/
                 if (type == TYPE_EDIT) {
                     updateReport(map);
@@ -469,11 +515,19 @@ public class WorkReportAddActivity extends BaseActivity {
             /*抄送人*/
             case R.id.layout_toUser:
 
-                mBundle = new Bundle();
-                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
-                mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code, mBundle);
+                if (joinUserId != null) {
+                    mBundle = new Bundle();
+                    mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
+                    mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.request_Code, mBundle);
+                } else {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.request_Code, bundle1);
+                }
 
                 break;
             case R.id.layout_del:
@@ -495,13 +549,42 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     /**
+     * 开启动态统计数据
+     */
+    public void openDynamic(String startTime, String endTime) {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        RestAdapterFactory.getInstance().build(Config_project.SIGNLN_TEM).create(IWorkReport.class)
+                .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
+                    @Override
+                    public void success(ArrayList<WorkReportDyn> dyn, Response response) {
+                        cancelLoading();
+                        HttpErrorCheck.checkResponse(response);
+                        LogUtil.dll("动态工作返回：" + MainApp.gson.toJson(dyn));
+                        dynList = dyn;
+                        mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        cancelLoading();
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    /**
      * 编辑报告请求
      */
     public void updateReport(HashMap map) {
-
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }
@@ -511,7 +594,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
-
         });
     }
 
@@ -519,10 +601,11 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(HashMap map) {
-        LogUtil.d(" 新建报告组装json：" + MainApp.gson.toJson(map));
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport workReport, Response response) {
+                HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 dealResult(workReport);
             }
@@ -585,16 +668,19 @@ public class WorkReportAddActivity extends BaseActivity {
                     members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
                     if (null == members) {
                         tv_toUser.setText("无参与人");
-                    }else{
-                        StringBuffer joinName  = new StringBuffer();
-                        if(null != members.depts){
-                            for(NewUser newUser : members.depts){
-                                joinName.append(newUser.getName()+",");
+                    } else {
+                        joinName = new StringBuffer();
+                        joinUserId = new StringBuffer();
+                        if (null != members.depts) {
+                            for (NewUser newUser : members.depts) {
+                                joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
-                        if(null != members.users){
-                            for(NewUser newUser : members.users){
-                                joinName.append(newUser.getName()+",");
+                        if (null != members.users) {
+                            for (NewUser newUser : members.users) {
+                                joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
                         tv_toUser.setText(joinName.toString());
@@ -612,7 +698,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 1, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         app.logUtil.e("onNext");
@@ -632,7 +718,10 @@ public class WorkReportAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", 1);
+                    map.put("uuid", uuid);
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                         @Override
                         public void success(Attachment attachment, Response response) {
                             Toast("删除附件成功!");

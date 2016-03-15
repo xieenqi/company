@@ -60,7 +60,6 @@ public class ChildTaskResponserSelectActivity extends BaseActivity
             mUsers=new ArrayList<NewUser>();
         adapter=new UserListAdapter();
         usersListeView.setAdapter(adapter);
-
         usersListeView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)

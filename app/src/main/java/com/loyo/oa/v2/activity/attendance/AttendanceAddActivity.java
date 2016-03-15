@@ -37,13 +37,15 @@ import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -73,7 +75,7 @@ import retrofit.client.Response;
  * 时间 : 15/9/14.
  */
 @EActivity(R.layout.activity_attendance_add)
-public class AttendanceAddActivity extends BaseActivity implements LocationUtil.AfterLocation {
+public class AttendanceAddActivity extends BaseActivity implements LocationUtilGD.AfterLocation {
 
     //控件
     @ViewById ViewGroup img_title_left;
@@ -88,11 +90,17 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     @ViewById ViewGroup layout_reason;
     @ViewById GridView gridView_photo;
     @Extra AttendanceRecord mAttendanceRecord;
+    @Extra("needExtra") boolean needExtra;
+    @Extra("needPhoto") boolean NeedPhoto;
+    @Extra("outKind") int outKind; //0上班 1正常下班 2完成加班
+    @Extra("serverTime") long serverTime;//当前时间
+    @Extra("extraWorkStartTime") long extraWorkStartTime;//加班开始时间
 
     //附件相关
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
+    private int state;
 
     //打卡计时相关
     private Timer mTimer;
@@ -100,7 +108,24 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     private boolean isRun;
     private MHandler mHandler = new MHandler(this);
     private Animation animation;
-    private AttendancePhoto attendancePhotos;
+    private String tvTimeName;
+
+    @Override
+    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+        iv_refresh_address.clearAnimation();
+        animation.reset();
+        tv_address.setText(address);
+        refreshLocation(longitude, latitude);
+        LocationUtilGD.sotpLocation();
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        Toast("刷新位置失败");
+        iv_refresh_address.clearAnimation();
+        animation.reset();
+        LocationUtilGD.sotpLocation();
+    }
 
     private static class MHandler extends Handler {
         private WeakReference<AttendanceAddActivity> mActivity;
@@ -128,35 +153,33 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
 
     @AfterViews
     void initViews() {
+
         setTouchView(NO_SCROLL);
-        tv_title_1.setText("新建考勤");
+        switch (outKind){
+            case 0:
+                state = 1;
+                tvTimeName = "打卡时间:";
+                tv_title_1.setText("上班打卡");
+                break;
+
+            case 1:
+                state = 1;
+                tvTimeName = "打卡时间:";
+                tv_title_1.setText("下班打卡");
+                break;
+
+            case 2:
+                state = 5;
+                tvTimeName = "加班时间:";
+                tv_title_1.setText("加班打卡");
+                break;
+        }
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         iv_refresh_address.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-        requestPhotoTest();
         initData();
-    }
-
-    /**
-     * 请求是否要拍照打卡
-     * */
-    private void requestPhotoTest(){
-        Utils.dialogShow(this,"获取考勤信息中");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getAttendancePhoto(new Callback<AttendancePhoto>() {
-            @Override
-            public void success(AttendancePhoto attendancePhoto, Response response) {
-                LogUtil.dll("考勤拍照信息:" + MainApp.gson.toJson(attendancePhoto));
-                attendancePhotos = attendancePhoto;
-                Utils.dialogDismiss();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Utils.dialogDismiss();
-            }
-        });
     }
 
 
@@ -166,7 +189,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     private void countDown() {
         mTimerTask = new TimerTask() {
             private int seconds = mAttendanceRecord.getRemainTime() * 60;
-
             @Override
             public void run() {
                 if (!isRun) {
@@ -205,24 +227,35 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
         if (null == mAttendanceRecord) {
             return;
         }
+
         tv_result.setVisibility(mAttendanceRecord.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK ? View.GONE : View.VISIBLE);
         String result = mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK ? "您已超出内勤范围,本次打卡将记作外勤!" : "";
-        app.logUtil.e("打卡时间 : " + mAttendanceRecord.getCreatetime());
-        String time = "打卡时间:".concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
-        SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
         tv_result.setText(result);
-        tv_time.setText(builder);
         tv_address.setText(mAttendanceRecord.getAddress());
-
-        if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
-            if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
-                et_reason.setHint("请输入迟到原因");
-            } else {
-                et_reason.setHint("请输入早退原因");
-            }
-            layout_reason.setVisibility(View.VISIBLE);
+        /*完成加班*/
+        if(outKind == 2){
+            et_reason.setHint("请输入加班原因");
+            String time = (DateTool.timet(extraWorkStartTime+"",DateTool.DATE_FORMATE_TRANSACTION)
+                    +"-"+DateTool.timet(serverTime+"",DateTool.DATE_FORMATE_TRANSACTION));
+            SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
+            tv_time.setText(tvTimeName+builder);
+            tv_time.setTextColor(Color.GREEN);
         }
-
+        /*正常上下班*/
+        else {
+            String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
+            SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
+            tv_time.setText(builder);
+            if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
+                if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
+                    et_reason.setHint("请输入迟到原因");
+                    state = 2;
+                } else {
+                    et_reason.setHint("请输入早退原因");
+                    state = 3;
+                }
+            }
+        }
         init_gridView_photo();
         countDown();
     }
@@ -230,12 +263,18 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     /**
      * 获取附件
      */
-    private void getAttachments(){
+    private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> _attachments, Response response) {
                 attachments = _attachments;
                 init_gridView_photo();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                Toast("获取附件失败");
             }
         });
     }
@@ -255,26 +294,33 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.iv_refresh_address})
     void onClick(View v) {
         switch (v.getId()) {
+
             case R.id.img_title_left:
                 onBackPressed();
                 break;
+
             case R.id.img_title_right:
                 if (!check()) {
                     return;
                 }
-                if(attendancePhotos.isNeedPhoto() && attachments.size() == 0){
+
+                if (NeedPhoto && attachments.size() == 0) {
                     Toast("需要考勤照片，请拍照");
                     return;
                 }
-                if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-                    showOutAttendanceDialog();
+
+                if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
+                        && mAttendanceRecord.getState() != 5) {
+                        showOutAttendanceDialog();
                 } else {
-                    commitAttendance();
+                        commitAttendance();
                 }
+
                 break;
+
             case R.id.iv_refresh_address:
                 iv_refresh_address.startAnimation(animation);
-                new LocationUtil(this, this);
+                new LocationUtilGD(this, this);
                 break;
         }
     }
@@ -285,16 +331,25 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
      * @return
      */
     private boolean check() {
-        if (layout_reason.getVisibility() == View.VISIBLE && TextUtils.isEmpty(et_reason.getText().toString())) {
-            if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
-                if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
-                    Toast("迟到原因不能为空");
-                } else {
-                    Toast("早退原因不能为空");
-                }
+
+    if(TextUtils.isEmpty(et_reason.getText().toString())) {
+        int state = mAttendanceRecord.getState();
+        if(state == AttendanceRecord.STATE_OVERWORK){
+            if (needExtra) {
+                Toast("加班原因不能为空");
+                return false;
             }
+        }
+        else if(state == AttendanceRecord.STATE_LEAVE_EARLY){
+            Toast("早退原因不能为空");
             return false;
         }
+
+        else if(state == AttendanceRecord.STATE_BE_LATE){
+            Toast("迟到原因不能为空");
+            return false;
+        }
+    }
 
         if (TextUtils.isEmpty(tv_address.getText().toString())) {
             Toast("地址不能为空");
@@ -324,69 +379,33 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
      * 显示打卡超时对话框
      */
     private void showTimeOutDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
-        dialogView.findViewById(R.id.layout_btn).setVisibility(View.GONE);
-        ((TextView) dialogView.findViewById(R.id.tv_content)).setText("打卡操作超时,请重新打卡");
-        dialogView.getBackground().setAlpha(150);
-        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-        dialog.setAnimationStyle(R.style.PopupAnimation);
-        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        dialog.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
-
-        dialogView.setOnTouchListener(new View.OnTouchListener() {
+        showGeneralDialog(false, false, getString(R.string.app_attendance_outtime_message));
+        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                dialog.dismiss();
-                return false;
-            }
-        });
-
-        dialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
+            public void onClick(View view) {
                 onBackPressed();
             }
         });
+
     }
 
     /**
      * 弹出外勤确认对话框
      */
     private void showOutAttendanceDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_confirm_out_attendance, null, false);
-        dialogView.getBackground().setAlpha(150);
-        final PopupWindow dialog = new PopupWindow(dialogView, -1, -1, true);
-        dialog.setAnimationStyle(R.style.PopupAnimation);
-        dialog.setBackgroundDrawable(new BitmapDrawable(getResources()));// 响应键盘三个主键的必须步骤
-        dialog.showAtLocation(findViewById(R.id.tv_title_1), Gravity.BOTTOM, 0, 0);
-
-
-        TextView confirm = (TextView) dialogView.findViewById(R.id.btn_confirm);
-        TextView cancel = (TextView) dialogView.findViewById(R.id.btn_cancel);
-
-        confirm.setOnTouchListener(Global.GetTouch());
-        cancel.setOnTouchListener(Global.GetTouch());
-
-        dialogView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                dialog.dismiss();
-                return false;
-            }
-        });
-
-        confirm.setOnClickListener(new View.OnClickListener() {
+        showGeneralDialog(true, true, getString(R.string.app_attendance_out_message));
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                generalPopView.dismiss();
                 commitAttendance();
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                generalPopView.dismiss();
             }
         });
     }
@@ -395,20 +414,24 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
      * 提交考勤
      */
     private void commitAttendance() {
-        String reason = et_reason.getText().toString();
 
+        String reason = et_reason.getText().toString();
         HashMap<String, Object> map = new HashMap<>();
         map.put("inorout", mAttendanceRecord.getInorout());
         map.put("checkindate", mAttendanceRecord.getCheckindate());
         map.put("createtime", mAttendanceRecord.getCreatetime());
-        map.put("attachementuuid", uuid);
         map.put("originalgps", mAttendanceRecord.getOriginalgps());
         map.put("gpsinfo", mAttendanceRecord.getGpsinfo());
         map.put("address", mAttendanceRecord.getAddress());
         map.put("reason", reason);
-        map.put("state", mAttendanceRecord.getState());
+        map.put("state", state);
         map.put("outstate", mAttendanceRecord.getOutstate());
-
+        map.put("extraWorkStartTime",extraWorkStartTime);
+        map.put("extraWorkEndTime", serverTime);
+        if(attachments.size() != 0){
+            map.put("attachementuuid", uuid);
+        }
+        LogUtil.dll("提交考勤:"+MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(AttendanceRecord attendanceRecord, Response response) {
@@ -417,7 +440,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 setResult(RESULT_OK, intent);
                 onBackPressed();
                 try {
-                    LogUtil.dll("result:"+Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -426,11 +449,10 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                if(error.getKind() == RetrofitError.Kind.NETWORK){
-                     Toast("请检查您的网络连接");
-                }
-                else if(error.getKind() == RetrofitError.Kind.HTTP){
-                    if(error.getResponse().getStatus() == 500){
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    Toast("请检查您的网络连接");
+                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    if (error.getResponse().getStatus() == 500) {
                         Toast("网络异常500，请稍候再试");
                         try {
                             LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
@@ -454,30 +476,20 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
         super.finish();
     }
 
-    @Override
-    public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-        iv_refresh_address.clearAnimation();
-        animation.reset();
-        tv_address.setText(address);
-        refreshLocation(longitude, latitude);
-    }
-
-    @Override
-    public void OnLocationFailed() {
-        Toast("刷新位置失败");
-        iv_refresh_address.clearAnimation();
-        animation.reset();
-    }
 
     /*附件删除回调*/
     @OnActivityResult(FinalVariables.REQUEST_DEAL_ATTACHMENT)
     void onDealImageResult(Intent data) {
-        if(null==data){
+        if (null == data) {
             return;
         }
-        Utils.dialogShow(this,"请稍候");
-        final Attachment delAttachment=(Attachment)data.getSerializableExtra("delAtm");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+        Utils.dialogShow(this, "请稍候");
+        final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+        HashMap<String,Object> map = new HashMap<String, Object>();
+        map.put("bizType",0);
+        map.put("uuid", uuid);
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
             @Override
             public void success(Attachment attachment, Response response) {
                 Utils.dialogDismiss();
@@ -508,10 +520,16 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtil.
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
-                        Utils.uploadAttachment(uuid,newFile).subscribe(new CommonSubscriber(this) {
+                        Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                             @Override
                             public void onNext(Serializable serializable) {
                                 getAttachments();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                Toast("网络异常");
                             }
                         });
                     }

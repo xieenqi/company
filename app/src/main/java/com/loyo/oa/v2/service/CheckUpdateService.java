@@ -18,6 +18,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMain;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
@@ -75,22 +76,19 @@ public class CheckUpdateService extends Service {
             stopSelf();
             return START_REDELIVER_INTENT;
         }
-
         checkUpdate();
-
         return START_REDELIVER_INTENT;
     }
 
     void downloadApp() {
         if (enqueue == 0) {
-            Global.Toast("正在下载");
-
+            Global.Toast("正在更新最新版..");
+            LogUtil.dll("版本更新地址:"+mUpdateInfo.apkUrl);
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
                     .setDescription("下载" + mUpdateInfo.versionName)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mUpdateInfo.apkName())
                     .setVisibleInDownloadsUi(true);
-
             try {
                 enqueue = downloadManager.enqueue(request);
             } catch (Exception ex) {
@@ -119,9 +117,8 @@ public class CheckUpdateService extends Service {
         //应该仅在wifi下升级
         if (!Global.isConnected()) {
             if (isToast) {
-                Toast.makeText(this, "没有网络连接", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "没有网络连接，仅在有WiFi升级", Toast.LENGTH_SHORT).show();
             }
-
             isChecking = false;
             stopSelf();
             return;
@@ -131,19 +128,18 @@ public class CheckUpdateService extends Service {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_CHECK_UPDATE).create(IMain.class).checkUpdate(new RCallback<UpdateInfo>() {
             @Override
             public void success(UpdateInfo updateInfo, Response response) {
-                HttpErrorCheck.checkResponse("版本跟新",response);
+                HttpErrorCheck.checkResponse(response);
                 mUpdateInfo = updateInfo;
+                LogUtil.dll("版本更新信息:"+MainApp.gson.toJson(updateInfo));
 
                 if (updateInfo.versionCode > Global.getVersion()) {
                     //有新版本
                     MainApp.getMainApp().hasNewVersion = true;
-
-                    if (updateInfo.autoUpdate) {
-                        downloadApp();
-                    } else if (updateInfo.forceUpdate || isToast) {
-                        //当服务端需要强制更新版本时，或手动点击更新时，弹出升级提示
+                    if (updateInfo.autoUpdate) {//后台自动更新
                         deleteFile();
-
+                        downloadApp();
+                    } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
+                        deleteFile();
                         Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
                         intentUpdateTipActivity.putExtra("data", updateInfo);
                         intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -151,14 +147,13 @@ public class CheckUpdateService extends Service {
                     } else {
                         stopSelf();
                     }
+                    
                 } else {
                     if (isToast) {
                         Global.Toast("你的软件已经是最新版本");
                     }
-
                     stopSelf();
                 }
-
                 isChecking = false;
             }
 
@@ -172,9 +167,11 @@ public class CheckUpdateService extends Service {
         });
     }
 
+    /**
+     * 删除APK
+     * */
     private void deleteFile() {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
         File file = new File(path, mUpdateInfo.apkName());
         if (file.exists()) {
             file.delete();
@@ -215,22 +212,13 @@ public class CheckUpdateService extends Service {
     }
 
     public static class UpdateInfo implements Serializable {
-        public UpdateInfo(JSONObject response) {
-            //兼容2.9.2以前的版本
-            versionCode = response.optInt("versionCode", 1);
-            appDescription = response.optString("appDescription", "请更新至最新版本");
-            forceUpdate = response.optBoolean("forceUpdate", false);
-            autoUpdate = response.optBoolean("autoUpdate", false);
-            apkUrl = response.optString("apkUrl", "http://361loyofiles.oss-cn-qingdao.aliyuncs.com/LeShare.apk");
-            versionName = response.optString("versionName");
-        }
 
-        public int versionCode;
         public String versionName;
         public String appDescription;
+        public String apkUrl;
         public boolean forceUpdate;
         public boolean autoUpdate;
-        public String apkUrl;
+        public int versionCode;
 
         public String apkName() {
             return apkUrl.substring(apkUrl.lastIndexOf("/") + 1);

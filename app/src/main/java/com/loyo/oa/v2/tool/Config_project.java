@@ -7,11 +7,11 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = false; //是否是正式产品
+    public static final Boolean isRelease = true; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
-    public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式
+    public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式`
 
     public static String IP = "http://192.168.31.131";       //内部测试环境
 
@@ -20,6 +20,8 @@ public class Config_project {
     //public static String IP = "http://112.74.66.99";       //产品预上线环境
 
     //public static String IP = "http://ukuaiqi.com";        //网站产品正式环境
+
+    //public static String IP = "http://192.168.31.136";
 
     /**
      * 正式产品的域名
@@ -50,16 +52,6 @@ public class Config_project {
          */
         public static String statistics = "http://stat.ukuaiqi.com";
 
-//        private String value = "";
-//
-//        private Domain(String value) {
-//            this.value = value;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return String.valueOf(value);
-//        }
     }
 
     /**
@@ -87,11 +79,10 @@ public class Config_project {
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-
         return isRelease ? Domain.account : IP + ":8080";
+
     }
     //产品预上线环境服务器 88端口  131的是8080
-
 
     /**
      * oa 系统
@@ -136,6 +127,10 @@ public class Config_project {
 
     public static String API_URL_EXTRA() {
         return SERVER_URL_EXTRA().concat("/api/v2/");
+    }
+
+    public static String API_URL_WORKDYSN() {
+        return SERVER_URL().concat("/api/v2/");
     }
 
 

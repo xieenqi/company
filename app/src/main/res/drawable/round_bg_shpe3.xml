@@ -8,8 +8,8 @@
     <corners android:radius="@dimen/dimen_3"/>
 
     <size
-        android:height="@dimen/dimen_23"
-        android:width="@dimen/dimen_25" >
+        android:height="@dimen/dimen_10"
+        android:width="@dimen/dimen_20" >
     </size>
 
 </shape>

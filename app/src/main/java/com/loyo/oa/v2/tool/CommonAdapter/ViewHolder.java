@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.tool.CommonAdapter;
+package com.loyo.oa.v2.tool.commonadapter;
 
 import android.content.Context;
 import android.util.SparseArray;

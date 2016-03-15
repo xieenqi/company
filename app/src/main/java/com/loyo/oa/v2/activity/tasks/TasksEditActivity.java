@@ -15,10 +15,10 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
@@ -38,8 +38,8 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
-import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
+import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -102,7 +102,7 @@ public class TasksEditActivity extends BaseActivity {
     @ViewById
     TextView tv_Project;
     @ViewById
-    Switch switch_approve;
+    SwitchView switch_approve;
     @ViewById
     EditText edt_content;
     @ViewById
@@ -124,8 +124,7 @@ public class TasksEditActivity extends BaseActivity {
     private NewUser newUser;
     private StringBuffer joinUser = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
-
-
+    private boolean isState;
     @AfterViews
         //类似onCreate方法执行入口
     void initUI() {
@@ -170,7 +169,7 @@ public class TasksEditActivity extends BaseActivity {
         tv_toUsers.setText(joinUser.toString());
         tv_deadline.setText(app.df3.format(new Date(mTask.getPlanEndAt() * 1000)));
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
-        switch_approve.setChecked(mTask.isReviewFlag());
+        switch_approve.setState(mTask.isReviewFlag());
         edt_content.setText(mTask.getContent());
         edt_title.setText(mTask.getTitle());
         tv_mycustomer.setText(mTask.getCustomerName());
@@ -283,11 +282,15 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("planendAt", mTask.getPlanEndAt());
                 map.put("remindflag", mTask.getRemindTime() > 0);
                 map.put("remindtime", mTask.getRemindTime());
-                map.put("reviewFlag", switch_approve.isChecked());
+                if(switch_approve.getState() == 4){
+                    isState = true;
+                }else if(switch_approve.getState() == 1){
+                    isState = false;
+                }
+                map.put("reviewFlag",isState);
                 map.put("attachmentUUId", uuid);
                 map.put("customerId", mTask.getCustomerId());
                 map.put("customerName", mTask.getCustomerName());
-
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
                     map.put("projectId", mTask.getProjectId());
                 }
@@ -308,8 +311,7 @@ public class TasksEditActivity extends BaseActivity {
                             @Override
                             public void onNext(Task task) {
                                 task.setAck(true);
-                                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-
+                                Toast("编辑成功");
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
                                 setResult(Activity.RESULT_OK, intent);
@@ -346,8 +348,8 @@ public class TasksEditActivity extends BaseActivity {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
                                 String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str)));
-                        LogUtil.d("修改截至时间：" + Long.parseLong(DateTool.getDataOne(str)));
+                        mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
+                        LogUtil.d("修改截至时间：" + Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
                     }
                 });
                 break;
@@ -482,7 +484,7 @@ public class TasksEditActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(mTask.getAttachmentUUId(), newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(mTask.getAttachmentUUId(),2,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
@@ -500,7 +502,10 @@ public class TasksEditActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                HashMap<String,Object> map = new HashMap<String, Object>();
+                map.put("bizType",2);
+                map.put("uuid", uuid);
+                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                     @Override
                     public void success(Attachment attachment, Response response) {
                         Utils.dialogDismiss();

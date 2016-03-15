@@ -8,5 +8,4 @@ package com.loyo.oa.v2.tool;
  */
 public interface OnLoadSuccessCallback {
     void onLoadSuccess(int id, int size);
-
 }

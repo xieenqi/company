@@ -97,11 +97,20 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:text="注：绑定后可使用手机号直接登录"
+        android:textColor="@color/grayC9"
+        />
+
     <Button
         android:id="@+id/btn_complete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_20"
+        android:layout_margin="@dimen/dimen_16"
         android:background="@drawable/round_bg_shpe"
         android:text="完成"
         android:textColor="@color/white"/>

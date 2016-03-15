@@ -352,19 +352,19 @@ public class BitmapUtil {
 //            this(imageView, 0, 0, 0, 0);
 //        }
 
-        public ImageLoadingListener_ClickShowImg(ImageView imageView, int _postion, ArrayList<Attachment> _attachments, int def_rid,boolean isEdit) {
-            this(imageView, def_rid, def_rid, def_rid, def_rid,isEdit);
+        public ImageLoadingListener_ClickShowImg(ImageView imageView, int _postion, ArrayList<Attachment> _attachments, int def_rid, boolean isEdit) {
+            this(imageView, def_rid, def_rid, def_rid, def_rid, isEdit);
             attachments = _attachments;
             postion = _postion;
         }
 
-        public ImageLoadingListener_ClickShowImg(ImageView imageView, int def_rid, int cancelled_rid, int failed_rid, int started_rid,boolean isEdit) {
+        public ImageLoadingListener_ClickShowImg(ImageView imageView, int def_rid, int cancelled_rid, int failed_rid, int started_rid, boolean isEdit) {
             this.imageView = imageView;
             this.def_rid = def_rid;
             this.cancelled_rid = cancelled_rid;
             this.failed_rid = failed_rid;
             this.started_rid = started_rid;
-            this.isEdit=isEdit;
+            this.isEdit = isEdit;
         }
 
         @Override
@@ -452,13 +452,15 @@ public class BitmapUtil {
         return bitmap;
 
     }
+
     /**
      * Bitmap to Drawable
+     *
      * @param bitmap
      * @param mcontext
      * @return
      */
-    public static Drawable bitmapToDrawble(Bitmap bitmap,Context mcontext){
+    public static Drawable bitmapToDrawble(Bitmap bitmap, Context mcontext) {
         Drawable drawable = new BitmapDrawable(mcontext.getResources(), bitmap);
         return drawable;
     }
@@ -494,13 +496,12 @@ public class BitmapUtil {
 
                 newAttachment.add(attachment);
             }
-            for (int i=0;i<newAttachment.size();i++){
-                if (newAttachment.get(i).equals(attachments.get(position))){
+            for (int i = 0; i < newAttachment.size(); i++) {
+                if (newAttachment.get(i).equals(attachments.get(position))) {
                     newPosistion = i;
                 }
+                LogUtil.d("yula预览的图片：" + newAttachment.get(i).url);
             }
-
-//
 //            Bundle bundle = new Bundle();
 //            bundle.putSerializable("data", newAttachment);
 //            bundle.putInt("position", newPosistion);

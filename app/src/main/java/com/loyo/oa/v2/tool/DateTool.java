@@ -77,9 +77,9 @@ public class DateTool {
     public static final String DATE_FORMATE_MINUTES = "yyyy-MM-dd_HH-mm-ss";
 
     /**
-     * dd/MM/yyyy, hh:mm
+     * dd-MM-yyyy, hh:mm
      */
-    public static final String DATE_FORMATE_TRANSACTION = "dd/MM/yyyy, hh:mm";
+    public static final String DATE_FORMATE_TRANSACTION = "MM.dd HH:mm";
     /**
      * MM/dd HH:mm
      */
@@ -486,10 +486,29 @@ public class DateTool {
     }
 
     /**
-     * yyyy-MM-dd HH:mm格式转时间戳
+     * 下班分时转时间戳
+     * */
+    public static String getOutDataOne(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
+                Locale.CHINA);
+        Date date;
+        String times = null;
+        try {
+            date = sdr.parse(time);
+            long l = date.getTime();
+            String stf = String.valueOf(l);
+            times = stf.substring(0, stf.length());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return times;
+    }
+
+    /**
+     *自定义格式转时间戳
      */
-    public static String getDataOne(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm",
+    public static String getDataOne(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
                 Locale.CHINA);
         Date date;
         String times = null;
@@ -511,8 +530,8 @@ public class DateTool {
      * @param time
      * @return
      */
-    public static String timet(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat(DATE_FORMATE_CUSTOM_2);
+    public static String timet(String time,String timeGs) {
+        SimpleDateFormat sdr = new SimpleDateFormat(timeGs);
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
         int i = Integer.parseInt(time);

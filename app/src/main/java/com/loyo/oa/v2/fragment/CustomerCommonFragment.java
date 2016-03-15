@@ -3,6 +3,7 @@ package com.loyo.oa.v2.fragment;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -21,7 +22,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.NearByCustomersActivity_;
+import com.loyo.oa.v2.activity.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Department;
@@ -39,7 +40,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -64,10 +65,10 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/21.
  */
-public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, OnDropItemSelectedListener {
+public class CustomerCommonFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2,
+        OnDropItemSelectedListener {
 
     private static final String[] TIMES_TAG = new String[]{"跟进时间 倒序", "跟进时间 顺序", "创建时间 倒序", "创建时间 顺序"};
-
     private View mView;
     private PullToRefreshListView listView;
     private Button btn_add;
@@ -116,22 +117,17 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
+
             mView = inflater.inflate(R.layout.fragment_customer_common, container, false);
-
             mDropMenu = (DropListMenu) mView.findViewById(R.id.droplist_menu);
-
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
             listView = (PullToRefreshListView) mView.findViewById(R.id.listView_customers);
-
-
             listView.setEmptyView(emptyView);
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             tv_near_customers = (TextView) mView.findViewById(R.id.tv_near_customers);
             layout_near_customers = (ViewGroup) mView.findViewById(R.id.layout_near_customers);
-
-            //layout_near_customers.setOnTouchListener(Global.GetTouch());
+            layout_near_customers.setOnTouchListener(Global.GetTouch());
             layout_near_customers.setOnClickListener(this);
-
             btn_add.setOnTouchListener(Global.GetTouch());
             btn_add.setOnClickListener(this);
 
@@ -147,7 +143,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 case Customer.CUSTOMER_TYPE_NEAR_MINE:
                 case Customer.CUSTOMER_TYPE_NEAR_TEAM:
                 case Customer.CUSTOMER_TYPE_NEAR_COMPANY:
-                    listView.setMode(PullToRefreshBase.Mode.DISABLED);
+                    listView.setOnRefreshListener(this);
+                    listView.setMode(PullToRefreshBase.Mode.BOTH);
                     break;
             }
         }
@@ -176,12 +173,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         if (MainApp.getMainApp().isCutomerEdit) {
             getData();
         }
-
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
             //附近的客户
             case R.id.layout_near_customers:
                 Bundle bundle = new Bundle();
@@ -190,6 +187,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 bundle.putInt("type", customer_type);//团队与个人
                 app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                 break;
+
             case R.id.btn_add:
                 Intent intent = new Intent();
                 intent.setClass(mActivity, CustomerAddActivity_.class);
@@ -224,7 +222,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
         //初始化时间筛选menu
         DropItem time = new DropItem("时间");
-        time.setSelectType(DropItem.GROUP_SINGLE);
         for (int i = 0; i < TIMES_TAG.length; i++) {
             time.addSubDropItem(new DropItem(TIMES_TAG[i], i));
         }
@@ -260,6 +257,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     dropItemTag.addSubDropItem(parentItem);
                 }
                 source.add(dropItemTag);
+                if (isAdded())
+                    mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+                mDropMenu.setmMenuTitleTextSize(14);//Menu的文字大小
+                mDropMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
                 mDropMenu.setmMenuItems(source);
                 mDropMenu.setMenuSelectedListener(CustomerCommonFragment.this);
             }
@@ -267,7 +268,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-
             }
         });
     }
@@ -465,9 +465,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * http获取附近客户信息
      */
     private void getNearCustomersInfo() {
-        new LocationUtil(mActivity, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(mActivity, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+                LocationUtilGD.sotpLocation();
                 String url = "";
                 switch (customer_type) {
                     //团队客户
@@ -507,8 +508,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             }
 
             @Override
-            public void OnLocationFailed() {
-                Toast("获取附近客户信息失败！");
+            public void OnLocationGDFailed() {
+                LocationUtilGD.sotpLocation();
+                Toast("定位失败！");
             }
         });
     }
@@ -531,6 +533,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 获取数据,默认设置倒序
      */
     private void getData() {
+
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);
@@ -580,7 +583,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                                 mPagination.setPageSize(20);
                                 mCustomers.clear();
                                 bindData();
-                                Toast("没有数据");
                             } else {
                                 Toast("没有更多数据了");
                                 listView.onRefreshComplete();
@@ -835,11 +837,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 }
             });
 
+            /*导航按钮*/
             img_go_where.setOnTouchListener(Global.GetTouch());
             img_go_where.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast("kais 开始导航");
                     Utils.goWhere(mActivity, customer.loc.loc[1], customer.loc.loc[0]);
                 }
             });

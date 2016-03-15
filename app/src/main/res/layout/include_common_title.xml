@@ -14,21 +14,21 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="@dimen/dimen_20"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginLeft="@dimen/dimen_5"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="23dp"
-            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_marginRight="@dimen/dimen_8"
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_sp16"/>
 
     </LinearLayout>
 
@@ -39,11 +39,11 @@
         android:layout_height="match_parent"
         android:text=""/>
 
-    <!--<ImageView-->
-    <!--android:id="@+id/img_title_right"-->
-    <!--android:layout_width="@dimen/view_h_title"-->
-    <!--android:layout_height="@dimen/view_h_title"-->
-    <!--android:scaleType="center" />-->
+ <!--   <ImageView
+    android:id="@+id/img_title_right"
+    android:layout_width="@dimen/view_h_title"
+    android:layout_height="@dimen/view_h_title"
+    android:scaleType="center" />-->
 
 </RelativeLayout>
 

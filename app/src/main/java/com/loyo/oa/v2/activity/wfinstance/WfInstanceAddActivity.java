@@ -25,6 +25,7 @@ import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Parameters.WfInstanceAdd;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -37,8 +38,8 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
-import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
+import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -102,6 +103,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     //要提交的数据的展示容器
     @ViewById LinearLayout wfinstance_data_container;
     WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
+    ArrayList postValue = new ArrayList<>();
 
     /**
      * 审批 内容 数据
@@ -113,13 +115,13 @@ public class WfInstanceAddActivity extends BaseActivity {
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
-
+    private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
     private String uuid = StringUtil.getUUID();
-
     //选择流程
     private AlertDialog dialog_follow;
     private String mTemplateId;
+    private PostBizExtData bizExtData;
 
     @AfterViews
     void init() {
@@ -284,7 +286,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid,12,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
@@ -303,7 +305,10 @@ public class WfInstanceAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
 
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                HashMap<String,Object> map = new HashMap<String, Object>();
+                map.put("bizType",12);
+                map.put("uuid", uuid);
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                     @Override
                     public void success(Attachment attachment, Response response) {
                         Toast("删除附件成功!");
@@ -429,10 +434,10 @@ public class WfInstanceAddActivity extends BaseActivity {
             newValues.put(field.getId(), "");
         }
         submitData.add(newValues);
-
         WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
+        addIsRequired();
 
     }
 
@@ -441,6 +446,15 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            bizFormFieldsListViewAdapter.setEmpty();
 //            layout_edit.setVisibility(View.GONE);
 //        }
+
+
+    void addIsRequired(){
+        LogUtil.dll("执行 addIsRequired");
+        for(int i = 0;i<mBizForm.getFields().size();i++){
+            isRequiredList.add(mBizForm.getFields().get(i).isRequired());
+        }
+    }
+
 
     /**
      * 确认新建审批
@@ -460,6 +474,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         /**审批内容，装进Post数据的list中*/
+        postValue.clear();
         ArrayList<HashMap<String, Object>> workflowValues = new ArrayList<>();
         wfInstanceAdd.getWorkflowValuesAdd().wfInstanceValuesDatas.clear();
         for (int k = 0; k < submitData.size(); k++) {
@@ -470,6 +485,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                     if (!TextUtils.equals(field.getId(), key)) {
                         continue;
                     }
+                    postValue.add(map_Values.get(key));
                     String value = (String) map_Values.get(key);
                     jsonMapValues.put(key, value);
                 }
@@ -477,26 +493,14 @@ public class WfInstanceAddActivity extends BaseActivity {
             workflowValues.add(jsonMapValues);
         }
 
-     /*     for (WfinstanceViewGroup element : WfinObj) {
-            workflowValues.add(element.getInfoData());
-        }*/
-
-        if (!(workflowValues.size() > 0)) {
-            Toast("请填写审批内容\"必填项\"");
-            return;
-        }
-
-        /**必填项判断是否为空*/
-        for (int i = 0; i < workflowValues.size(); i++) {
-            HashMap<String, Object> map = workflowValues.get(i);
-            for (Map.Entry<String, Object> entry : workflowValues.get(i).entrySet()) {
-                if (TextUtils.isEmpty((CharSequence) entry.getValue())) {
-                    Toast("请填写\"必填项\"");
-                    return;
-                }
+        for(int i = 0;i<postValue.size();i++){
+            if(TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i)){
+                Toast("请填写\"必填项\"");
+                return;
             }
         }
 
+        bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("bizformId", mBizForm.getId());   //表单Id
         map.put("title", mBizForm.getName() + " " + tv_WfTemplate.getText().toString());//类型名加流程名
@@ -504,19 +508,20 @@ public class WfInstanceAddActivity extends BaseActivity {
         map.put("workflowValues", workflowValues);//流程 内容
         map.put("wftemplateId", mTemplateId);//流程模板Id
         map.put("projectId", projectId);//项目Id
-
+        map.put("bizCode", mBizForm.getBizCode());//流程类型
         if (uuid != null && lstData_Attachment.size() > 0) {
+            bizExtData.setAttachmentCount(lstData_Attachment.size());
             map.put("attachmentUUId", uuid);
+            map.put("bizExtData",bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(WfInstance wfInstance, Response response) {
+                cancelLoading();
                 if (wfInstance != null) {
-                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                     isSave = false;
-                    //如果不clear,会提示java.io.NotSerializableException
                     wfInstance.ack = true;
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
@@ -527,9 +532,11 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
+                cancelLoading();
                 super.failure(error);
             }
         });
+        LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
     }
 
     boolean isSave = true;
@@ -537,9 +544,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         DBManager.Instance().deleteWfInstance();
-
         WfInstance wfInstance = new WfInstance();
         wfInstance.attachments = null;
         wfInstance.creator = null;

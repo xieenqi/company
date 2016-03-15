@@ -53,6 +53,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private ViewGroup imgTimeLeft;
     private ViewGroup imgTimeRight;
     private ViewGroup layout_date;
+    private ViewGroup layout_nodata;
     private Button btn_add;
     private PullToRefreshListView lv;
     private TextView tv_time;
@@ -83,7 +84,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
 
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
-
+            layout_nodata = (ViewGroup) mView.findViewById(R.id.layout_nodata);
 
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
@@ -147,7 +148,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     int resultTime = c1.compareTo(c2);
                     if (resultTime < 0) {
                         nextDay();
-                    }else{
+                    } else {
                         Toast("不能查看未来拜访数据!");
                     }
                 } catch (Exception e) {
@@ -217,8 +218,16 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
      */
     private void bindData() {
         if (null == adapter) {
-            adapter = new TeamSignInListAdapter();
-            lv.setAdapter(adapter);
+            if (null == legWorks || legWorks.size() == 0) {
+                layout_nodata.setVisibility(View.VISIBLE);
+                lv.setVisibility(View.GONE);
+            } else {
+                layout_nodata.setVisibility(View.GONE);
+                lv.setVisibility(View.VISIBLE);
+                adapter = new TeamSignInListAdapter();
+                lv.setAdapter(adapter);
+            }
+
         } else {
             adapter.notifyDataSetChanged();
         }
@@ -239,6 +248,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
      * //api/v2/statistics/visit/team?duration=2015-12-04
      */
     private void getData() {
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
 //        map.put("userId", "");
 //        map.put("deptId", MainApp.user.depts.get(0).getShortDept().getId());
@@ -270,6 +280,8 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         lv.onRefreshComplete();
+                        layout_nodata.setVisibility(View.VISIBLE);
+                        lv.setVisibility(View.GONE);
                         super.failure(error);
                     }
                 });

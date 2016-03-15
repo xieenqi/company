@@ -14,7 +14,7 @@ import com.loyo.oa.v2.tool.ViewUtil;
  */
 public class WfInstanceManageActivity extends BaseFragmentActivity {
 
-    WfInstanceManageFragment fragment = new WfInstanceManageFragment();
+    public WfInstanceManageFragment fragment = new WfInstanceManageFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

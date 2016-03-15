@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/dialog_blue"
+            >
+
+            <TextView
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="提示"
+                android:textColor="#FFFFFF"
+                />
+
+            </LinearLayout>
+
+        <TextView
+            android:id="@+id/dialog_generalpopview_message"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="28dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:text="消息发布后不能萨达萨萨实打实的飒飒的,确定发布?"
+            android:textSize="16sp"
+            android:textColor="#666666"
+            />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray0990"
+            />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/dialog_nocancelpopview_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/dialog_nocancelpopview_sure"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:text="确定"
+                android:textColor="@color/dialog_blue"
+                android:background="@drawable/attendance_popview_selector"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dialog_generalpopview_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/dialog_generalpopview_cancel"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:text="取消"
+                android:background="@drawable/attendance_popview_selector"
+                />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="@color/gray0990"
+                />
+
+            <TextView
+                android:id="@+id/dialog_generalpopview_sure"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:text="确定"
+                android:textColor="@color/dialog_blue"
+                android:background="@drawable/attendance_popview_selector"
+                />
+
+            </LinearLayout>
+        </LinearLayout>
+</LinearLayout>

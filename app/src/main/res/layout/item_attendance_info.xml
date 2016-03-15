@@ -7,8 +7,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dimen_2"
+        android:paddingTop="@dimen/dimen_2">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,12 +28,13 @@
                 android:gravity="center"
                 android:textColor="#383838"
                 android:textSize="14sp"
+                android:text="3月"
                 />
 
             <ImageView
                 android:id="@+id/iv_extra"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_25"
+                android:layout_height="18dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.5"
                 />
@@ -57,7 +59,7 @@
                 <LinearLayout
                     android:id="@+id/layout_morning"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -65,36 +67,31 @@
                         android:id="@+id/tv_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_5"
-                        android:gravity="center"
-                        android:text="未打卡"
-                        android:textColor="@color/red"
+                        android:text="未打"
                         android:textSize="14sp"
                         />
 
                     <TextView
                         android:id="@+id/tv_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_2"
-                        android:layout_marginBottom="@dimen/dimen_2"
-                        android:gravity="center"
-                        android:text="--:--"
+                        android:text="14:09"
                         android:textColor="@color/gray"
                         android:textSize="14sp"
                         />
+
                 </LinearLayout>
+
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/iv_record_in_type"
-                    android:layout_width="@dimen/dimen_25"
-                    android:layout_height="@dimen/dimen_30"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/dimen_5"
                     android:layout_marginRight="@dimen/dimen_16"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_field_work_confirm"
+                    android:visibility="invisible"
                     />
             </LinearLayout>
         </RelativeLayout>
@@ -117,58 +114,72 @@
                 <LinearLayout
                     android:id="@+id/layout_afternoon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_result"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_5"
-                        android:gravity="center"
-                        android:text="未打卡"
-                        android:textColor="@color/red"
+                        android:text="迟到"
                         android:textSize="14sp"
                         />
 
                     <TextView
                         android:id="@+id/tv_time1"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_2"
-                        android:layout_marginBottom="@dimen/dimen_2"
-                        android:gravity="center"
-                        android:text="--:--"
+                        android:text="14:09"
                         android:textColor="@color/gray"
                         android:textSize="14sp"
                         />
                 </LinearLayout>
+
                 <ImageView
-                    android:visibility="gone"
-                    android:layout_marginLeft="@dimen/dimen_5"
                     android:id="@+id/iv_record_out_type"
-                    android:layout_width="@dimen/dimen_25"
-                    android:layout_height="@dimen/dimen_30"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="@dimen/dimen_16"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_field_work_confirm"
+                    android:visibility="invisible"
                     />
 
             </LinearLayout>
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/layout_overtime"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/overtime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="--"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                />
+
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/devider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1"
+        android:layout_height="@dimen/dimen_0.5"
         android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        android:src="#e1e1e1"
+        android:layout_marginLeft="@dimen/dimen_10"
+        android:background="@color/lineCC"
         />
 </LinearLayout>

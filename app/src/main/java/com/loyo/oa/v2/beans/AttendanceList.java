@@ -15,7 +15,16 @@ public class AttendanceList implements Serializable {
     private int lateCount;// (int, optional): ,
     private int listType;// (int, optional): ,
     private int noreCcount;// (int, optional): ,
-    private int outsidecount;// (int, optional):
+    private int outsideCount;// (int, optional):
+    private int extraCount;
+
+    public int getExtraCount() {
+        return extraCount;
+    }
+
+    public void setExtraCount(int extraCount) {
+        this.extraCount = extraCount;
+    }
 
     public int getEarlyCount() {
         return earlyCount;
@@ -26,7 +35,7 @@ public class AttendanceList implements Serializable {
     }
 
     public void setOutsidecount(int outsidecount) {
-        this.outsidecount = outsidecount;
+        this.outsideCount = outsidecount;
     }
 
     public int getNoreCcount() {
@@ -54,7 +63,7 @@ public class AttendanceList implements Serializable {
     }
 
     public int getOutsidecount() {
-        return outsidecount;
+        return outsideCount;
     }
 
     public ArrayList<DayofAttendance> getAttendances() {

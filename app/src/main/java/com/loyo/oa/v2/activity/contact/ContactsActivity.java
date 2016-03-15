@@ -9,11 +9,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.fragment.ContactsInMyDeptFragment;
@@ -23,26 +24,23 @@ import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 
-/**通讯录 联系人 页面
+/**
+ * 通讯录 联系人 页面
  * com.loyo.oa.v2.activity
  * 描述 :
  * 作者 : ykb
  * 时间 : 15/8/24.
  */
 public class ContactsActivity extends BaseFragmentActivity implements View.OnClickListener {
-    ViewGroup img_title_left;
-    ViewGroup img_title_right;
 
-    ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
-    //ContactsInDepartmentFragment userFragment;     //本部门  人员frag
-    ContactsInMyDeptFragment userFragment;     //重构后 本部门  人员frag
-
-    PagerSlidingTabStrip tabs;
-    ViewPager pager;
-    MyPagerAdapter adapter;
-
-    MainApp app = MainApp.getMainApp();
-
+    private ViewGroup img_title_left;
+    private ViewGroup img_title_right;
+    private ContactsDepartmentFragment departmentFragment; //公司全部 部门frag
+    private ContactsInMyDeptFragment userFragment;         //本部门  人员frag
+    private PagerSlidingTabStrip tabs;
+    private ViewPager pager;
+    private MyPagerAdapter adapter;
+    private MainApp app = MainApp.getMainApp();
     private int departmentsSize;
     private int myDepartmentContactsSize;
 
@@ -60,6 +58,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     void initUI() {
         setTouchView(-1);
         getUserAndDepartmentSize();
+
 
         ((TextView) findViewById(R.id.tv_title_1)).setText("通讯录");
 
@@ -90,15 +89,12 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
      * 获取部门数量和本部门人员数量
      */
     void getUserAndDepartmentSize() {
-
-        String depId = (null != MainApp.user.depts && MainApp.user.depts.size() > 0) ? MainApp.user.depts.get(0).getShortDept().getId() : "";
-
         myDepartmentContactsSize = Common.getMyUserDept().size();
-        ArrayList<ContactsGroup> groups = Common.getContactsGroups(null);
-
-        if (!groups.isEmpty()) {
-            for (int i = 0; i < groups.size(); i++) {
-                departmentsSize += groups.get(i).getDepartments().size();
+        if (MainApp.lstDepartment != null) {//公司所有的人员数量
+            for (Department element : MainApp.lstDepartment) {
+                if (element.getUsers() != null) {
+                    departmentsSize += element.getUsers().size();
+                }
             }
         }
     }
@@ -116,6 +112,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
                 break;
         }
     }
+
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
         private String[] titles = {"本部门(0)", "全公司(0)"};

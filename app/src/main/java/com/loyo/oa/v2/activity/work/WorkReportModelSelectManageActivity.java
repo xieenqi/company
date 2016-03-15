@@ -23,6 +23,7 @@ import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.Slide.SlideView;
 
@@ -206,6 +207,7 @@ public class WorkReportModelSelectManageActivity extends Activity implements Sli
 
         @Override
         public void onClick(View v) {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("确认");
             builder.setPositiveButton(mContext.getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {

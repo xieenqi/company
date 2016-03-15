@@ -267,14 +267,17 @@
                         android:layout_weight="1"
                         android:text="是否审核"/>
 
-                    <Switch
+                    <com.loyo.oa.v2.activity.commonview.SwitchView
                         android:id="@+id/switch_approve"
-                        android:layout_width="wrap_content"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_marginTop="6dp"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/margin_side_edge"
-                        android:checked="true"
-                        android:textOff=" "
-                        android:textOn="审核"/>
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dimen_5"
+                        android:layout_marginRight="@dimen/dimen_16"
+                        />
 
                 </LinearLayout>
 

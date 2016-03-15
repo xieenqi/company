@@ -114,7 +114,6 @@ public class CustomerRepeat extends BaseActivity {
         tv_serach.setOnClickListener(onClickListener);
         img_title_left.setOnClickListener(onClickListener);
 
-
     }
 
     /**
@@ -139,7 +138,6 @@ public class CustomerRepeat extends BaseActivity {
             public void failure(RetrofitError error) {
 
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
-
                     Toast("请检查您的网络连接");
 
                 } else if (error.getResponse().getStatus() == 500) {

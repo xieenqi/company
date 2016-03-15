@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
@@ -30,7 +29,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -60,7 +59,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private String mAddress;
-    private String customerId;
+    private String customerId = "";
     private String customerName;
     private SignInGridViewAdapter signInGridViewAdapter;
     private ImageView img_refresh_address;
@@ -127,11 +126,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     void startLocation() {
         img_refresh_address.startAnimation(animation);
         mLocationFlag = false;
-        tv_address.setText("获取当前位置");
+        tv_address.setText("获取当前位置中...");
 
-        new LocationUtil(this, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 img_refresh_address.clearAnimation();
                 animation.reset();
                 mLat = latitude;
@@ -139,20 +138,22 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 mAddress = address;
 
                 boolean gpsOpen = Utils.isGPSOPen(mContext);
-                if (radius > 200 || !gpsOpen) {
-                    address = address.concat(" (gps未开启)");
-                    if (!gpsOpen) {
-                        Global.ToastLong("建议开启GPS,重新定位");
-                    }
-                }
+//                if (radius > 200 || !gpsOpen) {
+//                    address = address.concat(" (GPS未开启)");
+//                    if (!gpsOpen) {
+//                        Global.ToastLong("建议开启GPS,重新定位");
+//                    }
+//                }
                 tv_address.setText(address);
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 img_refresh_address.clearAnimation();
                 animation.reset();
-                Toast.makeText(SignInActivity.this, "定位失败,请在网络和GPS信号良好时重试", Toast.LENGTH_LONG).show();
+                Toast("定位失败,请在网络和GPS信号良好时重试");
+                LocationUtilGD.sotpLocation();
             }
         });
     }
@@ -161,7 +162,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 图片适配器绑定
      */
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -198,10 +199,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
      * 新增签到
      */
     private void addSignIn() {
-        if (TextUtils.isEmpty(customerId)) {
-            Toast("请选择客户");
-            return;
-        }
+//        if (TextUtils.isEmpty(customerId)) {
+//            Toast("请选择客户");
+//            return;
+//        }
 
         if (TextUtils.isEmpty(mAddress)) {
             Global.ToastLong("无效地址!请刷新地址后重试");
@@ -214,15 +215,16 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
 
-
         if (!StringUtil.isEmpty(edt_memo.getText().toString())) {
             map.put("memo", edt_memo.getText().toString());
         }
         LogUtil.d(" 新增拜访传递数据：" + MainApp.gson.toJson(map));
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
             public void success(LegWork legWork, Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
+                cancelLoading();
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
@@ -236,12 +238,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     Toast("提交失败" + response.getStatus());
                     legWork.creator = MainApp.user.toShortUser();
                 }
-
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -280,7 +282,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
          * */
         switch (requestCode) {
             case SelectPicPopupWindow.GET_IMG:
-
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
@@ -291,7 +292,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 /**上传附件*/
-                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
@@ -309,7 +310,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                    HashMap<String,Object> map = new HashMap<String, Object>();
+                    map.put("bizType",0);
+                    map.put("uuid", uuid);
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                         @Override
                         public void success(Attachment attachment, Response response) {
                             Toast("删除附件成功!");

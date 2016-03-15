@@ -42,7 +42,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void initAdapter() {
-        reports=pagingGroupDatas.size();
+        reports = pagingGroupDatas.size();
         mAdapter = new CommonExpandableListAdapter(mActivity, pagingGroupDatas);
         mExpandableListView.getRefreshableView().setAdapter(mAdapter);
     }
@@ -60,7 +60,9 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
-    /**跳转搜索*/
+    /**
+     * 跳转搜索
+     */
     @Override
     public void openSearch() {
 
@@ -75,7 +77,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
 
     @Override
     public void GetData() {
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
@@ -87,7 +89,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         //map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         //map.put("endAt", System.currentTimeMillis() / 1000);
 
-        LogUtil.dll("客户端发送数据:"+ MainApp.gson.toJson(map));
+        LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReports(map, this);
     }
 
@@ -118,13 +120,13 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         mMenu.setmMenuCount(3);//Menu的个数
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
-        mMenu.setmMenuTitleTextSize(16);//Menu的文字大小
+        mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
         mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
-        mMenu.setmMenuListTextSize(16);//Menu展开list的文字大小
+        mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
         mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
         mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
         mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.white));//Menu按下的背景颜色
-        mMenu.setmCheckIcon(R.drawable.ico_make);//Menu展开list的勾选图片
+        mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
         mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态", "全部类别"});//默认未选择任何过滤的Menu title

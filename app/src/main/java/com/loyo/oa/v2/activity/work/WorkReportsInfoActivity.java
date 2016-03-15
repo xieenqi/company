@@ -3,27 +3,31 @@ package com.loyo.oa.v2.activity.work;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
+import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -31,6 +35,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -42,7 +47,6 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -58,10 +62,11 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_workreports_info)
 public class WorkReportsInfoActivity extends BaseActivity {
 
-    final int MSG_DELETE_WORKREPORT = 100;
-    final int MSG_ATTACHMENT = 200;
-    final int MSG_DISCUSSION = 300;
-    final int MSG_REVIEW = 400;
+    public final int MSG_DELETE_WORKREPORT = 100;
+    public final int MSG_ATTACHMENT = 200;
+    public final int MSG_DISCUSSION = 300;
+    public final int MSG_REVIEW = 400;
+    public static final int UPDATE_SUCCESS = 0x01;
 
     @ViewById
     ViewGroup img_title_left;
@@ -100,33 +105,44 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @ViewById
     EditText edt_content;
     @ViewById
-    WebView webView_content;
-    @ViewById
     RatingBar ratingBar_workReport;
-
-    //统计数据
+    @ViewById
+    ViewGroup no_dysndata_workreports;
     @ViewById
     TextView tv_crm;
     @ViewById
-    TextView tv_new_customers_num;
-    @ViewById
-    TextView tv_new_visit_num;
-    @ViewById
-    TextView tv_visit_customers_num;
-
-    //@Extra("workreport")
-    WorkReport mWorkReport;
+    GridView info_gridview_workreports;
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String workReportId;//推送的id
 
+    public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
-    public int status;
+    private boolean isOver = false;
+    private workReportAddgridViewAdapter workGridViewAdapter;
+
+    private ArrayList<WorkReportDyn> dynList;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_SUCCESS) {
+                if (null == dynList || dynList.size() == 0) {
+                    no_dysndata_workreports.setVisibility(View.VISIBLE);
+                    info_gridview_workreports.setVisibility(View.GONE);
+                } else {
+                    no_dysndata_workreports.setVisibility(View.GONE);
+                    info_gridview_workreports.setVisibility(View.VISIBLE);
+                    workGridViewAdapter = new workReportAddgridViewAdapter(getApplicationContext(), dynList);
+                    info_gridview_workreports.setAdapter(workGridViewAdapter);
+                }
+            }
+        }
+    };
 
     @AfterViews
     void init() {
         initUI();
         setTouchView(R.id.layout_touch);
+        showLoading("");
         getData_WorkReport();
     }
 
@@ -143,7 +159,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
             public void success(WorkReport _workReport, Response response) {
-                HttpErrorCheck.checkResponse("报告详情", response);
+                HttpErrorCheck.checkResponse(response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -198,7 +214,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     void initUI() {
         super.setTitle("报告详情");
-
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
 
@@ -212,12 +227,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void updateUI(WorkReport mWorkReport) {
         if (mWorkReport == null) {
             return;
-        }
-
-        if (null != mWorkReport.getCrmDatas() && mWorkReport.getCrmDatas().size() > 2) {
-            tv_new_customers_num.setText(mWorkReport.getCrmDatas().get(0).getContent());
-            tv_new_visit_num.setText(mWorkReport.getCrmDatas().get(1).getContent());
-            tv_visit_customers_num.setText(mWorkReport.getCrmDatas().get(2).getContent());
         }
 
         StringBuilder title = new StringBuilder(mWorkReport.getCreator().name + "提交 ");
@@ -249,16 +258,25 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
 
         tv_crm.setText(crmName);
+        tv_discussion_count.setText("讨论 (" + mWorkReport.getBizExtData().getDiscussCount() + ")");
+        tv_attachment_count.setText("附件 (" + mWorkReport.getBizExtData().getAttachmentCount() + ")");
 
         edt_workReport_title.setText(title.toString());
-
-        webView_content.getSettings().setJavaScriptEnabled(true);
-        webView_content.loadDataWithBaseURL(null, mWorkReport.getContent(), "text/html", "utf-8", null);
-
+//        webView_content.getSettings().setJavaScriptEnabled(true);
+//        webView_content.loadDataWithBaseURL(null, mWorkReport.getContent(), "text/html", "utf-8", null);
+        /**
+         * 工作动态统计
+         */
+        if (null != mWorkReport.getCrmDatas()) {
+            dynList = mWorkReport.getCrmDatas();
+            mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+        } else {
+            mHandler.sendEmptyMessage(UPDATE_SUCCESS);
+        }
         NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
 
         tv_reviewer.setText(mWorkReport.getReviewer().getUser().getName());
-        tv_toUser.setText(getJoinUserNames());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "无抄送人" : getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
@@ -271,7 +289,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
-            status = 3;
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
@@ -286,7 +303,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             }
 
         } else {
-            status  = 0;
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
 
@@ -309,16 +325,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     void showAttachment() {
-        if (mWorkReport.getAttachments() != null && mWorkReport.getAttachments().size() > 0) {
-            tv_attachment_count.setHint("附件".concat("(" + String.valueOf(mWorkReport.getAttachments().size()) + ")"));
+        if (ListUtil.IsEmpty(mWorkReport.getAttachments())) {
+            return;
         }
+        tv_attachment_count.setText("附件 (" + (mWorkReport.getAttachments() == null ? 0 : mWorkReport.getAttachments().size()) + ")");
     }
 
-    @UiThread
     void showDiscussion() {
-        if (mPageDiscussion.getTotalRecords() > 0) {
-            tv_discussion_count.setHint("讨论".concat("(" +
-                    String.valueOf(mPageDiscussion.getTotalRecords()) + ")"));
+        if (!ListUtil.IsEmpty(mPageDiscussion.getRecords())) {
+            int count = mPageDiscussion.getRecords().size();
+            tv_discussion_count.setText("讨论 (" + count + ")");
         }
     }
 
@@ -337,13 +353,19 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
+
+        if(mWorkReport.getReviewer().getStatus().equals("1")){
+            isOver = true;
+        }
+        LogUtil.dll("status:"+mWorkReport.getReviewer().getStatus());
+        LogUtil.dll("isOver:"+isOver);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", isCreater());
-        bundle.putInt("fromPage", Common.WORK_PAGE);
-        bundle.putInt("status",status);
+        bundle.putInt("bizType", 1);
+        bundle.putBoolean("isOver",isOver);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
+
     }
 
     /**
@@ -353,8 +375,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
-        bundle.putInt("status", status);
+        bundle.putInt("status",Integer.parseInt(mWorkReport.getReviewer().getStatus()));
         bundle.putBoolean("isMyUser", isCreater());
+        bundle.putInt("bizType", 1);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
@@ -408,15 +431,15 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public String getJoinUserNames() {
         StringBuilder result = new StringBuilder();
         if (mWorkReport.getMembers().users != null || mWorkReport.getMembers().depts != null) {
-            if(mWorkReport.getMembers().users != null){
+            if (mWorkReport.getMembers().users != null) {
                 for (int i = 0; i < mWorkReport.getMembers().users.size(); i++) {
-                    result.append(mWorkReport.getMembers().users.get(i).getName()+",");
+                    result.append(mWorkReport.getMembers().users.get(i).getName() + ",");
                 }
             }
 
-            if(mWorkReport.getMembers().depts != null){
+            if (mWorkReport.getMembers().depts != null) {
                 for (int i = 0; i < mWorkReport.getMembers().depts.size(); i++) {
-                    result.append(mWorkReport.getMembers().depts.get(i).getName()+",");
+                    result.append(mWorkReport.getMembers().depts.get(i).getName() + ",");
                 }
             }
             return result.toString();
@@ -427,9 +450,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     /**
      * 判断是否是创建人
-     * */
-    public boolean isCreater(){
-        return mWorkReport.getCreator().getId().equals(MainApp.user.getId())?true:false;
+     */
+    public boolean isCreater() {
+        return mWorkReport.getCreator().getId().equals(MainApp.user.getId()) ? true : false;
     }
 
 
@@ -475,7 +498,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_ATTACHMENT:
+                LogUtil.dll("MSG_ATTACHMENT");
                 if (data == null || data.getExtras() == null) {
+                    LogUtil.dll("MSG_ATTACHMENT return");
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
@@ -484,13 +509,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_DISCUSSION:
+                LogUtil.dll("MSG_DISCUSSION");
                 if (data == null || data.getExtras() == null) {
+                    LogUtil.dll("MSG_DISCUSSION return");
                     return;
                 }
-
                 mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
                 showDiscussion();
-
                 break;
         }
     }

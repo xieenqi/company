@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attachment.AttachmentRightActivity_;
@@ -59,46 +58,49 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private ArrayList<Attachment> mAttachments = new ArrayList<>();
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
-    private int goneBtn = 1;
+    private int bizType = 5;
+    private boolean isOver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null && getArguments().containsKey("project")) {
             mProject = (HttpProject) getArguments().getSerializable("project");
         }
     }
 
     /**
-     *
      * 显示图片
+     *
      * @param mListAttachment
      */
     private void bindAttachment(final ArrayList<Attachment> mListAttachment) {
         if (ListUtil.IsEmpty(mListAttachment)) {
             return;
         }
-        onLoadSuccess(mAttachments.size());
-
+        onLoadSuccess(mListAttachment.size());
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
         ArrayList<User> users = Common.getUsersByProject(mProject);
-        boolean hasRights = checkRights();
+        LogUtil.dll("project status:"+mProject.status);
+
+        if(mProject.status == 2){
+            isOver = true;
+        }
 
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, hasRights, goneBtn);
-
+            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this,bizType,mProject.attachmentUUId,isOver);
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);
             adapter.setUsers(users);
-            adapter.setHasRights(hasRights);
             adapter.notifyDataSetChanged();
         }
+
+        /*适配器回调*/
         adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
             @Override
             public void afterDelete(Attachment attachment) {
-                //附件删除后重新绑定
+                onLoadSuccess(mListAttachment.size()-1);
                 mListAttachment.remove(attachment);
                 adapter.setData(mListAttachment);
                 adapter.notifyDataSetChanged();
@@ -124,8 +126,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                         break;
                     }
                 }
-
             }
+        }
+        if (mProject.status == 2) {
+            return false;
         }
         return hasRights;
     }
@@ -153,7 +157,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(mProject.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
-                LogUtil.d(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
+                LogUtil.dll(" 项目的附件获取数据： " + MainApp.gson.toJson(attachments));
                 if (null != attachments && !attachments.isEmpty()) {
                     mAttachments = attachments;
                     bindAttachment(mAttachments);
@@ -173,7 +177,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_attachment, container, false);
-
             mListViewAttachment = (SwipeListView) mView.findViewById(R.id.listView_attachment);
             layout_upload = (ViewGroup) mView.findViewById(R.id.layout_upload);
             layout_upload.setOnClickListener(this);
@@ -208,6 +211,9 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         }
     }
 
+    /**
+     * 上传图片成功
+     * */
     public class AsyncHandler_Upload_New_Attachment extends BaseAsyncHttpResponseHandler {
         File file;
 
@@ -268,6 +274,10 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                     }
                 }
                 break;
+
+            /**
+             * 附件上传回调
+             * */
             case SelectPicPopupWindow.GET_IMG:
                 List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 for (String p : mSelectPath) {
@@ -276,6 +286,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                         if (newFile != null && newFile.length() > 0) {
                             RequestParams params = new RequestParams();
                             params.put("uuid", mProject.attachmentUUId);
+                            params.put("bizType",bizType);
 
                             if (newFile.exists()) {
                                 params.put("attachments", newFile, "image/jpeg");

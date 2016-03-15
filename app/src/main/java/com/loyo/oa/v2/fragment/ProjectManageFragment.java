@@ -36,7 +36,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     private static final String[] FILTER_TYPE_ARRAY = new String[]{"全部类型", "我负责", "我创建", "我参与"};
     private static final int[] FILTER_TYPEID_ARRAY = new int[]{0, 3, 2, 1};
     private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
-
     private ProjectExpandableListAdapter adapter;
     private int type = 0;
     private int status = 0;
@@ -48,6 +47,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void GetData() {
+        showLoading("");
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -80,13 +80,13 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         mMenu.setmMenuCount(2);//Menu的个数
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
-        mMenu.setmMenuTitleTextSize(16);//Menu的文字大小
+        mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
         mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
-        mMenu.setmMenuListTextSize(16);//Menu展开list的文字大小
+        mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
         mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
         mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
         mMenu.setmMenuPressedBackColor(getResources().getColor(R.color.white));//Menu按下的背景颜色
-        mMenu.setmCheckIcon(R.drawable.ico_make);//Menu展开list的勾选图片
+        mMenu.setmCheckIcon(R.drawable.img_check1);//Menu展开list的勾选图片
         mMenu.setmUpArrow(R.drawable.arrow_up);//Menu默认状态的箭头
         mMenu.setmDownArrow(R.drawable.arrow_down);//Menu按下状态的箭头
         mMenu.setDefaultMenuTitle(new String[]{"全部类型", "全部状态"});//默认未选择任何过滤的Menu title

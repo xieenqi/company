@@ -39,13 +39,9 @@ import retrofit.client.Response;
 public class CustomerLabelActivity extends BaseActivity {
 
     @ViewById ExpandableListView expand_listview_label;
-
     @ViewById ViewGroup img_title_left;
-
     @Extra("tagitems") ArrayList<TagItem> mTagItems;
-
     @Extra("customerId") String mCustomerId;
-
     ArrayList<Tag> tags = new ArrayList<>();
 
     @AfterViews
@@ -98,7 +94,6 @@ public class CustomerLabelActivity extends BaseActivity {
                 }
                 adapter.notifyDataSetChanged();
                 expand();
-
                 return false;
             }
         });

@@ -22,11 +22,14 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
     protected MainApp app;
     protected Context mContext;
     private Toast mCurrentToast;
+    private int mTouchViewGroupId = -1;
+    public GeneralPopView generalPopView;
 
     final String Tag = "BaseFragmentActivity";
 
@@ -51,6 +54,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     /**
      * 网络状态变化回调方法
+     *
      * @param available
      */
     protected void onNetworkChanged(boolean available) {
@@ -134,7 +138,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
 //        main_layout = (DrawerLayout) findViewById(R.id.main_layout);
 //        f = this.findViewById(R.id.navigation_drawer);
     }
@@ -170,42 +173,36 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     public boolean dispatchTouchEvent(MotionEvent event) {
-        //如果筛选弹出
-
         switch (event.getAction()) {
+
+            /*获取手指触点左边*/
             case MotionEvent.ACTION_DOWN:
                 xDistance = yDistance = 0f;
                 xLast = event.getX();
                 yLast = event.getY();
                 break;
-            case MotionEvent.ACTION_MOVE:
-                final float curX = event.getX();
-                final float curY = event.getY();
 
+            /*禁用左滑finish*/
+            case MotionEvent.ACTION_MOVE:
+/*              final float curX = event.getX();
+                final float curY = event.getY();
                 xDistance += Math.abs(curX - xLast);
                 yDistance += Math.abs(curY - yLast);
                 if (curX > xLast && xDistance > yDistance && xDistance > 180) {
-
-//                    if (main_layout != null && f != null && main_layout.isDrawerOpen(f)) {
-//                        main_layout.closeDrawers();
-//                    } else if (mTouchViewGroupId == 0) {
-                        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-//                    }
-
+                    app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 }
                 xLast = curX;
-                yLast = curY;
+                yLast = curY;*/
         }
 
         return super.dispatchTouchEvent(event);
     }
 
-    int mTouchViewGroupId;
 
     public void setTouchView(int _touchViewGroupId) {
         mTouchViewGroupId = _touchViewGroupId;
-
         if (mTouchViewGroupId <= 0) {
+
             return;
         }
 
@@ -233,11 +230,11 @@ public class BaseFragmentActivity extends FragmentActivity {
 //                            if (curX > xLast && xDistance > yDistance && xDistance > 150) {
 //                            app.finishActivity((FragmentActivity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                             onBackPressed();
+
                         }
                         xLast = curX;
                         yLast = curY;
                 }
-
                 return true;
             }
         });
@@ -260,5 +257,25 @@ public class BaseFragmentActivity extends FragmentActivity {
         mCurrentToast = Toast.makeText(app.getBaseContext(), msg, Toast.LENGTH_SHORT);
         mCurrentToast.setGravity(Gravity.CENTER, 0, 0);
         mCurrentToast.show();
+    }
+
+    /**
+     * 通用提示弹出框init
+     * */
+    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
+        generalPopView = new GeneralPopView(this,isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
+    }
+
+    /*重启当前Activity*/
+    public void restartActivity(){
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 }

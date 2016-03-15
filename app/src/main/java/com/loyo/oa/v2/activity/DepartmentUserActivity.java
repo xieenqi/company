@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -27,7 +26,6 @@ import com.loyo.oa.v2.fragment.UserFragment;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,43 +38,33 @@ import java.util.Map;
 public class DepartmentUserActivity extends FragmentActivity implements View.OnClickListener {
 
     public static final int request_Code = 100;
-
-    static final String MSG_TYPE_MULTI = "com.loyo.oa.v2.multi";
-
+    public static final String MSG_TYPE_MULTI = "com.loyo.oa.v2.multi";
     public static final String STR_SHOW_TYPE = "show_type";
     public static final String STR_SELECT_TYPE = "select_type";
     public static final String STR_SUPER_ID = "super_id";
     public static final String STR_SUPER_NAME = "super_name";
-
     public static final String CC_DEPARTMENT_ID = "chaosong_Department_id";
     public static final String CC_USER_ID = "chaosong_User_id";
     public static final String CC_DEPARTMENT_NAME = "chaosong_Department_name";
     public static final String CC_USER_NAME = "chaosong_User_name";
-
-    ViewGroup img_title_left;
-    Button btn_title_right;
-
-    DepartmentFragment departmentFragment; //部门fragment
-    UserFragment userFragment;             //员工fragment
-
+    private ViewGroup img_title_left;
+    private Button btn_title_right;
+    private DepartmentFragment departmentFragment; //部门fragment
+    private UserFragment userFragment;             //员工fragment
     public int show_type;   //页面类型（0=部门+人员,1=仅人员）
     public int select_type; //选择类型 (0=多选，1=单选)
     public String superDeptId;
-
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;
-
     public static final int TYPE_SHOW_USER = 1;
     public static final int TYPE_SHOW_DEPT_USER = 0;
 
-    PagerSlidingTabStrip tabs;
-    ViewPager pager;
-    MyPagerAdapter adapter;
-
-    MultiUserReceiver receiver = new MultiUserReceiver();
-
-    HashMap<String, String> ccUserMap = new HashMap<>();
-    HashMap<String, String> ccDeptMap = new HashMap<>();
+    private PagerSlidingTabStrip tabs;
+    private ViewPager pager;
+    private MyPagerAdapter adapter;
+    private MultiUserReceiver receiver = new MultiUserReceiver();
+    private HashMap<String, String> ccUserMap = new HashMap<>();
+    private HashMap<String, String> ccDeptMap = new HashMap<>();
 
     MainApp app = MainApp.getMainApp();
 

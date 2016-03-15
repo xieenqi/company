@@ -17,7 +17,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
@@ -30,14 +29,13 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -56,6 +54,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -81,6 +80,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     EditText edt_contract_tel;
     @ViewById
+    EditText edt_contract_telnum;
+    @ViewById
     EditText et_address;
     @ViewById
     TextView tv_labels;
@@ -101,20 +102,26 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<TagItem> items = new ArrayList<>();
     private ArrayList<NewTag> tags;
 
-    private String uuid = null;
+    private String uuid = StringUtil.getUUID();
     private String tagItemIds;
-    private String mGpsAddress;
     private String myAddress;
     private boolean isFocused = false;
 
     private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public void dispatchMessage(Message msg) {
             if (msg.what == 0x01) {
                 et_address.setText(myAddress);
-                mGpsAddress = myAddress;
             }
         }
+
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if (msg.what == 0x01) {
+//                et_address.setText(myAddress);
+//                mGpsAddress = myAddress;
+//            }
+//        }
     };
 
 
@@ -132,26 +139,30 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    LocationUtilGD locationGd;
+
     /**
      * 获取定位
      */
     void startLocation() {
         img_refresh_address.startAnimation(animation);
-
-        new LocationUtil(this, new LocationUtil.AfterLocation() {
+        et_address.setText(app.address);
+        locationGd = new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 myAddress = address;
                 mHandler.sendEmptyMessage(0x01);
                 img_refresh_address.clearAnimation();
+                LocationUtilGD.sotpLocation();
             }
-
 
             @Override
-            public void OnLocationFailed() {
-                Toast.makeText(CustomerAddActivity.this, "定位失败,请在网络和GPS信号良好时重试", Toast.LENGTH_LONG).show();
+            public void OnLocationGDFailed() {
+                Toast("定位失败,请在网络和GPS信号良好时重试");
                 img_refresh_address.clearAnimation();
+                LocationUtilGD.sotpLocation();
             }
+
         });
     }
 
@@ -175,7 +186,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true,true,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
@@ -213,6 +224,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 String customerAddress = et_address.getText().toString().trim();
                 String customerContract = edt_contract.getText().toString().trim();
                 String customerContractTel = edt_contract_tel.getText().toString().trim();
+                String customerWrietele = edt_contract_telnum.getText().toString().trim();
 
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称");
@@ -220,17 +232,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else if (customerAddress.isEmpty()) {
                     Toast("请输入的客户地址");
                     break;
-                } else if (customerContract.isEmpty()) {
-                    Toast("请输入联系人");
-                    break;
-                } else if (customerContractTel.isEmpty()) {
-                    Toast("请输入联系电话");
-                    break;
                 }
-                if(!RegularCheck.isMobilePhone(customerContractTel)){
-                Toast("电话号码不正确");
-                return;
-            }
                 if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
                     Contact defaultContact;
                     defaultContact = new Contact();
@@ -250,9 +252,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 try {
                     jsonObject.put("name", customer_name);
                     // jsonObject.put("address", customerAddress);
-
-                    if (uuid != null && lstData_Attachment.size() > 0) {
+                    if (lstData_Attachment.size() > 0) {
                         jsonObject.put("uuid", uuid);
+                        jsonObject.put("attachmentCount", lstData_Attachment.size());
                     }
 
                     JSONObject jsonLoc = new JSONObject();
@@ -264,47 +266,21 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     jsonObject.put("loc", jsonLoc);
                     jsonObject.put("pname", customerContract);
                     jsonObject.put("ptel", customerContractTel);
-                   /* JSONArray jsonArrayContacts = new JSONArray();
-                    for (Contact contact : mContacts) {
+                    jsonObject.put("wiretel", customerWrietele);
 
-                        JSONObject jo = new JSONObject();
-                        jo.put("id",contact.getId());
-                        jo.put("name", contact.getName());
-                        jo.put("tel", contact.getTel());
-                        jo.put("isDefault", contact.isDefault());
-
-                        jsonArrayContacts.put(jo);
-                    }
-
-
-                  if (!ListUtil.IsEmpty(mContacts)) {
-                        jsonObject.put("contacts", jsonArrayContacts);
-                    }*/
-
-                   /* if (customerAddress.equals(mGpsAddress)
-                            && !StringUtil.isEmpty(customerAddress)
-                            && !StringUtil.isEmpty(mGpsAddress)) {
-
-                        jsonObject.put("gpsAddress", mGpsAddress);
-                        jsonObject.put("gpsInfo", app.longitude + "," + app.latitude);
-                    }
-*/
                     if (tags != null && tags.size() > 0) {
                         JSONArray jsonArrayTagItems = new JSONArray();
                         for (NewTag tag : tags) {
-
                             JSONObject jo = new JSONObject();
                             jo.put("tId", tag.gettId());
                             jo.put("itemId", tag.getItemId());
                             jo.put("itemName", tag.getItemName());
                             jsonArrayTagItems.put(jo);
                         }
-
                         jsonObject.put("tags", jsonArrayTagItems);
                     }
-
                     stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
-
+                    LogUtil.dll("新建客户 发送参数:" + MainApp.gson.toJson(jsonObject));
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -394,9 +370,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                         if (newFile != null && newFile.length() > 0) {
                             RequestParams params = new RequestParams();
-                            if (uuid == null) {
-                                uuid = StringUtil.getUUID();
-                            }
                             params.put("uuid", uuid);
 
                             if (newFile.exists()) {
@@ -417,11 +390,16 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this,"请稍候");
+                Utils.dialogShow(this, "请稍候");
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+                    uuid = StringUtil.getUUID();
+                    HashMap<String,Object> map = new HashMap<String, Object>();
+                    map.put("bizType",6);
+                    map.put("uuid", uuid);
+
                     RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map,
                             new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment attachment, Response response) {
@@ -540,5 +518,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
         }
+
+        locationGd.sotpLocation();
     }
 }

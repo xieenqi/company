@@ -1,9 +1,7 @@
 package com.loyo.oa.v2.activity.contact;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -40,7 +38,7 @@ import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RegexUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -62,8 +60,10 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -129,8 +129,9 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
+    private String[] mounthArr = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
 
-    private static class MHandler extends Handler {
+    private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
 
         private MHandler(ContactInfoEditActivity activity) {
@@ -143,15 +144,18 @@ public class ContactInfoEditActivity extends BaseActivity {
 
             String des = "重新获取(" + msg.what + "秒)";
             TextView tvtime = mActivity.get().tv_get_code;
+
             if (msg.what == 0) {
                 des = "重新获取";
                 mActivity.get().recycle();
                 if (null != tvtime) {
+                    tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.gray));
                     tvtime.setEnabled(true);
                 }
             }
 
             if (null != tvtime) {
+                tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.title_bg1));
                 tvtime.setText(des);
             }
         }
@@ -168,8 +172,9 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_birthday.setOnTouchListener(Global.GetTouch());
         layout_set_avartar.setOnTouchListener(Global.GetTouch());
         layout_mobile.setOnTouchListener(Global.GetTouch());
-        et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
+        //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
+
     }
 
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
@@ -182,7 +187,9 @@ public class ContactInfoEditActivity extends BaseActivity {
                     app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
                 }
                 break;
+            /*设置头像*/
             case R.id.layout_set_avartar:
+                LogUtil.dee("点击设置头像");
                 Intent intent = new Intent(this, MultiImageSelectorActivity.class);
                 // 是否显示拍摄图片
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
@@ -272,19 +279,24 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("系统提示").setMessage("您有数据未提交,是否提交?").setPositiveButton("提交", new DialogInterface.OnClickListener() {
+
+        showGeneralDialog(false, true, getString(R.string.app_userinfoedt_message));
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 updateProfile();
             }
-        }).setNegativeButton("不提交", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
             }
-        }).create();
-        dialog.show();
+        });
     }
 
     /**
@@ -300,7 +312,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
 
         path = user.getAvatar();
-        //Utils.setContent(tv_title, user.getRealname());
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
         if (user.gender == 2) {
@@ -317,9 +328,11 @@ public class ContactInfoEditActivity extends BaseActivity {
             Utils.setContent(tv_birthday, user.birthDay);
             Utils.setContent(tv_age, Utils.getAge(user.birthDay.substring(0, 4)) + "");
         }
+
+        /*获取职位与部门名字*/
         if (null != user.depts && !user.depts.isEmpty()) {
             StringBuilder departments = new StringBuilder();
-            StringBuilder positions = new StringBuilder();
+            StringBuilder posiName = new StringBuilder();
             for (int i = 0; i < user.depts.size(); i++) {
                 UserInfo info = user.depts.get(i);
                 if (null != info.getShortDept() && !TextUtils.isEmpty(info.getShortDept().getName())) {
@@ -328,15 +341,15 @@ public class ContactInfoEditActivity extends BaseActivity {
                     }
                     departments.append(info.getShortDept().getName());
                 }
-                if (null != info.getShortPosition() && !TextUtils.isEmpty(info.getShortPosition().getName())) {
-                    if (!TextUtils.isEmpty(positions)) {
-                        positions.append("|");
+                if (null != info.getTitle() && !TextUtils.isEmpty(info.getTitle())) {
+                    if (!TextUtils.isEmpty(posiName)) {
+                        posiName.append("|");
                     }
-                    positions.append(info.getShortPosition().getName());
+                    posiName.append(info.getTitle());
                 }
             }
             tv_departments.setText(departments);
-            tv_positions.setText(positions);
+            tv_positions.setText(posiName);
         }
     }
 
@@ -345,7 +358,7 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 编辑个人信息
      */
     private void updateProfile() {
-
+        showLoading("");
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();
@@ -360,22 +373,21 @@ public class ContactInfoEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-
+                HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
                 InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
                 mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
-                HttpErrorCheck.checkResponse(response);
 
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast("修改个人信息失败");
+                // Toast("修改个人信息失败");
                 HttpErrorCheck.checkError(error);
-                finish();
+                // finish();
             }
         });
     }
@@ -386,6 +398,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     private void countDown() {
         mTimerTask = new TimerTask() {
             private int seconds = 60;
+
             @Override
             public void run() {
                 if (!isRun) {
@@ -529,31 +542,67 @@ public class ContactInfoEditActivity extends BaseActivity {
                 super.failure(error);
                 dialog.dismiss();
                 Toast("修改手机号码失败" + error.getMessage());
-
-
             }
         });
     }
 
 
+    private DatePicker findDatePicker(ViewGroup group) {
+        if (group != null) {
+            for (int i = 0, j = group.getChildCount(); i < j; i++) {
+                View child = group.getChildAt(i);
+                if (child instanceof DatePicker) {
+                    return (DatePicker) child;
+                } else if (child instanceof ViewGroup) {
+                    DatePicker result = findDatePicker((ViewGroup) child);
+                    if (result != null)
+                        return result;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * 设置生日
      */
     private void selectBirthDay() {
-        DateTool.calendar = Calendar.getInstance();
+
+        Calendar calendar = Calendar.getInstance(Locale.CHINA);
+        Date date = new Date();
+        calendar.setTime(date);
+
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                //((NumberPicker)((ViewGroup) ((ViewGroup) view.getChildAt(0)).getChildAt(0)).getChildAt(1)).setDisplayedValues(mounthArr);
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
-                    String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
+                    String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth);
                     Utils.setContent(tv_birthday, str);
                     Utils.setContent(tv_age, age + "");
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
             }
-        }, DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
+        }, year, month, day);
+//        datePickerDialog.setButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
+//        datePickerDialog.setButton2("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
         datePickerDialog.show();
     }
 
@@ -583,26 +632,26 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 微信编辑框的文本观察器
-     */
-    private class WxTextWatcher extends ITextWatcher {
-        private String mDes;
-        private EditText mEt;
-
-        private WxTextWatcher(EditText tv, String des) {
-            mEt = tv;
-            mDes = des;
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
-            if (!isMobile) {
-                mEt.setError(mDes);
-            }
-        }
-    }
+//    /**
+//     * 微信编辑框的文本观察器
+//     */
+//    private class WxTextWatcher extends ITextWatcher {
+//        private String mDes;
+//        private EditText mEt;
+//
+//        private WxTextWatcher(EditText tv, String des) {
+//            mEt = tv;
+//            mDes = des;
+//        }
+//
+//        @Override
+//        public void afterTextChanged(Editable editable) {
+//            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
+//            if (!isMobile) {
+//                mEt.setError(mDes);
+//            }
+//        }
+//    }
 
     /**
      * 弹出框控件点击事件
@@ -660,10 +709,12 @@ public class ContactInfoEditActivity extends BaseActivity {
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
 
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+            LogUtil.dee("mSelectPath:" + (mSelectPath == null));
             StringBuilder sb = new StringBuilder();
             for (String p : mSelectPath) {
                 sb.append(p);
             }
+            LogUtil.dee("sb.toString:" + sb.toString());
 
             ImageLoader.getInstance().displayImage("file://" + sb.toString(), img_title_user);
             User.setImageUrl("file://" + sb.toString());

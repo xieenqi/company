@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -108,12 +109,19 @@ public class DepartmentUserSearchActivity extends Activity {
             }
         });
 
+        /*取消监听*/
         findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doSearch();
+                onBackPressed();
             }
         });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     String key;
@@ -125,7 +133,7 @@ public class DepartmentUserSearchActivity extends Activity {
     void doSearch() {
         key = edt_search.getText().toString().trim();
         if (StringUtil.isEmpty(key)) {
-            Global.Toast("请输入查询姓名!");
+            //Global.Toast("请输入查询姓名!");
             return;
         }
 
@@ -151,6 +159,8 @@ public class DepartmentUserSearchActivity extends Activity {
 
         if (resultData.size() > 0) {
             adapter.notifyDataSetChanged();
+        }else{
+            Global.Toast("未搜索到此联系人!");
         }
     }
 

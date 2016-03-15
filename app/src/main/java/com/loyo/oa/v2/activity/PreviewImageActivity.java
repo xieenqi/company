@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,8 +16,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -30,7 +30,7 @@ import uk.co.senab.photoview.PhotoView;
 /**
  * 预览图片
  */
-public class PreviewImageActivity extends Activity {
+public class PreviewImageActivity extends BaseActivity {
 
     private ViewPager mViewPager;
     private ArrayList<Attachment> mNewAttachments = null;
@@ -52,27 +52,7 @@ public class PreviewImageActivity extends Activity {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //删除
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PreviewImageActivity.this);
-                    builder.setTitle("确认");
-                    builder.setPositiveButton(getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Intent intent = new Intent();
-                            intent.putExtra("delAtm", mNewAttachments.get(mPosition));
-                            MainApp.getMainApp().finishActivity(PreviewImageActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
-                        }
-                    });
-
-                    builder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setMessage("是否删除附件?");
-                    builder.show();
+                    dialogToast();
                 }
             });
         }
@@ -126,18 +106,31 @@ public class PreviewImageActivity extends Activity {
 
             }
         });
+    }
 
-//        if (getIntent().hasExtra("position")) {
-//            int position = getIntent().getIntExtra("position", 0);
-//            if (position < mNewAttachments.size()) {
-//                mViewPager.setCurrentItem(position);
-//            }
-//        }
+    /**
+     * 删除提示框
+     * */
+    public void dialogToast(){
+        showGeneralDialog(true,true,"是否删除附件?");
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+                Intent intent = new Intent();
+                intent.putExtra("delAtm", mNewAttachments.get(mPosition));
+                MainApp.getMainApp().finishActivity(PreviewImageActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+            }
+        });
 
-//        if (savedInstanceState != null) {
-//            boolean isLocked = savedInstanceState.getBoolean(ISLOCKED_ARG, false);
-//            ((HackyViewPager) mViewPager).setLocked(isLocked);
-//        }
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
 
     }
 
@@ -150,16 +143,19 @@ public class PreviewImageActivity extends Activity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            PhotoView photoView = new PhotoView(container.getContext());
 
+            PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
             File imgFile = attachment.getFile();
+            LogUtil.d("预览图片的url：" + attachment.getUrl());
             if (imgFile != null) {
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {
-                ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
-            }
 
+                ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+
+            }
+            LogUtil.d("预览 转换 的url：" + bigImagUrl(attachment.getUrl()));
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -178,4 +174,9 @@ public class PreviewImageActivity extends Activity {
 
     }
 
+    public String bigImagUrl(String url) {
+        String newUrl = url.replaceAll("loyocloud-01.img-cn-qingdao.aliyuncs.com", "loyocloud-01.oss-cn-qingdao.aliyuncs.com");
+
+        return newUrl.replaceAll("@1e_1c_0o_0l_200h_200w_70q.src", "");
+    }
 }

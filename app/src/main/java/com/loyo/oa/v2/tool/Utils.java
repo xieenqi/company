@@ -35,6 +35,8 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
 import com.loyo.oa.v2.beans.TagItem;
+import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
 
@@ -130,10 +132,10 @@ public class Utils {
      * @param uuid
      * @param file
      */
-    public synchronized static Observable<Attachment> uploadAttachment(String uuid, File file) {
+    public synchronized static Observable<Attachment> uploadAttachment(String uuid, int bizType, File file) {
         TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedString = new TypedString(uuid);
-        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedString, typedFile);
+        TypedString typedUuid = new TypedString(uuid);
+        return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid, bizType, typedFile);
     }
 
     /**
@@ -287,7 +289,7 @@ public class Utils {
      */
     public static void call(Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
-            Global.Toast("电话号码为空");
+            Global.Toast("号码为空");
             return;
         }
         Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
@@ -327,10 +329,9 @@ public class Utils {
      */
     public static void goWhere(final Context context, final double toLat, final double toLng) {
 
-        new LocationUtil(context, new LocationUtil.AfterLocation() {
+        new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-
+            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 Uri uri;
                 if (hasMapApp(context)) {
                     uri = Uri.parse("geo: " + latitude + "," + longitude);
@@ -340,23 +341,30 @@ public class Utils {
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(it);
-
-
-/*                Intent intent;
-                try {
-                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
-                    context.startActivity(intent); //启动调用
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }*/
-
-
+                LocationUtilGD.sotpLocation();
             }
 
             @Override
-            public void OnLocationFailed() {
+            public void OnLocationGDFailed() {
                 Global.Toast("获取当前位置失败,无法规划路径");
+                LocationUtilGD.sotpLocation();
             }
+
+//            @Override
+//            public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
+///*                Intent intent;
+//                try {
+//                    intent = Intent.getIntent("intent://map/direction?origin=latlng:"+latitude+","+longitude+"|name:我家&destination=大雁塔&mode=driving®ion=西安&referer=Autohome|GasStation#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+//                    context.startActivity(intent); //启动调用
+//                } catch (URISyntaxException e) {
+//                    e.printStackTrace();
+//                }*/
+//            }
+//
+//            @Override
+//            public void OnLocationFailed() {
+//
+//            }
         }
 
         );
@@ -579,6 +587,7 @@ public class Utils {
         return false;
     }
 
+
     /**
      * 设置内容
      *
@@ -637,6 +646,42 @@ public class Utils {
 
         return sb.toString();
     }
+
+
+    /*取下班时间，最小值，最早下班时间*/
+    public static long minOutTime(ArrayList<Long> array){
+        long min = 0;
+        for(int i = 0;i<array.size();i++){
+            for(int k = i+1;k<array.size();k++){
+                if(array.get(i)<array.get(k)){
+                    min = array.get(k);
+                }else{
+                    min = array.get(i);
+                }
+            }
+        }
+        return min;
+    }
+
+    /**
+     * 获取部门名字和职位名字，包括多部门情况下
+     * */
+    public static StringBuffer getDeptName(StringBuffer stringBuffer,ArrayList<UserInfo> list){
+
+        for(int i = 0;i<list.size();i++){
+            stringBuffer.append(list.get(i).getShortDept().getName());
+            if(!list.get(i).getTitle().isEmpty()
+                    && list.get(i).getTitle().length() >0){
+                stringBuffer.append(" | "+list.get(i).getTitle());
+            }
+            if(i != list.size()-1){
+                stringBuffer.append(" ; ");
+            }
+        }
+
+        return stringBuffer;
+    }
+
 
     /**
      * 服务是否在运行

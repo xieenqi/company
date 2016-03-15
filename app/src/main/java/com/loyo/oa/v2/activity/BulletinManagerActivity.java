@@ -90,7 +90,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(PaginationX<Bulletin> pagination, Response response) {
-                HttpErrorCheck.checkResponse(" 通知公告的数据： ",response);
+                HttpErrorCheck.checkResponse(response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
@@ -216,20 +216,19 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             holder.tv_title.setText(bulletin.title);
             holder.tv_content.setText(bulletin.content);
             holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.creator.depts.get(0).getShortDept().getName()
-                    + " " + bulletin.creator.depts.get(0).getShortPosition().getName());
+                    + " " + bulletin.creator.depts.get(0).getShortDept().title);
 
             ImageLoader.getInstance().displayImage(bulletin.creator.avatar, holder.iv_avatar);
             ArrayList<Attachment> attachments = bulletin.attachments;
             if (null != attachments && !attachments.isEmpty()) {
                 holder.gridView.setVisibility(View.VISIBLE);
-                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true,true,0);
+                SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true, true, 0);
                 SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
                 //holder.gridView.setAdapter(adapter);
-               //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);
+                //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);
             } else {
                 holder.gridView.setVisibility(View.GONE);
             }
-
         }
 
         @Override

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.LoginActivity;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -32,6 +33,9 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
+
+import java.util.Locale;
 
 /**
  * activity 基类
@@ -44,6 +48,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected boolean isNeedLogin = true;
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
+    private int mTouchViewGroupId;
+    private GestureDetector mDetector;
+    public GeneralPopView generalPopView;
 
     /**
      * 搜索跳转分类
@@ -66,6 +73,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
+
+        /*强制设置系统语言为中文*/
+        Locale locale = new Locale("zh");
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, null);
+
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
@@ -137,7 +152,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         if (MainApp.user == null && savedInstanceState.containsKey("user")) {
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
-
 
         app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
     }
@@ -227,6 +241,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
     }
 
+
+    /**
+     * 老版弹出框
+     * */
     protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(message);
@@ -235,7 +253,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
                 confirm.Confirm();
             }
         });
@@ -246,7 +263,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             }
         });
         builder.create().show();
-
     }
 
     protected interface ConfirmDialogInterface {
@@ -256,8 +272,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     //当控件Id>0的时候，是指定ViewGroup的ID
     // = 0的时候是Activity使用手势。
     // = -1的时候是Activity不使用手势。
-    int mTouchViewGroupId;
-
     protected void setTouchView(int _touchViewGroupId) {
         if (_touchViewGroupId <= 0) {
             mTouchViewGroupId = _touchViewGroupId;
@@ -275,7 +289,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         });
     }
 
-    GestureDetector mDetector;
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -302,12 +315,12 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     }
 
+    /*页面左滑手指监听*/
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        //        int i = app.diptoPx(200);
         if (e2.getX() - e1.getX() > Global.GetBackGestureLength()) {
-            onBackPressed();
+            //onBackPressed();
         }
 
         return false;
@@ -351,7 +364,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
-    //加载loading的方法
+    /**
+     * 加载loading的方法
+     * */
     public void showLoading(String msg) {
         DialogHelp.showLoading(this, msg, true);
     }
@@ -362,5 +377,26 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     public static void cancelLoading() {
         DialogHelp.cancelLoading();
+    }
+
+
+    /**
+     * 通用提示弹出框init
+     * */
+    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
+        generalPopView = new GeneralPopView(this,isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
+    }
+
+    /*重启当前Activity*/
+    public void restartActivity(){
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 }

@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title1"/>
+    <include layout="@layout/include_common_title1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginTop="@dimen/dimen_10"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/img_bg_home_textview"
             android:orientation="horizontal">
 
             <EditText
+                android:padding="10dp"
                 android:id="@+id/et_child_add_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,57 +29,57 @@
                 android:hint="请输入子任务内容"
                 android:inputType="textMultiLine"
                 android:minHeight="@dimen/dimen_120"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
         </LinearLayout>
 
-        <LinearLayout
+
+        <View
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray0990"
+            />
+
+        <RelativeLayout
             android:id="@+id/layout_child_add_responser"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_48"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/dimen_15"
-            android:background="@drawable/img_bg_home_textview"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="0dp"
+            android:background="@color/white"
+            >
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_alignParentLeft="true"
+                style="@style/textView_hint"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/img_child_label"
-                    style="@style/image_label"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dimen_5"
-                    android:layout_marginRight="@dimen/dimen_5"
-                    android:src="@drawable/task_responsible_person"
-                    />
-
-                <TextView
-                    style="@style/textView_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical|left"
-                    android:layout_toRightOf="@+id/img_child_label"
-                    android:text="负责人"
-                    />
-
-            </RelativeLayout>
+                android:layout_gravity="center_vertical|left"
+                android:text="负责人"
+                android:textColor="@color/black"
+                />
 
             <TextView
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
                 android:id="@+id/tv_child_add_responser_name"
                 style="@style/textView_hint"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
                 android:layout_weight="0.5"
                 android:drawableRight="@drawable/right_arrow"
                 android:gravity="center"
                 android:text="点击添加负责人"
+                android:textColor="@color/title_bg1"
                 />
-        </LinearLayout>
+        </RelativeLayout>
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray0990"
+            />
 
         <LinearLayout
             android:id="@+id/layout_child_add_action"
@@ -97,7 +98,7 @@
                 android:layout_marginTop="@dimen/dimen_15"
                 android:background="@drawable/round_bg_shpe"
                 android:text="确认完成"
-                android:textColor="@color/whitesmoke"/>
+                android:textColor="@color/whitesmoke" />
 
             <Button
                 android:id="@+id/btn_child_add_cancel_complete"
@@ -106,7 +107,7 @@
                 android:layout_marginTop="@dimen/dimen_15"
                 android:background="@drawable/round_bg_shpe"
                 android:text="取消完成"
-                android:textColor="@color/whitesmoke"/>
+                android:textColor="@color/whitesmoke" />
             <!--
             <Button
                 android:background="@drawable/round_bg_shpe"

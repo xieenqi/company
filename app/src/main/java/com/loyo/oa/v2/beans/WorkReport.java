@@ -11,12 +11,13 @@ import java.util.ArrayList;
 public class WorkReport extends BaseBeans {
     public static final int DAY = 1, WEEK = 2, MONTH = 3;
 
-    private ArrayList<CRMData> crmDatas;
+    private ArrayList<WorkReportDyn> crmDatas;
     private boolean isDelayed ;
     private ArrayList<Reviewer> reviewers;
     private Members members = new Members();
     private NewUser user = new NewUser();
     private Reviewer reviewer = new Reviewer(user);
+    private BizExtData bizExtData;
 
 
     private String attachmentUUId;//string, optional): ,
@@ -33,6 +34,13 @@ public class WorkReport extends BaseBeans {
     private long updatedAt;//&{time Time}, optional):
     private DiscussCounter discuss;
 
+    public BizExtData getBizExtData() {
+        return bizExtData;
+    }
+
+    public void setBizExtData(BizExtData bizExtData) {
+        this.bizExtData = bizExtData;
+    }
 
     public NewUser getUser() {
         return user;
@@ -67,7 +75,7 @@ public class WorkReport extends BaseBeans {
         this.endAt = endAt;
     }
 
-    public ArrayList<CRMData> getCrmDatas() {
+    public ArrayList<WorkReportDyn> getCrmDatas() {
         return crmDatas;
     }
 

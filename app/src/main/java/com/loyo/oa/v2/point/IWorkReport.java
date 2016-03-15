@@ -4,10 +4,12 @@ import com.loyo.oa.v2.activity.work.HttpDefaultComment;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.beans.WorkReportTpl;
 import com.loyo.oa.v2.beans.WorkreportLastUsers;
 import com.loyo.oa.v2.common.FinalVariables;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -41,6 +43,16 @@ public interface IWorkReport {
 
     @GET(FinalVariables.workreports + "lastusers")
     void getLastUsers(Callback<WorkreportLastUsers> cb);
+
+
+    /**
+     * 获取动态工作报告
+     *
+     * @param map
+     * @param cb
+     * */
+    @GET("/statistics/process/number")
+    void getDynamic(@QueryMap HashMap<String,Object> map, Callback<ArrayList<WorkReportDyn>> cb);
 
     /**
      * 根据ID获取报告详情

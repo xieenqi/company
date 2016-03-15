@@ -33,15 +33,15 @@
 
                 <com.loyo.oa.v2.tool.customview.RoundImageView
                     android:id="@+id/iv_avartar"
-                    android:layout_width="@dimen/dimen_65"
+                    android:layout_width="@dimen/dimen_48"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="@dimen/dimen_8"
                     android:layout_marginLeft="@dimen/dimen_8"
                     android:layout_marginTop="@dimen/dimen_8"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_contact_avatar"
-                    imagecontrol:border_inside_color="#a8d4e9"
-                    imagecontrol:border_outside_color="#a8d4e9"
+                    imagecontrol:border_inside_color="@color/white"
+                    imagecontrol:border_outside_color="@color/white60"
                     imagecontrol:border_thickness="1dp"/>
 
                 <TextView
@@ -51,6 +51,7 @@
                     android:layout_marginLeft="@dimen/dimen_5"
                     android:gravity="center"
                     android:text="方静"
+                    android:textColor="@color/text33"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -65,57 +66,79 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_attendance_rusult"
-                android:minHeight="@dimen/dimen_45"
+                android:minHeight="@dimen/dimen_30"
+                android:orientation="vertical"
+                >
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <ImageView
                     android:id="@+id/iv_type"
                     android:layout_width="@dimen/dimen_25"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/dimen_25"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginLeft="@dimen/dimen_10"
                     />
+                <TextView
+                    android:id="@+id/tv_address_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:text="位置"
+                    android:textColor="@color/gray"
+                    />
+            </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_info"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimen_25"
-                    android:gravity="left|center"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginBottom="5dp"
                     android:singleLine="false"
                     android:text="迟到了,打卡时间"
                     android:textColor="@color/gray"
                     />
 
-            </LinearLayout>
+                </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_explain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_25"
+                android:layout_marginLeft="@dimen/dimen_10"
                 android:layout_marginTop="@dimen/dimen_8"
                 android:drawableLeft="@drawable/icon_attendance_explanation"
+                android:drawablePadding="@dimen/dimen_2"
                 android:text="说明"
+                android:textColor="@color/text99"
                 />
 
             <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/graypy"
                 />
 
             <TextView
                 android:id="@+id/tv_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_marginRight="@dimen/dimen_10"
                 android:gravity="left|center"
                 android:minHeight="@dimen/dimen_55"
                 android:text="迟到原因"
@@ -126,7 +149,8 @@
                 android:id="@+id/gridView_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_marginRight="@dimen/dimen_10"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/activity_horizontal_margin"
                 android:listSelector="@android:color/transparent"
@@ -141,11 +165,55 @@
                 android:layout_marginRight="@dimen/dimen_8"
                 android:background="@drawable/rectangle_bj"
                 android:orientation="vertical"
-                android:padding="5dp"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:padding="@dimen/dimen_10"
                 android:visibility="gone">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/tv_confirmDept"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#999999"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:id="@+id/tv_confirmName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_8"
+                        android:text=""
+                        android:textColor="#999999"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:id="@+id/tv_confirmTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_8"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text=""
+                        android:textColor="#999999"
+                        android:textSize="@dimen/text_sp14"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_3"
+                    android:layout_marginBottom="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:background="@drawable/view_dashed_line"
+                    android:layerType="software"
+                    android:padding="@dimen/dimen_15"/>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -153,62 +221,29 @@
                     >
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_30"
-                        android:layout_height="@dimen/dimen_30"
+                        android:layout_width="@dimen/dimen_25"
+                        android:layout_height="@dimen/dimen_25"
                         android:src="@drawable/img_wfinstance_agree"
                         />
 
                     <TextView
+                        android:id="@+id/tv_message"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_8"
                         android:text="确认外勤"
-                        android:textColor="@color/lawngreen"
-                        android:textSize="20sp"
+                        android:textColor="@color/green51"
+                        android:textSize="@dimen/text_sp18"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_confirmDept"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="迟到原因"
-                        android:textColor="#999999"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_confirmName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_8"
-                        android:text="迟到原因"
-                        android:textColor="#999999"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_confirmTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_8"
-                        android:text="迟到原因"
-                        android:textColor="#999999"
-                        android:textSize="16sp"/>
-
-                </LinearLayout>
             </LinearLayout>
-
 
             <Button
                 android:id="@+id/btn_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_45"
-                android:layout_margin="@dimen/dimen_16"
+                android:layout_margin="@dimen/dimen_10"
                 android:background="@drawable/round_bg_shpe"
                 android:text="确认外勤"
                 android:textColor="@color/white"

@@ -1,7 +1,7 @@
 <resources>
     <!-- 防止黑屏的主题-->
     <style name="AppStartLoadTranslucent" parent="android:Theme.Holo.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"></style>
@@ -9,9 +9,7 @@
     <style name="noTitle" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <!--<item name="android:windowFullscreen">true</item>-->
-
     </style>
-
 
     <!--FragmentActivity的样式，目前主要是用到ActionBar的地方-->
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
@@ -103,7 +101,7 @@
     <!--text style-->
     <style name="text_title">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/textsize_title1</item>
+        <item name="android:textSize">@dimen/text_sp20</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -114,17 +112,20 @@
     </style>
 
     <style name="text_item1">
-        <item name="android:textSize">@dimen/textsize_content_label</item>
+        <item name="android:textSize">@dimen/text_sp16</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingTop">4dp</item>
+        <item name="android:textColorHint">@color/text99</item>
+        <item name="android:textColor">@color/text33</item>
         <item name="android:paddingBottom">4dp</item>
     </style>
 
     <style name="text_item2">
-        <item name="android:textSize">@dimen/textsize_content1</item>
+        <item name="android:textSize">@dimen/text_sp16</item>
+        <item name="android:textColor">@color/text33</item>
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">4dp</item>
@@ -157,7 +158,7 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/halftransparent</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@+android:style/Animation.Translucent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 
 
@@ -166,8 +167,9 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:background">@null</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColorHint">#c9c9c9</item>
+        <item name="android:textSize">@dimen/text_sp16</item>
+        <item name="android:textColorHint">@color/text99</item>
+        <item name="android:textColor">@color/text33</item>
     </style>
 
     <style name="textView_hint">
@@ -183,7 +185,7 @@
 
     <style name="view_split">
         <item name="android:layout_height">0.5dp</item>
-        <item name="android:background">@color/activity_split</item>
+        <item name="android:background">@color/lineCC</item>
     </style>
 
     <style name="image_label">
@@ -206,6 +208,7 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.2</item>
     </style>
+
     <style name="popu_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -215,4 +218,35 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.2</item>
     </style>
+
+    <style name="AlertDalogThem">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="text_style99">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/text99</item>
+        <item name="android:textSize">@dimen/text_sp18</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <!-- 加载进度条-->
+    <style name="ProgressBarMini" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">50dip</item>
+        <item name="android:minHeight">5dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/shape_progressbar_mini</item>
+    </style>
+
 </resources>

@@ -116,7 +116,7 @@ public class WaveView extends Button {
         waveAlpha=typedArray.getInt(R.styleable.WaveView_wave_alpha, 255);
         mode=typedArray.getInt(R.styleable.WaveView_wave_mode,WAVE_MODE_SPREAD);
         responseTouch =typedArray.getBoolean(R.styleable.WaveView_wave_response_touch,false);
-        drawDelayMills=typedArray.getInt(R.styleable.WaveView_wave_duration,30);
+        drawDelayMills=typedArray.getInt(R.styleable.WaveView_wave_duration,300);
         typedArray.recycle();
     }
 

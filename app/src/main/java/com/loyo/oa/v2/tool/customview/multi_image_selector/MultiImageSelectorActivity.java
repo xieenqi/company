@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default);
 
+        LogUtil.dee("进入相册选择");
         Intent intent = getIntent();
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, 9);
         int mode = intent.getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);

@@ -39,6 +39,10 @@ public class ExtraAndResult {
     public static final int FROMPAGE_ATTENDANCE = 101;
 
     public static final int request_Code = 100;
+    public static final int MSG_WHAT_GONG = 120;
+    public static final int MSG_WHAT_VISIBLE = 130;
+    public static final int MSG_WHAT_DIALOG = 140;
+    public static final int MSG_WHAT_HIDEDIALOG = 150;
 
     /**
      * 传递部门数据的请求码

@@ -103,7 +103,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             /*任务超时判断*/
             try {
 
-                Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime()));
+                Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(),"yyyy-MM-dd HH:mm"));
                 if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
                     timeOut.setVisibility(View.VISIBLE);
                 } else {

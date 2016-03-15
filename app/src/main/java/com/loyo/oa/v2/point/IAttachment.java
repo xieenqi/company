@@ -1,10 +1,17 @@
 package com.loyo.oa.v2.point;
 
+import com.google.gson.JsonElement;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
@@ -12,6 +19,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -31,9 +39,9 @@ public interface IAttachment {
     @PUT("/attachment/{id}/public/{isopen}")
     void pub(@Path("id") String id,@Path("isopen") int isOpen, retrofit.Callback<Attachment> cb);
 
-    //删除附件
+    //删除附件(新加入UUID)
     @DELETE("/attachment/{id}")
-    void remove(@Path("id") String id, retrofit.Callback<Attachment> cb);
+    void remove(@Path("id") String id,@QueryMap HashMap<String,Object> map, retrofit.Callback<Attachment> cb);
 
     @GET("/attachment/uuid/{uuid}")
     void getAttachments(@Path("uuid") String uuid, Callback<ArrayList<Attachment>> cb);
@@ -54,12 +62,8 @@ public interface IAttachment {
      * @param uuid
      * @param attachments
      */
-    @POST("/attachment/")
     @Multipart
-    Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("attachments")TypedFile attachments);
-
-
-    Observable<Attachment> upload1(@Path("uuid") String uuid,@Part("sdf")TypedFile file);
-
+    @POST("/attachment/")
+    Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments);
 
 }

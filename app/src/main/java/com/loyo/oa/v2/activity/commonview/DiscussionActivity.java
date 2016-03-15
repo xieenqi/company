@@ -47,6 +47,8 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     @Extra("attachmentUUId") String attachmentUUId;
     @Extra("isMyUser") boolean isMyUser;
     @Extra("status") int status;
+    @Extra("bizType") int bizType;
+
 
     @ViewById PullToRefreshListView listView_discussion;
     @ViewById TextView et_comment;
@@ -68,7 +70,7 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
 
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
 
-        if(!isMyUser || status == 3){
+        if(status == 3){
             layout_comment.setVisibility(View.GONE);
         }
 
@@ -135,7 +137,8 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         HashMap<String, Object> body = new HashMap<>();
         body.put("attachmentUUId", attachmentUUId);
         body.put("content", comment);
-
+        body.put("bizType",bizType);
+        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
         t.createDiscussion(body, new RCallback<Discussion>() {
             @Override
             public void success(Discussion d, Response response) {

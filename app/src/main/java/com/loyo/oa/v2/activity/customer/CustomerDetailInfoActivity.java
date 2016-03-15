@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity.customer;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,9 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DemandsManageActivity;
-import com.loyo.oa.v2.activity.SaleActivitiesManageActivity;
 import com.loyo.oa.v2.activity.signin.SignInListActivity_;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
@@ -36,12 +36,17 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
+
 import java.util.Date;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -82,6 +87,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     ViewGroup layout_send_sms;
     @ViewById
     ViewGroup layout_call;
+    @ViewById
+    ViewGroup layout_wiretel_call;
 
     @ViewById
     ViewGroup layout_sale_activity;
@@ -94,6 +101,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_attachment;
 
+    @ViewById
+    TextView customer_detail_wiretel;
     @ViewById
     TextView tv_sale_activity_date;
     @ViewById
@@ -134,12 +143,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(Customer customer, Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
+                LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
                 ownErId = customer.owner.id;
                 isLock = customer.lock;
                 mCustomer = customer;
                 initData();
                 cancelLoading();
-
             }
 
             @Override
@@ -198,12 +207,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null != contact) {
             tv_contact_name.setText(contact.getName());
             tv_contact_tel.setText(contact.getTel());
+            customer_detail_wiretel.setText(contact.getWiretel());
         }
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
         tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
-
     }
 
     /**
@@ -232,8 +241,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         btnUpdate.setText("投入公海");
         btn_child_delete_task.setText("删除");
-        //btn_child_delete_task.setVisibility(View.GONE);
-
+        /*超级管理员 才能删除客户*/
+        if(!MainApp.user.isSuperUser()){
+            btn_child_delete_task.setVisibility(View.GONE);
+        }
         btn_child_delete_task.setOnTouchListener(Global.GetTouch());
         btnCancel.setOnTouchListener(Global.GetTouch());
         btnUpdate.setOnTouchListener(Global.GetTouch());
@@ -267,25 +278,46 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         PopuOnClickListener(PopupWindow window) {
             mWindow = window;
         }
-
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_child_delete_task:
-                    delete();
+                    setPopView(true,"你确定要删除客户?");
                     break;
                 case R.id.btn_child_add_update:
-                    ConfirmDialog("提示", "投入公海，相当于放弃此客户所有数据和管理权限，你确定要投入公海？", new ConfirmDialogInterface() {
-                        @Override
-                        public void Confirm() {
-                            toPublic();
-                        }
-                    });
+                    setPopView(false,"投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
                     break;
             }
             mWindow.dismiss();
         }
     }
+
+    /**
+     * 提示弹出框
+     * */
+    private void setPopView(final boolean isKind,String message){
+
+        showGeneralDialog(true, true, message);
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isKind){
+                    delete();
+                }else{
+                    toPublic();
+                }
+            }
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
+    }
+
 
     /**
      * 删除客户
@@ -328,7 +360,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment})
+            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment,R.id.layout_wiretel_call})
     void onClick(View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
@@ -353,7 +385,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 _class = CustomerInfoActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO;
-
                 break;
 
             /*挑入*/
@@ -372,7 +403,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     }
                 });
 
-
                 break;
             /*联系人*/
             case R.id.layout_contact:
@@ -387,6 +417,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             case R.id.layout_call:
                 Utils.call(this, mCustomer.contacts.get(0).getTel());
+                break;
+            case R.id.layout_wiretel_call:
+                Utils.call(this, mCustomer.contacts.get(0).getWiretel());
                 break;
             /*跟进动态*/
             case R.id.layout_sale_activity:
@@ -423,6 +456,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putSerializable("goneBtn", 1);
+                bundle.putInt("bizType",6);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;
@@ -464,17 +498,15 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK || null == data) {
-            return;
-        }
-
         switch (requestCode) {
-            case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
+          case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
             case FinalVariables.REQUEST_PREVIEW_DEMANDS:
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
+            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
+                getData();
+                break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
                 getData();
                 break;

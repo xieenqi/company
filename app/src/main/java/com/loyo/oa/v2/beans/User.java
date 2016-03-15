@@ -33,10 +33,18 @@ public class User implements Serializable {
     public Permission permission;
     public boolean isBQQ;
     public boolean index;
+    public boolean isSuperUser;
     public int gender;
     public long updatedAt;
     public long createdAt;
 
+    public boolean isSuperUser() {
+        return isSuperUser;
+    }
+
+    public void setIsSuperUser(boolean isSuperUser) {
+        this.isSuperUser = isSuperUser;
+    }
 
     public ArrayList<UserInfo> getDepts() {
         return depts;

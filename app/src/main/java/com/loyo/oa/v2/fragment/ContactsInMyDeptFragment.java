@@ -15,11 +15,14 @@ import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.adapter.ContactsInMyDeptAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.CharacterParser;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.PinyinComparator;
 import com.loyo.oa.v2.common.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +42,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public LayoutInflater mInflater;
 
     public ArrayList<User> myUserList;
+    public ArrayList<UserInfo> myDepts;
     public View view;
     public View headView;
     public ImageView heading;
@@ -46,6 +50,8 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public TextView deptInfoTv;
     public TextView catalogTv;
     public LinearLayout item_medleft_top;
+
+    public StringBuffer myDeptBuffer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +72,8 @@ public class ContactsInMyDeptFragment extends BaseFragment {
 
     public void initView(View view) {
 
+        myDepts = MainApp.user.depts;
+        myDeptBuffer = new StringBuffer();
         sortListView = (ListView) view.findViewById(R.id.expandableListView_user);
         sideBar = (SideBar) view.findViewById(R.id.sidrbar);
         mInflater = LayoutInflater.from(getActivity());
@@ -75,14 +83,13 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         deptInfoTv = (TextView)headView.findViewById(R.id.tv_position);
         catalogTv = (TextView)headView.findViewById(R.id.catalog);
         item_medleft_top = (LinearLayout)headView.findViewById(R.id.item_medleft_top);
-
         pinyinComparator = new PinyinComparator();
         characterParser = CharacterParser.getInstance();
 
+        Utils.getDeptName(myDeptBuffer,myDepts);
         nameTv.setText(MainApp.user.getRealname());
-        deptInfoTv.setText(MainApp.user.depts.get(0).getShortDept().getName());
+        deptInfoTv.setText(myDeptBuffer.toString());
         catalogTv.setText("我");
-
         myUserList = Common.getMyUserDept();
 
         /*我的部门数据中，移除自己*/

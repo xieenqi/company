@@ -61,23 +61,16 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_launcher_fade"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layerType="software"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_launcher_bg_bottom"
-            android:visibility="gone"
-            />
 
+        <!---->
         <ScrollView
             android:id="@+id/layout_launcher_fade"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="130000dp"
             android:layout_below="@+id/layout_center"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="130dp"
             android:clipChildren="false"
+            android:scrollbars="none"
             android:layerType="software"
             >
 
@@ -99,6 +92,41 @@
 
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+
+            >
+
+            <ImageView
+                android:id="@+id/iv_white"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@color/white"
+                android:layerType="software"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:id="@+id/iv_launcher_fade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layerType="software"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_launcher_bg_bottom"
+                android:visibility="gone"
+                />
+        </FrameLayout>
+
+    </RelativeLayout>
 </LinearLayout>

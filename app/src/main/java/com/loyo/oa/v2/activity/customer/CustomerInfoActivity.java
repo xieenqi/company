@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.activity.customer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,12 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerRegional;
+import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.Locate;
 import com.loyo.oa.v2.beans.Member;
@@ -33,15 +31,13 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LocationUtil;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ExtraDataView;
-import com.loyo.oa.v2.tool.customview.multi_level_interaction_menu.DialogFragmentAreaCast;
-
+import com.loyo.oa.v2.tool.customview.SelectCityView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -50,12 +46,10 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -63,7 +57,7 @@ import retrofit.client.Response;
  * 【客户信息】 页面
  */
 @EActivity(R.layout.activity_customer_info)
-public class CustomerInfoActivity extends BaseFragmentActivity implements LocationUtil.AfterLocation {
+public class CustomerInfoActivity extends BaseFragmentActivity implements LocationUtilGD.AfterLocation {
 
     public static final int REQUEST_CUSTOMER_LABEL = 5;
     public static final int REQUEST_CUSTOMER_NEW_CONTRACT = 6;
@@ -110,9 +104,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     TextView tv_industry;
     @ViewById
     TextView tv_district;
-
     LinearLayout layout_rushpackger;
-
     @ViewById
     ImageView img_go_where;
     @ViewById
@@ -122,14 +114,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @Extra("Customer")
     Customer mCustomer;
-
     @Extra("isMyUser")
     boolean isMyUser;
     @Extra(ExtraAndResult.EXTRA_TYPE)
     boolean isPublic;
     @Extra(ExtraAndResult.EXTRA_STATUS)
     boolean isMenber;
-
     @Extra("CustomerId")
     String mCustomerId;
 
@@ -141,6 +131,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private CustomerRegional regional = new CustomerRegional();
     private Industry industry = new Industry();
     private Animation animation;
+
 
     @AfterViews
     void initUI() {
@@ -188,6 +179,27 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                         finish();
                     }
                 });
+    }
+
+    /**
+     * 显示地区选择Dialog
+     */
+    void loadAreaCodeTable() {
+
+        final SelectCityView selectCityView = new SelectCityView(this);
+        selectCityView.setCanceledOnTouchOutside(true);
+        selectCityView.show();
+        selectCityView.setOnclickselectCity(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cityArr[] = selectCityView.getResult();
+                tv_district.setText(cityArr[0]+" "+cityArr[1]+" "+cityArr[2]);
+                regional.province = cityArr[0];
+                regional.city = cityArr[1];
+                regional.county = cityArr[2];
+                selectCityView.dismiss();
+            }
+        });
     }
 
     /**
@@ -274,7 +286,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
         // }
         if (regional.province != null) {
-            tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
+            tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
         tv_industry.setText(industry.getName());
         edt_customer_memo.setText(mCustomer.summary);
@@ -309,26 +321,39 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示对话框
      */
     private void showLeaveDialog() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle("提示").
-                setMessage("负责人更改后，此客户所有数据和管理权限将归属新的负责人，您确定要更改负责人？").
-                setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        dialogInterface.dismiss();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                        app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class,
-                                MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
-
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-
+        showGeneralDialog(true,true,getString(R.string.app_userdetalis_message));
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+                Bundle bundle = new Bundle();
+                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
+                app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
             }
-        }).create();
-        dialog.show();
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalPopView.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 验证必填动态字段是否填写*/
+
+    private boolean testDynamicword(){
+        for(ExtraData extDatas: mCustomer.extDatas){
+            if(extDatas.getProperties().isRequired()){
+                if(extDatas.getVal().isEmpty() || null == extDatas.getVal()){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
@@ -344,7 +369,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                 if (tv_district.getText().toString().isEmpty()) {
                     Toast("地区不能为空");
-                } else {
+                }
+                else if(!testDynamicword()){
+                    Toast("请填写必填选项");
+                }
+                else {
                     updateCustomer();
                 }
                 break;
@@ -359,7 +388,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
 
             case R.id.img_refresh_address:
-                new LocationUtil(this, this);
+                new LocationUtilGD(this, this);
                 img_refresh_address.startAnimation(animation);
                 break;
 
@@ -382,13 +411,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
 
             case R.id.layout_customer_district:
-                new DialogFragmentAreaCast().show(getSupportFragmentManager(), "地区选择", new OnMenuSelectCallback() {
-                    @Override
-                    public void onMenuSelected(Object o) {
-                        regional = (CustomerRegional) o;
-                        tv_district.setText(regional.province + "省" + regional.city + "市" + regional.county + "区");
-                    }
-                });
+                loadAreaCodeTable();
                 break;
 
 //            case R.id.layout_customer_industry:
@@ -412,7 +435,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         String customerAddress = tv_address.getText().toString().trim();
         String summary = edt_customer_memo.getText().toString().trim();
 
-
         if (TextUtils.isEmpty(customerName)) {
             Toast.makeText(this, "客户姓名不能为空", Toast.LENGTH_SHORT).show();
             return;
@@ -433,8 +455,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("loc", mLocate);
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
-        //map.put("industry", industry);
 
+        LogUtil.dll("提交客户信息，发送的数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
@@ -448,7 +470,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                     @Override
                     public void failure(RetrofitError error) {
-                        LogUtil.dll("url:" + error.getUrl());
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
                         } else if (error.getResponse().getStatus() == 500) {
@@ -466,25 +487,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 });
     }
 
-
-    @Override
-    public void OnLocationSucessed(String address, double longitude, double latitude, float radius) {
-
-        img_refresh_address.clearAnimation();
-        animation.reset();
-        lat = latitude;
-        lng = longitude;
-        mLocate.addr = address;
-        mLocate.setLoc(new double[]{longitude,latitude});
-        tv_address.setText(address);
-
-    }
-
-    @Override
-    public void OnLocationFailed() {
-        img_refresh_address.clearAnimation();
-        animation.reset();
-    }
 
     @Override
     public void onBackPressed() {
@@ -556,5 +558,25 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
 
         }
+    }
+
+    @Override
+    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+
+        img_refresh_address.clearAnimation();
+        animation.reset();
+        lat = latitude;
+        lng = longitude;
+        mLocate.addr = address;
+        mLocate.setLoc(new double[]{longitude, latitude});
+        tv_address.setText(address);
+        LocationUtilGD.sotpLocation();
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        img_refresh_address.clearAnimation();
+        animation.reset();
+        LocationUtilGD.sotpLocation();
     }
 }

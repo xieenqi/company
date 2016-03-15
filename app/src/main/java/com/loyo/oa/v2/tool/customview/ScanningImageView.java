@@ -12,8 +12,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.loyo.oa.v2.tool.LogUtil;
-
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -64,8 +62,8 @@ public class ScanningImageView extends ImageView {
                 new int[]{Color.parseColor("#10ffffff"), Color.parseColor("#ffffff"), Color.parseColor("#10ffffff")}, null, Shader.TileMode.CLAMP);
         mPaint.setShader(linearGradient);
 //        canvas.drawRect(0, mHeight - CHANGE_BOUNDS, CHANGE_BOUNDS, mHeight, mPaint);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, 108, mPaint);
-        LogUtil.d("宽度：" + getWidth());
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getResources().getDisplayMetrics().widthPixels / 7, mPaint);
+        //LogUtil.d("宽度：" + getWidth());
         if (mHeight >= getHeight()) {
             mHeight = 0;
         }

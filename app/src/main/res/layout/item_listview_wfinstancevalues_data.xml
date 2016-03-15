@@ -6,16 +6,17 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
         <View
-            android:visibility="gone"
             android:id="@+id/view_line1"
             style="@style/view_split"
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+            android:layout_marginRight="@dimen/margin_side_edge"
+            android:visibility="gone"/>
     </LinearLayout>
 
 
@@ -28,25 +29,25 @@
         <TextView
             android:id="@+id/tv_key"
             style="@style/text_item2"
-            android:textSize="16sp"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:gravity="start|center_vertical"
+            android:textSize="16sp"
             />
 
         <EditText
-            android:textSize="16sp"
-            android:background="@android:color/transparent"
             android:id="@+id/et_value"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/margin_side_edge"
+            android:background="@android:color/transparent"
             android:gravity="start|center_vertical"
             android:padding="4dp"
             android:singleLine="false"
             android:textColor="@color/black"
-           />
+            android:textSize="16sp"
+            />
 
     </LinearLayout>
 

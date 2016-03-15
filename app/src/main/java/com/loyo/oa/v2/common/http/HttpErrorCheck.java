@@ -22,7 +22,8 @@ import retrofit.client.Response;
  */
 public class HttpErrorCheck {
     private static Toast mCurrentToast;
-    private static String TAG = "";
+    private static String TAG = "LogoServerV2";
+    private static String MSG = "msg";
 
     private static void Toast(String msg) {
         if (null != mCurrentToast) {
@@ -35,8 +36,8 @@ public class HttpErrorCheck {
 
     public static void checkError(RetrofitError error) {
         DialogHelp.cancelLoading();
-
         LogUtil.d("网络异常" + error.getMessage());
+        LogUtil.d("error接口URL：" + error.getUrl());
 
         try {
             String msg = Utils.convertStreamToString(error.getResponse().getBody().in());
@@ -54,18 +55,17 @@ public class HttpErrorCheck {
                 Toast(job.getString("error"));
             }
             LogUtil.d(error.getMessage() + " 失败的错误信息：" + msg);
-            LogUtil.d("error接口URL：" + error.getUrl());
         } catch (IOException e) {
             e.printStackTrace();
-            Toast(error.getMessage());
+            // Toast(error.getMessage());
         } catch (JSONException e) {
             LogUtil.d("JSON异常err:" + error.getUrl());
-            Toast(error.getMessage());
+            Toast("服务端数据异常");
             e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
-            Toast(error.getMessage());
+            Toast("连接服务器失败");
         }
 
 
@@ -78,7 +78,7 @@ public class HttpErrorCheck {
 
     public static void checkResponse(String tag, Response response) {
         DialogHelp.cancelLoading();
-        TAG = tag;
+        MSG = tag;
         checkResponse(response);
     }
 
@@ -86,8 +86,8 @@ public class HttpErrorCheck {
         DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(TAG + " 接口成功result：" + result);
-            LogUtil.d(TAG + " 接口成功URL：" + response.getUrl());
+            LogUtil.d(MSG + " 接口成功result：" + result);
+            LogUtil.d(MSG + " 接口成功URL：" + response.getUrl());
         } catch (IOException e) {
 
         } catch (NullPointerException e) {

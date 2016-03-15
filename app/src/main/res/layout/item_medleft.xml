@@ -56,7 +56,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="XXX"
                 android:textColor="#383838"
                 android:textSize="18sp"/>
 
@@ -64,20 +64,21 @@
                 android:id="@+id/tv_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="成都乐育"
                 android:textColor="#999999"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                />
         </LinearLayout>
 
     </RelativeLayout>
 
-    <ImageView
+<!--    <ImageView
         android:id="@+id/devider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1"
         android:layout_marginLeft="@dimen/dimen_66"
         android:layout_marginRight="@dimen/dimen_8"
         android:scaleType="fitXY"
-        android:src="#e1e1e1"/>
+        android:src="#e1e1e1"/>-->
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,19 +23,26 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedString;
 
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
@@ -45,19 +53,22 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
     private MainApp app;
     private AttachmentAction mAction;
     private OnRightClickCallback callback;
-    private int goneBtn; //隐藏对应的按钮 1:权限 2:删除
-    private boolean hasRights = true;
+    private int bizType;
+    private boolean isOver;
+    private String uuid;
 
     public interface OnRightClickCallback {
         void onRightClick(Bundle b);
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int _goneBtn) {
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, int bizType,String uuid,boolean isOver) {
         super();
         mAttachments = _attachments;
         mContext = _context;
         app = (MainApp) _context.getApplicationContext();
-        this.goneBtn = _goneBtn;
+        this.bizType = bizType;
+        this.uuid = uuid;
+        this.isOver = isOver;
 
         if (_users != null) {
             users = _users;
@@ -65,14 +76,9 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         }
     }
 
-    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback, boolean hasRights, int _goneBtn) {
-        this(_context, _attachments, _users, _goneBtn);
-        this.hasRights = hasRights;
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments, ArrayList<User> _users, OnRightClickCallback _callback,int _bizType,String _uuid,boolean _isOver) {
+        this(_context, _attachments, _users,_bizType,_uuid,_isOver);
         callback = _callback;
-    }
-
-    public void setHasRights(boolean hasRights) {
-        this.hasRights = hasRights;
     }
 
     public void setData(ArrayList<Attachment> attachments) {
@@ -163,22 +169,25 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             }
         });
 
+        /**
+         * 是自己的附件，才能设置权限\删除
+           非开启/进行中/待点评/待审批/不通过状态下，不允许删除附件
+         */
 
-        /*只有附件的上传人是自已，才可以设置权限*/
-        if (!hasRights || !MainApp.user.equals(attachment.getCreator())) {
-            holder.layout_action_update.setVisibility(View.INVISIBLE);
-            holder.layout_action_delete.setVisibility(View.INVISIBLE);
+        if (!MainApp.user.id.equals(attachment.getCreator().getId())) {
+                holder.layout_action_delete.setVisibility(View.INVISIBLE);
         } else {
-
-            /*暂时弃用附件权限*/
-            /*holder.layout_action_update.setVisibility(View.VISIBLE);
-            holder.layout_action_delete.setVisibility(View.VISIBLE);*/
-
-            /*客户管理里面，没有权限功能，需禁用*/
-            if (goneBtn == 1) {
-                holder.layout_action_update.setVisibility(View.INVISIBLE);
-            }
-
+            /*未结束*/
+           if(!isOver){
+               if(holder.layout_action_delete.getVisibility() == View.INVISIBLE){
+                   holder.layout_action_delete.setVisibility(View.VISIBLE);
+               }
+               /*已结束*/
+           }else{
+               if(holder.layout_action_delete.getVisibility() == View.VISIBLE){
+                   holder.layout_action_delete.setVisibility(View.INVISIBLE);
+               }
+           }
             /**权限设置*/
             holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -198,22 +207,26 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //删除
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("确认");
-                    builder.setPositiveButton(mContext.getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
+                    final GeneralPopView generalPopView = new GeneralPopView(mContext,true);
+                    generalPopView.show();
+                    generalPopView.setMessage("是否删除附件?");
+                    generalPopView.setCanceledOnTouchOutside(true);
+                    //确定
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Utils.dialogShow(mContext,"请稍候");
-                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), new RCallback<Attachment>() {
+                        public void onClick(View view) {
+                            Utils.dialogShow(mContext, "请稍候");
+                            HashMap<String,Object> map = new HashMap<String, Object>();
+                            map.put("bizType",bizType);
+                            map.put("uuid",uuid);
+                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(attachment.getId(), map, new RCallback<Attachment>() {
                                 @Override
                                 public void success(Attachment att, Response response) {
-
+                                    HttpErrorCheck.checkResponse(response);
                                     if (mAction != null) {
                                         mAction.afterDelete(attachment);
                                     }
                                     Utils.dialogDismiss();
-
                                 }
 
                                 @Override
@@ -224,18 +237,16 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                                 }
                             });
 
-                            dialog.dismiss();
+                            generalPopView.dismiss();
                         }
                     });
-
-                    builder.setNegativeButton(mContext.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+                    //取消
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                        public void onClick(View view) {
+                            generalPopView.dismiss();
                         }
                     });
-                    builder.setMessage("是否删除附件?");
-                    builder.show();
                 }
             });
         }

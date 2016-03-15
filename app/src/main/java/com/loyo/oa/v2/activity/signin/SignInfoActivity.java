@@ -35,18 +35,17 @@ import retrofit.client.Response;
 public class SignInfoActivity extends BaseActivity {
     private static final int REQUEST_PREVIEW_CUSTOMER_INFO = 320;
 
-    TextView tv_address;
-    TextView tv_customer_name;
-    TextView tv_memo;
-    ViewGroup img_title_left;
-    GridView gridView_photo;
-    ViewGroup layout_customer_info;
-    SignInGridViewAdapter signInGridViewAdapter;
-
-    ArrayList<Attachment> lstData_Attachment;
+    private TextView tv_address;
+    private TextView tv_customer_name;
+    private TextView tv_memo;
+    private ViewGroup img_title_left;
+    private GridView gridView_photo;
+    private ViewGroup layout_customer_info;
+    private SignInGridViewAdapter signInGridViewAdapter;
+    private ArrayList<Attachment> lstData_Attachment;
     private Customer mCustomer;
     private boolean isFormCustom;
-    LegWork legWork;
+    private LegWork legWork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,8 +141,13 @@ public class SignInfoActivity extends BaseActivity {
             tv_address.setText(legWork.address);
             tv_memo.setText(legWork.memo);
 
-            String name = null == mCustomer ? legWork.customerName : mCustomer.name;
-            tv_customer_name.setText(name);
+            if(null != legWork.customerName){
+                tv_customer_name.setText(legWork.customerName);
+            }else{
+                tv_customer_name.setTextColor(this.getResources().getColor(R.color.diseditable));
+                tv_customer_name.setText("未指定拜访客户");
+                layout_customer_info.setEnabled(false);
+            }
         }
 
         if (legWork != null) {

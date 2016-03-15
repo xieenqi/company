@@ -55,5 +55,17 @@ proguard-project.txt
 .idea/
 
 *.iml
-app/*.log
+
+
 captures/
+app/*.log
+build/
+
+app/build/**
+
+wrapper/**
+
+gradle/wrapper/**
+
+.gradle/**
+

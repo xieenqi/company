@@ -11,8 +11,8 @@ public class Demand extends BaseBeans {
 
 
     private ArrayList<CommonTag> loseReason = new ArrayList<>();
-    private String wfId;
-    private int wfState;
+    private String wfId; //赢单审批 id
+    private int wfState;//赢单审批状态 1.待审核 2.审核中 3.未通过 4.审批通过 5.审批完结  0.非赢单状态
     private float amount;//float32, optional): ,
     private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     private long createdAt;//&{time Time}, optional): ,
@@ -20,7 +20,6 @@ public class Demand extends BaseBeans {
     private String customerId;//&{customer Customer}, optional): ,
     private User editor;//&{organization User}, optional): ,
     private String id;//int64, optional): ,
-
     private float estimatedNum;//float32, optional): ,
     private float estimatedPrice;//float32, optional): ,
 
@@ -30,10 +29,9 @@ public class Demand extends BaseBeans {
     private String spec;//string, optional): ,
     private String updatedAt;//&{time Time}, optional):
     private String memo;
-
-
     private float actualPrice;
     private float actualNum;
+
 
     public int getWfState() {
         return wfState;

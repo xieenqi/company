@@ -16,9 +16,11 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -28,16 +30,10 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     private List<User> list = null;
     private Context mContext;
     private StringBuffer deptName;
-    private String workName;
 
     public ContactsInMyDeptAdapter(Context mContext, List<User> list) {
         this.mContext = mContext;
         this.list = list;
-    }
-
-    public void updateListView(List<User> list) {
-        this.list = list;
-        notifyDataSetChanged();
     }
 
     public int getCount() {
@@ -78,27 +74,11 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
             viewHolder.tvLetter.setVisibility(View.GONE);
         }
 
-        /*部门名字*/
-        try {
-            deptName = new StringBuffer();
-            for(UserInfo userInfo : this.list.get(position).getDepts()){
-                deptName.append(userInfo.getShortDept().getName()+" ");
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            deptName.append("无");
-        }
-
-        /*职位名字*/
-        try {
-            workName = this.list.get(position).getDepts().get(0).getTitle();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            workName = "无";
-        }
-
+        User user = list.get(position);
+        deptName = new StringBuffer();
+        Utils.getDeptName(deptName,user.getDepts());
         viewHolder.name.setText(this.list.get(position).getRealname());
-        viewHolder.deptInf.setText(deptName.toString() + " " + workName);
+        viewHolder.deptInf.setText(deptName.toString());
         ImageLoader.getInstance().displayImage(this.list.get(position).getAvatar(), viewHolder.img);
 
         return view;

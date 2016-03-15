@@ -279,13 +279,14 @@ public class ProjectAddActivity extends BaseActivity {
         }
     }
 
-    @Background
     void CreateProject(ProjectTransObj obj) {
         LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
+        showLoading("");
         app.getRestAdapter().create(IProject.class).Create(obj, new RCallback<Project>() {
             @Override
             public void success(Project project, Response response) {
                 Global.ToastLong("新增项目成功");
+                cancelLoading();
                 Intent intent = new Intent();
                 intent.putExtra("data", project);
                 app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -294,18 +295,20 @@ public class ProjectAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
     }
 
-    @Background
     void UpdateProject(ProjectTransObj obj) {
         LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
+        showLoading("");
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
             public void success(Project project, Response response) {
                 Global.ToastLong("编辑项目成功");
+                cancelLoading();
                 Intent intent = new Intent();
                 intent.putExtra("data", project);
                 app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -313,6 +316,7 @@ public class ProjectAddActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });

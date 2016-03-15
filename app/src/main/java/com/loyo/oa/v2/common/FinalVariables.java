@@ -191,6 +191,10 @@ public final class FinalVariables {
      * 获取组织架构
      **/
     public static final String GET_ORGANIZATION = Config_project.SERVER_URL_LOGIN() + "/api/v2/user/organization/";
+    /**
+     * 刷新首页红点数据
+     * */
+    public static final String RUSH_HOMEDATA = Config_project.SERVER_URL() + "/api/v2/oa/rectify";
 
 
 

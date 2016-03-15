@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activity.attachment;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
@@ -11,7 +10,6 @@ import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
@@ -25,21 +23,18 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
 
 /**
  * 附件列表 【添加附件】页面
@@ -54,17 +49,11 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("uuid")
     String uuid;
 
-    @Extra("isMyUser")
-    boolean isMyUser;
+    @Extra("bizType")
+    int bizType;
 
-    @Extra("fromPage")
-    int fromPage;
-
-    @Extra("goneBtn")
-    int goneBtn;
-
-    @Extra("status")
-    int status;
+    @Extra("isOver")
+    boolean isOver; //当前业务已经结束
 
     @ViewById(R.id.listView_attachment)
     SwipeListView mListViewAttachment;
@@ -77,33 +66,32 @@ public class AttachmentActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("附件");
-
-        if (!isMyUser || status == 3 || status == 4) {
+        if (isOver) {
             tv_upload.setVisibility(View.GONE);
         }
-        LogUtil.dll("权限:"+status);
-
         setTouchView(NO_SCROLL);
         getAttachments();
-
     }
 
     /**
      * 获取附件列表信息
-     * */
+     */
     @UiThread
     void getAttachments() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(ArrayList<Attachment> attachments, Response response) {
+                LogUtil.dee("获取附件信息:"+MainApp.gson.toJson(attachments));
+                LogUtil.dee("获取附件URL:"+response.getUrl());
+                HttpErrorCheck.checkResponse(response);
                 mListAttachment = attachments;
                 bindAttachment();
-                HttpErrorCheck.checkResponse(response);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                LogUtil.dee("获取附件信息 失败:");
                 HttpErrorCheck.checkError(error);
                 finish();
             }
@@ -115,12 +103,13 @@ public class AttachmentActivity extends BaseActivity {
      */
     void bindAttachment() {
         if (ListUtil.IsEmpty(mListAttachment)) {
+            LogUtil.dee("没有附件 return");
             return;
         }
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList,goneBtn);
+            adapter = new AttachmentSwipeAdapter(mContext,mListAttachment,mUserList,bizType,uuid,isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
                 public void afterDelete(Attachment attachment) {
@@ -140,7 +129,6 @@ public class AttachmentActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -148,13 +136,17 @@ public class AttachmentActivity extends BaseActivity {
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
-    /**返回*/
+    /**
+     * 返回
+     */
     @Click(R.id.img_title_left)
     void click() {
-        finish();
+        onBackPressed();
     }
 
-    /**附件上传*/
+    /**
+     * 附件上传
+     */
     @Click(R.id.tv_upload)
     void addAttachment() {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);
@@ -195,6 +187,7 @@ public class AttachmentActivity extends BaseActivity {
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 uploadAttachment(newFile);
+                                //uploadAttachmentTest(newFile);
                             }
                         }
                     }
@@ -209,28 +202,21 @@ public class AttachmentActivity extends BaseActivity {
      * 上传附件
      */
     private void uploadAttachment(File file) {
-        Utils.uploadAttachment(uuid, file)
+        Utils.uploadAttachment(uuid,bizType,file)
                 .subscribe(new CommonSubscriber(this) {
                     @Override
                     public void onNext(Serializable attachment) {
+                        LogUtil.dee("上传附件成功:"+attachment.toString());
                         getAttachments();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        LogUtil.dee("上传附件失败:"+e.getMessage());
+                        LogUtil.dee("上传附件失败:"+e.toString());
+                        e.getMessage();
                         super.onError(e);
-                        Toast(e.getMessage());
                     }
                 });
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-            finish();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }

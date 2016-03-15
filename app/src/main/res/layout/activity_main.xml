@@ -113,6 +113,7 @@
                     android:scaleType="center"
                     android:text="点击进入\n考勤详情"
                     />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -169,14 +170,14 @@
             android:shadowRadius="1"
             android:text="用户名"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_sp20"/>
 
         <LinearLayout
             android:id="@+id/layout_network"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/red"
+            android:background="@color/redE8"
             android:gravity="center"
             android:minHeight="@dimen/dimen_25"
             android:visibility="gone">
@@ -188,7 +189,7 @@
                 android:gravity="center"
                 android:text="无网络连接，请检查网络"
                 android:textColor="@color/white"/>
-        </LinearLayout>
+        </LinearLayout>android:theme="@style/AppStartLoadTranslucent"
 
     </RelativeLayout>
 
@@ -209,7 +210,7 @@
             dslv:collapsed_height="@dimen/dimen_1"
             dslv:drag_enabled="true"
             dslv:drag_handle_id="@id/layout_drag"
-            dslv:drag_scroll_start="0.33"
+            dslv:drag_scroll_start="0.99"
             dslv:drag_start_mode="onLongPress"
             dslv:float_alpha="0.6"
             dslv:remove_enabled="false"

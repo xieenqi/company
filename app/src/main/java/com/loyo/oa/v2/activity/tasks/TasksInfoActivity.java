@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
@@ -24,6 +23,7 @@ import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
@@ -31,6 +31,8 @@ import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
+import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -45,7 +47,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -53,11 +54,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -73,7 +72,6 @@ public class TasksInfoActivity extends BaseActivity {
     public static final int REQUEST_EDIT_DELETE = 500;
     public static final int REQUEST_CREATE_SUB = 600;
     public static final int REQUEST_EDIT_TASK = 740;
-
     public static final int MSG_ATTACHMENT = 700;
     public static final int MSG_DISCUSSION = 800;
 
@@ -82,6 +80,10 @@ public class TasksInfoActivity extends BaseActivity {
     public String realName;
     public String isTest;
     public String beProjects;
+
+    private String taskId;  //任务ID
+    private String userId;
+    private String uuid = StringUtil.getUUID();
 
     @ViewById
     ViewGroup img_title_left;
@@ -124,9 +126,8 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
-    private String taskId;  //任务ID
-    private String userId;
-    private String uuid = StringUtil.getUUID();
+
+    private boolean isOver = false;
     private int statusSize;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
@@ -134,8 +135,10 @@ public class TasksInfoActivity extends BaseActivity {
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
-    public ArrayList<NewUser> allUsers;
-
+    public ArrayList<NewUser> childTastUsers = new ArrayList<>();
+    public ArrayList<NewUser> requestDepts = new ArrayList<>();
+    public ArrayList<User> aboutDepts = new ArrayList<>();
+    public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
     public LinearLayout item_tasks_sorece;
@@ -178,7 +181,7 @@ public class TasksInfoActivity extends BaseActivity {
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
-        allUsers = new ArrayList<>();
+
     }
 
     void updateUI() {
@@ -195,12 +198,12 @@ public class TasksInfoActivity extends BaseActivity {
      */
     void updateUI_task_responsiblePerson() {
 
-        allUsers.clear();
+        childTastUsers.clear();
         if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
             img_title_right.setVisibility(View.GONE);
-        }else if(IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED){
+        } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED) {
             img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//为参与人时
+        } else if (!IsResponsiblePerson() && !IsCreator()) {//参与人
             img_title_right.setVisibility(View.GONE);
         } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
             img_title_right.setVisibility(View.VISIBLE);
@@ -211,7 +214,8 @@ public class TasksInfoActivity extends BaseActivity {
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
             tv_responsiblePerson.setText("负责人:" + realName);
-            allUsers.add(mTask.getResponsiblePerson());
+            childTastUsers.add(mTask.getResponsiblePerson());
+            childTastUsers.add(mTask.getCreator());
         }
 
         if (mTask.members != null) {
@@ -221,7 +225,8 @@ public class TasksInfoActivity extends BaseActivity {
                     userNames.append(element.getName() + ",");
                 }
                 tv_toUsers.setText("参与人:" + userNames.toString());
-                allUsers.addAll(mTask.members.getAllData());
+                childTastUsers.addAll(mTask.members.users);
+                getAboutUser();
             } else {
                 tv_toUsers.setText("没有参与人");
             }
@@ -229,7 +234,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
             tv_task_project.setText("所属项目：" + beProjects);
-        }else{
+        } else {
             tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
@@ -303,9 +308,6 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_status.setTextColor(getResources().getColor(R.color.red));
             }
             layout_test_Add_area.addView(mView);
-
-            tv_discussion_count.setText(mTask.getBizExtData().getDiscussCount() + "");
-            tv_attachment_count.setText(mTask.getBizExtData().getAttachmentCount()+"");
         }
     }
 
@@ -318,10 +320,12 @@ public class TasksInfoActivity extends BaseActivity {
 
             if (mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
                 //负责人提交
+                btn_complete.setVisibility(View.VISIBLE);
                 btn_complete.setText("提交完成");
             } else if (mTask.getStatus() == Task.STATUS_REVIEWING
                     && IsCreator()
                     && !mTask.getCreator().getId().equals(mTask.getResponsiblePerson().getId())) {
+                btn_complete.setVisibility(View.VISIBLE);
                 btn_complete.setText("审 核");
             } else {
                 btn_complete.setVisibility(View.GONE);
@@ -342,9 +346,12 @@ public class TasksInfoActivity extends BaseActivity {
         vContent = mTask.getContent();
 
         if (mTask.getCreator() != null && mTask.getCreatedAt() > 0) {
-            tv_sub_title.setText(String.format("%s %s 修改", mTask.getCreator().getRealname(),
+            tv_sub_title.setText(String.format("%s %s 提交", mTask.getCreator().getRealname(),
                     app.df2.format(new Date(mTask.getCreatedAt()))));
         }
+
+        tv_discussion_count.setText("(" + mTask.getBizExtData().getDiscussCount() + ")");
+        tv_attachment_count.setText("(" + mTask.getBizExtData().getAttachmentCount() + ")");
 
         /*截至时间*/
         if (mTask.getPlanEndAt() > 0) {
@@ -420,7 +427,10 @@ public class TasksInfoActivity extends BaseActivity {
                         }
                     }
                 });
-
+                //没有权限就不显示
+                if (!(IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId()))) {
+                    childCheckbox.setVisibility(View.INVISIBLE);
+                }
                 /**
                  * 子任务编辑跳转
                  * */
@@ -441,8 +451,8 @@ public class TasksInfoActivity extends BaseActivity {
                         Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
                         intent.putExtra("TaskEdit", (TaskCheckPoint) v.getTag());
                         intent.putExtra("TaskId", mTask.getId());
-                        intent.putExtra("allUsers", allUsers);
-                        if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
+                        intent.putExtra("allUsers", childTastUsers);
+                        if (IsCreator() || IsResponsiblePerson()) {
                             intent.putExtra("isReponser", true);
                         } else {
                             intent.putExtra("isReponser", false);
@@ -491,9 +501,11 @@ public class TasksInfoActivity extends BaseActivity {
             finish();
             return;
         }
+
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
+                LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
                 HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
                 updateUI();
@@ -535,6 +547,9 @@ public class TasksInfoActivity extends BaseActivity {
                 if (IsCreator()) {
                     if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
                         intent.putExtra("edit", true);
+                        intent.putExtra("delete", true);
+                        intent.putExtra("extra", "复制任务");
+                    } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
                     } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
@@ -608,13 +623,13 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_child_add_action)
     void openNewSubTask() {
-        if(mTask.getStatus() != Task.STATUS_PROCESSING){
+        if (mTask.getStatus() != Task.STATUS_PROCESSING) {
             Toast("当前状态不能添加子任务");
-        }else{
+        } else {
             if (IsResponsiblePerson() || IsCreator()) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Task", mTask);
-                bundle.putSerializable("allUsers", allUsers);
+                bundle.putSerializable("allUsers", childTastUsers);
                 app.startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CREATE_SUB, bundle);
             } else {
                 Toast("你没有创建子任务权限!");
@@ -659,12 +674,10 @@ public class TasksInfoActivity extends BaseActivity {
 
             /*选择完参与人后，回调*/
             case ExtraAndResult.request_Code:
-                LogUtil.dll("参与人选择回调");
                 String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
                 String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
                 if (cc_user_id != null && cc_user_name != null) {
                     setJoinUsers(cc_user_id, cc_user_name);
-
                 } else {
                     Toast("未选择相关人员");
                 }
@@ -746,9 +759,12 @@ public class TasksInfoActivity extends BaseActivity {
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mTask.setAttachments(attachments);
-                showAttachment();
-
+                try{
+                    mTask.setAttachments(attachments);
+                    showAttachment();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
                 break;
 
             case MSG_DISCUSSION:
@@ -856,12 +872,20 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
+        if(null == mTask){
+            return;
+        }
+
+        /*任务Status: 1-进行中 2-待点评 3-完成*/
+        if(mTask.getStatus() == 2 || mTask.getStatus() == 3){
+            isOver = true;
+        }
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mTask.getAttachments());
         bundle.putSerializable("uuid", mTask.getAttachmentUUId());
-        bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
-        bundle.putInt("status",mTask.getStatus());
+        bundle.putBoolean("isOver", isOver);
+        bundle.putInt("bizType", 2);
 
         ArrayList<NewUser> users = new ArrayList<>();
         if (mTask.getMembers() != null) {
@@ -880,10 +904,14 @@ public class TasksInfoActivity extends BaseActivity {
     /*讨论*/
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
+        if(null == mTask){
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mTask.getAttachmentUUId());
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
-        bundle.putInt("status",mTask.getStatus());
+        bundle.putInt("status", mTask.getStatus());
+        bundle.putInt("bizType", 2);
         app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
@@ -894,7 +922,6 @@ public class TasksInfoActivity extends BaseActivity {
      */
     public boolean IsCreator() {
         return null != mTask.getCreator() ? mTask.getCreator().isCurrentUser() : false;
-        //return userId.equals(mTask.getCreator().getId()) ? true : false;
     }
 
     /**
@@ -904,6 +931,30 @@ public class TasksInfoActivity extends BaseActivity {
      */
     public boolean IsResponsiblePerson() {
         return null != mTask.getResponsiblePerson() ? mTask.getResponsiblePerson().isCurrentUser() : false;
-        //return !userId.equals(mTask.getCreator().getId()) && !userId.equals(mTask.getResponsiblePerson().getId()) ? true : false;
+    }
+
+
+    /**
+     * 参与人当中的部门，拆分成员工
+     * */
+    void getAboutUser(){
+
+        requestDepts.addAll(mTask.members.depts);
+
+        for(Department department : deptSource){
+            for(NewUser newUser : requestDepts){
+                try{
+                    if(department.getId().equals(newUser.getId())){
+                        aboutDepts.addAll(department.getUsers());
+                    }
+                }catch(NullPointerException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        for(User user : aboutDepts){
+            childTastUsers.add(user.toShortUser());
+        }
     }
 }

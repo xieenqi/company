@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.LoginActivity;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.beans.User;
 
 import java.util.HashMap;

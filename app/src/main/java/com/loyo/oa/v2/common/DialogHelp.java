@@ -20,6 +20,7 @@ import com.loyo.oa.v2.tool.LogUtil;
  */
 public class DialogHelp {
     private static Dialog loadingDialog;//加载loading
+    private static TextView tipTextView;
 
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
@@ -41,7 +42,7 @@ public class DialogHelp {
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.dialog_view);// 加载布局
         // main.xml中的ImageView
         ImageView spaceshipImage = (ImageView) v.findViewById(R.id.img);
-        TextView tipTextView = (TextView) v.findViewById(R.id.tipTextView);// 提示文字
+        tipTextView = (TextView) v.findViewById(R.id.tipTextView);// 提示文字
         // 加载动画
         Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
                 context, R.anim.load_animayion);
@@ -59,15 +60,20 @@ public class DialogHelp {
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT,
                 LinearLayout.LayoutParams.FILL_PARENT));// 设置布局
-
+        loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.show();
     }
 
     public static void cancelLoading() {
         if (null != loadingDialog && loadingDialog.isShowing()) {
             loadingDialog.cancel();
-            LogUtil.d(" 取消logo22 ");
             loadingDialog = null;
+        }
+    }
+
+    public static void setLoadingMsg(String msg) {
+        if (tipTextView != null && !TextUtils.isEmpty(msg)) {
+            tipTextView.setText(msg);
         }
     }
 }

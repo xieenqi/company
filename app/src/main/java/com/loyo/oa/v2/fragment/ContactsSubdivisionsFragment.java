@@ -21,6 +21,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -35,11 +36,12 @@ import java.util.ArrayList;
 public class ContactsSubdivisionsFragment extends BaseFragment implements View.OnClickListener {
 
     private String deptId;
-    MainApp app = MainApp.getMainApp();
-    ListView listView_user, listView_department;
-    ViewGroup layout_dept, layout_user;
-    DepartmentListViewAdapter deptAdapter;
-    UserListViewAdapter userAdapter;
+    private MainApp app = MainApp.getMainApp();
+    private ListView listView_user, listView_department;
+    private ViewGroup layout_dept, layout_user;
+    private DepartmentListViewAdapter deptAdapter;
+    private UserListViewAdapter userAdapter;
+    private StringBuffer deptName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,9 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
         }
     }
 
+    /**
+     * 展示部门Adapter 奥特曼(5人)
+     * */
     public class DepartmentListViewAdapter extends BaseAdapter {
         LayoutInflater mInflater;
         public ArrayList<Department> listDepartment;
@@ -167,6 +172,10 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
         }
     }
 
+
+    /**
+     * 展示人员Adapter XXX
+     * */
     public class UserListViewAdapter extends BaseAdapter {
 
         ArrayList<User> listUser;
@@ -200,13 +209,10 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
+            deptName = new StringBuffer();
+            Utils.getDeptName(deptName,user.getDepts());
+            tv_position.setText(deptName.toString());
             tv_content.setText(user.getRealname());
-            String departmentName = user.departmentsName;
-           // LogUtil.d(" re人员信息： "+MainApp.gson.toJson(user));
-            if (null != user.shortPosition && !TextUtils.isEmpty(user.shortPosition.getName())) {
-                departmentName = departmentName.concat(" | " + user.shortPosition.getName());
-            }
-            tv_position.setText(departmentName);
 
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);

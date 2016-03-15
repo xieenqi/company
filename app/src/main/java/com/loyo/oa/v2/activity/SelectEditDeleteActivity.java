@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 /**
  * 任务详情编辑[ 选择【项目 的结束 编辑 删除】弹窗 ]
@@ -25,7 +26,6 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
     private LinearLayout layout;
     private Intent intent;
     private Intent mIntent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +103,23 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //删除
             case R.id.btn_delete:
-                super.ConfirmDialog("提示", "确认删除?", new ConfirmDialogInterface() {
+                showGeneralDialog(true,true,"确认删除?");
+                //确定
+                generalPopView.setSureOnclick(new OnClickListener() {
                     @Override
-                    public void Confirm() {
+                    public void onClick(View view) {
+                        generalPopView.dismiss();
                         mIntent = new Intent();
                         mIntent.putExtra("delete", true);
                         setResult(RESULT_OK, mIntent);
                         finish();
+                    }
+                });
+                //取消
+                generalPopView.setCancelOnclick(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        generalPopView.dismiss();
                     }
                 });
                 break;

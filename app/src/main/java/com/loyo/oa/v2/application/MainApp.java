@@ -4,19 +4,18 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CellInfo;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Industry;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -44,7 +43,6 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -126,26 +124,7 @@ public class MainApp extends Application {
     }
 
 
-    public ArrayList<Province> mProvinces = new ArrayList<>();
     public ArrayList<Industry> mIndustries = new ArrayList<>();
-
-    /**
-     * xnq
-     * 加载地区编码
-     */
-    void loadAreaCodeTable() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDistricts(new RCallback<ArrayList<Province>>() {
-            @Override
-            public void success(ArrayList<Province> provinces, Response response) {
-                mProvinces = provinces;
-                try {
-                    LogUtil.d("districts加载地区编码:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     void loadIndustryCodeTable() {
 
@@ -165,7 +144,6 @@ public class MainApp extends Application {
         super.onCreate();
         mainApp = this;
         init();
-        loadAreaCodeTable();
         loadIndustryCodeTable();
         //    getWindowWH();
         JPushInterface.setDebugMode(true);
@@ -240,8 +218,9 @@ public class MainApp extends Application {
 //            }
 //        }
         //        init_StrictMode();
-
-        SDKInitializer.initialize(this);//百度sdk初始化
+        Configuration config = getResources().getConfiguration();
+        config.locale= Locale.CHINA;
+        getBaseContext().getResources().updateConfiguration(config, null);
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
         ServerAPI.init();

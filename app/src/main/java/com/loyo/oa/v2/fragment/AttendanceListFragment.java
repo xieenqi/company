@@ -1,8 +1,8 @@
 package com.loyo.oa.v2.fragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,9 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.PreviewAttendanceActivity_;
+import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
@@ -27,10 +28,14 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
@@ -59,25 +64,24 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private TextView tv_count_title;
     private TextView tv_later;//迟到
     private TextView tv_leave_early;//早退
+    private TextView tv_leave_overtime;//加班
     private TextView tv_unattendance;//未打卡
     private TextView tv_field_work;//外勤
-
-    private int type;//我的考勤【1】 团队考勤【2】
     private AttendanceList attendanceList;
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
     private AttendanceListAdapter adapter;
     private int qtime, page = 1;
-    private Calendar cal;
+    private int type;//我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;//是否下拉刷新 默认是
 
+    private Calendar cal;
     private View mView;
-    ProgressDialog dg;
-
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
+
             mView = inflater.inflate(R.layout.fragment_attendance_list, container, false);
             tv_time = (TextView) mView.findViewById(R.id.tv_time);
             tv_count_title = (TextView) mView.findViewById(R.id.tv_count_title);
@@ -85,10 +89,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             tv_leave_early = (TextView) mView.findViewById(R.id.tv_leave_early);
             tv_unattendance = (TextView) mView.findViewById(R.id.tv_un_attendance);
             tv_field_work = (TextView) mView.findViewById(R.id.tv_field_work);
-
+            tv_leave_overtime = (TextView) mView.findViewById(R.id.tv_leave_overtime);
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
-
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
             imgTimeLeft.setOnClickListener(this);
@@ -105,8 +108,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             initTimeStr(System.currentTimeMillis());
             qtime = type == 1 ? DateTool.getBeginAt_ofMonth() : (int) (System.currentTimeMillis() / 1000);
 
-            dg = new ProgressDialog(getActivity());
-            dg.setMessage("加载中");
             getData(page);
 
             lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -123,7 +124,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         }
                         if (view.getLastVisiblePosition() == 0) {
                             Toast("到 顶部 啦");
-                            page=1;
+                            page = 1;
                             isPullDowne = true;
                         }
                     }
@@ -177,6 +178,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         tv_leave_early.setText(attendanceList.getEarlyCount() + "");
         tv_unattendance.setText(attendanceList.getNoreCcount() + "");
         tv_field_work.setText(attendanceList.getOutsidecount() + "");
+        tv_leave_overtime.setText(attendanceList.getExtraCount() + "");
+
     }
 
 
@@ -200,14 +203,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     case 1:
                         if (checkTime(qtime, app.df13)) {
                             nextMonth();
-                        }else{
+                        } else {
                             Toast("不能查看未来考勤！");
                         }
                         break;
                     case 2:
                         if (checkTime(qtime, app.df12)) {
                             nextDay();
-                        }else{
+                        } else {
                             Toast("不能查看未来考勤！");
                         }
 
@@ -247,6 +250,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 前一天
      */
     private void previousDay() {
+
         if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMinimum(Calendar.DAY_OF_MONTH)) {
             if (cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
                 cal.set((cal.get(Calendar.YEAR) - 1), cal.getActualMaximum(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -275,7 +279,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         } else {
             cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) + 1);
         }
-
         refreshData();
     }
 
@@ -324,6 +327,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 绑定数据
      */
     private void bindData() {
+
         if (null == adapter) {
             adapter = new AttendanceListAdapter();
             lv.setAdapter(adapter);
@@ -340,10 +344,32 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     }
 
     /**
+     * 获取团队集合数据
+     */
+    private void getTeamData() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getTeamCount(new RCallback<AttendanceList>() {
+            @Override
+            public void success(AttendanceList attendanceLists, Response response) {
+                HttpErrorCheck.checkResponse(type + " 团队Count：", response);
+                attendanceList = attendanceLists;
+                initStatistics();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                Toast("团队统计数据，获取失败");
+                super.failure(error);
+            }
+        });
+    }
+
+
+    /**
      * 获取列表
      */
     private void getData(final int page) {
-        dg.show();
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("qtype", type);
         map.put("qtime", qtime);
@@ -353,14 +379,18 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                dg.dismiss();
-                attendanceList = result.records;
-                if (isPullDowne||page==1) {
+                if (type == 1) {
+                    attendanceList = result.records;
+                    initStatistics();
+                } else {
+                    getTeamData();
+                }
+
+                if (isPullDowne || page == 1) {
                     attendances = result.records.getAttendances();
                 } else {
                     attendances.addAll(result.records.getAttendances());
                 }
-                initStatistics();
                 bindData();
                 if (page != 1) {
                     adapter.notifyDataSetChanged();
@@ -369,9 +399,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
                 super.failure(error);
-                dg.dismiss();
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -382,13 +411,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * @param inOrOut
      * @param attendance
      */
-    private void previewAttendance(int inOrOut, DayofAttendance attendance) {
+    private void previewAttendance(int inOrOut, DayofAttendance attendance, String overTime) {
         if (type == 1) {
             attendance.setUser(MainApp.user);
         }
         Intent intent = new Intent(mActivity, PreviewAttendanceActivity_.class);
-        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut==1?attendance.getIn().getId():attendance.getOut().getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, inOrOut == 1 ? attendance.getIn().getId() : attendance.getOut().getId());
         intent.putExtra("inOrOut", inOrOut);
+        intent.putExtra("overTime", overTime);
         startActivityForResult(intent, FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE);
     }
 
@@ -398,8 +428,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
+
         if (requestCode == FinalVariables.REQUEST_PREVIEW_OUT_ATTENDANCE) {
-            page=1;
+            page = 1;
             getData(page);
         }
     }
@@ -423,50 +454,61 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+
             if (null == view) {
                 view = LayoutInflater.from(mActivity).inflate(R.layout.item_attendance_info, viewGroup, false);
             }
+
+            int inTagstate = 0;
+            int outTagstate = 0;
 
             final DayofAttendance attendance = (DayofAttendance) getItem(i);
             final AttendanceRecord recordIn = attendance.getIn();
             final AttendanceRecord recordOut = attendance.getOut();
 
-            ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);//上午
-            ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);//晚上
+            ViewGroup layout_overtime = ViewHolder.get(view, R.id.layout_overtime);//加班
+            ViewGroup layout_recordIn = ViewHolder.get(view, R.id.layout_recordin);//上班
+            ViewGroup layout_recordOut = ViewHolder.get(view, R.id.layout_recordout);//下班
             layout_recordIn.setOnTouchListener(Global.GetTouch());
             layout_recordOut.setOnTouchListener(Global.GetTouch());
 
-            layout_recordIn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null != recordIn) {
-                        previewAttendance(1, attendance);
-                    }
-                }
-            });
-
-            layout_recordOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null != recordOut) {
-                        previewAttendance(2, attendance);
-                    }
-                }
-            });
-
+            final TextView tv_overtime = ViewHolder.get(view, R.id.overtime);//加班时间显示
             TextView tv_title = ViewHolder.get(view, R.id.tv_title);
-            ImageView iv_extra = ViewHolder.get(view, R.id.iv_extra);
-            iv_extra.setVisibility(View.INVISIBLE);
-
-            TextView tv_state = ViewHolder.get(view, R.id.tv_state);
-            TextView tv_time = ViewHolder.get(view, R.id.tv_time);
-            ImageView iv_recordIn_type = ViewHolder.get(view, R.id.iv_record_in_type);
-            ImageView iv_recordOut_type = ViewHolder.get(view, R.id.iv_record_out_type);
-
             TextView tv_result = ViewHolder.get(view, R.id.tv_result);
             TextView tv_time1 = ViewHolder.get(view, R.id.tv_time1);
+            TextView tv_state = ViewHolder.get(view, R.id.tv_state);
+            TextView tv_time = ViewHolder.get(view, R.id.tv_time);
 
+            ImageView iv_extra = ViewHolder.get(view, R.id.iv_extra);
+            ImageView iv_recordIn_type = ViewHolder.get(view, R.id.iv_record_in_type);
+            ImageView iv_recordOut_type = ViewHolder.get(view, R.id.iv_record_out_type);
             ImageView divider = ViewHolder.get(view, R.id.devider);
+
+            boolean isHasOut = true;
+            boolean isHasIn = true;
+            String overTimes = "--";
+            int color = getActivity().getResources().getColor(R.color.gray);
+
+            //加班时间
+            if (recordOut != null) {
+                outTagstate = recordOut.getTagstate();
+                LogUtil.dll("Out TagState:"+outTagstate);
+
+                int extraTime = recordOut.getExtraTime();
+                if (extraTime > 60) {
+                    overTimes = extraTime / 60 + "小时" + extraTime % 60 + "分";
+                } else if (extraTime != 0) {
+                    overTimes = extraTime + "分钟";
+                }
+
+                if (recordOut.getExtraState() == 1) {
+                    color = getActivity().getResources().getColor(R.color.gray);
+                } else if (recordOut.getExtraState() == 2) {
+                    color = getActivity().getResources().getColor(R.color.red);
+                }
+            }
+            tv_overtime.setTextColor(color);
+            tv_overtime.setText(overTimes);
 
             //标题
             if (type == 1) {
@@ -479,8 +521,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 }
             }
 
-            //上班卡
+            /**上班卡*/
             if (null != recordIn) {
+                inTagstate = recordIn.getTagstate();
+                isHasIn = true;
                 String moring = "未打卡";
                 if (recordIn.getState() == AttendanceRecord.STATE_BE_LATE) {
                     tv_state.setTextColor(getResources().getColor(R.color.red));
@@ -488,60 +532,131 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 } else if (recordIn.getState() == AttendanceRecord.STATE_NORMAL) {
                     tv_state.setTextColor(getResources().getColor(R.color.black));
                     moring = "已打卡";
+                } else if(recordIn.getState() == 0){
+                    isHasIn = false;
+                    iv_recordIn_type.setVisibility(View.INVISIBLE);
+                    tv_time.setText("--");
                 }
-                tv_state.setText(moring);
-                tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
-                iv_recordIn_type.setVisibility(View.VISIBLE);
+
+                if(recordIn.getState() != 0){
+                    tv_state.setText(moring);
+                    tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
+                    iv_recordIn_type.setVisibility(View.VISIBLE);
+                }
+
+                /*外勤未确认*/
                 if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
-                    iv_recordIn_type.setImageResource(R.drawable.icon_field_work_unconfirm);
-                } else if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-                    iv_recordIn_type.setImageResource(R.drawable.icon_office_work);
-                } else if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                     iv_recordIn_type.setImageResource(R.drawable.icon_field_work_confirm);
                 }
+                /*外勤已确认*/
+                else if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
+                    iv_recordIn_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+                }
+                 /*内勤*/
+                else if (recordIn.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+                    iv_recordIn_type.setVisibility(View.INVISIBLE);
+                }
             } else {
-                tv_state.setText("未打卡");
-                tv_state.setTextColor(getResources().getColor(R.color.gray));
-                iv_recordIn_type.setVisibility(View.GONE);
-                tv_time.setText("--:--");
+                isHasIn = false;
+                iv_recordIn_type.setVisibility(View.INVISIBLE);
+                tv_time.setText("--");
             }
 
-            //下班卡
-            if (null != recordOut) {
+            int image = 0;
+
+            /**
+             * 请假 出差判断
+             * */
+            if (outTagstate == 1 || inTagstate == 1) {
+                LogUtil.dll("TagState:"+outTagstate+","+inTagstate);
+                image = R.drawable.icon_ask_overwork;
+            } else if (outTagstate == 2 || inTagstate == 2) {
+                image = R.drawable.icon_ask_for_leave;
+            }
+            iv_extra.setBackgroundResource(image);
+            tv_state.setVisibility(isHasIn ? View.VISIBLE : View.GONE);
+
+            /**下班卡*/
+            if (null != recordOut && recordOut.getState() != 5) {
+                isHasOut = true;
                 String result = "未打卡";
                 switch (recordOut.getState()) {
                     case AttendanceRecord.STATE_NORMAL:
                         tv_result.setTextColor(getResources().getColor(R.color.black));
-                        result = "已签退";
+                        result = "已打卡";
                         break;
                     case AttendanceRecord.STATE_LEAVE_EARLY:
                         tv_result.setTextColor(getResources().getColor(R.color.red));
                         result = "早退";
                         break;
+                    case AttendanceRecord.STATE_MASTER:
+                        isHasOut = false;
+                        iv_recordOut_type.setVisibility(View.INVISIBLE);
+                        tv_time1.setText("--");
+                        break;
                 }
-                tv_result.setText(Utils.modifyTextColor(result, Color.RED, 0, result.length()));
-                tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));
+                if(recordOut.getState() != 0){
+                    tv_result.setText(result);//打卡类型
+                    tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
+                    iv_recordOut_type.setVisibility(View.VISIBLE);
+                }
 
-                iv_recordOut_type.setVisibility(View.VISIBLE);
+                /*未确认的外勤*/
                 if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_FIELD_WORK) {
-                    iv_recordOut_type.setImageResource(R.drawable.icon_field_work_unconfirm);
-                } else if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
-                    iv_recordOut_type.setImageResource(R.drawable.icon_office_work);
-                } else if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                     iv_recordOut_type.setImageResource(R.drawable.icon_field_work_confirm);
                 }
+                /*已确认的外勤*/
+                else if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
+                    iv_recordOut_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+                }
+                /*内勤*/
+                else if (recordOut.getOutstate() == AttendanceRecord.OUT_STATE_OFFICE_WORK) {
+                    iv_recordOut_type.setVisibility(View.INVISIBLE);
+                }
+
             } else {
-                tv_result.setTextColor(getResources().getColor(R.color.gray));
-                tv_result.setText("未打卡");
-                iv_recordOut_type.setVisibility(View.GONE);
-                tv_time1.setText("--:--");
+                isHasOut = false;
+                iv_recordOut_type.setVisibility(View.INVISIBLE);
+                tv_time1.setText("--");
             }
+            tv_result.setVisibility(isHasOut ? View.VISIBLE : View.GONE);
 
             if (i == getCount() - 1) {
-                divider.setVisibility(View.GONE);
+                divider.setVisibility(View.INVISIBLE);
             } else {
                 divider.setVisibility(View.VISIBLE);
             }
+
+            /**按键监听*/
+            /*加班*/
+            layout_overtime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordOut && recordOut.getExtraTime() != 0) {
+                        previewAttendance(3, attendance, tv_overtime.getText().toString());
+                    }
+                }
+            });
+
+            /*上班*/
+            layout_recordIn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordIn) {
+                        previewAttendance(1, attendance, "");
+                    }
+                }
+            });
+
+            /*下班*/
+            layout_recordOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != recordOut && recordOut.getState() != 5) {
+                        previewAttendance(2, attendance, "");
+                    }
+                }
+            });
 
             return view;
         }

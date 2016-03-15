@@ -162,15 +162,7 @@ public class DropListMenu extends LinearLayout {
             /**
              * 弹窗列表，确认 取消监听 右边列表第一个列表
              */
-            ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
-//            menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                                                @Override
-//                                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                                                    LogUtil.d(" DAINIJI 点击了 ");
-//                                                    popupWindow.dismiss();
-//                                                }
-//                                            }
-//            );
+            final ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
             if (!mShowDivider) {
@@ -213,20 +205,20 @@ public class DropListMenu extends LinearLayout {
             menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    //((DropListAdapter) (menuList.getAdapter())).setSelectItem(position);//设置选择状态
                     mRowSelected = position;
                     if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
-                        //展示二级ListView
+                        /**
+                         * 展开后的右侧 二级ListView
+                         * */
                         final DropListAdapter adapter = new DropListAdapter(mContext, menuItem.getSubDropItem().get(mRowSelected).getSubDropItem(), selectedItem);
-                        subMenuList.setBackgroundColor(getResources().getColor(R.color.lightgrey));
                         getSubMenuList().setAdapter(adapter);
                         getSubMenuList().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
-                                    //popupWindow.dismiss();
-
+                                    // popupWindow.dismiss();
                                     // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                                     mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                                     mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
@@ -254,13 +246,11 @@ public class DropListMenu extends LinearLayout {
 
                                     adapter.notifyDataSetChanged();
                                     syncConfirmButton();
-
                                 }
-                                 popupWindow.dismiss();
                             }
                         });
                     } else {
-
+                        popupWindow.dismiss();//默认选择状态下
                         // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                         mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                         mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
@@ -273,10 +263,8 @@ public class DropListMenu extends LinearLayout {
                                 mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                             }
                         }
-
                     }
                 }
-
             });
 
             RelativeLayout shadow = (RelativeLayout) viewPopWindow.findViewById(R.id.rl_menu_shadow);
@@ -425,7 +413,7 @@ public class DropListMenu extends LinearLayout {
                 mIvMenuArrow.add(iv);
                 mIvMenuArrow.get(i).setImageResource(mDownArrow);
 
-                final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) iv.getLayoutParams();
                 params.leftMargin = mArrowMarginTitle;
                 iv.setLayoutParams(params);
 

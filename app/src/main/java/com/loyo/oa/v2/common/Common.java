@@ -61,6 +61,7 @@ public final class Common {
     }
 
     public static ArrayList<UserGroupData> getLstUserGroupData() {
+
         if (MainApp.lstUserGroupData == null) {
             InitOrganizationFromDB();
         }
@@ -143,15 +144,18 @@ public final class Common {
                     continue;
                 }
 
-                if ((department.getSuperiorId()).equals(companyId)) {
-                    String groupName_current = department.getGroupName();
-                    if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
-                        departments.add(department);
-                    } else if (TextUtils.isEmpty(groupName_current)) {
-                        departments.add(0, department);
+                try{
+                    if ((department.getSuperiorId()).equals(companyId)) {
+                        String groupName_current = department.getGroupName();
+                        if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
+                            departments.add(department);
+                        } else if (TextUtils.isEmpty(groupName_current)) {
+                            departments.add(0, department);
+                        }
                     }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
-
             }
             if (!departments.isEmpty()) {
                 maps.put(index, departments);
@@ -285,10 +289,6 @@ public final class Common {
             MainApp.lstDepartment.clear();
             MainApp.lstDepartment.addAll(_lstDepartment);
         }
-
-        /*老版通讯录数据，如果屏蔽，通讯录搜索会不出结果
-        * 2016.1.13前解决。
-        * */
         setOrganization(_lstDepartment);
     }
 
@@ -442,8 +442,12 @@ public final class Common {
 
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+            try{
+                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
+                    userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
+                }
+            }catch(NullPointerException e){
+                e.printStackTrace();
             }
         }
 
@@ -461,8 +465,12 @@ public final class Common {
         myUsers.clear();
         for (Department department : getLstDepartment()) {
             if (department.getXpath().contains(getLstDepartment().get(positions).getXpath())) {
-                for (User user : department.getUsers()) {
-                    myUsers.add(user);
+                try{
+                    for (User user : department.getUsers()) {
+                        myUsers.add(user);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
             }
         }

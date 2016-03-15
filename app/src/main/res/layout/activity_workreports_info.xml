@@ -34,18 +34,18 @@
                     android:layout_marginRight="@dimen/margin_side_edge">
 
                     <EditText
-                        android:singleLine="false"
-                        android:layout_marginRight="@dimen/dimen_4"
-                        android:layout_toLeftOf="@+id/img_workreport_status"
                         android:id="@+id/edt_workReport_title"
                         style="@style/text_item1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="5dp"
+                        android:layout_marginRight="@dimen/dimen_4"
                         android:layout_marginTop="4dp"
+                        android:layout_toLeftOf="@+id/img_workreport_status"
                         android:background="@android:color/transparent"
                         android:focusable="false"
+                        android:singleLine="false"
                         android:textColor="@color/text1"/>
 
                     <TextView
@@ -78,16 +78,16 @@
                     android:layerType="software"
                     android:padding="@dimen/dimen_15"/>
 
-                <WebView
-                    android:id="@+id/webView_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:background="@android:color/transparent"
-                    android:minHeight="80dp"/>
+                <!--  <WebView
+                      android:id="@+id/webView_content"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="8dp"
+                      android:layout_marginLeft="@dimen/margin_side_edge"
+                      android:layout_marginRight="@dimen/margin_side_edge"
+                      android:layout_marginTop="@dimen/dimen_10"
+                      android:background="@android:color/transparent"
+                      android:minHeight="80dp"/>-->
 
             </LinearLayout>
 
@@ -214,99 +214,41 @@
                             android:background="@drawable/view_dashed_line"
                             android:layerType="software"/>
 
-                        <LinearLayout
+                        <com.loyo.oa.v2.common.NoScroolGridView
+                            android:id="@+id/info_gridview_workreports"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dimen_80"
-                            android:orientation="horizontal">
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:listSelector="@android:color/transparent"
+                            android:numColumns="3"
+                            />
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                        <LinearLayout
+                            android:id="@+id/no_dysndata_workreports"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/beogray"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            >
 
-                                <TextView
-                                    android:id="@+id/tv_new_customers_num"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#ff5959"
-                                    android:textSize="28sp"/>
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="60dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/icon_dysn_nodata"
+                                />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="新增客戶"/>
-
-                            </LinearLayout>
-
-                            <View
-                                style="@style/view_split"
-                                android:layout_width="@dimen/dimen_0.5"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/dimen_10"
-                                android:layout_marginTop="@dimen/dimen_10"/>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_new_visit_num"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#59b80c"
-                                    android:textSize="28sp"/>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="拜访签到"/>
-
-                            </LinearLayout>
-
-                            <View
-                                style="@style/view_split"
-                                android:layout_width="@dimen/dimen_0.5"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/dimen_10"
-                                android:layout_marginTop="@dimen/dimen_10"/>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_visit_customers_num"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textColor="#4db1fe"
-                                    android:textSize="28sp"/>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="拜访客戶"/>
-
-                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="5dp"
+                                android:text="暂无统计数据"
+                                android:textColor="@color/gray"
+                                />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -452,12 +394,12 @@
                             android:layerType="software"/>
 
                         <LinearLayout
-                            android:layout_marginLeft="@dimen/dimen_10"
-                            android:layout_marginRight="@dimen/dimen_10"
-                            android:layout_marginBottom="@dimen/dimen_5"
                             android:id="@+id/layout_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dimen_5"
+                            android:layout_marginLeft="@dimen/dimen_10"
+                            android:layout_marginRight="@dimen/dimen_10"
                             android:background="@color/white"
                             android:orientation="vertical">
 
@@ -487,6 +429,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+
                 <Button
                     android:id="@+id/btn_workreport_review"
                     android:layout_width="match_parent"

@@ -15,10 +15,9 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
@@ -28,6 +27,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
@@ -39,8 +39,8 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
-import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
+import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -102,7 +102,7 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     TextView tv_mycustomer;
     @ViewById
-    Switch switch_approve;
+    SwitchView switch_approve;
     @ViewById
     EditText edt_content;
     @ViewById
@@ -122,21 +122,23 @@ public class TasksAddActivity extends BaseActivity {
     @Extra(ExtraAndResult.EXTRA_NAME)
     String customerName;
 
-
     private AlertDialog dialog_Product;
     private SignInGridViewAdapter signInGridViewAdapter;
     private NewUser newUser;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private StringBuffer strBuf;
     private Members members;
+    private PostBizExtData bizExtData;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private int remindTime;
-
     private String uuid = StringUtil.getUUID();
     private long mDeadline;
     private int mRemind = 0;
     private boolean isCopy;
+    private boolean isState = true;
+    private StringBuffer joinName;
+    private StringBuffer joinUserId;
 
     @AfterViews
     void initUI() {
@@ -152,6 +154,7 @@ public class TasksAddActivity extends BaseActivity {
         depts = new ArrayList<>();
         members = new Members();
         strBuf = new StringBuffer();
+        switch_approve.setState(true);
 
         init_gridView_photo();
         setTouchView(-1);
@@ -187,11 +190,11 @@ public class TasksAddActivity extends BaseActivity {
         edt_content.setText(mTask.getContent());
         tv_responsiblePerson.setText(mTask.getResponsiblePerson().getName());
         tv_toUsers.setText(strBuf.toString());
-        //tv_Project.setText();
-        switch_approve.setChecked(true);
+        switch_approve.setState(true);
         isCopy = mTask != null ? true : false;
         members.users = mTask.getMembers().users; //参与人
         newUser = mTask.getResponsiblePerson();  //负责人
+
     }
 
     void getTempTask() {
@@ -199,17 +202,12 @@ public class TasksAddActivity extends BaseActivity {
             return;
         }
 
-        switch_approve.setChecked(mTask.isReviewFlag());
-
         if (!TextUtils.isEmpty(mTask.getResponsiblePersonId()) && !StringUtil.isEmpty(mTask.getResponsiblePersonName())) {
-
             User u = new User();
             u.id = mTask.getResponsiblePersonId();
             u.realname = mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
-
         }
-
         //截至日期设置,需求没要求默认时间，暂注释
         /*  if (mTask.getPlanEndAt() > 0) {
             mDeadline = mTask.getPlanEndAt();
@@ -220,6 +218,7 @@ public class TasksAddActivity extends BaseActivity {
             tv_Project.setText(projectTitle);
         }
         getBundle();
+
     }
 
     void init_gridView_photo() {
@@ -233,6 +232,9 @@ public class TasksAddActivity extends BaseActivity {
 
     void requestCommitTask(String title, String content) {
 
+        showLoading("");
+        bizExtData = new PostBizExtData();
+        bizExtData.setAttachmentCount(lstData_Attachment.size());
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
@@ -243,21 +245,32 @@ public class TasksAddActivity extends BaseActivity {
             map.put("remindflag", mRemind > 0);
             map.put("remindtime", remindTime);
         }
-        map.put("reviewFlag", switch_approve.isChecked());
+
+        if(switch_approve.getState() == 1){
+            isState = false;
+        }
+        else if(switch_approve.getState() == 4){
+            isState = true;
+        }
+
+        map.put("reviewFlag", isState);
+        map.put("bizExtData",bizExtData);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
-        LogUtil.d(" " +
-                "新建任务传递： " + MainApp.gson.toJson(map));
+
+        LogUtil.dee("任务创建图片的数量:"+lstData_Attachment.size());
+        LogUtil.dee("任务创建 发送的数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(Task task, Response response) {
                 //task.setAck(true);
 //                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 //不需要保存
+                cancelLoading();
                 isSave = false;
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
@@ -270,9 +283,8 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast("网络一场，＝");
+                cancelLoading();
                 HttpErrorCheck.checkError(error);
-
             }
         });
     }
@@ -309,9 +321,7 @@ public class TasksAddActivity extends BaseActivity {
                 }
 
                 requestCommitTask(title, content);
-
                 break;
-
 
             //截至时间
             case R.id.layout_deadline:
@@ -322,7 +332,7 @@ public class TasksAddActivity extends BaseActivity {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
                                 String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
-                        mDeadline = Long.parseLong(DateTool.getDataOne(str));
+                        mDeadline = Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm"));
                         LogUtil.dll("截至时间:" + mDeadline + "");
                     }
                 });
@@ -338,11 +348,19 @@ public class TasksAddActivity extends BaseActivity {
 
             //参与人选项
             case R.id.tv_toUsers:
-                Bundle bundle1 = new Bundle();
-                bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code, bundle1);
+
+                if(joinUserId != null){
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
+                    bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
+                }else{
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            ExtraAndResult.request_Code, bundle1);
+                }
 
                 break;
 
@@ -472,15 +490,18 @@ public class TasksAddActivity extends BaseActivity {
                     if (null == members) {
                         tv_toUsers.setText("无参与人");
                     } else {
-                        StringBuffer joinName = new StringBuffer();
+                        joinName = new StringBuffer();
+                        joinUserId = new StringBuffer();
                         if (null != members.depts) {
                             for (NewUser newUser : members.depts) {
                                 joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
                         if (null != members.users) {
                             for (NewUser newUser : members.users) {
                                 joinName.append(newUser.getName() + ",");
+                                joinUserId.append(newUser.getId() + ",");
                             }
                         }
                         tv_toUsers.setText(joinName.toString());
@@ -499,10 +520,15 @@ public class TasksAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, newFile).subscribe(new CommonSubscriber(this) {
+                                LogUtil.dll("执行了");
+                                Utils.uploadAttachment(uuid,2,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(Serializable serializable) {
                                         getAttachments();
+                                    }
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
                                     }
                                 });
                             }
@@ -517,7 +543,10 @@ public class TasksAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), new RCallback<Attachment>() {
+                HashMap<String,Object> map = new HashMap<String, Object>();
+                map.put("bizType",2);
+                map.put("uuid", uuid);
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                     @Override
                     public void success(Attachment attachment, Response response) {
                         Utils.dialogDismiss();
@@ -550,10 +579,16 @@ public class TasksAddActivity extends BaseActivity {
         DBManager.Instance().deleteTask();
 
         if (isSave) {
+            if(switch_approve.getState() == 1){
+                isState = false;
+            }else if(switch_approve.getState() == 4){
+                isState = true;
+            }
+
             mTask = new Task();
             mTask.setTitle(edt_title.getText().toString().trim());
             mTask.setContent(edt_content.getText().toString().trim());
-            mTask.setReviewFlag(switch_approve.isChecked());
+            mTask.setReviewFlag(isState);
 
             if (newUser != null) {
                 //直接保存responsiblePerson会出错
