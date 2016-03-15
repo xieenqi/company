@@ -26,7 +26,6 @@
         <!--module name="JavadocVariable"/-->
         <!--<module name="JavadocStyle"/>-->
 
-
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
 
@@ -39,7 +38,6 @@
         <!--<module name="ParameterName"/>-->
         <!--<module name="StaticVariableName"/>-->
         <!--<module name="TypeName"/>-->
-
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
@@ -126,7 +124,6 @@
         <module name="SimplifyBooleanReturn"/>
         <!--检查是否有过于复杂的布尔类型return语句-->
 
-
         <!-- Checks for class design   类设计的检查                      -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!--module name="DesignForExtension"/-->
@@ -140,7 +137,6 @@
         <!--module name="VisibilityModifier"/--><!--检查类成员的可见性-->
         <!--<module name="StrictDuplicateCode"/>-->
         <!--严格重复代码-->
-
 
         <!-- Miscellaneous other checks. 杂项其它项检查                  -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
