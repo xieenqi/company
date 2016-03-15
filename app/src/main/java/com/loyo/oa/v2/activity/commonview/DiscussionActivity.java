@@ -81,7 +81,7 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         body.put("attachmentUUId", attachmentUUId);
         t.getDiscussions(body, new RCallback<PaginationX<Discussion>>() {
             @Override
-            public void success(PaginationX<Discussion> d, Response response) {
+            public void success(final PaginationX<Discussion> d, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 listView_discussion.onRefreshComplete();
                 if(isPullUp){
@@ -93,7 +93,7 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 listView_discussion.onRefreshComplete();
                 super.failure(error);
@@ -141,13 +141,13 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
         t.createDiscussion(body, new RCallback<Discussion>() {
             @Override
-            public void success(Discussion d, Response response) {
+            public void success(final Discussion d, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 onPullDownToRefresh(listView_discussion);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
@@ -162,14 +162,14 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isPullUp=false;
         mPageDiscussion.setPageIndex(1);
         getDDiscussion();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isPullUp=true;
         mPageDiscussion.setPageIndex(mPageDiscussion.getPageIndex() + 1);
         mPageDiscussion.setPageSize(20);
