@@ -113,7 +113,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_base_new, container, false);
             mMenu = (DropDownMenu) mView.findViewById(R.id.drop_menu);
-
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
 
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);

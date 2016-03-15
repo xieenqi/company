@@ -289,7 +289,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
 
         if (node != null) {
-
             if (node.getActive() == 2) {
                 if (node.isNeedApprove()) {
                     layout_nopass.setOnTouchListener(touch);
