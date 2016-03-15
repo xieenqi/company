@@ -59,6 +59,7 @@ public class WfInstance extends BaseBeans {
         public String memo;
         public String unit;
         public String productName;
+        public String customerName;
 
     }
 }
