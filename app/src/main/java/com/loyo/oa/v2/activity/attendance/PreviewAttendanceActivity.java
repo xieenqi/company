@@ -29,7 +29,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -54,28 +53,48 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_attendance_info)
 public class PreviewAttendanceActivity extends BaseActivity {
 
-    @ViewById ViewGroup layout_back;
-    @ViewById TextView tv_title;
-    @ViewById RoundImageView iv_avartar;
-    @ViewById TextView tv_name;
-    @ViewById TextView tv_role;
-    @ViewById TextView tv_address_info;
-    @ViewById ImageView iv_type;
-    @ViewById TextView tv_info;
-    @ViewById TextView tv_reason;
-    @ViewById GridView gridView_photo;
-    @ViewById Button btn_confirm;
-    @ViewById LinearLayout ll_confirm;
-    @ViewById TextView tv_confirmDept;
-    @ViewById TextView tv_confirmName;
-    @ViewById TextView tv_confirmTime;
-    @ViewById TextView tv_explain;
-    @ViewById TextView tv_message;
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    TextView tv_title;
+    @ViewById
+    RoundImageView iv_avartar;
+    @ViewById
+    TextView tv_name;
+    @ViewById
+    TextView tv_role;
+    @ViewById
+    TextView tv_address_info;
+    @ViewById
+    ImageView iv_type;
+    @ViewById
+    TextView tv_info;
+    @ViewById
+    TextView tv_reason;
+    @ViewById
+    GridView gridView_photo;
+    @ViewById
+    Button btn_confirm;
+    @ViewById
+    LinearLayout ll_confirm;
+    @ViewById
+    TextView tv_confirmDept;
+    @ViewById
+    TextView tv_confirmName;
+    @ViewById
+    TextView tv_confirmTime;
+    @ViewById
+    TextView tv_explain;
+    @ViewById
+    TextView tv_message;
 
     HttpAttendanceDetial attendance;
-    @Extra("overTime") String overTime;
-    @Extra("inOrOut") int inOrOut; // 1:上班 2:下班 3:加班
-    @Extra(ExtraAndResult.EXTRA_ID) String attendanceId;
+    @Extra("overTime")
+    String overTime;
+    @Extra("inOrOut")
+    int inOrOut; // 1:上班 2:下班 3:加班
+    @Extra(ExtraAndResult.EXTRA_ID)
+    String attendanceId;
 
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
@@ -93,19 +112,19 @@ public class PreviewAttendanceActivity extends BaseActivity {
 
     /**
      * 获取考勤详情
-     * */
+     */
     public void getData() {
         showLoading("");
         app.getRestAdapter().create(IAttendance.class).getAttendancesDetial(attendanceId, new RCallback<HttpAttendanceDetial>() {
             @Override
-            public void success(HttpAttendanceDetial attend, Response response) {
+            public void success(final HttpAttendanceDetial attend, final Response response) {
                 attendance = attend;
                 HttpErrorCheck.checkResponse("考勤详情-->", response);
                 initData();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
@@ -115,7 +134,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
     /**
      * 获取附件
      */
-    private void getAttachments(String attachementuuid) {
+    private void getAttachments(final String attachementuuid) {
 
         if (TextUtils.isEmpty(attachementuuid)) {//附件id为空
             return;
@@ -123,14 +142,14 @@ public class PreviewAttendanceActivity extends BaseActivity {
 
         Utils.getAttachments(attachementuuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> _attachments, Response response) {
+            public void success(final ArrayList<Attachment> _attachments, final Response response) {
                 HttpErrorCheck.checkResponse("考勤详情-获取附件", response);
                 attachments = _attachments;
                 initGridView();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
                 Toast("获取附件失败");
@@ -157,32 +176,28 @@ public class PreviewAttendanceActivity extends BaseActivity {
                 ? "-" : user.depts.get(0).getShortDept().title));
 
         /*确认加班*/
-        if(attendance.state == 5 && attendance.extraState == AttendanceRecord.OUT_STATE_FIELD_OVERTIME){
+        if (attendance.state == 5 && attendance.extraState == AttendanceRecord.OUT_STATE_FIELD_OVERTIME) {
             btn_confirm.setVisibility(View.VISIBLE);
             btn_confirm.setText("确认加班");
-            strMessage = "是否确定该员工的加班?\n"+"确认后将无法取消！";
-        }
-        /*确认外勤*/
-        else {
+            strMessage = "是否确定该员工的加班?\n" + "确认后将无法取消！";
+        } else {/*确认外勤*/
             if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_confirm);
                 btn_confirm.setVisibility(View.VISIBLE);
                 btn_confirm.setText("确认外勤");
-                strMessage = "是否确定该员工的外勤?\n"+"确认后将无法取消！";
+                strMessage = "是否确定该员工的外勤?\n" + "确认后将无法取消！";
             } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
             }
         }
 
          /*加班处理*/
-        if(attendance.state == 5 && inOrOut == 3){
+        if (attendance.state == 5 && inOrOut == 3) {
             String time = (DateTool.timet(attendance.extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
-                    +"-"+DateTool.timet(attendance.extraWorkEndTime+"",DateTool.DATE_FORMATE_TRANSACTION));
+                    + "-" + DateTool.timet(attendance.extraWorkEndTime + "", DateTool.DATE_FORMATE_TRANSACTION));
             tv_info.setText("时间：" + time + " 共" + overTime);
             tv_explain.setText("加班说明");
-        }
-        /*上班下班处理*/
-        else{
+        } else { /*上班下班处理*/
             String info = "";
             if (attendance.state == AttendanceRecord.STATE_BE_LATE) {
                 info = "上班迟到, ";
@@ -204,24 +219,22 @@ public class PreviewAttendanceActivity extends BaseActivity {
         }
         getAttachments(attendance.attachementuuid);
 
-        if(null != attendance.confirmuser){
+        if (null != attendance.confirmuser) {
         /*已确认的外勤*/
-        if(attendance.state != 4 && attendance.state != 5 &&
-                attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK){
+            if (attendance.state != 4 && attendance.state != 5 &&
+                    attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                 ll_confirm.setVisibility(View.VISIBLE);
                 tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
                 tv_confirmName.setText(attendance.confirmuser.name);
                 tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
+            } else if (attendance.state == 5 &&
+                    attendance.extraState == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_OVERTIME) { /*已确认的加班*/
+                ll_confirm.setVisibility(View.VISIBLE);
+                tv_message.setText("确认加班");
+                tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
+                tv_confirmName.setText(attendance.confirmuser.name);
+                tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
             }
-        /*已确认的加班*/
-        else if(attendance.state == 5 &&
-                attendance.extraState == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_OVERTIME){
-            ll_confirm.setVisibility(View.VISIBLE);
-            tv_message.setText("确认加班");
-            tv_confirmDept.setText(attendance.confirmuser.depts.get(0).getShortDept().getName());
-            tv_confirmName.setText(attendance.confirmuser.name);
-            tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
-             }
         }
 
     }
@@ -254,12 +267,12 @@ public class PreviewAttendanceActivity extends BaseActivity {
     /**
      * 弹出外勤(加班)确认对话框
      */
-    private void showConfirmOutAttendanceDialog(String str) {
-        showGeneralDialog(false,true,str);
+    private void showConfirmOutAttendanceDialog(final String str) {
+        showGeneralDialog(false, true, str);
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 confirmOutAttendance();
             }
@@ -268,7 +281,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -281,7 +294,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
                 confirmOutAttendance(attendanceId, new RCallback<AttendanceRecord>() {
                     @Override
-                    public void success(AttendanceRecord record, Response response) {
+                    public void success(final AttendanceRecord record, final Response response) {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);
                         btn_confirm.setVisibility(View.GONE);
                         iv_type.setImageResource(R.drawable.icon_field_work_confirm);
@@ -291,7 +304,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                         Toast("操作失败！");
