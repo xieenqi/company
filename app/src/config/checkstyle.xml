@@ -26,7 +26,6 @@
         <!--module name="JavadocVariable"/-->
         <!--<module name="JavadocStyle"/>-->
 
-
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
 
@@ -39,7 +38,6 @@
         <!--<module name="ParameterName"/>-->
         <!--<module name="StaticVariableName"/>-->
         <!--<module name="TypeName"/>-->
-
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
@@ -126,7 +124,6 @@
         <module name="SimplifyBooleanReturn"/>
         <!--检查是否有过于复杂的布尔类型return语句-->
 
-
         <!-- Checks for class design   类设计的检查                      -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!--module name="DesignForExtension"/-->
@@ -137,7 +134,6 @@
         <!--确保工具类（在API中只有静态方法和字段的类）没有任何公有构造器。-->
         <module name="InterfaceIsType"/>
         <!--接口是类型的检查-->
-
 
 
 

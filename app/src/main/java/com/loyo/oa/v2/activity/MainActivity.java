@@ -290,7 +290,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void onRefresh() {
                 swipe_container.setRefreshing(true);
                 MainActivity.this.onRefresh();
-
             }
         });
 
