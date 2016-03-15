@@ -138,7 +138,7 @@
         <module name="InterfaceIsType"/>
         <!--接口是类型的检查-->
         <!--module name="VisibilityModifier"/--><!--检查类成员的可见性-->
-        <module name="StrictDuplicateCode"/>
+        <!--<module name="StrictDuplicateCode"/>-->
         <!--严格重复代码-->
 
 
