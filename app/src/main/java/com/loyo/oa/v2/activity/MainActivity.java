@@ -1047,7 +1047,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         suitesNew.add(new Suites());
         suitesNew.add(new Suites());
         for (Suites stuites : MainApp.user.permission.suites) {
-            // suitesNew.add(stuites);
             if ("客户管理".equals(stuites.name)) {
                 suitesNew.add(0, stuites);
             } else if ("协同办公".equals(stuites.name)) {
