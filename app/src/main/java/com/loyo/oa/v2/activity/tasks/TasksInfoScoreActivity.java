@@ -93,7 +93,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.btn_task_agree})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
 
             /*返回*/
@@ -115,6 +115,9 @@ public class TasksInfoScoreActivity extends BaseActivity {
                     verfyTask(sorce, status, comment);
                 }
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -123,7 +126,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
      *
      * @param sorce status comment
      */
-    private void verfyTask(int sorce, int status, String comment) {
+    private void verfyTask(final int sorce,final int status,final String comment) {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("score", sorce);
@@ -133,7 +136,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
         LogUtil.dll("发送数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).verifyTask(mTask.getId(), map, new RCallback<Task>() {
             @Override
-            public void success(Task task, Response response) {
+            public void success(final Task task,final Response response) {
                 if (task != null) {
                     isSave = false;
                     Intent intent = new Intent();
@@ -143,7 +146,7 @@ public class TasksInfoScoreActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }

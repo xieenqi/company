@@ -151,7 +151,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     public android.os.Handler mHandler = new android.os.Handler() {
 
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
             }
@@ -254,6 +254,9 @@ public class TasksInfoActivity extends BaseActivity {
 
             case 3:
                 iv_task_status.setBackgroundResource(R.drawable.img_task_status_finish);
+                break;
+
+            default:
                 break;
         }
 
@@ -411,7 +414,7 @@ public class TasksInfoActivity extends BaseActivity {
             } else {
                 childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isCheck) {
+                    public void onCheckedChanged(final CompoundButton compoundButton,final boolean isCheck) {
                         if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
                             if (isCheck) {
                                 statusSize++;
@@ -437,7 +440,7 @@ public class TasksInfoActivity extends BaseActivity {
                 view.setTag(subTask);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
 
                         //组装 负责人 于 参与人
                         ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
@@ -472,19 +475,19 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 更新子任务状态（完成／未完成)
      */
-    void requestTaskupdates(String id, String cid, int sts) {
+    void requestTaskupdates(final String id,final String cid,final int sts) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", sts);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
-            public void success(Task task, Response response) {
+            public void success(final Task task,final Response response) {
                 Toast("更新成功");
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -504,7 +507,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
-            public void success(Task task, Response response) {
+            public void success(final Task task,final Response response) {
                 LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
                 HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
@@ -514,7 +517,7 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 // LogUtil.d("任务错误信息："+error.getBody().toString());
@@ -526,7 +529,7 @@ public class TasksInfoActivity extends BaseActivity {
      * 标题左右监听
      */
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete})
-    void onClick(View v) {
+    void onClick(final View v) {
 
         switch (v.getId()) {
 
@@ -555,9 +558,8 @@ public class TasksInfoActivity extends BaseActivity {
                     } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
                         intent.putExtra("delete", true);
                     }
-                }
-                /*负责人*/
-                else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
+                    /*负责人*/
+                }else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
                     intent.putExtra("editText", "修改参与人");
                 }
@@ -572,6 +574,9 @@ public class TasksInfoActivity extends BaseActivity {
                 } else {
                     Toast("子任务尚未完成，不能提交！");
                 }
+                break;
+
+            default:
                 break;
         }
     }
@@ -592,7 +597,7 @@ public class TasksInfoActivity extends BaseActivity {
             RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
                     .commitTask(null != mTask ? mTask.getId() : mTaskId, new RCallback<Task>() {
                         @Override
-                        public void success(Task task, Response response) {
+                        public void success(final Task task,final Response response) {
                             if (task != null) {
                                 task.setAck(true);
                                 Intent intent = new Intent();
@@ -602,7 +607,7 @@ public class TasksInfoActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void failure(final RetrofitError error) {
                             super.failure(error);
                             HttpErrorCheck.checkError(error);
                         }
@@ -665,7 +670,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -691,8 +696,6 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
 
             case REQUEST_SCORE:
-//                mTask = (Task) data.getSerializableExtra("review");
-//                updateUI();
                 getTask();
                 break;
 
@@ -719,10 +722,8 @@ public class TasksInfoActivity extends BaseActivity {
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, mBundle);
                     }
-                }
-
-                /*删除回调*/
-                else if (data.getBooleanExtra("delete", false)) {
+                                /*删除回调*/
+                }else if (data.getBooleanExtra("delete", false)) {
 
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
@@ -732,20 +733,15 @@ public class TasksInfoActivity extends BaseActivity {
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
                         }
                     });
-
-                }
-
-                /*复制回调*/
-                else if (data.getBooleanExtra("extra", false)) {
+                                /*复制回调*/
+                }else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
-                }
-
-                /*修改参与人回调*/
-                else if (data.getBooleanExtra("editjoiner", false)) {
+                                /*修改参与人回调*/
+                }else if (data.getBooleanExtra("editjoiner", false)) {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
@@ -776,12 +772,15 @@ public class TasksInfoActivity extends BaseActivity {
                 showDiscussion();
 
                 break;
+
+            default:
+                break;
         }
     }
 
 
     @OnActivityResult(REQUEST_CREATE_SUB)
-    void onNewSubTaskActivityResult(int resultCode, Intent data) {
+    void onNewSubTaskActivityResult(final int resultCode,final Intent data) {
         if (resultCode != Activity.RESULT_OK || data.hasExtra("data")) {
             return;
         }
@@ -813,7 +812,7 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 参与人组装
      */
-    void setJoinUsers(String joinedUserIds, String joinedUserName) {
+    void setJoinUsers(final String joinedUserIds,final String joinedUserName) {
         userss.clear();
         depts.clear();
 
@@ -853,13 +852,13 @@ public class TasksInfoActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
             @Override
-            public void success(Task task, Response response) {
+            public void success(final Task task,final Response response) {
                 Toast("修改参与人成功");
                 getTask();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
