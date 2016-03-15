@@ -149,5 +149,5 @@
     </module>
 
     <!--module name="VisibilityModifier"/--><!--检查类成员的可见性-->
-    <module name="StrictDuplicateCode"/><!--严格重复代码-->
+    <!--<module name="StrictDuplicateCode"/>&lt;!&ndash;严格重复代码&ndash;&gt;-->
 </module>
