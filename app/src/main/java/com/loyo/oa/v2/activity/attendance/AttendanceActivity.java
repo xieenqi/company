@@ -40,12 +40,18 @@ import java.util.List;
 @EActivity(R.layout.activity_attendance)
 public class AttendanceActivity extends BaseFragmentActivity {
 
-    @ViewById ViewGroup img_title_left;
-    @ViewById TextView tv_title_1;
-    @ViewById ViewGroup layout_title_action;
-    @ViewById ViewGroup layout_category;
-    @ViewById(R.id.img_title_arrow) ImageView imageArrow;
-    @ViewById(R.id.lv_attendance_category) ListView categoryListView;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    ViewGroup layout_title_action;
+    @ViewById
+    ViewGroup layout_category;
+    @ViewById(R.id.img_title_arrow)
+    ImageView imageArrow;
+    @ViewById(R.id.lv_attendance_category)
+    ListView categoryListView;
 
     private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
     private Animation rotateAnimation;
@@ -54,6 +60,16 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private List<BaseFragment> fragments = new ArrayList<>();
     private int mIndex = -1, Identity;
     private float mRotation = 0;
+
+    private static final int mIdentity = 3;
+
+    public static final float ROTATE_START = 0f;
+    public static final float ROTATE_END = 180f;
+
+    public static final float ROTATE_PIVOT_X = 0.5f;
+    public static final float ROTATE_PIVOT_Y = 0.5f;
+
+    public static final int ROTATE_TIME = 200;
 
     @AfterViews
     void initViews() {
@@ -77,20 +93,23 @@ public class AttendanceActivity extends BaseFragmentActivity {
         if (null != MainApp.user.role) {
             Identity = MainApp.user.role.getDataRange();
         }
-        if (Identity == 3) {
+        if (Identity == mIdentity) {
             imageArrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
         }
     }
 
     @Click({R.id.img_title_left, R.id.layout_title_action})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
                 changeCategoryView();
                 break;
             case R.id.img_title_left:
                 onBackPressed();
+                break;
+            default:
+
                 break;
         }
     }
@@ -114,7 +133,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
      *
      * @param index
      */
-    private void changeChild(int index) {
+    private void changeChild(final int index) {
         if (index != mIndex) {
             mIndex = index;
             fragmentManager.beginTransaction().replace(R.id.layout_attendance_container, fragments.get(index)).commit();
@@ -127,10 +146,10 @@ public class AttendanceActivity extends BaseFragmentActivity {
      * @return 旋转动画
      */
     private Animation initAnimation() {
-        RotateAnimation rotateAnimation = new RotateAnimation(0f, 180f, Animation.RELATIVE_TO_SELF, 0.5f,// X轴
-                Animation.RELATIVE_TO_SELF, 0.5f);// y轴
+        RotateAnimation rotateAnimation = new RotateAnimation(ROTATE_START, ROTATE_END, Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_X,// X轴
+                Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_Y);// y轴
 
-        rotateAnimation.setDuration(200);
+        rotateAnimation.setDuration(ROTATE_TIME);
         rotateAnimation.setFillAfter(true);             //保留在终止位置
         rotateAnimation.setFillEnabled(true);
         rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -156,7 +175,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
         categoryListView.setAdapter(categoryAdapter);
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 
                 changeCategoryView();
                 String content = ATTENDANCE_FILTER_STRS[position];

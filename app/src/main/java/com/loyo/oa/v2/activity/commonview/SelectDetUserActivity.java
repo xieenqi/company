@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SelectDetAdapter;
 import com.loyo.oa.v2.adapter.SelectUserAdapter;
@@ -33,6 +34,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HorizontalScrollListView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -164,7 +166,7 @@ public class SelectDetUserActivity extends BaseActivity {
                 for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
                     localCacheUserList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
                 }
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
@@ -205,39 +207,38 @@ public class SelectDetUserActivity extends BaseActivity {
 
     /**
      * 根据部门业务结构，对部门列表重新排序
-     * */
-    void deptSort(){
+     */
+    void deptSort() {
         /*分别获取一级/其他级部门*/
-        for(Department department : deptSource){
-            if(department.getXpath().split("/").length == 2){
+        for (Department department : deptSource) {
+            if (department.getXpath().split("/").length == 2) {
                 deptHead.add(department);
-            }
-            else if(!department.getXpath().contains("/")){
+            } else if (!department.getXpath().contains("/")) {
                 deptHead.add(department);
-            }else{
+            } else {
                 deptOther.add(department);
             }
         }
 
         /*根据Xpath,把部门按照一级/二级顺序排序,排除掉公司数据*/
-        for(Department dept1 : deptHead){
+        for (Department dept1 : deptHead) {
             newDeptSource.add(dept1);
-            for(Department dept2 : deptOther){
-                if(dept2.getXpath().contains(dept1.getXpath()) && dept1.getXpath().indexOf("/") != -1){
+            for (Department dept2 : deptOther) {
+                if (dept2.getXpath().contains(dept1.getXpath()) && dept1.getXpath().indexOf("/") != -1) {
                     newDeptSource.add(dept2);
                 }
             }
         }
 
         /*把公司数据，移动到首位*/
-        for(int i = 0;i<newDeptSource.size();i++){
-            if(newDeptSource.get(i).getXpath().indexOf("/") == -1){
+        for (int i = 0; i < newDeptSource.size(); i++) {
+            if (newDeptSource.get(i).getXpath().indexOf("/") == -1) {
                 companySource = newDeptSource.get(i);
                 newDeptSource.remove(i);
                 break;
             }
         }
-        newDeptSource.add(0,companySource);
+        newDeptSource.add(0, companySource);
     }
 
     /**
@@ -292,7 +293,7 @@ public class SelectDetUserActivity extends BaseActivity {
 
     /**
      * ListView监听
-     * */
+     */
     void lvOnClick() {
 
         /**横着ListView*/
@@ -457,9 +458,9 @@ public class SelectDetUserActivity extends BaseActivity {
         selectUserIds.clear();
 
         for (Department department : newDeptSource) {
-            try{
+            try {
                 dealisAllSelect(department.getUsers());
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             if (popy) {
@@ -471,13 +472,13 @@ public class SelectDetUserActivity extends BaseActivity {
             if (department.isIndex()) {
                 selectDeptIds.add(department.getId());
             } else {
-                try{
+                try {
                     for (User user : department.getUsers()) {
                         if (user.isIndex()) {
                             selectUserIds.add(user.getId());
                         }
                     }
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -524,11 +525,11 @@ public class SelectDetUserActivity extends BaseActivity {
         userList.clear();
         for (Department department : newDeptSource) {
             if (department.getXpath().contains(newDeptSource.get(positions).getXpath())) {
-                try{
+                try {
                     for (User user : department.getUsers()) {
                         userList.add(user);
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -541,11 +542,10 @@ public class SelectDetUserActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode != ExtraAndResult.request_Code) {
+        if (requestCode != ExtraAndResult.request_Code || data == null) {
             return;
         }
         int selectTypePage = 999;
-        String userId;
         switch (requestCode) {
            /*选人搜索回调*/
             case ExtraAndResult.request_Code:
@@ -559,53 +559,37 @@ public class SelectDetUserActivity extends BaseActivity {
                 switch (selectTypePage) {
                    /*负责人*/
                     case ExtraAndResult.TYPE_SELECT_SINGLE:
-
                         mIntent = new Intent();
                         mBundle = new Bundle();
                         mBundle.putSerializable(User.class.getName(), data.getSerializableExtra(User.class.getName()));
                         mIntent.putExtras(mBundle);
                         app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-
                         break;
                    /*参与人*/
                     case ExtraAndResult.TYPE_SELECT_MULTUI:
-
-                        userId = data.getStringExtra("userId");
-                        for (User user : userAllList) {
-                            if (user.getId().equals(userId)) {
-                                user.setIndex(true);
-
-                                Message msg = new Message();
-                                msg.what = SelectDetUserActivity.selectWhat;
-                                msg.obj = user;
-                                mHandler.sendMessage(msg);
-                            }
-                        }
-                        totalSize += 1;
-                        mHandler.sendEmptyMessage(0x01);
-
+                        getSelectUser(data.getStringExtra("userId"));
                         break;
-
                    /*参与人编辑*/
                     case ExtraAndResult.TYPE_SELECT_EDT:
-
-                        userId = data.getStringExtra("userId");
-                        for (User user : userAllList) {
-                            if (user.getId().equals(userId)) {
-                                user.setIndex(true);
-
-                                Message msg = new Message();
-                                msg.what = SelectDetUserActivity.selectWhat;
-                                msg.obj = user;
-                                mHandler.sendMessage(msg);
-                            }
-                        }
-                        totalSize += 1;
-                        mHandler.sendEmptyMessage(0x01);
-
+                        getSelectUser(data.getStringExtra("userId"));
                         break;
                 }
         }
+    }
+
+    private void getSelectUser(String userId) {
+        for (User user : userAllList) {
+            if (user.getId().equals(userId)) {
+                user.setIndex(true);
+
+                Message msg = new Message();
+                msg.what = SelectDetUserActivity.selectWhat;
+                msg.obj = user;
+                mHandler.sendMessage(msg);
+            }
+        }
+        totalSize += 1;
+        mHandler.sendEmptyMessage(0x01);
     }
 
     /**
