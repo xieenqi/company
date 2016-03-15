@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -23,15 +24,18 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -80,16 +84,16 @@ public class AttachmentActivity extends BaseActivity {
     void getAttachments() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> attachments, Response response) {
-                LogUtil.dee("获取附件信息:"+MainApp.gson.toJson(attachments));
-                LogUtil.dee("获取附件URL:"+response.getUrl());
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
+                LogUtil.dee("获取附件信息:" + MainApp.gson.toJson(attachments));
+                LogUtil.dee("获取附件URL:" + response.getUrl());
                 HttpErrorCheck.checkResponse(response);
                 mListAttachment = attachments;
                 bindAttachment();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 LogUtil.dee("获取附件信息 失败:");
                 HttpErrorCheck.checkError(error);
@@ -109,10 +113,10 @@ public class AttachmentActivity extends BaseActivity {
 
         Attachment.Sort(mListAttachment);
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mContext,mListAttachment,mUserList,bizType,uuid,isOver);
+            adapter = new AttachmentSwipeAdapter(mContext, mListAttachment, mUserList, bizType, uuid, isOver);
             adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
                 @Override
-                public void afterDelete(Attachment attachment) {
+                public void afterDelete(final Attachment attachment) {
                     //附件删除后重新绑定
                     mListAttachment.remove(attachment);
                     //                bindAttachment();
@@ -155,7 +159,7 @@ public class AttachmentActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -195,6 +199,9 @@ public class AttachmentActivity extends BaseActivity {
                     Global.ProcException(ex);
                 }
                 break;
+            default:
+
+
         }
     }
 
@@ -202,18 +209,18 @@ public class AttachmentActivity extends BaseActivity {
      * 上传附件
      */
     private void uploadAttachment(File file) {
-        Utils.uploadAttachment(uuid,bizType,file)
+        Utils.uploadAttachment(uuid, bizType, file)
                 .subscribe(new CommonSubscriber(this) {
                     @Override
                     public void onNext(Serializable attachment) {
-                        LogUtil.dee("上传附件成功:"+attachment.toString());
+                        LogUtil.dee("上传附件成功:" + attachment.toString());
                         getAttachments();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.dee("上传附件失败:"+e.getMessage());
-                        LogUtil.dee("上传附件失败:"+e.toString());
+                        LogUtil.dee("上传附件失败:" + e.getMessage());
+                        LogUtil.dee("上传附件失败:" + e.toString());
                         e.getMessage();
                         super.onError(e);
                     }
