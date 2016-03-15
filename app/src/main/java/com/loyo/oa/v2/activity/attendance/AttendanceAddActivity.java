@@ -258,9 +258,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
             tv_time.setText(tvTimeName + builder);
             tv_time.setTextColor(Color.GREEN);
-        }
-        /*正常上下班*/
-        else {
+        } else {/*正常上下班*/
             String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
             SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
             tv_time.setText(builder);
