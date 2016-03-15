@@ -20,7 +20,7 @@ public class PreviewOfficeActivity extends Activity {
     ProgressWebView mWebView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_preview);
 
@@ -37,7 +37,7 @@ public class PreviewOfficeActivity extends Activity {
 
                     mWebView.setWebViewClient(new WebViewClient() {
                         @Override
-                        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                        public void onReceivedSslError(final WebView view, final SslErrorHandler handler, final SslError error) {
                             handler.proceed();
                         }
                     });

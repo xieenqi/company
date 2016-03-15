@@ -28,7 +28,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
     private Intent mIntent;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ExitActivity.getInstance().addActivity(this);
         setContentView(R.layout.dialog_edit_delete);
@@ -44,7 +44,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
         layout.setOnClickListener(new OnClickListener() {
 
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 Toast.makeText(getApplicationContext(), "提示：点击窗口外部关闭窗口！",
                         Toast.LENGTH_SHORT).show();
             }
@@ -84,14 +84,13 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
     // 实现onTouchEvent触屏函数但点击屏幕时销毁本Activity
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(final MotionEvent event) {
         finish();
         return true;
     }
 
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
-
             //编辑
             case R.id.btn_edit:
                 LogUtil.dll("点击编辑");
@@ -107,7 +106,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 //确定
                 generalPopView.setSureOnclick(new OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(final View view) {
                         generalPopView.dismiss();
                         mIntent = new Intent();
                         mIntent.putExtra("delete", true);
@@ -118,7 +117,7 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
                 //取消
                 generalPopView.setCancelOnclick(new OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(final View view) {
                         generalPopView.dismiss();
                     }
                 });
@@ -136,6 +135,9 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
             case R.id.btn_cancel:
                 LogUtil.dll("点击btn_cancel");
                 finish();
+                break;
+
+            default:
                 break;
         }
     }
