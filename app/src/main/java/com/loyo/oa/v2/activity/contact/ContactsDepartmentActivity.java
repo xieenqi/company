@@ -49,7 +49,7 @@ public class ContactsDepartmentActivity extends BaseFragmentActivity {
     }
 
     @Click(R.id.layout_back)
-    void onClick(View v) {
+    void onClick(final View v) {
         app.finishActivity(this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_CANCELED, null);
     }
 }
