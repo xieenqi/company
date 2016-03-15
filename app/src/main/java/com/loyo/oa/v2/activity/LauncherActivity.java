@@ -40,7 +40,7 @@ public class LauncherActivity extends BaseActivity {
         iv_launcher_adv.postDelayed(advRunner, 1000);//小微企业工作台
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
 
             }
 
@@ -62,22 +62,22 @@ public class LauncherActivity extends BaseActivity {
             animator.setDuration(500);
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animator) {
+                public void onAnimationStart(final Animator animator) {
 
                 }
 
                 @Override
-                public void onAnimationEnd(Animator animator) {
+                public void onAnimationEnd(final Animator animator) {
                     layout_launcher_fade.postDelayed(rocketRunner, 200);
                 }
 
                 @Override
-                public void onAnimationCancel(Animator animator) {
+                public void onAnimationCancel(final Animator animator) {
 
                 }
 
                 @Override
-                public void onAnimationRepeat(Animator animator) {
+                public void onAnimationRepeat(final Animator animator) {
 
                 }
             });
@@ -96,7 +96,7 @@ public class LauncherActivity extends BaseActivity {
             animator.setInterpolator(new AccelerateInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                     iv_launcher_fade.setVisibility(View.VISIBLE);//火箭头
                     layout_launcher_fade.setVisibility(View.GONE);
                     float value = (float) valueAnimator.getAnimatedValue();

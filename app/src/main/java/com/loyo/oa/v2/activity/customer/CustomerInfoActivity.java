@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -38,6 +39,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ExtraDataView;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -46,10 +48,13 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -193,7 +198,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             @Override
             public void onClick(View view) {
                 String cityArr[] = selectCityView.getResult();
-                tv_district.setText(cityArr[0]+" "+cityArr[1]+" "+cityArr[2]);
+                tv_district.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
                 regional.province = cityArr[0];
                 regional.city = cityArr[1];
                 regional.county = cityArr[2];
@@ -300,20 +305,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @UiThread
     void setTag() {
-        StringBuffer sb = null;
-
-        for (NewTag item : mTagItems) {
-            if (sb == null) {
-                sb = new StringBuffer();
-                sb.append(String.valueOf(item.getItemName()));
-            } else {
-                sb.append("/");
-                sb.append(String.valueOf(item.getItemName()));
-            }
-        }
-
-        if (sb != null) {
-            tv_labels.setText(sb.toString());
+        String tag = appendTagItem(mTagItems);
+        if (!TextUtils.isEmpty(tag)) {
+            tv_labels.setText(tag);
         }
     }
 
@@ -321,7 +315,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示对话框
      */
     private void showLeaveDialog() {
-        showGeneralDialog(true,true,getString(R.string.app_userdetalis_message));
+        showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -343,12 +337,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     /**
-     * 验证必填动态字段是否填写*/
+     * 验证必填动态字段是否填写
+     */
 
-    private boolean testDynamicword(){
-        for(ExtraData extDatas: mCustomer.extDatas){
-            if(extDatas.getProperties().isRequired()){
-                if(extDatas.getVal().isEmpty() || null == extDatas.getVal()){
+    private boolean testDynamicword() {
+        for (ExtraData extDatas : mCustomer.extDatas) {
+            if (extDatas.getProperties().isRequired()) {
+                if (extDatas.getVal().isEmpty() || null == extDatas.getVal()) {
                     return false;
                 }
             }
@@ -369,11 +364,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                 if (tv_district.getText().toString().isEmpty()) {
                     Toast("地区不能为空");
-                }
-                else if(!testDynamicword()){
+                } else if (!testDynamicword()) {
                     Toast("请填写必填选项");
-                }
-                else {
+                } else {
                     updateCustomer();
                 }
                 break;
@@ -456,7 +449,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
 
-        LogUtil.dll("提交客户信息，发送的数据:"+MainApp.gson.toJson(map));
+        LogUtil.dll("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
@@ -536,28 +529,34 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 Bundle bundle = data.getExtras();
                 mTagItems = (ArrayList<NewTag>) bundle.getSerializable("data");
 
-                StringBuffer sb = null;
-
-                for (NewTag item : mTagItems) {
-                    if (sb == null) {
-                        sb = new StringBuffer();
-                        sb.append(String.valueOf(item.getItemName()));
-                    } else {
-                        sb.append("/");
-                        sb.append(String.valueOf(item.getItemName()));
-                    }
-                }
-
-                if (sb != null) {
-                    tv_labels.setText(sb.toString());
-                } else {
-                    tv_labels.setText("");
-                }
+                tv_labels.setText(appendTagItem(mTagItems));
 
                 mCustomer.tags = mTagItems;
                 break;
 
         }
+    }
+
+    /**
+     * 拼接mTagItems.getItemName, 如果mTagitems为空，返回“”；
+     *
+     * @param tagList
+     * @return
+     */
+    private String appendTagItem(List<NewTag> tagList) {
+        StringBuffer sb = null;
+
+        for (NewTag item : tagList) {
+            if (sb == null) {
+                sb = new StringBuffer();
+                sb.append(String.valueOf(item.getItemName()));
+            } else {
+                sb.append("/");
+                sb.append(String.valueOf(item.getItemName()));
+            }
+        }
+
+        return null == sb ? "" : sb.toString();
     }
 
     @Override
