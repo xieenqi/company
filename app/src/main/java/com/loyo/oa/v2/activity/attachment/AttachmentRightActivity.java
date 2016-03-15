@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -65,7 +66,7 @@ public class AttachmentRightActivity extends BaseActivity {
 
         cb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(final CompoundButton compoundButton, final boolean b) {
                 if (b) {
                     layout_type1.setEnabled(false);
                     for (CheckBox cb : listCb) {
@@ -76,14 +77,14 @@ public class AttachmentRightActivity extends BaseActivity {
 
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).pub(mAttachment.getId(), 1, new RCallback<Attachment>() {
                         @Override
-                        public void success(Attachment o, Response response) {
+                        public void success(final Attachment o, final Response response) {
                             Toast("设置成功");
                             mAttachment.SetIsPublic(true);
                             mAttachment.getViewers().clear();
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void failure(final RetrofitError error) {
                             super.failure(error);
                             HttpErrorCheck.checkError(error);
                         }
@@ -109,8 +110,7 @@ public class AttachmentRightActivity extends BaseActivity {
     }
 
     @Click(R.id.layout_type1)
-    void toggleCbAll()
-    {
+    void toggleCbAll() {
         cb1.toggle();
     }
 
@@ -129,7 +129,7 @@ public class AttachmentRightActivity extends BaseActivity {
         public TextView tv_content;
         public ViewGroup layout_title;
 
-        public UserViewHolder(View view) {
+        public UserViewHolder(final View view) {
             super(view);
 
             tv_title = (TextView) view.findViewById(R.id.tv_title);
@@ -144,13 +144,13 @@ public class AttachmentRightActivity extends BaseActivity {
     RecyclerView.Adapter<UserViewHolder> adapter = new RecyclerView.Adapter<UserViewHolder>() {
 
         @Override
-        public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public UserViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listview_attachment_right_setting, parent, false);
             return new UserViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(final UserViewHolder holder, int position) {
+        public void onBindViewHolder(final UserViewHolder holder, final int position) {
             final NewUser user = users.get(position);
 
             if (user != null) {
@@ -168,7 +168,7 @@ public class AttachmentRightActivity extends BaseActivity {
 
                 holder.layout_title.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(final View view) {
                         holder.cb.toggle();
 
                         if (holder.cb.isChecked() && cb1.isChecked()) {
@@ -177,7 +177,7 @@ public class AttachmentRightActivity extends BaseActivity {
                     }
                 });
 
-                LogUtil.dll("SIZE:"+mAttachment.getViewers().size());
+                LogUtil.dll("SIZE:" + mAttachment.getViewers().size());
 
                 /*勾选状态设置*/
 /*                for(NewUser newUser : mAttachment.getViewers()){
@@ -190,11 +190,11 @@ public class AttachmentRightActivity extends BaseActivity {
 
                 holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    public void onCheckedChanged(final CompoundButton compoundButton, final boolean b) {
                         if (b) {
                             RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).addViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
                                 @Override
-                                public void success(Attachment o, Response response) {
+                                public void success(final Attachment o, final Response response) {
                                     LogUtil.dll("设置" + user.getRealname() + "附件权限成功!");
                                     mAttachment.SetIsPublic(false);
 
@@ -206,15 +206,19 @@ public class AttachmentRightActivity extends BaseActivity {
                                 }
 
                                 @Override
-                                public void failure(RetrofitError error) {
+                                public void failure(final RetrofitError error) {
                                     super.failure(error);
                                     HttpErrorCheck.checkError(error);
                                 }
                             });
                         } else {
-                            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).removeViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
+                            RestAdapterFactory
+                                    .getInstance()
+                                    .build(Config_project.API_URL_ATTACHMENT())
+                                    .create(IAttachment.class)
+                                    .removeViewer(mAttachment.getId(), user.getId(), new RCallback<Attachment>() {
                                 @Override
-                                public void success(Attachment o, Response response) {
+                                public void success(final Attachment o, final Response response) {
                                     LogUtil.dll("删除" + user.getRealname() + "附件权限成功!");
                                     mAttachment.SetIsPublic(false);
 
@@ -236,7 +240,7 @@ public class AttachmentRightActivity extends BaseActivity {
                                 }
 
                                 @Override
-                                public void failure(RetrofitError error) {
+                                public void failure(final RetrofitError error) {
                                     super.failure(error);
                                     HttpErrorCheck.checkError(error);
                                 }
