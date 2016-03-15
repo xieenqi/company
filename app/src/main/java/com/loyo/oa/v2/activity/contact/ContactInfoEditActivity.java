@@ -134,12 +134,12 @@ public class ContactInfoEditActivity extends BaseActivity {
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
 
-        private MHandler(ContactInfoEditActivity activity) {
+        private MHandler(final ContactInfoEditActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             super.handleMessage(msg);
 
             String des = "重新获取(" + msg.what + "秒)";
@@ -178,12 +178,12 @@ public class ContactInfoEditActivity extends BaseActivity {
     }
 
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                if (isDataChange() == false) {
+                if (!isDataChange()) {
                     showLeaveDialog();
-                } else if (isDataChange()) {
+                } else {
                     app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
                 }
                 break;
@@ -218,11 +218,14 @@ public class ContactInfoEditActivity extends BaseActivity {
             case R.id.layout_mobile:
                 showUpdateMobileDialog();
                 break;
+            default:
+
+                break;
         }
     }
 
     @CheckedChange({R.id.sex_famale, R.id.sex_male})
-    void onCheckChanged(CompoundButton compoundButton, boolean checked) {
+    void onCheckChanged(final CompoundButton compoundButton, final boolean checked) {
         switch (compoundButton.getId()) {
             case R.id.sex_famale:
                 if (checked) {
@@ -233,6 +236,9 @@ public class ContactInfoEditActivity extends BaseActivity {
                 if (checked) {
                     sex = 2;
                 }
+                break;
+            default:
+
                 break;
         }
     }
@@ -284,7 +290,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 updateProfile();
             }
@@ -292,7 +298,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
             }
@@ -372,18 +378,17 @@ public class ContactInfoEditActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.SERVER_URL_LOGIN()).create(IUser.class).updateProfile(user.getId(), map, new RCallback<User>() {
             @Override
-            public void success(User user, Response response) {
+            public void success(final User user, final Response response) {
                 HttpErrorCheck.checkResponse("修改个人信息", response);
                 Toast("修改个人信息成功");
                 Intent mIntent = new Intent();
                 InitDataService_.intent(ContactInfoEditActivity.this).start(); //更新组织架构
                 mIntent.putExtra(ExtraAndResult.STR_SUPER_ID, ExtraAndResult.TYPE_SHOW_DEPT_USER);
                 app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_ZOOM_IN, RESULT_OK, mIntent);
-
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 // Toast("修改个人信息失败");
                 HttpErrorCheck.checkError(error);
@@ -481,17 +486,17 @@ public class ContactInfoEditActivity extends BaseActivity {
     private void verifyPhone(final String tel) {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 tv_get_code.setEnabled(false);
                 countDown();
                 RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
                     @Override
-                    public void success(Object o, Response response) {
+                    public void success(final Object o, final Response response) {
                         Toast("发送验证码成功");
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         super.failure(error);
                         Toast("发送验证码失败");
                     }
@@ -499,9 +504,9 @@ public class ContactInfoEditActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
-                if (error.getMessage().substring(0, 3).equals("500")) {
+                if ("500".equals(error.getMessage().substring(0, 3))) {
                     Toast("该手机号已被录入本系统,请勿重复使用!");
                 }
             }
@@ -530,7 +535,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         map.put("code", code);
         app.getRestAdapter(mobile_phone).create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 dialog.dismiss();
                 Toast("修改手机号码成功");
                 tv_mobile.setText(mobile);
@@ -538,7 +543,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 dialog.dismiss();
                 Toast("修改手机号码失败" + error.getMessage());
@@ -547,7 +552,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     }
 
 
-    private DatePicker findDatePicker(ViewGroup group) {
+    private DatePicker findDatePicker(final ViewGroup group) {
         if (group != null) {
             for (int i = 0, j = group.getChildCount(); i < j; i++) {
                 View child = group.getChildAt(i);
@@ -579,7 +584,7 @@ public class ContactInfoEditActivity extends BaseActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
                 //((NumberPicker)((ViewGroup) ((ViewGroup) view.getChildAt(0)).getChildAt(0)).getChildAt(1)).setDisplayedValues(mounthArr);
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
@@ -609,15 +614,15 @@ public class ContactInfoEditActivity extends BaseActivity {
     /**
      * 电话号码编辑框的文本观察器
      */
-    private class MobileTextWatcher extends ITextWatcher {
+    private final class MobileTextWatcher extends ITextWatcher {
         private TextView mButton;
 
-        private MobileTextWatcher(TextView button) {
+        private MobileTextWatcher(final TextView button) {
             mButton = button;
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
+        public void afterTextChanged(final Editable editable) {
             if (TextUtils.isEmpty(editable.toString()) || editable.length() < 11) {
                 tv_mobile_error.setText("");
                 mButton.setEnabled(false);
@@ -659,12 +664,12 @@ public class ContactInfoEditActivity extends BaseActivity {
     private class MOnclickListener implements View.OnClickListener {
         private PopupWindow mDialog;
 
-        private MOnclickListener(PopupWindow dialog) {
+        private MOnclickListener(final PopupWindow dialog) {
             mDialog = dialog;
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             switch (view.getId()) {
                 case R.id.btn_get_code:
                     getVerifyCode();
@@ -678,33 +683,36 @@ public class ContactInfoEditActivity extends BaseActivity {
                     mDialog.dismiss();
                     recycle();
                     break;
+                default:
+
+                    break;
             }
         }
     }
 
     private abstract class ITextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (isDataChange() == false) {
+        if (!isDataChange()) {
             showLeaveDialog();
-        } else if (isDataChange()) {
+        } else {
             finish();
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
 
@@ -750,12 +758,12 @@ public class ContactInfoEditActivity extends BaseActivity {
     public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
         File file;
 
-        public void setBitmap(File imageFile) {
+        public void setBitmap(final File imageFile) {
             file = imageFile;
         }
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
             try {
                 Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
                 path = attachment.getUrl();

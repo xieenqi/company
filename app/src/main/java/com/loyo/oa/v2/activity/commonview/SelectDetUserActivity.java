@@ -91,7 +91,7 @@ public class SelectDetUserActivity extends BaseActivity {
 
     public Handler mHandler = new Handler() {
         @Override
-        public void dispatchMessage(Message msg) {
+        public void dispatchMessage(final Message msg) {
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case 0x01:
@@ -110,13 +110,14 @@ public class SelectDetUserActivity extends BaseActivity {
                     }
                     selectDataAdapter.refreshData();
                     break;
+                default:
+                    break;
             }
         }
     };
 
     @Override
-
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_selectdetuser);
@@ -244,7 +245,7 @@ public class SelectDetUserActivity extends BaseActivity {
     /**
      * 去掉人员重复数据
      */
-    ArrayList RemoveSame(ArrayList<User> list) {
+    ArrayList RemoveSame(final ArrayList<User> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = i + 1; j < list.size(); j++) {
                 if (list.get(i).getId().equals(list.get(j).getId())) {
@@ -299,7 +300,7 @@ public class SelectDetUserActivity extends BaseActivity {
         /**横着ListView*/
         lv_selectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
 //                selectUserList.remove(position);
 //                selectDataAdapter.refreshData();
 //                mHandler.sendEmptyMessage(0x01);
@@ -315,7 +316,7 @@ public class SelectDetUserActivity extends BaseActivity {
         /**左侧ListView*/
         leftLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
                 positions = position;
                 getInfoUser(positions);
                 mHandler.sendEmptyMessage(0x01);
@@ -330,19 +331,15 @@ public class SelectDetUserActivity extends BaseActivity {
         /**右侧ListView 加入header后 下标要－1*/
         rightLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
                 /*选负责人时*/
                 if (selectType == 1) {
-
                     Intent mIntent = new Intent();
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable(User.class.getName(), userList.get(position - 1));
                     mIntent.putExtras(mBundle);
                     app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
-
-                }
-                /*选参与人*/
-                else {
+                } else { /*选参与人*/
                     userList.get(position - 1).setIndex(userList.get(position - 1).isIndex() ? false : true);
                     statisticsTotalSize(position);
 
@@ -372,7 +369,7 @@ public class SelectDetUserActivity extends BaseActivity {
         /**全选*/
         relAllcheck.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 int hasSet = 0;
                 int canSet = 0;
@@ -383,7 +380,7 @@ public class SelectDetUserActivity extends BaseActivity {
                 for (User user : userList) {
                     if (user.isIndex()) {
                         hasSet++;
-                    } else if (user.isIndex() == false) {
+                    } else if (!user.isIndex()) {
                         canSet++;
                     }
                     user.setIndex(isAllCheck);
@@ -415,7 +412,7 @@ public class SelectDetUserActivity extends BaseActivity {
         /**返回*/
         llback.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 finish();
             }
         });
@@ -423,7 +420,7 @@ public class SelectDetUserActivity extends BaseActivity {
         /**确定*/
         btnSure.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 setJoinUsers();
                 mIntent = new Intent();
                 mBundle = new Bundle();
@@ -440,7 +437,7 @@ public class SelectDetUserActivity extends BaseActivity {
         /**搜索*/
         tv_selectdetuser_tv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 MainApp.selectAllUsers = userAllList;
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, selectType);
@@ -488,7 +485,7 @@ public class SelectDetUserActivity extends BaseActivity {
     /**
      * 选中总数统计
      */
-    void statisticsTotalSize(int position) {
+    void statisticsTotalSize(final int position) {
         if (userList.get(position - 1).isIndex()) {
             totalSize += 1;
         } else {
@@ -500,12 +497,12 @@ public class SelectDetUserActivity extends BaseActivity {
     /**
      * 判断本次集合中 是否被全选
      */
-    void dealisAllSelect(ArrayList<User> users) {
+    void dealisAllSelect(final ArrayList<User> users) {
 
         for (User user : users) {
             if (user.isIndex()) {
                 popy = true;
-            } else if (user.isIndex() == false) {
+            } else if (!user.isIndex()) {
                 popy = false;
                 return;
             } else {
@@ -521,7 +518,7 @@ public class SelectDetUserActivity extends BaseActivity {
      *
      * @deprecated 根据部门Xpath获取人员
      */
-    void getInfoUser(int positions) {
+    void getInfoUser(final int positions) {
         userList.clear();
         for (Department department : newDeptSource) {
             if (department.getXpath().contains(newDeptSource.get(positions).getXpath())) {
@@ -539,7 +536,7 @@ public class SelectDetUserActivity extends BaseActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode != ExtraAndResult.request_Code || data == null) {
@@ -573,11 +570,15 @@ public class SelectDetUserActivity extends BaseActivity {
                     case ExtraAndResult.TYPE_SELECT_EDT:
                         getSelectUser(data.getStringExtra("userId"));
                         break;
+                    default:
                 }
+            default:
+
+                break;
         }
     }
 
-    private void getSelectUser(String userId) {
+    private void getSelectUser(final String userId) {
         for (User user : userAllList) {
             if (user.getId().equals(userId)) {
                 user.setIndex(true);
@@ -603,12 +604,12 @@ public class SelectDetUserActivity extends BaseActivity {
         }
 
         @Override
-        public Object getItem(int position) {
+        public Object getItem(final int position) {
             return null;
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return 0;
         }
 
@@ -634,7 +635,7 @@ public class SelectDetUserActivity extends BaseActivity {
             notifyDataSetChanged();
         }
 
-        public String selectDept(String xpath) {
+        public String selectDept(final String xpath) {
             for (Department user : Data) {
 //                if (xpath.equals(user.getDepts().get(0).getShortDept().getXpath())) {
 //                    return user.getDepts().get(0).getShortDept().getXpath() ;
@@ -644,7 +645,7 @@ public class SelectDetUserActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             Holder holder = null;
             if (convertView == null) {
                 holder = new Holder();

@@ -81,7 +81,7 @@ public class WorkReportEditActivity extends BaseActivity {
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+            public void onCheckedChanged(final RadioGroup group,final int checkedId) {
                 switch (checkedId) {
                     case R.id.rb1:
                         //fixes bug290 ,ykb 07-13
@@ -112,6 +112,9 @@ public class WorkReportEditActivity extends BaseActivity {
                             tv_time.setText(year + "-" + String.format("%02d", (month + 1)));
                         }
                         mSelectType = WorkReport.MONTH;
+                        break;
+
+                    default:
                         break;
                 }
                 mWorkReport.setType(mSelectType);
@@ -147,6 +150,9 @@ public class WorkReportEditActivity extends BaseActivity {
                     rg.check(R.id.rb3);
                     tv_time.setText(app.df8.format(begin));
                     break;
+
+                default:
+                    break;
             }
             if (mWorkReport.getReviewer() != null) {
                 setReviewer(mWorkReport.getReviewer().getUser());
@@ -163,7 +169,7 @@ public class WorkReportEditActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_time,
             R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -236,15 +242,18 @@ public class WorkReportEditActivity extends BaseActivity {
                 layout_del.setVisibility(View.GONE);
                 img_title_toUser.setVisibility(View.VISIBLE);
                 break;
+
+            default:
+                break;
+
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
-
         switch (requestCode) {
 
             case DepartmentUserActivity.request_Code:
@@ -274,13 +283,15 @@ public class WorkReportEditActivity extends BaseActivity {
                     user_reviewer = user.toShortUser();
                     tv_reviewer.setText(user.getRealname());
                 }
+                break;
 
+            default:
                 break;
 
         }
     }
 
-    void setReviewer(NewUser user) {
+    void setReviewer(final NewUser user) {
         user_reviewer = user;
         tv_reviewer.setText(user_reviewer.getRealname());
     }
@@ -288,7 +299,7 @@ public class WorkReportEditActivity extends BaseActivity {
     public class AsyncHttpResponseHandler_workreports extends BaseActivityAsyncHttpResponseHandler {
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
             try {
                 WorkReport workReport = MainApp.gson.fromJson(getStr(arg2), WorkReport.class);
 
@@ -315,7 +326,7 @@ public class WorkReportEditActivity extends BaseActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    public void onDateSet(final DatePicker view, final int year, final int monthOfYear,final int dayOfMonth) {
                         String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-"
                                 + String.format("%02d", dayOfMonth);
 
@@ -333,7 +344,7 @@ public class WorkReportEditActivity extends BaseActivity {
                 DatePickerDialog datePickerDialogMonth = new DatePickerDialog(
                         this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    public void onDateSet(final DatePicker view,final int year,final int monthOfYear,final int dayOfMonth) {
                         String str = year + "-" + String.format("%02d", (monthOfYear + 1));
 
                         tv_time.setText(str);
@@ -357,6 +368,9 @@ public class WorkReportEditActivity extends BaseActivity {
                 break;
             case WorkReport.WEEK:
                 weeksDialog.showChoiceDialog("选择周报").show();
+                break;
+
+            default:
                 break;
         }
     }

@@ -89,7 +89,7 @@ public class ContactInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.tv_edit, R.id.layout_back, R.id.layout_call, R.id.layout_msg})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
                 app.finishActivity(this, MainApp.ENTER_TYPE_ZOOM_IN, 0, null);
@@ -105,6 +105,9 @@ public class ContactInfoActivity extends BaseActivity {
             case R.id.layout_msg:
                 sendSms();
                 break;
+            default:
+
+                break;
         }
     }
 
@@ -115,7 +118,7 @@ public class ContactInfoActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
-            public void success(User users, Response response) {
+            public void success(final User users, final Response response) {
 
                 user = users;
                 HttpErrorCheck.checkResponse(response);
@@ -124,7 +127,7 @@ public class ContactInfoActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 Toast("获取用户资料失败");
                 HttpErrorCheck.checkError(error);
@@ -180,7 +183,7 @@ public class ContactInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode != ExtraAndResult.request_Code || resultCode != RESULT_OK) {
