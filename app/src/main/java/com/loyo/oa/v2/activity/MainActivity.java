@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
@@ -1019,6 +1020,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
+//        String userPermission=SharedUtil.get(this, ExtraAndResult.USER_PERMISSION);
+//        if(!TextUtils.isEmpty(userPermission)){
+//            items=app.gson.fromJson(userPermission,new TypeToken<ArrayList<Suites>>(){}.getType());
+//            lv_main.setAdapter(adapter);//为了业务使用权限
+//            lv_main.setDragEnabled(true);
+//            LogUtil.d("缓存配置权限");
+//        }
+
         if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
                 0 == MainApp.user.permission.suites.size()) {
             Timer timer = new Timer();
@@ -1034,8 +1043,18 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         ArrayList<ClickItem> itemsNew = new ArrayList<>();
         ArrayList<Suites> suitesNew = new ArrayList<>();
-        for(Suites stuites : MainApp.user.permission.suites){
-            suitesNew.add(stuites);
+        suitesNew.add(new Suites());
+        suitesNew.add(new Suites());
+        suitesNew.add(new Suites());
+        for (Suites stuites : MainApp.user.permission.suites) {
+            // suitesNew.add(stuites);
+            if ("客户管理".equals(stuites.name)) {
+                suitesNew.add(0, stuites);
+            } else if ("协同办公".equals(stuites.name)) {
+                suitesNew.add(1, stuites);
+            } else if ("其他".equals(stuites.name)) {
+                suitesNew.add(2, stuites);
+            }
         }
         for (int i = 0; i < suitesNew.size(); i++) {
             for (int k = 0; k < items.size(); k++) {
@@ -1050,6 +1069,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         items.clear();
         items = itemsNew;
+//        SharedUtil.put(this, ExtraAndResult.USER_PERMISSION, app.gson.toJson(items).toString());
         lv_main.setAdapter(adapter);//为了业务使用权限
         lv_main.setDragEnabled(true);
         cancelLoading();
