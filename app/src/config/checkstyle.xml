@@ -137,9 +137,8 @@
         <!--确保工具类（在API中只有静态方法和字段的类）没有任何公有构造器。-->
         <module name="InterfaceIsType"/>
         <!--接口是类型的检查-->
-        <!--module name="VisibilityModifier"/--><!--检查类成员的可见性-->
-        <!--<module name="StrictDuplicateCode"/>-->
-        <!--严格重复代码-->
+
+
 
 
         <!-- Miscellaneous other checks. 杂项其它项检查                  -->
@@ -152,4 +151,7 @@
         <module name="UpperEll"/>
         <!--大写“L”-->
     </module>
+
+    <!--module name="VisibilityModifier"/--><!--检查类成员的可见性-->
+    <module name="StrictDuplicateCode"/><!--严格重复代码-->
 </module>
