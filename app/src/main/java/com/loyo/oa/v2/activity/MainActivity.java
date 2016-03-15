@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             if (null == intent) {
                 return;
             }
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     //显示通知公告红点
     public Handler handler = new Handler() {
         @Override
-        public void dispatchMessage(Message msg) {
+        public void dispatchMessage(final Message msg) {
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case ExtraAndResult.MSG_WHAT_VISIBLE:
@@ -163,6 +163,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     break;
                 case ExtraAndResult.MSG_WHAT_GONG:
                     img_bulletinStatus.setVisibility(View.GONE);
+                    break;
+                default:
                     break;
             }
 
@@ -182,7 +184,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * @param item
      */
     @Override
-    public void onPopupMenuItemClick(int position, PopupMenuItem item) {
+    public void onPopupMenuItemClick(final int position, final PopupMenuItem item) {
 
         Class<?> _class = null;
         switch (position) {
@@ -202,6 +204,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             case 4:
                 _class = WfInstanceAddActivity_.class;
                 break;
+            default:
+                break;
 
         }
 
@@ -210,24 +214,23 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     @Override
-    public void onPopupMenuItemLongClick(int position, PopupMenuItem item) {
+    public void onPopupMenuItemLongClick(final int position, final PopupMenuItem item) {
     }
 
     private static class MHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
-
-        private MHandler(MainActivity activity) {
+        private MHandler(final MainActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             super.handleMessage(msg);
             mActivity.get().swipe_container.setRefreshing(false);
         }
     }
 
-    protected void onNetworkChanged(boolean available) {
+    protected void onNetworkChanged(final boolean available) {
         if (null != layout_network) {
             layout_network.setVisibility(available ? View.GONE : View.VISIBLE);
         }
@@ -261,7 +264,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     private DragSortListView.DropListener onDrag = new DragSortListView.DropListener() {
         @Override
-        public void drop(int from, int to) {
+        public void drop(final int from, final int to) {
             if (from != to) {
                 ClickItem item = adapter.getItem(from);
                 adapter.remove(from);
@@ -321,7 +324,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
         JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
             @Override
-            public void gotResult(int i, String s, Set<String> set) {
+            public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
                     setJpushAlias();
                 }
@@ -398,7 +401,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         showLoading("加载中...");
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
-            public void success(ValidateInfo _validateInfo, Response response) {
+            public void success(final ValidateInfo _validateInfo, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
@@ -421,7 +424,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -465,12 +468,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     //高德定位回调
     @Override
-    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+    public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
-            public void success(AttendanceRecord attendanceRecord, Response response) {
+            public void success(final AttendanceRecord attendanceRecord,final Response response) {
                 cancelLoading();
                 attendanceRecords = attendanceRecord;
                 LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
@@ -484,7 +487,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -542,19 +545,16 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             /*加班*/
             if (validateInfo.isPopup()) {
                 popOutToast();
-            }
-            /*不加班*/
-            else {
+                /*不加班*/
+            }else {
                 dealInOutWork();
             }
-        }
-        /*非工作日，下班状态*/
-        else if (!validateInfo.isWorkDay() && outEnable) {
+            /*非工作日，下班状态*/
+        }else if (!validateInfo.isWorkDay() && outEnable) {
             outKind = 2;
             startAttanceLocation();
-        }
-        /*非工作日，上班状态*/
-        else if (!validateInfo.isWorkDay() && inEnable) {
+            /*非工作日，上班状态*/
+        }else if (!validateInfo.isWorkDay() && inEnable) {
             outKind = 0;
             startAttanceLocation();
         }
@@ -568,9 +568,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (inEnable) {
             outKind = 0;
             startAttanceLocation();
-        }
-        /*下班*/
-        else if (outEnable) {
+            /*下班*/
+        }else if (outEnable) {
             outKind = 1;
             startAttanceLocation();
         }
@@ -588,7 +587,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         /*正常下班*/
         popView.generalOutBtn(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 outKind = 1;
                 startAttanceLocation();
                 popView.dismiss();
@@ -598,7 +597,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
        /*完成加班*/
         popView.finishOutBtn(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 outKind = 2;
                 startAttanceLocation();
                 popView.dismiss();
@@ -608,7 +607,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         /*取消*/
         popView.cancels(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 popView.dismiss();
             }
         });
@@ -623,7 +622,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 intentValue();
             }
@@ -631,7 +630,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -655,7 +654,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         objectAnimator.setInterpolator(new LinearInterpolator());
         objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
                 layout_avatar.setRotationY(value);
 
@@ -688,7 +687,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                     float value = (float) valueAnimator.getAnimatedValue();
                     layout_avatar.setRotationY(value);
                     if (Math.round(value) <= -90) {
@@ -777,27 +776,27 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
 
         @Override
-        public ClickItem getItem(int position) {
+        public ClickItem getItem(final int position) {
             return items.get(position);
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return position;
         }
 
-        public void remove(int arg0) {
+        public void remove(final int arg0) {
             items.remove(arg0);
             notifyDataSetChanged();
         }
 
-        public void insert(ClickItem item, int arg0) {
+        public void insert(final ClickItem item, final int arg0) {
             items.add(arg0, item);
             notifyDataSetChanged();
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -883,7 +882,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 //android 5.0以后不能隐式启动或关闭服务
                 if (mIntentCheckUpdate != null) {
@@ -900,7 +899,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -931,7 +930,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1) {
@@ -977,17 +976,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
             ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
                 @Override
-                public void onLoadingStarted(String s, View view) {
+                public void onLoadingStarted(final String s, final View view) {
 
                 }
 
                 @Override
-                public void onLoadingFailed(String s, View view, FailReason failReason) {
+                public void onLoadingFailed(final String s, final View view,final FailReason failReason) {
 
                 }
 
                 @Override
-                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                public void onLoadingComplete(final String s, final View view, final Bitmap bitmap) {
                     if (null != bitmap) {
                         Bitmap blur = Utils.doBlur(bitmap, 50, false);
                         img_home_head.setImageResource(android.R.color.transparent);
@@ -997,7 +996,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
 
                 @Override
-                public void onLoadingCancelled(String s, View view) {
+                public void onLoadingCancelled(final String s,final View view) {
 
                 }
             });
@@ -1064,7 +1063,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             //确认
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     generalPopView.dismiss();
                     app.startActivity(MainActivity.this, ActivityEditUserMobile.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 }
@@ -1072,7 +1071,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             //取消
             generalPopView.setCancelOnclick(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     generalPopView.dismiss();
                 }
             });
@@ -1099,7 +1098,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public String title;
         public Class<?> cls;
 
-        public ClickItem(int _imageViewRes, String _title, Class<?> _cls) {
+        public ClickItem(final int _imageViewRes,final String _title,final Class<?> _cls) {
             imageViewRes = _imageViewRes;
             title = _title;
             cls = _cls;
@@ -1159,6 +1158,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -1175,7 +1176,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     void requestNumber() {
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
             @Override
-            public void success(ArrayList<HttpMainRedDot> homeNumbers, Response response) {
+            public void success(final ArrayList<HttpMainRedDot> homeNumbers,final Response response) {
                 HttpErrorCheck.checkResponse("首页红点", response);
                 mItemNumbers = homeNumbers;
                 adapter.notifyDataSetChanged();
@@ -1183,7 +1184,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
                 mHandler.sendEmptyMessageDelayed(0, 500);
