@@ -26,12 +26,12 @@ public class CommonCategoryAdapter extends BaseAdapter {
     public List<String> lstData = new ArrayList<>();
     private int selectPosition = -1;
 
-    public CommonCategoryAdapter(Context context, List<String> lstData) {
+    public CommonCategoryAdapter(final Context context, final List<String> lstData) {
         this.lstData = lstData;
         layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setSelectPosition(int position) {
+    public void setSelectPosition(final int position) {
         selectPosition = position;
     }
 
@@ -41,19 +41,19 @@ public class CommonCategoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
 
         return null == lstData || lstData.isEmpty() ? null : lstData.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
 
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_wf_category_layout, parent, false);
         }
