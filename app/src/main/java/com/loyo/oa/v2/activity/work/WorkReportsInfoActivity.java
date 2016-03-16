@@ -123,7 +123,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     private ArrayList<WorkReportDyn> dynList;
     private Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             if (msg.what == UPDATE_SUCCESS) {
                 if (null == dynList || dynList.size() == 0) {
                     no_dysndata_workreports.setVisibility(View.VISIBLE);
@@ -158,14 +158,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
-            public void success(WorkReport _workReport, Response response) {
+            public void success(final WorkReport _workReport,final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -178,14 +178,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void delete_WorkReport() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(workReportId, new RCallback<WorkReport>() {
             @Override
-            public void success(WorkReport workReport, Response response) {
+            public void success(final WorkReport workReport,final Response response) {
                 Intent intent = new Intent();
                 intent.putExtra("delete", mWorkReport);
                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -224,7 +224,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     }
 
-    void updateUI(WorkReport mWorkReport) {
+    void updateUI(final WorkReport mWorkReport) {
         if (mWorkReport == null) {
             return;
         }
@@ -249,6 +249,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
                 reportDate = app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
+                break;
+            default:
                 break;
 
         }
@@ -354,7 +356,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Click(R.id.layout_attachment)
     void clickAttachment() {
 
-        if(mWorkReport.getReviewer().getStatus().equals("1")){
+        if("1".equals(mWorkReport.getReviewer().getStatus())){
             isOver = true;
         }
         LogUtil.dll("status:"+mWorkReport.getReviewer().getStatus());
@@ -385,14 +387,12 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 标题左右监听
      */
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_workreport_review})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-
-                LogUtil.dll("报告详情，右上角按钮");
                 if (mWorkReport.isReviewed()) {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("extra", "复制报告");
@@ -409,6 +409,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
             case R.id.btn_workreport_review:
                 reviewWorkreport();
+                break;
+            default:
                 break;
         }
     }
@@ -457,7 +459,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -472,29 +474,25 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             case MSG_DELETE_WORKREPORT:
 
-                  /*编辑回调*/
+                     /*编辑回调*/
                 if (data.getBooleanExtra("edit", false)) {
                     LogUtil.dll("进入回调：编辑");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                }
-                /*复制回调*/
-                else if ((data.getBooleanExtra("extra", false))) {
+                    /*复制回调*/
+                }else if ((data.getBooleanExtra("extra", false))) {
                     LogUtil.dll("进入回调：复制");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                }
-
-                /*删除回调*/
-                else if (data.getBooleanExtra("delete", false)) {
+                    /*删除回调*/
+                }else if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
                     LogUtil.dll("进入回调：删除");
                 }
-
                 break;
 
             case MSG_ATTACHMENT:
@@ -517,6 +515,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
                 showDiscussion();
                 break;
+            default:
+                break;
+
         }
     }
 }

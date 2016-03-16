@@ -15,14 +15,15 @@ import java.util.HashMap;
 
 public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReport> {
 
+    private final int pageSize = 20;
+
     @Override
-    protected void openDetail(int position) {
+    protected void openDetail(final int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, WorkReportsInfoActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReport) adapter.getItem(position)).getId());
         startActivityForResult(intent, WorkReportsManageFragment.REQUEST_REVIEW);
     }
-
 
     @Override
     public void getData() {
@@ -34,8 +35,7 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReport> {
         //params.put("endAt", System.currentTimeMillis() / 1000);
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getPageIndex());
-        params.put("pageSize", isTopAdd?lstData.size()>=20?lstData.size():20:20);
-
+        params.put("pageSize", isTopAdd?lstData.size()>=pageSize?lstData.size():pageSize:pageSize);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReports(params, this);
     }
 }
