@@ -197,7 +197,8 @@ public class MainApp extends Application {
                 }
             };
 
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).
+                    setRequestInterceptor(requestInterceptor).build();
         }
 
         return restAdapter;
@@ -219,7 +220,7 @@ public class MainApp extends Application {
 //        }
         //        init_StrictMode();
         Configuration config = getResources().getConfiguration();
-        config.locale= Locale.CHINA;
+        config.locale = Locale.CHINA;
         getBaseContext().getResources().updateConfiguration(config, null);
 
         // SDKInitializer.initialize(getApplicationContext());
