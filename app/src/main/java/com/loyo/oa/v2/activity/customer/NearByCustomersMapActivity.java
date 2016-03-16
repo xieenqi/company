@@ -51,7 +51,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     private BitmapDescriptor markTeam;//团队
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearbycustomers_map);
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
@@ -76,7 +76,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         layout_back.setOnTouchListener(Global.GetTouch());
         layout_back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onBackPressed();
             }
         });
@@ -138,7 +138,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     }
 
     @Override
-    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+    public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         initMap(latitude, longitude);
         LocationUtilGD.sotpLocation();
     }
@@ -156,7 +156,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
      * @param lat
      * @param lng
      */
-    private void initMap(double lat, double lng) {
+    private void initMap(final double lat, final double lng) {
         LatLngBounds bounds = new LatLngBounds.Builder().include(new LatLng(lat, lng)).build();
         aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 10, 10, 10));
         aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
@@ -180,12 +180,12 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     public void setInfoWindow() {
         aMap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
             @Override
-            public View getInfoWindow(Marker marker) {
+            public View getInfoWindow(final Marker marker) {
                 return render(marker);
             }
 
             @Override
-            public View getInfoContents(Marker marker) {
+            public View getInfoContents(final Marker marker) {
                 return render(marker);
             }
         });
@@ -195,7 +195,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     /**
      * 自定义infowinfow窗口
      */
-    public View render(Marker marker) {
+    public View render(final Marker marker) {
         for (OverlayItem element : points) {
             if (marker.getTitle().equals(element.customer.name)) {
                 point = element;
@@ -209,7 +209,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         address.setText(point.customer.loc.addr);
         navigation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//开始导航
+            public void onClick(final View v) {//开始导航
                 Utils.goWhere(NearByCustomersMapActivity.this, point.customer.loc.loc[1], point.customer.loc.loc[0]);
             }
         });
@@ -276,7 +276,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         mapview.onSaveInstanceState(outState);
     }
