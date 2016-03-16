@@ -5,8 +5,8 @@ import android.content.Context;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
+import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
