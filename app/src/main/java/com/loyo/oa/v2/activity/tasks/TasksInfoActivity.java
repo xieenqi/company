@@ -726,7 +726,7 @@ public class TasksInfoActivity extends BaseActivity {
 
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
-                        public void success(Task o, Response response) {
+                        public void success(final Task o,final Response response) {
                             Intent intent = new Intent();
                             intent.putExtra("delete", mTask);
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
