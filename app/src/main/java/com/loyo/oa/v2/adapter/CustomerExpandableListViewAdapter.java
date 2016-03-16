@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class CustomerExpandableListViewAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter<T> {
 
-    public CustomerExpandableListViewAdapter(Context context, ArrayList<PagingGroupData<T>> data) {
+    public CustomerExpandableListViewAdapter(final Context context, final ArrayList<PagingGroupData<T>> data) {
         mContext = context;
         pagingGroupDatas = data;
         app = (MainApp) mContext.getApplicationContext();
@@ -31,27 +31,27 @@ public class CustomerExpandableListViewAdapter<T extends BaseBeans> extends Base
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
+    public int getChildrenCount(final int groupPosition) {
         return pagingGroupDatas.get(groupPosition).getRecords().size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Object getGroup(final int groupPosition) {
         return null;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Object getChild(final int groupPosition, final int childPosition) {
         return pagingGroupDatas.get(groupPosition).getRecords().get(childPosition);
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
+    public long getGroupId(final int groupPosition) {
         return groupPosition;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
+    public long getChildId(final int groupPosition, final int childPosition) {
         return childPosition;
     }
 
@@ -71,7 +71,7 @@ public class CustomerExpandableListViewAdapter<T extends BaseBeans> extends Base
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sign_show_group, null);
             item_info_Group = new Item_info_Group();
@@ -90,7 +90,7 @@ public class CustomerExpandableListViewAdapter<T extends BaseBeans> extends Base
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_manage, null);
             item_info = new Item_info_Child();
@@ -136,7 +136,7 @@ public class CustomerExpandableListViewAdapter<T extends BaseBeans> extends Base
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
+    public boolean isChildSelectable(final int groupPosition, final int childPosition) {
         return true;
     }
 }
