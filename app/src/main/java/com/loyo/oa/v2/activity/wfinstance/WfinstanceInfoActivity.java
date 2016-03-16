@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_memo;
     @ViewById
+    TextView tv_projectName;
+    @ViewById
     TextView tv_time_creator;
     @ViewById
     TextView tv_title_role;
@@ -81,6 +84,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     ViewGroup layout_pass;
     @ViewById
     ViewGroup layout_AttachFile;
+    @ViewById
+    LinearLayout ll_project;
     @ViewById
     ViewGroup layout_lastwork;
     @ViewById
@@ -217,6 +222,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
         }
         tv_attachment_count.setText("附件 (" + wfInstance.bizExtData.getAttachmentCount() + ")");
+        tv_projectName.setText(null == wfInstance.ProjectInfo ? "无" : wfInstance.ProjectInfo.title);
+        if (300 == wfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件
+            layout_AttachFile.setVisibility(View.GONE);
+            ll_project.setVisibility(View.GONE);
+        }
         switch (wfInstance.status) {
 
             case WfInstance.STATUS_NEW:
