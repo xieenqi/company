@@ -23,12 +23,12 @@ public class CustomerRepeatAdapter extends BaseAdapter {
     PaginationX<CustomerRepeatList> listCommon;
     Context mContext;
 
-    public CustomerRepeatAdapter(PaginationX<CustomerRepeatList> listCommons,Context context){
+    public CustomerRepeatAdapter(final PaginationX<CustomerRepeatList> listCommons, final Context context) {
         listCommon = listCommons;
         mContext = context;
     }
 
-    class viewHolder{
+    class viewHolder {
         TextView item_cuslist_tv;
     }
 
@@ -39,30 +39,29 @@ public class CustomerRepeatAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Object getItem(final int i) {
         return null;
     }
 
     @Override
-    public long getItemId(int i) {
+    public long getItemId(final int i) {
         return 0;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, final ViewGroup viewGroup) {
         viewHolder holder = null;
-        if(convertView == null){
+        if (convertView == null) {
             holder = new viewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customerrepeat_list,null);
-            holder.item_cuslist_tv = (TextView)convertView.findViewById(R.id.item_cuslist_tv);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customerrepeat_list, null);
+            holder.item_cuslist_tv = (TextView) convertView.findViewById(R.id.item_cuslist_tv);
 
             convertView.setTag(holder);
-        }
-        else{
-            holder = (viewHolder)convertView.getTag();
+        } else {
+            holder = (viewHolder) convertView.getTag();
         }
 
-        LogUtil.dll("data:"+listCommon.getRecords().get(position).getName());
+        LogUtil.dll("data:" + listCommon.getRecords().get(position).getName());
 
 
         holder.item_cuslist_tv.setText(listCommon.getRecords().get(position).getName());
