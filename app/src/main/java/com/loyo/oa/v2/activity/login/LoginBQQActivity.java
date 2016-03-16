@@ -26,7 +26,7 @@ public class LoginBQQActivity extends BaseActivity {
     ProgressBar pb_progress;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_bqq_login);
@@ -34,7 +34,7 @@ public class LoginBQQActivity extends BaseActivity {
         initUI();
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
         LogUtil.d("onKeyDown");
         LogUtil.d("((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()):" + ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()));
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
@@ -52,7 +52,7 @@ public class LoginBQQActivity extends BaseActivity {
         webView.getSettings().setJavaScriptEnabled(true);
 
         webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
                 final boolean blockLoadingNetworkImage = true;
                 LogUtil.d("QQ登录URL:" + url);
                 if (url.indexOf(FinalVariables.GetLogin_success_prefix()) >= 0) {
@@ -76,7 +76,7 @@ public class LoginBQQActivity extends BaseActivity {
         });
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public void onProgressChanged(WebView view, int newProgress) {
+            public void onProgressChanged(final WebView view, final int newProgress) {
                 pb_progress.setProgress(newProgress);
                 if (newProgress == 100) {
                     pb_progress.setVisibility(View.GONE);
