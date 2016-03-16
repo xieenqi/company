@@ -301,6 +301,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult((Activity) mContext, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_NEW_CONTRACT, null);
                 break;*/
             default:
+
                 break;
         }
     }
@@ -396,12 +397,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                     uuid = StringUtil.getUUID();
-                    HashMap<String,Object> map = new HashMap<String, Object>();
-                    map.put("bizType",6);
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", 6);
                     map.put("uuid", uuid);
 
                     RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map,
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map,
                             new RCallback<Attachment>() {
                                 @Override
                                 public void success(final Attachment attachment, final Response response) {
@@ -425,7 +426,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             default:
 
                 break;
-
         }
     }
 
