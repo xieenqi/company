@@ -88,7 +88,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         DialogHelp.showLoading(this,"",true);
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
-            public void success(HttpProject _project, Response response) {
+            public void success(final HttpProject _project, final Response response) {
                 DialogHelp.cancelLoading();
                 HttpErrorCheck.checkResponse("项目详情 ", response);
                 project = _project;
@@ -97,7 +97,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 DialogHelp.cancelLoading();
                 HttpErrorCheck.checkError(error);
@@ -106,7 +106,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_project_des})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
@@ -140,6 +140,9 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 b.putSerializable("project", project);
                 app.startActivity(this, ProjectDescriptionActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, b);
                 break;
+            default:
+
+                break;
         }
     }
 
@@ -153,7 +156,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     /**
      * 初始化数据(绑定页面 任务 报告 审批...)
      */
-    private void initData(HttpProject project) {
+    private void initData(final HttpProject project) {
         if (null == project) {
             LogUtil.dll("return 了");
             return;
@@ -231,7 +234,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * @param size
      */
     @Override
-    public void onLoadSuccess(int id, int size) {
+    public void onLoadSuccess(final int id, final int size) {
         int idexS = TITLES[id].indexOf("(");
         int idexE = TITLES[id].lastIndexOf(")");
         String c = TITLES[id].substring(idexS + 1, idexE);
@@ -243,12 +246,12 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
-        public MyPagerAdapter(FragmentManager fm) {
+        public MyPagerAdapter(final FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(final int position) {
             return TITLES[position];
         }
 
@@ -258,13 +261,13 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             return fragmentXes.isEmpty() ? null : fragmentXes.get(position);
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) {
             return;
@@ -281,31 +284,25 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
                     app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
                             TasksInfoActivity.REQUEST_EDIT, bundle);
-                }
-
-                /*删除回调*/
-                else if (data.getBooleanExtra("delete", false)) {
+                } else if (data.getBooleanExtra("delete", false)) {/*删除回调*/
                     app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
                         @Override
-                        public void success(Project o, Response response) {
+                        public void success(final Project o, final Response response) {
                             Intent intent = new Intent();
                             intent.putExtra("delete", project);
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void failure(final RetrofitError error) {
                             HttpErrorCheck.checkError(error);
                         }
                     });
-                }
-
-                /*结束任务或重启任务*/
-                else if (data.getBooleanExtra("extra", false)) {
+                } else if (data.getBooleanExtra("extra", false)) { /*结束任务或重启任务*/
                     DialogHelp.showLoading(this, "", true);
                     app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
                         @Override
-                        public void success(Project o, Response response) {
+                        public void success(final Project o, final Response response) {
                             DialogHelp.cancelLoading();
                             HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                             project.status = (project.status == 1 ? 0 : 1);
@@ -313,13 +310,16 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void failure(final RetrofitError error) {
                             DialogHelp.cancelLoading();
                             Toast("有任务未结束,不能结束项目!");
                             HttpErrorCheck.checkError(error);
                         }
                     });
                 }
+                break;
+            default:
+
                 break;
         }
     }
