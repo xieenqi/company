@@ -86,7 +86,7 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
         }
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(final int arg0,final Header[] arg1,final byte[] arg2) {
 
             if (arg2 != null && arg2.length > 0 && !StringUtil.isEmpty(getStr(arg2))) {
                 Type type = new TypeToken<ArrayList<TaskTpl>>() {
@@ -107,12 +107,12 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(final AdapterView<?> adapterView,final View view,final int i,final long l) {
 
                 TaskTpl tpl = lstData.get((int) l);
                 app.getRestAdapter().create(ITask.class).getTpl(tpl.getId(), new RCallback<TaskTpl>() {
                     @Override
-                    public void success(TaskTpl taskTpl, Response response) {
+                    public void success(final TaskTpl taskTpl,final Response response) {
                         if (isBlockOnItemClick) {
                             isBlockOnItemClick = false;
                             return;
@@ -135,17 +135,17 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
         }
 
         @Override
-        public Object getItem(int i) {
+        public Object getItem(final int i) {
             return lstData_SlideView.get(i);
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(final int i) {
             return i;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
+        public View getView(final int position, View convertView,final ViewGroup viewGroup) {
             SlideView slideView = (SlideView) convertView;
 
             Item_info item_info;
@@ -176,7 +176,7 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
     };
 
     @Override
-    public void onSlide(View view, int status) {
+    public void onSlide(final View view,final int status) {
         if (mLastSlideViewWithStatusOn != null && mLastSlideViewWithStatusOn != view) {
             mLastSlideViewWithStatusOn.shrink();
         }
@@ -195,22 +195,22 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
     class OnClickListener_layout_holder implements View.OnClickListener {
         int position;
 
-        public OnClickListener_layout_holder(int position) {
+        public OnClickListener_layout_holder(final int position) {
             this.position = position;
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("确认");
             builder.setPositiveButton(mContext.getString(R.string.dialog_submit), new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(final DialogInterface dialog,final int which) {
 
                     TaskTpl tpl = lstData.get(position);
                     app.getRestAdapter().create(ITask.class).deleteTpl(tpl.getId(), new RCallback<TaskTpl>() {
                         @Override
-                        public void success(TaskTpl taskTpl, Response response) {
+                        public void success(final TaskTpl taskTpl,final Response response) {
                             lstData.remove(position);
                             bindAdapter();
                         }
@@ -221,7 +221,7 @@ public class TaskModelSelectManageActivity extends Activity implements SlideView
             });
             builder.setNegativeButton(mContext.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(final DialogInterface dialog,final int which) {
                     dialog.dismiss();
                 }
             });

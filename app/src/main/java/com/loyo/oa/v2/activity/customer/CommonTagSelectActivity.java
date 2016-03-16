@@ -83,14 +83,14 @@ public class CommonTagSelectActivity extends BaseActivity {
         if (type == SELECT_TYPE_LOSE_REASON) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getLoseReasons(new RCallback<ArrayList<CommonTag>>() {
                 @Override
-                public void success(ArrayList<CommonTag> tags, Response response) {
+                public void success(final ArrayList<CommonTag> tags, final Response response) {
                     processData(tags);
                 }
             });
         } else if (type == SELECT_TYPE_SALE_ACTIVE_ACTION) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivitytypes(new RCallback<ArrayList<CommonTag>>() {
                 @Override
-                public void success(ArrayList<CommonTag> tags, Response response) {
+                public void success(final ArrayList<CommonTag> tags, final Response response) {
                     processData(tags);
                 }
             });
@@ -120,7 +120,7 @@ public class CommonTagSelectActivity extends BaseActivity {
      *
      * @param tags
      */
-    private void processData(ArrayList<CommonTag> tags) {
+    private void processData(final ArrayList<CommonTag> tags) {
         commonTags.addAll(tags);
         for (int i = 0; i < commonTags.size(); i++) {
             if (results.contains(commonTags.get(i))) {
@@ -146,7 +146,7 @@ public class CommonTagSelectActivity extends BaseActivity {
         public TextView tv_content;
         public View layout;
 
-        public CommonTagViewHolder(View view) {
+        public CommonTagViewHolder(final View view) {
             super(view);
             tv_title = (TextView) view.findViewById(R.id.tv_title);
             tv_content = (TextView) view.findViewById(R.id.tv_content);
@@ -159,7 +159,7 @@ public class CommonTagSelectActivity extends BaseActivity {
         private boolean onBind;
 
         @Override
-        public CommonTagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CommonTagViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lose_reason, parent, false);
             return new CommonTagViewHolder(v);
         }
@@ -175,14 +175,14 @@ public class CommonTagSelectActivity extends BaseActivity {
             holder.layout.setOnTouchListener(Global.GetTouch());
             holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     holder.cb.toggle();
                 }
             });
 
             holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                public void onCheckedChanged(final CompoundButton compoundButton, final boolean b) {
                     if (!onBind) {
                         reson.setIsChecked(b);
                         if (mode == SELECT_MODE_MULTIPLE) {

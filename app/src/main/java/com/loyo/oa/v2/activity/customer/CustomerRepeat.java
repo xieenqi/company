@@ -53,7 +53,7 @@ public class CustomerRepeat extends BaseActivity {
     private Handler mHandler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
                 tv_customer_onlyname.setText("不存在该用户,点击“" + edt_serach.getText().toString() + "”,创建该客户");
             }
@@ -61,7 +61,7 @@ public class CustomerRepeat extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_repeat);
         initUi();
@@ -69,7 +69,7 @@ public class CustomerRepeat extends BaseActivity {
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
 
             switch (view.getId()) {
 
@@ -89,7 +89,9 @@ public class CustomerRepeat extends BaseActivity {
                     }
                     serachRepate(edt_serach.getText().toString());
                     break;
+                default:
 
+                    break;
             }
         }
     };
@@ -119,7 +121,7 @@ public class CustomerRepeat extends BaseActivity {
     /**
      * 查重请求
      */
-    void serachRepate(String name) {
+    void serachRepate(final String name) {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("pageIndex", 1);
@@ -128,14 +130,14 @@ public class CustomerRepeat extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSerachRepeat(map, new RCallback<PaginationX<CustomerRepeatList>>() {
             @Override
-            public void success(PaginationX<CustomerRepeatList> customerRepeatList, Response response) {
+            public void success(final PaginationX<CustomerRepeatList> customerRepeatList, final Response response) {
                 LogUtil.dll("success result:" + MainApp.gson.toJson(customerRepeatList));
                 setViewdata(customerRepeatList);
                 mHandler.sendEmptyMessage(0x01);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
 
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
                     Toast("请检查您的网络连接");
@@ -152,14 +154,14 @@ public class CustomerRepeat extends BaseActivity {
     /**
      * 若没有相同数据，则展示ll_showonly,提示该名字可以创建
      */
-    void setViewdata(PaginationX<CustomerRepeatList> customerRepeatList) {
+    void setViewdata(final PaginationX<CustomerRepeatList> customerRepeatList) {
 
         if (customerRepeatList.getRecords().size() != 0) {
             for (int i = 0; i < customerRepeatList.getRecords().size(); i++) {
-                if(customerRepeatList.getRecords().get(i).getName().equals(edt_serach.getText().toString())){
+                if (customerRepeatList.getRecords().get(i).getName().equals(edt_serach.getText().toString())) {
                     isOk = true;
                     break;
-                }else{
+                } else {
                     isOk = false;
                 }
             }
@@ -167,14 +169,14 @@ public class CustomerRepeat extends BaseActivity {
             isOk = false;
         }
 
-        if (isOk == false) {
+        if (!isOk) {
             ll_showonly.setVisibility(View.VISIBLE);
             tv_customer_onlyname.setText("不存在该用户,点击“" + edt_serach.getText().toString() + "”,创建该客户");
-        } else if (isOk) {
+        } else {
             ll_showonly.setVisibility(View.GONE);
         }
 
-        LogUtil.dll("re:"+isOk);
+        LogUtil.dll("re:" + isOk);
         adapter = new CustomerRepeatAdapter(customerRepeatList, CustomerRepeat.this);
         lv_list.setAdapter(adapter);
 

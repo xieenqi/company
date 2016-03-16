@@ -45,7 +45,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     private int myDepartmentContactsSize;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_contacts);
 
@@ -100,7 +100,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -110,6 +110,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
                 b.putInt("type", 1);
                 app.startActivity(this, DepartmentUserSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
+            default:
+                break;
         }
     }
 
@@ -117,16 +119,16 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     public class MyPagerAdapter extends FragmentPagerAdapter {
         private String[] titles = {"本部门(0)", "全公司(0)"};
 
-        public void setTitles(String[] titles) {
+        public void setTitles(final String[] titles) {
             this.titles = titles;
         }
 
-        public MyPagerAdapter(FragmentManager fm) {
+        public MyPagerAdapter(final FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(final int position) {
             return titles[position];
         }
 
@@ -136,7 +138,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             return (position == 0) ? userFragment : departmentFragment;
         }
     }

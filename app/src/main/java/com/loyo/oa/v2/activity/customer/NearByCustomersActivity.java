@@ -43,14 +43,22 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     private MyPagerAdapter adapter;
     private ArrayList<CustomerCommonFragment> fragmentXes = new ArrayList<>();
 
-    @ViewById ViewGroup layout_back;
-    @ViewById ImageView iv_submit;
-    @ViewById TextView tv_title;
-    @ViewById PagerSlidingTabStrip tabs;
-    @ViewById ViewPager pager;
-    @Extra String position;
-    @Extra NearCount nearCount;
-    @Extra int type;//客户类型
+    @ViewById
+    ViewGroup layout_back;
+    @ViewById
+    ImageView iv_submit;
+    @ViewById
+    TextView tv_title;
+    @ViewById
+    PagerSlidingTabStrip tabs;
+    @ViewById
+    ViewPager pager;
+    @Extra
+    String position;
+    @Extra
+    NearCount nearCount;
+    @Extra
+    int type;//客户类型
 
     @AfterViews
     void initViews() {
@@ -128,12 +136,12 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
-        public MyPagerAdapter(FragmentManager fm) {
+        public MyPagerAdapter(final FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(final int position) {
             return TITLES[position];
         }
 
@@ -143,7 +151,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             return fragmentXes.isEmpty() ? null : fragmentXes.get(position);
         }
     }

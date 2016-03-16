@@ -41,7 +41,7 @@ public class PreviewImageActivity extends BaseActivity {
     private boolean isEdit;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
         isEdit = getIntent() == null || !getIntent().hasExtra("isEdit") ? false : getIntent().getBooleanExtra("isEdit", false);
@@ -51,7 +51,7 @@ public class PreviewImageActivity extends BaseActivity {
             delete.setVisibility(View.VISIBLE);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     dialogToast();
                 }
             });
@@ -92,17 +92,17 @@ public class PreviewImageActivity extends BaseActivity {
         mViewPager.setCurrentItem(mNewPosition);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
                 mPosition = position;
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
 
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onPageScrollStateChanged(final int state) {
 
             }
         });
@@ -116,7 +116,7 @@ public class PreviewImageActivity extends BaseActivity {
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 Intent intent = new Intent();
                 intent.putExtra("delAtm", mNewAttachments.get(mPosition));
@@ -127,7 +127,7 @@ public class PreviewImageActivity extends BaseActivity {
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -142,7 +142,7 @@ public class PreviewImageActivity extends BaseActivity {
         }
 
         @Override
-        public View instantiateItem(ViewGroup container, int position) {
+        public View instantiateItem(final ViewGroup container, final int position) {
 
             PhotoView photoView = new PhotoView(container.getContext());
             Attachment attachment = mNewAttachments.get(position);
@@ -163,18 +163,18 @@ public class PreviewImageActivity extends BaseActivity {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(final ViewGroup container,final int position,final Object object) {
             container.removeView((View) object);
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(final View view, final Object object) {
             return view == object;
         }
 
     }
 
-    public String bigImagUrl(String url) {
+    public String bigImagUrl(final String url) {
         String newUrl = url.replaceAll("loyocloud-01.img-cn-qingdao.aliyuncs.com", "loyocloud-01.oss-cn-qingdao.aliyuncs.com");
 
         return newUrl.replaceAll("@1e_1c_0o_0l_200h_200w_70q.src", "");

@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity.project;
 
 import android.content.Intent;
 
-import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IProject;
@@ -21,9 +20,8 @@ import java.util.HashMap;
  */
 public class ProjectSearchActivity extends BaseSearchActivity<Project> {
 
-
     @Override
-    protected void openDetail(int position) {
+    protected void openDetail(final int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, ProjectInfoActivity_.class);
         intent.putExtra("project", adapter.getItem(position));

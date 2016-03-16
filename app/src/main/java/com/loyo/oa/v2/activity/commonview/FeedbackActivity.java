@@ -78,13 +78,13 @@ public class FeedbackActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> _attachments, Response response) {
+            public void success(final ArrayList<Attachment> _attachments, final Response response) {
                 attachments = _attachments;
                 init_gridView_photo();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
@@ -119,13 +119,13 @@ public class FeedbackActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(FinalVariables.URL_FEEDBACK).create(IFeedback.class).create(map, new RCallback<FeedBackCommit>() {
             @Override
-            public void success(FeedBackCommit feedBackCommit, Response response) {
+            public void success(final FeedBackCommit feedBackCommit, final Response response) {
 
                 showSuccessDialog();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 Toast("提交失败");
                 super.failure(error);
@@ -143,7 +143,7 @@ public class FeedbackActivity extends BaseActivity {
         showGeneralDialog(false,false,message);
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 finish();
             }
         });
@@ -163,7 +163,7 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -180,7 +180,7 @@ public class FeedbackActivity extends BaseActivity {
                             if (newFile.exists()) {
                                 Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
-                                    public void onNext(Serializable serializable) {
+                                    public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
                                 });
@@ -200,14 +200,14 @@ public class FeedbackActivity extends BaseActivity {
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).
                             create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                         @Override
-                        public void success(Attachment attachment, Response response) {
+                        public void success(final Attachment attachment, final Response response) {
                             Toast("删除附件成功!");
                             attachments.remove(delAttachment);
                             signInGridViewAdapter.notifyDataSetChanged();
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void failure(final RetrofitError error) {
                             HttpErrorCheck.checkError(error);
                             Toast("删除附件失败!");
                             super.failure(error);
@@ -216,6 +216,9 @@ public class FeedbackActivity extends BaseActivity {
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
+                break;
+            default:
+
                 break;
         }
     }

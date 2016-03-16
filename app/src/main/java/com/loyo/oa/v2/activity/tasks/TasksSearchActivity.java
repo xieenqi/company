@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class TasksSearchActivity extends BaseSearchActivity<Task> {
 
     @Override
-    protected void openDetail(int position) {
+    protected void openDetail(final int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, TasksInfoActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, ((Task) adapter.getItem(position)).getId());

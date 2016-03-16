@@ -49,7 +49,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
     private int count;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
 
@@ -68,7 +68,6 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
     @Override
     protected void onResume() {
-        
         super.onResume();
         syncButton();
     }
@@ -103,6 +102,9 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
             case DepartmentUserActivity.TYPE_SELECT_SINGLE:
                 layout_checkall.setVisibility(View.GONE);
                 break;
+            default:
+
+                break;
         }
 
         ArrayList<Department> listDept = Common.getLstDepartment(deptId);
@@ -126,7 +128,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
             listView_user.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                     UserListViewAdapter.Item_info item_info = (UserListViewAdapter.Item_info) view.getTag();
                     item_info.cBox.toggle();
 
@@ -168,7 +170,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -209,11 +211,15 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
                 syncButton();
 
                 break;
+
+            default:
+
+                break;
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_ON_ACTIVITY_RETURN) {

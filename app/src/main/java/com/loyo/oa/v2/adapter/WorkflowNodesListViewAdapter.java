@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -80,42 +81,39 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             item_info.tv_result.setTextSize(TypedValue.COMPLEX_UNIT_SP, app.pxTosp(app.diptoPx(20)));
 
             /*已通过*/
-           if(wfInstanceStatus == 4){
-               item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
-               item_info.tv_result.setText("同意");
-           }
-          else{
-               if(wfNodes.getActive() == 1){
-                   item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
-                   item_info.tv_deal_time.setText("");
-                   item_info.tv_result.setText("待处理");
-                   item_info.tv_comment.setVisibility(View.GONE);
-                   item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
-               }
-
-               else if(wfNodes.getActive() == 2){
-                   item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
-                   item_info.tv_deal_time.setText("");
-                   item_info.tv_result.setText("处理中");
-                   item_info.tv_comment.setVisibility(View.GONE);
-                   item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
-               }
-
-               else if(wfNodes.getActive() == 3){
-                   if (wfNodes.isApproveFlag() == true) {
-                       item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
-                       item_info.tv_result.setText("同意");
-                       item_info.tv_comment.setVisibility(View.VISIBLE);
-                       item_info.tv_comment.setText("处理意见:"+wfNodes.getComment());
-                   } else {
-                       item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
-                       item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
-                       item_info.tv_result.setText("驳回");
-                       item_info.tv_comment.setVisibility(View.VISIBLE);
-                       item_info.tv_comment.setText("处理意见:"+wfNodes.getComment());
-                   }
-               }
-           }
+            if (wfInstanceStatus == 4) {
+                item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
+                item_info.tv_result.setText("同意");
+                item_info.tv_comment.setVisibility(View.VISIBLE);
+                item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
+            } else {
+                if (wfNodes.getActive() == 1) {
+                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
+                    item_info.tv_deal_time.setText("");
+                    item_info.tv_result.setText("待处理");
+                    item_info.tv_comment.setVisibility(View.GONE);
+                    item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
+                } else if (wfNodes.getActive() == 2) {
+                    item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
+                    item_info.tv_deal_time.setText("");
+                    item_info.tv_result.setText("处理中");
+                    item_info.tv_comment.setVisibility(View.GONE);
+                    item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
+                } else if (wfNodes.getActive() == 3) {
+                    if (wfNodes.isApproveFlag() == true) {
+                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
+                        item_info.tv_result.setText("同意");
+                        item_info.tv_comment.setVisibility(View.VISIBLE);
+                        item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
+                    } else {
+                        item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
+                        item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
+                        item_info.tv_result.setText("驳回");
+                        item_info.tv_comment.setVisibility(View.VISIBLE);
+                        item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
+                    }
+                }
+            }
         }
         return convertView;
     }

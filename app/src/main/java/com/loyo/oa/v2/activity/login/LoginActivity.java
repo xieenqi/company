@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tv_resetPassword, tv_qqLogin;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         super.isNeedLogin = false;
@@ -72,17 +72,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     TextWatcher nameWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
+        public void afterTextChanged(final Editable editable) {
             if (!TextUtils.equals(layout_login.getText(), "登录")) {
                 resetLogin();
             }
@@ -98,7 +98,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_login:
                 String username = edt_username.getText().toString().trim();
@@ -124,11 +124,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.tv_resetPassword://忘记密码
                 app.startActivity(this, VerifyAccountActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
+            default:
+
+                break;
         }
     }
 
     @Override
-    public void onWaveComplete(int color) {
+    public void onWaveComplete(final int color) {
         layout_login.setBackGroundColor(color);
     }
 
@@ -138,7 +141,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * @param bgColor
      * @param waveColor
      */
-    private void changeColor(int bgColor, int waveColor) {
+    private void changeColor(final int bgColor, final int waveColor) {
         if (bgColor > 0)
             layout_login.setBackGroundColor(getResources().getColor(bgColor));
         if (waveColor > 0)
@@ -153,18 +156,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      *
      * @param body 表单
      *             、 @param type 1，微信登录；2，普通登录
-     *             <p/>
+     *             <p>
      *             成功 getStatus 状态码
      *             失败 getKind 状态码
      */
-    private void login(HashMap<String, Object> body) {
+    private void login(final HashMap<String, Object> body) {
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(FinalVariables.GET_TOKEN) //URL
                 .setLogLevel(RestAdapter.LogLevel.FULL) //是否Debug
                 .build();
         adapter.create(ILogin.class).login(body, new RCallback<Token>() {
             @Override
-            public void success(Token token, Response response) {
+            public void success(final Token token, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 if (null == token || TextUtils.isEmpty(token.access_token)) {
                     loginFial();
@@ -176,7 +179,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
                 loginFial();

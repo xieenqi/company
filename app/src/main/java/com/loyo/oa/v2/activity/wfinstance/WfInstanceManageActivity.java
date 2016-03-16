@@ -17,7 +17,7 @@ public class WfInstanceManageActivity extends BaseFragmentActivity {
     public WfInstanceManageFragment fragment = new WfInstanceManageFragment();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wfinstance_manage);
         initUI();
@@ -25,14 +25,13 @@ public class WfInstanceManageActivity extends BaseFragmentActivity {
 
     void initUI() {
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.main_content, fragment);
         transaction.commit();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

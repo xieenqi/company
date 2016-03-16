@@ -54,7 +54,7 @@ public class SelectDetUserSerach extends Activity{
     private Bundle mBundle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectdetuserserach);
         initView();
@@ -75,16 +75,16 @@ public class SelectDetUserSerach extends Activity{
         edt_selectuser_search.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            public void onTextChanged(final CharSequence arg0, final int arg1, final int arg2, final int arg3) {
 
             }
 
             @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            public void beforeTextChanged(final CharSequence arg0, final int arg1, final int arg2, final int arg3) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
                 doSearch();
             }
         });
@@ -93,7 +93,7 @@ public class SelectDetUserSerach extends Activity{
         lv_selectuser_serach.setAdapter(adapter);
         lv_selectuser_serach.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 
                  mIntent = new Intent();
                  mBundle = new Bundle();
@@ -127,7 +127,8 @@ public class SelectDetUserSerach extends Activity{
                         app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.request_Code, mIntent);
 
                         break;
-
+                    default:
+                        break;
                 }
             }
         });
@@ -135,7 +136,7 @@ public class SelectDetUserSerach extends Activity{
         /*返回*/
         img_title_left.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 //关闭键盘
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm.isActive()) {
@@ -148,7 +149,7 @@ public class SelectDetUserSerach extends Activity{
         /*搜索操作*/
         tv_selectuser_search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 LogUtil.dll("点击搜索");
                 doSearch();
             }
@@ -203,17 +204,17 @@ public class SelectDetUserSerach extends Activity{
         }
 
         @Override
-        public Object getItem(int position) {
+        public Object getItem(final int position) {
             return resultData.get(position);
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(final int position) {
             return position;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             if (null == convertView) {
                 convertView = LayoutInflater.from(SelectDetUserSerach.this).inflate(R.layout.item_contacts_child, null, false);
             }
@@ -257,7 +258,7 @@ public class SelectDetUserSerach extends Activity{
     /**
      * 返回
      */
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             finish();
             return true;

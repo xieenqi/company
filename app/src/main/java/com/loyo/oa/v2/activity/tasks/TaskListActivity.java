@@ -54,7 +54,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     private PaginationX<Task> taskPaginationX = new PaginationX<>(20);
     private ArrayList<Task> tasks = new ArrayList<>();
     protected ArrayList<PagingGroupData_<Task>> pagingGroupDatas = new ArrayList<>();
-
     private CommonExpandableListAdapter adapter;
     private boolean isTopAdd;
     private boolean isChanged;
@@ -105,14 +104,14 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.setOnRefreshListener(this);
             lv.getRefreshableView().setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                 @Override
-                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                public boolean onGroupClick(final ExpandableListView parent,final View v,final int groupPosition,final long id) {
                     return true;
                 }
             });
 
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                public boolean onChildClick(final ExpandableListView parent,final View v,final int groupPosition,final int childPosition,final long id) {
                     Task task = (Task) adapter.getChild(groupPosition, childPosition);
                     openTaskDetial(task);
                     return false;
@@ -155,12 +154,12 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void onError(final Throwable e) {
                 lv.onRefreshComplete();
             }
 
             @Override
-            public void onNext(PaginationX<Task> paginationX) {
+            public void onNext(final PaginationX<Task> paginationX) {
                 lv.onRefreshComplete();
                 taskPaginationX = paginationX;
                 lv.onRefreshComplete();
@@ -179,7 +178,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      *
      * @param task
      */
-    private void openTaskDetial(Task task) {
+    private void openTaskDetial(final Task task) {
         Intent intent = new Intent(this, TasksInfoActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, task.getId());
         //intent.putExtra("mCustomer", mCustomer);
@@ -187,7 +186,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || null == data) {
             return;
@@ -199,19 +198,22 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             case FinalVariables.REQUEST_CREATE_TASK:
                 isChanged = true;
                 break;
+
+            default:
+                break;
         }
         onPullDownToRefresh(lv);
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         taskPaginationX.setPageIndex(1);
         isTopAdd = true;
         getData();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         taskPaginationX.setPageIndex(taskPaginationX.getPageIndex() + 1);
         getData();

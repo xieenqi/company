@@ -41,28 +41,38 @@ import retrofit.client.Response;
 
 /**
  * 新建项目
- * */
+ */
 
 @EActivity(R.layout.activity_project_add)
 public class ProjectAddActivity extends BaseActivity {
 
-    final static int REQUEST_MANAGERS = 100;
-    final static int REQUEST_MEMBERS = 200;
+    static final int REQUEST_MANAGERS = 100;
+    static final int REQUEST_MEMBERS = 200;
 
-    @ViewById TextView tv_managers;
-    @ViewById TextView tv_members;
+    @ViewById
+    TextView tv_managers;
+    @ViewById
+    TextView tv_members;
 
-    @ViewById EditText edt_title;
-    @ViewById EditText edt_content;
+    @ViewById
+    EditText edt_title;
+    @ViewById
+    EditText edt_content;
 
-    @ViewById ViewGroup layout_managers;
-    @ViewById ViewGroup layout_members;
-    @ViewById ViewGroup ll_managerGon;
+    @ViewById
+    ViewGroup layout_managers;
+    @ViewById
+    ViewGroup layout_members;
+    @ViewById
+    ViewGroup ll_managerGon;
 
-    @ViewById ListView lv_project_members;
+    @ViewById
+    ListView lv_project_members;
 
-    @Extra(ExtraAndResult.EXTRA_OBJ) HttpProject mProject;
-    @Extra("mUpdate") boolean mUpdate;
+    @Extra(ExtraAndResult.EXTRA_OBJ)
+    HttpProject mProject;
+    @Extra("mUpdate")
+    boolean mUpdate;
 
     ProjectMemberListViewAdapter mAdapter;
     ArrayList<HttpProject.ProjectMember> mProjectMember = new ArrayList<>();
@@ -78,7 +88,7 @@ public class ProjectAddActivity extends BaseActivity {
         layout_members.setOnTouchListener(Global.GetTouch());
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onBackPressed();
             }
         });
@@ -137,7 +147,7 @@ public class ProjectAddActivity extends BaseActivity {
     }
 
     @OnActivityResult(REQUEST_MANAGERS)
-    void OnResultManagers(int resultCode, Intent data) {
+    void OnResultManagers(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -159,7 +169,7 @@ public class ProjectAddActivity extends BaseActivity {
     }
 
     @OnActivityResult(REQUEST_MEMBERS)
-    void OnResultMembers(int resultCode, Intent data) {
+    void OnResultMembers(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -262,7 +272,7 @@ public class ProjectAddActivity extends BaseActivity {
         if (TextUtils.isEmpty(content)) {
             Toast("项目内容不能为空!");
             return;
-        }else{
+        } else {
             projectTransObj.content = content;
         }
 
@@ -279,12 +289,12 @@ public class ProjectAddActivity extends BaseActivity {
         }
     }
 
-    void CreateProject(ProjectTransObj obj) {
+    void CreateProject(final ProjectTransObj obj) {
         LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
         showLoading("");
         app.getRestAdapter().create(IProject.class).Create(obj, new RCallback<Project>() {
             @Override
-            public void success(Project project, Response response) {
+            public void success(final Project project, final Response response) {
                 Global.ToastLong("新增项目成功");
                 cancelLoading();
                 Intent intent = new Intent();
@@ -293,7 +303,7 @@ public class ProjectAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 cancelLoading();
                 HttpErrorCheck.checkError(error);
@@ -301,12 +311,12 @@ public class ProjectAddActivity extends BaseActivity {
         });
     }
 
-    void UpdateProject(ProjectTransObj obj) {
+    void UpdateProject(final ProjectTransObj obj) {
         LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
         showLoading("");
         app.getRestAdapter().create(IProject.class).Update(mProject.getId(), obj, new RCallback<Project>() {
             @Override
-            public void success(Project project, Response response) {
+            public void success(final Project project, final Response response) {
                 Global.ToastLong("编辑项目成功");
                 cancelLoading();
                 Intent intent = new Intent();
@@ -315,7 +325,7 @@ public class ProjectAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
@@ -351,7 +361,7 @@ public class ProjectAddActivity extends BaseActivity {
      *
      * @return
      */
-    public List<HttpProject.ProjectMember> getProjectMenbers(ArrayList<HttpProject.ProjectMember> data) {
+    public List<HttpProject.ProjectMember> getProjectMenbers(final ArrayList<HttpProject.ProjectMember> data) {
         ArrayList<HttpProject.ProjectMember> newData = new ArrayList<>();
         for (HttpProject.ProjectMember element : data) {
             HttpProject.ProjectMember menb = new HttpProject().new ProjectMember();

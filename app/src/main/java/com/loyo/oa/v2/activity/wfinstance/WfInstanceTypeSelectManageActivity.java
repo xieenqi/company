@@ -44,7 +44,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
     private boolean isTopAdd;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wfinstance_type_select);
 
@@ -67,19 +67,13 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
             listView_bizform.setAdapter(wfInstanceTypeSelectListViewAdapter);
             listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
                     bizForm = lstData_BizForm.get((int) id);
-                    //bizForm = wfInstanceTypeSelectListViewAdapter.getData().get(position-1);
                     if (bizForm != null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(bizForm.getId(), new RCallback<BizForm>() {
                             @Override
-                            public void success(BizForm bizForm, Response response) {
+                            public void success(final BizForm bizForm,final Response response) {
                                 HttpErrorCheck.checkResponse("获取审批类型详情:", response);
-//                                try {
-//                                    LogUtil.dll(Utils.convertStreamToString(response.getBody().in()));//获得查询的数据
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
                                 if (bizForm != null) {
                                     Intent intent = new Intent();
                                     intent.putExtra(BizForm.class.getName(), bizForm);
@@ -88,7 +82,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
+                            public void failure(final RetrofitError error) {
                                 HttpErrorCheck.checkError(error);
                                 Toast("获取审批类型详情失败");
                                 super.failure(error);
@@ -104,10 +98,13 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                break;
+
+            default:
                 break;
         }
     }
@@ -119,7 +116,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override
-            public void success(PaginationX<BizForm> bizFormPaginationX, Response response) {
+            public void success(final PaginationX<BizForm> bizFormPaginationX,final Response response) {
                 HttpErrorCheck.checkResponse("获取审批类型", response);
                 listView_bizform.onRefreshComplete();
 
@@ -135,7 +132,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 Toast("获取审批类型失败");
                 listView_bizform.onRefreshComplete();
@@ -145,14 +142,14 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         pagination.setPageIndex(1);
         isTopAdd = true;
         getData_BizForm();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         pagination.setPageIndex(pagination.getPageIndex() + 1);
         isTopAdd = false;
         getData_BizForm();

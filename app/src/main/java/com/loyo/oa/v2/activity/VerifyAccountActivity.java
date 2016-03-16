@@ -76,7 +76,7 @@ public class VerifyAccountActivity extends BaseActivity {
     private void verifyPhone(final String tel) {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMain.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o,final Response response) {
                 et_account.removeCallbacks(countRunner);
                 et_account.post(countRunner);
                 btn_get_code.setEnabled(false);
@@ -86,14 +86,10 @@ public class VerifyAccountActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 btn_get_code.setEnabled(true);
-               HttpErrorCheck.checkError(error);
-                //Log.d("LOG", error.getResponse().getStatus() + "m:" + error.getResponse().getReason());
-//                if (error.getResponse().getStatus() == 500) {
-//                    Toast("您的手机号尚未登记到本系统,请联系统管理员!");
-//                }
             }
         });
     }
@@ -118,7 +114,7 @@ public class VerifyAccountActivity extends BaseActivity {
         map.put("code", code);
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_CODE).create(IMobile.class).verifyCode(map, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 et_account.removeCallbacks(countRunner);
                 Bundle bundle = new Bundle();
                 bundle.putString("tel", mobile);
@@ -126,7 +122,7 @@ public class VerifyAccountActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
@@ -154,17 +150,17 @@ public class VerifyAccountActivity extends BaseActivity {
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
+        public void afterTextChanged(final Editable editable) {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 btn_get_code.setEnabled(true);
                 btn_get_code.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)

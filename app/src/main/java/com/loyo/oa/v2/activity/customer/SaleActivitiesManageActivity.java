@@ -53,7 +53,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     boolean isMyUser;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_activities_manage);
 
@@ -79,7 +79,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             map.put("pageSize", isTopAdd ? lstData_saleActivity_current.size() >= 20 ? lstData_saleActivity_current.size() : 20 : 20);
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<SaleActivity>>() {
                 @Override
-                public void success(PaginationX<SaleActivity> paginationXes, Response response) {
+                public void success(final PaginationX<SaleActivity> paginationXes, final Response response) {
 
                     try {
                         LogUtil.dll("跟进动态数据:" + Utils.convertStreamToString(response.getBody().in()));
@@ -99,7 +99,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
+                public void failure(final RetrofitError error) {
                     HttpErrorCheck.checkError(error);
                     lv_saleActivity.onRefreshComplete();
                     super.failure(error);
@@ -123,7 +123,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
@@ -133,11 +133,14 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 bundle.putSerializable(Customer.class.getName(), customer);
                 app.startActivityForResult(this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, ACTIVITIES_ADD, bundle);
                 break;
+            default:
+
+                break;
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 
         if (resultCode != RESULT_OK || data == null) {
             return;
@@ -154,18 +157,21 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                     bindData();
                 }
                 break;
+            default:
+
+                break;
         }
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
         paginationX.setPageIndex(1);
         getData();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         paginationX.setPageIndex(paginationX.getPageIndex() + 1);
         getData();
@@ -203,17 +209,17 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
         }
 
         @Override
-        public Object getItem(int i) {
+        public Object getItem(final int i) {
             return lstData_saleActivity_current.isEmpty() ? null : lstData_saleActivity_current.get(i);
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(final int i) {
             return i;
         }
 
         @Override
-        public View getView(int i, View convertView, ViewGroup parent) {
+        public View getView(final int i, View convertView, final ViewGroup parent) {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }

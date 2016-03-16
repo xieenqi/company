@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
@@ -29,17 +28,25 @@ import java.util.Date;
 @EActivity(R.layout.activity_project_description)
 public class ProjectDescriptionActivity extends BaseActivity {
 
-    @ViewById TextView tv_managers;
-    @ViewById TextView tv_members;
+    @ViewById
+    TextView tv_managers;
+    @ViewById
+    TextView tv_members;
 
-    @ViewById TextView tv_title;
-    @ViewById TextView tv_extra;
-    @ViewById TextView tv_content;
+    @ViewById
+    TextView tv_title;
+    @ViewById
+    TextView tv_extra;
+    @ViewById
+    TextView tv_content;
 
-    @ViewById TextView tv_title_1;
-    @ViewById ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    ViewGroup img_title_left;
 
-    @Extra HttpProject project;
+    @Extra
+    HttpProject project;
 
     @AfterViews
     void initViews() {
@@ -48,7 +55,7 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null == project) {
             return;
         }
-        tv_extra.setText(project.creator.getRealname()+" "+MainApp.getMainApp().df2.format(new Date(project.getCreatedAt()))+" 发布");
+        tv_extra.setText(project.creator.getRealname() + " " + MainApp.getMainApp().df2.format(new Date(project.getCreatedAt())) + " 发布");
         tv_title.setText(project.title);
         tv_content.setText(project.content);
         ArrayList<HttpProject.ProjectManaer> responsers = project.managers;
@@ -56,12 +63,12 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null != responsers && !responsers.isEmpty()) {
             StringBuilder managers = new StringBuilder();
             for (int i = 0; i < responsers.size(); i++) {
-                User u=responsers.get(i).user;
-                if(null==u){
+                User u = responsers.get(i).user;
+                if (null == u) {
                     continue;
                 }
                 managers.append(responsers.get(i).user.getRealname());
-                if (i !=responsers.size() - 1) {
+                if (i != responsers.size() - 1) {
                     managers.append(",");
                 }
             }
@@ -71,12 +78,12 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null != members && !members.isEmpty()) {
             StringBuilder subMembers = new StringBuilder();
             for (int i = 0; i < members.size(); i++) {
-                User u=members.get(i).user;
-                if(null==u){
+                User u = members.get(i).user;
+                if (null == u) {
                     continue;
                 }
                 subMembers.append(members.get(i).user.getRealname());
-                if (i !=members.size() - 1) {
+                if (i != members.size() - 1) {
                     subMembers.append(",");
                 }
             }
@@ -85,7 +92,7 @@ public class ProjectDescriptionActivity extends BaseActivity {
     }
 
     @Click(R.id.img_title_left)
-    void onClick(View v) {
+    void onClick(final View v) {
         app.finishActivity(this, MainApp.ENTER_TYPE_TOP, 0, null);
     }
 

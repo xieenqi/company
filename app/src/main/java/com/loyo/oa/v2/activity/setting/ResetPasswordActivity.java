@@ -34,11 +34,16 @@ import retrofit.client.Response;
  */
 @EActivity(R.layout.activity_reset_password)
 public class ResetPasswordActivity extends BaseActivity {
-    @ViewById ViewGroup img_title_left;
-    @ViewById TextView tv_title_1;
-    @ViewById Button btn_submit;
-    @ViewById EditText et_new_password, et_confirm_new_password;
-    @Extra String tel;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    Button btn_submit;
+    @ViewById
+    EditText et_new_password, et_confirm_new_password;
+    @Extra
+    String tel;
 
     @AfterViews
     void initUI() {
@@ -66,23 +71,23 @@ public class ResetPasswordActivity extends BaseActivity {
             return;
         }
 
-        if(!TextUtils.equals(newPassword,confirmNewPassword)){
+        if (!TextUtils.equals(newPassword, confirmNewPassword)) {
             Toast("两次输入的新密码不一致");
             return;
         }
 
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("tel",tel);
-        map.put("password",confirmNewPassword);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("tel", tel);
+        map.put("password", confirmNewPassword);
         RestAdapterFactory.getInstance().build(FinalVariables.URL_RESET_PASSWORD).create(IMain.class).resetPassword(map, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 Toast("重置密码成功");
                 onBackPressed();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("重置密码失败");
                 super.failure(error);
             }
@@ -91,7 +96,7 @@ public class ResetPasswordActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT,RESULT_CANCELED,null);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
     }
 
     /**
@@ -100,7 +105,7 @@ public class ResetPasswordActivity extends BaseActivity {
      * @param editText
      * @return
      */
-    private String getText(EditText editText) {
+    private String getText(final EditText editText) {
         return editText.getText().toString().trim();
     }
 

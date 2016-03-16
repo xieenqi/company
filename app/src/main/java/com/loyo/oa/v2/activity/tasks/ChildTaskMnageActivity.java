@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.tasks.ChildTaskAddActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
@@ -18,7 +16,6 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -76,12 +73,12 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
     }
 
     @Override
-    public void onRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(final PullToRefreshBase refreshView) {
 
     }
 
     @Click({R.id.img_title_left, R.id.iv_child_task_add})
-    void onClick(View view) {
+    void onClick(final View view) {
         switch (view.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
@@ -91,7 +88,8 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
                 b.putSerializable("Task", mTask);
                 MainApp.getMainApp().startActivityForResult(this, ChildTaskAddActivity_.class, MainApp.ENTER_TYPE_BUTTOM, REQUEST_ADD_CHILD_TASK, b);
                 break;
-
+            default:
+                break;
         }
     }
 
@@ -102,17 +100,17 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
         }
 
         @Override
-        public TaskCheckPoint getItem(int i) {
+        public TaskCheckPoint getItem(final int i) {
             return mChildTasks == null || mChildTasks.isEmpty() ? null : mChildTasks.get(i);
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(final int i) {
             return i;
         }
 
         @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
+        public View getView(final int position, View view,final ViewGroup viewGroup) {
             final TaskCheckPoint point = getItem(position);
             if (null == point) {
                 return null;
@@ -133,7 +131,7 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     if (null == point || null == point.getResponsiblePerson() || null == MainApp.user) {
                         return;
                     }
@@ -158,7 +156,7 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -198,7 +196,9 @@ public class ChildTaskMnageActivity extends BaseActivity implements PullToRefres
                         }
                     }
                 }
+                break;
 
+            default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);

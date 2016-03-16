@@ -43,7 +43,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
     private String tagItemIds;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_activities_add);
 
@@ -99,7 +99,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
-            public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
+            public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
                 String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                 tv_remain_time.setText(str);
             }
@@ -108,7 +108,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
@@ -144,19 +144,23 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
                     @Override
-                    public void success(SaleActivity saleActivity, Response response) {
+                    public void success(final SaleActivity saleActivity, final Response response) {
                         onBackOk(saleActivity);
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         super.failure(error);
                         HttpErrorCheck.checkError(error);
                     }
                 });
 
                 break;
+            default:
+
+                break;
         }
+
     }
 
     /**
@@ -164,7 +168,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
      *
      * @param activity
      */
-    public void onBackOk(SaleActivity activity) {
+    public void onBackOk(final SaleActivity activity) {
         isSave = false;
         Intent intent = new Intent();
         intent.putExtra("data", activity);
@@ -196,7 +200,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
      * @param tags
      * @return
      */
-    private String getSaleTypes(ArrayList<CommonTag> tags) {
+    private String getSaleTypes(final ArrayList<CommonTag> tags) {
         if (null == tags || tags.isEmpty()) {
             return "";
         }
@@ -213,7 +217,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (null == data || resultCode != RESULT_OK) {
             return;
@@ -223,6 +227,9 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 ArrayList<CommonTag> tags = (ArrayList<CommonTag>) data.getSerializableExtra("data");
                 tv_sale_action.setText(getSaleTypes(tags));
                 tagItemIds = tags.get(0).getId();
+                break;
+            default:
+
                 break;
         }
     }

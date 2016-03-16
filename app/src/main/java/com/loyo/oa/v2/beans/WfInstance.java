@@ -1,9 +1,10 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WfInstance extends BaseBeans {
+public class WfInstance extends BaseBeans implements Serializable{
 
 
     public final static int STATUS_NEW = 1;
@@ -35,6 +36,7 @@ public class WfInstance extends BaseBeans {
     public BizExtData bizExtData;
     public boolean ack;
     public Demand demand;
+    public ProjectInfoName ProjectInfo;
 
     @Override
     String getOrderStr() {
@@ -59,6 +61,12 @@ public class WfInstance extends BaseBeans {
         public String memo;
         public String unit;
         public String productName;
+        public String customerName;
+
+    }
+
+    public class ProjectInfoName implements Serializable{
+        public String title;
 
     }
 }

@@ -21,7 +21,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 public class WelcomeActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
@@ -42,17 +42,17 @@ public class WelcomeActivity extends BaseActivity {
             }
 
             @Override
-            public boolean isViewFromObject(View view, Object o) {
+            public boolean isViewFromObject(final View view, final Object o) {
                 return view == o;
             }
 
             @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
+            public void destroyItem(final ViewGroup container, final int position, final Object object) {
                 container.removeView((View) object);
             }
 
             @Override
-            public Object instantiateItem(ViewGroup container, final int position) {
+            public Object instantiateItem(final ViewGroup container, final int position) {
                 View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_welcome, container, false);
                 container.addView(view);
                 ImageView imageView = (ImageView) view.findViewById(R.id.welcomeImage);
@@ -62,7 +62,7 @@ public class WelcomeActivity extends BaseActivity {
                     buttonOk.setVisibility(View.VISIBLE);
                     buttonOk.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(final View v) {
                             Intent intent = new Intent();
                             intent.setClass(WelcomeActivity.this,
                                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);

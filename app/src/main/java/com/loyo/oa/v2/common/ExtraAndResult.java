@@ -29,6 +29,7 @@ public class ExtraAndResult {
     public static final String STR_SUPER_NAME = "super_name";
 
     public static final String WELCOM_KEY = "welcom_key";
+    public static final String USER_PERMISSION = "user_permission";
 
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;
