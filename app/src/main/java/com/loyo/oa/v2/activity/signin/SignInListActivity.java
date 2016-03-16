@@ -113,7 +113,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
                 LegWork legWork = legWorks.get(i - 1);
                 previewLegwork(legWork);
             }
@@ -134,7 +134,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
-            public void success(PaginationX<LegWork> paginationX, Response response) {
+            public void success(final PaginationX<LegWork> paginationX, final Response response) {
                 LogUtil.d(" 拜访签到列表数据： "+MainApp.gson.toJson(paginationX));
                 workPaginationX = paginationX;
                 lv.onRefreshComplete();
@@ -146,7 +146,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 lv.onRefreshComplete();
                 super.failure(error);
@@ -159,7 +159,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
      *
      * @param legWork
      */
-    private void previewLegwork(LegWork legWork) {
+    private void previewLegwork(final LegWork legWork) {
         Intent intent = new Intent(this, SignInfoActivity.class);
         intent.putExtra(LegWork.class.getName(), legWork);
         intent.putExtra("mCustomer", mCustomer);
@@ -168,7 +168,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != FinalVariables.REQUEST_CREATE_LEGWORK || resultCode != Activity.RESULT_OK || null == data) {
             return;
@@ -178,14 +178,14 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         workPaginationX.setPageIndex(1);
         isTopAdd = true;
         getData();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         workPaginationX.setPageIndex(workPaginationX.getPageIndex() + 1);
         getData();
