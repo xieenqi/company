@@ -84,7 +84,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         initFragments();
         layout_category.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
             }
         });
@@ -124,7 +124,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         lv_customer_category.setAdapter(mCategoryAdapter);
         lv_customer_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 changeCategoryView();
                 String content = CUSTOMER_FILTER_STRS[position];
                 setTitle(content);
@@ -150,7 +150,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         changeCategoryView();
     }
 
-    void changeChild(int index) {
+    void changeChild(final int index) {
         if (index != mIndex) {
             mIndex = index;
             fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(index)).commit();
@@ -187,7 +187,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragments.get(0).onActivityResult(requestCode, resultCode, data);
     }

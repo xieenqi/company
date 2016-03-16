@@ -141,7 +141,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(id, new RCallback<Customer>() {
             @Override
-            public void success(Customer customer, Response response) {
+            public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
                 LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
                 ownErId = customer.owner.id;
@@ -152,7 +152,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 cancelLoading();
                 finish();
@@ -218,7 +218,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     /**
      * 判断是否是参与人
      */
-    public boolean isMenber(Customer mCustomer) {
+    public boolean isMenber(final Customer mCustomer) {
         for (Member element : mCustomer.members) {
             if (MainApp.user.id.equals(element.getUser().getId())) {
                 return true;
@@ -242,7 +242,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         btnUpdate.setText("投入公海");
         btn_child_delete_task.setText("删除");
         /*超级管理员 才能删除客户*/
-        if(!MainApp.user.isSuperUser()){
+        if (!MainApp.user.isSuperUser()) {
             btn_child_delete_task.setVisibility(View.GONE);
         }
         btn_child_delete_task.setOnTouchListener(Global.GetTouch());
@@ -256,7 +256,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         menuView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(final View view, final MotionEvent motionEvent) {
                 popupWindow.dismiss();
                 return false;
             }
@@ -275,17 +275,21 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     private class PopuOnClickListener implements View.OnClickListener {
         private PopupWindow mWindow;
 
-        PopuOnClickListener(PopupWindow window) {
+        PopuOnClickListener(final PopupWindow window) {
             mWindow = window;
         }
+
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             switch (view.getId()) {
                 case R.id.btn_child_delete_task:
-                    setPopView(true,"你确定要删除客户?");
+                    setPopView(true, "你确定要删除客户?");
                     break;
                 case R.id.btn_child_add_update:
-                    setPopView(false,"投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                    setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
+                    break;
+                default:
+
                     break;
             }
             mWindow.dismiss();
@@ -294,17 +298,17 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     /**
      * 提示弹出框
-     * */
-    private void setPopView(final boolean isKind,String message){
+     */
+    private void setPopView(final boolean isKind, final String message) {
 
         showGeneralDialog(true, true, message);
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if(isKind){
+            public void onClick(final View view) {
+                if (isKind) {
                     delete();
-                }else{
+                } else {
                     toPublic();
                 }
             }
@@ -312,7 +316,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -325,12 +329,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     private void delete() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
             @Override
-            public void success(Customer newCustomer, Response response) {
+            public void success(final Customer newCustomer, final Response response) {
                 app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, new Intent());
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 Toast("删除客户失败");
             }
@@ -343,7 +347,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     private void toPublic() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(mCustomer.getId(), new RCallback<Customer>() {
             @Override
-            public void success(Customer newCustomer, Response response) {
+            public void success(final Customer newCustomer, final Response response) {
                 //getData();
                 isPutOcen = true;
                 Intent intent = new Intent();
@@ -352,7 +356,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -360,8 +364,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment,R.id.layout_wiretel_call})
-    void onClick(View view) {
+            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call})
+    void onClick(final View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
         int requestCode = -1;
@@ -392,12 +396,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
-                    public void success(Customer newCustomer, Response response) {
+                    public void success(final Customer newCustomer, final Response response) {
                         app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, new Intent());
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         finish();
                     }
@@ -456,9 +460,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 bundle.putInt("fromPage", Common.CUSTOMER_PAGE);
                 bundle.putSerializable("uuid", mCustomer.uuid);
                 bundle.putSerializable("goneBtn", 1);
-                bundle.putInt("bizType",6);
+                bundle.putInt("bizType", 6);
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
+                break;
+            default:
+
                 break;
         }
         if (null != _class && requestCode != -1) {
@@ -474,12 +481,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * @param requestCode
      */
 
-    private void goToChild(Bundle b, Class<?> _class, int requestCode) {
+    private void goToChild(final Bundle b, final Class<?> _class, final int requestCode) {
         app.startActivityForResult(this, _class, MainApp.ENTER_TYPE_RIGHT, requestCode, b);
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 
@@ -496,10 +503,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-          case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
+            case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
             case FinalVariables.REQUEST_PREVIEW_DEMANDS:
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
@@ -509,6 +516,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
                 getData();
+                break;
+            default:
+
                 break;
         }
     }

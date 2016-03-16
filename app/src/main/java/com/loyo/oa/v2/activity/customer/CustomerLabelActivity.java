@@ -55,14 +55,14 @@ public class CustomerLabelActivity extends BaseActivity {
         expand_listview_label.setAdapter(adapter);
         expand_listview_label.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+            public boolean onGroupClick(final ExpandableListView parent, final View v, final int groupPosition, final long id) {
                 return true;
             }
         });
 
         expand_listview_label.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+            public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
                 TagItem tagItem = (TagItem) adapter.getChild(groupPosition, childPosition);
                 if (tagItem.isChecked()) {
                     tagItem.setIsChecked(false);
@@ -100,7 +100,7 @@ public class CustomerLabelActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).GetTags(new RCallback<ArrayList<Tag>>() {
             @Override
-            public void success(ArrayList<Tag> _tags, Response response) {
+            public void success(final ArrayList<Tag> _tags, final Response response) {
                 tags = _tags;
                 handler.sendEmptyMessage(0);
             }
@@ -118,7 +118,7 @@ public class CustomerLabelActivity extends BaseActivity {
     class LabelsHandler extends BaseHandler {
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             super.handleMessage(msg);
             for (Tag tag : tags) {
                 ArrayList<TagItem> items = tag.getItems();
@@ -182,27 +182,27 @@ public class CustomerLabelActivity extends BaseActivity {
         }
 
         @Override
-        public int getChildrenCount(int groupPosition) {
+        public int getChildrenCount(final int groupPosition) {
             return tags.get(groupPosition).getItems().size();
         }
 
         @Override
-        public Object getGroup(int groupPosition) {
+        public Object getGroup(final int groupPosition) {
             return tags.get(groupPosition);
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
+        public Object getChild(final int groupPosition, final int childPosition) {
             return tags.get(groupPosition).getItems().get(childPosition);
         }
 
         @Override
-        public long getGroupId(int groupPosition) {
+        public long getGroupId(final int groupPosition) {
             return groupPosition;
         }
 
         @Override
-        public long getChildId(int groupPosition, int childPosition) {
+        public long getChildId(final int groupPosition, final int childPosition) {
             return childPosition;
         }
 
@@ -215,7 +215,7 @@ public class CustomerLabelActivity extends BaseActivity {
         Item_info_Child item_info_Child;
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sign_show_group, null);
                 item_info_Group = new Item_info_Group();
@@ -234,7 +234,7 @@ public class CustomerLabelActivity extends BaseActivity {
         }
 
         @Override
-        public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customer_tag, null);
                 item_info_Child = new Item_info_Child();
@@ -253,7 +253,7 @@ public class CustomerLabelActivity extends BaseActivity {
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean isChildSelectable(final int groupPosition, final int childPosition) {
             return true;
         }
     };
