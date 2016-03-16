@@ -94,7 +94,7 @@ public class HttpProject implements Serializable {
     }
 
 
-    public void setManagers(ArrayList<HttpProject.ProjectManaer> managers) {
+    public void setManagers(final ArrayList<HttpProject.ProjectManaer> managers) {
         ArrayList<ProjectManaer> newData = new ArrayList<>();
         for (ProjectManaer element : managers) {
             ProjectManaer pm = new ProjectManaer();
