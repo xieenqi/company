@@ -17,18 +17,17 @@ import org.androidannotations.annotations.EActivity;
  * 时间 : 15/9/7.
  */
 @EActivity(R.layout.activity_project)
-public class ProjectManageActivity extends BaseFragmentActivity{
+public class ProjectManageActivity extends BaseFragmentActivity {
 
     @AfterViews
-    void initUI()
-    {
+    void initUI() {
         setTouchView(-1);
         getSupportFragmentManager().beginTransaction().add(R.id.project_container,
                 Fragment.instantiate(this, ProjectManageFragment.class.getName())).commit();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 }
