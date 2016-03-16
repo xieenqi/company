@@ -22,7 +22,7 @@ public class DepartmentChoose extends BaseActivity {
     RelativeLayout img_title_right;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_choose);
         initUI();
@@ -39,7 +39,7 @@ public class DepartmentChoose extends BaseActivity {
         lv_deptList.setAdapter(adapter);
         lv_deptList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
                 Intent intent=new Intent();
                 intent.putExtra(DepartmentChoose.class.getName(), adapter.getData().get(position));
                 app.finishActivity(DepartmentChoose.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -49,10 +49,13 @@ public class DepartmentChoose extends BaseActivity {
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
                     app.finishActivity(DepartmentChoose.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    break;
+
+                default:
                     break;
             }
         }
