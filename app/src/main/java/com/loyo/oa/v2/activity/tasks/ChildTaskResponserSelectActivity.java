@@ -35,8 +35,7 @@ import java.util.HashMap;
  * 时间 : 15/7/21.
  */
 @EActivity(R.layout.layout_customer_select)
-public class ChildTaskResponserSelectActivity extends BaseActivity
-{
+public class ChildTaskResponserSelectActivity extends BaseActivity {
     @Extra("users")
     ArrayList<NewUser> mUsers;
     private UserListAdapter adapter;
@@ -46,24 +45,21 @@ public class ChildTaskResponserSelectActivity extends BaseActivity
     ViewGroup img_title_left;
 
     @Click(R.id.img_title_left)
-    void onClick()
-    {
-        MainApp.getMainApp().finishActivity(this,MainApp.ENTER_TYPE_LEFT,RESULT_CANCELED,null);
+    void onClick() {
+        MainApp.getMainApp().finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
     }
 
     @AfterViews
-    void initUi()
-    {
+    void initUi() {
         img_title_left.setOnTouchListener(Global.GetTouch());
-        ((TextView)findViewById(R.id.tv_title_1)).setText("选择");
-        if(null==mUsers)
-            mUsers=new ArrayList<NewUser>();
-        adapter=new UserListAdapter();
+        ((TextView) findViewById(R.id.tv_title_1)).setText("选择");
+        if (null == mUsers)
+            mUsers = new ArrayList<NewUser>();
+        adapter = new UserListAdapter();
         usersListeView.setAdapter(adapter);
         usersListeView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
+            public void onItemClick(final AdapterView<?> adapterView,final View view,final int i,final long l) {
                 UserListAdapter.Item_info item_info = (UserListAdapter.Item_info) view.getTag();
                 //在每次获取点击的item时将对于的checkbox状态改变，同时修改map的值。
                 item_info.cBox.toggle();
@@ -77,18 +73,12 @@ public class ChildTaskResponserSelectActivity extends BaseActivity
         usersListeView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
-    public class UserListAdapter extends BaseAdapter
-    {
-
+    public class UserListAdapter extends BaseAdapter {
         LayoutInflater layoutInflater;
-
-        HashMap<Integer, Boolean> isSelected =new  HashMap<Integer, Boolean>();
-
+        HashMap<Integer, Boolean> isSelected = new HashMap<Integer, Boolean>();
         private Item_info item_info;
-        public int isSelected_radio_child = -1;
-
         public UserListAdapter() {
-            layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //这儿定义isSelected这个map是记录每个listitem的状态，初始状态全部为false。
             for (int i = 0; i < mUsers.size(); i++) {
                 isSelected.put(i, false);
@@ -101,20 +91,17 @@ public class ChildTaskResponserSelectActivity extends BaseActivity
         }
 
         @Override
-        public Object getItem(int i)
-        {
-            return mUsers.isEmpty()?null:mUsers.get(i);
+        public Object getItem(int i) {
+            return mUsers.isEmpty() ? null : mUsers.get(i);
         }
 
         @Override
-        public long getItemId(int i)
-        {
+        public long getItemId(int i) {
             return i;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
+        public View getView(final int position,View convertView,final ViewGroup parent) {
             if (convertView == null) {
                 convertView = layoutInflater.inflate(R.layout.item_usergroup_child, null);
                 item_info = new Item_info();

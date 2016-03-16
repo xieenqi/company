@@ -17,7 +17,7 @@ public class WorkReportsManageActivity extends BaseFragmentActivity {
     WorkReportsManageFragment workReportsManageFragment = new WorkReportsManageFragment();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workreports_manage);
         initUI();
@@ -36,7 +36,7 @@ public class WorkReportsManageActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

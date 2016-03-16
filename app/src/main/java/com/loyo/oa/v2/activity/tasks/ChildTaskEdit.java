@@ -46,7 +46,7 @@ public class ChildTaskEdit extends BaseActivity {
     private boolean isReponser;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_child_edit);
         initView();
@@ -91,7 +91,7 @@ public class ChildTaskEdit extends BaseActivity {
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             switch (v.getId()) {
 
                 /*返回*/
@@ -116,6 +116,9 @@ public class ChildTaskEdit extends BaseActivity {
                 case R.id.btn_delete:
                     deleteChildTask();
                     break;
+
+                default:
+                    break;
             }
         }
     };
@@ -130,12 +133,12 @@ public class ChildTaskEdit extends BaseActivity {
 
         app.getRestAdapter().create(ICheckPoint.class).updateChildTaskInfo(TaskId, data.getId(), parmas, new RCallback<TaskCheckPoint>() {
             @Override
-            public void success(TaskCheckPoint taskCheckPoint, Response response) {
+            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("更新子任务成功");
                 MainApp.getMainApp().finishActivity(ChildTaskEdit.this, MainApp.ENTER_TYPE_TOP,RESULT_OK,new Intent());
             }
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("更新子任务失败");
                 LogUtil.d(error.getUrl()+"   错误信息 "+error.getMessage()+" 热舞id "+ MainApp.gson.toJson(data));
                 super.failure(error);
@@ -149,13 +152,13 @@ public class ChildTaskEdit extends BaseActivity {
     private void deleteChildTask(){
         app.getRestAdapter().create(ICheckPoint.class).deleteChildTaskInfo(TaskId, data.getId(), new RCallback<TaskCheckPoint>() {
             @Override
-            public void success(TaskCheckPoint taskCheckPoint, Response response) {
+            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("删除子任务成功");
                 MainApp.getMainApp().finishActivity(ChildTaskEdit.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, new Intent());
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("删除子任务失败");
                 super.failure(error);
             }
@@ -172,7 +175,7 @@ public class ChildTaskEdit extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK&&requestCode==300){
             newUser=(NewUser) data.getSerializableExtra("user");
@@ -181,7 +184,7 @@ public class ChildTaskEdit extends BaseActivity {
     }
 
     /*返回监听*/
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(final int keyCode,final KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
