@@ -37,27 +37,28 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
     Context context;
     HashMap<Integer, Item_info> views = new HashMap<>();
 
-    public BizFormFieldsListViewAdapter(Context _context, ArrayList<BizFormFields> lstData) {
+    public BizFormFieldsListViewAdapter(final Context _context, final ArrayList<BizFormFields> lstData) {
         this.lstData = lstData;
         this.context = _context;
         map_Values = new HashMap<String, Object>();
     }
-    public ArrayList<BizFormFields> getLstData()
-    {
+
+    public ArrayList<BizFormFields> getLstData() {
         return lstData;
     }
+
     @Override
     public int getCount() {
         return lstData.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return lstData.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
@@ -121,13 +122,13 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
                 item_info.value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 //                item_info.value.setHint(R.string.app_please_input);
             }
-            if(!bizFormFields.isRequired())
+            if (!bizFormFields.isRequired())
                 item_info.value.setHint("");
 //            if(!map_Values.keySet().contains((int)bizFormFields.getBizformId()))
 //            if(map_Values.isEmpty())
 //                map_Values.put((int)bizFormFields.getId(),"");
 
-            item_info.value.setText((String)map_Values.get(bizFormFields.getId()));
+            item_info.value.setText((String) map_Values.get(bizFormFields.getId()));
 
             item_info.tv_label.setText(bizFormFields.getName() + "：");
         }
@@ -156,13 +157,13 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
     private class BizFiedTextWatcher implements TextWatcher {
         private int position;
 
-        private BizFiedTextWatcher(int position) {
+        private BizFiedTextWatcher(final int position) {
             this.position = position;
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-            Log.e(getClass().getSimpleName(),"afterTextChanged, s : "+s.toString());
+        public void afterTextChanged(final Editable s) {
+            Log.e(getClass().getSimpleName(), "afterTextChanged, s : " + s.toString());
             if (s.toString().length() > 0) {
                 map_Values.put(lstData.get(position).getId(), s.toString());
             } else {
@@ -174,12 +175,12 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
 
         }
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
 
         }
     }
@@ -187,12 +188,12 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
     private class ValueOnClickListener_list implements View.OnClickListener {
         AlertDialog dialog_Wheel_one;
 
-        private ValueOnClickListener_list(AlertDialog _dialog, int position) {
+        private ValueOnClickListener_list(final AlertDialog _dialog, final int position) {
             this.dialog_Wheel_one = _dialog;
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (dialog_Wheel_one != null && !dialog_Wheel_one.isShowing()) {
                 dialog_Wheel_one.show();
             }
@@ -203,13 +204,13 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
         private TextView textView;
         private int position;
 
-        private ValueOnClickListener_dateTime(TextView textView, int position) {
+        private ValueOnClickListener_dateTime(final TextView textView, final int position) {
             this.textView = textView;
             this.position = position;
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (!ClickTool.isDoubleClick()) {
                 DateTool.calendar = Calendar.getInstance();
                 final DateTool.DateSetListener_Datetool dateListener = new DateTool.DateSetListener_Datetool(
@@ -222,20 +223,19 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
 
                     @Override
                     public boolean onClick_onTimeSet() {
-                        map_Values.put( lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
+                        map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
 //                        mainApplication.logUtil.d("map_Values.put(" + (int) mListData.get(position).getId() + "," + dateListener.strDate + dateListener.strTime + ")");
                         return false;
                     }
                 });
 
-                DateTimePickDialog dateTimePickDialog=new DateTimePickDialog(context,null);
+                DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(context, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
-                    public void onDateTimeChanged(int year, int month, int day, int hour, int min)
-                    {
+                    public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
 
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-"
-                                + String.format("%02d", day)+String.format(" %02d",hour)+String.format(":%02d",min);
+                                + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
                         map_Values.put(lstData.get(position).getId(), str);
 
@@ -254,7 +254,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
 
     AlertDialog dialog;
 
-    AlertDialog initDialog_Wheel_one(final TextView textView, String src, int position) {
+    AlertDialog initDialog_Wheel_one(final TextView textView, final String src, final int position) {
 
         String[] str = src.split(",");
         final ArrayList<HashMap<String, String>> lstData1 = new ArrayList<HashMap<String, String>>();
@@ -273,19 +273,19 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
             }
 
             @Override
-            public Object getItem(int position) {
+            public Object getItem(final int position) {
                 return lstData1.get(position);
             }
 
             @Override
-            public long getItemId(int position) {
+            public long getItemId(final int position) {
                 return position;
             }
 
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(final int position, View convertView, final ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(context).inflate(R.layout.item_listview_product_select, parent,false);
+                    convertView = LayoutInflater.from(context).inflate(R.layout.item_listview_product_select, parent, false);
                 }
 
                 TextView tv = (TextView) convertView.findViewById(R.id.tv);
@@ -301,7 +301,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
         listView_follow.setAdapter(followAdapter);
         listView_follow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 map_Values.put(lstData1.get(position).get("id"),
                         lstData1.get(position).get("title"));
 

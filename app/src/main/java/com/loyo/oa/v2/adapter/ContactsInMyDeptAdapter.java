@@ -31,7 +31,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     private Context mContext;
     private StringBuffer deptName;
 
-    public ContactsInMyDeptAdapter(Context mContext, List<User> list) {
+    public ContactsInMyDeptAdapter(final Context mContext, final List<User> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -40,15 +40,15 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         return this.list.size();
     }
 
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return list.get(position);
     }
 
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
-    public View getView(final int position, View view, ViewGroup arg2) {
+    public View getView(final int position, View view, final ViewGroup arg2) {
 
         ViewHolder viewHolder = null;
         final User mContent = list.get(position);
@@ -84,7 +84,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         return view;
     }
 
-    final static class ViewHolder {
+    static final class ViewHolder {
 
         TextView deptInf;
         TextView tvLetter;
@@ -93,11 +93,11 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
     }
 
-    public int getSectionForPosition(int position) {
+    public int getSectionForPosition(final int position) {
         return list.get(position).getSortLetters().charAt(0);
     }
 
-    public int getPositionForSection(int section) {
+    public int getPositionForSection(final int section) {
         for (int i = 0; i < getCount(); i++) {
             String sortStr = list.get(i).getSortLetters();
             char firstChar = sortStr.toUpperCase().charAt(0);
@@ -109,7 +109,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         return -1;
     }
 
-    private String getAlpha(String str) {
+    private String getAlpha(final String str) {
         String sortStr = str.trim().substring(0, 1).toUpperCase();
         if (sortStr.matches("[A-Z]")) {
             return sortStr;

@@ -121,7 +121,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             adapter.setData(pagingGroupDatas);
             adapter.notifyDataSetChanged();
         }
-
         expand();
     }
 
@@ -144,7 +143,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", taskPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? tasks.size() >= 20 ? tasks.size() : 20 : 20);
-
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getList(map).
                 observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<PaginationX<Task>>() {
