@@ -61,7 +61,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     public boolean isTopAdd = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_search);
         mContext = this;
@@ -76,7 +76,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         //getNearCustomersInfo();
         findViewById(R.id.img_title_left).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 onBackPressed();
             }
         });
@@ -85,7 +85,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     doSearch();
                 }
@@ -95,17 +95,17 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
         edt_search.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(final Editable editable) {
                 if (edt_search.length() == 0) {
                     tv_search.setText("取消");
                 } else {
@@ -118,7 +118,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         /*搜索操作*/
         findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 doSearch();
             }
         });
@@ -132,7 +132,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         /**列表监听器*/
         expandableListView_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long l) {
                 returnData(position - 1);
             }
         });
@@ -146,7 +146,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     private void getNearCustomersInfo() {
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 LogUtil.dll("附近");
                 position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
                 String url = FinalVariables.QUERY_NEAR_CUSTOMERS_SELF;
@@ -184,11 +184,11 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     /**
      * 请求体
      */
-    void dataRequestvoid(String url, HashMap<String, Object> params) {
+    void dataRequestvoid(final String url, final HashMap<String, Object> params) {
         Utils.dialogShow(mContext, "请稍候");
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
-            public void success(PaginationX<Customer> customerPaginationX, Response response) {
+            public void success(final PaginationX<Customer> customerPaginationX, final Response response) {
                 Utils.dialogDismiss();
                 HttpErrorCheck.checkResponse(response);
                 expandableListView_search.onRefreshComplete();
@@ -225,7 +225,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 expandableListView_search.onRefreshComplete();
                 Utils.dialogDismiss();
@@ -245,7 +245,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
         paginationX.setPageIndex(1);
         if (kalo == 0) {
@@ -256,7 +256,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         paginationX.setPageIndex(paginationX.getPageIndex() + 1);
         if (kalo == 0) {
@@ -271,7 +271,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     }
 
 
-    protected void returnData(int position) {
+    protected void returnData(final int position) {
         Intent intent = new Intent();
         intent.putExtra("data", lstData.get(position));
         setResult(RESULT_OK, intent);
@@ -292,17 +292,17 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
         }
 
         @Override
-        public Object getItem(int i) {
+        public Object getItem(final int i) {
             return lstData.get(i);
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(final int i) {
             return i;
         }
 
         @Override
-        public View getView(int i, View convertView, ViewGroup viewGroup) {
+        public View getView(final int i, View convertView, final ViewGroup viewGroup) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
             }
