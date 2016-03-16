@@ -69,7 +69,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Animation animation;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         super.setTitle("拜访签到");
@@ -130,7 +130,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
-            public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
                 img_refresh_address.clearAnimation();
                 animation.reset();
                 mLat = latitude;
@@ -167,7 +167,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
 
             case R.id.img_title_left:
@@ -191,6 +191,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             /*地址更新*/
             case R.id.img_refresh_address:
                 startLocation();
+                break;
+            default:
+
                 break;
         }
     }
@@ -222,7 +225,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSignIn(map, new RCallback<LegWork>() {
             @Override
-            public void success(LegWork legWork, Response response) {
+            public void success(final LegWork legWork, final Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
                 cancelLoading();
                 if (legWork != null) {
@@ -241,7 +244,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 cancelLoading();
                 HttpErrorCheck.checkError(error);
@@ -255,7 +258,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> attachments, Response response) {
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
                 LogUtil.dll("获取附件成功 result:" + MainApp.gson.toJson(attachments));
                 LogUtil.dll("success code:" + response.getStatus());
                 lstData_Attachment = attachments;
@@ -263,7 +266,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("获取附件失败");
                 LogUtil.dll("failure code:" + error.getResponse().getStatus());
             }
@@ -271,7 +274,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (data == null || resultCode != RESULT_OK) {
             return;
         }
@@ -294,7 +297,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                                 /**上传附件*/
                                 Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
-                                    public void onNext(Serializable serializable) {
+                                    public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
                                 });
@@ -315,14 +318,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     map.put("uuid", uuid);
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                         @Override
-                        public void success(Attachment attachment, Response response) {
+                        public void success(final Attachment attachment, final Response response) {
                             Toast("删除附件成功!");
                             lstData_Attachment.remove(delAttachment);
                             init_gridView_photo();
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void failure(final RetrofitError error) {
                             Toast("删除附件失败!");
                             super.failure(error);
                         }
@@ -340,6 +343,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 }
                 tv_customer_name.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                 break;
+            default:
+
+                break;
         }
     }
 
@@ -349,7 +355,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
