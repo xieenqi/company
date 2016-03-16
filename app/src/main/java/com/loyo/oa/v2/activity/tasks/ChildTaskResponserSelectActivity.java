@@ -91,12 +91,12 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
         }
 
         @Override
-        public Object getItem(int i) {
+        public Object getItem(final int i) {
             return mUsers.isEmpty() ? null : mUsers.get(i);
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(final int i) {
             return i;
         }
 

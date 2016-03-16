@@ -54,7 +54,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     private PaginationX<Task> taskPaginationX = new PaginationX<>(20);
     private ArrayList<Task> tasks = new ArrayList<>();
     protected ArrayList<PagingGroupData_<Task>> pagingGroupDatas = new ArrayList<>();
-
     private CommonExpandableListAdapter adapter;
     private boolean isTopAdd;
     private boolean isChanged;

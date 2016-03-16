@@ -198,7 +198,6 @@ public class WorkReportAddActivity extends BaseActivity {
         });
 
         if (null != mWorkReport) {
-            LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
                 uuid = mWorkReport.getAttachmentUUId();
@@ -336,11 +335,10 @@ public class WorkReportAddActivity extends BaseActivity {
      * 获取附件(编辑)
      */
     private void getEditAttachments() {
-        showLoading("");
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments,final Response response) {
-                cancelLoading();
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -348,7 +346,6 @@ public class WorkReportAddActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
