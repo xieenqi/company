@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.activity.wfinstance;
 
 import android.content.Intent;
-
-import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -11,14 +9,13 @@ import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.HashMap;
 
 
 public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstance> {
 
     @Override
-    protected void openDetail(int position) {
+    protected void openDetail(final int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, WfinstanceInfoActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, (adapter.getItem(position)).getId());
