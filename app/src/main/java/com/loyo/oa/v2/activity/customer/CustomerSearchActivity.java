@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -9,6 +10,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+
 import java.util.HashMap;
 
 public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
@@ -18,14 +20,14 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBundle = getIntent().getExtras();
         customerType = mBundle.getInt(ExtraAndResult.EXTRA_TYPE);
     }
 
     @Override
-    protected void openDetail(int position) {
+    protected void openDetail(final int position) {
         Intent intent = new Intent();
         intent.setClass(mContext, CustomerDetailInfoActivity_.class);
         intent.putExtra("Customer", adapter.getItem(position));
@@ -36,7 +38,7 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
     @Override
     public void getData() {
 
-        Utils.dialogShow(this,"请稍候");
+        Utils.dialogShow(this, "请稍候");
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
         HashMap<String, Object> params = new HashMap<>();
 
@@ -53,6 +55,9 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
                 break;
             case 3:
                 url = FinalVariables.SEARCH_CUSTOMERS_PUBLIC;
+                break;
+            default:
+
                 break;
         }
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, this);
