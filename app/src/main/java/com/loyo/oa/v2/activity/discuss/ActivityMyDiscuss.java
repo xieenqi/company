@@ -13,12 +13,13 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
-import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
@@ -42,7 +43,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     private ImageView iv_submit;
     private LinearLayoutManager linearLayoutManager;
 
-    private List<DiscussInfo> list = new ArrayList<>();
+    private List<HttpDiscussItem> list = new ArrayList<>();
     private DiscussAdapter adapter;
 
 
@@ -68,19 +69,20 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
 
         adapter = new DiscussAdapter();
-        adapter.updataList(list);
+
         lv_discuss.getRefreshableView().setAdapter(adapter);
     }
 
     private void initData() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", "20");
-        map.put("pageSize", "1");
-        app.getRestAdapter().create(MyDiscuss.class).getDisscussList(map, new RCallback<PaginationX<Bulletin>>() {
-            @Override
-            public void success(PaginationX<Bulletin> pagination, Response response) {
-                HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
+        map.put("pageIndex", "1");
+        map.put("pageSize", "20");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
+                getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
+                    @Override
+                    public void success(PaginationX<HttpDiscussItem> discuss, Response response) {
+                        HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
 //                if (!PaginationX.isEmpty(pagination)) {
 //                    ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
 //                    mPagination = pagination;
@@ -94,16 +96,17 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 //                } else {
 //                    //Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
 //                }
-                lv_discuss.onRefreshComplete();
-            }
+                        adapter.updataList(discuss.getRecords());
+                        lv_discuss.onRefreshComplete();
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                lv_discuss.onRefreshComplete();
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        lv_discuss.onRefreshComplete();
+                    }
+                });
     }
 
     private void assignViews() {
@@ -181,9 +184,9 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
     private class DiscussAdapter extends RecyclerView.Adapter<DiscussViewHolder> {
 
-        private List<DiscussInfo> datas = new ArrayList<>();
+        private List<HttpDiscussItem> datas = new ArrayList<>();
 
-        public void updataList(List<DiscussInfo> data) {
+        public void updataList(List<HttpDiscussItem> data) {
             if (data == null) {
                 data = new ArrayList<>();
             }
@@ -199,10 +202,10 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
         @Override
         public void onBindViewHolder(DiscussViewHolder holder, int position) {
-            DiscussInfo info = datas.get(position);
-            holder.tv_title.setText(info.getTitle());
-            holder.tv_time.setText(info.getTime());
-            holder.tv_content.setText(info.getContent());
+            HttpDiscussItem info = datas.get(position);
+            holder.tv_title.setText(info.title);
+            holder.tv_time.setText(info.updatedAt);
+            holder.tv_content.setText(info.content);
         }
 
         @Override
