@@ -11,16 +11,10 @@ public class HttpMyDiscussItem {
     public String title;
     public int bizType;//1.工作报告 2.任务 5.项目
     public String attachmentUUId;
-    public Creator creator;
+    public HttpCrecter creator;
     //    public String atUsers;
     public boolean viewed;
     public boolean isAt;
     public String createdAt;
     public String updatedAt;
-
-    public class Creator {
-        public String id;
-        public String name;
-        public String avatar;
-    }
 }

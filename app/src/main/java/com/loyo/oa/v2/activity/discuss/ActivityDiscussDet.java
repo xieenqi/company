@@ -23,6 +23,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -30,6 +33,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
+import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -38,10 +42,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,14 +82,9 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     private int mBizType;
     private String mAttachmentUUId;
-    private String mDiscussId;
+    private String bizTypeId;
 
-    public PaginationX<Discussion> mPageDiscussion = new PaginationX<>();
-
-    public static void startThisActivity(Activity act) {
-        Intent intent = new Intent(act, ActivityDiscussDet.class);
-        act.startActivity(intent);
-    }
+    public PaginationX<HttpDiscussDet> mPageDiscussion = new PaginationX<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +99,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private void initData() {
         mBizType = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
         mAttachmentUUId = getIntent().getStringExtra(ExtraAndResult.EXTRA_UUID);
-        mDiscussId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
-
+        bizTypeId = getIntent().getStringExtra(ExtraAndResult.EXTRA_TYPE_ID);
         //获取屏幕高度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
         screenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -113,19 +109,26 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     private void initView() {
         assignViews();
-
         tv_title.setText("讨论");
-        tv_edit.setText("查看项目");
+        switch (mBizType) {
+            case 1:
+                tv_edit.setText("查看报告");
+                break;
+            case 2:
+                tv_edit.setText("查看任务");
+                break;
+            case 5:
+                tv_edit.setText("查看项目");
+                break;
+
+        }
 
         tv_title.setVisibility(View.VISIBLE);
         tv_edit.setVisibility(View.VISIBLE);
-
         linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        // linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
-
         bindDiscussion();
-
         loadMessage();
     }
 
@@ -134,13 +137,11 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
         et_discuss = (EditText) findViewById(R.id.et_discuss);
         tv_send = (TextView) findViewById(R.id.tv_send);
-
         layout_back = (LinearLayout) findViewById(R.id.layout_back);
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_edit = (TextView) findViewById(R.id.tv_edit);
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
-
         rl_root = (RelativeLayout) findViewById(R.id.rl_root);
         ll_scanner = (LinearLayout) findViewById(R.id.rl_scanner);
     }
@@ -150,7 +151,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         ll_scanner.setOnClickListener(this);
         tv_edit.setOnClickListener(this);
         tv_send.setOnClickListener(this);
-
         lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
@@ -167,7 +167,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
             }
         });
-
         et_discuss.addTextChangedListener(new UserScannerTextWatcher()); //监听用户输入
         et_discuss.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -183,10 +182,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                         if (aiTePrefixIndex > -1) {
                             int index = et_discuss.getSelectionStart();
                             Editable editable = et_discuss.getText();
-
                             String delName = str.substring(aiTePrefixIndex + 1, index - 1);
                             delSelectUser(delName);
-
                             editable.delete(aiTePrefixIndex, index);
                             return true;
                         }
@@ -197,20 +194,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         });
     }
 
-    /**
-     * 删除
-     *
-     * @param delName
-     */
-    private void delSelectUser(String delName) {
-        for (int i = 0; i < mHaitSelectUsers.size(); i++) {
-            SelectUser selectUser = mHaitSelectUsers.get(i);
-            if (selectUser.matchName(delName)) {
-                mHaitSelectUsers.remove(i);
-                break;
-            }
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -221,8 +204,26 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             case R.id.rl_scanner:
                 showKeyBoard(et_discuss);
                 break;
-            case R.id.tv_edit:
-                Toast("查看项目");
+            case R.id.tv_edit://查看具体详情
+                Intent intent = new Intent();
+                switch (mBizType) {
+                    case 1:
+                        intent.setClass(ActivityDiscussDet.this, WorkReportsInfoActivity_.class);
+                        intent.putExtra(ExtraAndResult.EXTRA_ID, bizTypeId);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent.setClass(ActivityDiscussDet.this, TasksInfoActivity_.class);
+                        intent.putExtra(ExtraAndResult.EXTRA_ID, bizTypeId);
+                        startActivity(intent);
+                        break;
+                    case 5:
+                        intent.setClass(ActivityDiscussDet.this, ProjectInfoActivity_.class);
+                        intent.putExtra("projectId", bizTypeId);
+                        startActivity(intent);
+                        break;
+
+                }
                 break;
             case R.id.tv_send:
                 String mineMessage = et_discuss.getText().toString().trim();
@@ -243,6 +244,37 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
     }
 
+    /**
+     * 加载讨论信息...
+     */
+    private void loadMessage() {
+        showLoading("");
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("pageIndex", mPageDiscussion.getPageIndex());
+        body.put("pageSize", mPageDiscussion.getPageSize());
+        body.put("attachmentUUId", mAttachmentUUId);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).
+                create(MyDiscuss.class).getDiscussDetail(body, new RCallback<PaginationX<HttpDiscussDet>>() {
+            @Override
+            public void success(PaginationX<HttpDiscussDet> d, Response response) {
+                HttpErrorCheck.checkResponse("讨论详情：", response);
+                if (d == null || d.getRecords().size() == 0) {
+                    Toast("加载失败");
+                    return;
+                }
+                mPageDiscussion.setPageIndex(d.getPageIndex() + 1);
+                mPageDiscussion.getRecords().addAll(d.getRecords());
+                bindDiscussion();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
+            }
+        });
+    }
+
     private Map<Long, String> messages = new HashMap<>();
 
     /**
@@ -253,12 +285,10 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      */
     private void addMineMessge(long time, String mineMessage) {
         messages.put(time, mineMessage);
-
-        Discussion discussion = new Discussion();
-        discussion.setCreator(MainApp.user);
-        discussion.setCreatedAt(time);
-        discussion.setContent(mineMessage);
-
+        HttpDiscussDet discussion = new HttpDiscussDet();
+        //discussion.creator=MainApp.user;
+        discussion.createdAt = time;
+        discussion.content = mineMessage;
         adapter.addMineMessage(discussion);
     }
 
@@ -269,16 +299,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private void sendMessage(final long time, final String message) {
         final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
         HashMap<String, Object> body = new HashMap<>();
-
         //TODO: 添加参数...
-
         body.put("attachmentUUId", mAttachmentUUId);
         body.put("content", message);
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
-
         mHaitSelectUsers.clear();
-
         LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
         t.createDiscussion(body, new RCallback<Discussion>() {
             @Override
@@ -301,6 +327,21 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 }, 800);
             }
         });
+    }
+
+    /**
+     * 删除
+     *
+     * @param delName
+     */
+    private void delSelectUser(String delName) {
+        for (int i = 0; i < mHaitSelectUsers.size(); i++) {
+            SelectUser selectUser = mHaitSelectUsers.get(i);
+            if (selectUser.matchName(delName)) {
+                mHaitSelectUsers.remove(i);
+                break;
+            }
+        }
     }
 
     private String[] getAndClearSelectUser(final String message) {
@@ -329,37 +370,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         return ids.toArray(new String[ids.size()]);
     }
 
-    /**
-     * 加载讨论信息...
-     */
-    private void loadMessage() {
-        final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).
-                create(IDiscuss.class);
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("pageIndex", mPageDiscussion.getPageIndex());
-        body.put("pageSize", mPageDiscussion.getPageSize());
-        body.put("attachmentUUId", mAttachmentUUId);
-        t.getDiscussions(body, new RCallback<PaginationX<Discussion>>() {
-
-            @Override
-            public void success(PaginationX<Discussion> d, Response response) {
-                HttpErrorCheck.checkResponse(response);
-                if (d == null || d.getRecords().size() == 0) {
-                    Toast("加载失败");
-                    return;
-                }
-                mPageDiscussion.setPageIndex(d.getPageIndex() + 1);
-                mPageDiscussion.getRecords().addAll(d.getRecords());
-                bindDiscussion();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-            }
-        });
-    }
 
     private void bindDiscussion() {
         if (adapter == null) {
@@ -545,9 +555,9 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     private class DiscussDetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<Discussion> datas = new ArrayList<>();
+        private List<HttpDiscussDet> datas = new ArrayList<>();
 
-        public void updataList(List<Discussion> data) {
+        public void updataList(List<HttpDiscussDet> data) {
             if (data == null)
                 data = new ArrayList<>();
             this.datas = data;
@@ -555,7 +565,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             scrollToBottom();
         }
 
-        public void addMineMessage(Discussion info) {
+        public void addMineMessage(HttpDiscussDet info) {
             datas.add(info);
             notifyItemChanged(getItemCount());
             scrollToBottom();
@@ -582,17 +592,17 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder == null)
                 return;
-            Discussion info = datas.get(position);
+            HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
-                mineHolder.tvMineTime.setText(info.getCreatedAt() + "");
-                mineHolder.tvContent.setText(info.getContent());
+                mineHolder.tvMineTime.setText(info.createdAt + "");
+                mineHolder.tvContent.setText(info.content);
 //                ImageLoader.getInstance().displayImage(Config_project.);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
-                otherHolder.mTvOtherName.setText(info.getCreator().getRealname());
-                otherHolder.mTvOtherContent.setText(info.getContent());
-                otherHolder.mTvOtherTime.setText(info.getCreatedAt() + "");
+                otherHolder.mTvOtherName.setText(info.creator.name);
+                otherHolder.mTvOtherContent.setText(info.content);
+                otherHolder.mTvOtherTime.setText(info.createdAt + "");
             }
         }
 
@@ -603,8 +613,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
          */
         public void removeAtTime(long time) {
             for (int i = 0; i < getItemCount(); i++) {
-                Discussion discussion = datas.get(i);
-                if (discussion.getCreatedAt() == time) {
+                HttpDiscussDet discussion = datas.get(i);
+                if (discussion.createdAt == time) {
                     datas.remove(i);
                     linearLayoutManager.removeViewAt(i);
                     break;
@@ -614,10 +624,10 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
         public void updata(long time, Discussion discussion) {
             for (int i = 0; i < getItemCount(); i++) {
-                Discussion dis = datas.get(i);
+                HttpDiscussDet dis = datas.get(i);
                 if (discussion.getCreatedAt() == time) {
-                    dis.setId(discussion.getId());
-                    dis.setCreatedAt(discussion.getCreatedAt());
+                    dis.id = discussion.getId();
+                    dis.createdAt = discussion.getCreatedAt();
                     break;
                 }
             }
@@ -630,7 +640,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
         @Override
         public int getItemViewType(int position) {
-            String id = datas.get(position).getCreator().getId();
+            String id = datas.get(position).creator.id;
             boolean isMine = TextUtils.isEmpty(id) ? false : id.equals(MainApp.user.getId());
             return isMine ? DiscussSendMode.mine : DiscussSendMode.other;
         }

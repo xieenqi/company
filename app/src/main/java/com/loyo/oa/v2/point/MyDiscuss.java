@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activity.discuss.HttpDiscussDet;
 import com.loyo.oa.v2.activity.discuss.HttpDiscussItem;
 import com.loyo.oa.v2.activity.discuss.HttpMyDiscussItem;
 import com.loyo.oa.v2.beans.PaginationX;
@@ -33,14 +34,8 @@ public interface MyDiscuss {
     @GET("/discussion/at/query")
     void getMyDisscussList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpMyDiscussItem>> callback);
 
-//    /**
-//     * 发布通知
-//     * @param body
-//     * @param callback
-//     */
-//    @POST("/bulletin")
-//    void publishNotice(@Body HashMap<String, Object> body, Callback<Bulletin> callback);
-//
 
+    @GET("/discussion/query")
+    void getDiscussDetail(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpDiscussDet>> callback);
 
 }
