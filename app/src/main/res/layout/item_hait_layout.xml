@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_8"
         android:layout_marginTop="@dimen/dimen_8"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:singleLine="true"
         android:text=""
         android:textColor="@color/text_black_2"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:text=""
-                android:textColor="@color/text_black_2"
+                android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14" />
 
             <TextView
@@ -62,16 +62,16 @@
                 android:layout_marginTop="@dimen/dimen_8"
                 android:text=""
                 android:textColor="@color/text_black_1"
-                android:textSize="@dimen/text_sp16" />
+                android:textSize="@dimen/text_sp14" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1"
-        android:layout_marginLeft="@dimen/dimen_16"
-        android:background="@color/md_grey_300"></View>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dimen_1"-->
+        <!--android:layout_marginLeft="@dimen/dimen_16"-->
+        <!--android:background="@color/md_grey_300"></View>-->
 
 </LinearLayout>

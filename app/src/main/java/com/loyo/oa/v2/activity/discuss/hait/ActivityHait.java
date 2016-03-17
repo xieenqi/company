@@ -1,9 +1,8 @@
 package com.loyo.oa.v2.activity.discuss.hait;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -20,6 +19,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.activity.discuss.HttpMyDiscussItem;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
@@ -30,6 +30,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +82,6 @@ public class ActivityHait extends BaseActivity {
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_title1 = (TextView) findViewById(R.id.tv_title_1);
-
         lv_myDiscuss = (PullToRefreshRecycleView) findViewById(R.id.lv_myDiscuss);
     }
 
@@ -95,22 +95,16 @@ public class ActivityHait extends BaseActivity {
         lv_myDiscuss.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        lv_myDiscuss.onRefreshComplete();
-                    }
-                }, 2000);
+                pageIndex = 1;
+                isTopAdd = true;
+                getData();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        lv_myDiscuss.onRefreshComplete();
-                    }
-                }, 2000);
+                pageIndex++;
+                isTopAdd = false;
+                getData();
             }
         });
     }
@@ -174,6 +168,8 @@ public class ActivityHait extends BaseActivity {
             holder.tv_time.setText(info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.content);
             holder.tv_title.setText(parseTitle(info.creator.name, info.title));
+            ImageLoader.getInstance().displayImage(info.creator.avatar, holder.iv_avatar);
+            holder.openItem(datas.get(position));
         }
 
         private SpannableStringBuilder parseTitle(String name, String group) {
@@ -212,12 +208,26 @@ public class ActivityHait extends BaseActivity {
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
 
             itemView.setTag(this);
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    ActivityDiscussDet.startThisActivity((Activity) view.getContext());
+//                }
+//            });
+        }
+
+        public void openItem(final HttpMyDiscussItem itemData) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    ActivityDiscussDet.startThisActivity((Activity) view.getContext());
+                public void onClick(View view) {
+                    Intent intent = new Intent(ActivityHait.this, ActivityDiscussDet.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
+                    intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.id);
+                    startActivity(intent);
                 }
             });
+            itemView.setOnTouchListener(Global.GetTouch());
         }
     }
 }

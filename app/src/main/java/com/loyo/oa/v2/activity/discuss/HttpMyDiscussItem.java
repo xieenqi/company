@@ -9,7 +9,7 @@ public class HttpMyDiscussItem {
     public String bizId;
     public String content;
     public String title;
-//    public int bizType;//1.工作报告 2.任务 5.项目
+    public int bizType;//1.工作报告 2.任务 5.项目
     public String attachmentUUId;
     public Creator creator;
     //    public String atUsers;
@@ -21,5 +21,6 @@ public class HttpMyDiscussItem {
     public class Creator {
         public String id;
         public String name;
+        public String avatar;
     }
 }
