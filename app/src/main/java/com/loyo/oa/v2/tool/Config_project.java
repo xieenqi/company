@@ -51,7 +51,6 @@ public class Config_project {
          * statistics 统计
          */
         public static String statistics = "http://stat.ukuaiqi.com";
-
     }
 
     /**

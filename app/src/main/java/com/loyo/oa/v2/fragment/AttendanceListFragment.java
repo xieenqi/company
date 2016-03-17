@@ -479,7 +479,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             TextView tv_state = ViewHolder.get(view, R.id.tv_state);
             TextView tv_time = ViewHolder.get(view, R.id.tv_time);
 
-            ImageView iv_extra = ViewHolder.get(view, R.id.iv_extra);
+            TextView iv_extra = ViewHolder.get(view, R.id.iv_extra);
             ImageView iv_recordIn_type = ViewHolder.get(view, R.id.iv_record_in_type);
             ImageView iv_recordOut_type = ViewHolder.get(view, R.id.iv_record_out_type);
             ImageView divider = ViewHolder.get(view, R.id.devider);
@@ -562,18 +562,26 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 tv_time.setText("--");
             }
 
-            int image = 0;
+            int textColor = 0;
+            int background = 0;
+            String status = "";
 
             /**
              * 请假 出差判断
              * */
             if (outTagstate == 1 || inTagstate == 1) {
                 LogUtil.dll("TagState:"+outTagstate+","+inTagstate);
-                image = R.drawable.icon_ask_overwork;
+                background = R.drawable.attendance_shape_travel;
+                status = "出差";
+                textColor = getResources().getColor(R.color.title_bg1);
             } else if (outTagstate == 2 || inTagstate == 2) {
-                image = R.drawable.icon_ask_for_leave;
+                background = R.drawable.attendance_shape_leave;
+                status = "请假";
+                textColor = getResources().getColor(R.color.redE8);
             }
-            iv_extra.setBackgroundResource(image);
+            iv_extra.setText(status);
+            iv_extra.setBackgroundResource(background);
+            iv_extra.setTextColor(textColor);
             tv_state.setVisibility(isHasIn ? View.VISIBLE : View.GONE);
 
             /**下班卡*/
