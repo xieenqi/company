@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.Bulletin;
+import com.loyo.oa.v2.activity.discuss.HttpDiscussItem;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import retrofit.http.QueryMap;
 
 /**
  * com.loyo.oa.v2.point
- * 通知模块 的接口
+ * 讨论模块 的接口
  * 时间 : 15/8/28.
  */
 public interface MyDiscuss {
@@ -22,7 +22,7 @@ public interface MyDiscuss {
      * @param callback
      */
     @GET("/discussion/subject/query")
-    void getDisscussList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<Bulletin>> callback);
+    void getDisscussList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpDiscussItem>> callback);
 
 //    /**
 //     * 发布通知
