@@ -35,7 +35,7 @@ public class DepartmentListViewAdapter extends BaseAdapter {
     boolean enabled = true;
     int select_type, show_type;
 
-    public DepartmentListViewAdapter(Context _context, ArrayList<Department> lstData, int _select_type, int _show_type) {
+    public DepartmentListViewAdapter(final Context _context, final ArrayList<Department> lstData, final int _select_type, final int _show_type) {
         mInflater = LayoutInflater.from(_context);
         app = MainApp.getMainApp();
         context = _context;
@@ -61,17 +61,17 @@ public class DepartmentListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return listDepartment.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         ViewHolder holder;
 
         if (convertView == null) {
@@ -90,7 +90,7 @@ public class DepartmentListViewAdapter extends BaseAdapter {
         if (enabled) {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     Bundle bundle = new Bundle();
                     bundle.putString(DepartmentUserActivity.STR_SUPER_ID, listDepartment.get(position).getId());
                     bundle.putString(DepartmentUserActivity.STR_SUPER_NAME, listDepartment.get(position).getName());
@@ -115,7 +115,7 @@ public class DepartmentListViewAdapter extends BaseAdapter {
         public TextView tv_title;
     }
 
-    public void setEnabled(boolean _enabled) {
+    public void setEnabled(final boolean _enabled) {
         enabled = _enabled;
     }
 }

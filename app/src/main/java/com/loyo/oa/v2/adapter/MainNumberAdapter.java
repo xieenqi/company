@@ -7,8 +7,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ClickItem;
 import com.loyo.oa.v2.beans.HomeNumber;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
+import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.RippleView;
 import com.readystatesoftware.viewbadger.BadgeView;
 
@@ -19,7 +19,7 @@ public class MainNumberAdapter extends CommonAdapter<ClickItem> {
     MainApp app;
     ArrayList<HomeNumber> mNumbers;
 
-    public MainNumberAdapter(Context context, List<ClickItem> datas, ArrayList<HomeNumber> numbers) {
+    public MainNumberAdapter(final Context context, final List<ClickItem> datas, final ArrayList<HomeNumber> numbers) {
         super(context, datas, R.layout.item_main);
         mNumbers = numbers;
         app = MainApp.getMainApp();
@@ -28,9 +28,9 @@ public class MainNumberAdapter extends CommonAdapter<ClickItem> {
     @Override
     public void convert(final ViewHolder holder, final ClickItem item) {
         for (HomeNumber num : mNumbers) {
-            if ((item.title.equals("报告") && num.getBiz_name().toLowerCase().equals("workreport"))
-                    || (item.title.equals("任务") && num.getBiz_name().toLowerCase().equals("task"))
-                    || (item.title.equals("审批") && num.getBiz_name().toLowerCase().equals("approval"))) {
+            if (("报告".equals(item.title) && "workreport".toLowerCase().equals(num.getBiz_name()))
+                    || ("任务".equals(item.title) && "task".equals(num.getBiz_name().toLowerCase()))
+                    || ("审批".equals(item.title) && "approval".equals(num.getBiz_name().toLowerCase()))) {
 
                 BadgeView badge = holder.getView(R.id.view_number);
 
@@ -48,7 +48,7 @@ public class MainNumberAdapter extends CommonAdapter<ClickItem> {
         rv.setRippleColor(R.color.title_bg1);
         rv.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
-            public void onComplete(RippleView rippleView) {
+            public void onComplete(final RippleView rippleView) {
                 //前三项需要刷新小红点数字
                 if (holder.getPosition() < 3) {
                     app.startActivityForResult((Activity) mContext, item.cls, MainApp.ENTER_TYPE_RIGHT, 1, null);
@@ -62,7 +62,7 @@ public class MainNumberAdapter extends CommonAdapter<ClickItem> {
                 .setText(R.id.tv_item, item.title);
     }
 
-    public void setNumbers(ArrayList<HomeNumber> numbers) {
+    public void setNumbers(final ArrayList<HomeNumber> numbers) {
         mNumbers = numbers;
     }
 }
