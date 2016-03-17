@@ -29,21 +29,21 @@ import java.util.List;
  */
 public class ActivityHait extends BaseActivity {
 
-    private PullToRefreshRecycleView lvNotice;
-    private LinearLayout imgTitleLeft;
-    private ImageView imgBack;
-    private TextView tvBack;
-    private TextView tvTitle1;
+    private PullToRefreshRecycleView lv_notice;
+    private LinearLayout img_title_left;
+    private ImageView img_back;
+    private TextView tv_back;
+    private TextView tv_title1;
     private LinearLayoutManager linearLayoutManager;
     private HaitAdapter adapter;
 
     private void assignViews() {
-        imgTitleLeft = (LinearLayout) findViewById(R.id.img_title_left);
-        imgBack = (ImageView) findViewById(R.id.img_back);
-        tvBack = (TextView) findViewById(R.id.tv_back);
-        tvTitle1 = (TextView) findViewById(R.id.tv_title_1);
+        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+        img_back = (ImageView) findViewById(R.id.img_back);
+        tv_back = (TextView) findViewById(R.id.tv_back);
+        tv_title1 = (TextView) findViewById(R.id.tv_title_1);
 
-        lvNotice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
+        lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
     }
 
 
@@ -56,46 +56,46 @@ public class ActivityHait extends BaseActivity {
         initListener();
     }
     
-    private List<HaitInfo> infos = new ArrayList<>();
+    private List<HttpHaitMe> infos = new ArrayList<>();
 
     private void initData() {
         for (int i = 0; i < 20; i++) {
-            infos.add(new HaitInfo());
+            infos.add(new HttpHaitMe());
         }
     }
 
     private void initView() {
         assignViews();
 
-        tvBack.setText("我的讨论");
-        tvTitle1.setText("@我的");
+        tv_back.setText("我的讨论");
+        tv_title1.setText("@我的");
         
-        lvNotice.setMode(PullToRefreshBase.Mode.BOTH);
+        lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         
-        lvNotice.getRefreshableView().setLayoutManager(linearLayoutManager);
+        lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
         
         adapter = new HaitAdapter();
         adapter.updataList(infos);
-        lvNotice.getRefreshableView().setAdapter(adapter);
+        lv_notice.getRefreshableView().setAdapter(adapter);
     }
 
     private void initListener() {
-        tvBack.setOnClickListener(new View.OnClickListener() {
+        tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        lvNotice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+        lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lvNotice.onRefreshComplete();
+                        lv_notice.onRefreshComplete();
                     }
                 }, 2000);
             }
@@ -105,7 +105,7 @@ public class ActivityHait extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lvNotice.onRefreshComplete();
+                        lv_notice.onRefreshComplete();
                     }
                 }, 2000);
             }
@@ -131,9 +131,9 @@ public class ActivityHait extends BaseActivity {
     }
 
     private class HaitAdapter extends RecyclerView.Adapter<HaitViewHolder> {
-        private List<HaitInfo> datas = new ArrayList<>();
+        private List<HttpHaitMe> datas = new ArrayList<>();
         
-        public void updataList(List<HaitInfo> data){
+        public void updataList(List<HttpHaitMe> data){
             if (data == null){
                 data = new ArrayList<>();
             }
@@ -149,7 +149,7 @@ public class ActivityHait extends BaseActivity {
 
         @Override
         public void onBindViewHolder(HaitViewHolder holder, int position) {
-            HaitInfo info = datas.get(position);
+            HttpHaitMe info = datas.get(position);
             
             holder.tvTime.setText(info.getTime());
             holder.tvContent.setText(info.getTitle());

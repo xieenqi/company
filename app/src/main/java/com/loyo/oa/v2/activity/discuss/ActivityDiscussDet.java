@@ -43,14 +43,14 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
 
-    private PullToRefreshRecycleView lvNotice;
-    private EditText etDiscuss;
-    private LinearLayout layoutBack;
-    private ImageView imgBack;
-    private TextView tvTitle;
-    private TextView tvEdit;
-    private ImageView ivSubmit;
-    private TextView tvSend;
+    private PullToRefreshRecycleView lv_notice;
+    private EditText et_discuss;
+    private LinearLayout layout_back;
+    private ImageView img_back;
+    private TextView tv_title;
+    private TextView tv_edit;
+    private ImageView iv_submit;
+    private TextView tv_send;
     private RelativeLayout rl_root;
 
     private DiscussDetAdapter adapter;
@@ -77,11 +77,11 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         initListener();
     }
 
-    private List<DiscussDetInfo> infos = new ArrayList<>();
+    private List<HttpDiscussDet> infos = new ArrayList<>();
 
     private void initData() {
         for (int i = 0; i < 20; i++) {
-            infos.add(new DiscussDetInfo().setIsMine(i % 2 == 0));
+            infos.add(new HttpDiscussDet().setIsMine(i % 2 == 0));
         }
 
         //获取屏幕高度
@@ -94,70 +94,70 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private void initView() {
         assignViews();
 
-        tvTitle.setText("讨论");
-        tvEdit.setText("查看项目");
+        tv_title.setText("讨论");
+        tv_edit.setText("查看项目");
 
-        tvTitle.setVisibility(View.VISIBLE);
-        tvEdit.setVisibility(View.VISIBLE);
+        tv_title.setVisibility(View.VISIBLE);
+        tv_edit.setVisibility(View.VISIBLE);
 
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        lvNotice.getRefreshableView().setLayoutManager(linearLayoutManager);
+        lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
 
         adapter = new DiscussDetAdapter();
         adapter.updataList(infos);
-        lvNotice.getRefreshableView().setAdapter(adapter);
+        lv_notice.getRefreshableView().setAdapter(adapter);
     }
 
 
     private void assignViews() {
-        lvNotice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
-        etDiscuss = (EditText) findViewById(R.id.et_discuss);
-        tvSend = (TextView) findViewById(R.id.tv_send);
+        lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
+        et_discuss = (EditText) findViewById(R.id.et_discuss);
+        tv_send = (TextView) findViewById(R.id.tv_send);
 
-        layoutBack = (LinearLayout) findViewById(R.id.layout_back);
-        imgBack = (ImageView) findViewById(R.id.img_back);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvEdit = (TextView) findViewById(R.id.tv_edit);
-        ivSubmit = (ImageView) findViewById(R.id.iv_submit);
+        layout_back = (LinearLayout) findViewById(R.id.layout_back);
+        img_back = (ImageView) findViewById(R.id.img_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_edit = (TextView) findViewById(R.id.tv_edit);
+        iv_submit = (ImageView) findViewById(R.id.iv_submit);
 
         rl_root = (RelativeLayout) findViewById(R.id.rl_root);
         ll_scanner = (LinearLayout) findViewById(R.id.rl_scanner);
     }
 
     private void initListener() {
-        layoutBack.setOnClickListener(new View.OnClickListener() {
+        layout_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        tvEdit.setOnClickListener(new View.OnClickListener() {
+        tv_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast("查看项目");
             }
         });
-        tvSend.setOnClickListener(new View.OnClickListener() {
+        tv_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(etDiscuss.getText().toString())) {
+                if (TextUtils.isEmpty(et_discuss.getText().toString())) {
                     return;
                 }
-                DiscussDetInfo info = new DiscussDetInfo().setIsMine(true);
-                info.setContent(etDiscuss.getText().toString());
+                HttpDiscussDet info = new HttpDiscussDet().setIsMine(true);
+                info.setContent(et_discuss.getText().toString());
                 adapter.addMineMessage(info);
-                etDiscuss.getText().clear();
+                et_discuss.getText().clear();
             }
         });
 
-        lvNotice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+        lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lvNotice.onRefreshComplete();
+                        lv_notice.onRefreshComplete();
                     }
                 }, 2000);
             }
@@ -167,7 +167,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lvNotice.onRefreshComplete();
+                        lv_notice.onRefreshComplete();
                     }
                 }, 2000);
             }
@@ -176,25 +176,25 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         ll_scanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showKeyBoard(etDiscuss);
+                showKeyBoard(et_discuss);
             }
         });
 
-        etDiscuss.addTextChangedListener(new UserScannerTextWatcher()); //监听用户输入
-        etDiscuss.setOnKeyListener(new View.OnKeyListener() {
+        et_discuss.addTextChangedListener(new UserScannerTextWatcher()); //监听用户输入
+        et_discuss.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
-                int selection = etDiscuss.getSelectionStart();
+                int selection = et_discuss.getSelectionStart();
                 if (keyCode == KeyEvent.KEYCODE_DEL
                         && selection > 0
                         && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    String str = etDiscuss.getText().toString();
+                    String str = et_discuss.getText().toString();
                     char delChar = str.charAt(selection - 1);
                     if (delChar == SCANNER_HAIT_TRIM) {
                         int aiTePrefixIndex = str.lastIndexOf("@", selection - 1);
                         if (aiTePrefixIndex > -1) {
-                            int index = etDiscuss.getSelectionStart();
-                            Editable editable = etDiscuss.getText();
+                            int index = et_discuss.getSelectionStart();
+                            Editable editable = et_discuss.getText();
                             editable.delete(aiTePrefixIndex, index);
                             return true;
                         }
@@ -221,7 +221,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     public void onLayoutChange(View v, int left, int top, int right,
                                int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
-            lvNotice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount());
+            lv_notice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount());
         } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
 
         }
@@ -233,11 +233,11 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             User user = (User) data.getSerializableExtra(User.class.getName());
             if (user != null) {
                 String selectName = add$Name(user.toShortUser().getName());
-                int index = etDiscuss.getSelectionStart();
-                Editable editable = etDiscuss.getText();
+                int index = et_discuss.getSelectionStart();
+                Editable editable = et_discuss.getText();
                 editable.insert(index, selectName);
 
-                showKeyBoard(etDiscuss);
+                showKeyBoard(et_discuss);
             }
         }
     }
@@ -291,7 +291,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             String newString = s.toString();
             boolean addNewEditAiTe = TextUtils.isEmpty(oldScanner) ? true : newString.length() > oldScanner.length();
             oldScanner = newString;
-            int selection = etDiscuss.getSelectionStart();
+            int selection = et_discuss.getSelectionStart();
             int frontCharIndex = selection - 2;
             boolean isLetterDigit = frontCharIndex < 0 ?
                     false : isLetterDigit(oldScanner.charAt(frontCharIndex) + ""); // 判断'@'之前 的是否是字母和文字
@@ -363,19 +363,19 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     private class DiscussDetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<DiscussDetInfo> datas = new ArrayList<>();
+        private List<HttpDiscussDet> datas = new ArrayList<>();
 
-        public void updataList(List<DiscussDetInfo> data) {
+        public void updataList(List<HttpDiscussDet> data) {
             if (data == null)
                 data = new ArrayList<>();
             this.datas = data;
             this.notifyDataSetChanged();
         }
 
-        public void addMineMessage(DiscussDetInfo info) {
+        public void addMineMessage(HttpDiscussDet info) {
             datas.add(info);
             notifyItemChanged(getItemCount());
-            lvNotice.getRefreshableView().smoothScrollToPosition(getItemCount());
+            lv_notice.getRefreshableView().smoothScrollToPosition(getItemCount());
         }
 
         @Override
@@ -399,7 +399,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder == null)
                 return;
-            DiscussDetInfo info = datas.get(position);
+            HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
                 mineHolder.tvMineTime.setText(info.getTime());

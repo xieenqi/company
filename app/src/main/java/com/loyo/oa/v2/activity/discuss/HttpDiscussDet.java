@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by loyocloud on 16/3/10.
  */
-public class DiscussDetInfo implements Serializable {
+public class HttpDiscussDet implements Serializable {
     private boolean isMine = true;
     private String time = "2016/03/10";
     private String name = "当前activity";
@@ -21,7 +21,7 @@ public class DiscussDetInfo implements Serializable {
         return isMine;
     }
 
-    public DiscussDetInfo setIsMine(boolean isMine) {
+    public HttpDiscussDet setIsMine(boolean isMine) {
         this.isMine = isMine;
         return this;
     }

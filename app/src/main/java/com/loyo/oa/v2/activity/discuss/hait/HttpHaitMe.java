@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by loyocloud on 16/3/10.
  */
-public class HaitInfo implements Serializable {
+public class HttpHaitMe implements Serializable {
     private String time = "2016/03/10";
     private String title = "call to OpenGL ES API with no current context (logged once per thread)";
     private String name = "刘德";
