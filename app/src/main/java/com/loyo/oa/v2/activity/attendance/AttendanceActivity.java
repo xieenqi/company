@@ -62,13 +62,10 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private float mRotation = 0;
 
     private static final int mIdentity = 3;
-
     public static final float ROTATE_START = 0f;
     public static final float ROTATE_END = 180f;
-
     public static final float ROTATE_PIVOT_X = 0.5f;
     public static final float ROTATE_PIVOT_Y = 0.5f;
-
     public static final int ROTATE_TIME = 200;
 
     @AfterViews

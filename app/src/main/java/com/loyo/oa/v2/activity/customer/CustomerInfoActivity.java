@@ -259,12 +259,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             industry = mCustomer.industry;
         }
 
-
-        if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
-            lat = mCustomer.loc.loc[1];
-            lng = mCustomer.loc.loc[0];
+        try{
+            if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
+                lat = mCustomer.loc.loc[1];
+                lng = mCustomer.loc.loc[0];
         }
-
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         tv_customer_name.setText(mCustomer.name);
 
         if (mCustomer.loc.addr != "") {
