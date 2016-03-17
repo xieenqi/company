@@ -488,17 +488,23 @@ public class WfInstanceAddActivity extends BaseActivity {
         for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
             HashMap<String, Object> map_Values = submitData.get(k);
-            for (BizFormFields field : mBizForm.getFields()) {
-                for (String key : map_Values.keySet()) {
-                    if (!TextUtils.equals(field.getId(), key)) {
-                        continue;
+            try{
+                for (BizFormFields field : mBizForm.getFields()) {
+                    for (String key : map_Values.keySet()) {
+                        if (!TextUtils.equals(field.getId(), key)) {
+                            continue;
+                        }
+                        postValue.add(map_Values.get(key));
+                        String value = (String) map_Values.get(key);
+                        jsonMapValues.put(key, value);
                     }
-                    postValue.add(map_Values.get(key));
-                    String value = (String) map_Values.get(key);
-                    jsonMapValues.put(key, value);
                 }
+                workflowValues.add(jsonMapValues);
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("操作失败！");
+                return;
             }
-            workflowValues.add(jsonMapValues);
         }
 
         for(int i = 0;i<postValue.size();i++){
