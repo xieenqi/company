@@ -48,6 +48,7 @@ public class ActivityHait extends BaseActivity {
     private LinearLayout img_title_left;
     private ImageView img_back;
     private TextView tv_back;
+    private LinearLayout layout_back;
     private TextView tv_title1;
     private LinearLayoutManager linearLayoutManager;
     private HaitAdapter adapter;
@@ -81,12 +82,13 @@ public class ActivityHait extends BaseActivity {
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_back = (TextView) findViewById(R.id.tv_back);
+        layout_back = (LinearLayout) findViewById(R.id.img_title_left);
         tv_title1 = (TextView) findViewById(R.id.tv_title_1);
         lv_myDiscuss = (PullToRefreshRecycleView) findViewById(R.id.lv_myDiscuss);
     }
 
     private void initListener() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
+        layout_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

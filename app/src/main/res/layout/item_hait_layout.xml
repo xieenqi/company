@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_8"
-        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_5"
         android:gravity="center_horizontal"
         android:singleLine="true"
-        android:text=""
-        android:textColor="@color/text_black_2"
-        android:textSize="@dimen/text_sp14" />
+        android:text="shijsin"
+        android:textColor="@color/text99"
+        android:textSize="@dimen/text_sp13"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:src="@drawable/img_default_user"
             imagecontrol:border_inside_color="#a8d4e9"
             imagecontrol:border_outside_color="#a8d4e9"
-            imagecontrol:border_thickness="0dp" />
+            imagecontrol:border_thickness="0dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -51,27 +51,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text=""
+                android:text="ghfnfn"
                 android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp14" />
+                android:textSize="@dimen/text_sp14"/>
 
             <TextView
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_8"
-                android:text=""
-                android:textColor="@color/text_black_1"
-                android:textSize="@dimen/text_sp14" />
+                android:text="bfddbd"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp14"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/dimen_1"-->
-        <!--android:layout_marginLeft="@dimen/dimen_16"-->
-        <!--android:background="@color/md_grey_300"></View>-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/dimen_1"-->
+    <!--android:layout_marginLeft="@dimen/dimen_16"-->
+    <!--android:background="@color/md_grey_300"></View>-->
 
 </LinearLayout>
