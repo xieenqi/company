@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -42,6 +43,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     private TextView tv_edit;
     private ImageView iv_submit;
     private LinearLayoutManager linearLayoutManager;
+    protected PaginationX<HttpDiscussItem> mDiscuss = new PaginationX(20);
 
     private List<HttpDiscussItem> list = new ArrayList<>();
     private DiscussAdapter adapter;
@@ -69,7 +71,6 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
 
         adapter = new DiscussAdapter();
-
         lv_discuss.getRefreshableView().setAdapter(adapter);
     }
 
@@ -83,19 +84,19 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     @Override
                     public void success(PaginationX<HttpDiscussItem> discuss, Response response) {
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
-//                if (!PaginationX.isEmpty(pagination)) {
+                        if (!PaginationX.isEmpty(discuss)) {
 //                    ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
-//                    mPagination = pagination;
-//
+                            mDiscuss = discuss;
+
 //                    if (isTopAdd) {
 //                        bulletins.clear();
 //                    }
 //                    bulletins.addAll(lstData_bulletin_current);
 //
 //                    bindData();
-//                } else {
-//                    //Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
-//                }
+                        } else {
+                            //Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                        }
                         adapter.updataList(discuss.getRecords());
                         lv_discuss.onRefreshComplete();
                     }
@@ -133,6 +134,8 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_edit:
                 Intent intent = new Intent(this, ActivityHait.class);
+                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
+                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
                 startActivity(intent);
                 break;
         }
@@ -158,29 +161,6 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         }, 2000);
     }
 
-    private class DiscussViewHolder extends RecyclerView.ViewHolder {
-        private ImageView iv_icon;
-        private View view_msgpoint;
-        private TextView tv_title;
-        private TextView tv_time;
-        private TextView tv_content;
-
-        public DiscussViewHolder(View itemView) {
-            super(itemView);
-            iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
-            view_msgpoint = itemView.findViewById(R.id.view_msgpoint);
-            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
-            tv_content = (TextView) itemView.findViewById(R.id.tv_content);
-            itemView.setTag(this);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityDiscussDet.startThisActivity(ActivityMyDiscuss.this);
-                }
-            });
-        }
-    }
 
     private class DiscussAdapter extends RecyclerView.Adapter<DiscussViewHolder> {
 
@@ -206,11 +186,44 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             holder.tv_title.setText(info.title);
             holder.tv_time.setText(info.updatedAt);
             holder.tv_content.setText(info.content);
+            holder.openItem(datas.get(position));
         }
 
         @Override
         public int getItemCount() {
             return datas.size();
+        }
+    }
+
+    private class DiscussViewHolder extends RecyclerView.ViewHolder {
+        private ImageView iv_icon;
+        private View view_msgpoint;
+        private TextView tv_title;
+        private TextView tv_time;
+        private TextView tv_content;
+
+        public DiscussViewHolder(View itemView) {
+            super(itemView);
+            iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
+            view_msgpoint = itemView.findViewById(R.id.view_msgpoint);
+            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
+            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+            itemView.setTag(this);
+
+        }
+
+        public void openItem(final HttpDiscussItem itemData) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(ActivityMyDiscuss.this, ActivityDiscussDet.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.attachmentUUId);
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 }
