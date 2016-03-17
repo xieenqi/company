@@ -184,7 +184,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         public void onBindViewHolder(DiscussViewHolder holder, int position) {
             HttpDiscussItem info = datas.get(position);
             holder.tv_title.setText(info.title);
-            holder.tv_time.setText(info.updatedAt);
+            holder.tv_time.setText(info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.content);
             holder.openItem(datas.get(position));
         }
@@ -219,11 +219,22 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 public void onClick(View view) {
                     Intent intent = new Intent(ActivityMyDiscuss.this, ActivityDiscussDet.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.attachmentUUId);
+                    intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.id);
                     startActivity(intent);
                 }
             });
-
+            switch (itemData.bizType) {
+                case 1:
+                    iv_icon.setImageResource(R.drawable.ic_disuss_report);
+                    break;
+                case 2:
+                    iv_icon.setImageResource(R.drawable.ic_discuss_task);
+                    break;
+                case 5:
+                    iv_icon.setImageResource(R.drawable.ic_discuss_project);
+                    break;
+            }
         }
     }
 }
