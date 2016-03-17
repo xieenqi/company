@@ -279,7 +279,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 String id = user.toShortUser().getId();
                 String name = user.toShortUser().getName();
 
-                mHaitSelectUsers.add(new SelectUser());
+                mHaitSelectUsers.add(new SelectUser(name, id));
 
                 String selectName = add$Name(name);
                 int index = et_discuss.getSelectionStart();
