@@ -290,15 +290,15 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
-
-                et_discuss.setText(message);
-                Toast("信息上传失败请重新发送");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         adapter.removeAtTime(time);
                     }
                 }, 800);
+//                et_discuss.setText(message);
+//                Toast("信息上传失败请重新发送");
+
             }
         });
     }
