@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,29 +17,29 @@
                 android:id="@+id/iv_icon"
                 android:layout_width="@dimen/dimen_48"
                 android:layout_height="@dimen/dimen_48"
-                android:layout_marginTop="@dimen/dimen_8"
                 android:layout_marginBottom="@dimen/dimen_7"
                 android:layout_marginLeft="@dimen/dimen_16"
                 android:layout_marginRight="@dimen/dimen_8"
-                android:src="@drawable/ic_discuss_task" />
+                android:layout_marginTop="@dimen/dimen_8"
+                android:src="@drawable/ic_discuss_task"/>
 
-            <View
-                android:id="@+id/view_msgpoint"
+            <ImageView
+                android:id="@+id/v_msgPoint"
                 android:layout_width="@dimen/dimen_8"
                 android:layout_height="@dimen/dimen_8"
                 android:layout_marginLeft="60dp"
                 android:layout_marginTop="@dimen/dimen_4"
-                android:background="@drawable/draw_point_newmsg"></View>
+                android:background="@drawable/draw_point_newmsg"/>
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_8"
             android:layout_marginBottom="@dimen/dimen_7"
             android:layout_marginLeft="@dimen/dimen_8"
             android:layout_marginRight="@dimen/dimen_16"
+            android:layout_marginTop="@dimen/dimen_8"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -53,11 +53,11 @@
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:layout_weight="1"
+                    android:singleLine="true"
                     android:text=""
                     android:textColor="@color/text_black_1"
-                    android:textSize="@dimen/text_sp16" />
+                    android:textSize="@dimen/text_sp16"/>
 
                 <TextView
                     android:id="@+id/tv_time"
@@ -66,7 +66,7 @@
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/text_black_2"
-                    android:textSize="@dimen/text_sp14" />
+                    android:textSize="@dimen/text_sp14"/>
 
             </LinearLayout>
 
@@ -78,7 +78,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/text_black_3"
-                android:textSize="@dimen/text_sp12" />
+                android:textSize="@dimen/text_sp12"/>
 
         </LinearLayout>
 

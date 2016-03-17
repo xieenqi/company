@@ -2,7 +2,6 @@ package com.loyo.oa.v2.activity.discuss;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -45,17 +45,18 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     private LinearLayoutManager linearLayoutManager;
     protected PaginationX<HttpDiscussItem> mDiscuss = new PaginationX(20);
 
-    private List<HttpDiscussItem> list = new ArrayList<>();
     private DiscussAdapter adapter;
+    private boolean isTopAdd = true;
+    private int pageIndex = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mydiscuss);
-        initData();
         initView();
         initListener();
+        getData();
     }
 
     private void initView() {
@@ -74,10 +75,10 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         lv_discuss.getRefreshableView().setAdapter(adapter);
     }
 
-    private void initData() {
+    private void getData() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", "1");
+        map.put("pageIndex", pageIndex + "");
         map.put("pageSize", "20");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
                 getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
@@ -85,19 +86,14 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     public void success(PaginationX<HttpDiscussItem> discuss, Response response) {
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
-//                    ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
                             mDiscuss = discuss;
-
-//                    if (isTopAdd) {
-//                        bulletins.clear();
-//                    }
-//                    bulletins.addAll(lstData_bulletin_current);
-//
-//                    bindData();
+                            if (isTopAdd) {
+                                adapter.cleanData();
+                            }
+                            adapter.updataList(discuss.getRecords());
                         } else {
-                            //Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                            Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
                         }
-                        adapter.updataList(discuss.getRecords());
                         lv_discuss.onRefreshComplete();
                     }
 
@@ -143,22 +139,17 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lv_discuss.onRefreshComplete();
-            }
-        }, 2000);
+        pageIndex = 1;
+        isTopAdd = true;
+        getData();
+
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lv_discuss.onRefreshComplete();
-            }
-        }, 2000);
+        pageIndex++;
+        isTopAdd = false;
+        getData();
     }
 
 
@@ -170,8 +161,12 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             if (data == null) {
                 data = new ArrayList<>();
             }
-            this.datas = data;
+            this.datas.addAll(data);
             this.notifyDataSetChanged();
+        }
+
+        public void cleanData() {
+            datas.clear();
         }
 
         @Override
@@ -185,7 +180,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             HttpDiscussItem info = datas.get(position);
             holder.tv_title.setText(info.title);
             holder.tv_time.setText(info.updatedAt.substring(11, 19));
-            holder.tv_content.setText(info.content);
+            holder.tv_content.setText(info.creator.name + ":" + info.content);
             holder.openItem(datas.get(position));
         }
 
@@ -197,7 +192,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
     private class DiscussViewHolder extends RecyclerView.ViewHolder {
         private ImageView iv_icon;
-        private View view_msgpoint;
+        private ImageView v_msgPoint;
         private TextView tv_title;
         private TextView tv_time;
         private TextView tv_content;
@@ -205,7 +200,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         public DiscussViewHolder(View itemView) {
             super(itemView);
             iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
-            view_msgpoint = itemView.findViewById(R.id.view_msgpoint);
+            v_msgPoint = (ImageView) itemView.findViewById(R.id.v_msgPoint);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
@@ -234,7 +229,9 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 case 5:
                     iv_icon.setImageResource(R.drawable.ic_discuss_project);
                     break;
+
             }
+            v_msgPoint.setVisibility(itemData.viewed ? View.INVISIBLE : View.VISIBLE);
         }
     }
 }

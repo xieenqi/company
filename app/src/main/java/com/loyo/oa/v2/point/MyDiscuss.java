@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activity.discuss.HttpDiscussItem;
+import com.loyo.oa.v2.activity.discuss.HttpMyDiscussItem;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.HashMap;
@@ -24,6 +25,14 @@ public interface MyDiscuss {
     @GET("/discussion/subject/query")
     void getDisscussList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpDiscussItem>> callback);
 
+    /**
+     * 分页获取【@我讨论】列表
+     *
+     * @param callback
+     */
+    @GET("/discussion/at/query")
+    void getMyDisscussList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpMyDiscussItem>> callback);
+
 //    /**
 //     * 发布通知
 //     * @param body
@@ -32,12 +41,6 @@ public interface MyDiscuss {
 //    @POST("/bulletin")
 //    void publishNotice(@Body HashMap<String, Object> body, Callback<Bulletin> callback);
 //
-//    /**
-//     * 根据id查看通知详情
-//     * @param id
-//     * @param callback
-//     */
-//    @GET("/bulletin/{id}")
-//    void examineNoticeById(@Path("id") int id, Callback<Bulletin> callback);
+
 
 }
