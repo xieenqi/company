@@ -39,7 +39,7 @@ import java.util.List;
  * create by libo 2016/03/10
  */
 
-public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutChangeListener {
+public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
 
@@ -126,30 +126,10 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     private void initListener() {
-        layout_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        tv_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast("查看项目");
-            }
-        });
-        tv_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (TextUtils.isEmpty(et_discuss.getText().toString())) {
-                    return;
-                }
-                HttpDiscussDet info = new HttpDiscussDet().setIsMine(true);
-                info.setContent(et_discuss.getText().toString());
-                adapter.addMineMessage(info);
-                et_discuss.getText().clear();
-            }
-        });
+        layout_back.setOnClickListener(this);
+        ll_scanner.setOnClickListener(this);
+        tv_edit.setOnClickListener(this);
+        tv_send.setOnClickListener(this);
 
         lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
@@ -170,13 +150,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                         lv_notice.onRefreshComplete();
                     }
                 }, 2000);
-            }
-        });
-
-        ll_scanner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showKeyBoard(et_discuss);
             }
         });
 
@@ -203,6 +176,33 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layout_back:
+                finish();
+                break;
+            case R.id.rl_scanner:
+                showKeyBoard(et_discuss);
+                break;
+            case R.id.tv_edit:
+                Toast("查看项目");
+                break;
+            case R.id.tv_send:
+                if (TextUtils.isEmpty(et_discuss.getText().toString())) {
+                    return;
+                }
+                HttpDiscussDet info = new HttpDiscussDet().setIsMine(true);
+                info.setContent(et_discuss.getText().toString());
+                adapter.addMineMessage(info);
+                et_discuss.getText().clear();
+                break;
+            default:
+
+                break;
+        }
     }
 
     @Override

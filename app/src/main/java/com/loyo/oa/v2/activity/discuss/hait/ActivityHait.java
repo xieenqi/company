@@ -37,16 +37,6 @@ public class ActivityHait extends BaseActivity {
     private LinearLayoutManager linearLayoutManager;
     private HaitAdapter adapter;
 
-    private void assignViews() {
-        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-        img_back = (ImageView) findViewById(R.id.img_back);
-        tv_back = (TextView) findViewById(R.id.tv_back);
-        tv_title1 = (TextView) findViewById(R.id.tv_title_1);
-
-        lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +70,15 @@ public class ActivityHait extends BaseActivity {
         adapter = new HaitAdapter();
         adapter.updataList(infos);
         lv_notice.getRefreshableView().setAdapter(adapter);
+    }
+
+    private void assignViews() {
+        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+        img_back = (ImageView) findViewById(R.id.img_back);
+        tv_back = (TextView) findViewById(R.id.tv_back);
+        tv_title1 = (TextView) findViewById(R.id.tv_title_1);
+
+        lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
     }
 
     private void initListener() {
