@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.discuss.hait;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -111,7 +113,7 @@ public class ActivityHait extends BaseActivity {
         });
     }
 
-    private static class HaitViewHolder extends RecyclerView.ViewHolder {
+    private class HaitViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvTime;
         private RoundImageView ivHaitAvatar;
@@ -126,6 +128,12 @@ public class ActivityHait extends BaseActivity {
             tvContent = (TextView) itemView.findViewById(R.id.tv_content);
 
             itemView.setTag(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    ActivityDiscussDet.startThisActivity((Activity) view.getContext());
+                }
+            });
         }
     }
 

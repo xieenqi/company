@@ -24,15 +24,26 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【讨论详情界面】
@@ -42,6 +53,7 @@ import java.util.List;
 public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
+    private final List<SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
 
     private PullToRefreshRecycleView lv_notice;
     private EditText et_discuss;
@@ -191,18 +203,50 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 Toast("查看项目");
                 break;
             case R.id.tv_send:
-                if (TextUtils.isEmpty(et_discuss.getText().toString())) {
+                String mineMessage = et_discuss.getText().toString().trim();
+                if (TextUtils.isEmpty(mineMessage)) {
                     return;
                 }
                 HttpDiscussDet info = new HttpDiscussDet().setIsMine(true);
-                info.setContent(et_discuss.getText().toString());
+                info.setContent(mineMessage);
                 adapter.addMineMessage(info);
                 et_discuss.getText().clear();
+                sendMessage(mineMessage);
                 break;
             default:
 
                 break;
         }
+    }
+
+    private static final String ATTACHMENTUUID = "03906ec4-26f4-494e-b53c-c3f898f987d8";
+
+    /**
+     * 发送讨论信息
+     */
+    private void sendMessage(String message) {
+        final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
+        HashMap<String, Object> body = new HashMap<>();
+
+        //TODO: 添加参数...
+
+        body.put("attachmentUUId", ATTACHMENTUUID);
+        body.put("content", message);
+        body.put("bizType", 0);
+        body.put("mentionedUserIds", "");
+        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
+        t.createDiscussion(body, new RCallback<Discussion>() {
+            @Override
+            public void success(Discussion d, Response response) {
+                HttpErrorCheck.checkResponse(response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
+            }
+        });
     }
 
     @Override
@@ -232,7 +276,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         if (resultCode == Activity.RESULT_OK && data != null) {
             User user = (User) data.getSerializableExtra(User.class.getName());
             if (user != null) {
-                String selectName = add$Name(user.toShortUser().getName());
+                String id = user.toShortUser().getId();
+                String name = user.toShortUser().getName();
+
+                mHaitSelectUsers.add(new SelectUser());
+
+                String selectName = add$Name(name);
                 int index = et_discuss.getSelectionStart();
                 Editable editable = et_discuss.getText();
                 editable.insert(index, selectName);
@@ -305,7 +354,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
 
         public boolean isLetterDigit(String str) {
-            String regex = "^[a-z0-9A-Z]+$";
+            String regex = "^[a-z0-9A-Z_\\-]+$";
             return str.matches(regex);
         }
 
@@ -422,6 +471,29 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             return datas.get(position).isMine()
                     ? DiscussSendMode.mine
                     : DiscussSendMode.other;
+        }
+    }
+
+    private class SelectUser {
+        String id;
+        String name;
+
+        public SelectUser(String name, String id) {
+            this.name = name;
+            this.id = id;
+        }
+
+        /**
+         * 用于比较
+         *
+         * @param name
+         * @return
+         */
+        public boolean matchName(String name) {
+            if (TextUtils.isEmpty(name)) {
+                return false;
+            }
+            return name.equals(this.name);
         }
     }
 
