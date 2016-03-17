@@ -265,7 +265,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     public void onLayoutChange(View v, int left, int top, int right,
                                int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
-            lv_notice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount());
+//            lv_notice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount());
+            lv_notice.getRefreshableView().scrollToPosition(adapter.getItemCount());
         } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
 
         }
@@ -279,7 +280,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 String id = user.toShortUser().getId();
                 String name = user.toShortUser().getName();
 
-                mHaitSelectUsers.add(new SelectUser());
+                mHaitSelectUsers.add(new SelectUser(name, id));
 
                 String selectName = add$Name(name);
                 int index = et_discuss.getSelectionStart();
@@ -424,7 +425,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         public void addMineMessage(HttpDiscussDet info) {
             datas.add(info);
             notifyItemChanged(getItemCount());
-            lv_notice.getRefreshableView().smoothScrollToPosition(getItemCount());
+//            lv_notice.getRefreshableView().smoothScrollToPosition(getItemCount());
+            lv_notice.getRefreshableView().scrollToPosition(getItemCount());
         }
 
         @Override
