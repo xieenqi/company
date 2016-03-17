@@ -724,7 +724,6 @@ public class TasksInfoActivity extends BaseActivity {
                     }
                                 /*删除回调*/
                 }else if (data.getBooleanExtra("delete", false)) {
-
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
                         public void success(final Task o,final Response response) {
