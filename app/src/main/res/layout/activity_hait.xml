@@ -10,7 +10,7 @@
         layout="@layout/include_common_title"></include>
 
     <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView
-        android:id="@+id/lv_notice"
+        android:id="@+id/lv_myDiscuss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/actionbar"

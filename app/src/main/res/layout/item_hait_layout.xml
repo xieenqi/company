@@ -23,7 +23,7 @@
         android:orientation="horizontal">
 
         <com.loyo.oa.v2.tool.customview.RoundImageView
-            android:id="@+id/iv_hait_avatar"
+            android:id="@+id/iv_avatar"
             android:layout_width="@dimen/dimen_50"
             android:layout_height="@dimen/dimen_50"
             android:layout_below="@+id/tv_notice_publisher"

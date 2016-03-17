@@ -45,7 +45,6 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     private LinearLayoutManager linearLayoutManager;
     protected PaginationX<HttpDiscussItem> mDiscuss = new PaginationX(20);
 
-    private List<HttpDiscussItem> list = new ArrayList<>();
     private DiscussAdapter adapter;
     private boolean isTopAdd = true;
     private int pageIndex = 1;
@@ -181,7 +180,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             HttpDiscussItem info = datas.get(position);
             holder.tv_title.setText(info.title);
             holder.tv_time.setText(info.updatedAt.substring(11, 19));
-            holder.tv_content.setText(info.content);
+            holder.tv_content.setText(info.creator.name + ":" + info.content);
             holder.openItem(datas.get(position));
         }
 

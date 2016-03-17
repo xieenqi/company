@@ -654,8 +654,15 @@
             android:name=".activity.discuss.ActivityMyDiscuss"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.discuss.hait.ActivityHait"/>
-        <activity android:name=".activity.discuss.ActivityDiscussDet"/>
+        <activity
+            android:name=".activity.discuss.hait.ActivityHait"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.discuss.ActivityDiscussDet"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

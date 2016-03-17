@@ -18,60 +18,62 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
+import com.loyo.oa.v2.activity.discuss.HttpMyDiscussItem;
+import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * @我的界面 create by libo 2016/03/10
  */
 public class ActivityHait extends BaseActivity {
 
-    private PullToRefreshRecycleView lv_notice;
+    private PullToRefreshRecycleView lv_myDiscuss;
     private LinearLayout img_title_left;
     private ImageView img_back;
     private TextView tv_back;
     private TextView tv_title1;
     private LinearLayoutManager linearLayoutManager;
     private HaitAdapter adapter;
+    private boolean isTopAdd = true;
+    private int pageIndex = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hait);
-        initData();
         initView();
         initListener();
-    }
-    
-    private List<HttpHaitMe> infos = new ArrayList<>();
-
-    private void initData() {
-        for (int i = 0; i < 20; i++) {
-            infos.add(new HttpHaitMe());
-        }
+        getData();
     }
 
     private void initView() {
         assignViews();
-
-        tv_back.setText("我的讨论");
+        // tv_back.setText("我的讨论");
         tv_title1.setText("@我的");
-        
-        lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
-        
+
+        lv_myDiscuss.setMode(PullToRefreshBase.Mode.BOTH);
+
         linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        
-        lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
-        
+        lv_myDiscuss.getRefreshableView().setLayoutManager(linearLayoutManager);
         adapter = new HaitAdapter();
-        adapter.updataList(infos);
-        lv_notice.getRefreshableView().setAdapter(adapter);
+        lv_myDiscuss.getRefreshableView().setAdapter(adapter);
     }
 
     private void assignViews() {
@@ -80,7 +82,7 @@ public class ActivityHait extends BaseActivity {
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_title1 = (TextView) findViewById(R.id.tv_title_1);
 
-        lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
+        lv_myDiscuss = (PullToRefreshRecycleView) findViewById(R.id.lv_myDiscuss);
     }
 
     private void initListener() {
@@ -90,13 +92,13 @@ public class ActivityHait extends BaseActivity {
                 finish();
             }
         });
-        lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+        lv_myDiscuss.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lv_notice.onRefreshComplete();
+                        lv_myDiscuss.onRefreshComplete();
                     }
                 }, 2000);
             }
@@ -106,46 +108,58 @@ public class ActivityHait extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lv_notice.onRefreshComplete();
+                        lv_myDiscuss.onRefreshComplete();
                     }
                 }, 2000);
             }
         });
     }
 
-    private class HaitViewHolder extends RecyclerView.ViewHolder {
+    private void getData() {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", pageIndex + "");
+        map.put("pageSize", "20");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
+                getMyDisscussList(map, new RCallback<PaginationX<HttpMyDiscussItem>>() {
+                    @Override
+                    public void success(PaginationX<HttpMyDiscussItem> discuss, Response response) {
+                        HttpErrorCheck.checkResponse(" 【@我的】讨论数据： ", response);
+                        if (!PaginationX.isEmpty(discuss)) {
+                            // mDiscuss = discuss;
+                            if (isTopAdd) {
+                                adapter.cleanData();
+                            }
+                            adapter.updataList(discuss.getRecords());
+                        } else {
+                            Global.Toast(!isTopAdd ? R.string.app_list_noMoreData : R.string.app_no_newest_data);
+                        }
+                        lv_myDiscuss.onRefreshComplete();
+                    }
 
-        private TextView tvTime;
-        private RoundImageView ivHaitAvatar;
-        private TextView tvTitle;
-        private TextView tvContent;
-
-        public HaitViewHolder(View itemView) {
-            super(itemView);
-            tvTime = (TextView) itemView.findViewById(R.id.tv_time);
-            ivHaitAvatar = (RoundImageView) itemView.findViewById(R.id.iv_hait_avatar);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
-            tvContent = (TextView) itemView.findViewById(R.id.tv_content);
-
-            itemView.setTag(this);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    ActivityDiscussDet.startThisActivity((Activity) view.getContext());
-                }
-            });
-        }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        lv_myDiscuss.onRefreshComplete();
+                    }
+                });
     }
 
+
     private class HaitAdapter extends RecyclerView.Adapter<HaitViewHolder> {
-        private List<HttpHaitMe> datas = new ArrayList<>();
-        
-        public void updataList(List<HttpHaitMe> data){
-            if (data == null){
+        private List<HttpMyDiscussItem> datas = new ArrayList<>();
+
+        public void updataList(List<HttpMyDiscussItem> data) {
+            if (data == null) {
                 data = new ArrayList<>();
             }
-            this.datas = data;
+            this.datas.addAll(data);
             this.notifyDataSetChanged();
+        }
+
+        public void cleanData() {
+            datas.clear();
         }
 
         @Override
@@ -156,11 +170,10 @@ public class ActivityHait extends BaseActivity {
 
         @Override
         public void onBindViewHolder(HaitViewHolder holder, int position) {
-            HttpHaitMe info = datas.get(position);
-            
-            holder.tvTime.setText(info.getTime());
-            holder.tvContent.setText(info.getTitle());
-            holder.tvTitle.setText(parseTitle(info.getName(), info.getGroup()));
+            HttpMyDiscussItem info = datas.get(position);
+            holder.tv_time.setText(info.updatedAt.substring(11, 19));
+            holder.tv_content.setText(info.content);
+            holder.tv_title.setText(parseTitle(info.creator.name, info.title));
         }
 
         private SpannableStringBuilder parseTitle(String name, String group) {
@@ -181,6 +194,30 @@ public class ActivityHait extends BaseActivity {
         @Override
         public int getItemCount() {
             return datas.size();
+        }
+    }
+
+    private class HaitViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView tv_time;
+        private RoundImageView iv_avatar;
+        private TextView tv_title;
+        private TextView tv_content;
+
+        public HaitViewHolder(View itemView) {
+            super(itemView);
+            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_avatar);
+            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
+            tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+
+            itemView.setTag(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    ActivityDiscussDet.startThisActivity((Activity) view.getContext());
+                }
+            });
         }
     }
 }
