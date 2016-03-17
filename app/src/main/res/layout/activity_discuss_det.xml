@@ -54,6 +54,7 @@
                 android:hint="请输入讨论内容"
                 android:inputType="textMultiLine"
                 android:maxLines="3"
+                android:minHeight="@dimen/dimen_30"
                 android:scrollHorizontally="false"
                 android:singleLine="false"
                 android:text=""
