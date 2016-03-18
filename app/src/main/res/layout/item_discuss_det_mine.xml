@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:minWidth="1000dp"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_mine_time"
@@ -14,7 +15,7 @@
         android:gravity="center"
         android:text="2016/03/10"
         android:textColor="@color/text_black_2"
-        android:textSize="@dimen/text_sp12" />
+        android:textSize="@dimen/text_sp12"/>
 
     <TextView
         android:id="@+id/tv_mine"
@@ -27,7 +28,7 @@
         android:singleLine="true"
         android:text="我"
         android:textColor="@color/text_black_2"
-        android:textSize="@dimen/text_sp12" />
+        android:textSize="@dimen/text_sp12"/>
 
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
@@ -116,7 +117,7 @@
                 android:paddingTop="@dimen/dimen_16"
                 android:text="asssdhavuvdsufvusvd阿布多啥办法把收到回复fba"
                 android:textColor="#fff"
-                android:textSize="@dimen/text_sp14" />
+                android:textSize="@dimen/text_sp14"/>
 
         </RelativeLayout>
 
@@ -132,7 +133,7 @@
             android:src="@drawable/img_default_user"
             imagecontrol:border_inside_color="#a8d4e9"
             imagecontrol:border_outside_color="#a8d4e9"
-            imagecontrol:border_thickness="0dp" />
+            imagecontrol:border_thickness="0dp"/>
 
     </LinearLayout>
 

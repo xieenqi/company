@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:minWidth="1000dp"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_other_time"
@@ -14,7 +15,7 @@
         android:gravity="center"
         android:text="2016/03/10"
         android:textColor="@color/text_black_2"
-        android:textSize="@dimen/text_sp12" />
+        android:textSize="@dimen/text_sp12"/>
 
     <TextView
         android:id="@+id/tv_other_name"
@@ -26,7 +27,7 @@
         android:singleLine="true"
         android:text="LIBO"
         android:textColor="@color/text_black_2"
-        android:textSize="@dimen/text_sp12" />
+        android:textSize="@dimen/text_sp12"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +46,7 @@
             android:src="@drawable/img_default_user"
             imagecontrol:border_inside_color="#a8d4e9"
             imagecontrol:border_outside_color="#a8d4e9"
-            imagecontrol:border_thickness="0dp" />
+            imagecontrol:border_thickness="0dp"/>
 
         <TextView
             android:id="@+id/tv_other_content"
@@ -54,6 +55,7 @@
             android:layout_marginBottom="@dimen/dimen_4"
             android:background="@drawable/bg_other"
             android:gravity="center_vertical|left"
+            android:maxWidth="@dimen/dimen_200"
             android:minHeight="@dimen/dimen_40"
             android:paddingBottom="@dimen/dimen_16"
             android:paddingLeft="@dimen/dimen_24"
@@ -61,8 +63,7 @@
             android:paddingTop="@dimen/dimen_16"
             android:text="asssdhavuvdsufvusvd阿布多啥办法把收到回复fba"
             android:textColor="@color/text_black_1"
-            android:maxWidth="@dimen/dimen_200"
-            android:textSize="@dimen/text_sp14" />
+            android:textSize="@dimen/text_sp14"/>
 
         <RelativeLayout
             android:layout_width="@dimen/dimen_40"
