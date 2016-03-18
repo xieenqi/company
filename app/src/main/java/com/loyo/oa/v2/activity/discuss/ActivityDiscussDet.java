@@ -72,6 +72,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private ImageView iv_submit;
     private TextView tv_send;
     private RelativeLayout rl_root;
+    private LinearLayout ll_edit;
+
     private DiscussDetAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
     private int screenHeight;
@@ -84,6 +86,15 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private int pageIndex = 1;
     public PaginationX<HttpDiscussDet> mPageDiscussion = new PaginationX<>();
     private Map<Long, String> messages = new HashMap<>();
+    private int mStatus;
+
+    public static void startThisActivity(Activity act, int mBizType, String mAttachmentUUId, int status, int requestCode) {
+        Intent intent = new Intent(act, ActivityDiscussDet.class);
+        intent.putExtra(ExtraAndResult.EXTRA_TYPE, mBizType);
+        intent.putExtra("status", status);
+        intent.putExtra(ExtraAndResult.EXTRA_UUID, mAttachmentUUId);
+        act.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +110,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         mBizType = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
         mAttachmentUUId = getIntent().getStringExtra(ExtraAndResult.EXTRA_UUID);
         bizTypeId = getIntent().getStringExtra(ExtraAndResult.EXTRA_TYPE_ID);
+        mStatus = getIntent().getIntExtra("status", -1);
         //获取屏幕高度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
         screenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -122,7 +134,15 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
 
         tv_title.setVisibility(View.VISIBLE);
-        tv_edit.setVisibility(View.VISIBLE);
+
+        if (!TextUtils.isEmpty(bizTypeId)) {
+            tv_edit.setVisibility(View.VISIBLE);
+        }
+
+        if (mStatus == 3) {
+            ll_edit.setVisibility(View.GONE);
+        }
+
         linearLayoutManager = new LinearLayoutManager(this);
         // linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
@@ -142,6 +162,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
         rl_root = (RelativeLayout) findViewById(R.id.rl_root);
         ll_scanner = (LinearLayout) findViewById(R.id.rl_scanner);
+
+        ll_edit = (LinearLayout) findViewById(R.id.ll_edit);
     }
 
     private void initListener() {
@@ -193,6 +215,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("data", mPageDiscussion);
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+    }
 
     @Override
     public void onClick(View view) {
