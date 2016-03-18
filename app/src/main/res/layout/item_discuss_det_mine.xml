@@ -118,7 +118,7 @@
                 android:paddingTop="@dimen/dimen_16"
                 android:text="布多啥办法把收到回"
                 android:textColor="#fff"
-                android:textSize="@dimen/text_sp14"/>
+                android:textSize="@dimen/text_sp14" />
 
         </RelativeLayout>
 
