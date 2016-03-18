@@ -36,6 +36,7 @@ import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -60,7 +61,7 @@ import retrofit.client.Response;
 public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
-    private final List<SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
+    private final List<HaitHelper.SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
 
     private PullToRefreshRecycleView lv_notice;
     private EditText et_discuss;
@@ -336,7 +337,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      */
     private void delSelectUser(String delName) {
         for (int i = 0; i < mHaitSelectUsers.size(); i++) {
-            SelectUser selectUser = mHaitSelectUsers.get(i);
+            HaitHelper.SelectUser selectUser = mHaitSelectUsers.get(i);
             if (selectUser.matchName(delName)) {
                 mHaitSelectUsers.remove(i);
                 break;
@@ -345,12 +346,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     private List<String> getAndClearSelectUser(final String message) {
-        List<String> ids = new ArrayList(){};
+        List<String> ids = new ArrayList();
         if (mHaitSelectUsers.size() == 0) {
             return ids;
         }
         for (int i = 0; i < mHaitSelectUsers.size(); i++) {
-            SelectUser user = mHaitSelectUsers.get(i);
+            HaitHelper.SelectUser user = mHaitSelectUsers.get(i);
             if (!message.contains(user.name) || ids.contains(user.id)) {
                 continue;
             }
@@ -409,7 +410,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 String id = user.toShortUser().getId();
                 String name = user.toShortUser().getName();
 
-                mHaitSelectUsers.add(new SelectUser(name, id));
+                mHaitSelectUsers.add(new HaitHelper.SelectUser(name, id));
 
                 String selectName = add$Name(name);
                 int index = et_discuss.getSelectionStart();
@@ -536,7 +537,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             mTvOtherName = (TextView) itemView.findViewById(R.id.tv_other_name);
             mTvOtherContent = (TextView) itemView.findViewById(R.id.tv_other_content);
 
-            mTvOtherContent.setMaxWidth(screenWidth / 2);
+            mTvOtherContent.setMaxWidth((int) (screenWidth / 1.6f));
 
             mIvOtherAvatar = (RoundImageView) itemView.findViewById(R.id.iv_other_avatar);
         }
@@ -545,6 +546,20 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private class DiscussDetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<HttpDiscussDet> datas = new ArrayList<>();
+        private View.OnLongClickListener onAvaterLongClicklistener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                HaitHelper.SelectUser user = (HaitHelper.SelectUser) view.getTag();
+                if (user == null) {
+                    return false;
+                }
+                int selection = et_discuss.getSelectionStart();
+                et_discuss.getText().insert(selection, add$Name_real(user.name));
+                mHaitSelectUsers.add(user);
+                showKeyBoard(et_discuss);
+                return true;
+            }
+        };
 
         public void updataList(List<HttpDiscussDet> data) {
             if (data == null)
@@ -581,17 +596,27 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder == null)
                 return;
-            HttpDiscussDet info = datas.get(position);
+            final HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
                 mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
                 mineHolder.tvContent.setText(info.content);
+
+                HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
+                mineHolder.ivMineAvatar.setTag(selectUser);
+
+                mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
 //                ImageLoader.getInstance().displayImage(Config_project.);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
                 otherHolder.mTvOtherName.setText(info.creator.name);
                 otherHolder.mTvOtherContent.setText(info.content);
                 otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
+
+                HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
+                otherHolder.mIvOtherAvatar.setTag(selectUser);
+
+                otherHolder.mIvOtherAvatar.setOnLongClickListener(onAvaterLongClicklistener);
             }
         }
 
@@ -635,28 +660,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
     }
 
-    private class SelectUser {
-        String id;
-        String name;
-
-        public SelectUser(String name, String id) {
-            this.name = name;
-            this.id = id;
-        }
-
-        /**
-         * 用于比较
-         *
-         * @param name
-         * @return
-         */
-        public boolean matchName(String name) {
-
-            if (TextUtils.isEmpty(name)) {
-                return false;
-            }
-            return name.equals(this.name);
-        }
+    private String add$Name_real(String name) {
+        return "@" + name + SCANNER_HAIT_TRIM;
     }
 
     private static class DiscussSendMode {
