@@ -80,7 +80,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private String oldScanner;
     private LinearLayout ll_scanner;
     private int mBizType;
-    private String mAttachmentUUId, bizTypeId;
+    private String mAttachmentUUId, bizTypeId, summaryId;
     private int pageIndex = 1;
     public PaginationX<HttpDiscussDet> mPageDiscussion = new PaginationX<>();
     private Map<Long, String> messages = new HashMap<>();
@@ -99,6 +99,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         mBizType = getIntent().getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
         mAttachmentUUId = getIntent().getStringExtra(ExtraAndResult.EXTRA_UUID);
         bizTypeId = getIntent().getStringExtra(ExtraAndResult.EXTRA_TYPE_ID);
+        summaryId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
         //获取屏幕高度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
         screenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -304,8 +305,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         body.put("content", message);
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
-        mHaitSelectUsers.clear();
         LogUtil.d("发送的数据:" + MainApp.gson.toJson(body));
+        mHaitSelectUsers.clear();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
                 .createDiscussion(body, new RCallback<Discussion>() {
                     @Override
@@ -381,6 +382,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     protected void onStop() {
         super.onStop();
         rl_root.removeOnLayoutChangeListener(this);
+        refreshRedDot();
     }
 
     @Override
@@ -667,5 +669,26 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private static class DiscussSendMode {
         private static final int other = 0x0001;
         private static final int mine = 0x0002;
+    }
+
+    /**
+     * 刷新红点
+     */
+    private void refreshRedDot() {
+        HashMap<String, String> body = new HashMap<>();
+        body.put("summaryId", summaryId);
+        LogUtil.d("刷新红点:" + app.gson.toJson(body));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
+                .updateReadDot(body, new RCallback<Object>() {
+                    @Override
+                    public void success(Object d, Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 }

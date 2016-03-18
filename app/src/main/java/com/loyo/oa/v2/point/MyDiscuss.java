@@ -8,7 +8,9 @@ import com.loyo.oa.v2.beans.PaginationX;
 import java.util.HashMap;
 
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.PUT;
 import retrofit.http.QueryMap;
 
 /**
@@ -34,8 +36,23 @@ public interface MyDiscuss {
     @GET("/discussion/at/query")
     void getMyDisscussList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpMyDiscussItem>> callback);
 
-
+    /**
+     * 获取讨论详细
+     *
+     * @param map
+     * @param callback
+     */
     @GET("/discussion/query")
     void getDiscussDetail(@QueryMap HashMap<String, Object> map, Callback<PaginationX<HttpDiscussDet>> callback);
 
+    //    http://192.168.31.136:8050/api/v2/discussion/read?summaryId=56ea106debe07f6b21000001
+//    查看以后修改view状态的接口
+
+    /**
+     * 更新红点
+     * @param map
+     * @param cb
+     */
+    @PUT("/discussion/read")
+    void updateReadDot(@Body HashMap<String, String> map, retrofit.Callback<Object> cb);
 }

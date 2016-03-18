@@ -216,6 +216,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.summaryId);
                     startActivity(intent);
                 }
             });
