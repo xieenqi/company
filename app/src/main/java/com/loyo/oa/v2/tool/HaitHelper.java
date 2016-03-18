@@ -163,18 +163,11 @@ public class HaitHelper {
      * @param message
      * @return
      */
-    public String[] getSelectUser(final String message) {
+    public List<String> getSelectUser(final String message) {
         if (mHaitSelectUsers.size() == 0) {
             return null;
         }
-        List<String> ids = new ArrayList<String>() {
-            public String[] toArray(String[] contents) {
-                for (int i = 0; i < size(); i++) {
-                    contents[i] = get(i);
-                }
-                return contents;
-            }
-        };
+        List<String> ids = new ArrayList<>();
         for (int i = 0; i < mHaitSelectUsers.size(); i++) {
             SelectUser user = mHaitSelectUsers.get(i);
             if (!message.contains(user.name) || ids.contains(user.id)) {
@@ -182,10 +175,7 @@ public class HaitHelper {
             }
             ids.add(user.id);
         }
-        if (ids.isEmpty()) {
-            return null;
-        }
-        return ids.toArray(new String[ids.size()]);
+        return ids;
     }
 
     /**
