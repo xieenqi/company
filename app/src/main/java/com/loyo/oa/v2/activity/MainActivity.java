@@ -718,7 +718,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (null != MainApp.lstDepartment) {
             app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
         } else {
-            Toast("组织架构缺损，请重新拉去");
+            Toast("请重新拉去组织架构");
         }
     }
 
