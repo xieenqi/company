@@ -969,7 +969,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
 
-        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty()) {
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
             img_user.setImageResource(R.drawable.img_default_user);
             Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
             Bitmap blur = Utils.doBlur(bitmap, 50, false);
