@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,14 +29,20 @@ public class HaitHelper {
     private static final char SCANNER_HAIT_TRIM = '\u2005';
 
     private final List<SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
+    private final Fragment mFragment;
 
     private EditText et_scanner;
     private String oldScanner;
 
-    public HaitHelper(EditText et_scanner) {
+    public HaitHelper(Fragment fragment, EditText et_scanner){
         this.et_scanner = et_scanner;
+        this.mFragment = fragment;
 
         init();
+    }
+
+    public HaitHelper(EditText et_scanner) {
+        this(null, et_scanner);
     }
 
     private void init() {
@@ -74,11 +81,17 @@ public class HaitHelper {
         private void toSelectUserByHait() {
             Bundle bundle = new Bundle();
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-            MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
-                    SelectDetUserActivity.class,
-                    MainApp.ENTER_TYPE_RIGHT,
-                    ExtraAndResult.request_Code,
-                    bundle);
+            if (null == mFragment){
+                MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
+                        SelectDetUserActivity.class,
+                        MainApp.ENTER_TYPE_RIGHT,
+                        ExtraAndResult.request_Code,
+                        bundle);
+            } else {
+                mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
+                        SelectDetUserActivity.class).putExtras(bundle),
+                        ExtraAndResult.request_Code);
+            }
         }
 
         /**
@@ -228,9 +241,8 @@ public class HaitHelper {
                 int index = et_scanner.getSelectionStart();
                 Editable editable = et_scanner.getText();
                 editable.insert(index, selectName);
-
-                showKeyBoard();
             }
+            showKeyBoard();
         }
     }
 
