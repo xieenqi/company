@@ -44,6 +44,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,21 +71,18 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private ImageView iv_submit;
     private TextView tv_send;
     private RelativeLayout rl_root;
-
     private DiscussDetAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
-
     private int screenHeight;
     private int keyHeight;
     private int screenWidth;
     private String oldScanner;
     private LinearLayout ll_scanner;
-
     private int mBizType;
-    private String mAttachmentUUId;
-    private String bizTypeId;
-
+    private String mAttachmentUUId, bizTypeId;
+    private int pageIndex = 1;
     public PaginationX<HttpDiscussDet> mPageDiscussion = new PaginationX<>();
+    private Map<Long, String> messages = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +118,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             case 5:
                 tv_edit.setText("查看项目");
                 break;
-
         }
 
         tv_title.setVisibility(View.VISIBLE);
@@ -128,10 +125,10 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         linearLayoutManager = new LinearLayoutManager(this);
         // linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
+        lv_notice.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         bindDiscussion();
         loadMessage();
     }
-
 
     private void assignViews() {
         lv_notice = (PullToRefreshRecycleView) findViewById(R.id.lv_notice);
@@ -164,7 +161,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-
+                pageIndex++;
+                loadMessage();
             }
         });
         et_discuss.addTextChangedListener(new UserScannerTextWatcher()); //监听用户输入
@@ -232,7 +230,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 }
                 et_discuss.getText().clear();
 
-                long time = System.currentTimeMillis();
+                long time = System.currentTimeMillis() / 1000;
 
                 addMineMessge(time, mineMessage);
 
@@ -250,8 +248,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private void loadMessage() {
         showLoading("");
         HashMap<String, Object> body = new HashMap<>();
-        body.put("pageIndex", mPageDiscussion.getPageIndex());
-        body.put("pageSize", mPageDiscussion.getPageSize());
+        body.put("pageIndex", pageIndex + "");
+        body.put("pageSize", 5);
         body.put("attachmentUUId", mAttachmentUUId);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).
                 create(MyDiscuss.class).getDiscussDetail(body, new RCallback<PaginationX<HttpDiscussDet>>() {
@@ -259,23 +257,22 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             public void success(PaginationX<HttpDiscussDet> d, Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
                 if (d == null || d.getRecords().size() == 0) {
-                    Toast("加载失败");
-                    return;
+                    Toast("没有更多信息");
                 }
-                mPageDiscussion.setPageIndex(d.getPageIndex() + 1);
                 mPageDiscussion.getRecords().addAll(d.getRecords());
                 bindDiscussion();
+                lv_notice.onRefreshComplete();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                lv_notice.onRefreshComplete();
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
         });
     }
 
-    private Map<Long, String> messages = new HashMap<>();
 
     /**
      * 预显示我发送的消息
@@ -286,7 +283,11 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private void addMineMessge(long time, String mineMessage) {
         messages.put(time, mineMessage);
         HttpDiscussDet discussion = new HttpDiscussDet();
-        //discussion.creator=MainApp.user;
+        HttpCrecter creacter = new HttpCrecter();
+        creacter.id = MainApp.user.id;
+        creacter.name = MainApp.user.name;
+        creacter.avatar = MainApp.user.avatar;
+        discussion.creator = creacter;
         discussion.createdAt = time;
         discussion.content = mineMessage;
         adapter.addMineMessage(discussion);
@@ -297,36 +298,35 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      * 发送讨论信息
      */
     private void sendMessage(final long time, final String message) {
-        final IDiscuss t = RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class);
         HashMap<String, Object> body = new HashMap<>();
-        //TODO: 添加参数...
         body.put("attachmentUUId", mAttachmentUUId);
         body.put("content", message);
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
         mHaitSelectUsers.clear();
         LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
-        t.createDiscussion(body, new RCallback<Discussion>() {
-            @Override
-            public void success(Discussion d, Response response) {
-                HttpErrorCheck.checkResponse(response);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                new Handler().postDelayed(new Runnable() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
+                .createDiscussion(body, new RCallback<Discussion>() {
                     @Override
-                    public void run() {
-                        adapter.removeAtTime(time);
+                    public void success(Discussion d, Response response) {
+                        HttpErrorCheck.checkResponse(response);
                     }
-                }, 800);
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.removeAtTime(time);
+                            }
+                        }, 800);
 //                et_discuss.setText(message);
 //                Toast("信息上传失败请重新发送");
 
-            }
-        });
+                    }
+                });
     }
 
     /**
@@ -344,18 +344,11 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
     }
 
-    private String[] getAndClearSelectUser(final String message) {
+    private List<String> getAndClearSelectUser(final String message) {
         if (mHaitSelectUsers.size() == 0) {
             return null;
         }
-        List<String> ids = new ArrayList<String>() {
-
-            public String[] toArray(String[] contents) {
-                for (int i = 0; i < size(); i++) {
-                    contents[i] = get(i);
-                }
-                return contents;
-            }
+        List<String> ids = new ArrayList() {
         };
         for (int i = 0; i < mHaitSelectUsers.size(); i++) {
             SelectUser user = mHaitSelectUsers.get(i);
@@ -364,10 +357,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             }
             ids.add(user.id);
         }
-        if (ids.isEmpty()) {
-            return null;
-        }
-        return ids.toArray(new String[ids.size()]);
+        return ids;
     }
 
 
@@ -595,14 +585,14 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             HttpDiscussDet info = datas.get(position);
             if (holder.getClass() == DiscussDetMineViewHolder.class) {
                 DiscussDetMineViewHolder mineHolder = (DiscussDetMineViewHolder) holder;
-                mineHolder.tvMineTime.setText(info.createdAt + "");
+                mineHolder.tvMineTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
                 mineHolder.tvContent.setText(info.content);
 //                ImageLoader.getInstance().displayImage(Config_project.);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
                 otherHolder.mTvOtherName.setText(info.creator.name);
                 otherHolder.mTvOtherContent.setText(info.content);
-                otherHolder.mTvOtherTime.setText(info.createdAt + "");
+                otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
             }
         }
 

@@ -14,11 +14,6 @@ public class HttpDiscussDet {
     public long createdAt;
     public long updatedAt;
     public ArrayList<String> mentionedUserIds;
-    public Creator creator;
+    public HttpCrecter creator;
 
-    public class Creator {
-        public String id;
-        public String name;
-        public String avatar;
-    }
 }
