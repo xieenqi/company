@@ -168,7 +168,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 default:
                     break;
             }
-
         }
     };
 
