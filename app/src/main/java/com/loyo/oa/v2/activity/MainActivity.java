@@ -34,6 +34,7 @@ import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
+import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
@@ -1125,6 +1126,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public void intentJpushInfo() {
         if (MainApp.jpushData != null) {
             Intent intent = new Intent();
+            if ("discuss".equals(MainApp.jpushData.operationType)) {
+                intent.setClass(MainActivity.this, ActivityHait.class);//推送讨论
+                startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            }
             switch (MainApp.jpushData.buzzType) {
                 case 1:
                     intent.setClass(MainActivity.this, TasksInfoActivity_.class);

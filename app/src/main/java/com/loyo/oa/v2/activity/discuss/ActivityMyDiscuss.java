@@ -130,8 +130,8 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_edit:
                 Intent intent = new Intent(this, ActivityHait.class);
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
-                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
+//                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
+//                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
                 startActivity(intent);
                 break;
         }
