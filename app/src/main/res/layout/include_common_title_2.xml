@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
-                android:background="@color/title_bg1"
-                android:gravity="center_vertical">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/view_h_title"
+    android:background="@color/title_bg1"
+    android:gravity="center_vertical">
 
     <LinearLayout
         android:id="@+id/layout_back"
@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dimen_5"
             android:scaleType="fitCenter"
-            android:src="@drawable/back_left1"/>
+            android:src="@drawable/back_left1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sp16"/>
+            android:textSize="@dimen/text_sp16" />
 
     </LinearLayout>
 
@@ -40,14 +40,13 @@
         android:layout_height="23dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:maxEms="11"
         android:ellipsize="end"
+        android:maxEms="11"
         android:singleLine="true"
         android:text="标题"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sp18"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_edit"
@@ -60,7 +59,7 @@
         android:text="编辑"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sp16"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_submit"
@@ -71,7 +70,7 @@
         android:layout_marginRight="@dimen/dimen_8"
         android:scaleType="fitCenter"
         android:src="@drawable/right_submit1"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>
 

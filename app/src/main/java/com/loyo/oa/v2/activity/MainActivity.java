@@ -33,6 +33,8 @@ import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
+import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
@@ -219,6 +221,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     private static class MHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
+
         private MHandler(final MainActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
@@ -473,7 +476,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
-            public void success(final AttendanceRecord attendanceRecord,final Response response) {
+            public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 cancelLoading();
                 attendanceRecords = attendanceRecord;
                 LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
@@ -546,15 +549,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             if (validateInfo.isPopup()) {
                 popOutToast();
                 /*不加班*/
-            }else {
+            } else {
                 dealInOutWork();
             }
             /*非工作日，下班状态*/
-        }else if (!validateInfo.isWorkDay() && outEnable) {
+        } else if (!validateInfo.isWorkDay() && outEnable) {
             outKind = 2;
             startAttanceLocation();
             /*非工作日，上班状态*/
-        }else if (!validateInfo.isWorkDay() && inEnable) {
+        } else if (!validateInfo.isWorkDay() && inEnable) {
             outKind = 0;
             startAttanceLocation();
         }
@@ -569,7 +572,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 0;
             startAttanceLocation();
             /*下班*/
-        }else if (outEnable) {
+        } else if (outEnable) {
             outKind = 1;
             startAttanceLocation();
         }
@@ -958,7 +961,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
-                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class)));
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class),
+                // TODO: 添加我的讨论界面
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class)));
 
         if (MainApp.user == null) {
             return;
@@ -981,7 +986,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
 
                 @Override
-                public void onLoadingFailed(final String s, final View view,final FailReason failReason) {
+                public void onLoadingFailed(final String s, final View view, final FailReason failReason) {
 
                 }
 
@@ -996,7 +1001,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
 
                 @Override
-                public void onLoadingCancelled(final String s,final View view) {
+                public void onLoadingCancelled(final String s, final View view) {
 
                 }
             });
@@ -1018,14 +1023,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
-//        String userPermission=SharedUtil.get(this, ExtraAndResult.USER_PERMISSION);
-//        if(!TextUtils.isEmpty(userPermission)){
-//            items=app.gson.fromJson(userPermission,new TypeToken<ArrayList<Suites>>(){}.getType());
-//            lv_main.setAdapter(adapter);//为了业务使用权限
-//            lv_main.setDragEnabled(true);
-//            LogUtil.d("缓存配置权限");
-//        }
-
         if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
                 0 == MainApp.user.permission.suites.size()) {
             Timer timer = new Timer();
@@ -1066,7 +1063,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
         items.clear();
         items = itemsNew;
-//        SharedUtil.put(this, ExtraAndResult.USER_PERMISSION, app.gson.toJson(items).toString());
+        //默认添加有
+        items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));
         lv_main.setAdapter(adapter);//为了业务使用权限
         lv_main.setDragEnabled(true);
         cancelLoading();
@@ -1116,7 +1114,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public String title;
         public Class<?> cls;
 
-        public ClickItem(final int _imageViewRes,final String _title,final Class<?> _cls) {
+        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls) {
             imageViewRes = _imageViewRes;
             title = _title;
             cls = _cls;
@@ -1138,6 +1136,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public void intentJpushInfo() {
         if (MainApp.jpushData != null) {
             Intent intent = new Intent();
+            if ("discuss".equals(MainApp.jpushData.operationType)) {
+                intent.setClass(MainActivity.this, ActivityHait.class);//推送讨论
+                startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            }
             switch (MainApp.jpushData.buzzType) {
                 case 1:
                     intent.setClass(MainActivity.this, TasksInfoActivity_.class);
@@ -1194,7 +1198,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     void requestNumber() {
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
             @Override
-            public void success(final ArrayList<HttpMainRedDot> homeNumbers,final Response response) {
+            public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
                 HttpErrorCheck.checkResponse("首页红点", response);
                 mItemNumbers = homeNumbers;
                 adapter.notifyDataSetChanged();
