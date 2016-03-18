@@ -8,7 +8,6 @@ import com.loyo.oa.v2.beans.PaginationX;
 import java.util.HashMap;
 
 import retrofit.Callback;
-import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.PUT;
 import retrofit.http.QueryMap;
@@ -54,5 +53,5 @@ public interface MyDiscuss {
      * @param cb
      */
     @PUT("/discussion/read")
-    void updateReadDot(@Body HashMap<String, String> map, retrofit.Callback<Object> cb);
+    void updateReadDot(@QueryMap HashMap<String, Object> map, retrofit.Callback<Object> cb);
 }

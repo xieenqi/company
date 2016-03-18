@@ -43,6 +43,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -609,12 +610,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
                 mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
 //                ImageLoader.getInstance().displayImage(Config_project.);
+                ImageLoader.getInstance().displayImage(info.creator.avatar, mineHolder.ivMineAvatar);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
                 otherHolder.mTvOtherName.setText(info.creator.name);
                 otherHolder.mTvOtherContent.setText(info.content);
                 otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
-
+                ImageLoader.getInstance().displayImage(info.creator.avatar, otherHolder.mIvOtherAvatar);
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 otherHolder.mIvOtherAvatar.setTag(selectUser);
 
@@ -675,7 +677,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      * 刷新红点
      */
     private void refreshRedDot() {
-        HashMap<String, String> body = new HashMap<>();
+        HashMap<String, Object> body = new HashMap<>();
         body.put("summaryId", summaryId);
         LogUtil.d("刷新红点:" + app.gson.toJson(body));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)

@@ -168,7 +168,7 @@ public class ActivityHait extends BaseActivity {
         public void onBindViewHolder(HaitViewHolder holder, int position) {
             HttpMyDiscussItem info = datas.get(position);
             holder.tv_time.setText(info.updatedAt.substring(11, 19));
-            holder.tv_content.setText(info.content);
+            holder.tv_content.setText(info.atContent);
             holder.tv_title.setText(parseTitle(info.creator.name, info.title));
             ImageLoader.getInstance().displayImage(info.creator.avatar, holder.iv_avatar);
             holder.openItem(datas.get(position));

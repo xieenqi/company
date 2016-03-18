@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -196,6 +197,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         private TextView tv_title;
         private TextView tv_time;
         private TextView tv_content;
+        private TextView tv_dateTime;
 
         public DiscussViewHolder(View itemView) {
             super(itemView);
@@ -204,6 +206,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+            tv_dateTime = (TextView) itemView.findViewById(R.id.tv_dateTime);
             itemView.setTag(this);
 
         }
@@ -223,6 +226,8 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             switch (itemData.bizType) {
                 case 1:
                     iv_icon.setImageResource(R.drawable.ic_disuss_report);
+                    tv_dateTime.setVisibility(View.VISIBLE);
+                    tv_dateTime.setText(app.df11.format(new Date(System.currentTimeMillis())));
                     break;
                 case 2:
                     iv_icon.setImageResource(R.drawable.ic_discuss_task);

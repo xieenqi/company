@@ -78,7 +78,7 @@
             android:paddingLeft="@dimen/dimen_4"
             android:paddingRight="@dimen/dimen_8"
             android:text="发送"
-            android:textColor="@color/col_discuss_send"
+            android:textColor="@color/title_bg1"
             android:textSize="@dimen/text_sp18" />
 
     </LinearLayout>
