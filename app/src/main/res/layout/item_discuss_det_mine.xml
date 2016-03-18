@@ -117,7 +117,7 @@
                 android:paddingTop="@dimen/dimen_16"
                 android:text="asssdhavuvdsufvusvd阿布多啥办法把收到回复fba"
                 android:textColor="#fff"
-                android:textSize="@dimen/text_sp14"/>
+                android:textSize="@dimen/text_sp14" />
 
         </RelativeLayout>
 

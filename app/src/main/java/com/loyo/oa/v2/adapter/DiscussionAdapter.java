@@ -11,6 +11,7 @@ import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
 import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.TimeFormatUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,7 @@ public class DiscussionAdapter extends CommonAdapter<Discussion> {
     public void convert(ViewHolder holder, final Discussion discussion) {
         LogUtil.d(MainApp.gson.toJson(discussion) + " 讨2论的名 " + discussion.getCreator().getRealname());
         holder.setText(R.id.tv_creator, discussion.getCreator().getRealname())
-                .setText(R.id.tv_create_time, app.df3.format(new Date(discussion.getCreatedAt() * 1000))).setText(R.id.tv_comment, discussion.getContent())
+                .setText(R.id.tv_create_time, TimeFormatUtil.toFormat(discussion.getCreatedAt())).setText(R.id.tv_comment, discussion.getContent())
                 .setImageUri(R.id.img_disscution_creator, discussion.getCreator().avatar, R.drawable.img_default_user);
 
         holder.getView(R.id.img_disscution_creator).setOnLongClickListener(new View.OnLongClickListener() {

@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.TimeFormatUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -266,7 +267,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             TextView name = ViewHolder.get(view, R.id.tv_discuss_sender);
             TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
-            time.setText(app.df9.format(new Date(discussion.getCreatedAt()*1000)));
+            time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
             name.setText(discussion.getCreator().name);
             content.setText(discussion.getContent());
             ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, iv);
