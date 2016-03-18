@@ -28,7 +28,8 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- 修改手机连接网路状态权限 <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>-->
+    <!-- 修改手机连接网路状态权限 <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/> -->
+
 
     <!-- 激光推送 -->
     <permission
@@ -62,6 +63,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -70,28 +72,26 @@
         <activity
             android:name=".activity.login.WelcomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.VerifyAccountActivity_"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.MainActivity_"
             android:hardwareAccelerated="false"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppStartLoadTranslucent"
-            />
+            android:theme="@style/AppStartLoadTranslucent"/>
         <activity
             android:name=".tool.customview.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize"
@@ -120,8 +120,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activity.customer.NearByCustomersMapActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LegworksListActivity_"
             android:launchMode="standard"
@@ -289,9 +288,8 @@
             android:name=".activity.contact.ContactInfoEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            />
-        <!-- 子任务的添加-->
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <!-- 子任务的添加 -->
         <activity
             android:name=".activity.tasks.ChildTaskAddActivity_"
             android:launchMode="singleTop"
@@ -302,7 +300,7 @@
             android:name=".activity.tasks.ChildTaskEdit"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <!-- 任务编辑页面-->
+        <!-- 任务编辑页面 -->
         <activity
             android:name=".activity.tasks.TasksEditActivity_"
             android:launchMode="singleTop"
@@ -320,7 +318,6 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activity.work.WorkReportAddActivity_"
-
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
@@ -328,13 +325,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <!-- 部门选择页面-->
+        <!-- 部门选择页面 -->
         <activity
             android:name=".activity.wfinstance.DepartmentChoose"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-
         <activity
             android:name=".activity.wfinstance.WfInstanceTypeSelectManageActivity"
             android:launchMode="singleTop"
@@ -360,13 +356,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
-        <!-- 设置账号页面-->
+        <!-- 设置账号页面 -->
         <activity
             android:name=".activity.setting.ActivityEditUserMobile"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
-
         <activity
             android:name=".activity.customer.CustomerContractAddActivity"
             android:screenOrientation="portrait"
@@ -392,7 +387,7 @@
             android:name=".activity.signin.SignInManagerFromCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <!--任务审核 -->
+        <!-- 任务审核 -->
         <activity
             android:name=".activity.tasks.TasksInfoScoreActivity_"
             android:screenOrientation="portrait"
@@ -406,7 +401,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
-        <!-- 任务的搜索-->
+        <!-- 任务的搜索 -->
         <activity
             android:name=".activity.tasks.TasksSearchActivity"
             android:launchMode="singleTop"
@@ -445,7 +440,7 @@
             android:name=".activity.commonview.DiscussionActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.work.WorkReportModelSelectManageActivity_"
             android:launchMode="singleTop"
@@ -494,20 +489,17 @@
         <activity
             android:name=".activity.signin.SigninSelectCustomer"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.commonview.SelectDetUserActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.commonview.SelectDetUserSerach"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <service
             android:name=".service.InitDataService_"
@@ -529,7 +521,6 @@
             </intent-filter>
         </receiver>
 
-
         <!-- 高德定位后台服务 -->
         <service
             android:name=".service.AMapService"
@@ -548,15 +539,13 @@
                 <category android:name="${applicationId}"/>
             </intent-filter>
         </activity>
-        <!-- Required  SDK核心功能-->
+        <!-- Required  SDK核心功能 -->
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false">
-        </service>
+            android:exported="false"/>
 
-
-        <!-- Required SDK 核心功能-->
+        <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service
             android:name="cn.jpush.android.service.PushService"
@@ -578,19 +567,19 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService"/>
+
                 <category android:name="${applicationId}"/>
             </intent-filter>
-
         </service>
 
-        <!-- Required SDK核心功能-->
+        <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
-                <!--Required  显示通知栏 -->
+                <!-- Required  显示通知栏 -->
                 <category android:name="${applicationId}"/>
             </intent-filter>
             <intent-filter>
@@ -604,31 +593,30 @@
 
                 <data android:scheme="package"/>
             </intent-filter>
-
         </receiver>
 
-        <!-- Required SDK核心功能-->
+        <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.AlarmReceiver"
             android:exported="false"/>
 
-        <!-- User defined.  For test only  用户自定义的广播接收器-->
+        <!-- User defined.  For test only  用户自定义的广播接收器 -->
         <receiver
             android:name=".service.JPushService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION"/>
-                <!--Required  用户注册SDK的intent-->
+                <!-- Required  用户注册SDK的intent -->
                 <action android:name="cn.jpush.android.intent.UNREGISTRATION"/>
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
-                <!--Required  用户接收SDK消息的intent-->
+                <!-- Required  用户接收SDK消息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
-                <!--Required  用户接收SDK通知栏信息的intent-->
+                <!-- Required  用户接收SDK通知栏信息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
-                <!--Required  用户打开自定义通知栏的intent-->
+                <!-- Required  用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK"/>
-                <!--Optional 用户接受Rich Push Javascript 回调函数的intent-->
+                <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
                 <action android:name="cn.jpush.android.intent.CONNECTION"/>
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <category android:name="${applicationId}"/>
@@ -643,13 +631,27 @@
             android:name="JPUSH_APPKEY"
             android:value="f78e54766a8910db098ce699"/>
 
-        <!--高德定位相关 -->
+        <!-- 高德定位相关 -->
         <service android:name="com.amap.api.location.APSService"/>
 
-        <!-- 高德地图 //开发者申请的key-->
+        <!-- 高德地图 //开发者申请的key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2d8b80512b2c5a6110c177828b56bc01"/>
-
+        <!--我的讨论界面-->
+        <activity
+            android:name=".activity.discuss.ActivityMyDiscuss"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.discuss.hait.ActivityHait"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.discuss.ActivityDiscussDet"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
     </application>
+
 </manifest>

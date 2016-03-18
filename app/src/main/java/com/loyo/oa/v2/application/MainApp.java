@@ -197,7 +197,8 @@ public class MainApp extends Application {
                 }
             };
 
-            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).setRequestInterceptor(requestInterceptor).build();
+            restAdapter = new RestAdapter.Builder().setEndpoint(Config_project.SERVER_URL_LOGIN()).setLogLevel(RestAdapter.LogLevel.FULL).
+                    setRequestInterceptor(requestInterceptor).build();
         }
 
         return restAdapter;
@@ -219,7 +220,7 @@ public class MainApp extends Application {
 //        }
         //        init_StrictMode();
         Configuration config = getResources().getConfiguration();
-        config.locale= Locale.CHINA;
+        config.locale = Locale.CHINA;
         getBaseContext().getResources().updateConfiguration(config, null);
         logUtil = LogUtil.lLog();
         handler = new MainApplicationHandler();
@@ -280,8 +281,8 @@ public class MainApp extends Application {
 
         File cacheDir = StorageUtils.getOwnCacheDirectory(mainApp.getBaseContext(), "imageloader/Cache");
 
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.empty_photo)// 空uri时的默认图片
-                .showImageOnFail(R.drawable.empty_photo)// 加载失败时的默认图片
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.img_default_user)// 空uri时的默认图片
+                .showImageOnFail(R.drawable.img_default_user)// 加载失败时的默认图片
                 .cacheInMemory(true)// 是否缓存到内存
                 .cacheOnDisc(true)// 是否缓存到磁盘
                 .bitmapConfig(Bitmap.Config.RGB_565)// 图片格式比RGB888少消耗2倍内存

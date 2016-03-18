@@ -2,8 +2,6 @@ package com.loyo.oa.v2.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -17,10 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
+import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
@@ -28,7 +25,6 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -36,7 +32,6 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 
 import java.text.SimpleDateFormat;
@@ -461,6 +456,8 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             int inTagstate = 0;
             int outTagstate = 0;
+            int totState = 0;
+
 
             final DayofAttendance attendance = (DayofAttendance) getItem(i);
             final AttendanceRecord recordIn = attendance.getIn();
@@ -491,6 +488,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
             //加班时间
             if (recordOut != null) {
+                totState = recordOut.getState();
                 outTagstate = recordOut.getTagstate();
                 LogUtil.dll("Out TagState:"+outTagstate);
 
@@ -578,7 +576,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 background = R.drawable.attendance_shape_leave;
                 status = "请假";
                 textColor = getResources().getColor(R.color.redE8);
+            } else if(totState == 6){
+                background = R.drawable.attendance_shape_test;
+                status = "休息";
+                textColor = getResources().getColor(R.color.grayC9);
             }
+
             iv_extra.setText(status);
             iv_extra.setBackgroundResource(background);
             iv_extra.setTextColor(textColor);

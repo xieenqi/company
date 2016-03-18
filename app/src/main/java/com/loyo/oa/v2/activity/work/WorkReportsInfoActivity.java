@@ -35,6 +35,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -80,6 +81,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     ViewGroup layout_attachment;
     @ViewById
     ViewGroup layout_discussion;
+    @ViewById
+    TextView tv_review_time;
 
     @ViewById
     ImageView img_workreport_status;
@@ -294,6 +297,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
+            tv_review_time.setText(DateTool.timet(mWorkReport.getReviewer().getReviewedAt()+"",DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             btn_workreport_review.setVisibility(View.GONE);
             ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.getReviewer().getScore())).intValue() / 20);
 

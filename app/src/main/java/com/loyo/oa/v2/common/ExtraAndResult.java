@@ -12,6 +12,9 @@ public class ExtraAndResult {
     public static final String EXTRA_OBJ = "extra_obj";
     public static final String EXTRA_STATUS = "extra_status";
     public static final String EXTRA_TYPE = "extra_type";
+    public static final String EXTRA_UUID = "extra_uuid";
+    public static final String EXTRA_TYPE_ID = "extra_type_id";
+    public static final String EXTRA_BOOLEAN = "extra_boolean";
 
     public static final String RESULT_ID = "result_id";
     public static final String RESULT_NAME = "result_name";

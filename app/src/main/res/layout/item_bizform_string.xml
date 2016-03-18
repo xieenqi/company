@@ -18,7 +18,7 @@
             android:gravity="left|center_vertical"
             android:text="标题："
             android:textColor="#999999"
-            android:textSize="@dimen/textsize_content_label"/>
+            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/edt_value"
@@ -27,7 +27,9 @@
             android:background="@android:color/transparent"
             android:hint="必填项"
             android:paddingLeft="4dp"
-            android:textColor="#383838"/>
+            android:textColor="#383838"
+            android:textSize="15sp"
+            />
 
     </LinearLayout>
 </LinearLayout>

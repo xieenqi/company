@@ -38,8 +38,8 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
+import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -446,7 +446,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();
-
     }
 
 //        @Click(R.id.layout_delete2)
@@ -454,7 +453,6 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            bizFormFieldsListViewAdapter.setEmpty();
 //            layout_edit.setVisibility(View.GONE);
 //        }
-
 
     void addIsRequired(){
         LogUtil.dll("执行 addIsRequired");
@@ -488,17 +486,23 @@ public class WfInstanceAddActivity extends BaseActivity {
         for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
             HashMap<String, Object> map_Values = submitData.get(k);
-            for (BizFormFields field : mBizForm.getFields()) {
-                for (String key : map_Values.keySet()) {
-                    if (!TextUtils.equals(field.getId(), key)) {
-                        continue;
+            try{
+                for (BizFormFields field : mBizForm.getFields()) {
+                    for (String key : map_Values.keySet()) {
+                        if (!TextUtils.equals(field.getId(), key)) {
+                            continue;
+                        }
+                        postValue.add(map_Values.get(key));
+                        String value = (String) map_Values.get(key);
+                        jsonMapValues.put(key, value);
                     }
-                    postValue.add(map_Values.get(key));
-                    String value = (String) map_Values.get(key);
-                    jsonMapValues.put(key, value);
                 }
+                workflowValues.add(jsonMapValues);
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("操作失败！");
+                return;
             }
-            workflowValues.add(jsonMapValues);
         }
 
         for(int i = 0;i<postValue.size();i++){
