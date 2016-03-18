@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,7 +57,6 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_mydiscuss);
         initView();
         initListener();
-        getData();
     }
 
     private void initView() {
@@ -84,6 +84,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
                     @Override
                     public void success(PaginationX<HttpDiscussItem> discuss, Response response) {
+                        cancelLoading();
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
                             mDiscuss = discuss;
@@ -99,6 +100,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void failure(RetrofitError error) {
+                        cancelLoading();
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                         lv_discuss.onRefreshComplete();
@@ -152,6 +154,11 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         getData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }
 
     private class DiscussAdapter extends RecyclerView.Adapter<DiscussViewHolder> {
 
@@ -196,6 +203,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         private TextView tv_title;
         private TextView tv_time;
         private TextView tv_content;
+        private TextView tv_dateTime;
 
         public DiscussViewHolder(View itemView) {
             super(itemView);
@@ -204,6 +212,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
+            tv_dateTime = (TextView) itemView.findViewById(R.id.tv_dateTime);
             itemView.setTag(this);
 
         }
@@ -216,12 +225,15 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.summaryId);
                     startActivity(intent);
                 }
             });
             switch (itemData.bizType) {
                 case 1:
                     iv_icon.setImageResource(R.drawable.ic_disuss_report);
+                    tv_dateTime.setVisibility(View.VISIBLE);
+                    tv_dateTime.setText(app.df11.format(new Date(System.currentTimeMillis())));
                     break;
                 case 2:
                     iv_icon.setImageResource(R.drawable.ic_discuss_task);

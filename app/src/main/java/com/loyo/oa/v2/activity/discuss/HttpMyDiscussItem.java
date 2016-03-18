@@ -7,7 +7,8 @@ public class HttpMyDiscussItem {
     public String id;
     public String companyId;
     public String bizId;
-    public String content;
+    public String atContent;
+
     public String title;
     public int bizType;//1.工作报告 2.任务 5.项目
     public String attachmentUUId;

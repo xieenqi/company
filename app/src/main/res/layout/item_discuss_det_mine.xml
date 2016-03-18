@@ -106,6 +106,7 @@
                 android:id="@+id/tv_mine_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="60dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/dimen_8"
                 android:background="@drawable/bg_mine"
@@ -115,7 +116,7 @@
                 android:paddingLeft="@dimen/dimen_16"
                 android:paddingRight="@dimen/dimen_24"
                 android:paddingTop="@dimen/dimen_16"
-                android:text="asssdhavuvdsufvusvd阿布多啥办法把收到回复fba"
+                android:text="布多啥办法把收到回"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_sp14" />
 

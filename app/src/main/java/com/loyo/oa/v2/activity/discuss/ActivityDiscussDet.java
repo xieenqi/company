@@ -43,6 +43,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +83,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private String oldScanner;
     private LinearLayout ll_scanner;
     private int mBizType;
-    private String mAttachmentUUId, bizTypeId;
+    private String mAttachmentUUId, bizTypeId, summaryId;
     private int pageIndex = 1;
     public PaginationX<HttpDiscussDet> mPageDiscussion = new PaginationX<>();
     private Map<Long, String> messages = new HashMap<>();
@@ -111,6 +112,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         mAttachmentUUId = getIntent().getStringExtra(ExtraAndResult.EXTRA_UUID);
         bizTypeId = getIntent().getStringExtra(ExtraAndResult.EXTRA_TYPE_ID);
         mStatus = getIntent().getIntExtra("status", -1);
+        summaryId = getIntent().getStringExtra(ExtraAndResult.EXTRA_ID);
         //获取屏幕高度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
         screenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -332,8 +334,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         body.put("content", message);
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
-        mHaitSelectUsers.clear();
         LogUtil.d("发送的数据:" + MainApp.gson.toJson(body));
+        mHaitSelectUsers.clear();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
                 .createDiscussion(body, new RCallback<Discussion>() {
                     @Override
@@ -409,6 +411,9 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     protected void onStop() {
         super.onStop();
         rl_root.removeOnLayoutChangeListener(this);
+        if (!TextUtils.isEmpty(bizTypeId)) {
+            refreshRedDot();
+        }
     }
 
     @Override
@@ -635,12 +640,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
                 mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
 //                ImageLoader.getInstance().displayImage(Config_project.);
+                ImageLoader.getInstance().displayImage(info.creator.avatar, mineHolder.ivMineAvatar);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {
                 DiscussDetOtherViewHolder otherHolder = (DiscussDetOtherViewHolder) holder;
                 otherHolder.mTvOtherName.setText(info.creator.name);
                 otherHolder.mTvOtherContent.setText(info.content);
                 otherHolder.mTvOtherTime.setText(app.df3.format(new Date(info.createdAt * 1000)));
-
+                ImageLoader.getInstance().displayImage(info.creator.avatar, otherHolder.mIvOtherAvatar);
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 otherHolder.mIvOtherAvatar.setTag(selectUser);
 
@@ -695,5 +701,26 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private static class DiscussSendMode {
         private static final int other = 0x0001;
         private static final int mine = 0x0002;
+    }
+
+    /**
+     * 刷新红点
+     */
+    private void refreshRedDot() {
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("summaryId", summaryId);
+        LogUtil.d("刷新红点:" + app.gson.toJson(body));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
+                .updateReadDot(body, new RCallback<Object>() {
+                    @Override
+                    public void success(Object d, Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 }
