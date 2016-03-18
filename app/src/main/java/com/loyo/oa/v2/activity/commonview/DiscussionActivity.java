@@ -123,6 +123,12 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         Collections.sort(sortDiscussion);
         if (null == adapter) {
             adapter = new DiscussionAdapter(mContext, sortDiscussion);
+            adapter.setSelectUserCallback(new DiscussionAdapter.OnSelectUserCallback() {
+                @Override
+                public void onCallback(HaitHelper.SelectUser user) {
+                    mHaitHelper.addSelectUser(user);
+                }
+            });
             listView_discussion.setAdapter(adapter);
         } else {
             adapter.setmDatas(sortDiscussion);

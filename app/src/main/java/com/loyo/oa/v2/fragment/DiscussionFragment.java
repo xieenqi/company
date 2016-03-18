@@ -270,6 +270,14 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             name.setText(discussion.getCreator().name);
             content.setText(discussion.getContent());
             ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, iv);
+            iv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mHaitHelper.addSelectUser(new HaitHelper.SelectUser(discussion.getCreator().getRealname()
+                            , discussion.getCreator().getId()));
+                    return true;
+                }
+            });
 
             return view;
         }

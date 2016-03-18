@@ -237,6 +237,18 @@ public class HaitHelper {
     }
 
     /**
+     * 添加艾特用户
+     *
+     * @param user
+     */
+    public void addSelectUser(SelectUser user){
+        showKeyBoard();
+        int selection = et_scanner.getSelectionStart();
+        et_scanner.getText().insert(selection, add$Name_real(user.name));
+        mHaitSelectUsers.add(user);
+    }
+
+    /**
      * 组合@的用户名 -- xxx + '\u2005'
      *
      * @param selectName
@@ -244,6 +256,16 @@ public class HaitHelper {
      */
     private String add$Name(String selectName) {
         return selectName + SCANNER_HAIT_TRIM;
+    }
+
+    /**
+     * 组合@的用户名 -- '@' + xxx + '\u2005'
+     *
+     * @param name
+     * @return
+     */
+    private String add$Name_real(String name) {
+        return "@" + name + SCANNER_HAIT_TRIM;
     }
 
     public static class SelectUser {
