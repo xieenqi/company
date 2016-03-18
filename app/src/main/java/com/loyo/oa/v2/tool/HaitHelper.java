@@ -246,9 +246,9 @@ public class HaitHelper {
         return selectName + SCANNER_HAIT_TRIM;
     }
 
-    private class SelectUser {
-        String id;
-        String name;
+    public static class SelectUser {
+        public String id;
+        public String name;
 
         public SelectUser(String name, String id) {
             this.name = name;
