@@ -446,7 +446,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();
-
     }
 
 //        @Click(R.id.layout_delete2)
@@ -454,7 +453,6 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            bizFormFieldsListViewAdapter.setEmpty();
 //            layout_edit.setVisibility(View.GONE);
 //        }
-
 
     void addIsRequired(){
         LogUtil.dll("执行 addIsRequired");
