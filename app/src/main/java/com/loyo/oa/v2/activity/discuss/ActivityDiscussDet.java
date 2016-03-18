@@ -305,7 +305,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         body.put("bizType", mBizType);
         body.put("mentionedUserIds", getAndClearSelectUser(message));
         mHaitSelectUsers.clear();
-        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
+        LogUtil.d("发送的数据:" + MainApp.gson.toJson(body));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
                 .createDiscussion(body, new RCallback<Discussion>() {
                     @Override
@@ -346,10 +346,10 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     private List<String> getAndClearSelectUser(final String message) {
+        List<String> ids = new ArrayList();
         if (mHaitSelectUsers.size() == 0) {
-            return null;
+            return ids;
         }
-        List<String> ids = new ArrayList<>();
         for (int i = 0; i < mHaitSelectUsers.size(); i++) {
             HaitHelper.SelectUser user = mHaitSelectUsers.get(i);
             if (!message.contains(user.name) || ids.contains(user.id)) {
