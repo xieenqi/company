@@ -57,7 +57,6 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_mydiscuss);
         initView();
         initListener();
-        getData();
     }
 
     private void initView() {
@@ -85,6 +84,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
                     @Override
                     public void success(PaginationX<HttpDiscussItem> discuss, Response response) {
+                        cancelLoading();
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
                             mDiscuss = discuss;
@@ -100,6 +100,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void failure(RetrofitError error) {
+                        cancelLoading();
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                         lv_discuss.onRefreshComplete();
@@ -153,6 +154,11 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         getData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }
 
     private class DiscussAdapter extends RecyclerView.Adapter<DiscussViewHolder> {
 

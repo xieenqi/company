@@ -226,6 +226,7 @@ public class ActivityHait extends BaseActivity {
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.id);
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     startActivity(intent);
                 }
             });
