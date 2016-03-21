@@ -630,7 +630,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		mLayoutVisibilityChangesEnabled = false;
 	}
 
-	protected final LoadingLayout getFooterLayout() {
+	public final LoadingLayout getFooterLayout() {
 		return mFooterLayout;
 	}
 
@@ -638,7 +638,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		return mFooterLayout.getContentSize();
 	}
 
-	protected final LoadingLayout getHeaderLayout() {
+	public final LoadingLayout getHeaderLayout() {
 		return mHeaderLayout;
 	}
 
