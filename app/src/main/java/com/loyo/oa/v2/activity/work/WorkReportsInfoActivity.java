@@ -20,6 +20,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
+import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -381,7 +382,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putInt("status", status);
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
-        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
+
+        ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.getAttachmentUUId(), status, MSG_DISCUSSION);
+
+//        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
     /**
