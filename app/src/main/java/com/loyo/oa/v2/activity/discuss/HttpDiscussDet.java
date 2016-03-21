@@ -1,12 +1,13 @@
 package com.loyo.oa.v2.activity.discuss;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * 讨论详情 的模板
  * Created by loyocloud on 16/3/10.
  */
-public class HttpDiscussDet {
+public class HttpDiscussDet implements Serializable{
     public String id;
     public String attachmentUUId;
     public String content;
