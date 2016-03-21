@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.application.MainApp;
+
 import java.util.ArrayList;
 
 /**
@@ -33,6 +35,7 @@ public class WorkReport extends BaseBeans {
     public long updatedAt;//&{time Time}, optional):
     public DiscussCounter discuss;
     public boolean ack;
+
     @Override
     String getOrderStr() {
         return createdAt + "";
@@ -41,151 +44,6 @@ public class WorkReport extends BaseBeans {
     public String getId() {
         return id;
     }
-//    public BizExtData getBizExtData() {
-//        return bizExtData;
-//    }
-//
-//    public void setBizExtData(BizExtData bizExtData) {
-//        this.bizExtData = bizExtData;
-//    }
-//
-//    public NewUser getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(NewUser user) {
-//        this.user = user;
-//    }
-//
-//    public void setReviewer(Reviewer reviewer) {
-//        this.reviewer = reviewer;
-//    }
-//
-//    public void setMembers(Members members) {
-//        this.members = members;
-//    }
-//
-//    public Members getMembers() {
-//        return members;
-//    }
-//
-//
-//    public ArrayList<Reviewer> getReviewers() {
-//        return reviewers;
-//    }
-//
-//    public boolean isDelayed() {
-//        return isDelayed;
-//    }
-//
-//    public void setEndAt(long endAt) {
-//        this.endAt = endAt;
-//    }
-//
-//
-//    public ArrayList<WorkReportDyn> getCrmDatas() {
-//        return crmDatas;
-//    }
-//
-//    public DiscussCounter getDiscuss() {
-//        return discuss;
-//    }
-//
-//    public void setAck(boolean ack) {
-//        this.ack = ack;
-//    }
-//
-//
-//
-//    public String getAttachmentUUId() {
-//        return attachmentUUId;
-//    }
-//
-//    public void setAttachmentUUId(String attachmentUUId) {
-//        this.attachmentUUId = attachmentUUId;
-//    }
-//
-//    public ArrayList<Attachment> getAttachments() {
-//        return attachments;
-//    }
-//
-//    public void setAttachments(ArrayList<Attachment> attachments) {
-//        this.attachments = attachments;
-//    }
-//
-//    public long getBeginAt() {
-//        return beginAt;
-//    }
-//
-//    public String getContent() {
-//        return content == null ? "" : content;
-//    }
-//
-//    public void setContent(String content) {
-//        this.content = content;
-//    }
-//
-//    public long getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(long createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    public User getCreator() {
-//        return creator;
-//    }
-//
-//    public void setCreator(User creator) {
-//        this.creator = creator;
-//    }
-//
-//    public long getEndAt() {
-//        return endAt;
-//    }
-//
-
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public Project getProject() {
-//        return ProjectInfo;
-//    }
-//
-//    public void setProject(Project project) {
-//        this.ProjectInfo = project;
-//    }
-//
-//    public int getType() {
-//        return type;
-//    }
-//
-//    public void setType(int type) {
-//        this.type = type;
-//    }
-//
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public long getUpdatedAt() {
-//        return updatedAt;
-//    }
-//
-//    public void setUpdatedAt(long updatedAt) {
-//        this.updatedAt = updatedAt;
-//    }
-//
-//    public Reviewer getReviewer() {
-//        return reviewer;
-//    }
 
     @Override
     public String getOrderStr2() {
@@ -193,11 +51,27 @@ public class WorkReport extends BaseBeans {
     }
 
     /**
-     * 获取点评人
+     * 点评人是否点评过
      *
      * @return
      */
     public boolean isReviewed() {
         return null != reviewer && reviewer.isReviewed() ? true : false;
+    }
+
+    /**
+     * 是否和本工作报告相关
+     */
+    public boolean isRelevant() {
+        String myId = MainApp.user.id;
+        if (myId.equals(reviewer.getUser().getId())) {
+            return true;
+        }
+        for (NewUser menber : members.users) {
+            if (myId.equals(menber.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
