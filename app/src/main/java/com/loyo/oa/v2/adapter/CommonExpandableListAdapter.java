@@ -167,7 +167,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 reportTitle.append(" (补签)");
             }
 
-            title.setText(reportTitle);
+            title.setText(workReport.title);
 
             String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
             time.setText(end);
