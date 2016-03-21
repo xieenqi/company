@@ -25,9 +25,9 @@ public class Members implements Serializable {
         return newData;
     }
 
-    public ArrayList<NewUser> getAllDepts(){
+    public ArrayList<NewUser> getAllDepts() {
         ArrayList<NewUser> newDate = new ArrayList<>();
-        if(depts != null){
+        if (depts != null) {
             newDate.addAll(depts);
         }
         return newDate;

@@ -15,8 +15,8 @@ public class HttpProject implements Serializable {
     public String name;
     public String title;
     public String content;
-    public ArrayList<ProjectManaer> managers=new ArrayList<>();
-    public ArrayList<ProjectMember> members=new ArrayList<>();
+    public ArrayList<ProjectManaer> managers = new ArrayList<>();//负责人
+    public ArrayList<ProjectMember> members = new ArrayList<>();//参与人
     public User creator;
     public String attachmentUUId;
     public long createdAt;
@@ -40,22 +40,39 @@ public class HttpProject implements Serializable {
     }
 
     public class ProjectManaer implements Serializable {
-        public User user=new User();
+        public User user = new User();
         public boolean canReadAll;
     }
 
 
     public class ProjectMember implements Serializable {
-        public User user=new User();
+        public User user = new User();
         public Dept dept;
         public boolean canReadAll;
     }
 
-//    public class User {
-//        public String id;
-//        public String name;
-//        public String avatar;
-//    }
+    /**
+     * @是否和项目相关
+     */
+    public boolean isProjectRelevant() {
+        String myId = MainApp.user.id;
+
+        for (ProjectManaer manager : managers) {
+            if (myId.equals(manager.user.id)) {
+                return true;
+            }
+        }
+
+        for (ProjectMember member : members) {
+            if (null != member.user && myId.equals(member.user.id)) {
+                return true;
+            }
+        }
+        if (myId.equals(creator.id)) {
+            return true;
+        }
+        return false;
+    }
 
     public class Dept implements Serializable {
         public String id;

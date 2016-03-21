@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -23,6 +24,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -59,11 +61,19 @@ public class WorkReportReviewActivity extends BaseActivity {
         HashMap<String ,Object> map=new HashMap<>();
         map.put("score",ratingBar_workReport.getProgress()*20);
         map.put("comment",content);
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).reviewWorkReport(mWorkReportId, map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 setResult(RESULT_OK);
                 back();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                super.failure(error);
             }
         });
     }
