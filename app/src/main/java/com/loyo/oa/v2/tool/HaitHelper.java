@@ -223,10 +223,11 @@ public class HaitHelper {
             User user = (User) data.getSerializableExtra(User.class.getName());
             if (user != null) {
                 String id = user.toShortUser().getId();
+                if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
+                    return;
+                }
                 String name = user.toShortUser().getName();
-
                 mHaitSelectUsers.add(new SelectUser(name, id));
-
                 String selectName = add$Name(name);
                 int index = et_scanner.getSelectionStart();
                 Editable editable = et_scanner.getText();
