@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
 
     <com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView
-        android:layout_above="@+id/layout_upload"
         android:id="@+id/listView_attachment"
         xmlns:swipe="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/layout_upload"
         android:listSelector="#00000000"
         swipe:swipeActionLeft="reveal"
         swipe:swipeActionRight="reveal"
@@ -24,30 +24,28 @@
         swipe:swipeOpenOnLongPress="false"/>
 
 
-
-
     <RelativeLayout
-        android:layout_alignParentBottom="true"
         android:id="@+id/layout_upload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/activity_bg">
 
 
         <LinearLayout
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:orientation="horizontal"
             >
 
             <ImageView
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_common_add"
+                android:layout_gravity="center"
                 android:layout_marginRight="5dp"
+                android:background="@drawable/icon_common_add"
                 />
 
             <TextView
@@ -55,8 +53,8 @@
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center"
                 android:text="添加文件"
-                android:textSize="15sp"
-                android:textColor="@color/title_bg1"/>
-            </LinearLayout>
+                android:textColor="@color/title_bg1"
+                android:textSize="15sp"/>
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

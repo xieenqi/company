@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attachment.AttachmentRightActivity_;
@@ -81,14 +82,14 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         onLoadSuccess(mListAttachment.size());
         final ArrayList<Attachment> sortAttachment = Attachment.Sort(mListAttachment);
         ArrayList<User> users = Common.getUsersByProject(mProject);
-        LogUtil.dll("project status:"+mProject.status);
+        LogUtil.dll("project status:" + mProject.status);
 
-        if(mProject.status == 2){
+        if (mProject.status == 2) {
             isOver = true;
         }
 
         if (null == adapter) {
-            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this,bizType,mProject.attachmentUUId,isOver);
+            adapter = new AttachmentSwipeAdapter(mActivity, sortAttachment, users, this, bizType, mProject.attachmentUUId, isOver);
             mListViewAttachment.setAdapter(adapter);
         } else {
             adapter.setData(mListAttachment);
@@ -100,7 +101,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         adapter.setAttachmentAction(new AttachmentSwipeAdapter.AttachmentAction() {
             @Override
             public void afterDelete(Attachment attachment) {
-                onLoadSuccess(mListAttachment.size()-1);
+                onLoadSuccess(mListAttachment.size() - 1);
                 mListAttachment.remove(attachment);
                 adapter.setData(mListAttachment);
                 adapter.notifyDataSetChanged();
@@ -150,6 +151,27 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         }
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (null == mView) {
+            mView = inflater.inflate(R.layout.fragment_attachment, container, false);
+            mListViewAttachment = (SwipeListView) mView.findViewById(R.id.listView_attachment);
+            layout_upload = (ViewGroup) mView.findViewById(R.id.layout_upload);
+            layout_upload.setOnClickListener(this);
+            getData();
+        }
+        return mView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mProject.isProjectRelevant()) {
+            layout_upload.setVisibility(View.GONE);
+        }
+    }
+
     /**
      * 获取数据
      */
@@ -172,18 +194,6 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         });
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (null == mView) {
-            mView = inflater.inflate(R.layout.fragment_attachment, container, false);
-            mListViewAttachment = (SwipeListView) mView.findViewById(R.id.listView_attachment);
-            layout_upload = (ViewGroup) mView.findViewById(R.id.layout_upload);
-            layout_upload.setOnClickListener(this);
-            getData();
-        }
-        return mView;
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -213,7 +223,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
 
     /**
      * 上传图片成功
-     * */
+     */
     public class AsyncHandler_Upload_New_Attachment extends BaseAsyncHttpResponseHandler {
         File file;
 
@@ -286,7 +296,7 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
                         if (newFile != null && newFile.length() > 0) {
                             RequestParams params = new RequestParams();
                             params.put("uuid", mProject.attachmentUUId);
-                            params.put("bizType",bizType);
+                            params.put("bizType", bizType);
 
                             if (newFile.exists()) {
                                 params.put("attachments", newFile, "image/jpeg");
