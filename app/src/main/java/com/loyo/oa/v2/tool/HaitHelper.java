@@ -224,6 +224,7 @@ public class HaitHelper {
             if (user != null) {
                 String id = user.toShortUser().getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
+                    ((BaseActivity) (mFragment != null ? mFragment.getActivity() : et_scanner.getContext())).Toast("不能@自己");
                     return;
                 }
                 String name = user.toShortUser().getName();

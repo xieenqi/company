@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
@@ -48,6 +49,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -55,9 +57,12 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -96,6 +101,10 @@ public class TasksInfoActivity extends BaseActivity {
     ViewGroup layout_child_add_action;
     @ViewById
     ViewGroup layout_child_Add_area;
+
+    View v_split;
+    @ViewById
+    LinearLayout layout_attachment;
 
     @ViewById
     TextView tv_task_title;
@@ -177,20 +186,55 @@ public class TasksInfoActivity extends BaseActivity {
         layout_test_Add_area = (LinearLayout) findViewById(R.id.layout_test_Add_area);
         layout_task_testfather = (LinearLayout) findViewById(R.id.layout_task_testfather);
         iv_task_status = (ImageView) findViewById(R.id.iv_task_status);
+        v_split = findViewById(R.id.v_splite);
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_complete.setOnTouchListener(Global.GetTouch());
         layout_child_add_action.setOnTouchListener(Global.GetTouch());
-
     }
 
     void updateUI() {
-
         if (mTask != null) {
             updateUI_task_base();
             updateUI_task_responsiblePerson();
             updateUI_task_sub_task();
+            updateUIInTask();
+        }
+    }
+
+    /**
+     * 当当前用户不在项目中, 不显示附件和子任务
+     */
+    private void updateUIInTask() {
+        NewUser user = mTask.getResponsiblePerson(); // 获取负责人
+        NewUser createUser = mTask.getCreator(); //获取创建人
+        List<NewUser> users = mTask.getMembers().getAllData(); // 获取参与人列表
+
+        users.add(user);
+        users.add(createUser);
+
+        boolean isInTask = false; //判断当前用户是否在任务中
+        for (int i = 0; i < users.size(); i++) {
+            if (MainApp.user.id.equals(users.get(i).getId())) {
+                isInTask = true;
+                break;
+            }
+        }
+
+        if (isInTask) {
+            layout_child_add_action.setVisibility(View.VISIBLE);
+            layout_attachment.setVisibility(View.VISIBLE);
+            v_split.setVisibility(View.VISIBLE);
+            img_title_right.setVisibility(View.VISIBLE);
+        } else {
+            layout_child_add_action.setVisibility(View.GONE);
+            layout_attachment.setVisibility(View.GONE);
+            v_split.setVisibility(View.GONE);
+            img_title_right.setVisibility(View.GONE);
+            layout_child_Add_area.setVisibility(View.GONE);
+            layout_task_testfather.setVisibility(View.GONE);
+            btn_complete.setVisibility(View.GONE);
         }
     }
 
@@ -319,9 +363,7 @@ public class TasksInfoActivity extends BaseActivity {
      * 底部按钮内容控制
      */
     void updateUI_task_base() {
-
         if (mTask.getCreator() != null) {
-
             if (mTask.getStatus() == Task.STATUS_PROCESSING && IsResponsiblePerson()) {
                 //负责人提交
                 btn_complete.setVisibility(View.VISIBLE);
@@ -334,11 +376,9 @@ public class TasksInfoActivity extends BaseActivity {
             } else {
                 btn_complete.setVisibility(View.GONE);
             }
-
             if (!ListUtil.IsEmpty(mTask.getReviewComments())) {
                 tv_comment.setText(mTask.getReviewComments().get(mTask.getReviewComments().size() - 1).getContent());
             }
-
         }
 
         tv_task_title.setText(mTask.getTitle());
@@ -415,7 +455,7 @@ public class TasksInfoActivity extends BaseActivity {
             } else {
                 childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(final CompoundButton compoundButton,final boolean isCheck) {
+                    public void onCheckedChanged(final CompoundButton compoundButton, final boolean isCheck) {
                         if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
                             if (isCheck) {
                                 statusSize++;
@@ -476,14 +516,14 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 更新子任务状态（完成／未完成)
      */
-    void requestTaskupdates(final String id,final String cid,final int sts) {
+    void requestTaskupdates(final String id, final String cid, final int sts) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", sts);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updatesTask(id, cid, map, new RCallback<Task>() {
             @Override
-            public void success(final Task task,final Response response) {
+            public void success(final Task task, final Response response) {
                 Toast("更新成功");
             }
 
@@ -508,7 +548,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
             @Override
-            public void success(final Task task,final Response response) {
+            public void success(final Task task, final Response response) {
                 LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
                 HttpErrorCheck.checkResponse("任务详情返回", response);
                 mTask = task;
@@ -560,7 +600,7 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("delete", true);
                     }
                     /*负责人*/
-                }else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
+                } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
                     intent.putExtra("edit", true);
                     intent.putExtra("editText", "修改参与人");
                 }
@@ -598,7 +638,7 @@ public class TasksInfoActivity extends BaseActivity {
             RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class)
                     .commitTask(null != mTask ? mTask.getId() : mTaskId, new RCallback<Task>() {
                         @Override
-                        public void success(final Task task,final Response response) {
+                        public void success(final Task task, final Response response) {
                             if (task != null) {
                                 task.setAck(true);
                                 Intent intent = new Intent();
@@ -671,7 +711,7 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -724,24 +764,24 @@ public class TasksInfoActivity extends BaseActivity {
                         app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, mBundle);
                     }
                                 /*删除回调*/
-                }else if (data.getBooleanExtra("delete", false)) {
+                } else if (data.getBooleanExtra("delete", false)) {
                     app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
                         @Override
-                        public void success(final Task o,final Response response) {
+                        public void success(final Task o, final Response response) {
                             Intent intent = new Intent();
                             intent.putExtra("delete", mTask);
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
                         }
                     });
                                 /*复制回调*/
-                }else if (data.getBooleanExtra("extra", false)) {
+                } else if (data.getBooleanExtra("extra", false)) {
                     Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable("data", mTask);
                     intent.putExtras(mBundle);
                     startActivity(intent);
                                 /*修改参与人回调*/
-                }else if (data.getBooleanExtra("editjoiner", false)) {
+                } else if (data.getBooleanExtra("editjoiner", false)) {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
@@ -755,10 +795,10 @@ public class TasksInfoActivity extends BaseActivity {
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                try{
+                try {
                     mTask.setAttachments(attachments);
                     showAttachment();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -780,7 +820,7 @@ public class TasksInfoActivity extends BaseActivity {
 
 
     @OnActivityResult(REQUEST_CREATE_SUB)
-    void onNewSubTaskActivityResult(final int resultCode,final Intent data) {
+    void onNewSubTaskActivityResult(final int resultCode, final Intent data) {
         if (resultCode != Activity.RESULT_OK || data.hasExtra("data")) {
             return;
         }
@@ -812,7 +852,7 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 参与人组装
      */
-    void setJoinUsers(final String joinedUserIds,final String joinedUserName) {
+    void setJoinUsers(final String joinedUserIds, final String joinedUserName) {
         userss.clear();
         depts.clear();
 
@@ -852,7 +892,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
             @Override
-            public void success(final Task task,final Response response) {
+            public void success(final Task task, final Response response) {
                 Toast("修改参与人成功");
                 getTask();
             }
@@ -871,12 +911,12 @@ public class TasksInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-        if(null == mTask){
+        if (null == mTask) {
             return;
         }
 
         /*任务Status: 1-进行中 2-待点评 3-完成*/
-        if(mTask.getStatus() == 2 || mTask.getStatus() == 3){
+        if (mTask.getStatus() == 2 || mTask.getStatus() == 3) {
             isOver = true;
         }
 
@@ -903,7 +943,7 @@ public class TasksInfoActivity extends BaseActivity {
     /*讨论*/
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
-        if(null == mTask){
+        if (null == mTask) {
             return;
         }
         Bundle bundle = new Bundle();
@@ -938,24 +978,24 @@ public class TasksInfoActivity extends BaseActivity {
 
     /**
      * 参与人当中的部门，拆分成员工
-     * */
-    void getAboutUser(){
+     */
+    void getAboutUser() {
 
         requestDepts.addAll(mTask.members.depts);
 
-        for(Department department : deptSource){
-            for(NewUser newUser : requestDepts){
-                try{
-                    if(department.getId().equals(newUser.getId())){
+        for (Department department : deptSource) {
+            for (NewUser newUser : requestDepts) {
+                try {
+                    if (department.getId().equals(newUser.getId())) {
                         aboutDepts.addAll(department.getUsers());
                     }
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        for(User user : aboutDepts){
+        for (User user : aboutDepts) {
             childTastUsers.add(user.toShortUser());
         }
     }
