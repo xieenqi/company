@@ -200,22 +200,22 @@ public class WorkReportAddActivity extends BaseActivity {
         if (null != mWorkReport) {
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
-                uuid = mWorkReport.getAttachmentUUId();
-                dynList = mWorkReport.getCrmDatas();
+                uuid = mWorkReport.attachmentUUId;
+                dynList = mWorkReport.crmDatas;
                 crm_switch.setState(null == dynList ? false : true);
                 mHandler.sendEmptyMessage(UPDATE_SUCCESS);
                 layout_crm.setVisibility(View.VISIBLE);
             }
 
             try {
-                mReviewer = mWorkReport.getReviewer();
-                members = mWorkReport.getMembers();
-                projectId = mWorkReport.getProject().getId();
+                mReviewer = mWorkReport.reviewer;
+                members = mWorkReport.members;
+                projectId = mWorkReport.ProjectInfo.getId();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
 
-            switch (mWorkReport.getType()) {
+            switch (mWorkReport.type) {
                 case WorkReport.DAY:
                     rg.check(R.id.rb1);
                     break;
@@ -228,15 +228,15 @@ public class WorkReportAddActivity extends BaseActivity {
                 default:
                     break;
             }
-            NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer()
-                    .getUser() ? mWorkReport.getReviewer().getUser() : null;
+            NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
+                    .getUser() ? mWorkReport.reviewer.getUser() : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
 
             tv_toUser.setText(getMenberText());
-            edt_content.setText(mWorkReport.getContent());
+            edt_content.setText(mWorkReport.content);
 
-            if (null != mWorkReport.getProject()) {
-                tv_project.setText(mWorkReport.getProject().title);
+            if (null != mWorkReport.ProjectInfo) {
+                tv_project.setText(mWorkReport.ProjectInfo.title);
             }
             //附件暂时不能做
         } else {
@@ -304,9 +304,9 @@ public class WorkReportAddActivity extends BaseActivity {
         joinUser = new StringBuffer();
         joinUserId = new StringBuffer();
 
-        for (int i = 0; i < mWorkReport.getMembers().getAllData().size(); i++) {
-            joinUser.append(mWorkReport.getMembers().getAllData().get(i).getName() + ",");
-            joinUserId.append(mWorkReport.getMembers().getAllData().get(i).getId() + ",");
+        for (int i = 0; i < mWorkReport.members.getAllData().size(); i++) {
+            joinUser.append(mWorkReport.members.getAllData().get(i).getName() + ",");
+            joinUserId.append(mWorkReport.members.getAllData().get(i).getId() + ",");
 
         }
         return joinUser.toString();
@@ -627,7 +627,7 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void dealResult(final WorkReport workReport) {
         if (workReport != null) {
-            workReport.setAck(true);
+            workReport.ack=true;
             Intent intent = getIntent();
             intent.putExtra("data", workReport);
             app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

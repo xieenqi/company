@@ -477,35 +477,35 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //报告
             else if (o instanceof WorkReport) {
                 final WorkReport workReport = (WorkReport) o;
-                if (null != workReport.getReviewer() && null != workReport.getReviewer().getUser() && !TextUtils.isEmpty(workReport.getReviewer().getUser().getName())) {
-                    content.setText("点评: " + workReport.getReviewer().getUser().getName());
+                if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
+                    content.setText("点评: " + workReport.reviewer.getUser().getName());
                 }
-                StringBuilder reportTitle = new StringBuilder(workReport.getCreator().name + "提交 ");
+                StringBuilder reportTitle = new StringBuilder(workReport.creator.name + "提交 ");
                 String reportDate = "";
                 String reportType = "";
-                switch (workReport.getType()) {
+                switch (workReport.type) {
                     case WorkReport.DAY:
                         reportType = " 日报";
-                        reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000));
+                        reportDate = app.df4.format(new Date(workReport.beginAt * 1000));
                         break;
                     case WorkReport.WEEK:
                         reportType = " 周报";
-                        reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(workReport.getEndAt() * 1000));
+                        reportDate = app.df4.format(new Date(workReport.beginAt * 1000)) + "-" + app.df4.format(new Date(workReport.endAt * 1000));
                         break;
                     case WorkReport.MONTH:
                         reportType = " 月报";
-                        reportDate = DateTool.toDateStr(workReport.getBeginAt() * 1000, "yyyy.MM");
+                        reportDate = DateTool.toDateStr(workReport.beginAt * 1000, "yyyy.MM");
                         ;
                         break;
                 }
                 reportTitle.append(reportDate + reportType);
-                if (workReport.isDelayed()) {
+                if (workReport.isDelayed) {
                     reportTitle.append(" (补签)");
                 }
 
                 title.setText(reportTitle);
 
-                String end = "提交时间: " + app.df3.format(new Date(workReport.getCreatedAt() * 1000));
+                String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
                 time.setText(end);
                 //                ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
                 status.setImageResource(workReport.isReviewed() ? R.drawable.img_workreport_list_status2 : R.drawable.img_workreport_list_status1);

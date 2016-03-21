@@ -43,7 +43,6 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -144,20 +143,20 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void init() {
         initUI();
         setTouchView(R.id.layout_touch);
-        showLoading("");
-        getData_WorkReport();
+
+        getDataWorkReport();
     }
 
     /**
      * 获取报告详情
      */
-    @Background
-    void getData_WorkReport() {
+    void getDataWorkReport() {
         if (TextUtils.isEmpty(workReportId)) {
             Toast("参数不完整");
             finish();
             return;
         }
+        showLoading("");
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
@@ -231,39 +230,39 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return;
         }
 
-        StringBuilder title = new StringBuilder(mWorkReport.getCreator().name + "提交 ");
+        StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
-        String date = app.df3.format(new Date(mWorkReport.getCreatedAt() * 1000));
+        String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
         String reportType = "";
         String crmName = "";
-        switch (mWorkReport.getType()) {
+        switch (mWorkReport.type) {
             case WorkReport.DAY:
                 reportType = " 日报";
                 crmName = "本日工作动态统计";
-                reportDate = app.df4.format(new Date(mWorkReport.getBeginAt() * 1000));
+                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000));
                 break;
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
-                reportDate = app.df4.format(new Date(mWorkReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(mWorkReport.getEndAt() * 1000));
+                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df4.format(new Date(mWorkReport.endAt * 1000));
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
                 crmName = "本月工作动态统计";
-                reportDate = app.df8.format(new Date(mWorkReport.getBeginAt() * 1000));
+                reportDate = app.df8.format(new Date(mWorkReport.beginAt * 1000));
                 break;
             default:
                 break;
 
         }
         title.append(reportDate + reportType);
-        if (mWorkReport.isDelayed()) {
+        if (mWorkReport.isDelayed) {
             title.append("(补签)");
         }
 
         tv_crm.setText(crmName);
-        tv_discussion_count.setText("讨论 (" + mWorkReport.getBizExtData().getDiscussCount() + ")");
-        tv_attachment_count.setText("附件 (" + mWorkReport.getBizExtData().getAttachmentCount() + ")");
+        tv_discussion_count.setText("讨论 (" + mWorkReport.bizExtData.getDiscussCount() + ")");
+        tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
 
         edt_workReport_title.setText(title.toString());
 //        webView_content.getSettings().setJavaScriptEnabled(true);
@@ -271,21 +270,21 @@ public class WorkReportsInfoActivity extends BaseActivity {
         /**
          * 工作动态统计
          */
-        if (null != mWorkReport.getCrmDatas()) {
-            dynList = mWorkReport.getCrmDatas();
+        if (null != mWorkReport.crmDatas) {
+            dynList = mWorkReport.crmDatas;
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         } else {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
-        NewUser reviewer = null != mWorkReport.getReviewer() && null != mWorkReport.getReviewer().getUser() ? mWorkReport.getReviewer().getUser() : null;
+        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
 
-        tv_reviewer.setText(mWorkReport.getReviewer().getUser().getName());
+        tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
         tv_toUser.setText(getJoinUserNames().isEmpty() ? "无抄送人" : getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
-        if (null != mWorkReport.getProject() && mWorkReport.getProject().title.length() != 0) {
-            tv_ptoject.setText(mWorkReport.getProject().title);
+        if (null != mWorkReport.ProjectInfo && mWorkReport.ProjectInfo.title.length() != 0) {
+            tv_ptoject.setText(mWorkReport.ProjectInfo.title);
         } else {
             tv_ptoject.setText("无");
         }
@@ -295,13 +294,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.isReviewed()) {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
-            tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
-            tv_review_time.setText(DateTool.timet(mWorkReport.getReviewer().getReviewedAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.getUser().getName());
+            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.getReviewedAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             btn_workreport_review.setVisibility(View.GONE);
-            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.getReviewer().getScore())).intValue() / 20);
+            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.getScore())).intValue() / 20);
 
-            if (!StringUtil.isEmpty(mWorkReport.getReviewer().getComment())) {
-                edt_content.setText(mWorkReport.getReviewer().getComment());
+            if (!StringUtil.isEmpty(mWorkReport.reviewer.getComment())) {
+                edt_content.setText(mWorkReport.reviewer.getComment());
                 edt_content.setEnabled(false);
             } else {
                 layout_content.setVisibility(View.GONE);
@@ -320,7 +319,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 btn_workreport_review.setVisibility(View.GONE);
             }
 
-            if (!mWorkReport.getCreator().id.equals(MainApp.user.id)) {
+            if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
                 //显示编辑、删除按钮
                 img_title_right.setVisibility(View.GONE);
             }
@@ -330,10 +329,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     void showAttachment() {
-        if (ListUtil.IsEmpty(mWorkReport.getAttachments())) {
+        if (ListUtil.IsEmpty(mWorkReport.attachments)) {
             return;
         }
-        tv_attachment_count.setText("附件 (" + (mWorkReport.getAttachments() == null ? 0 : mWorkReport.getAttachments().size()) + ")");
+        tv_attachment_count.setText("附件 (" + (mWorkReport.attachments == null ? 0 : mWorkReport.attachments.size()) + ")");
     }
 
     void showDiscussion() {
@@ -347,7 +346,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mWorkReport != null) {
-            mWorkReport.setAck(true);
+            mWorkReport.ack=true;
             intent.putExtra("review", mWorkReport);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -358,14 +357,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-        if (("1").equals(mWorkReport.getReviewer().getStatus())) {
+        if (("1").equals(mWorkReport.reviewer.getStatus())) {
             isOver = true;
         }
-        LogUtil.dll("status:" + mWorkReport.getReviewer().getStatus());
+        LogUtil.dll("status:" + mWorkReport.reviewer.getStatus());
         LogUtil.dll("isOver:" + isOver);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("data", mWorkReport.getAttachments());
-        bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
+        bundle.putSerializable("data", mWorkReport.attachments);
+        bundle.putSerializable("uuid", mWorkReport.attachmentUUId);
         bundle.putInt("bizType", 1);
         bundle.putBoolean("isOver", isOver);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
@@ -378,12 +377,12 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Click(R.id.layout_discussion)
     void clickDiscussion() {
         Bundle bundle = new Bundle();
-        bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
-        bundle.putInt("status", Integer.parseInt(mWorkReport.getReviewer().getStatus()));
+        bundle.putString("attachmentUUId", mWorkReport.attachmentUUId);
+        bundle.putInt("status", Integer.parseInt(mWorkReport.reviewer.getStatus()));
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
-        int status = Integer.parseInt(mWorkReport.getReviewer().getStatus());
-        ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.getAttachmentUUId(), status, MSG_DISCUSSION);
+        int status = Integer.parseInt(mWorkReport.reviewer.getStatus());
+        ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
 
 //        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
@@ -438,16 +437,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     public String getJoinUserNames() {
         StringBuilder result = new StringBuilder();
-        if (mWorkReport.getMembers().users != null || mWorkReport.getMembers().depts != null) {
-            if (mWorkReport.getMembers().users != null) {
-                for (int i = 0; i < mWorkReport.getMembers().users.size(); i++) {
-                    result.append(mWorkReport.getMembers().users.get(i).getName() + ",");
+        if (mWorkReport.members.users != null || mWorkReport.members.depts != null) {
+            if (mWorkReport.members.users != null) {
+                for (int i = 0; i < mWorkReport.members.users.size(); i++) {
+                    result.append(mWorkReport.members.users.get(i).getName() + ",");
                 }
             }
 
-            if (mWorkReport.getMembers().depts != null) {
-                for (int i = 0; i < mWorkReport.getMembers().depts.size(); i++) {
-                    result.append(mWorkReport.getMembers().depts.get(i).getName() + ",");
+            if (mWorkReport.members.depts != null) {
+                for (int i = 0; i < mWorkReport.members.depts.size(); i++) {
+                    result.append(mWorkReport.members.depts.get(i).getName() + ",");
                 }
             }
             return result.toString();
@@ -460,7 +459,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
      * 判断是否是创建人
      */
     public boolean isCreater() {
-        return mWorkReport.getCreator().getId().equals(MainApp.user.getId()) ? true : false;
+        return mWorkReport.creator.getId().equals(MainApp.user.getId()) ? true : false;
     }
 
 
@@ -475,7 +474,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         switch (requestCode) {
 
             case MSG_REVIEW:
-                getData_WorkReport();
+                getDataWorkReport();
                 break;
 
             case MSG_DELETE_WORKREPORT:
@@ -508,7 +507,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWorkReport.setAttachments(attachments);
+                mWorkReport.attachments=attachments;
                 showAttachment();
                 break;
 

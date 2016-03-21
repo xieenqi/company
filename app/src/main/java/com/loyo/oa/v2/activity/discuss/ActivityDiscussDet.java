@@ -150,6 +150,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
         lv_notice.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         bindDiscussion();
+        loadMessage();
     }
 
     private void assignViews() {
@@ -405,7 +406,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     protected void onResume() {
         super.onResume();
         rl_root.addOnLayoutChangeListener(this);
-        loadMessage();
     }
 
     @Override
