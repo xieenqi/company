@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -29,7 +28,6 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.beans.WorkReportDyn;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -162,7 +160,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         }
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport _workReport,final Response response) {
+            public void success(final WorkReport _workReport, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
@@ -182,7 +180,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void delete_WorkReport() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).deleteWorkReport(workReportId, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport,final Response response) {
+            public void success(final WorkReport workReport, final Response response) {
                 Intent intent = new Intent();
                 intent.putExtra("delete", mWorkReport);
                 app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
@@ -298,7 +296,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
-            tv_review_time.setText(DateTool.timet(mWorkReport.getReviewer().getReviewedAt()+"",DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+            tv_review_time.setText(DateTool.timet(mWorkReport.getReviewer().getReviewedAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             btn_workreport_review.setVisibility(View.GONE);
             ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.getReviewer().getScore())).intValue() / 20);
 
@@ -360,16 +358,16 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-        if(("1").equals(mWorkReport.getReviewer().getStatus())){
+        if (("1").equals(mWorkReport.getReviewer().getStatus())) {
             isOver = true;
         }
-        LogUtil.dll("status:"+mWorkReport.getReviewer().getStatus());
-        LogUtil.dll("isOver:"+isOver);
+        LogUtil.dll("status:" + mWorkReport.getReviewer().getStatus());
+        LogUtil.dll("isOver:" + isOver);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.getAttachments());
         bundle.putSerializable("uuid", mWorkReport.getAttachmentUUId());
         bundle.putInt("bizType", 1);
-        bundle.putBoolean("isOver",isOver);
+        bundle.putBoolean("isOver", isOver);
         app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
 
     }
@@ -381,10 +379,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.getAttachmentUUId());
-        bundle.putInt("status",Integer.parseInt(mWorkReport.getReviewer().getStatus()));
+        bundle.putInt("status", Integer.parseInt(mWorkReport.getReviewer().getStatus()));
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
-
+        int status = Integer.parseInt(mWorkReport.getReviewer().getStatus());
         ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.getAttachmentUUId(), status, MSG_DISCUSSION);
 
 //        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
@@ -467,7 +465,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     @Override
-    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -490,14 +488,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
                     /*复制回调*/
-                }else if ((data.getBooleanExtra("extra", false))) {
+                } else if ((data.getBooleanExtra("extra", false))) {
                     LogUtil.dll("进入回调：复制");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
                     /*删除回调*/
-                }else if (data.getBooleanExtra("delete", false)) {
+                } else if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
                     LogUtil.dll("进入回调：删除");
                 }
