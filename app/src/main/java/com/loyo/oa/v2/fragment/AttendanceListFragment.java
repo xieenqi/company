@@ -430,6 +430,10 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         }
     }
 
+    /**
+     * 打卡列表适配器
+     * */
+
     private class AttendanceListAdapter extends BaseAdapter {
 
         @Override
