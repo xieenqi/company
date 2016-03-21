@@ -442,10 +442,11 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             User user = (User) data.getSerializableExtra(User.class.getName());
             if (user != null) {
                 String id = user.toShortUser().getId();
+                if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
+                    return;
+                }
                 String name = user.toShortUser().getName();
-
                 mHaitSelectUsers.add(new HaitHelper.SelectUser(name, id));
-
                 String selectName = add$Name(name);
                 int index = et_discuss.getSelectionStart();
                 Editable editable = et_discuss.getText();
@@ -639,7 +640,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(info.creator.name, info.creator.id);
                 mineHolder.ivMineAvatar.setTag(selectUser);
 
-                mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
+//                mineHolder.ivMineAvatar.setOnLongClickListener(onAvaterLongClicklistener);
 //                ImageLoader.getInstance().displayImage(Config_project.);
                 ImageLoader.getInstance().displayImage(info.creator.avatar, mineHolder.ivMineAvatar);
             } else if (holder.getClass() == DiscussDetOtherViewHolder.class) {

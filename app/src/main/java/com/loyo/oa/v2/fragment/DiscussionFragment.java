@@ -3,6 +3,7 @@ package com.loyo.oa.v2.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,18 +73,19 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
 
     @Override
     public void onProjectChange(int status) {
-        if(null!=project){
-            project.status=status;
+        if (null != project) {
+            project.status = status;
         }
-        if(layout_discuss_action==null){
+        if (layout_discuss_action == null) {
             return;
         }
-        if(status==Project.STATUS_FINISHED){
+        if (status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
-        }else {
+        } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
         }
     }
+
     /**
      * 绑定数据
      */
@@ -200,7 +202,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         HashMap<String, Object> body = new HashMap<>();
         body.put("attachmentUUId", project.attachmentUUId);
         body.put("content", comment);
-        body.put("bizType",5);
+        body.put("bizType", 5);
 
         body.put("mentionedUserIds", mHaitHelper.getSelectUser(comment));
         mHaitHelper.clear();
@@ -274,6 +276,9 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             iv.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    if (TextUtils.isEmpty(discussion.getCreator().getId()) || discussion.getCreator().id.equals(MainApp.user.id)) {
+                        return false;
+                    }
                     mHaitHelper.addSelectUser(new HaitHelper.SelectUser(discussion.getCreator().getRealname()
                             , discussion.getCreator().getId()));
                     return true;
