@@ -46,6 +46,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -299,6 +300,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 if (d == null || d.getRecords().size() == 0) {
                     Toast("没有更多信息");
                 }
+                Collections.reverse(d.getRecords());
                 if (isPull){
                     mPageDiscussion.getRecords().clear();
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
