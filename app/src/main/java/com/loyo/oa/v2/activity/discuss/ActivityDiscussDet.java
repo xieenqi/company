@@ -395,10 +395,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private void bindDiscussion() {
         if (adapter == null) {
             adapter = new DiscussDetAdapter();
-            adapter.updataList(mPageDiscussion.getRecords());
             lv_notice.getRefreshableView().setAdapter(adapter);
+            adapter.updataList(mPageDiscussion.getRecords());
         } else {
             adapter.notifyDataSetChanged();
+            if (adapter.getItemCount() > 0) {
+                lv_notice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount() - 1);
+            }
         }
     }
 
@@ -443,6 +446,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             if (user != null) {
                 String id = user.toShortUser().getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
+                    Toast("不能@自己");
                     return;
                 }
                 String name = user.toShortUser().getName();
@@ -601,7 +605,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 data = new ArrayList<>();
             this.datas = data;
             this.notifyDataSetChanged();
-            scrollToBottom();
+//            scrollToBottom();
         }
 
         public void addMineMessage(HttpDiscussDet info) {

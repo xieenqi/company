@@ -229,7 +229,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport == null) {
             return;
         }
-
+        if (!mWorkReport.isRelevant()) {//和本报告无关的人
+            layout_attachment.setVisibility(View.GONE);
+        }
         StringBuilder title = new StringBuilder(mWorkReport.creator.name + "提交 ");
         String reportDate = "";
         String date = app.df3.format(new Date(mWorkReport.createdAt * 1000));
@@ -346,7 +348,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mWorkReport != null) {
-            mWorkReport.ack=true;
+            mWorkReport.ack = true;
             intent.putExtra("review", mWorkReport);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -507,7 +509,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWorkReport.attachments=attachments;
+                mWorkReport.attachments = attachments;
                 showAttachment();
                 break;
 
