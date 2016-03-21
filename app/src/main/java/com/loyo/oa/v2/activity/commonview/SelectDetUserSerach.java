@@ -105,7 +105,7 @@ public class SelectDetUserSerach extends Activity{
                         mBundle.putString("userId",resultData.get(position).getId());
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         mIntent.putExtras(mBundle);
-                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.request_Code, mIntent);
+                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
 
                         break;
 
@@ -115,7 +115,7 @@ public class SelectDetUserSerach extends Activity{
                         mBundle.putSerializable(User.class.getName(), resultData.get(position));
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
                         mIntent.putExtras(mBundle);
-                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.request_Code, mIntent);
+                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
                         break;
 
                     /*编辑参与人*/
@@ -124,7 +124,7 @@ public class SelectDetUserSerach extends Activity{
                         mBundle.putString("userId",resultData.get(position).getId());
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         mIntent.putExtras(mBundle);
-                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.request_Code, mIntent);
+                        app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
 
                         break;
                     default:

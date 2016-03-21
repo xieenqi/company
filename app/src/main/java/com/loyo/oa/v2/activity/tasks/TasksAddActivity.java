@@ -340,7 +340,7 @@ public class TasksAddActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code, bundle);
+                        ExtraAndResult.REQUEST_CODE, bundle);
                 break;
 
             //参与人选项
@@ -350,13 +350,13 @@ public class TasksAddActivity extends BaseActivity {
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
                     bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);
                 }else{
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                     app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                            ExtraAndResult.request_Code, bundle1);
+                            ExtraAndResult.REQUEST_CODE, bundle1);
                 }
 
                 break;
@@ -476,7 +476,7 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            case ExtraAndResult.request_Code:
+            case ExtraAndResult.REQUEST_CODE:
 
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 /*负责人回调*/

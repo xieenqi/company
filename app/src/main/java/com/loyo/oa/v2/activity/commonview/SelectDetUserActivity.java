@@ -441,7 +441,7 @@ public class SelectDetUserActivity extends BaseActivity {
                 MainApp.selectAllUsers = userAllList;
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, selectType);
-                app.startActivityForResult(SelectDetUserActivity.this, SelectDetUserSerach.class, MainApp.ENTER_TYPE_ZOOM_IN, ExtraAndResult.request_Code, mBundle);
+                app.startActivityForResult(SelectDetUserActivity.this, SelectDetUserSerach.class, MainApp.ENTER_TYPE_ZOOM_IN, ExtraAndResult.REQUEST_CODE, mBundle);
             }
         });
     }
@@ -539,13 +539,13 @@ public class SelectDetUserActivity extends BaseActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode != ExtraAndResult.request_Code || data == null) {
+        if (requestCode != ExtraAndResult.REQUEST_CODE || data == null) {
             return;
         }
         int selectTypePage = 999;
         switch (requestCode) {
            /*选人搜索回调*/
-            case ExtraAndResult.request_Code:
+            case ExtraAndResult.REQUEST_CODE:
 
                 try {
                     selectTypePage = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
