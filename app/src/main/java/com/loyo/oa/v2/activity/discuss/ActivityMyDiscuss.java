@@ -237,9 +237,11 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     break;
                 case 2:
                     iv_icon.setImageResource(R.drawable.ic_discuss_task);
+                    tv_dateTime.setVisibility(View.GONE);
                     break;
                 case 5:
                     iv_icon.setImageResource(R.drawable.ic_discuss_project);
+                    tv_dateTime.setVisibility(View.GONE);
                     break;
 
             }

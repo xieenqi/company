@@ -129,23 +129,23 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;
             LogUtil.d(" 加载 报告 的数据： " + MainApp.gson.toJson(workReport));
-            DiscussCounter discussCounter = workReport.getDiscuss();
+            DiscussCounter discussCounter = workReport.discuss;
             //iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
             //tv_discuss_num.setText(discussCounter.getTotal() + "");
             layout_discuss.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    previewDiscuss(workReport.getAttachmentUUId());
+                    previewDiscuss(workReport.attachmentUUId);
                 }
             });
 
-            if (null != workReport.getReviewer() && null != workReport.getReviewer().getUser() && !TextUtils.isEmpty(workReport.getReviewer().getUser().getName())) {
-                content.setText("点评: " + workReport.getReviewer().getUser().getName());
+            if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
+                content.setText("点评: " + workReport.reviewer.getUser().getName());
             }
-            StringBuilder reportTitle = new StringBuilder(workReport.getCreator().name + "提交 ");
+            StringBuilder reportTitle = new StringBuilder(workReport.reviewer.name + "提交 ");
             String reportDate = "";
             String reportType = "";
-            switch (workReport.getType()) {
+            switch (workReport.type) {
                 case WorkReport.DAY:
                     reportType = " 日报";
                     //reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000));
@@ -163,13 +163,13 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     break;
             }
             reportTitle.append(reportType);
-            if (workReport.isDelayed()) {
+            if (workReport.isDelayed) {
                 reportTitle.append(" (补签)");
             }
 
             title.setText(reportTitle);
 
-            String end = "提交时间: " + app.df3.format(new Date(workReport.getCreatedAt() * 1000));
+            String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
             time.setText(end);
             //ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
             status.setImageResource(workReport.isReviewed() ? R.drawable.img_workreport_list_status2 : R.drawable.img_workreport_list_status1);
