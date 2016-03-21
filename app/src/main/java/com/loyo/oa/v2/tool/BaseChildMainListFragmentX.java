@@ -111,6 +111,9 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 tv_add.setText("新建审批");
                 break;
         }
+        if (!mProject.isProjectRelevant()) {
+            layout_add.setVisibility(View.GONE);
+        }
     }
 
     int pageIndex;

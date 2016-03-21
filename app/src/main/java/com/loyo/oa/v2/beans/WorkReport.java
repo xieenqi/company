@@ -64,13 +64,17 @@ public class WorkReport extends BaseBeans {
      */
     public boolean isRelevant() {
         String myId = MainApp.user.id;
-        if (myId.equals(reviewer.getUser().getId())) {
+
+        if (null != reviewer.getUser() && myId.equals(reviewer.getUser().getId())) {
             return true;
         }
         for (NewUser menber : members.users) {
-            if (myId.equals(menber.getId())) {
+            if (null != menber && myId.equals(menber.getId())) {
                 return true;
             }
+        }
+        if (myId.equals(creator.id)) {
+            return true;
         }
         return false;
     }
