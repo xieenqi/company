@@ -46,6 +46,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     public PaginationX<HttpDiscussDet> mPageDiscussion = new PaginationX<>();
     private Map<Long, String> messages = new HashMap<>();
     private int mStatus;
+    private boolean isOnce = true; // 让数据第一次定位的底部
 
     public static void startThisActivity(Activity act, int mBizType, String mAttachmentUUId, int status, int requestCode) {
         Intent intent = new Intent(act, ActivityDiscussDet.class);
@@ -148,9 +150,18 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         linearLayoutManager = new LinearLayoutManager(this);
         // linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         lv_notice.getRefreshableView().setLayoutManager(linearLayoutManager);
-        lv_notice.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+
+        lv_notice.getFooterLayout().setPullLabel("上拉刷新");
+        lv_notice.getFooterLayout().setReleaseLabel("松开刷新");
+        lv_notice.getFooterLayout().setRefreshingLabel("正在刷新...");
+
+        lv_notice.getHeaderLayout().setPullLabel("下拉加载");
+        lv_notice.getHeaderLayout().setReleaseLabel("松开加载");
+        lv_notice.getHeaderLayout().setRefreshingLabel("正在加载...");
+
+        lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
         bindDiscussion();
-        loadMessage();
+        loadMessage(true);
     }
 
     private void assignViews() {
@@ -176,18 +187,14 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        lv_notice.onRefreshComplete();
-                    }
-                }, 2000);
+                pageIndex++;
+                loadMessage(false);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                pageIndex++;
-                loadMessage();
+                pageIndex = 1;
+                loadMessage(true);
             }
         });
         et_discuss.addTextChangedListener(new UserScannerTextWatcher()); //监听用户输入
@@ -276,8 +283,10 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     /**
      * 加载讨论信息...
+     *
+     * @param isPull 是否是上拉
      */
-    private void loadMessage() {
+    private void loadMessage(final boolean isPull) {
         showLoading("");
         HashMap<String, Object> body = new HashMap<>();
         body.put("pageIndex", pageIndex + "");
@@ -291,7 +300,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 if (d == null || d.getRecords().size() == 0) {
                     Toast("没有更多信息");
                 }
-                mPageDiscussion.getRecords().addAll(d.getRecords());
+                Collections.reverse(d.getRecords());
+                if (isPull){
+                    mPageDiscussion.getRecords().clear();
+                    mPageDiscussion.getRecords().addAll(0, d.getRecords());
+                } else {
+                    mPageDiscussion.getRecords().addAll(0, d.getRecords());
+                }
                 bindDiscussion();
                 lv_notice.onRefreshComplete();
             }
@@ -303,6 +318,24 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 super.failure(error);
             }
         });
+    }
+
+    /**
+     * 绑定数据到adapter
+     *
+     */
+    private void bindDiscussion() {
+        if (adapter == null) {
+            adapter = new DiscussDetAdapter();
+            lv_notice.getRefreshableView().setAdapter(adapter);
+            adapter.updataList(mPageDiscussion.getRecords());
+        } else {
+            adapter.notifyDataSetChanged();
+            if (adapter.getItemCount() > 0 && isOnce) {
+                isOnce = false;
+                lv_notice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount() - 1);
+            }
+        }
     }
 
 
@@ -389,20 +422,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             ids.add(user.id);
         }
         return ids;
-    }
-
-
-    private void bindDiscussion() {
-        if (adapter == null) {
-            adapter = new DiscussDetAdapter();
-            lv_notice.getRefreshableView().setAdapter(adapter);
-            adapter.updataList(mPageDiscussion.getRecords());
-        } else {
-            adapter.notifyDataSetChanged();
-            if (adapter.getItemCount() > 0) {
-                lv_notice.getRefreshableView().smoothScrollToPosition(adapter.getItemCount() - 1);
-            }
-        }
     }
 
     @Override
@@ -537,7 +556,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             Bundle bundle = new Bundle();
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
             app.startActivityForResult(ActivityDiscussDet.this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                    ExtraAndResult.request_Code, bundle);
+                    ExtraAndResult.REQUEST_CODE, bundle);
         }
 
         @Override
@@ -713,6 +732,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      * 刷新红点
      */
     private void refreshRedDot() {
+        setResult(Activity.RESULT_OK);
         HashMap<String, Object> body = new HashMap<>();
         body.put("summaryId", summaryId);
         LogUtil.d("刷新红点:" + app.gson.toJson(body));

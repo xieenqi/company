@@ -60,9 +60,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
     protected final PullToRefreshBase.Mode mMode;
     protected final PullToRefreshBase.Orientation mScrollDirection;
 
-    private CharSequence mPullLabel;
-    private CharSequence mRefreshingLabel;
-    private CharSequence mReleaseLabel;
+    private CharSequence mPullLabel; // 刷新时还未到达刷新临界点时的显示文本
+    private CharSequence mRefreshingLabel; // 刷新时超过刷新临界点时的显示文本
+    private CharSequence mReleaseLabel; // 刷新确认，正在加载时的显示文本
 
     public LoadingLayout(Context context, final PullToRefreshBase.Mode mode, final PullToRefreshBase.Orientation scrollDirection, TypedArray attrs) {
         super(context);

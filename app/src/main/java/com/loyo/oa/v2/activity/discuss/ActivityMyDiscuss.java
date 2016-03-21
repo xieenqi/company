@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.discuss;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.MyDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -160,6 +162,19 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         getData();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case ExtraAndResult.REQUEST_CODE:
+                    adapter.cleanData();
+                    LogUtil.d("数组刷新了红点数据");
+                    break;
+            }
+        }
+    }
+
     private class DiscussAdapter extends RecyclerView.Adapter<DiscussViewHolder> {
 
         private List<HttpDiscussItem> datas = new ArrayList<>();
@@ -226,7 +241,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.summaryId);
-                    startActivity(intent);
+                    startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
                 }
             });
             switch (itemData.bizType) {

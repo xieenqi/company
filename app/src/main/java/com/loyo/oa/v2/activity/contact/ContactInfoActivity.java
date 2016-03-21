@@ -97,7 +97,7 @@ public class ContactInfoActivity extends BaseActivity {
             case R.id.tv_edit:
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
-                app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_BUTTOM, ExtraAndResult.request_Code, b);
+                app.startActivityForResult(this, ContactInfoEditActivity_.class, MainApp.ENTER_TYPE_BUTTOM, ExtraAndResult.REQUEST_CODE, b);
                 break;
             case R.id.layout_call:
                 call();
@@ -186,7 +186,7 @@ public class ContactInfoActivity extends BaseActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode != ExtraAndResult.request_Code || resultCode != RESULT_OK) {
+        if (requestCode != ExtraAndResult.REQUEST_CODE || resultCode != RESULT_OK) {
             return;
         }
         getUserInfo();
