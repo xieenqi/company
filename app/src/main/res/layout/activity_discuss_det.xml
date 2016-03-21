@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_grey_200"
+    tools:context=".activity.discuss.ActivityDiscussDet">
+
+    <include
+        android:id="@+id/actionbar"
+        layout="@layout/include_common_title_2"></include>
+
+    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshRecycleView
+        android:id="@+id/lv_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_edit"
+        android:layout_below="@+id/actionbar"
+        android:clickable="false"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingBottom="@dimen/dimen_16" />
+
+    <LinearLayout
+        android:id="@+id/ll_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:minHeight="@dimen/dimen_48"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/rl_scanner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginRight="@dimen/dimen_4"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dimen_4"
+            android:paddingTop="@dimen/dimen_4">
+
+            <EditText
+                android:id="@+id/et_discuss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/dimen_2"
+                android:background="@null"
+                android:hint="请输入讨论内容"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:minHeight="@dimen/dimen_30"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:text=""
+                android:textColor="@color/text_black_1"
+                android:textColorHint="@color/text_black_3"
+                android:textSize="@dimen/text_sp14"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1"
+                android:layout_marginTop="@dimen/dimen_4"
+                android:background="#d5d5d5"></View>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_send"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dimen_4"
+            android:paddingRight="@dimen/dimen_8"
+            android:text="发送"
+            android:textColor="@color/title_bg1"
+            android:textSize="@dimen/text_sp18" />
+
+    </LinearLayout>
+
+</RelativeLayout>

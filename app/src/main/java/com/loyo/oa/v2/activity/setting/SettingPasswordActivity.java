@@ -28,10 +28,14 @@ import retrofit.client.Response;
 
 @EActivity(R.layout.activity_setting_setpassword)
 public class SettingPasswordActivity extends BaseActivity {
-    @ViewById ViewGroup img_title_left;
-    @ViewById TextView tv_title_1;
-    @ViewById Button btn_submit;
-    @ViewById EditText et_old_password, et_new_password, et_confirm_new_password;
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    Button btn_submit;
+    @ViewById
+    EditText et_old_password, et_new_password, et_confirm_new_password;
 
     @AfterViews
     void initUI() {
@@ -75,14 +79,14 @@ public class SettingPasswordActivity extends BaseActivity {
         map.put("newpasswd", confirmNewPassword);
         RestAdapterFactory.getInstance().build(FinalVariables.URL_UPDATE_PASSWORD).create(IUser.class).updatePassword(map, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Toast("修改密码成功");
                 onBackPressed();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 //Toast(error.getBody().toString());
                 super.failure(error);
@@ -96,7 +100,7 @@ public class SettingPasswordActivity extends BaseActivity {
      * @param editText
      * @return
      */
-    private String getText(EditText editText) {
+    private String getText(final EditText editText) {
         return editText.getText().toString().trim();
     }
 

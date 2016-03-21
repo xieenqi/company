@@ -39,8 +39,8 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
+import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -230,7 +230,7 @@ public class TasksAddActivity extends BaseActivity {
      * 新建任务 POST提交
      */
 
-    void requestCommitTask(String title, String content) {
+    void requestCommitTask(final String title,final String content) {
 
         showLoading("");
         bizExtData = new PostBizExtData();
@@ -248,8 +248,7 @@ public class TasksAddActivity extends BaseActivity {
 
         if(switch_approve.getState() == 1){
             isState = false;
-        }
-        else if(switch_approve.getState() == 4){
+        }else if(switch_approve.getState() == 4){
             isState = true;
         }
 
@@ -266,9 +265,7 @@ public class TasksAddActivity extends BaseActivity {
         LogUtil.dee("任务创建 发送的数据:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
-            public void success(Task task, Response response) {
-                //task.setAck(true);
-//                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+            public void success(final Task task,final Response response) {
                 //不需要保存
                 cancelLoading();
                 isSave = false;
@@ -281,17 +278,17 @@ public class TasksAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
+                cancelLoading();
             }
         });
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
             R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
@@ -328,7 +325,7 @@ public class TasksAddActivity extends BaseActivity {
                 DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
-                    public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
+                    public void onDateTimeChanged(final int year,final int month,final int day,final int hour,final int min) {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
                                 String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         tv_deadline.setText(str);
@@ -387,6 +384,9 @@ public class TasksAddActivity extends BaseActivity {
                 bundle3.putInt("from", TASKS_ADD_CUSTOMER);
                 app.startActivityForResult(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_CUSTOMER, bundle3);
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -405,7 +405,7 @@ public class TasksAddActivity extends BaseActivity {
         listView_products.setAdapter(productsRadioListViewAdapter);
         listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
                 mRemind = Task.RemindListSource.get(position);
                 remindTime = Task.RemindListSource.get(position);
                 tv_remind.setText(Task.RemindList.get(position));
@@ -418,7 +418,7 @@ public class TasksAddActivity extends BaseActivity {
      * 负责人值设置,这里User为老版本bean,NewUser为新版本bean,做了一个数据转移
      * RealName字段，改为Name
      */
-    void setResponsiblePersion(User user) {
+    void setResponsiblePersion(final User user) {
         newUser = user.toShortUser();
         tv_responsiblePerson.setText(newUser.getName());
     }
@@ -430,13 +430,13 @@ public class TasksAddActivity extends BaseActivity {
     void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> _attachments, Response response) {
+            public void success(final ArrayList<Attachment> _attachments,final Response response) {
                 lstData_Attachment = _attachments;
                 init_gridView_photo();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("获取附件失败");
                 super.failure(error);
             }
@@ -444,13 +444,12 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
 
         switch (requestCode) {
-
             /*关联客户回调*/
             case FinalVariables.REQUEST_SELECT_CUSTOMER:
                 Customer customer = (Customer) data.getSerializableExtra("data");
@@ -483,9 +482,7 @@ public class TasksAddActivity extends BaseActivity {
                 /*负责人回调*/
                 if (user != null) {
                     setResponsiblePersion(user);
-                }
-                /*参与人回调*/
-                else {
+                }else { /*参与人回调*/
                     members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
                     if (null == members) {
                         tv_toUsers.setText("无参与人");
@@ -523,11 +520,11 @@ public class TasksAddActivity extends BaseActivity {
                                 LogUtil.dll("执行了");
                                 Utils.uploadAttachment(uuid,2,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
-                                    public void onNext(Serializable serializable) {
+                                    public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
                                     @Override
-                                    public void onError(Throwable e) {
+                                    public void onError(final Throwable e) {
                                         super.onError(e);
                                     }
                                 });
@@ -548,7 +545,7 @@ public class TasksAddActivity extends BaseActivity {
                 map.put("uuid", uuid);
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                     @Override
-                    public void success(Attachment attachment, Response response) {
+                    public void success(final Attachment attachment,final Response response) {
                         Utils.dialogDismiss();
                         Toast("删除附件成功!");
                         lstData_Attachment.remove(delAttachment);
@@ -556,12 +553,15 @@ public class TasksAddActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         Utils.dialogDismiss();
                         Toast("删除附件失败!");
                         super.failure(error);
                     }
                 });
+                break;
+
+            default:
                 break;
         }
     }
@@ -575,9 +575,7 @@ public class TasksAddActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         DBManager.Instance().deleteTask();
-
         if (isSave) {
             if(switch_approve.getState() == 1){
                 isState = false;
@@ -606,12 +604,12 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     public class RemindAdapter extends CommonAdapter<String> {
-        public RemindAdapter(Context context, List<String> datas, int layoutId) {
+        public RemindAdapter(final Context context,final List<String> datas,final int layoutId) {
             super(context, datas, layoutId);
         }
 
         @Override
-        public void convert(ViewHolder holder, String s) {
+        public void convert(final ViewHolder holder,final String s) {
             holder.setText(R.id.tv, s);
         }
     }

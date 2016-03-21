@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @ViewById
     TextView tv_memo;
     @ViewById
+    TextView tv_projectName;
+    @ViewById
     TextView tv_time_creator;
     @ViewById
     TextView tv_title_role;
@@ -81,6 +84,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
     ViewGroup layout_pass;
     @ViewById
     ViewGroup layout_AttachFile;
+    @ViewById
+    LinearLayout ll_project;
     @ViewById
     ViewGroup layout_lastwork;
     @ViewById
@@ -217,6 +222,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
         }
         tv_attachment_count.setText("附件 (" + wfInstance.bizExtData.getAttachmentCount() + ")");
+        tv_projectName.setText(null == wfInstance.ProjectInfo ? "无" : wfInstance.ProjectInfo.title);
+        if (300 == wfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件
+            layout_AttachFile.setVisibility(View.GONE);
+            ll_project.setVisibility(View.GONE);
+        }
         switch (wfInstance.status) {
 
             case WfInstance.STATUS_NEW:
@@ -234,6 +244,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
             case WfInstance.STATUS_FINISHED:
                 //img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status5);
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4); //状态4，5都归类为 已通过
+                break;
+            default:
                 break;
 
         }
@@ -321,7 +333,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         }
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
-            public void success(WfInstance wfInstance_current, Response response) {
+            public void success(final WfInstance wfInstance_current,final Response response) {
                 HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
                 wfInstance = wfInstance_current;
                 if (wfInstance_current.workflowNodes != null) {
@@ -340,7 +352,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 finish();
@@ -353,7 +365,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
      *
      * @param wfData
      */
-    private void wfData(WfInstance wfData) {
+    private void wfData(final WfInstance wfData) {
         List<String> wfList = new ArrayList<>();
         String custerName = wfData.demand.customerName;
         wfList.add("客户名称：" + (TextUtils.isEmpty(custerName) ? "" : custerName));
@@ -373,7 +385,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     /**
      * 提交审批请求
      */
-    void setData_wfinstance_approve(int type, String comment) {
+    void setData_wfinstance_approve(final int type,final String comment) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
@@ -381,7 +393,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         LogUtil.dll("请求内容:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
-            public void success(WfInstance wfInstance_current, Response response) {
+            public void success(final WfInstance wfInstance_current,final Response response) {
                 Toast("审批" + getString(R.string.app_succeed));
                 //如果不clear,会提示java.io.NotSerializableException
                 if (null != wfInstance_current.workflowValues) {
@@ -394,7 +406,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -402,7 +414,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork, R.id.layout_AttachFile})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
@@ -436,7 +448,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 bundle.putInt("bizType", 12);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
-
+            default:
+                break;
         }
     }
 
@@ -466,14 +479,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         container.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 popupWindow.dismiss();
             }
         });
 
         tv_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 String comment = et_comment.getText().toString().trim();
                 if (comment.isEmpty() && type == 2) {
                     Toast("请输入驳回原因");
@@ -489,7 +502,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 popupWindow.dismiss();
             }
         });
@@ -504,7 +517,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -515,7 +528,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             case MSG_DELETE_WFINSTANCE:
                 RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(wfInstance.getId(), new RCallback<WfInstance>() {
                     @Override
-                    public void success(WfInstance wfInstance, Response response) {
+                    public void success(final WfInstance wfInstance,final Response response) {
                         if (null != wfInstance.workflowValues) {
                             wfInstance.workflowValues.clear();
                         }
@@ -525,7 +538,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         Toast("删除失败");
                         super.failure(error);
                     }
@@ -540,6 +553,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 if (null != attachments) {
                     tv_attachment_count.setText("附件 " + "(" + attachments.size() + ")");
                 }
+                break;
+
+            default:
                 break;
         }
     }

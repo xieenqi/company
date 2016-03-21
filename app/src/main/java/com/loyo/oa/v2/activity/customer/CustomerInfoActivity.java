@@ -153,7 +153,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
 
-        if (isMyUser == false || isMenber) {
+        if (!isMyUser || isMenber) {
             imgview_title_right.setVisibility(View.GONE);
         }
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
@@ -168,7 +168,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
                     @Override
-                    public void success(Customer customer, Response response) {
+                    public void success(final Customer customer, final Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
                         mCustomer = customer;
                         Utils.dialogDismiss();
@@ -177,7 +177,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         super.failure(error);
                         HttpErrorCheck.checkError(error);
                         Utils.dialogDismiss();
@@ -196,8 +196,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         selectCityView.show();
         selectCityView.setOnclickselectCity(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                String cityArr[] = selectCityView.getResult();
+            public void onClick(final View view) {
+                String[] cityArr = selectCityView.getResult();
                 tv_district.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2]);
                 regional.province = cityArr[0];
                 regional.city = cityArr[1];
@@ -210,7 +210,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     /**
      * 初始化动态字段
      */
-    private void initExtra(boolean ismy) {
+    private void initExtra(final boolean ismy) {
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
             container.addView(new ExtraDataView(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
@@ -259,12 +259,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             industry = mCustomer.industry;
         }
 
-
-        if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
-            lat = mCustomer.loc.loc[1];
-            lng = mCustomer.loc.loc[0];
+        try{
+            if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
+                lat = mCustomer.loc.loc[1];
+                lng = mCustomer.loc.loc[0];
         }
-
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         tv_customer_name.setText(mCustomer.name);
 
         if (mCustomer.loc.addr != "") {
@@ -319,7 +321,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         //确定
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
@@ -330,7 +332,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 generalPopView.dismiss();
             }
         });
@@ -355,7 +357,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label,
             R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users,
             R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district, R.id.layout_customer_industry})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 onBackPressed();
@@ -416,6 +418,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 //                    }
 //                });
 //                break;
+            default:
+
+                break;
         }
     }
 
@@ -453,7 +458,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
-                    public void success(Customer customer, Response response) {
+                    public void success(final Customer customer, final Response response) {
                         app.isCutomerEdit = true;
                         Intent intent = new Intent();
                         customer.loc = mLocate;
@@ -462,7 +467,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         if (error.getKind() == RetrofitError.Kind.NETWORK) {
                             Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
                         } else if (error.getResponse().getStatus() == 500) {
@@ -489,7 +494,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -508,9 +513,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     owner.name = u.getName();
                     owner.avatar = u.getAvatar();
                     tv_customer_responser.setText(u.getName());
-                }
-                //参与人
-                else {
+                } else { //参与人
                     String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
                     String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
                     members = Utils.convert2Members(userIds, userNames);
@@ -533,7 +536,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                 mCustomer.tags = mTagItems;
                 break;
+            default:
 
+                break;
         }
     }
 
@@ -543,7 +548,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * @param tagList
      * @return
      */
-    private String appendTagItem(List<NewTag> tagList) {
+    private String appendTagItem(final List<NewTag> tagList) {
         StringBuffer sb = null;
 
         for (NewTag item : tagList) {
@@ -560,7 +565,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     @Override
-    public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
+    public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
 
         img_refresh_address.clearAnimation();
         animation.reset();

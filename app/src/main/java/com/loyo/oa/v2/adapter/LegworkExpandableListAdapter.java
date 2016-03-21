@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter<T> {
 
-    public LegworkExpandableListAdapter(Context context, ArrayList<PagingGroupData<T>> data) {
+    public LegworkExpandableListAdapter(final Context context, final ArrayList<PagingGroupData<T>> data) {
         super();
         mContext = context;
         pagingGroupDatas = data;
@@ -28,7 +28,7 @@ public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagin
     Item_info_Child item_info_Child;
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition,final  boolean isExpanded, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sign_show_group, null);
             item_info_Group = new Item_info_Group();
@@ -47,7 +47,7 @@ public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagin
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sign_show_alluser_group_child, null);
             item_info_Child = new Item_info_Child();

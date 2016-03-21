@@ -14,9 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.tasks.ChildTaskResponserSelectActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Task;
@@ -27,16 +25,13 @@ import com.loyo.oa.v2.point.ICheckPoint;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -101,12 +96,12 @@ public class ChildTaskAddActivity extends BaseActivity {
                 layout_child_add_responser.setEnabled(false);
                 et_child_add_content.setEnabled(false);
                 img_title_right.setVisibility(View.GONE);
-            }
-            /**
-             * 1. 未完成子任务不能显示取消完成按钮
-             * 2.未完成任务下，是主任务负责人或发布人或子任务创建人，允许所有权限；只是子任务负责人的话，只允许提交完成和未完成
-             */
-            else {
+
+                /**
+                 * 1. 未完成子任务不能显示取消完成按钮
+                 * 2.未完成任务下，是主任务负责人或发布人或子任务创建人，允许所有权限；只是子任务负责人的话，只允许提交完成和未完成
+                 */
+            }else {
                 btn_child_add_cancel_complete.setVisibility(View.GONE);
                 if (mTask.getCreator().isCurrentUser() || mTask.getResponsiblePerson().isCurrentUser() || mChildTask.getCreator().isCurrentUser()) {
 
@@ -126,7 +121,7 @@ public class ChildTaskAddActivity extends BaseActivity {
     }
 
     @Click({R.id.layout_child_add_responser, R.id.btn_child_add_complete, R.id.btn_child_add_cancel_complete, R.id.img_title_left, R.id.img_title_right})
-    void onClick(View view) {
+    void onClick(final View view) {
         switch (view.getId()) {
             //选择添加负责人
             case R.id.layout_child_add_responser:
@@ -162,6 +157,9 @@ public class ChildTaskAddActivity extends BaseActivity {
                     showEditPopu();
                 }
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -186,7 +184,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
         menuView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(final View view,final MotionEvent motionEvent) {
                 popupWindow.dismiss();
                 return false;
             }
@@ -204,18 +202,20 @@ public class ChildTaskAddActivity extends BaseActivity {
     private class PopuOnClickListener implements View.OnClickListener {
         private PopupWindow mWindow;
 
-        PopuOnClickListener(PopupWindow window) {
+        PopuOnClickListener(final PopupWindow window) {
             mWindow = window;
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             switch (view.getId()) {
                 case R.id.btn_child_delete_task:
                     delete();
                     break;
                 case R.id.btn_child_add_update:
                     update(true);
+                    break;
+                default:
                     break;
 
             }
@@ -229,7 +229,7 @@ public class ChildTaskAddActivity extends BaseActivity {
     private void delete() {
         MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).deleteChildTask(mTask.getId(), mChildTask.getId(), new RCallback<TaskCheckPoint>() {
             @Override
-            public void success(TaskCheckPoint taskCheckPoint, Response response) {
+            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("删除子任务成功");
                 Intent delIntent = new Intent();
                 delIntent.putExtra("childTaskId", chidTask.getId());
@@ -237,7 +237,7 @@ public class ChildTaskAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("删除子任务失败");
                 super.failure(error);
             }
@@ -266,7 +266,7 @@ public class ChildTaskAddActivity extends BaseActivity {
 
         MainApp.getMainApp().getRestAdapter().create(ICheckPoint.class).createChildTask(mTask.getId(), map, new RCallback<TaskCheckPoint>() {
             @Override
-            public void success(TaskCheckPoint taskCheckPoint, Response response) {
+            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("创建子任务成功");
                 mChildTask = taskCheckPoint;
                 Intent intent = new Intent();
@@ -276,7 +276,7 @@ public class ChildTaskAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 Toast("创建子任务失败");
                 LogUtil.d("LOG","创建子任务失败"+error.getMessage());
@@ -290,7 +290,7 @@ public class ChildTaskAddActivity extends BaseActivity {
      *
      * @param update 是否需要更新子任务其他内容
      */
-    private void update(boolean update) {
+    private void update(final boolean update) {
         if (TextUtils.isEmpty(tv_child_add_responser_name.getText().toString())) {
             Toast("请选择负责人");
             return;
@@ -309,7 +309,7 @@ public class ChildTaskAddActivity extends BaseActivity {
         datas2.put("responsiblePersonId", mChildTask.getResponsiblePerson().getId());
         app.getRestAdapter().create(ICheckPoint.class).updateChildTask(mChildTask.getTaskId(), mChildTask.getId(), datas2, new RCallback<TaskCheckPoint>() {
             @Override
-            public void success(TaskCheckPoint taskCheckPoint, Response response) {
+            public void success(final TaskCheckPoint taskCheckPoint,final Response response) {
                 Toast("更新子任务成功");
                 Intent completeIntent = new Intent();
                 completeIntent.putExtra("childTask", mChildTask);
@@ -317,7 +317,7 @@ public class ChildTaskAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("更新子任务失败");
                 super.failure(error);
             }
@@ -325,7 +325,7 @@ public class ChildTaskAddActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -337,6 +337,9 @@ public class ChildTaskAddActivity extends BaseActivity {
                     tv_child_add_responser_name.setText(user.getRealname());
                     newUser = user;
                 }
+                break;
+
+            default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);

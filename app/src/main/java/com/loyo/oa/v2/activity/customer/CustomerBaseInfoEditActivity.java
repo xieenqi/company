@@ -32,53 +32,53 @@ import org.json.JSONObject;
  * 时间 : 15/7/17.
  */
 @EActivity(R.layout.activity_customer_baseinfo_edit_layout)
-public class CustomerBaseInfoEditActivity extends BaseActivity
-{
+public class CustomerBaseInfoEditActivity extends BaseActivity {
     @ViewById
     EditText edt_customer_basesummary;
     @ViewById
     EditText edt_basename;
 
-    @Extra("Customer") Customer customer;
+    @Extra("Customer")
+    Customer customer;
 
     @AfterViews
-     void initUi()
-    {
+    void initUi() {
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户基础信息");
-        if(!TextUtils.isEmpty(customer.summary))
+        if (!TextUtils.isEmpty(customer.summary))
             edt_customer_basesummary.setText(customer.summary);
-        if(!TextUtils.isEmpty(customer.name))
+        if (!TextUtils.isEmpty(customer.name))
             edt_basename.setText(customer.name);
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right})
-     void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    void onClick(final View view) {
+        switch (view.getId()) {
             case R.id.img_title_left:
                 MainApp.getMainApp().finishActivity(this, MainApp.ENTER_TYPE_RIGHT, RESULT_CANCELED, null);
                 break;
             case R.id.img_title_right:
-                String name=getEditTextContent(edt_basename);
-                String content=getEditTextContent(edt_customer_basesummary);
-                    JSONObject jsonObject = new JSONObject();
-                    StringEntity stringEntity = null;
-                    try {
-                        jsonObject.put("name", name);
-                        jsonObject.put("content", content);
-                        //如果不传默认的联系人的话,服务端会把默认联系人更新掉。
-                        Contact contact= Utils.findDeault(customer);
-                        if(null!=contact) {
-                            jsonObject.put("contactPersonName", contact.getName());
-                            jsonObject.put("contactPersonTel", contact.getTel());
-                        }
-
-                        stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
-                    } catch (Exception e) {
-                        Global.ProcException(e);
+                String name = getEditTextContent(edt_basename);
+                String content = getEditTextContent(edt_customer_basesummary);
+                JSONObject jsonObject = new JSONObject();
+                StringEntity stringEntity = null;
+                try {
+                    jsonObject.put("name", name);
+                    jsonObject.put("content", content);
+                    //如果不传默认的联系人的话,服务端会把默认联系人更新掉。
+                    Contact contact = Utils.findDeault(customer);
+                    if (null != contact) {
+                        jsonObject.put("contactPersonName", contact.getName());
+                        jsonObject.put("contactPersonTel", contact.getTel());
                     }
-                    ServerAPI.request(this, ServerAPI.PUT, FinalVariables.customers + customer.getId(), stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncUpdateCustomer.class);
+
+                    stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
+                } catch (Exception e) {
+                    Global.ProcException(e);
+                }
+                ServerAPI.request(this, ServerAPI.PUT, FinalVariables.customers + customer.getId(), stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncUpdateCustomer.class);
+                break;
+            default:
+
                 break;
         }
 
@@ -87,10 +87,10 @@ public class CustomerBaseInfoEditActivity extends BaseActivity
     public class AsyncUpdateCustomer extends BaseActivityAsyncHttpResponseHandler {
 
         @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
             try {
                 Customer retCustomer = MainApp.gson.fromJson(getStr(arg2), Customer.class);
-                if(retCustomer!=null) {
+                if (retCustomer != null) {
                     Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
                     customer = retCustomer;
                     Intent intent = new Intent();
@@ -106,10 +106,11 @@ public class CustomerBaseInfoEditActivity extends BaseActivity
 
     /**
      * 获取EditText里的内容
+     *
      * @param et EditText
      * @return EditText里的内容
      */
-    private String getEditTextContent(EditText et) {
+    private String getEditTextContent(final EditText et) {
         return et.getText().toString().trim();
     }
 }

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Project;
@@ -19,9 +21,12 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.HaitHelper;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.TimeFormatUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -55,6 +60,7 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     private TextView tv_send;
 
     ViewGroup layout_discuss_action;
+    private HaitHelper mHaitHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,6 +163,9 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             lv_discuss.setMode(PullToRefreshBase.Mode.BOTH);
             lv_discuss.setOnRefreshListener(this);
             layout_discuss_action = (ViewGroup) mView.findViewById(R.id.layout_discuss_action);
+
+            mHaitHelper = new HaitHelper(this, et_comment);
+
             getData();
         }
         return mView;
@@ -173,6 +182,11 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mHaitHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
     /**
      * 发表讨论
      */
@@ -187,6 +201,11 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         body.put("attachmentUUId", project.attachmentUUId);
         body.put("content", comment);
         body.put("bizType",5);
+
+        body.put("mentionedUserIds", mHaitHelper.getSelectUser(comment));
+        mHaitHelper.clear();
+
+        LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class).createDiscussion(body, new RCallback<Discussion>() {
             @Override
@@ -248,10 +267,18 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
             TextView name = ViewHolder.get(view, R.id.tv_discuss_sender);
             TextView content = ViewHolder.get(view, R.id.tv_discuss_content);
 
-            time.setText(app.df9.format(new Date(discussion.getCreatedAt()*1000)));
+            time.setText(TimeFormatUtil.toMd_Hm(discussion.getCreatedAt()));
             name.setText(discussion.getCreator().name);
             content.setText(discussion.getContent());
             ImageLoader.getInstance().displayImage(discussion.getCreator().avatar, iv);
+            iv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mHaitHelper.addSelectUser(new HaitHelper.SelectUser(discussion.getCreator().getRealname()
+                            , discussion.getCreator().getId()));
+                    return true;
+                }
+            });
 
             return view;
         }

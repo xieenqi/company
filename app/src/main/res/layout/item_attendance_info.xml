@@ -31,12 +31,15 @@
                 android:text="3月"
                 />
 
-            <ImageView
+            <TextView
                 android:id="@+id/iv_extra"
                 android:layout_width="0dp"
-                android:layout_height="18dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.55"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:text=""
                 />
 
         </LinearLayout>

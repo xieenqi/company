@@ -45,7 +45,7 @@ public class ActivityEditUserMobile extends BaseActivity {
     String verificatioNumber, pwd, mobile;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_mobile);
         initViews();
@@ -67,7 +67,7 @@ public class ActivityEditUserMobile extends BaseActivity {
         cb_showHide = (CheckBox) findViewById(R.id.cb_showHide);
         cb_showHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 et_pwd.setTransformationMethod(isChecked ? HideReturnsTransformationMethod.getInstance() : PasswordTransformationMethod.getInstance());
             }
         });
@@ -78,7 +78,7 @@ public class ActivityEditUserMobile extends BaseActivity {
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
                     finish();
@@ -94,6 +94,9 @@ public class ActivityEditUserMobile extends BaseActivity {
                 case R.id.btn_complete:
                     complete();
                     break;
+                default:
+
+                    break;
 
             }
         }
@@ -101,15 +104,15 @@ public class ActivityEditUserMobile extends BaseActivity {
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
         }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
+        public void afterTextChanged(final Editable editable) {
             if (RegexUtil.regexk(editable.toString().trim(), RegexUtil.StringType.MOBILEL)) {
                 bt_verificationCode.setEnabled(true);
                 bt_verificationCode.setBackgroundResource(R.drawable.round_bg_shpe);//getResources().getColor(R.color.title_bg1)
@@ -131,7 +134,7 @@ public class ActivityEditUserMobile extends BaseActivity {
     private void verifyPhone(final String tel) {
         RestAdapterFactory.getInstance().build(Config_project.GET_VERIFICATION_CODE).create(IMain.class).getVerificationCode(tel, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 et_mobile.removeCallbacks(countRunner);
                 et_mobile.post(countRunner);
                 bt_verificationCode.setEnabled(false);
@@ -141,7 +144,7 @@ public class ActivityEditUserMobile extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 bt_verificationCode.setEnabled(true);
                 HttpErrorCheck.checkError(error);
@@ -190,7 +193,7 @@ public class ActivityEditUserMobile extends BaseActivity {
         map.put("password", pwd);
         RestAdapterFactory.getInstance().build(Config_project.BIND_MOBLIE).create(IMobile.class).bindMobile(map, new RCallback<Object>() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse("绑定手机号码", response);
                 Toast("绑定成功");
                 finish();
@@ -201,7 +204,7 @@ public class ActivityEditUserMobile extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }

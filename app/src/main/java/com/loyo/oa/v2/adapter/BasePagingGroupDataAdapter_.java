@@ -34,9 +34,10 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
         app = MainApp.getMainApp();
     }
 
-    public void setData(ArrayList<PagingGroupData_<T>> data) {
+    public void setData(final ArrayList<PagingGroupData_<T>> data) {
         pagingGroupDatas = data;
     }
+
     //上拉加载时不会滑到第一页需要获取数据源 ykb 07-15
     public List<PagingGroupData_<T>> getData() {
         return pagingGroupDatas;
@@ -48,27 +49,27 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
+    public int getChildrenCount(final int groupPosition) {
         return pagingGroupDatas.get(groupPosition).getRecords().size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Object getGroup(final int groupPosition) {
         return pagingGroupDatas.get(groupPosition);
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Object getChild(final int groupPosition, final int childPosition) {
         return pagingGroupDatas.get(groupPosition).getRecords().get(childPosition);
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
+    public long getGroupId(final int groupPosition) {
         return groupPosition;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
+    public long getChildId(final int groupPosition, final int childPosition) {
         return childPosition;
     }
 
@@ -78,32 +79,29 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sign_show_group, null);
         }
-        TextView tv_title =  ViewHolder.get(convertView,R.id.tv_title);
-        ImageView img_status=ViewHolder.get(convertView,R.id.img_time_point);
+        TextView tv_title = ViewHolder.get(convertView, R.id.tv_title);
+        ImageView img_status = ViewHolder.get(convertView, R.id.img_time_point);
 
         PagingGroupData_ data = pagingGroupDatas.get(groupPosition);
 
-        LogUtil.dll("status:"+data.getOrderStr());
+        LogUtil.dll("status:" + data.getOrderStr());
 
         /*列表状态条 颜色设置*/
         if (data != null && data.getOrderStr() != null) {
-            if(data.getOrderStr().contains("已")){
+            if (data.getOrderStr().contains("已")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isfinish));
                 img_status.setImageResource(R.drawable.bg_view_green_circle);
-            }
-            else if(data.getOrderStr().contains("进行中") || data.getOrderStr().contains("待点评") ||data.getOrderStr().contains("待审批")){
+            } else if (data.getOrderStr().contains("进行中") || data.getOrderStr().contains("待点评") || data.getOrderStr().contains("待审批")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isteston));
                 img_status.setImageResource(R.drawable.bg_view_purple_circle);
-            }
-            else if(data.getOrderStr().contains("待审核") || data.getOrderStr().contains("审")){
+            } else if (data.getOrderStr().contains("待审核") || data.getOrderStr().contains("审")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.iswrite));
                 img_status.setImageResource(R.drawable.bg_view_blue_circle);
-            }
-            else if(data.getOrderStr().contains("未")){
+            } else if (data.getOrderStr().contains("未")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.wfinstance_notagree));
                 img_status.setImageResource(R.drawable.bg_view_red_circle);
             }
@@ -116,7 +114,7 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
+    public boolean isChildSelectable(final int groupPosition, final int childPosition) {
         return true;
     }
 

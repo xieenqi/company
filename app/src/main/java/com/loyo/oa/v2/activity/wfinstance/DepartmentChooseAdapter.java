@@ -20,7 +20,7 @@ public class DepartmentChooseAdapter extends BaseAdapter {
     private Context context;
     private List<UserInfo> data;
 
-    DepartmentChooseAdapter(Context context,List<UserInfo> data) {
+    DepartmentChooseAdapter(final Context context,final List<UserInfo> data) {
         this.context = context;
         this.data = data;
     }
@@ -31,7 +31,7 @@ public class DepartmentChooseAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return position;
     }
 
@@ -40,12 +40,12 @@ public class DepartmentChooseAdapter extends BaseAdapter {
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView,final ViewGroup parent) {
         HoloderView holoder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.list_two_stair_menu_item,null);
@@ -62,12 +62,11 @@ public class DepartmentChooseAdapter extends BaseAdapter {
     class HoloderView {
 
         TextView text;
-        HoloderView(View view){
+        HoloderView(final View view){
             text= (TextView)view.findViewById(R.id.text);
         }
-        public void setContent(int position ){
+        public void setContent(final int position ){
             text.setText(data.get(position).getShortDept().getName());
-            //System.err.print("牡丹园法国人：" + data.get(position).getShortDept().getName());
         }
     }
 }

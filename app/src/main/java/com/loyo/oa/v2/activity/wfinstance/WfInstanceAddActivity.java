@@ -38,8 +38,8 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
+import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -161,13 +161,13 @@ public class WfInstanceAddActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> attachments, Response response) {
+            public void success(final ArrayList<Attachment> attachments,final Response response) {
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("获取附件失败");
                 super.failure(error);
             }
@@ -176,7 +176,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.ll_project:
                     Bundle bundle2 = new Bundle();
@@ -185,6 +185,9 @@ public class WfInstanceAddActivity extends BaseActivity {
                     app.startActivityForResult(WfInstanceAddActivity.this, ProjectSearchActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
+                    break;
+
+                default:
                     break;
             }
         }
@@ -227,7 +230,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         CommonAdapter followAdapter = new CommonAdapter<WfTemplate>(mContext, wfTemplateArrayList, R.layout.item_listview_product_select) {
             @Override
-            public void convert(ViewHolder holder, WfTemplate w) {
+            public void convert(final ViewHolder holder,final WfTemplate w) {
                 holder.setText(R.id.tv, w.getTitle());
             }
         };
@@ -239,7 +242,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         listView_follow.setAdapter(followAdapter);
         listView_follow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
                 mTemplateId = wfTemplateArrayList.get(position).getId();
                 tv_WfTemplate.setText(wfTemplateArrayList.get(position).getTitle());
                 dialog_follow.dismiss();
@@ -262,7 +265,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || data == null) {
             return;
@@ -288,7 +291,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                             if (newFile.exists()) {
                                 Utils.uploadAttachment(uuid,12,newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
-                                    public void onNext(Serializable serializable) {
+                                    public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
                                 });
@@ -310,14 +313,14 @@ public class WfInstanceAddActivity extends BaseActivity {
                 map.put("uuid", uuid);
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
                     @Override
-                    public void success(Attachment attachment, Response response) {
+                    public void success(final Attachment attachment,final Response response) {
                         Toast("删除附件成功!");
                         lstData_Attachment.remove(delAttachment);
                         init_gridView_photo();
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         Toast("删除附件失败!");
                         super.failure(error);
                     }
@@ -342,6 +345,9 @@ public class WfInstanceAddActivity extends BaseActivity {
                     tv_project.setText("无");
                 }
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -365,14 +371,14 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(mBizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
             @Override
-            public void success(ArrayList<WfTemplate> bizFormFieldsPaginationX, Response response) {
+            public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX,final Response response) {
                 HttpErrorCheck.checkResponse("获取审批流程", response);
                 wfTemplateArrayList = bizFormFieldsPaginationX;
                 initUI_Dialog_WfTemplate();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 Toast("获取审批流程失败");
                 super.failure(error);
@@ -381,7 +387,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.btn_add, R.id.layout_WfTemplate, R.id.layout_wfinstance, R.id.ll_dept})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
@@ -402,6 +408,8 @@ public class WfInstanceAddActivity extends BaseActivity {
                 break;
             case R.id.ll_dept:
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
+                break;
+            default:
                 break;
         }
     }
@@ -438,7 +446,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();
-
     }
 
 //        @Click(R.id.layout_delete2)
@@ -446,7 +453,6 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            bizFormFieldsListViewAdapter.setEmpty();
 //            layout_edit.setVisibility(View.GONE);
 //        }
-
 
     void addIsRequired(){
         LogUtil.dll("执行 addIsRequired");
@@ -480,17 +486,23 @@ public class WfInstanceAddActivity extends BaseActivity {
         for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
             HashMap<String, Object> map_Values = submitData.get(k);
-            for (BizFormFields field : mBizForm.getFields()) {
-                for (String key : map_Values.keySet()) {
-                    if (!TextUtils.equals(field.getId(), key)) {
-                        continue;
+            try{
+                for (BizFormFields field : mBizForm.getFields()) {
+                    for (String key : map_Values.keySet()) {
+                        if (!TextUtils.equals(field.getId(), key)) {
+                            continue;
+                        }
+                        postValue.add(map_Values.get(key));
+                        String value = (String) map_Values.get(key);
+                        jsonMapValues.put(key, value);
                     }
-                    postValue.add(map_Values.get(key));
-                    String value = (String) map_Values.get(key);
-                    jsonMapValues.put(key, value);
                 }
+                workflowValues.add(jsonMapValues);
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("操作失败！");
+                return;
             }
-            workflowValues.add(jsonMapValues);
         }
 
         for(int i = 0;i<postValue.size();i++){
@@ -518,7 +530,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
-            public void success(WfInstance wfInstance, Response response) {
+            public void success(final WfInstance wfInstance,final Response response) {
                 cancelLoading();
                 if (wfInstance != null) {
                     isSave = false;
@@ -530,7 +542,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 cancelLoading();
                 super.failure(error);

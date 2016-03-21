@@ -76,14 +76,14 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         Utils.dialogShow(this,"请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(mCustomer.getId(), new RCallback<Customer>() {
             @Override
-            public void success(Customer customer, Response response) {
+            public void success(final Customer customer, final Response response) {
                 mCustomer = customer;
                 Utils.dialogDismiss();
                 initData();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 Utils.dialogDismiss();
@@ -123,7 +123,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK || null == data) {
@@ -149,6 +149,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     }
                 }
                 initData();
+                break;
+            default:
+
                 break;
         }
     }
@@ -199,7 +202,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 setDefaultContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
-                    public void success(Contact _contact, Response response) {
+                    public void success(final Contact _contact, final Response response) {
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
                         for (int i = 0; i < mCustomer.contacts.size(); i++) {

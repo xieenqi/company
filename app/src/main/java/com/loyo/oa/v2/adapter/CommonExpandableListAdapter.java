@@ -30,19 +30,19 @@ import java.util.Date;
 
 /**
  * 任务管理列表的adapter
- * <p/>
+ * <p>
  * xnq
  */
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
-    public CommonExpandableListAdapter(Context context, ArrayList<PagingGroupData_<T>> data) {
+    public CommonExpandableListAdapter(final Context context, final ArrayList<PagingGroupData_<T>> data) {
         super();
         mContext = context;
         pagingGroupDatas = data;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
         }
@@ -87,10 +87,11 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 case WfInstance.STATUS_FINISHED:
                     status.setImageResource(R.drawable.img_wfinstance_list_status5);
                     break;
+                default:
+
+                    break;
             }
-        }
-        /**任务*/
-        else if (obj instanceof Task) {
+        } else if (obj instanceof Task) { /**任务*/
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
             if (task.getStatus() == Task.STATUS_PROCESSING) {
@@ -103,7 +104,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             /*任务超时判断*/
             try {
 
-                Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(),"yyyy-MM-dd HH:mm"));
+                Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"));
                 if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
                     timeOut.setVisibility(View.VISIBLE);
                 } else {
@@ -124,9 +125,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 title.setText(task.getTitle());
             }
 
-        }
-        /**报告*/
-        else if (obj instanceof WorkReport) {
+        } else if (obj instanceof WorkReport) { /**报告*/
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;
             LogUtil.d(" 加载 报告 的数据： " + MainApp.gson.toJson(workReport));
@@ -135,7 +134,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             //tv_discuss_num.setText(discussCounter.getTotal() + "");
             layout_discuss.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     previewDiscuss(workReport.getAttachmentUUId());
                 }
             });
@@ -159,8 +158,11 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     reportType = " 月报";
                     //reportDate = app.df8.format(new Date(workReport.getBeginAt() * 1000));
                     break;
+                default:
+
+                    break;
             }
-            reportTitle.append( reportType);
+            reportTitle.append(reportType);
             if (workReport.isDelayed()) {
                 reportTitle.append(" (补签)");
             }
@@ -179,7 +181,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
     /**
      * @param attachmentUUid
      */
-    private void previewDiscuss(String attachmentUUid) {
+    private void previewDiscuss(final String attachmentUUid) {
         Intent intent = new Intent((Activity) mContext, DiscussionActivity_.class);
         intent.putExtra("attachementUUid", attachmentUUid);
         ((Activity) mContext).startActivityForResult(intent, DiscussionActivity.REQUEST_PREVIEW_DISCUSS);

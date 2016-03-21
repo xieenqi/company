@@ -26,7 +26,7 @@ public abstract class BasePagingGroupDataAdapter<T extends BaseBeans> extends Ba
         app = MainApp.getMainApp();
     }
 
-    public void setData(ArrayList<PagingGroupData<T>> data) {
+    public void setData(final ArrayList<PagingGroupData<T>> data) {
         pagingGroupDatas = data;
     }
     //上拉加载时不会滑到第一页需要获取数据源 ykb 07-15
@@ -40,27 +40,27 @@ public abstract class BasePagingGroupDataAdapter<T extends BaseBeans> extends Ba
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
+    public int getChildrenCount(final int groupPosition) {
         return pagingGroupDatas.get(groupPosition).getRecords().size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Object getGroup(final int groupPosition) {
         return pagingGroupDatas.get(groupPosition);
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Object getChild(final int groupPosition, final int childPosition) {
         return pagingGroupDatas.get(groupPosition).getRecords().get(childPosition);
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
+    public long getGroupId(final int groupPosition) {
         return groupPosition;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
+    public long getChildId(final int groupPosition, final int childPosition) {
         return childPosition;
     }
 
@@ -70,7 +70,7 @@ public abstract class BasePagingGroupDataAdapter<T extends BaseBeans> extends Ba
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_sign_show_group, null);
             item_info_Group = new Item_info_Group();
@@ -91,7 +91,7 @@ public abstract class BasePagingGroupDataAdapter<T extends BaseBeans> extends Ba
     Item_info_Group item_info_Group;
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
+    public boolean isChildSelectable(final int groupPosition, final int childPosition) {
         return true;
     }
 

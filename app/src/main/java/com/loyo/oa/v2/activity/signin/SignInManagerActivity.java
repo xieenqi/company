@@ -31,26 +31,33 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 /**
  * 【客户拜访】界面  activity xnq
  */
 @EActivity(R.layout.activity_sign_list_my)
 public class SignInManagerActivity extends FragmentActivity {
 
-    private String[] LEGWORK_FILTER_STRS = new String[]{"我的拜访","团队拜访"};
-    @ViewById ViewGroup img_title_left;
-    @ViewById TextView tv_title_1;
-    @ViewById ViewGroup layout_title_action;
-    @ViewById ViewGroup layout_category;
-    @ViewById(R.id.img_title_arrow) ImageView imageArrow;
-    @ViewById(R.id.lv_signin_category) ListView categoryListView;
+    private String[] LEGWORK_FILTER_STRS = new String[]{"我的拜访", "团队拜访"};
+    @ViewById
+    ViewGroup img_title_left;
+    @ViewById
+    TextView tv_title_1;
+    @ViewById
+    ViewGroup layout_title_action;
+    @ViewById
+    ViewGroup layout_category;
+    @ViewById(R.id.img_title_arrow)
+    ImageView imageArrow;
+    @ViewById(R.id.lv_signin_category)
+    ListView categoryListView;
 
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
-    private int mIndex=-1;
+    private int mIndex = -1;
 
     @AfterViews
     void initViews() {
@@ -63,7 +70,7 @@ public class SignInManagerActivity extends FragmentActivity {
         imageArrow.setVisibility(View.VISIBLE);
         rotateAnimation = initAnimation();
 
-        if(!Utils.hasRights()){
+        if (!Utils.hasRights()) {
             LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
         }
         initCategoryUI();
@@ -71,13 +78,16 @@ public class SignInManagerActivity extends FragmentActivity {
     }
 
     @Click({R.id.img_title_left, R.id.layout_title_action})
-    void onClick(View v) {
+    void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
                 changeCategoryView();
                 break;
             case R.id.img_title_left:
                 onBackPressed();
+                break;
+            default:
+
                 break;
         }
     }
@@ -91,8 +101,8 @@ public class SignInManagerActivity extends FragmentActivity {
             if (i == 0) {
                 Bundle b = new Bundle();
                 b.putSerializable("user", MainApp.user);
-                fragment = (BaseFragment) Fragment.instantiate(this, SignInOfUserFragment.class.getName(),b);
-            }  else {
+                fragment = (BaseFragment) Fragment.instantiate(this, SignInOfUserFragment.class.getName(), b);
+            } else {
                 Bundle b = new Bundle();
                 b.putInt("type", i);
                 fragment = (BaseFragment) Fragment.instantiate(this, SignInOfTeamFragment.class.getName(), b);
@@ -108,8 +118,8 @@ public class SignInManagerActivity extends FragmentActivity {
      * @param index
      */
     private void changeChild(int index) {
-        if(index!=mIndex) {
-            mIndex=index;
+        if (index != mIndex) {
+            mIndex = index;
             fragmentManager.beginTransaction().replace(R.id.layout_list_container, fragments.get(index)).commit();
         }
     }
@@ -150,7 +160,7 @@ public class SignInManagerActivity extends FragmentActivity {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 changeCategoryView();
                 String content = LEGWORK_FILTER_STRS[position];
                 tv_title_1.setText(content);

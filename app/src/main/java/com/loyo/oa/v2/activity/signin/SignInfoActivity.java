@@ -48,7 +48,7 @@ public class SignInfoActivity extends BaseActivity {
     private LegWork legWork;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_info);
 
@@ -73,7 +73,7 @@ public class SignInfoActivity extends BaseActivity {
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 app.finishActivity((Activity) v.getContext(), MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
             }
         });
@@ -85,7 +85,7 @@ public class SignInfoActivity extends BaseActivity {
         if (!isFormCustom) {
             layout_customer_info.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     Bundle b = new Bundle();
                     b.putString("Id", legWork.customerId);
                     app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
@@ -108,7 +108,7 @@ public class SignInfoActivity extends BaseActivity {
         if (legWork != null) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getLegwork(legWork.getId(), new RCallback<LegWork>() {
                 @Override
-                public void success(LegWork _legWork, Response response) {
+                public void success(final LegWork _legWork, final Response response) {
                     legWork = _legWork;
                     updateUI();
                 }
@@ -122,13 +122,13 @@ public class SignInfoActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(legWork.attachmentUUId, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(ArrayList<Attachment> attachments, Response response) {
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 Toast("获取附件失败");
                 super.failure(error);
             }
@@ -169,7 +169,7 @@ public class SignInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != REQUEST_PREVIEW_CUSTOMER_INFO || resultCode != Activity.RESULT_OK || null == data) {
             return;

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.commonview;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -42,35 +44,50 @@ import retrofit.client.Response;
 @EActivity(R.layout.activity_discussion)
 public class DiscussionActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
-    public static final int REQUEST_PREVIEW_DISCUSS=121;
+    public static final int REQUEST_PREVIEW_DISCUSS = 121;
 
-    @Extra("attachmentUUId") String attachmentUUId;
-    @Extra("isMyUser") boolean isMyUser;
-    @Extra("status") int status;
-    @Extra("bizType") int bizType;
+    @Extra("attachmentUUId")
+    String attachmentUUId;
+    @Extra("isMyUser")
+    boolean isMyUser;
+    @Extra("status")
+    int status;
+    @Extra("bizType")
+    int bizType;
 
 
-    @ViewById PullToRefreshListView listView_discussion;
-    @ViewById TextView et_comment;
-    private boolean isPullUp=false;
+    @ViewById
+    PullToRefreshListView listView_discussion;
+    @ViewById
+    EditText et_comment;
+    private boolean isPullUp = false;
 
     private PaginationX<Discussion> mPageDiscussion = new PaginationX<>(20);
     private DiscussionAdapter adapter;
     private LinearLayout layout_comment;
+    private HaitHelper mHaitHelper;
 
     @AfterViews
     void init() {
         super.setTitle("讨论");
         listView_discussion.setOnRefreshListener(this);
         listView_discussion.setMode(PullToRefreshBase.Mode.BOTH);
+
+        mHaitHelper = new HaitHelper(et_comment);
+
         getDDiscussion();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mHaitHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     void getDDiscussion() {
 
         layout_comment = (LinearLayout) findViewById(R.id.layout_comment);
 
-        if(status == 3){
+        if (status == 3) {
             layout_comment.setVisibility(View.GONE);
         }
 
@@ -84,9 +101,9 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
             public void success(final PaginationX<Discussion> d, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 listView_discussion.onRefreshComplete();
-                if(isPullUp){
+                if (isPullUp) {
                     mPageDiscussion.getRecords().addAll(d.getRecords());
-                }else{
+                } else {
                     mPageDiscussion = d;
                 }
                 bindDiscussion();
@@ -106,6 +123,12 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         Collections.sort(sortDiscussion);
         if (null == adapter) {
             adapter = new DiscussionAdapter(mContext, sortDiscussion);
+            adapter.setSelectUserCallback(new DiscussionAdapter.OnSelectUserCallback() {
+                @Override
+                public void onCallback(HaitHelper.SelectUser user) {
+                    mHaitHelper.addSelectUser(user);
+                }
+            });
             listView_discussion.setAdapter(adapter);
         } else {
             adapter.setmDatas(sortDiscussion);
@@ -137,7 +160,11 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
         HashMap<String, Object> body = new HashMap<>();
         body.put("attachmentUUId", attachmentUUId);
         body.put("content", comment);
-        body.put("bizType",bizType);
+        body.put("bizType", bizType);
+
+        body.put("mentionedUserIds", mHaitHelper.getSelectUser(comment));
+        mHaitHelper.clear();
+
         LogUtil.dll("发送的数据:" + MainApp.gson.toJson(body));
         t.createDiscussion(body, new RCallback<Discussion>() {
             @Override
@@ -162,15 +189,15 @@ public class DiscussionActivity extends BaseActivity implements PullToRefreshBas
     }
 
     @Override
-    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
-        isPullUp=false;
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        isPullUp = false;
         mPageDiscussion.setPageIndex(1);
         getDDiscussion();
     }
 
     @Override
-    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
-        isPullUp=true;
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isPullUp = true;
         mPageDiscussion.setPageIndex(mPageDiscussion.getPageIndex() + 1);
         mPageDiscussion.setPageSize(20);
         getDDiscussion();

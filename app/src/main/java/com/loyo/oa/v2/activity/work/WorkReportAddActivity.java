@@ -198,7 +198,6 @@ public class WorkReportAddActivity extends BaseActivity {
         });
 
         if (null != mWorkReport) {
-            LogUtil.d("编辑工作报告的数据:" + MainApp.gson.toJson(mWorkReport));
             if (type == TYPE_EDIT) {
                 super.setTitle("编辑工作报告");
                 uuid = mWorkReport.getAttachmentUUId();
@@ -267,7 +266,7 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.ADD_WORK_REPORT_PL).create(IWorkReport.class)
                 .defaultComment(new RCallback<HttpDefaultComment>() {
                     @Override
-                    public void success(final HttpDefaultComment reviewer, final Response response) {
+                    public void success(final HttpDefaultComment reviewer,final Response response) {
                         HttpErrorCheck.checkResponse(response);
                         mReviewer = new Reviewer();
                         if (reviewer.reviewer != null) {
@@ -319,8 +318,7 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
+            public void success(final ArrayList<Attachment> attachments,final Response response) {
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -337,11 +335,10 @@ public class WorkReportAddActivity extends BaseActivity {
      * 获取附件(编辑)
      */
     private void getEditAttachments() {
-        showLoading("");
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                cancelLoading();
+            public void success(final ArrayList<Attachment> attachments,final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -349,7 +346,6 @@ public class WorkReportAddActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -387,7 +383,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 日报checkbox
      */
     @CheckedChange(R.id.rb1)
-    void dayClick(final CompoundButton button, final boolean b) {
+    void dayClick(final CompoundButton button,final boolean b) {
         if (!b) {
             return;
         }
@@ -403,7 +399,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 周报checkbox
      */
     @CheckedChange(R.id.rb2)
-    void weekClick(final CompoundButton button, final boolean b) {
+    void weekClick(final CompoundButton button,final boolean b) {
         if (!b) {
             return;
         }
@@ -415,7 +411,6 @@ public class WorkReportAddActivity extends BaseActivity {
         mSelectType = WorkReport.WEEK;
 
     }
-
 
     /**
      * 月报checkbox
@@ -550,6 +545,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 mBundle.putInt(ExtraAndResult.EXTRA_STATUS, 1);
                 app.startActivityForResult(this, ProjectSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_SELECT_PROJECT, mBundle);
                 break;
+
             default:
                 break;
         }
@@ -558,7 +554,7 @@ public class WorkReportAddActivity extends BaseActivity {
     /**
      * 开启动态统计数据
      */
-    public void openDynamic(final String startTime, final String endTime) {
+    public void openDynamic(final String startTime,final String endTime) {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
@@ -567,7 +563,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 .getDynamic(map, new RCallback<ArrayList<WorkReportDyn>>() {
                     @Override
                     public void success(final ArrayList<WorkReportDyn> dyn, final Response response) {
-                        cancelLoading();
                         HttpErrorCheck.checkResponse(response);
                         LogUtil.dll("动态工作返回：" + MainApp.gson.toJson(dyn));
                         dynList = dyn;
@@ -577,11 +572,10 @@ public class WorkReportAddActivity extends BaseActivity {
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
-                        cancelLoading();
                         HttpErrorCheck.checkError(error);
                     }
                 });
-    }
+            }
 
     /**
      * 编辑报告请求
@@ -590,7 +584,7 @@ public class WorkReportAddActivity extends BaseActivity {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
+            public void success(final WorkReport workReport,final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
                 dealResult(workReport);
@@ -611,7 +605,7 @@ public class WorkReportAddActivity extends BaseActivity {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport, final Response response) {
+            public void success(final WorkReport workReport,final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 dealResult(workReport);
@@ -641,13 +635,12 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
 
         switch (requestCode) {
-
             /*所属项目回调*/
             case FinalVariables.REQUEST_SELECT_PROJECT:
                 Project _project = (Project) data.getSerializableExtra("data");
@@ -668,8 +661,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     mReviewer = new Reviewer(user.toShortUser());
                     mReviewer.setUser(user.toShortUser());
                     tv_reviewer.setText(user.getRealname());
-                    /*抄送人*/
-                }else {
+                }else {  /*抄送人*/
                     members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
                     if (null == members) {
                         tv_toUser.setText("无参与人");
@@ -759,9 +751,8 @@ public class WorkReportAddActivity extends BaseActivity {
             case WorkReport.DAY:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(final DatePicker view, final int year,final int monthOfYear,final int dayOfMonth) {
+                    public void onDateSet(final DatePicker view,final int year,final int monthOfYear,final int dayOfMonth) {
                         String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
-
                         beginAt = DateTool.getDateToTimestamp(str, app.df4);
                         endAt = DateTool.getDateToTimestamp(str, app.df4) + DateTool.DAY_MILLIS - 100;
                         if (beginAt < DateTool.getBeginAt_ofDay()) {
@@ -775,9 +766,8 @@ public class WorkReportAddActivity extends BaseActivity {
             case WorkReport.MONTH:
                 DatePickerDialog datePickerDialogMonth = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(final DatePicker view, final int year,final int monthOfYear,final int dayOfMonth) {
+                    public void onDateSet(final DatePicker view,final int year,final int monthOfYear,final int dayOfMonth) {
                         String str = year + "." + String.format("%02d", (monthOfYear + 1));
-
                         beginAt = DateTool.getDateToTimestamp(str.concat(".01 00:00"), app.df3);
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, monthOfYear + 2, 1);
@@ -791,7 +781,6 @@ public class WorkReportAddActivity extends BaseActivity {
                         tv_time.setText(str);
                     }
                 },
-
                         DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
 
                 ((LinearLayout) ((ViewGroup) datePickerDialogMonth.getDatePicker().getChildAt(0)).getChildAt(0)).getChildAt(2).setVisibility(View.GONE);

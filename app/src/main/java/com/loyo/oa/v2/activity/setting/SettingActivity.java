@@ -52,7 +52,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             if (null == intent)
                 return;
             String action = intent.getAction();
@@ -63,7 +63,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initUI();
@@ -129,7 +129,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 //onBackPressed();
@@ -165,6 +165,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.layout_profile:
                 updateUserinfp();
                 break;
+            default:
+
+                break;
         }
     }
 
@@ -174,12 +177,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     void rushHomeData(){
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
             @Override
-            public void success(User user, Response response) {
+            public void success(final User user, final Response response) {
                 HttpErrorCheck.checkResponse(response);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }
@@ -193,7 +196,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         showLoading("");
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
-            public void success(User user, Response response) {
+            public void success(final User user, final Response response) {
                 HttpErrorCheck.checkResponse("获取个人资料修改", response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
@@ -205,7 +208,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
             }

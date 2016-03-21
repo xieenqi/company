@@ -61,7 +61,7 @@ public class WorkReportReviewActivity extends BaseActivity {
         map.put("comment",content);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).reviewWorkReport(mWorkReportId, map, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport,final Response response) {
+            public void success(final WorkReport workReport, final Response response) {
                 setResult(RESULT_OK);
                 back();
             }

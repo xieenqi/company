@@ -201,6 +201,7 @@ public class AttachmentActivity extends BaseActivity {
             default:
                 LogUtil.d("其他");
                 break;
+
         }
     }
 
@@ -211,13 +212,15 @@ public class AttachmentActivity extends BaseActivity {
         Utils.uploadAttachment(uuid, bizType, file)
                 .subscribe(new CommonSubscriber(this) {
                     @Override
-                    public void onNext(final Serializable attachment) {
+                    public void onNext(Serializable attachment) {
+
                         LogUtil.dee("上传附件成功:" + attachment.toString());
                         getAttachments();
                     }
 
                     @Override
-                    public void onError(final Throwable e) {
+                    public void onError(Throwable e) {
+
                         LogUtil.dee("上传附件失败:" + e.getMessage());
                         LogUtil.dee("上传附件失败:" + e.toString());
                         e.getMessage();

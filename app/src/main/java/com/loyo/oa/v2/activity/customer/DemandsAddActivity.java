@@ -70,7 +70,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private final int UI_UPDATE = 0x01;
     private Handler mHandler = new Handler(){
 
-        public void handleMessage(Message msg){
+        public void handleMessage(final Message msg){
             if(msg.what == UI_UPDATE){
 
             }
@@ -78,7 +78,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demands_add);
 
@@ -115,13 +115,13 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private void getProducts() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getProducts(new RCallback<ArrayList<Product>>() {
             @Override
-            public void success(ArrayList<Product> products, Response response) {
+            public void success(final ArrayList<Product> products, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 lstData_Product.addAll(products);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 finish();
@@ -135,7 +135,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private void getSaleStages() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
             @Override
-            public void success(ArrayList<SaleStage> saleStages, Response response) {
+            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 lstData_SaleStage.addAll(saleStages);
                 if (saleStageDialogFragment == null) {
@@ -149,7 +149,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 finish();
@@ -228,7 +228,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
      *
      * @param reason
      */
-    private void showReason(String reason) {
+    private void showReason(final String reason) {
         layout_reason.setVisibility(View.VISIBLE);
         tv_reason.setText(reason);
     }
@@ -264,8 +264,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
@@ -275,26 +274,20 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                     Toast("请选择产品");
                     return;
                 }
-
                 if (null == saleStageDialogFragment.lSaleStageID_select) {
                     Toast("请选择销售阶段");
                     return;
                 }
-
-                if (tv_salestages.getText().toString().equals("输单") && tv_reason.getText().toString().equals("请选择输单原因")) {
+                if ("输单".equals(tv_salestages.getText().toString()) && "请选择输单原因".equals(tv_reason.getText().toString())) {
                     Toast("请填写输单原因");
                     return;
                 }
-
                 if (demand == null) {
                     addDemand();
-
                 } else {
                     updateDemad();
                 }
-
                 break;
-
             case R.id.layout_products:
                 if (lstData_Product == null) {
                     Toast(R.string.app_init_await);
@@ -314,7 +307,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 listView_products.setAdapter(productsRadioListViewAdapter);
                 listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 
                         productsRadioListViewAdapter.notifyDataSetChanged();
                         productsRadioListViewAdapter.isSelected = id;
@@ -327,7 +320,6 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).getUnid()+")");
 
                         dialog_Product.dismiss();
-
                     }
                 });
                 break;
@@ -344,9 +336,11 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                     Toast(R.string.app_init_await);
                     break;
                 }
-
                 saleStageDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
                 saleStageDialogFragment.show(getFragmentManager(), SaleStageDialogFragment.class.getName());
+                break;
+            default:
+
                 break;
         }
     }
@@ -357,7 +351,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
      * @param type : 1,新增;2,修改
      * @return
      */
-    private HashMap<String, Object> buildDatas(int type) {
+    private HashMap<String, Object> buildDatas(final int type) {
         double num = -1;
         try {
             num = Double.valueOf(edt_num.getText().toString().trim());
@@ -441,7 +435,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
      *
      * @param result
      */
-    private void processResult(Demand result) {
+    private void processResult(final Demand result) {
         if (demand == null) {
             Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
         } else {
@@ -461,12 +455,12 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(ICustomer.class).addDemand(buildDatas(1), new RCallback<Demand>() {
             @Override
-            public void success(Demand demand, Response response) {
+            public void success(final Demand demand, final Response response) {
                 processResult(demand);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
@@ -480,12 +474,12 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(ICustomer.class).updateDemand(demand.getId(), buildDatas(2), new RCallback<Demand>() {
             @Override
-            public void success(Demand demand, Response response) {
+            public void success(final Demand demand, final Response response) {
                 processResult(demand);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
@@ -493,7 +487,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (null == data || resultCode != RESULT_OK) {
             return;
@@ -502,6 +496,9 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
             case CommonTagSelectActivity.REQUEST_TAGS:
                 loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
                 tv_reason.setText(getLoseReason());
+                break;
+            default:
+
                 break;
         }
     }

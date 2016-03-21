@@ -36,7 +36,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
     private boolean isMyUser;
     private String customerId, customerName;
 
-    public DemandsRadioListViewAdapter(Context context, ArrayList<Demand> lstData, boolean isMyUser, String customerId, String customerName) {
+    public DemandsRadioListViewAdapter(final Context context, final ArrayList<Demand> lstData, final boolean isMyUser, final String customerId, final String customerName) {
         mInflater = LayoutInflater.from(context);
         this.lstData = lstData;
         mContext = context;
@@ -51,17 +51,17 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return lstData.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_listview_demands, parent, false);
         }
@@ -109,7 +109,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
 
         img_edit_damand.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 editDemand(demand);
             }
         });
@@ -120,7 +120,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
             convertView.setOnTouchListener(Global.GetTouch());
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     goWfInstance(demand.getWfId());
                 }
             });
@@ -133,7 +133,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
      *
      * @param wFInstanceId
      */
-    private void goWfInstance(String wFInstanceId) {
+    private void goWfInstance(final String wFInstanceId) {
         Bundle b = new Bundle();
         b.putString(ExtraAndResult.EXTRA_ID, wFInstanceId);
         MainApp.getMainApp().startActivityForResult((DemandsManageActivity) mContext, WfinstanceInfoActivity_.class, 0, BaseMainListFragment.REQUEST_REVIEW, b);
@@ -144,7 +144,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
      *
      * @param data
      */
-    private void editDemand(Demand data) {
+    private void editDemand(final Demand data) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Demand.class.getName(), data);
         bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
@@ -152,7 +152,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         MainApp.getMainApp().startActivityForResult((Activity) mContext, DemandsAddActivity.class,
                 MainApp.ENTER_TYPE_BUTTOM, DemandsManageActivity.VIEW_DEMANDS, bundle);
     }
-    private String wfStatusText(int index){
+    private String wfStatusText(final int index){
         switch (index){
             case WfInstance.STATUS_NEW:
                 return "(待审核)";
@@ -164,6 +164,9 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
                 return "(已通过)";
             case WfInstance.STATUS_FINISHED:
                 return "(已完结)";
+            default:
+
+                break;
         }
         return "";
     }

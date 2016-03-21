@@ -48,7 +48,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTouchView(NO_SCROLL);
         setContentView(R.layout.activity_demands_manage);
@@ -94,7 +94,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
             @Override
-            public void success(PaginationX<Demand> demandPaginationX, Response response) {
+            public void success(final PaginationX<Demand> demandPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse(" 购买意向详情：", response);
                 listView_demands.onRefreshComplete();
                 if (!PaginationX.isEmpty(demandPaginationX)) {
@@ -108,7 +108,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 listView_demands.onRefreshComplete();
                 super.failure(error);
@@ -129,7 +129,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         Bundle bundle;
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -144,6 +144,9 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                 bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
                 app.startActivityForResult(this, DemandsAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 break;
+            default:
+
+                break;
         }
     }
 
@@ -153,7 +156,7 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 
         if (resultCode != RESULT_OK || data == null) {
             return;
@@ -166,18 +169,21 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                 isChanged = true;
                 onPullDownToRefresh(listView_demands);
                 break;
+            default:
+
+                break;
         }
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
         paginationX.setPageIndex(1);
         getData();
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
         paginationX.setPageIndex(paginationX.getPageIndex() + 1);
         getData();

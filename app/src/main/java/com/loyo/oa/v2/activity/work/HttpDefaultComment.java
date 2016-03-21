@@ -9,12 +9,8 @@ import com.loyo.oa.v2.beans.NewUser;
 public class HttpDefaultComment {
 
     public Reviewer reviewer;
-//public members;
-
     public class Reviewer {
         public NewUser user;
 
     }
-
-
 }

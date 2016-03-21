@@ -35,6 +35,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -80,6 +81,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     ViewGroup layout_attachment;
     @ViewById
     ViewGroup layout_discussion;
+    @ViewById
+    TextView tv_review_time;
 
     @ViewById
     ImageView img_workreport_status;
@@ -294,6 +297,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
             tv_reviewer_.setText("点评人：" + mWorkReport.getReviewer().getUser().getName());
+            tv_review_time.setText(DateTool.timet(mWorkReport.getReviewer().getReviewedAt()+"",DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             btn_workreport_review.setVisibility(View.GONE);
             ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.getReviewer().getScore())).intValue() / 20);
 
@@ -355,7 +359,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-
         if(("1").equals(mWorkReport.getReviewer().getStatus())){
             isOver = true;
         }
@@ -393,8 +396,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-
-                LogUtil.dll("报告详情，右上角按钮");
                 if (mWorkReport.isReviewed()) {
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("extra", "复制报告");
@@ -477,29 +478,25 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             case MSG_DELETE_WORKREPORT:
 
-                  /*编辑回调*/
+                     /*编辑回调*/
                 if (data.getBooleanExtra("edit", false)) {
                     LogUtil.dll("进入回调：编辑");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                }
-                /*复制回调*/
-                else if ((data.getBooleanExtra("extra", false))) {
+                    /*复制回调*/
+                }else if ((data.getBooleanExtra("extra", false))) {
                     LogUtil.dll("进入回调：复制");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
-                }
-
-                /*删除回调*/
-                else if (data.getBooleanExtra("delete", false)) {
+                    /*删除回调*/
+                }else if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
                     LogUtil.dll("进入回调：删除");
                 }
-
                 break;
 
             case MSG_ATTACHMENT:
@@ -525,6 +522,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             default:
                 break;
+
         }
     }
 }
