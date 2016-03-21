@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.application.MainApp;
+
 import java.util.ArrayList;
 
 /**
@@ -55,5 +57,21 @@ public class WorkReport extends BaseBeans {
      */
     public boolean isReviewed() {
         return null != reviewer && reviewer.isReviewed() ? true : false;
+    }
+
+    /**
+     * 是否和本工作报告相关
+     */
+    public boolean isRelevant() {
+        String myId = MainApp.user.id;
+        if (myId.equals(reviewer.getUser().getId())) {
+            return true;
+        }
+        for (NewUser menber : members.users) {
+            if (myId.equals(menber.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
