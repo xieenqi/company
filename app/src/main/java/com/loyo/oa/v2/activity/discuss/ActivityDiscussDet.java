@@ -252,6 +252,9 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                         startActivity(intent);
                         break;
 
+
+
+
                 }
                 break;
             case R.id.tv_send:
