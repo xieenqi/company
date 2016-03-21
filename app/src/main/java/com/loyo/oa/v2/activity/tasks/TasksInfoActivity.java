@@ -18,7 +18,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
@@ -719,7 +718,7 @@ public class TasksInfoActivity extends BaseActivity {
         switch (requestCode) {
 
             /*选择完参与人后，回调*/
-            case ExtraAndResult.request_Code:
+            case ExtraAndResult.REQUEST_CODE:
                 String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
                 String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
                 if (cc_user_id != null && cc_user_name != null) {
@@ -761,7 +760,7 @@ public class TasksInfoActivity extends BaseActivity {
                         Bundle mBundle = new Bundle();
                         mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, mBundle);
+                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, mBundle);
                     }
                                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
@@ -785,7 +784,7 @@ public class TasksInfoActivity extends BaseActivity {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle);
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);
 
                 }
                 break;

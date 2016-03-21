@@ -266,7 +266,7 @@ public class WorkReportAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.ADD_WORK_REPORT_PL).create(IWorkReport.class)
                 .defaultComment(new RCallback<HttpDefaultComment>() {
                     @Override
-                    public void success(final HttpDefaultComment reviewer,final Response response) {
+                    public void success(final HttpDefaultComment reviewer, final Response response) {
                         HttpErrorCheck.checkResponse(response);
                         mReviewer = new Reviewer();
                         if (reviewer.reviewer != null) {
@@ -318,7 +318,7 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            public void success(final ArrayList<Attachment> attachments,final Response response) {
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -337,7 +337,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private void getEditAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> attachments,final Response response) {
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
@@ -358,18 +358,18 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void crmSwitch(final boolean b) {
         if (b) {
-            switch (mSelectType){
-            case WorkReport.DAY:
-                openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
-                break;
+            switch (mSelectType) {
+                case WorkReport.DAY:
+                    openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
+                    break;
 
-            case WorkReport.WEEK:
-                openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
-                break;
+                case WorkReport.WEEK:
+                    openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
+                    break;
 
-            case WorkReport.MONTH:
-                openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
-                break;
+                case WorkReport.MONTH:
+                    openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
+                    break;
 
                 default:
                     break;
@@ -383,7 +383,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 日报checkbox
      */
     @CheckedChange(R.id.rb1)
-    void dayClick(final CompoundButton button,final boolean b) {
+    void dayClick(final CompoundButton button, final boolean b) {
         if (!b) {
             return;
         }
@@ -399,7 +399,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 周报checkbox
      */
     @CheckedChange(R.id.rb2)
-    void weekClick(final CompoundButton button,final boolean b) {
+    void weekClick(final CompoundButton button, final boolean b) {
         if (!b) {
             return;
         }
@@ -416,7 +416,7 @@ public class WorkReportAddActivity extends BaseActivity {
      * 月报checkbox
      */
     @CheckedChange(R.id.rb3)
-    void monthClick(final CompoundButton button,final boolean b) {
+    void monthClick(final CompoundButton button, final boolean b) {
         if (!b) {
             return;
         }
@@ -508,7 +508,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 mBundle = new Bundle();
                 mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code, mBundle);
+                        ExtraAndResult.REQUEST_CODE, mBundle);
 
                 break;
 
@@ -520,13 +520,13 @@ public class WorkReportAddActivity extends BaseActivity {
                     mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
                     mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
                     app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                            ExtraAndResult.request_Code, mBundle);
+                            ExtraAndResult.REQUEST_CODE, mBundle);
                 } else {
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                     app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                            ExtraAndResult.request_Code, bundle1);
+                            ExtraAndResult.REQUEST_CODE, bundle1);
                 }
 
                 break;
@@ -554,7 +554,7 @@ public class WorkReportAddActivity extends BaseActivity {
     /**
      * 开启动态统计数据
      */
-    public void openDynamic(final String startTime,final String endTime) {
+    public void openDynamic(final String startTime, final String endTime) {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("startTime", startTime);
@@ -575,7 +575,7 @@ public class WorkReportAddActivity extends BaseActivity {
                         HttpErrorCheck.checkError(error);
                     }
                 });
-            }
+    }
 
     /**
      * 编辑报告请求
@@ -584,7 +584,7 @@ public class WorkReportAddActivity extends BaseActivity {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport,final Response response) {
+            public void success(final WorkReport workReport, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_update) + getString(R.string.app_succeed));
                 dealResult(workReport);
@@ -605,7 +605,7 @@ public class WorkReportAddActivity extends BaseActivity {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
-            public void success(final WorkReport workReport,final Response response) {
+            public void success(final WorkReport workReport, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
                 dealResult(workReport);
@@ -627,7 +627,7 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void dealResult(final WorkReport workReport) {
         if (workReport != null) {
-            workReport.ack=true;
+            workReport.ack = true;
             Intent intent = getIntent();
             intent.putExtra("data", workReport);
             app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -635,7 +635,7 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -654,14 +654,14 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
 
             /*点评人 抄送人回调*/
-            case ExtraAndResult.request_Code:
+            case ExtraAndResult.REQUEST_CODE:
                 /*点评人*/
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
                     mReviewer = new Reviewer(user.toShortUser());
                     mReviewer.setUser(user.toShortUser());
                     tv_reviewer.setText(user.getRealname());
-                }else {  /*抄送人*/
+                } else {  /*抄送人*/
                     members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
                     if (null == members) {
                         tv_toUser.setText("无参与人");
@@ -720,7 +720,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     map.put("uuid", uuid);
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                         @Override
-                        public void success(final Attachment attachment,final Response response) {
+                        public void success(final Attachment attachment, final Response response) {
                             Toast("删除附件成功!");
                             lstData_Attachment.remove(delAttachment);
                             signInGridViewAdapter.notifyDataSetChanged();
@@ -751,7 +751,7 @@ public class WorkReportAddActivity extends BaseActivity {
             case WorkReport.DAY:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(final DatePicker view,final int year,final int monthOfYear,final int dayOfMonth) {
+                    public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
                         String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
                         beginAt = DateTool.getDateToTimestamp(str, app.df4);
                         endAt = DateTool.getDateToTimestamp(str, app.df4) + DateTool.DAY_MILLIS - 100;
@@ -766,7 +766,7 @@ public class WorkReportAddActivity extends BaseActivity {
             case WorkReport.MONTH:
                 DatePickerDialog datePickerDialogMonth = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(final DatePicker view,final int year,final int monthOfYear,final int dayOfMonth) {
+                    public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
                         String str = year + "." + String.format("%02d", (monthOfYear + 1));
                         beginAt = DateTool.getDateToTimestamp(str.concat(".01 00:00"), app.df3);
                         Calendar calendar = Calendar.getInstance();

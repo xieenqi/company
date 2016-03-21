@@ -324,7 +324,7 @@ public class TasksEditActivity extends BaseActivity {
 
                 Bundle bundle = new Bundle();
                 bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);
 
                 break;
 
@@ -334,7 +334,7 @@ public class TasksEditActivity extends BaseActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
                 bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.request_Code, bundle1);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);
 
                 break;
 
@@ -445,7 +445,7 @@ public class TasksEditActivity extends BaseActivity {
                 break;
 
             /*负责人 参与人选人回调*/
-            case ExtraAndResult.request_Code:
+            case ExtraAndResult.REQUEST_CODE:
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
                     setResponsiblePersion(user);

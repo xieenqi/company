@@ -554,7 +554,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             Bundle bundle = new Bundle();
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
             app.startActivityForResult(ActivityDiscussDet.this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                    ExtraAndResult.request_Code, bundle);
+                    ExtraAndResult.REQUEST_CODE, bundle);
         }
 
         @Override
@@ -730,6 +730,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      * 刷新红点
      */
     private void refreshRedDot() {
+        setResult(Activity.RESULT_OK);
         HashMap<String, Object> body = new HashMap<>();
         body.put("summaryId", summaryId);
         LogUtil.d("刷新红点:" + app.gson.toJson(body));

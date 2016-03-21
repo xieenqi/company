@@ -85,12 +85,12 @@ public class HaitHelper {
                 MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
                         SelectDetUserActivity.class,
                         MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.request_Code,
+                        ExtraAndResult.REQUEST_CODE,
                         bundle);
             } else {
                 mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
                         SelectDetUserActivity.class).putExtras(bundle),
-                        ExtraAndResult.request_Code);
+                        ExtraAndResult.REQUEST_CODE);
             }
         }
 

@@ -42,7 +42,7 @@ public class ExtraAndResult {
     public static final int TYPE_SHOW_DEPT_USER = 0;
     public static final int FROMPAGE_ATTENDANCE = 101;
 
-    public static final int request_Code = 100;
+    public static final int REQUEST_CODE = 100;
     public static final int MSG_WHAT_GONG = 120;
     public static final int MSG_WHAT_VISIBLE = 130;
     public static final int MSG_WHAT_DIALOG = 140;
