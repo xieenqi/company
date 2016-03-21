@@ -92,7 +92,7 @@ public class DateTool {
 
     public static final String DATE_FORMATE_CHINE = "yyyy年MM月dd日 hh时mm分";
 
-    public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd hh:mm";
+    public static final String DATE_FORMATE_SPLITE_BY_POINT = "yyyy.MM.dd HH:mm";
 
     public static Calendar calendar;
 
