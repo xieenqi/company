@@ -300,7 +300,8 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                     Toast("没有更多信息");
                 }
                 if (isPull){
-                    mPageDiscussion = d;
+                    mPageDiscussion.getRecords().clear();
+                    mPageDiscussion.getRecords().addAll(0, d.getRecords());
                 } else {
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
                 }
