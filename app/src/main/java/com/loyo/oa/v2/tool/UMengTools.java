@@ -34,6 +34,7 @@ public class UMengTools {
             erroInfo.append("定位结果:" + location.getErrorInfo() + "--" + location.getLocationDetail() + "<->");
             erroInfo.append("网络类型:" + Utils.getNetworkType(context) + "<->");
             erroInfo.append("发生的时间:" + time + "");
+            erroInfo.append("用户信息:" + MainApp.gson.toJson(MainApp.user) + "");
             MobclickAgent.reportError(context, erroInfo.toString());
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
         }

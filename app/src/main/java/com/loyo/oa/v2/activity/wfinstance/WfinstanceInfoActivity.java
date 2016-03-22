@@ -394,6 +394,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current,final Response response) {
+                HttpErrorCheck.checkResponse("审批成功：",response);
                 Toast("审批" + getString(R.string.app_succeed));
                 //如果不clear,会提示java.io.NotSerializableException
                 if (null != wfInstance_current.workflowValues) {
