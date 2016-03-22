@@ -3,6 +3,7 @@ package com.loyo.oa.v2.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
@@ -16,8 +17,12 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.umeng.analytics.MobclickAgent;
+
 import org.androidannotations.annotations.EIntentService;
+
 import java.util.ArrayList;
+
 import retrofit.client.Response;
 
 /**
@@ -44,6 +49,7 @@ public class InitDataService extends IntentService {
                 MainApp.user = user;
                 sendDataChangeBroad(user);
                 DBManager.Instance().putUser(json);//保存用户信息
+                MobclickAgent.onProfileSignIn(user.name);//友盟账号统计
             }
         });
         try {

@@ -33,6 +33,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 import retrofit.RetrofitError;
@@ -173,8 +174,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 刷新首页红点数据
-     * */
-    void rushHomeData(){
+     */
+    void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {
@@ -248,6 +249,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);
         ExitActivity.getInstance().finishAllActivity();
+        MobclickAgent.onProfileSignOff();//暂停友盟账号统计
         app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
     }
 }

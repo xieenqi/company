@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -35,7 +37,6 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Role;
 import com.loyo.oa.v2.beans.TagItem;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
@@ -478,6 +479,92 @@ public class Utils {
     }
 
     /**
+     * 强制用户打开GPS定位
+     *
+     * @param context
+     */
+    public static final void openGPS(Context context) {
+        Intent GPSIntent = new Intent();
+        GPSIntent.setClassName("com.android.settings",
+                "com.android.settings.widget.SettingsAppWidgetProvider");
+        GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
+        GPSIntent.setData(Uri.parse("custom:3"));
+        try {
+            PendingIntent.getBroadcast(context, 0, GPSIntent, 0).send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取手机当前网络链接的类型
+     */
+    public static String getNetworkType(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            String type = networkInfo.getTypeName();
+            if (type.equalsIgnoreCase("WIFI")) {
+                return "WIFI网络";
+            } else if (type.equalsIgnoreCase("MOBILE")) {
+                String proxyHost = android.net.Proxy.getDefaultHost();
+                return TextUtils.isEmpty(proxyHost)
+                        ? (isFastMobileNetwork(context) ? "3G以上网络" : "2G网络")
+                        : "wap网络";
+            }
+        } else {
+            return "没有链接网络";
+        }
+        return "";
+    }
+
+    /**
+     * 网络的速度
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isFastMobileNetwork(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        switch (telephonyManager.getNetworkType()) {
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                return false; // ~ 50-100 kbps
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                return false; // ~ 14-64 kbps
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                return false; // ~ 50-100 kbps
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                return true; // ~ 400-1000 kbps
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                return true; // ~ 600-1400 kbps
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                return false; // ~ 100 kbps
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                return true; // ~ 2-14 Mbps
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                return true; // ~ 700-1700 kbps
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                return true; // ~ 1-23 Mbps
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                return true; // ~ 400-7000 kbps
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                return true; // ~ 1-2 Mbps
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                return true; // ~ 5 Mbps
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                return true; // ~ 10-20 Mbps
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                return false; // ~25 kbps
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                return true; // ~ 10+ Mbps
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * 从一个输入流里写文件
      *
      * @param destFilePath 要创建的文件的路径
@@ -649,13 +736,13 @@ public class Utils {
 
 
     /*取下班时间，最小值，最早下班时间*/
-    public static long minOutTime(ArrayList<Long> array){
+    public static long minOutTime(ArrayList<Long> array) {
         long min = 0;
-        for(int i = 0;i<array.size();i++){
-            for(int k = i+1;k<array.size();k++){
-                if(array.get(i)<array.get(k)){
+        for (int i = 0; i < array.size(); i++) {
+            for (int k = i + 1; k < array.size(); k++) {
+                if (array.get(i) < array.get(k)) {
                     min = array.get(k);
-                }else{
+                } else {
                     min = array.get(i);
                 }
             }
@@ -665,16 +752,16 @@ public class Utils {
 
     /**
      * 获取部门名字和职位名字，包括多部门情况下
-     * */
-    public static StringBuffer getDeptName(StringBuffer stringBuffer,ArrayList<UserInfo> list){
+     */
+    public static StringBuffer getDeptName(StringBuffer stringBuffer, ArrayList<UserInfo> list) {
 
-        for(int i = 0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             stringBuffer.append(list.get(i).getShortDept().getName());
-            if(!list.get(i).getTitle().isEmpty()
-                    && list.get(i).getTitle().length() >0){
-                stringBuffer.append(" | "+list.get(i).getTitle());
+            if (!list.get(i).getTitle().isEmpty()
+                    && list.get(i).getTitle().length() > 0) {
+                stringBuffer.append(" | " + list.get(i).getTitle());
             }
-            if(i != list.size()-1){
+            if (i != list.size() - 1) {
                 stringBuffer.append(" ; ");
             }
         }
