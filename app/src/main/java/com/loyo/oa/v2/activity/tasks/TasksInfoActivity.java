@@ -235,6 +235,10 @@ public class TasksInfoActivity extends BaseActivity {
             layout_task_testfather.setVisibility(View.GONE);
             btn_complete.setVisibility(View.GONE);
         }
+
+        if(!IsCreator() && !IsResponsiblePerson()){
+            img_title_right.setVisibility(View.GONE);
+        }
     }
 
     /**

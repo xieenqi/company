@@ -12,8 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <TextView
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:id="@+id/tv_deal_time"
+            android:textSize="@dimen/textsize_content2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#9c9c9c"
+            android:text="" />
+
         <LinearLayout
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:layout_marginRight="@dimen/margin_side_edge"
             android:layout_width="match_parent"
@@ -23,7 +35,7 @@
                 android:id="@+id/tv_creator_title"
                 android:textSize="14sp"
                 android:textColor="#9C9C9C"
-                android:text="sf"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -34,17 +46,7 @@
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="姓名" />
-
-            <TextView
-                android:id="@+id/tv_deal_time"
-                android:textSize="@dimen/textsize_content2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textColor="#9c9c9c"
-                android:text="处理时间" />
+                android:text="" />
 
         </LinearLayout>
 
@@ -76,7 +78,7 @@
             <TextView
                 android:id="@+id/tv_result"
                 android:textColor="#34D434"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"

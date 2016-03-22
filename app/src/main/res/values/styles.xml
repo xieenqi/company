@@ -189,8 +189,8 @@
     </style>
 
     <style name="image_label">
-        <item name="android:layout_width">24dp</item>
-        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 

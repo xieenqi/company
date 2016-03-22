@@ -1183,6 +1183,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
+                case 111://暂时定为审批提醒
+                    intent.setClass(MainActivity.this,WfinstanceInfoActivity_.class);
+                    startActivity(intent);
+                    break;
+
                 default:
                     break;
             }

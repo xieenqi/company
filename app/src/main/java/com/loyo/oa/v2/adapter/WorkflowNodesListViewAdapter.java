@@ -13,6 +13,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -67,11 +69,12 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         }
 
         WfNodes wfNodes = lstData.get(position);
+        StringBuffer stringBuffer = new StringBuffer();
         if (wfNodes != null) {
             if (wfNodes.getExecutorUser() != null) {
                 item_info.tv_name.setText(wfNodes.getExecutorUser().getRealname());
                 try {
-                    item_info.tv_creator_title.setText(wfNodes.getExecutorUser().shortPosition.getName());
+                    item_info.tv_creator_title.setText(Utils.getDeptName(stringBuffer,wfNodes.getExecutorUser().getDepts()));
                 } catch (Exception ex) {
                     item_info.tv_creator_title.setText("");
                     Global.ProcException(ex);
@@ -86,16 +89,16 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 item_info.tv_result.setText("同意");
                 item_info.tv_comment.setVisibility(View.VISIBLE);
                 item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
+                item_info.tv_deal_time.setVisibility(View.VISIBLE);
+                item_info.tv_deal_time.setText(DateTool.timet(wfNodes.getUpdateAt()+"",DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             } else {
                 if (wfNodes.getActive() == 1) {
                     item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
-                    item_info.tv_deal_time.setText("");
                     item_info.tv_result.setText("待处理");
                     item_info.tv_comment.setVisibility(View.GONE);
                     item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
                 } else if (wfNodes.getActive() == 2) {
                     item_info.img_left.setImageResource(R.drawable.img_wfinstance_wait);
-                    item_info.tv_deal_time.setText("");
                     item_info.tv_result.setText("处理中");
                     item_info.tv_comment.setVisibility(View.GONE);
                     item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
@@ -105,12 +108,16 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                         item_info.tv_result.setText("同意");
                         item_info.tv_comment.setVisibility(View.VISIBLE);
                         item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
+                        item_info.tv_deal_time.setVisibility(View.VISIBLE);
+                        item_info.tv_deal_time.setText(DateTool.timet(wfNodes.getUpdateAt()+"",DateTool.DATE_FORMATE_SPLITE_BY_POINT));
                     } else {
                         item_info.img_left.setImageResource(R.drawable.img_wfinstance_notagree);
                         item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notagree));
                         item_info.tv_result.setText("驳回");
                         item_info.tv_comment.setVisibility(View.VISIBLE);
                         item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
+                        item_info.tv_deal_time.setVisibility(View.VISIBLE);
+                        item_info.tv_deal_time.setText(DateTool.timet(wfNodes.getUpdateAt()+"",DateTool.DATE_FORMATE_SPLITE_BY_POINT));
                     }
                 }
             }
