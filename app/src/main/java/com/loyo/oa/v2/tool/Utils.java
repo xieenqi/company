@@ -474,7 +474,6 @@ public class Utils {
         if (gps || network) {
             return true;
         }
-
         return false;
     }
 

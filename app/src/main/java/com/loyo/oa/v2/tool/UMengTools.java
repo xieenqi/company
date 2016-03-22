@@ -4,8 +4,11 @@ import android.content.Context;
 import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CellInfo;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.Date;
 
 /**
  * 友盟统计相关方法
@@ -20,6 +23,7 @@ public class UMengTools {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            String time = MainApp.getMainApp().df1.format(new Date(location.getTime()));
             CellInfo cellInfo = Utils.getCellInfo();
             StringBuffer erroInfo = new StringBuffer();
             erroInfo.append("品牌：" + cellInfo.getLoyoAgent() + "<->");
@@ -29,6 +33,7 @@ public class UMengTools {
             erroInfo.append("网络状态（非数据）:" + network + "<->");
             erroInfo.append("定位结果:" + location.getErrorInfo() + "--" + location.getLocationDetail() + "<->");
             erroInfo.append("网络类型:" + Utils.getNetworkType(context) + "<->");
+            erroInfo.append("发生的时间:" + time + "");
             MobclickAgent.reportError(context, erroInfo.toString());
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
         }
