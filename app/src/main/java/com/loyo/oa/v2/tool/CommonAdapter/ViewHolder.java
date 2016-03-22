@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.tool.CommonAdapter;
+package com.loyo.oa.v2.tool.commonadapter;
 
 import android.content.Context;
 import android.util.SparseArray;
@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;

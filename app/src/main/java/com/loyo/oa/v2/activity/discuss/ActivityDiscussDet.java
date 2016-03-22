@@ -91,7 +91,20 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private int mStatus;
     private boolean isOnce = true; // 让数据第一次定位的底部
 
-    public static void startThisActivity(Activity act, int mBizType, String mAttachmentUUId, int status, int requestCode) {
+    /**
+     * 启动当前页面
+     *
+     * @param act
+     * @param mBizType
+     * @param mAttachmentUUId
+     * @param status
+     * @param requestCode
+     */
+    public static void startThisActivity(final Activity act,
+                                         final int mBizType,
+                                         final String mAttachmentUUId,
+                                         final int status,
+                                         final int requestCode) {
         Intent intent = new Intent(act, ActivityDiscussDet.class);
         intent.putExtra(ExtraAndResult.EXTRA_TYPE, mBizType);
         intent.putExtra("status", status);
@@ -100,7 +113,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE /*| WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN*/);
         setContentView(R.layout.activity_discuss_det);
@@ -134,6 +147,9 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 break;
             case 5:
                 tv_edit.setText("查看项目");
+                break;
+            default:
+
                 break;
         }
 
@@ -186,13 +202,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         tv_send.setOnClickListener(this);
         lv_notice.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+            public void onPullDownToRefresh(final PullToRefreshBase<RecyclerView> refreshView) {
                 pageIndex++;
                 loadMessage(false);
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+            public void onPullUpToRefresh(final PullToRefreshBase<RecyclerView> refreshView) {
                 pageIndex = 1;
                 loadMessage(true);
             }
@@ -200,7 +216,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         et_discuss.addTextChangedListener(new UserScannerTextWatcher()); //监听用户输入
         et_discuss.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
+            public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
                 int selection = et_discuss.getSelectionStart();
                 if (keyCode == KeyEvent.KEYCODE_DEL
                         && selection > 0
@@ -232,7 +248,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.layout_back:
                 finish();
@@ -258,8 +274,9 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                         intent.putExtra("projectId", bizTypeId);
                         startActivity(intent);
                         break;
+                    default:
 
-
+                        break;
                 }
                 break;
             case R.id.tv_send:
@@ -295,13 +312,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).
                 create(MyDiscuss.class).getDiscussDetail(body, new RCallback<PaginationX<HttpDiscussDet>>() {
             @Override
-            public void success(PaginationX<HttpDiscussDet> d, Response response) {
+            public void success(final PaginationX<HttpDiscussDet> d, final Response response) {
                 HttpErrorCheck.checkResponse("讨论详情：", response);
                 if (d == null || d.getRecords().size() == 0) {
                     Toast("没有更多信息");
                 }
                 Collections.reverse(d.getRecords());
-                if (isPull){
+                if (isPull) {
                     mPageDiscussion.getRecords().clear();
                     mPageDiscussion.getRecords().addAll(0, d.getRecords());
                 } else {
@@ -312,7 +329,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void failure(final RetrofitError error) {
                 lv_notice.onRefreshComplete();
                 HttpErrorCheck.checkError(error);
                 super.failure(error);
@@ -322,7 +339,6 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 
     /**
      * 绑定数据到adapter
-     *
      */
     private void bindDiscussion() {
         if (adapter == null) {
@@ -345,7 +361,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      * @param time
      * @param mineMessage
      */
-    private void addMineMessge(long time, String mineMessage) {
+    private void addMineMessge(final long time, final String mineMessage) {
         messages.put(time, mineMessage);
         HttpDiscussDet discussion = new HttpDiscussDet();
         HttpCrecter creacter = new HttpCrecter();
@@ -373,12 +389,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(IDiscuss.class)
                 .createDiscussion(body, new RCallback<Discussion>() {
                     @Override
-                    public void success(Discussion d, Response response) {
+                    public void success(final Discussion d, final Response response) {
                         HttpErrorCheck.checkResponse(response);
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                         new Handler().postDelayed(new Runnable() {
@@ -399,7 +415,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      *
      * @param delName
      */
-    private void delSelectUser(String delName) {
+    private void delSelectUser(final String delName) {
         for (int i = 0; i < mHaitSelectUsers.size(); i++) {
             HaitHelper.SelectUser selectUser = mHaitSelectUsers.get(i);
             if (selectUser.matchName(delName)) {
@@ -440,8 +456,15 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     @Override
-    public void onLayoutChange(View v, int left, int top, int right,
-                               int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+    public void onLayoutChange(final View v,
+                               final int left,
+                               final int top,
+                               final int right,
+                               final int bottom,
+                               final int oldLeft,
+                               final int oldTop,
+                               final int oldRight,
+                               final int oldBottom) {
         if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
             scrollToBottom();
         } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
@@ -459,7 +482,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null) {
             User user = (User) data.getSerializableExtra(User.class.getName());
             if (user != null) {
@@ -486,7 +509,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      * @param selectName
      * @return
      */
-    private String add$Name(String selectName) {
+    private String add$Name(final String selectName) {
         return selectName + SCANNER_HAIT_TRIM;
     }
 
@@ -495,7 +518,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      *
      * @param view
      */
-    public void hitKeyBoard(EditText view) {
+    public void hitKeyBoard(final EditText view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
@@ -505,7 +528,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      *
      * @param view
      */
-    public void showKeyBoard(EditText view) {
+    public void showKeyBoard(final EditText view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         imm.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
@@ -522,12 +545,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
     private class UserScannerTextWatcher implements TextWatcher {
 
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+        public void onTextChanged(final CharSequence s, final int i, final int i1, final int i2) {
             String newString = s.toString();
             boolean addNewEditAiTe = TextUtils.isEmpty(oldScanner) ? true : newString.length() > oldScanner.length();
             oldScanner = newString;
@@ -544,7 +567,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             }
         }
 
-        public boolean isLetterDigit(String str) {
+        public boolean isLetterDigit(final String str) {
             String regex = "^[a-z0-9A-Z_\\-]+$";
             return str.matches(regex);
         }
@@ -560,7 +583,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
+        public void afterTextChanged(final Editable editable) {
 
         }
     }
@@ -571,7 +594,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         private TextView tvContent;
         private RoundImageView ivMineAvatar;
 
-        public DiscussDetMineViewHolder(View itemView) {
+        public DiscussDetMineViewHolder(final View itemView) {
             super(itemView);
             tvMineTime = (TextView) itemView.findViewById(R.id.tv_mine_time);
             tvMine = (TextView) itemView.findViewById(R.id.tv_mine);
@@ -589,7 +612,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         private TextView mTvOtherContent;
         private RoundImageView mIvOtherAvatar;
 
-        public DiscussDetOtherViewHolder(View itemView) {
+        public DiscussDetOtherViewHolder(final View itemView) {
             super(itemView);
             mTvOtherTime = (TextView) itemView.findViewById(R.id.tv_other_time);
             mTvOtherName = (TextView) itemView.findViewById(R.id.tv_other_name);
@@ -606,7 +629,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         private List<HttpDiscussDet> datas = new ArrayList<>();
         private View.OnLongClickListener onAvaterLongClicklistener = new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(final View view) {
                 HaitHelper.SelectUser user = (HaitHelper.SelectUser) view.getTag();
                 if (user == null) {
                     return false;
@@ -627,14 +650,14 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
 //            scrollToBottom();
         }
 
-        public void addMineMessage(HttpDiscussDet info) {
+        public void addMineMessage(final HttpDiscussDet info) {
             datas.add(info);
             notifyItemChanged(getItemCount());
             scrollToBottom();
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             View view = null;
             RecyclerView.ViewHolder holder = null;
             switch (viewType) {
@@ -651,7 +674,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
             if (holder == null)
                 return;
             final HttpDiscussDet info = datas.get(position);
@@ -684,7 +707,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
          *
          * @param time
          */
-        public void removeAtTime(long time) {
+        public void removeAtTime(final long time) {
             for (int i = 0; i < getItemCount(); i++) {
                 HttpDiscussDet discussion = datas.get(i);
                 if (discussion.createdAt == time) {
@@ -695,7 +718,7 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             }
         }
 
-        public void updata(long time, Discussion discussion) {
+        public void updata(final long time, final Discussion discussion) {
             for (int i = 0; i < getItemCount(); i++) {
                 HttpDiscussDet dis = datas.get(i);
                 if (discussion.getCreatedAt() == time) {
@@ -712,14 +735,14 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         }
 
         @Override
-        public int getItemViewType(int position) {
+        public int getItemViewType(final int position) {
             String id = datas.get(position).creator.id;
             boolean isMine = TextUtils.isEmpty(id) ? false : id.equals(MainApp.user.getId());
             return isMine ? DiscussSendMode.mine : DiscussSendMode.other;
         }
     }
 
-    private String add$Name_real(String name) {
+    private String add$Name_real(final String name) {
         return "@" + name + SCANNER_HAIT_TRIM;
     }
 
@@ -739,12 +762,12 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
                 .updateReadDot(body, new RCallback<Object>() {
                     @Override
-                    public void success(Object d, Response response) {
+                    public void success(final Object d, final Response response) {
                         HttpErrorCheck.checkResponse(response);
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                     }
                 });
