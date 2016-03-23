@@ -14,8 +14,10 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -28,6 +30,7 @@ import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.apache.http.Header;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -70,6 +73,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         edt_qq = (EditText) findViewById(R.id.edt_qq);
         edt_email = (EditText) findViewById(R.id.edt_email);
         edt_memo = (EditText) findViewById(R.id.edt_remark);
+
         edt_wx = (EditText) findViewById(R.id.edt_wx);
         edt_wiretel = (EditText) findViewById(R.id.edt_wiretel);
         edt_birth = (TextView) findViewById(R.id.edt_birthday);
@@ -101,6 +105,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         } else {
             //            layout_extra.setVisibility(View.GONE);
         }
+        getContactsFields();
     }
 
     @Override
@@ -158,42 +163,30 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
                             @Override
                             public void success(final Contact contact, final Response response) {
+                                HttpErrorCheck.checkResponse("添加联系人：", response);
                                 mContact = contact;
                                 sendBack();
                             }
 
                             @Override
                             public void failure(final RetrofitError error) {
-                                LogUtil.d("客户 新增联系人URL" + error.getUrl());
-                                LogUtil.d("客户 新增联系人" + error.getMessage());
-
-                                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                                    Toast("请检查您的网络连接");
-                                } else if (error.getResponse().getStatus() == 500) {
-                                    Toast("网络异常500,请稍候再试");
-                                }
+                                HttpErrorCheck.checkError(error);
                             }
                         });
                     } else {
                         /*修改联系人*/
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).updateContact(mCustomer.getId(), mContact.getId(), maps, new RCallback<Contact>() {
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                                create(ICustomer.class).updateContact(mCustomer.getId(), mContact.getId(), maps, new RCallback<Contact>() {
                             @Override
                             public void success(final Contact contact, final Response response) {
+                                HttpErrorCheck.checkResponse("修改联系人", response);
                                 mContact = contact;
                                 sendBack();
                             }
 
                             @Override
                             public void failure(final RetrofitError error) {
-
-                                LogUtil.d("客户 修改联系人:" + error.getMessage());
-                                LogUtil.d("客户 修改联系人URL:" + error.getUrl());
-
-                                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                                    Toast("请检查您的网络连接");
-                                } else if (error.getResponse().getStatus() == 500) {
-                                    Toast("网络异常500,请稍候再试");
-                                }
+                                HttpErrorCheck.checkError(error);
                             }
 
                         });
@@ -208,6 +201,18 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
                 break;
         }
+    }
+
+    /**
+     * 获取联系人的动态字段
+     */
+    private void getContactsFields() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getContactsField(new RCallback<ArrayList<Province>>() {
+            @Override
+            public void success(ArrayList<Province> provinces, Response response) {
+                HttpErrorCheck.checkResponse("联系人动态字段", response);
+            }
+        });
     }
 
     /**
@@ -230,17 +235,17 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         datePickerDialog.show();
     }
 
-    Contact getmContact() {
-        Contact contract = new Contact();
-        contract.setName(getContractName());
-        contract.setTel(getContractTel());
-
-        if (mContact != null) {
-            contract.setId(mContact.getId());
-        }
-
-        return contract;
-    }
+//    Contact getmContact() {
+//        Contact contract = new Contact();
+//        contract.setName(getContractName());
+//        contract.setTel(getContractTel());
+//
+//        if (mContact != null) {
+//            contract.setId(mContact.getId());
+//        }
+//
+//        return contract;
+//    }
 
     /**
      * 获取EditText里的内容
