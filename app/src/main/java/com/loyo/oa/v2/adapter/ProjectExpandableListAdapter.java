@@ -18,14 +18,14 @@ import java.util.ArrayList;
 
 public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
-    public ProjectExpandableListAdapter(Context context, ArrayList<PagingGroupData_<T>> data) {
+    public ProjectExpandableListAdapter(final Context context, final ArrayList<PagingGroupData_<T>> data) {
         super();
         mContext = context;
         pagingGroupDatas = data;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
         }
