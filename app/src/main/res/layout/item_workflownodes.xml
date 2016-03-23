@@ -70,36 +70,33 @@
             android:layout_marginLeft="@dimen/margin_side_edge"
             android:layout_marginRight="@dimen/margin_side_edge">
 
-            <ImageView
+           <ImageView
                 android:id="@+id/img_left"
-                style="@style/image_label"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/img_wfinstance_agree" />
 
             <TextView
                 android:id="@+id/tv_result"
                 android:textColor="#34D434"
                 android:textSize="15sp"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="同意" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_comment"
-            android:textSize="@dimen/textsize_content2"
+            android:textSize="13sp"
             android:textColor="#626262"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="@dimen/margin_side_edge"
+            android:layout_marginLeft="44dp"
+            android:layout_marginRight="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:text="处理意见:" />
 
     </LinearLayout>
-
-
 </LinearLayout>
