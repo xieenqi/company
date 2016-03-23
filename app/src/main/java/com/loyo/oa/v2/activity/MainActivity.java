@@ -1127,7 +1127,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     protected void onResume() {
         super.onResume();
-
         intentJpushInfo();
         requestNumber();
     }

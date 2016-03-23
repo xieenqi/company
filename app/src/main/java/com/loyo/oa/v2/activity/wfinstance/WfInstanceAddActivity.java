@@ -161,7 +161,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> attachments,final Response response) {
+            public void success(final ArrayList<Attachment> attachments, final Response response) {
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
@@ -230,7 +230,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         CommonAdapter followAdapter = new CommonAdapter<WfTemplate>(mContext, wfTemplateArrayList, R.layout.item_listview_product_select) {
             @Override
-            public void convert(final ViewHolder holder,final WfTemplate w) {
+            public void convert(final ViewHolder holder, final WfTemplate w) {
                 holder.setText(R.id.tv, w.getTitle());
             }
         };
@@ -242,7 +242,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         listView_follow.setAdapter(followAdapter);
         listView_follow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 mTemplateId = wfTemplateArrayList.get(position).getId();
                 tv_WfTemplate.setText(wfTemplateArrayList.get(position).getTitle());
                 dialog_follow.dismiss();
@@ -265,7 +265,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || data == null) {
             return;
@@ -289,7 +289,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid,12,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 12, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
@@ -308,12 +308,12 @@ public class WfInstanceAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
 
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String,Object> map = new HashMap<String, Object>();
-                map.put("bizType",12);
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("bizType", 12);
                 map.put("uuid", uuid);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                     @Override
-                    public void success(final Attachment attachment,final Response response) {
+                    public void success(final Attachment attachment, final Response response) {
                         Toast("删除附件成功!");
                         lstData_Attachment.remove(delAttachment);
                         init_gridView_photo();
@@ -371,7 +371,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(mBizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
             @Override
-            public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX,final Response response) {
+            public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse("获取审批流程", response);
                 wfTemplateArrayList = bizFormFieldsPaginationX;
                 initUI_Dialog_WfTemplate();
@@ -454,9 +454,9 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            layout_edit.setVisibility(View.GONE);
 //        }
 
-    void addIsRequired(){
+    void addIsRequired() {
         LogUtil.dll("执行 addIsRequired");
-        for(int i = 0;i<mBizForm.getFields().size();i++){
+        for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
         }
     }
@@ -486,27 +486,26 @@ public class WfInstanceAddActivity extends BaseActivity {
         for (int k = 0; k < submitData.size(); k++) {
             HashMap<String, Object> jsonMapValues = new HashMap<>();
             HashMap<String, Object> map_Values = submitData.get(k);
-            try{
+            try {
                 for (BizFormFields field : mBizForm.getFields()) {
                     for (String key : map_Values.keySet()) {
                         if (!TextUtils.equals(field.getId(), key)) {
                             continue;
                         }
                         postValue.add(map_Values.get(key));
-                        String value = (String) map_Values.get(key);
-                        jsonMapValues.put(key, value);
+                        jsonMapValues.put(key, map_Values.get(key));
                     }
                 }
                 workflowValues.add(jsonMapValues);
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 Toast("操作失败！");
                 return;
             }
         }
 
-        for(int i = 0;i<postValue.size();i++){
-            if(TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i)){
+        for (int i = 0; i < postValue.size(); i++) {
+            if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i)) {
                 Toast("请填写\"必填项\"");
                 return;
             }
@@ -524,13 +523,14 @@ public class WfInstanceAddActivity extends BaseActivity {
         if (uuid != null && lstData_Attachment.size() > 0) {
             bizExtData.setAttachmentCount(lstData_Attachment.size());
             map.put("attachmentUUId", uuid);
-            map.put("bizExtData",bizExtData);
+            map.put("bizExtData", bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
-            public void success(final WfInstance wfInstance,final Response response) {
+            public void success(final WfInstance wfInstance, final Response response) {
+                HttpErrorCheck.checkResponse("新建审批cg", response);
                 cancelLoading();
                 if (wfInstance != null) {
                     isSave = false;
@@ -538,6 +538,9 @@ public class WfInstanceAddActivity extends BaseActivity {
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
                     app.finishActivity(WfInstanceAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                } else {
+                    Toast("服务器错误");
+                    LogUtil.d("服务器没有返回数据，服务器错误！");
                 }
             }
 

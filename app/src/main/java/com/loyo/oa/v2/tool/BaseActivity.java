@@ -34,6 +34,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Locale;
 
@@ -166,12 +167,15 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
-
+        //友盟统计代码
+        MobclickAgent.onResume(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        //友盟统计代码
+        MobclickAgent.onPause(this);
         super.onPause();
     }
 
@@ -247,7 +251,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * 老版弹出框
-     * */
+     */
     protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(message);
@@ -369,7 +373,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * 加载loading的方法
-     * */
+     */
     public void showLoading(String msg) {
         DialogHelp.showLoading(this, msg, true);
     }
@@ -385,16 +389,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * 通用提示弹出框init
-     * */
-    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
-        generalPopView = new GeneralPopView(this,isKind);
+     */
+    public void showGeneralDialog(boolean isOut, boolean isKind, String message) {
+        generalPopView = new GeneralPopView(this, isKind);
         generalPopView.show();
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
     }
 
     /*重启当前Activity*/
-    public void restartActivity(){
+    public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
