@@ -236,7 +236,7 @@ public class TasksInfoActivity extends BaseActivity {
             btn_complete.setVisibility(View.GONE);
         }
 
-        if(!IsCreator() && !IsResponsiblePerson()){
+        if (!IsCreator() && !IsResponsiblePerson()) {
             img_title_right.setVisibility(View.GONE);
         }
     }
@@ -342,7 +342,7 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_content.setText(reviewer.getComment());
             }
 
-            if (reviewer.getStatus().equals("0")) {
+            if ("0".equals(reviewer.getStatus())) {
                 item_tasks_sorece.setVisibility(View.GONE);
             }
 
@@ -351,7 +351,7 @@ public class TasksInfoActivity extends BaseActivity {
                 ratingBar_Task.setRating((float) (rat / 1.0));
             }
 
-            if (reviewer.getStatus().equals("1")) {
+            if ("1".equals(reviewer.getStatus())) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
             } else {
@@ -442,7 +442,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             /*Checkbox勾选,赋值*/
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
-            boolean isStatus = subTask.getStatus().equals("1") ? true : false;
+            boolean isStatus = "1".equals(subTask.getStatus()) ? true : false;
 
             /*子任务个数设置*/
             if (isStatus) {

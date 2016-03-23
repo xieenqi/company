@@ -84,17 +84,16 @@ public class ServerAPI {
 
     public static void request(Object rootObject, int requestMode, String urlOperation, Header[] headers, HttpEntity entity, String contentType, RequestParams params, String strJSON, Class<?> cls, ArrayList<ParamInfo> lstParamInfo) {
         String url;
-        if(urlOperation.trim().equals("/attachment/")){
+        if ("/attachment/".equals(urlOperation.trim())) {
             url = urlOperation.trim().startsWith("http://") ?
                     urlOperation.trim() : Config_project.API_URL_ATTACHMENT() + urlOperation.trim();
-        }else{
+        } else {
             url = urlOperation.trim().startsWith("http://") ?
                     urlOperation.trim() : Config_project.API_URL_CUSTOMER() + urlOperation.trim();
         }
         Thread thread = new Thread(new AsyncHttpClienRunnable(rootObject, requestMode, url, headers, entity, contentType, params, strJSON, cls, lstParamInfo));
         thread.run();
     }
-
 
 
     public static void init() {

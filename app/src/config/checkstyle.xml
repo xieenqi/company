@@ -8,13 +8,14 @@
         <property name="file" value="${proj.module.dir}/src/config/checkstyle-suppression.xml"/>
     </module>
     <module name="FileLength"/>
-    <module name="FileTabCharacter"/>
+    <!--<module name="FileTabCharacter"/>-->
+    <!--检查源码中没有制表符（'\t'）。-->
 
     <!-- Trailing spaces -->
-    <module name="RegexpSingleline">
-        <property name="format" value="\s+$"/>
-        <property name="message" value="Line has trailing spaces."/>
-    </module>
+    <!--<module name="RegexpSingleline">&lt;!&ndash;检查单行是否匹配一条给定的正则表达式。可以处理任何文件类型。&ndash;&gt;-->
+    <!--<property name="format" value="\s+$"/>-->
+    <!--<property name="message" value="Line has trailing spaces."/>-->
+    <!--</module>-->
 
     <module name="TreeWalker"><!--FileSetCheck TreeWalker会检查单个的Java源码文件，并且定义了适用于检查这种文件的属性-->
         <property name="cacheFile" value="bin/cachefile"/>
@@ -52,12 +53,12 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="200"/>
-            <property name="severity" value="warning"/>
-        </module>
-        <module name="MethodLength"/>
-        <module name="ParameterNumber"/>
+        <!--<module name="LineLength">-->
+        <!--<property name="max" value="200"/>-->
+        <!--<property name="severity" value="warning"/>-->
+        <!--</module>-->
+        <!--<module name="MethodLength"/>-->
+        <!--<module name="ParameterNumber"/>-->
 
 
         <!-- Checks for whitespace   空格检查                            -->
@@ -79,17 +80,17 @@
         <module name="ModifierOrder"/>
         <!--修饰符顺序-->
         <module name="RedundantModifier"/>
-        <!--修饰符顺序-->
+        <!--多余修饰符-->
 
 
         <!-- Checks for blocks. You know, those {}'s   代码块的检查       -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <!--<module name="AvoidNestedBlocks"/>-->
         <!--module name="EmptyBlock"/-->
-        <module name="LeftCurly"/>
+        <!--<module name="LeftCurly"/>-->
         <!--左花括号位置-->
         <!--module name="NeedBraces"/--><!--需要花括号 的地方-->
-        <module name="RightCurly"/>
+        <!--<module name="RightCurly"/>-->
         <!--右花括号位置-->
 
 
@@ -107,12 +108,12 @@
         <!--module name="HiddenField"/-->
         <module name="IllegalInstantiation"/>
         <!--非法实例化-->
-        <module name="InnerAssignment"/>
+        <!--<module name="InnerAssignment"/>-->
         <!--非法内部赋值-->
-        <module name="MagicNumber"><!--幻数-->
-            <property name="severity" value="warning"/>
-        </module>
-        <module name="MissingSwitchDefault"/>
+        <!--<module name="MagicNumber">&lt;!&ndash;幻数&ndash;&gt;-->
+        <!--<property name="severity" value="warning"/>-->
+        <!--</module>-->
+        <!--<module name="MissingSwitchDefault"/>-->
         <!--缺少switch默认分支-->
         <module name="RedundantThrows"><!--多余的throws-->
             <property name="allowUnchecked" value="true"/>
@@ -127,14 +128,13 @@
         <!-- Checks for class design   类设计的检查                      -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!--module name="DesignForExtension"/-->
-        <module name="FinalClass"><!--检查一个只有私有构造器的类是否被声明为final。-->
-            <property name="severity" value="warning"/>
-        </module>
+        <!--<module name="FinalClass">&lt;!&ndash;检查一个只有私有构造器的类是否被声明为final。&ndash;&gt;-->
+        <!--<property name="severity" value="warning"/>-->
+        <!--</module>-->
         <module name="HideUtilityClassConstructor"/>
         <!--确保工具类（在API中只有静态方法和字段的类）没有任何公有构造器。-->
         <module name="InterfaceIsType"/>
         <!--接口是类型的检查-->
-
 
 
         <!-- Miscellaneous other checks. 杂项其它项检查                  -->

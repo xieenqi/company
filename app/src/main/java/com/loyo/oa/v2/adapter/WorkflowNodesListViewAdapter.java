@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.adapter;
 
 
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +102,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                     item_info.tv_comment.setVisibility(View.GONE);
                     item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_notprocess));
                 } else if (wfNodes.getActive() == 3) {
-                    if (wfNodes.isApproveFlag() == true) {
+                    if (wfNodes.isApproveFlag()) {
                         item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                         item_info.tv_result.setText("同意");
                         item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_agree));

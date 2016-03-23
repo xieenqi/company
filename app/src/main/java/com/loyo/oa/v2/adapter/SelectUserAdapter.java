@@ -9,9 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 
 
@@ -105,7 +107,7 @@ public class SelectUserAdapter extends BaseAdapter {
             /*选中赋值*/
         if (listUsers.get(position).isIndex()) {
             holder.checkBox.setChecked(true);
-        } else if (listUsers.get(position).isIndex() == false) {
+        } else if (!listUsers.get(position).isIndex()) {
             holder.checkBox.setChecked(false);
         } else {
             holder.checkBox.setChecked(false);

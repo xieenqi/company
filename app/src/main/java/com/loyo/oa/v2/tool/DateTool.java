@@ -20,15 +20,15 @@ public class DateTool {
     /**
      * 1s==1000ms
      */
-    private final static int TIME_MILLISECONDS = 1000;
+    protected final static int TIME_MILLISECONDS = 1000;
     /**
      * 时间中的分、秒最大值均为60
      */
-    private final static int TIME_SECONDS = 60;
+    protected final static int TIME_SECONDS = 60;
     /**
      * 时间中的小时最大值
      */
-    private final static int TIME_HOURSES = 24;
+    protected final static int TIME_HOURSES = 24;
 
     public static final long MINUTE_MILLIS = TIME_SECONDS * TIME_MILLISECONDS;
 
@@ -487,8 +487,8 @@ public class DateTool {
 
     /**
      * 下班分时转时间戳
-     * */
-    public static String getOutDataOne(String time,String timeGs) {
+     */
+    public static String getOutDataOne(String time, String timeGs) {
         SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
                 Locale.CHINA);
         Date date;
@@ -505,9 +505,9 @@ public class DateTool {
     }
 
     /**
-     *自定义格式转时间戳
+     * 自定义格式转时间戳
      */
-    public static String getDataOne(String time,String timeGs) {
+    public static String getDataOne(String time, String timeGs) {
         SimpleDateFormat sdr = new SimpleDateFormat(timeGs,
                 Locale.CHINA);
         Date date;
@@ -530,7 +530,7 @@ public class DateTool {
      * @param time
      * @return
      */
-    public static String timet(String time,String timeGs) {
+    public static String timet(String time, String timeGs) {
         SimpleDateFormat sdr = new SimpleDateFormat(timeGs);
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
@@ -547,7 +547,6 @@ public class DateTool {
         SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES);
         return sDateFormat.format(new java.util.Date());
     }
-
 
 
     public static class DateSetListener_Datetool implements
@@ -585,9 +584,9 @@ public class DateTool {
         }
 
         public interface OnClick_Callback {
-            public boolean onClick_onDateSet();
+            boolean onClick_onDateSet();
 
-            public boolean onClick_onTimeSet();
+            boolean onClick_onTimeSet();
         }
     }
 }
