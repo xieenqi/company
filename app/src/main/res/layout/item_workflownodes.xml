@@ -46,7 +46,9 @@
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="" />
+                android:text=""
+                android:singleLine="true"
+                />
 
         </LinearLayout>
 
@@ -84,6 +86,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="同意" />
+
+
+            <TextView
+                android:id="@+id/tv_startTime"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/wfinstance_notprocess"
+                />
+
+            <TextView
+                android:id="@+id/tv_redTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/red"
+                />
+
+            <TextView
+                android:id="@+id/tv_endTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/wfinstance_notprocess"
+                />
 
         </LinearLayout>
 

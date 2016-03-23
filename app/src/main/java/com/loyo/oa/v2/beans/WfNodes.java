@@ -10,6 +10,8 @@ public class WfNodes implements Serializable {
     public static final int ACTIVE_STATUS_PROCESSING=2;
     public static final int ACTIVE_STATUS_PROCESSED=3;
 
+    private int handAt;
+    private int  remindAt;
     private int active ;//bool, optional): ,
     private boolean approveFlag ;//bool, optional): ,
     private String comment ;//string, optional): ,
@@ -22,6 +24,23 @@ public class WfNodes implements Serializable {
     private long updateAt ;//&{time Time}, optional): ,
     private String wfInstanceId ;//int64, optional):
     private boolean approveResult;
+
+
+    public int getHandAt() {
+        return handAt;
+    }
+
+    public void setHandAt(int handAt) {
+        this.handAt = handAt;
+    }
+
+    public int getRemindAt() {
+        return remindAt;
+    }
+
+    public void setRemindAt(int remindAt) {
+        this.remindAt = remindAt;
+    }
 
     public boolean isApproveResult() {
         return approveResult;

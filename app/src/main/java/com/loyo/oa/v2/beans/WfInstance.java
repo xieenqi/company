@@ -28,6 +28,7 @@ public class WfInstance extends BaseBeans implements Serializable{
     public String attachmentUUId;//string, optional): ,
     public User creator;//&{organization User}, optional): ,
     public long createdAt;
+    public int serverTime;
     public int updatedAt;
     public int status;//int, optional):
     public String memo;
