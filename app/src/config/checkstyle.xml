@@ -141,7 +141,7 @@
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
         <!--数组类型风格-->
-        <module name="FinalParameters"/>
+        <!--<module name="FinalParameters"/>-->
         <!--final参数-->
         <!--module name="TodoComment"/-->
         <module name="UpperEll"/>
