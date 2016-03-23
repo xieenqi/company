@@ -1,20 +1,21 @@
 package com.loyo.oa.v2.adapter;
 
-
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -22,16 +23,18 @@ import java.util.ArrayList;
  * Created by Administrator on 2014/12/11 0011.
  */
 public class WorkflowNodesListViewAdapter extends BaseAdapter {
-    MainApp app;
-    LayoutInflater mInflater;
-    ArrayList<WfNodes> lstData;
-    int wfInstanceStatus;
+    private MainApp app;
+    private LayoutInflater mInflater;
+    private ArrayList<WfNodes> lstData;
+    private int wfInstanceStatus;
+    private int serverTime;
 
-    public WorkflowNodesListViewAdapter(int _wfInstanceStatus, ArrayList<WfNodes> lstData, LayoutInflater _mInflater) {
+    public WorkflowNodesListViewAdapter(int _wfInstanceStatus, ArrayList<WfNodes> lstData, LayoutInflater _mInflater,int serverTime) {
         mInflater = _mInflater;
         wfInstanceStatus = _wfInstanceStatus;
         app = MainApp.getMainApp();
         this.lstData = lstData;
+        this.serverTime = serverTime;
     }
 
     @Override
@@ -63,6 +66,10 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
             item_info.tv_comment = (TextView) convertView.findViewById(R.id.tv_comment);
             item_info.tv_creator_title = (TextView) convertView.findViewById(R.id.tv_creator_title);
             item_info.tv_result = (TextView) convertView.findViewById(R.id.tv_result);
+            item_info.tv_startTime = (TextView) convertView.findViewById(R.id.tv_startTime);
+            item_info.tv_endTime = (TextView) convertView.findViewById(R.id.tv_endTime);
+            item_info.tv_redTime = (TextView) convertView.findViewById(R.id.tv_redTime);
+
             convertView.setTag(item_info);
         } else {
             item_info = (Item_info) convertView.getTag();
@@ -81,6 +88,21 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 }
             }
 
+            /**是否限时，是否超时*/
+            if(wfNodes.getRemindAt() != 0){
+                if((wfNodes.getRemindAt()*3600)+wfNodes.getHandAt() > serverTime){
+                    int totalTime = (wfNodes.getRemindAt()*3600)+wfNodes.getHandAt();
+                    LogUtil.dll("审批时间:"+totalTime);
+                    LogUtil.dll("服务器时间:"+serverTime);
+                    item_info.tv_startTime.setText("(限"+wfNodes.getRemindAt()+"小时,");
+                    item_info.tv_redTime.setText("已超时");
+                    item_info.tv_endTime.setText(")");
+                }else{
+                    item_info.tv_startTime.setText("(限"+wfNodes.getRemindAt()+"小时)");
+                    item_info.tv_redTime.setVisibility(View.GONE);
+                    item_info.tv_endTime.setVisibility(View.GONE);
+                }
+            }
 
             /*已通过*/
             if (wfInstanceStatus == 4) {
@@ -133,5 +155,8 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
         public TextView tv_name;
         public TextView tv_comment;
         public TextView tv_result;
+        public TextView tv_startTime;
+        public TextView tv_redTime;
+        public TextView tv_endTime;
     }
 }

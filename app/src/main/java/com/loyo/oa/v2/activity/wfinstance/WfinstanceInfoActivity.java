@@ -192,7 +192,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initUI_listView_workflowNodes() {
-        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this));
+        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this),wfInstance.serverTime);
         listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
         Global.setListViewHeightBasedOnChildren(listView_workflowNodes);
     }
@@ -247,7 +247,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             default:
                 break;
-
         }
         initUI_listView_wfinstance();
         initUI_listView_workflowNodes();
@@ -292,7 +291,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (nodes == null) {
             return;
         }
-
 
         WfNodes node = null;
         for (int i = 0; i < nodes.size(); i++) {
