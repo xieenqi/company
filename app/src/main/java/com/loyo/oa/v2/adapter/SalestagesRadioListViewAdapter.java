@@ -17,7 +17,7 @@ public class SalestagesRadioListViewAdapter extends BaseAdapter {
     private ArrayList<SaleStage> lstData;
     public long isSelected = -1;
 
-    public SalestagesRadioListViewAdapter(Context context, ArrayList<SaleStage> lstData) {
+    public SalestagesRadioListViewAdapter(final Context context, final ArrayList<SaleStage> lstData) {
         mInflater = LayoutInflater.from(context);
         this.lstData = lstData;
     }
@@ -29,17 +29,17 @@ public class SalestagesRadioListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return lstData.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         Item_info item_info = null;
         //convertView为null的时候初始化convertView。
         if (convertView == null) {

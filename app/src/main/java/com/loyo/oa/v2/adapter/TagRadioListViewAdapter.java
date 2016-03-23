@@ -22,7 +22,7 @@ public class TagRadioListViewAdapter extends BaseAdapter {
     ArrayList<Tag> lstData;
     Item_info item_info;
 
-    public TagRadioListViewAdapter(Context context, ArrayList<Tag> lstData) {
+    public TagRadioListViewAdapter(final Context context, final ArrayList<Tag> lstData) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.lstData = lstData;
@@ -34,17 +34,17 @@ public class TagRadioListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return lstData.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             item_info = new Item_info();
             convertView = mInflater.inflate(R.layout.item_tag_listview, null);
@@ -84,13 +84,13 @@ public class TagRadioListViewAdapter extends BaseAdapter {
         int position_group;
         TagItemRadioGridViewAdapter tagItemRadioGridViewAdapter;
 
-        GridViewOnItemClickListener(int position_group, TagItemRadioGridViewAdapter tagItemRadioGridViewAdapter) {
+        GridViewOnItemClickListener(final int position_group, final TagItemRadioGridViewAdapter tagItemRadioGridViewAdapter) {
             this.position_group = position_group;
             this.tagItemRadioGridViewAdapter = tagItemRadioGridViewAdapter;
         }
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 
             TagItemRadioGridViewAdapter.Item_info item_info = (TagItemRadioGridViewAdapter.Item_info) view.getTag();
             item_info.img.setImageResource(R.drawable.img_check1);

@@ -81,12 +81,12 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                 }
             }
 
-            item_info.tv_result.setTextSize(TypedValue.COMPLEX_UNIT_SP, app.pxTosp(app.diptoPx(20)));
 
             /*已通过*/
             if (wfInstanceStatus == 4) {
                 item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                 item_info.tv_result.setText("同意");
+                item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_agree));
                 item_info.tv_comment.setVisibility(View.VISIBLE);
                 item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
                 item_info.tv_deal_time.setVisibility(View.VISIBLE);
@@ -106,6 +106,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
                     if (wfNodes.isApproveFlag() == true) {
                         item_info.img_left.setImageResource(R.drawable.img_wfinstance_agree);
                         item_info.tv_result.setText("同意");
+                        item_info.tv_result.setTextColor(convertView.getResources().getColor(R.color.wfinstance_agree));
                         item_info.tv_comment.setVisibility(View.VISIBLE);
                         item_info.tv_comment.setText("处理意见:" + wfNodes.getComment());
                         item_info.tv_deal_time.setVisibility(View.VISIBLE);
