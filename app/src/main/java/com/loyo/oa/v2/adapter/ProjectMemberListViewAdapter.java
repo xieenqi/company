@@ -10,9 +10,9 @@ import android.widget.Switch;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.CommonAdapter.CommonAdapter;
-import com.loyo.oa.v2.tool.CommonAdapter.ViewHolder;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 
 import java.util.ArrayList;
 

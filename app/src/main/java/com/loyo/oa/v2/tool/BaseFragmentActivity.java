@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
@@ -277,5 +278,19 @@ public class BaseFragmentActivity extends FragmentActivity {
         finish();
         overridePendingTransition(0, 0);
         startActivity(intent);
+    }
+    /**
+     * 加载loading的方法
+     */
+    public void showLoading(String msg) {
+        DialogHelp.showLoading(this, msg, true);
+    }
+
+    public void showLoading(String msg, boolean Cancelable) {
+        DialogHelp.showLoading(this, msg, Cancelable);
+    }
+
+    public static void cancelLoading() {
+        DialogHelp.cancelLoading();
     }
 }

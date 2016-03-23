@@ -136,14 +136,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 mLat = latitude;
                 mLng = longitude;
                 mAddress = address;
-
-                boolean gpsOpen = Utils.isGPSOPen(mContext);
-//                if (radius > 200 || !gpsOpen) {
-//                    address = address.concat(" (GPS未开启)");
-//                    if (!gpsOpen) {
-//                        Global.ToastLong("建议开启GPS,重新定位");
-//                    }
-//                }
                 tv_address.setText(address);
                 LocationUtilGD.sotpLocation();
             }
@@ -152,6 +144,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             public void OnLocationGDFailed() {
                 img_refresh_address.clearAnimation();
                 animation.reset();
+                boolean gpsOpen = Utils.isGPSOPen(mContext);
+                if (!gpsOpen) {
+                    Global.ToastLong("建议开启GPS,重新定位");
+                }
                 Toast("定位失败,请在网络和GPS信号良好时重试");
                 LocationUtilGD.sotpLocation();
             }
@@ -313,10 +309,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String,Object> map = new HashMap<String, Object>();
-                    map.put("bizType",0);
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", 0);
                     map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                         @Override
                         public void success(final Attachment attachment, final Response response) {
                             Toast("删除附件成功!");
