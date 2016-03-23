@@ -267,11 +267,16 @@ public interface ICustomer {
     @GET("/customer/regional")
     void getDistricts(Callback<ArrayList<Province>> callback);
 
-
-
-    /**新建客户，查重*/
+    /**
+     * 新建客户，查重
+     */
     @GET("/customer/search")
-    void getSerachRepeat(@QueryMap Map<String, Object> params,Callback<PaginationX<CustomerRepeatList>> callback);
+    void getSerachRepeat(@QueryMap Map<String, Object> params, Callback<PaginationX<CustomerRepeatList>> callback);
 
-
+    /**
+     * 获取客户新建联系人的动态字段
+     * @param callback
+     */
+    @GET("/contact/fields")
+    void getContactsField(Callback<ArrayList<Province>> callback);
 }
