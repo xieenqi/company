@@ -57,7 +57,7 @@ public class ActivityHait extends BaseActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hait);
         initView();
@@ -90,20 +90,20 @@ public class ActivityHait extends BaseActivity {
     private void initListener() {
         layout_back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 finish();
             }
         });
         lv_myDiscuss.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+            public void onPullDownToRefresh(final PullToRefreshBase<RecyclerView> refreshView) {
                 pageIndex = 1;
                 isTopAdd = true;
                 getData();
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+            public void onPullUpToRefresh(final PullToRefreshBase<RecyclerView> refreshView) {
                 pageIndex++;
                 isTopAdd = false;
                 getData();
@@ -119,7 +119,7 @@ public class ActivityHait extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
                 getMyDisscussList(map, new RCallback<PaginationX<HttpMyDiscussItem>>() {
                     @Override
-                    public void success(PaginationX<HttpMyDiscussItem> discuss, Response response) {
+                    public void success(final PaginationX<HttpMyDiscussItem> discuss, final Response response) {
                         HttpErrorCheck.checkResponse(" 【@我的】讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
                             // mDiscuss = discuss;
@@ -134,7 +134,7 @@ public class ActivityHait extends BaseActivity {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
                         lv_myDiscuss.onRefreshComplete();
