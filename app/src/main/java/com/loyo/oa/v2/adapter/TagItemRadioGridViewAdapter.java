@@ -25,8 +25,8 @@ public class TagItemRadioGridViewAdapter extends BaseAdapter {
     public long isSelected = -1;
     public ImageView img_last;
 
-    public TagItemRadioGridViewAdapter(Context context,
-                                       ArrayList<TagItem> lstData) {
+    public TagItemRadioGridViewAdapter(final Context context,
+                                       final ArrayList<TagItem> lstData) {
 //        mainApplication = MainApp.getMainApp();
 //        this.context = context;
         this.lstData = lstData;
@@ -42,24 +42,22 @@ public class TagItemRadioGridViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-
         return lstData.size();
-
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return lstData.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
 
         return lstData.size();
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_gridview_item_tag, null);
             item_info = new Item_info();

@@ -29,7 +29,7 @@ public class SelectUserAdapter extends BaseAdapter {
     private boolean isAllCheck;
     public Handler handler;
 
-    public SelectUserAdapter(Context mContext, ArrayList<User> listUsers, boolean isAllCheck, Handler handler) {
+    public SelectUserAdapter(final Context mContext, final ArrayList<User> listUsers, final boolean isAllCheck, final Handler handler) {
 
         this.isAllCheck = isAllCheck;
         this.mContext = mContext;
@@ -54,12 +54,12 @@ public class SelectUserAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return listUsers.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
@@ -68,7 +68,7 @@ public class SelectUserAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, final ViewGroup viewGroup) {
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
