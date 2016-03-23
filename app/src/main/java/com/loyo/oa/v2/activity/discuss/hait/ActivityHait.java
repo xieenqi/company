@@ -159,13 +159,13 @@ public class ActivityHait extends BaseActivity {
         }
 
         @Override
-        public HaitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public HaitViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             View view = View.inflate(ActivityHait.this, R.layout.item_hait_layout, null);
             return new HaitViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(HaitViewHolder holder, int position) {
+        public void onBindViewHolder(final HaitViewHolder holder, final int position) {
             HttpMyDiscussItem info = datas.get(position);
             holder.tv_time.setText(info.updatedAt.substring(11, 19));
             holder.tv_content.setText(info.atContent);
@@ -174,7 +174,7 @@ public class ActivityHait extends BaseActivity {
             holder.openItem(datas.get(position));
         }
 
-        private SpannableStringBuilder parseTitle(String name, String group) {
+        private SpannableStringBuilder parseTitle(final String name, final String group) {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(group)) {
                 return null;
             }
@@ -202,7 +202,7 @@ public class ActivityHait extends BaseActivity {
         private TextView tv_title;
         private TextView tv_content;
 
-        public HaitViewHolder(View itemView) {
+        public HaitViewHolder(final View itemView) {
             super(itemView);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_avatar);
