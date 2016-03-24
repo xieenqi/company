@@ -86,7 +86,8 @@ public class SwitchView extends View {
         mWidth = w;
         mHeight = h;
 
-        sLeft = sTop = 0;
+        sLeft = 0;
+        sTop = 0;
         sRight = mWidth;
         sBottom = mHeight * 0.91f;
         sWidth = sRight - sLeft;
@@ -96,8 +97,10 @@ public class SwitchView extends View {
 
         shadowHeight = mHeight - sBottom;
 
-        bLeft = bTop = 0;
-        bRight = bBottom = sBottom;
+        bLeft = 0;
+        bTop = 0;
+        bRight = mHeight * 0.91f;
+        bBottom = mHeight * 0.91f;
         bWidth = bRight - bLeft;
         final float halfHeightOfS = (sBottom - sTop) / 2;
         bRadius = halfHeightOfS * 0.95f;

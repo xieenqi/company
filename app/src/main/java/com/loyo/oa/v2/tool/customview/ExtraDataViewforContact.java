@@ -111,18 +111,7 @@ public class ExtraDataViewforContact extends LinearLayout {
                 if(customerExtra.isRequired()){
                     tv_content.setHint("必填");
                 }
-            } else if ("birth".equals(customerExtra.getType())) {
-                LogUtil.dll("时间");
-                LogUtil.dll("long enable:"+customerExtra.isEnabled());
-                extra.setOnTouchListener(Global.GetTouch());
-                extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
-                tv_content.setFocusable(false);
-                tv_content.setFocusableInTouchMode(false);
-                tv_content.setOnFocusChangeListener(null);
-                tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(customerExtra.isRequired()){
-                    tv_content.setHint("必填");
-                }
+
             } else if ("long".equals(customerExtra.getType())) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:"+customerExtra.isEnabled());
