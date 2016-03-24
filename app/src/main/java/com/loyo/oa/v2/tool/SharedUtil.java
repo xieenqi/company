@@ -13,6 +13,9 @@ import com.loyo.oa.v2.common.Global;
  * @description 操作sharedpreference的工具
  */
 public final class SharedUtil {
+    protected SharedUtil() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
     public static void remove(Context context, String name) {
         SharedPreferences base_share = context.getSharedPreferences(FinalVariables.BASE_SHARE, Context.MODE_PRIVATE);
@@ -20,15 +23,15 @@ public final class SharedUtil {
         try {
             editor.remove(name);
             editor.apply();
-        }catch (Exception e){
+        } catch (Exception e) {
             Global.ProcException(e);
         }
     }
 
     /**
      * @param context 上下文
-     * @param name  保存在shared文件中的key
-     * @param value 保存在shared中的value
+     * @param name    保存在shared文件中的key
+     * @param value   保存在shared中的value
      * @描述 保存指定名称的值
      */
     public static void put(Context context, String name, String value) {
@@ -40,7 +43,7 @@ public final class SharedUtil {
 
     /**
      * @param context 上下文
-     * @param name  保存在shared文件中的key
+     * @param name    保存在shared文件中的key
      * @描述 获取指定名称的值
      */
     public static String get(Context context, String name) {
@@ -50,8 +53,8 @@ public final class SharedUtil {
 
     /**
      * @param context 上下文
-     * @param name  保存在shared文件中的key
-     * @param value 保存在shared中的value
+     * @param name    保存在shared文件中的key
+     * @param value   保存在shared中的value
      * @描述 保存指定名称的值
      */
     public static void putBoolean(Context context, String name, boolean value) {
@@ -63,7 +66,7 @@ public final class SharedUtil {
 
     /**
      * @param context 上下文
-     * @param name  保存在shared文件中的key
+     * @param name    保存在shared文件中的key
      * @描述 获取指定名称的值
      */
     public static boolean getBoolean(Context context, String name) {

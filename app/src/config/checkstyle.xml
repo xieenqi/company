@@ -139,7 +139,7 @@
 
         <!-- Miscellaneous other checks. 杂项其它项检查                  -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
-        <module name="ArrayTypeStyle"/>
+        <!--<module name="ArrayTypeStyle"/>-->
         <!--数组类型风格-->
         <!--<module name="FinalParameters"/>-->
         <!--final参数-->

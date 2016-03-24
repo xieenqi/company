@@ -15,6 +15,10 @@ import java.util.Date;
  * Created by xeq on 16/3/22.
  */
 public class UMengTools {
+    protected UMengTools() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     /**
      * 自定义统计error信息
      */

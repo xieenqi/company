@@ -44,82 +44,82 @@ public class SwipeListView extends ListView {
     /**
      * log tag
      */
-    public final static String TAG = "SwipeListView";
+    public static final String TAG = "SwipeListView";
 
     /**
      * whether debug
      */
-    public final static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
 
     /**
      * Used when user want change swipe list mode on some rows
      */
-    public final static int SWIPE_MODE_DEFAULT = -1;
+    public static final int SWIPE_MODE_DEFAULT = -1;
 
     /**
      * Disables all swipes
      */
-    public final static int SWIPE_MODE_NONE = 0;
+    public static final int SWIPE_MODE_NONE = 0;
 
     /**
      * Enables both left and right swipe
      */
-    public final static int SWIPE_MODE_BOTH = 1;
+    public static final int SWIPE_MODE_BOTH = 1;
 
     /**
      * Enables right swipe
      */
-    public final static int SWIPE_MODE_RIGHT = 2;
+    public static final int SWIPE_MODE_RIGHT = 2;
 
     /**
      * Enables left swipe
      */
-    public final static int SWIPE_MODE_LEFT = 3;
+    public static final int SWIPE_MODE_LEFT = 3;
 
     /**
      * Binds the swipe gesture to reveal a view behind the row (Drawer style)
      */
-    public final static int SWIPE_ACTION_REVEAL = 0;
+    public static final int SWIPE_ACTION_REVEAL = 0;
 
     /**
      * Dismisses the cell when swiped over
      */
-    public final static int SWIPE_ACTION_DISMISS = 1;
+    public static final int SWIPE_ACTION_DISMISS = 1;
 
     /**
      * Marks the cell as checked when swiped and release
      */
-    public final static int SWIPE_ACTION_CHOICE = 2;
+    public static final int SWIPE_ACTION_CHOICE = 2;
 
     /**
      * No action when swiped
      */
-    public final static int SWIPE_ACTION_NONE = 3;
+    public static final int SWIPE_ACTION_NONE = 3;
 
     /**
      * Default ids for front view
      */
-    public final static String SWIPE_DEFAULT_FRONT_VIEW = "swipelist_frontview";
+    public static final String SWIPE_DEFAULT_FRONT_VIEW = "swipelist_frontview";
 
     /**
      * Default id for back view
      */
-    public final static String SWIPE_DEFAULT_BACK_VIEW = "swipelist_backview";
+    public static final String SWIPE_DEFAULT_BACK_VIEW = "swipelist_backview";
 
     /**
      * Indicates no movement
      */
-    private final static int TOUCH_STATE_REST = 0;
+    private static final int TOUCH_STATE_REST = 0;
 
     /**
      * State scrolling x position
      */
-    private final static int TOUCH_STATE_SCROLLING_X = 1;
+    private static final int TOUCH_STATE_SCROLLING_X = 1;
 
     /**
      * State scrolling y position
      */
-    private final static int TOUCH_STATE_SCROLLING_Y = 2;
+    private static final int TOUCH_STATE_SCROLLING_Y = 2;
 
     private int touchState = TOUCH_STATE_REST;
 

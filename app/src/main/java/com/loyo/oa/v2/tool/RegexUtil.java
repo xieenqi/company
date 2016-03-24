@@ -8,29 +8,25 @@ import java.util.regex.Pattern;
  * 作者 : ykb
  * 时间 : 15/8/26.
  */
-public class RegexUtil
-{
+public class RegexUtil {
     private static final String regexkEmaiL = "\\w+@\\w+\\.[a-z]+(\\.[a-z]+)?";
     private static final String regexkIdCard = "[1-9]\\d{13,16}[a-zA-Z0-9]{1}";
     private static final String regexkMobileL = "(\\+\\d+)?1[34578]\\d{9}$";
     private static final String regexkPhone = "(\\+\\d+)?(\\d{3,4}\\-?)?\\d{7,8}$";
-    ;
     private static final String regexkDigit = "\\-?[1-9]\\d+";
-    ;
     private static final String regexkDecimals = "\\-?[1-9]\\d+(\\.\\d+)?";
-    ;
     private static final String regexkBlankSpace = "\\s+";
-    ;
     private static final String regexkChinese = "^[\u4E00-\u9FA5]+$";
-    ;
     private static final String regexkURL = "(https?://(w{3}\\.)?)?\\w+\\.\\w+(\\.[a-zA-Z]+)*(:\\d{1,5})?(/\\w*)*(\\??(.+=.*)?(&.+=.*)?)?";
-    ;
     private static final String regexkPostcode = "[1-9]\\d{5}";
     private static final String regexkIp = "\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b";
     private static final String regexkWx = "^[a-zA-Z\\d_]{6,}$";
 
-    public enum StringType
-    {
+    protected RegexUtil() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
+    public enum StringType {
         /**
          * 邮箱格式 验证
          */
@@ -104,8 +100,7 @@ public class RegexUtil
      * @param stringType 枚举类型
      * @return (ture==验证成功，false==验证失败)
      */
-    public static boolean regexk(String string, StringType stringType)
-    {
+    public static boolean regexk(String string, StringType stringType) {
 
         if (null == string || null == stringType) {
             return false;
@@ -151,8 +146,9 @@ public class RegexUtil
                 break;
             case PORT:
                 int port = Integer.parseInt(string);
-                if (port > 0 && port < 65535) {
-                    return true;
+                if (port > 0) {
+                    if (port < 65535)
+                        return true;
                 } else {
                     return false;
                 }
