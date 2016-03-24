@@ -91,10 +91,7 @@ public class WorkflowNodesListViewAdapter extends BaseAdapter {
 
             /**是否限时，是否超时*/
             if(wfNodes.getRemindAt() != 0){
-                if((wfNodes.getRemindAt()*3600)+wfNodes.getHandAt() > serverTime){
-                    int totalTime = (wfNodes.getRemindAt()*3600)+wfNodes.getHandAt();
-                    LogUtil.dll("审批时间:"+totalTime);
-                    LogUtil.dll("服务器时间:"+serverTime);
+                if(wfNodes.isOverTime()){
                     item_info.tv_startTime.setText("(限"+wfNodes.getRemindAt()+"小时,");
                     item_info.tv_redTime.setText("已超时");
                     item_info.tv_endTime.setText(")");

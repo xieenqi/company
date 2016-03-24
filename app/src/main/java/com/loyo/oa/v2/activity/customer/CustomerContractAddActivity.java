@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.ExtraData;
+import com.loyo.oa.v2.beans.ExtraDataforContact;
 import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
@@ -27,6 +30,8 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
+import com.loyo.oa.v2.tool.customview.ExtraDataView;
+import com.loyo.oa.v2.tool.customview.ExtraDataViewforContact;
 
 import org.apache.http.Header;
 
@@ -50,6 +55,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     ViewGroup layout_extra;
     Customer mCustomer;
     Contact mContact;
+    LinearLayout layout_contact_extra_info;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -67,6 +73,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     }
 
     void initUI() {
+
+        layout_contact_extra_info = (LinearLayout) findViewById(R.id.layout_contact_extra_info);
 
         edt_name = (EditText) findViewById(R.id.edt_name);
         edt_phone = (EditText) findViewById(R.id.edt_phone);
@@ -106,6 +114,9 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             //            layout_extra.setVisibility(View.GONE);
         }
         getContactsFields();
+
+
+
     }
 
     @Override
@@ -209,8 +220,14 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     private void getContactsFields() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getContactsField(new RCallback<ArrayList<Province>>() {
             @Override
-            public void success(ArrayList<Province> provinces, Response response) {
+            public void success(ArrayList<Province> ExtraDataforContact, Response response) {
                 HttpErrorCheck.checkResponse("联系人动态字段", response);
+            }
+
+            @Override
+            public void failure(RetrofitError error){
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
     }
@@ -234,18 +251,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         }, DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
-
-//    Contact getmContact() {
-//        Contact contract = new Contact();
-//        contract.setName(getContractName());
-//        contract.setTel(getContractTel());
-//
-//        if (mContact != null) {
-//            contract.setId(mContact.getId());
-//        }
-//
-//        return contract;
-//    }
 
     /**
      * 获取EditText里的内容

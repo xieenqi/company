@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ExtraData;
+import com.loyo.oa.v2.beans.ExtraDataforContact;
 import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
@@ -30,30 +29,30 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 : 客户联系人 动态字段
+ * 描述 : 动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
-public class ExtraDataView extends LinearLayout {
+public class ExtraDataViewforContact extends LinearLayout {
 
     private AlertDialog dialog;
     private Context mContext;
-    private ArrayList<ExtraData> extras = new ArrayList<>();
+    private ArrayList<ExtraDataforContact> extras = new ArrayList<>();
 
-    public ExtraDataView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ExtraDataViewforContact(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(-1,-2));
         setOrientation(VERTICAL);
     }
 
-    public ExtraDataView(Context context, ArrayList<ExtraData> extras,boolean edit,int valueColor,int valueSize) {
+    public ExtraDataViewforContact(Context context, ArrayList<ExtraDataforContact> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         bindView(edit,valueColor,valueSize);
     }
 
-    public ArrayList<ExtraData> getExtras() {
+    public ArrayList<ExtraDataforContact> getExtras() {
         return extras;
     }
 
@@ -64,12 +63,13 @@ public class ExtraDataView extends LinearLayout {
      * @param valueSize
      */
     private void bindView(boolean edit,int valueColor,int valueSize) {
+
         if(null==extras||extras.isEmpty()){
             return;
         }
-//        valueSize=MainApp.getMainApp().diptoPx(valueSize);
+
         for (int i = 0; i < extras.size(); i++) {
-            ExtraData customerExtra = extras.get(i);
+            ExtraDataforContact customerExtra = extras.get(i);
             final ExtraProperties properties = customerExtra.getProperties();
             if (null == properties) {
                 continue;
@@ -91,7 +91,7 @@ public class ExtraDataView extends LinearLayout {
             }
             tv_content.setTextColor(valueColor);
             tv_tag.setText(properties.getLabel());
-            tv_content.setText(customerExtra.getVal());
+            //tv_content.setText(customerExtra.getVal());
 
             if (properties.isList()) {
                 tv_content.setEnabled(false);
@@ -168,15 +168,15 @@ public class ExtraDataView extends LinearLayout {
     }
 
     private class BizFiedTextWatcher implements TextWatcher {
-        private ExtraData extra;
+        private ExtraDataforContact extra;
 
-        private BizFiedTextWatcher(ExtraData extra) {
+        private BizFiedTextWatcher(ExtraDataforContact extra) {
             this.extra = extra;
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            extra.setVal(s.toString());
+            //extra.setVal(s.toString());
         }
 
         @Override
@@ -190,7 +190,7 @@ public class ExtraDataView extends LinearLayout {
         }
     }
 
-    class ValueOnClickListener_list implements View.OnClickListener {
+    class ValueOnClickListener_list implements OnClickListener {
         AlertDialog dialog_Wheel_one;
 
         private ValueOnClickListener_list(AlertDialog _dialog, int position) {
@@ -206,11 +206,11 @@ public class ExtraDataView extends LinearLayout {
     }
 
     /*动态字段，时间选择监听*/
-    class ValueOnClickListener_dateTime implements View.OnClickListener {
+    class ValueOnClickListener_dateTime implements OnClickListener {
         private TextView textView;
-        private ExtraData extra;
+        private ExtraDataforContact extra;
 
-        private ValueOnClickListener_dateTime(TextView textView, ExtraData extra) {
+        private ValueOnClickListener_dateTime(TextView textView, ExtraDataforContact extra) {
             this.textView = textView;
             this.extra = extra;
         }
@@ -239,14 +239,14 @@ public class ExtraDataView extends LinearLayout {
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
                         //extra.setVal(DateTool.getDateToTimestamp(str, MainApp.getMainApp().df2) + "");
-                        extra.setVal(str);
+                        //extra.setVal(str);
                     }
                 });
             }
         }
     }
 
-    AlertDialog initDialog_Wheel_one(final TextView textView, final ExtraData extra) {
+    AlertDialog initDialog_Wheel_one(final TextView textView, final ExtraDataforContact extra) {
         final ArrayList<String> str = extra.getProperties().getDefVal();
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override
@@ -285,7 +285,7 @@ public class ExtraDataView extends LinearLayout {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 textView.setText(str.get(position));
-                extra.setVal(str.get(position));
+                //extra.setVal(str.get(position));
                 dialog.dismiss();
             }
         });

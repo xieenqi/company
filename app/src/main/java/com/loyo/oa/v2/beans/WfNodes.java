@@ -14,6 +14,7 @@ public class WfNodes implements Serializable {
     private int  remindAt;
     private int active ;//bool, optional): ,
     private boolean approveFlag ;//bool, optional): ,
+    private boolean isOverTime;
     private String comment ;//string, optional): ,
     private long createdAt ;//&{time Time}, optional): ,
     private String executor ;//int, optional): ,
@@ -25,6 +26,14 @@ public class WfNodes implements Serializable {
     private String wfInstanceId ;//int64, optional):
     private boolean approveResult;
 
+
+    public boolean isOverTime() {
+        return isOverTime;
+    }
+
+    public void setIsOverTime(boolean isOverTime) {
+        this.isOverTime = isOverTime;
+    }
 
     public int getHandAt() {
         return handAt;

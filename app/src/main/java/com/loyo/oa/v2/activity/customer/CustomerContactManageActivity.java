@@ -101,7 +101,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         }
         layout_container.removeAllViews();
         ArrayList<Contact> contacts = mCustomer.contacts;
-        app.logUtil.e("contacts : " + contacts.size());
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
             ContactViewGroup contactViewGroup = new ContactViewGroup(this, mCustomer, contact, this);

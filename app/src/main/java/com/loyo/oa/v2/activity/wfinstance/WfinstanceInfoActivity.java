@@ -329,6 +329,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
+
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current,final Response response) {
