@@ -28,7 +28,7 @@
 
             <EditText
                 android:singleLine="false"
-                android:text="fafafafaa"
+                android:text=""
                 android:layout_toLeftOf="@+id/img_right_arrow"
                 style="@style/text_item1"
                 android:background="@null"

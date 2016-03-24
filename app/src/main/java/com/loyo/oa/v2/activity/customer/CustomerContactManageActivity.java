@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -54,7 +55,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
 
     private Customer customerContact;
-    private ArrayList<HttpCustomerContactFieds> fiedList;
+    private ArrayList<ContactExtras> fiedList;
+
 
     @AfterViews
     void initViews() {
@@ -76,9 +78,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      */
     private void getContactsFields() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getContactsField(new RCallback<ArrayList<HttpCustomerContactFieds>>() {
+                getContactsField(new RCallback<ArrayList<ContactExtras>>() {
                     @Override
-                    public void success(ArrayList<HttpCustomerContactFieds> fiedListData, Response response) {
+                    public void success(ArrayList<ContactExtras> fiedListData, Response
                         HttpErrorCheck.checkResponse("联系人动态字段", response);
                         fiedList = fiedListData;
                         getData();

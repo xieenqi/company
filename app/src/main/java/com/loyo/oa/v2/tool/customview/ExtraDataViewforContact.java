@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.ExtraDataforContact;
 import com.loyo.oa.v2.beans.ExtraProperties;
@@ -37,7 +38,7 @@ public class ExtraDataViewforContact extends LinearLayout {
 
     private AlertDialog dialog;
     private Context mContext;
-    private ArrayList<ExtraDataforContact> extras = new ArrayList<>();
+    private ArrayList<ContactExtras> extras = new ArrayList<>();
 
     public ExtraDataViewforContact(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -46,13 +47,13 @@ public class ExtraDataViewforContact extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ExtraDataViewforContact(Context context, ArrayList<ExtraDataforContact> extras, boolean edit, int valueColor, int valueSize) {
+    public ExtraDataViewforContact(Context context, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         bindView(edit,valueColor,valueSize);
     }
 
-    public ArrayList<ExtraDataforContact> getExtras() {
+    public ArrayList<ContactExtras> getExtras() {
         return extras;
     }
 
@@ -69,12 +70,11 @@ public class ExtraDataViewforContact extends LinearLayout {
         }
 
         for (int i = 0; i < extras.size(); i++) {
-            ExtraDataforContact customerExtra = extras.get(i);
-            final ExtraProperties properties = customerExtra.getProperties();
-            if (null == properties) {
+            ContactExtras customerExtra = extras.get(i);
+            if (null == customerExtra) {
                 continue;
             }
-            if(!properties.isEnabled()){
+            if(!customerExtra.isEnabled()){
                 continue;
             }
 
@@ -90,17 +90,17 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.setTextSize(valueSize);
             }
             tv_content.setTextColor(valueColor);
-            tv_tag.setText(properties.getLabel());
+            tv_tag.setText(customerExtra.getLabel());
             //tv_content.setText(customerExtra.getVal());
 
-            if (properties.isList()) {
+            if (customerExtra.isList()) {
                 tv_content.setEnabled(false);
             }
 
             addView(extra);
-            if (properties.isList()) {
+            if (customerExtra.isList()) {
                 LogUtil.dll("islist");
-                LogUtil.dll("islist enable:" + properties.isEnabled());
+                LogUtil.dll("islist enable:" + customerExtra.isEnabled());
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
@@ -108,25 +108,25 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(properties.isRequired()){
+                if(customerExtra.isRequired()){
                     tv_content.setHint("必填");
                 }
 
-            } else if ("long".equals(properties.getType())) {
+            } else if ("long".equals(customerExtra.getType())) {
                 LogUtil.dll("时间");
-                LogUtil.dll("long enable:"+properties.isEnabled());
+                LogUtil.dll("long enable:"+customerExtra.isEnabled());
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
                 tv_content.setFocusable(false);
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(properties.isRequired()){
+                if(customerExtra.isRequired()){
                     tv_content.setHint("必填");
                 }
-            } else if ("string".equals(properties.getType())) {
+            } else if ("string".equals(customerExtra.getType())) {
                 LogUtil.dll("string");
-                LogUtil.dll("string enable:" + properties.isEnabled());
+                LogUtil.dll("string enable:" + customerExtra.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -134,12 +134,12 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(properties.isRequired()){
+                if(customerExtra.isRequired()){
                     tv_content.setHint("必填");
                 }
-            } else if ("int".equals(properties.getType())) {
+            } else if ("int".equals(customerExtra.getType())) {
                 LogUtil.dll("int");
-                LogUtil.dll("int enable:"+properties.isEnabled());
+                LogUtil.dll("int enable:"+customerExtra.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -147,12 +147,12 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
-                if(properties.isRequired()){
+                if(customerExtra.isRequired()){
                     tv_content.setHint("必填");
                 }
-            } else if ("double".equals(properties.getType())) {
+            } else if ("double".equals(customerExtra.getType())) {
                 LogUtil.dll("double");
-                LogUtil.dll("double enable:"+properties.isEnabled());
+                LogUtil.dll("double enable:"+customerExtra.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -160,7 +160,7 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                if(properties.isRequired()){
+                if(customerExtra.isRequired()){
                     tv_content.setHint("必填");
                 }
             }
@@ -168,15 +168,15 @@ public class ExtraDataViewforContact extends LinearLayout {
     }
 
     private class BizFiedTextWatcher implements TextWatcher {
-        private ExtraDataforContact extra;
+        private ContactExtras extra;
 
-        private BizFiedTextWatcher(ExtraDataforContact extra) {
+        private BizFiedTextWatcher(ContactExtras extra) {
             this.extra = extra;
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            //extra.setVal(s.toString());
+            extra.setVal(s.toString());
         }
 
         @Override
@@ -208,9 +208,9 @@ public class ExtraDataViewforContact extends LinearLayout {
     /*动态字段，时间选择监听*/
     class ValueOnClickListener_dateTime implements OnClickListener {
         private TextView textView;
-        private ExtraDataforContact extra;
+        private ContactExtras extra;
 
-        private ValueOnClickListener_dateTime(TextView textView, ExtraDataforContact extra) {
+        private ValueOnClickListener_dateTime(TextView textView, ContactExtras extra) {
             this.textView = textView;
             this.extra = extra;
         }
@@ -246,8 +246,8 @@ public class ExtraDataViewforContact extends LinearLayout {
         }
     }
 
-    AlertDialog initDialog_Wheel_one(final TextView textView, final ExtraDataforContact extra) {
-        final ArrayList<String> str = extra.getProperties().getDefVal();
+    AlertDialog initDialog_Wheel_one(final TextView textView,ContactExtras extra) {
+        final ArrayList<String> str = extra.getDefVal();
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
