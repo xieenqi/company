@@ -4,7 +4,7 @@ apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 21
     buildToolsVersion '22.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
@@ -56,8 +56,8 @@ android {
     //多渠道打包的配置
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.android.support:appcompat-v7:22.1.1'
-        compile 'com.android.support:recyclerview-v7:22.1.1'
+        compile 'com.android.support:appcompat-v7:21.1.1'
+        compile 'com.android.support:recyclerview-v7:21.1.1'
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile files('libs/android-async-http-1.4.6.jar')
