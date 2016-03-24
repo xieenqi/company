@@ -5,7 +5,7 @@ def AAVersion = '3.3.2'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '22.0.2'
+    buildToolsVersion '22.0.0'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
