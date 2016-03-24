@@ -14,6 +14,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.ExtraData;
+import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -98,22 +100,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 获取客户详情
      */
     private void getData() {
-//        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(mCustomer.getId(), new RCallback<Customer>() {
-//            @Override
-//            public void success(final Customer customer, final Response response) {
-//                mCustomer = customer;
-//                Utils.dialogDismiss();
-//                initData();
-//            }
-//
-//            @Override
-//            public void failure(final RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//                Utils.dialogDismiss();
-//                finish();
-//            }
-//        });
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
@@ -140,7 +126,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             return;
         }
         layout_container.removeAllViews();
-
+        //contactData();
         ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
@@ -149,6 +135,32 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         }
     }
 
+    public void contactData() {
+//        for (int i = 0; i < 9; i++) {
+//            fiedList.remove(9);
+//        }
+        for (Contact element : customerContact.contacts) {
+            for (int j = 0; j < fiedList.size(); j++) {
+                for (int f = 0; f < element.extDatas.size(); f++) {
+//                    listData = fiedList.get(j);
+                    if (!fiedList.get(j).name.equals(element.extDatas.get(f).getProperties().getName())) {
+                        ExtraData newExt = new ExtraData();
+                        ExtraProperties ept = new ExtraProperties();
+                        ept.setName(fiedList.get(j).name);
+                        ept.setEnabled(fiedList.get(j).enabled);
+                        ept.setIsList(fiedList.get(j).isList);
+                        ept.setRequired(fiedList.get(j).required);
+                        ept.setLabel(fiedList.get(j).label);
+//                        ept.setRegExpress(fiedList.get(j).name);
+//                        ept.setName(fiedList.get(j).name);
+//                        ept.setName(fiedList.get(j).name);
+                        newExt.setProperties(ept);
+                        element.extDatas.add(newExt);
+                    }
+                }
+            }
+        }
+    }
 
     @Click(R.id.layout_add)
     void addNewContact() {

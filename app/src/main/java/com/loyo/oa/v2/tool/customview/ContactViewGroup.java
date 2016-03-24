@@ -16,7 +16,6 @@ import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 /**
@@ -118,6 +117,7 @@ public class ContactViewGroup extends LinearLayout {
             TextView tv_wx = (TextView) findViewById(R.id.tv_wx);
             TextView tv_email = (TextView) findViewById(R.id.tv_email);
             TextView tv_memo = (TextView) findViewById(R.id.tv_memo);
+            TextView tv_depart = (TextView) findViewById(R.id.tv_depart);
 
             tv_name.setText(mContact.getName());
             tv_tel.setText(mContact.getTel());
@@ -127,7 +127,7 @@ public class ContactViewGroup extends LinearLayout {
             tv_email.setText(mContact.getEmail());
             tv_memo.setText(mContact.getMemo());
             tv_birthday.setText(mContact.getBirthStr());
-
+            tv_depart.setText(mContact.deptName);
             if (mContact.isDefault()) {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
                 del.setVisibility(INVISIBLE);

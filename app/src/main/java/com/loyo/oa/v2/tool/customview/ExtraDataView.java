@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
@@ -43,14 +41,14 @@ public class ExtraDataView extends LinearLayout {
     public ExtraDataView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        setLayoutParams(new ViewGroup.LayoutParams(-1,-2));
+        setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         setOrientation(VERTICAL);
     }
 
-    public ExtraDataView(Context context, ArrayList<ExtraData> extras,boolean edit,int valueColor,int valueSize) {
+    public ExtraDataView(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
-        bindView(edit,valueColor,valueSize);
+        bindView(edit, valueColor, valueSize);
     }
 
     public ArrayList<ExtraData> getExtras() {
@@ -59,12 +57,13 @@ public class ExtraDataView extends LinearLayout {
 
     /**
      * 绑定数据
+     *
      * @param edit
      * @param valueColor
      * @param valueSize
      */
-    private void bindView(boolean edit,int valueColor,int valueSize) {
-        if(null==extras||extras.isEmpty()){
+    private void bindView(boolean edit, int valueColor, int valueSize) {
+        if (null == extras || extras.isEmpty()) {
             return;
         }
 //        valueSize=MainApp.getMainApp().diptoPx(valueSize);
@@ -74,7 +73,7 @@ public class ExtraDataView extends LinearLayout {
             if (null == properties) {
                 continue;
             }
-            if(!properties.isEnabled()){
+            if (!properties.isEnabled()) {
                 continue;
             }
 
@@ -85,7 +84,7 @@ public class ExtraDataView extends LinearLayout {
             final EditText tv_content = (EditText) extra.findViewById(R.id.et_content);
 
             tv_content.setEnabled(edit);
-            if(valueSize!=0){
+            if (valueSize != 0) {
                 tv_tag.setTextSize(valueSize);
                 tv_content.setTextSize(valueSize);
             }
@@ -108,20 +107,20 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(properties.isRequired()){
+                if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
 
             } else if ("long".equals(properties.getType())) {
                 LogUtil.dll("时间");
-                LogUtil.dll("long enable:"+properties.isEnabled());
+                LogUtil.dll("long enable:" + properties.isEnabled());
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
                 tv_content.setFocusable(false);
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(properties.isRequired()){
+                if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
             } else if ("string".equals(properties.getType())) {
@@ -134,12 +133,12 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(properties.isRequired()){
+                if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
             } else if ("int".equals(properties.getType())) {
                 LogUtil.dll("int");
-                LogUtil.dll("int enable:"+properties.isEnabled());
+                LogUtil.dll("int enable:" + properties.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -147,12 +146,12 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
-                if(properties.isRequired()){
+                if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
             } else if ("double".equals(properties.getType())) {
                 LogUtil.dll("double");
-                LogUtil.dll("double enable:"+properties.isEnabled());
+                LogUtil.dll("double enable:" + properties.isEnabled());
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -160,7 +159,7 @@ public class ExtraDataView extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                if(properties.isRequired()){
+                if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
             }
@@ -251,7 +250,7 @@ public class ExtraDataView extends LinearLayout {
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
-                return str.size();
+                return null == str ? 0 : str.size();
             }
 
             @Override
