@@ -46,6 +46,10 @@ public class ServerAPI {
     public static final int PUT = 3;
     public static final int DELETE = 4;
 
+    protected ServerAPI() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     public static void request(Object rootObject, int requestMode, String urlOperation, Class<?> cls) {
         request(rootObject, requestMode, urlOperation, null, null, null, null, null, cls, null);
     }

@@ -20,15 +20,15 @@ public class DateTool {
     /**
      * 1s==1000ms
      */
-    protected final static int TIME_MILLISECONDS = 1000;
+    protected static final int TIME_MILLISECONDS = 1000;
     /**
      * 时间中的分、秒最大值均为60
      */
-    protected final static int TIME_SECONDS = 60;
+    protected static final int TIME_SECONDS = 60;
     /**
      * 时间中的小时最大值
      */
-    protected final static int TIME_HOURSES = 24;
+    protected static final int TIME_HOURSES = 24;
 
     public static final long MINUTE_MILLIS = TIME_SECONDS * TIME_MILLISECONDS;
 
@@ -96,13 +96,17 @@ public class DateTool {
 
     public static Calendar calendar;
 
+    protected DateTool() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     public static String toDateStr(long time, String dateFormat) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.getDefault());
         return format.format(new Date(time));
     }
 
     public static Long getDateToTimestamp(String strTime, DateFormat sdfOut) {
-        Long timestamp = 0l;
+        Long timestamp = 0L;
         try {
             timestamp = sdfOut.parse(strTime).getTime();
         } catch (Exception e) {

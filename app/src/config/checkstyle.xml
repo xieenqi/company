@@ -7,7 +7,7 @@
     <module name="SuppressionFilter"><!--抑制过滤器-->
         <property name="file" value="${proj.module.dir}/src/config/checkstyle-suppression.xml"/>
     </module>
-    <module name="FileLength"/>
+    <!--<module name="FileLength"/>-->
     <!--<module name="FileTabCharacter"/>-->
     <!--检查源码中没有制表符（'\t'）。-->
 

@@ -13,6 +13,9 @@ import java.util.Locale;
  * Created by Nereo on 2015/4/8.
  */
 public class FileUtils {
+    protected FileUtils() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
     public static File createTmpFile(Context context) {
 

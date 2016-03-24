@@ -8,13 +8,16 @@ import java.util.regex.Pattern;
  * Created xnq 15/12/30.
  */
 public class RegularCheck {
+    protected RegularCheck() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
     /**
      * 邮箱格式验证
      *
      * @param email
-     * @return  通过返回true
-     * */
+     * @return 通过返回true
+     */
 
     public static boolean checkEmail(String email) {
 

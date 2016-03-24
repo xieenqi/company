@@ -27,7 +27,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class BitmapUtil {
-
+    protected BitmapUtil() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 //    /**
 //     * @param view
 //     * @return
