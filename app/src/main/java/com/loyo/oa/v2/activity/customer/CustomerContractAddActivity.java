@@ -10,14 +10,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.ExtraData;
-import com.loyo.oa.v2.beans.ExtraDataforContact;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -30,15 +27,10 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.tool.customview.ExtraDataView;
 import com.loyo.oa.v2.tool.customview.ExtraDataViewforContact;
-
-import org.apache.http.Header;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -50,12 +42,10 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     ViewGroup img_title_left;
     ViewGroup img_title_right;
-    EditText edt_name, edt_phone, edt_qq, edt_email, edt_memo, edt_wx, edt_wiretel;
-    TextView edt_birth;
-    ViewGroup layout_extra;
     Customer mCustomer;
     Contact mContact;
     LinearLayout layout_contact_extra_info;
+    public ArrayList<ContactExtras> mContactExtras;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -68,55 +58,28 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             mCustomer = (Customer) getIntent().getExtras().getSerializable("customer");
             mContact = (Contact) getIntent().getExtras().getSerializable("contract");
         }
-
         initUI();
     }
 
     void initUI() {
 
         layout_contact_extra_info = (LinearLayout) findViewById(R.id.layout_contact_extra_info);
-
-        edt_name = (EditText) findViewById(R.id.edt_name);
-        edt_phone = (EditText) findViewById(R.id.edt_phone);
-        edt_qq = (EditText) findViewById(R.id.edt_qq);
-        edt_email = (EditText) findViewById(R.id.edt_email);
-        edt_memo = (EditText) findViewById(R.id.edt_remark);
-
-        edt_wx = (EditText) findViewById(R.id.edt_wx);
-        edt_wiretel = (EditText) findViewById(R.id.edt_wiretel);
-        edt_birth = (TextView) findViewById(R.id.edt_birthday);
-
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
-
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
 
-        layout_extra = (ViewGroup) findViewById(R.id.contact_extra_layout);
-
-        edt_birth.setOnTouchListener(Global.GetTouch());
-        edt_birth.setOnClickListener(this);
-
-        if (mContact != null) {
-            edt_name.setText(mContact.getName());
-            edt_phone.setText(mContact.getTel());
-            edt_qq.setText(mContact.getQq());
-            edt_wx.setText(mContact.getWx());
-            edt_wiretel.setText(mContact.getWiretel());
-            edt_birth.setText(mContact.getBirthStr());
-            edt_email.setText(mContact.getEmail());
-            edt_memo.setText(mContact.getMemo());
-
-            super.setTitle("修改联系人");
-        } else {
-            //            layout_extra.setVisibility(View.GONE);
-        }
         getContactsFields();
+    }
 
-
-
+    /**
+     * 绑定数据
+     * */
+    void bindData(){
+        LogUtil.d("bindData");
+        layout_contact_extra_info.addView(new ExtraDataViewforContact(mContext,mContactExtras,true,R.color.title_bg1, 0));
     }
 
     @Override
@@ -126,7 +89,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                 break;
             case R.id.img_title_right:
-                String name = edt_name.getText().toString().trim();
+
+/*                String name = edt_name.getText().toString().trim();
                 String phone = edt_phone.getText().toString().trim();
                 if (name.isEmpty()) {
                     Toast("联系人不能为空");
@@ -155,7 +119,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         return;
                     }
                 }
-                //现有客户新增联系人
+
                 HashMap<String, Object> maps = new HashMap<>();
                 maps.put("name", getContractName());
                 maps.put("tel", getContractTel());
@@ -168,7 +132,19 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 maps.put("qq", getEditTextContent(edt_qq));
                 maps.put("email", getEditTextContent(edt_email));
                 maps.put("memo", getEditTextContent(edt_memo));
+                LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));*/
+
+                HashMap<String, Object> maps = new HashMap<>();
+                maps.put("name", mContactExtras.get(0).getVal());
+                maps.put("tel", mContactExtras.get(1).getVal());
+                maps.put("wiretel", mContactExtras.get(2).getVal());
+                maps.put("birth", mContactExtras.get(3).getVal());
+                maps.put("wx", mContactExtras.get(4).getVal());
+                maps.put("qq", mContactExtras.get(5).getVal());
+                maps.put("email", mContactExtras.get(6).getVal());
+                maps.put("memo", mContactExtras.get(7).getVal());
                 LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));
+
                 if (mCustomer != null) {
                     if (mContact == null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
@@ -199,17 +175,12 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             public void failure(final RetrofitError error) {
                                 HttpErrorCheck.checkError(error);
                             }
-
                         });
                     }
-
                 }
                 break;
-            case R.id.edt_birthday:
-                selectBirthDay();
-                break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -218,56 +189,22 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 获取联系人的动态字段
      */
     private void getContactsFields() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getContactsField(new RCallback<ArrayList<Province>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getContactsField(new RCallback<ArrayList<ContactExtras>>() {
             @Override
-            public void success(ArrayList<Province> ExtraDataforContact, Response response) {
+            public void success(ArrayList<ContactExtras> ContactExtras, Response response) {
                 HttpErrorCheck.checkResponse("联系人动态字段", response);
+                LogUtil.d("联系人动态字段 toJson:" + MainApp.gson.toJson(ContactExtras));
+                mContactExtras = ContactExtras;
+                bindData();
             }
 
             @Override
             public void failure(RetrofitError error){
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                Toast("请求失败");
             }
         });
-    }
-
-    /**
-     * 设置生日
-     */
-    private void selectBirthDay() {
-        DateTool.calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                int age = Utils.getAge(year + "");
-                if (age > 0) {
-                    String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
-                    Utils.setContent(edt_birth, str);
-                } else {
-                    Toast("请输入您正确的生日");
-                }
-            }
-        }, DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
-    }
-
-    /**
-     * 获取EditText里的内容
-     *
-     * @param et 需要获取数据的EditText
-     * @return EditText里的内容
-     */
-    private String getEditTextContent(final EditText et) {
-        return et.getText().toString().trim();
-    }
-
-    String getContractName() {
-        return edt_name.getText().toString().trim();
-    }
-
-    String getContractTel() {
-        return edt_phone.getText().toString().trim();
     }
 
     void sendBack() {
@@ -275,23 +212,4 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         intent.putExtra("data", mContact);
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
-
-    public class AsyncHandler_contract extends BaseActivityAsyncHttpResponseHandler {
-
-        @Override
-        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
-            try {
-                Contact contact = MainApp.gson.fromJson(getStr(arg2), Contact.class);
-                if (contact != null) {
-                    mContact = contact;
-                }
-                //应传回完整对象
-                sendBack();
-
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }
-        }
-    }
-
 }

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
@@ -280,5 +281,5 @@ public interface ICustomer {
      * @param callback
      */
     @GET("/contact/fields")
-    void getContactsField(Callback<ArrayList<Province>> callback);
+    void getContactsField(Callback<ArrayList<ContactExtras>> callback);
 }
