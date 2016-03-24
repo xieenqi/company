@@ -56,8 +56,13 @@ android {
     //多渠道打包的配置
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.android.support:appcompat-v7:21.1.1'
-        compile 'com.android.support:recyclerview-v7:21.1.1'
+        //TODO: 修改21.1.1 - 21.0.3
+//        compile 'com.android.support:appcompat-v7:21.1.1'
+//        compile 'com.android.support:recyclerview-v7:21.1.1'
+
+        compile 'com.android.support:appcompat-v7:21.0.3'
+        compile 'com.android.support:recyclerview-v7:21.0.3'
+
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile files('libs/android-async-http-1.4.6.jar')
