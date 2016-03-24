@@ -64,4 +64,8 @@ public class ExtraAndResult {
      * 操作状态
      */
     public static final int REQUSET_STATUS = 302;
+
+    protected ExtraAndResult() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 }

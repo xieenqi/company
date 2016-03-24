@@ -122,7 +122,7 @@ public class MyLetterListView extends View {
     }
 
     public interface OnTouchingLetterChangedListener {
-        public void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state);
+        void onTouchingLetterChanged(int selectionIndex, String sectionLetter, int state);
     }
 
     public void setKeyword(String s) {

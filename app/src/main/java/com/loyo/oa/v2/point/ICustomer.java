@@ -69,17 +69,17 @@ public interface ICustomer {
     void getNearCustomers(@Query("lat") String lat, @Query("lon") String lon, retrofit.Callback<ArrayList<Customer>> cb);
 
     /**
-     * name "客户名称"	string	form<BR/>
-     * loc		"客户位置信息"	models.customer.Location	form<BR/>
+     * name "客户名称"	string
+     * loc		"客户位置信息"	models.customer.Location
      * industry		"行业"	models.Industry	form
-     * regional		"地区"	models.customer.Regional	form<BR/>
-     * tags		false "标签"	[]<BR/>
+     * regional		"地区"	models.customer.Regional
+     * tags		false "标签"
      * ModelModel Schema<BR/>
      * CustomerTag <BR/>
-     * summary		"简介"	string	form<BR/>
-     * owner		"项目负责人"	tmodels.Member	form<BR/>
-     * members		false "项目成员"	[]	Member<BR/>
-     * extDatas		false "自定义字段值"	[]	DynamicData<BR/>
+     * summary		"简介"	string
+     * owner		"项目负责人"	tmodels.Member
+     * members		false "项目成员"	[]
+     * extDatas		false "自定义字段值"	[]
      *
      * @param id
      * @param map

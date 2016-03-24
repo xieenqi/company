@@ -84,8 +84,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     /**
      * 初始化
-     * */
-    void initView(){
+     */
+    void initView() {
         vs_nodata = findViewById(R.id.vs_nodata);
         mBundle = getIntent().getExtras();
         mInflater = LayoutInflater.from(this);
@@ -194,7 +194,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     case CUSTOMER_MANAGE:
                         mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
                         mIntent.putExtra("Id", lstData.get(position - 2).getId());
-                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE,customerType);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE, customerType);
                         startActivity(mIntent);
                         break;
                     //任务管理
@@ -239,7 +239,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     /**
      * 搜索操作
-     * */
+     */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         if (strSearch.length() > 0) {
@@ -252,9 +252,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     /**
      * 根据业务 展示"无"Item
-     * */
-    public void switchPage(int befromPage){
-        switch (befromPage){
+     */
+    public void switchPage(int befromPage) {
+        switch (befromPage) {
             case WFIN_ADD:
                 headerViewBtn.setVisibility(View.VISIBLE);
                 break;
@@ -495,7 +495,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     case WorkReport.MONTH:
                         reportType = " 月报";
                         reportDate = DateTool.toDateStr(workReport.beginAt * 1000, "yyyy.MM");
-                        ;
                         break;
                 }
                 reportTitle.append(reportDate + reportType);
@@ -536,7 +535,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 customer = (Customer) o;
                 time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
                 title.setText(customer.name);
-                content.setText("标签"+Utils.getTagItems(customer));
+                content.setText("标签" + Utils.getTagItems(customer));
 
               /*  if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);

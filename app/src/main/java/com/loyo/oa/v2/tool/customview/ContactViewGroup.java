@@ -14,11 +14,10 @@ import com.loyo.oa.v2.activity.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activity.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -29,8 +28,9 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
 public class ContactViewGroup extends LinearLayout {
 
     public interface OnContactProcessCallback {
-        public void onDel(Contact contact);
-        public void onSetDefault(Contact contact);
+        void onDel(Contact contact);
+
+        void onSetDefault(Contact contact);
     }
 
     private Context context;
