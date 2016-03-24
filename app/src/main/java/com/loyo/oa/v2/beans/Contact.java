@@ -22,7 +22,8 @@ public class Contact implements Serializable {
     private String email;
     private String memo;
     private boolean isDefault;
-    private ArrayList<ExtraData> extDatas = new ArrayList<>();
+    public String deptName;
+    public ArrayList<ExtraData> extDatas = new ArrayList<>();
 
 
     public String getMemo() {
