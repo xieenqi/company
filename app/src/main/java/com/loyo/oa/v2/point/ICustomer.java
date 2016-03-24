@@ -105,6 +105,8 @@ public interface ICustomer {
     @GET("/customer/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
+
+
     /**
      * 丢入公海
      *

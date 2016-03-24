@@ -251,6 +251,19 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/layout_contact_extra_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/view_first_margin_top"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+            </LinearLayout>
+
+
             <View
                 android:layout_width="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
@@ -268,9 +281,6 @@
                 android:minHeight="@dimen/dimen_70"
                 android:maxHeight="140dp"
                 android:layout_height="wrap_content" />
-
-
-
 
         </LinearLayout>
     </LinearLayout>

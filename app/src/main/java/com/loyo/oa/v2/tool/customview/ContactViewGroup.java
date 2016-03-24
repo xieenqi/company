@@ -79,10 +79,8 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
-            LogUtil.dll("isMyUser:"+isMyUser);
             /*判断是否有操作权限*/
             if (!isMyUser) {
-                LogUtil.dll("进入!isMyUser");
                 edit.setVisibility(View.GONE);
                 del.setVisibility(View.GONE);
                 default_.setVisibility(View.GONE);
