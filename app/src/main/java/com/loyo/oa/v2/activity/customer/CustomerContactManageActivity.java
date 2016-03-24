@@ -13,7 +13,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -54,7 +53,8 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Extra("isMyUser") boolean isMyUser;
     @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
 
-    Customer customerContact;
+    private Customer customerContact;
+    private ArrayList<HttpCustomerContactFieds> fiedList;
 
     @AfterViews
     void initViews() {
@@ -78,8 +78,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getContactsField(new RCallback<ArrayList<HttpCustomerContactFieds>>() {
                     @Override
-                    public void success(ArrayList<HttpCustomerContactFieds> ExtraDataforContact, Response response) {
+                    public void success(ArrayList<HttpCustomerContactFieds> fiedListData, Response response) {
                         HttpErrorCheck.checkResponse("联系人动态字段", response);
+                        fiedList = fiedListData;
                         getData();
                     }
 
@@ -88,7 +89,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                         super.failure(error);
                         HttpErrorCheck.checkError(error);
                     }
-        });
+                });
     }
 
     /**
@@ -132,10 +133,12 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 初始化数据
      */
     private void initData() {
-        if (null == customerContact || null == customerContact.contacts || customerContact.contacts.isEmpty()) {
+        if (null == fiedList || null == customerContact || null == customerContact.contacts
+                || customerContact.contacts.isEmpty()) {
             return;
         }
         layout_container.removeAllViews();
+
         ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
