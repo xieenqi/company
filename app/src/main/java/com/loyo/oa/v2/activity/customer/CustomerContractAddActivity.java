@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
@@ -19,8 +20,10 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.ExtraDataViewforContact;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -66,10 +69,10 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
     /**
      * 绑定数据
-     * */
-    void bindData(){
+     */
+    void bindData() {
         LogUtil.d("bindData");
-        layout_contact_extra_info.addView(new ExtraDataViewforContact(mContext,mContactExtras,true,R.color.title_bg1, 0));
+        layout_contact_extra_info.addView(new ExtraDataViewforContact(mContext, mContactExtras, true, R.color.title_bg1, 0));
     }
 
     @Override
@@ -125,14 +128,14 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));*/
 
                 HashMap<String, Object> maps = new HashMap<>();
-                maps.put("name", mContactExtras.get(0).getVal());
-                maps.put("tel", mContactExtras.get(1).getVal());
-                maps.put("wiretel", mContactExtras.get(2).getVal());
-                maps.put("birth", mContactExtras.get(3).getVal());
-                maps.put("wx", mContactExtras.get(4).getVal());
-                maps.put("qq", mContactExtras.get(5).getVal());
-                maps.put("email", mContactExtras.get(6).getVal());
-                maps.put("memo", mContactExtras.get(7).getVal());
+                maps.put("name", mContactExtras.get(0).val);
+                maps.put("tel", mContactExtras.get(1).val);
+                maps.put("wiretel", mContactExtras.get(2).val);
+                maps.put("birth", mContactExtras.get(3).val);
+                maps.put("wx", mContactExtras.get(4).val);
+                maps.put("qq", mContactExtras.get(5).val);
+                maps.put("email", mContactExtras.get(6).val);
+                maps.put("memo", mContactExtras.get(7).val);
                 LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));
 
                 if (mCustomer != null) {
@@ -189,7 +192,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             }
 
             @Override
-            public void failure(RetrofitError error){
+            public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
                 Toast("请求失败");

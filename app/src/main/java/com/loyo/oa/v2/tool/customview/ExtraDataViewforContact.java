@@ -18,9 +18,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.ContactExtras;
-import com.loyo.oa.v2.beans.ExtraData;
-import com.loyo.oa.v2.beans.ExtraDataforContact;
-import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
@@ -43,14 +40,14 @@ public class ExtraDataViewforContact extends LinearLayout {
     public ExtraDataViewforContact(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        setLayoutParams(new ViewGroup.LayoutParams(-1,-2));
+        setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         setOrientation(VERTICAL);
     }
 
     public ExtraDataViewforContact(Context context, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
-        bindView(edit,valueColor,valueSize);
+        bindView(edit, valueColor, valueSize);
     }
 
     public ArrayList<ContactExtras> getExtras() {
@@ -59,13 +56,14 @@ public class ExtraDataViewforContact extends LinearLayout {
 
     /**
      * 绑定数据
+     *
      * @param edit
      * @param valueColor
      * @param valueSize
      */
-    private void bindView(boolean edit,int valueColor,int valueSize) {
+    private void bindView(boolean edit, int valueColor, int valueSize) {
 
-        if(null==extras||extras.isEmpty()){
+        if (null == extras || extras.isEmpty()) {
             return;
         }
 
@@ -74,7 +72,7 @@ public class ExtraDataViewforContact extends LinearLayout {
             if (null == customerExtra) {
                 continue;
             }
-            if(!customerExtra.isEnabled()){
+            if (!customerExtra.enabled) {
                 continue;
             }
 
@@ -85,22 +83,22 @@ public class ExtraDataViewforContact extends LinearLayout {
             final EditText tv_content = (EditText) extra.findViewById(R.id.et_content);
 
             tv_content.setEnabled(edit);
-            if(valueSize!=0){
+            if (valueSize != 0) {
                 tv_tag.setTextSize(valueSize);
                 tv_content.setTextSize(valueSize);
             }
             tv_content.setTextColor(valueColor);
-            tv_tag.setText(customerExtra.getLabel());
+            tv_tag.setText(customerExtra.label);
             //tv_content.setText(customerExtra.getVal());
 
-            if (customerExtra.isList()) {
+            if (customerExtra.isList) {
                 tv_content.setEnabled(false);
             }
 
             addView(extra);
-            if (customerExtra.isList()) {
+            if (customerExtra.isList) {
                 LogUtil.dll("islist");
-                LogUtil.dll("islist enable:" + customerExtra.isEnabled());
+                LogUtil.dll("islist enable:" + customerExtra.enabled);
                 AlertDialog dialog_follow = initDialog_Wheel_one(tv_content, customerExtra);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
@@ -108,25 +106,25 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(customerExtra.isRequired()){
+                if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
 
-            } else if ("long".equals(customerExtra.getType())) {
+            } else if ("long".equals(customerExtra.type)) {
                 LogUtil.dll("时间");
-                LogUtil.dll("long enable:"+customerExtra.isEnabled());
+                LogUtil.dll("long enable:" + customerExtra.enabled);
                 extra.setOnTouchListener(Global.GetTouch());
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
                 tv_content.setFocusable(false);
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(customerExtra.isRequired()){
+                if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-            } else if ("string".equals(customerExtra.getType())) {
+            } else if ("string".equals(customerExtra.type)) {
                 LogUtil.dll("string");
-                LogUtil.dll("string enable:" + customerExtra.isEnabled());
+                LogUtil.dll("string enable:" + customerExtra.enabled);
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -134,12 +132,12 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
-                if(customerExtra.isRequired()){
+                if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-            } else if ("int".equals(customerExtra.getType())) {
+            } else if ("int".equals(customerExtra.type)) {
                 LogUtil.dll("int");
-                LogUtil.dll("int enable:"+customerExtra.isEnabled());
+                LogUtil.dll("int enable:" + customerExtra.enabled);
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -147,12 +145,12 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
-                if(customerExtra.isRequired()){
+                if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-            } else if ("double".equals(customerExtra.getType())) {
+            } else if ("double".equals(customerExtra.type)) {
                 LogUtil.dll("double");
-                LogUtil.dll("double enable:"+customerExtra.isEnabled());
+                LogUtil.dll("double enable:" + customerExtra.enabled);
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
@@ -160,7 +158,7 @@ public class ExtraDataViewforContact extends LinearLayout {
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                if(customerExtra.isRequired()){
+                if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
             }
@@ -176,7 +174,7 @@ public class ExtraDataViewforContact extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            extra.setVal(s.toString());
+            extra.val = s.toString();
         }
 
         @Override
@@ -246,8 +244,8 @@ public class ExtraDataViewforContact extends LinearLayout {
         }
     }
 
-    AlertDialog initDialog_Wheel_one(final TextView textView,ContactExtras extra) {
-        final ArrayList<String> str = extra.getDefVal();
+    AlertDialog initDialog_Wheel_one(final TextView textView, ContactExtras extra) {
+        final ArrayList<String> str = extra.defVal;
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
