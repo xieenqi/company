@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activity.customer.HttpCustomerContactFieds;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
@@ -104,7 +105,6 @@ public interface ICustomer {
      */
     @GET("/customer/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
-
 
 
     /**
@@ -277,8 +277,17 @@ public interface ICustomer {
 
     /**
      * 获取客户新建联系人的动态字段
+     *
      * @param callback
      */
     @GET("/contact/fields")
-    void getContactsField(Callback<ArrayList<Province>> callback);
+    void getContactsField(Callback<ArrayList<HttpCustomerContactFieds>> callback);
+
+    /**
+     * 获取客户联系人的详细数据
+     *
+     * @param callback
+     */
+    @GET("/contact/{customerId}")
+    void getCustomerContacts(@Path("customerId") String id, Callback<Customer> callback);
 }

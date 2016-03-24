@@ -15,9 +15,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.ExtraData;
-import com.loyo.oa.v2.beans.ExtraDataforContact;
-import com.loyo.oa.v2.beans.Province;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -30,8 +27,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.tool.customview.ExtraDataView;
-import com.loyo.oa.v2.tool.customview.ExtraDataViewforContact;
 
 import org.apache.http.Header;
 
@@ -114,7 +109,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             //            layout_extra.setVisibility(View.GONE);
         }
         getContactsFields();
-
 
 
     }
@@ -218,18 +212,19 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 获取联系人的动态字段
      */
     private void getContactsFields() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getContactsField(new RCallback<ArrayList<Province>>() {
-            @Override
-            public void success(ArrayList<Province> ExtraDataforContact, Response response) {
-                HttpErrorCheck.checkResponse("联系人动态字段", response);
-            }
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getContactsField(new RCallback<ArrayList<HttpCustomerContactFieds>>() {
+                    @Override
+                    public void success(ArrayList<HttpCustomerContactFieds> ExtraDataforContact, Response response) {
+                        HttpErrorCheck.checkResponse("联系人动态字段", response);
+                    }
 
-            @Override
-            public void failure(RetrofitError error){
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     /**

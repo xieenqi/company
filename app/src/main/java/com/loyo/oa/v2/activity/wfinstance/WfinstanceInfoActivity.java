@@ -192,7 +192,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initUI_listView_workflowNodes() {
-        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this),wfInstance.serverTime);
+        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this), wfInstance.serverTime);
         listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
         Global.setListViewHeightBasedOnChildren(listView_workflowNodes);
     }
@@ -332,7 +332,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
-            public void success(final WfInstance wfInstance_current,final Response response) {
+            public void success(final WfInstance wfInstance_current, final Response response) {
                 HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
                 wfInstance = wfInstance_current;
                 if (wfInstance_current.workflowNodes != null) {
@@ -384,7 +384,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     /**
      * 提交审批请求
      */
-    void setData_wfinstance_approve(final int type,final String comment) {
+    void setData_wfinstance_approve(final int type, final String comment) {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("comment", comment);
@@ -392,17 +392,21 @@ public class WfinstanceInfoActivity extends BaseActivity {
         LogUtil.dll("请求内容:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).doWfInstance(wfInstance.getId(), map, new RCallback<WfInstance>() {
             @Override
-            public void success(final WfInstance wfInstance_current,final Response response) {
-                HttpErrorCheck.checkResponse("审批成功：",response);
-                Toast("审批" + getString(R.string.app_succeed));
-                //如果不clear,会提示java.io.NotSerializableException
-                if (null != wfInstance_current.workflowValues) {
-                    wfInstance_current.workflowValues.clear();
+            public void success(final WfInstance wfInstance_current, final Response response) {
+                HttpErrorCheck.checkResponse("审批成功：", response);
+                if (null != wfInstance_current) {
+                    Toast("审批" + getString(R.string.app_succeed));
+                    //如果不clear,会提示java.io.NotSerializableException
+                    if (null != wfInstance_current.workflowValues) {
+                        wfInstance_current.workflowValues.clear();
+                    }
+                    wfInstance_current.ack = true;
+                    Intent intent = getIntent();
+                    intent.putExtra("review", wfInstance_current);
+                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                } else {
+                    Toast("服务器错误");
                 }
-                wfInstance_current.ack = true;
-                Intent intent = getIntent();
-                intent.putExtra("review", wfInstance_current);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
             }
 
             @Override
@@ -517,7 +521,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -528,7 +532,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             case MSG_DELETE_WFINSTANCE:
                 RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(wfInstance.getId(), new RCallback<WfInstance>() {
                     @Override
-                    public void success(final WfInstance wfInstance,final Response response) {
+                    public void success(final WfInstance wfInstance, final Response response) {
                         if (null != wfInstance.workflowValues) {
                             wfInstance.workflowValues.clear();
                         }
