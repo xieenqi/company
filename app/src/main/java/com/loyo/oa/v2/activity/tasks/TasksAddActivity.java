@@ -332,7 +332,7 @@ public class TasksAddActivity extends BaseActivity {
                         mDeadline = Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm"));
                         LogUtil.dll("截至时间:" + mDeadline + "");
                     }
-                });
+                },false);
                 break;
 
             //负责人选项

@@ -240,7 +240,7 @@ public class ExtraDataView extends LinearLayout {
                         //extra.setVal(DateTool.getDateToTimestamp(str, MainApp.getMainApp().df2) + "");
                         extra.setVal(str);
                     }
-                });
+                },false);
             }
         }
     }
