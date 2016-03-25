@@ -140,6 +140,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
+                if(customer == null){
+                    Toast("获取数据失败");
+                    return;
+                }
                 LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
                 ownErId = customer.owner.id;
                 isLock = customer.lock;
