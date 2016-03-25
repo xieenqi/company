@@ -22,6 +22,7 @@ import com.umeng.analytics.MobclickAgent;
 import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.client.Response;
 
@@ -50,6 +51,11 @@ public class InitDataService extends IntentService {
                 sendDataChangeBroad(user);
                 DBManager.Instance().putUser(json);//保存用户信息
                 MobclickAgent.onProfileSignIn(user.name);//友盟账号统计
+                HashMap<String, String> map = new HashMap<>();
+                map.put("name", user.name);
+                map.put("id", user.id);
+                MobclickAgent.onEvent(getApplicationContext(), "name_id", map);
+
             }
         });
         try {

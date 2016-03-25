@@ -49,8 +49,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -225,7 +223,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 String customerContract = edt_contract.getText().toString().trim();
                 String customerContractTel = edt_contract_tel.getText().toString().trim();
                 String customerWrietele = edt_contract_telnum.getText().toString().trim();
-
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称");
                     break;
@@ -246,41 +243,31 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         mContacts.add(0, defaultContact);
                     }
                 }
-
-                JSONObject jsonObject = new JSONObject();
                 StringEntity stringEntity = null;
                 try {
-                    jsonObject.put("name", customer_name);
-                    // jsonObject.put("address", customerAddress);
+                    HttpAddCustomer addCustomerData = new HttpAddCustomer();
+                    addCustomerData.name = customer_name;
                     if (lstData_Attachment.size() > 0) {
-                        jsonObject.put("uuid", uuid);
-                        jsonObject.put("attachmentCount", lstData_Attachment.size());
+                        addCustomerData.uuid = uuid;
+                        addCustomerData.attachmentCount = lstData_Attachment.size();
                     }
-
-                    JSONObject jsonLoc = new JSONObject();
-                    jsonLoc.put("addr", customerAddress);
-                    JSONArray jsonArray = new JSONArray();
-                    jsonArray.put(app.longitude);
-                    jsonArray.put(app.latitude);
-                    jsonLoc.put("loc", jsonArray);
-
-                    jsonObject.put("loc", jsonLoc);
-                    jsonObject.put("pname", customerContract);
-                    jsonObject.put("ptel", customerContractTel);
-                    jsonObject.put("wiretel", customerWrietele);
+                    addCustomerData.loc.addr = customerAddress;
+                    addCustomerData.loc.loc.add(app.longitude);
+                    addCustomerData.loc.loc.add(app.latitude);
+                    addCustomerData.pname = customerContract;
+                    addCustomerData.ptel = customerContractTel;
+                    addCustomerData.wiretel = customerWrietele;
                     if (tags != null && tags.size() > 0) {
-                        JSONArray jsonArrayTagItems = new JSONArray();
                         for (NewTag tag : tags) {
-                            JSONObject jo = new JSONObject();
-                            jo.put("tId", tag.gettId());
-                            jo.put("itemId", tag.getItemId());
-                            jo.put("itemName", tag.getItemName());
-                            jsonArrayTagItems.put(jo);
+                            NewTag newtag = new NewTag();
+                            newtag.tId = tag.tId;
+                            newtag.itemId = tag.itemId;
+                            newtag.itemName = tag.itemName;
+                            addCustomerData.tags.add(newtag);
                         }
-                        jsonObject.put("tags", jsonArrayTagItems);
                     }
-                    stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
-                    LogUtil.dll("新建客户 发送参数:" + MainApp.gson.toJson(jsonObject));
+                    stringEntity = new StringEntity(MainApp.gson.toJson(addCustomerData), "UTF-8");
+                    LogUtil.dll("新建客户 发送参数:" + MainApp.gson.toJson(addCustomerData));
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
@@ -396,12 +383,12 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                     uuid = StringUtil.getUUID();
-                    HashMap<String,Object> map = new HashMap<String, Object>();
-                    map.put("bizType",6);
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", 6);
                     map.put("uuid", uuid);
 
                     RestAdapterFactory.getInstance().build(Config_project.DELETE_ENCLOSURE).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map,
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map,
                             new RCallback<Attachment>() {
                                 @Override
                                 public void success(final Attachment attachment, final Response response) {

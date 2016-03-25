@@ -1131,6 +1131,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         intentJpushInfo();
         requestNumber();
         PusherTest.appTest();
+        LogUtil.d("友盟设备："+PusherTest.getDeviceInfo(this));
+
     }
 
     /**
