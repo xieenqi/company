@@ -85,7 +85,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目 详细数据
      */
     private void getProject() {
-        DialogHelp.showLoading(this,"",true);
+        DialogHelp.showLoading(this, "", true);
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
