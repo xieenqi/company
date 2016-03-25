@@ -111,19 +111,18 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
 
                 HashMap<String, Object> maps = new HashMap<>();
-                maps.put("name", mContactExtras.get(0).val);
+/*                maps.put("name", mContactExtras.get(0).val);
                 maps.put("tel", mContactExtras.get(1).val);
                 maps.put("wiretel", mContactExtras.get(2).val);
                 maps.put("birth", mContactExtras.get(3).val);
                 maps.put("wx", mContactExtras.get(4).val);
                 maps.put("qq", mContactExtras.get(5).val);
                 maps.put("email", mContactExtras.get(6).val);
-                maps.put("memo", mContactExtras.get(7).val);
-
+                maps.put("memo", mContactExtras.get(7).val);*/
                 maps.put("extDatas",mContactExtras);
                 LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));
 
-                if (mCustomer != null) {
+/*                if (mCustomer != null) {
                     if (mContact == null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
                             @Override
@@ -139,7 +138,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             }
                         });
                     } else {
-                        /*修改联系人*/
+                        *//*修改联系人*//*
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                                 create(ICustomer.class).updateContact(mCustomer.getId(), mContact.getId(), maps, new RCallback<Contact>() {
                             @Override
@@ -155,7 +154,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             }
                         });
                     }
-                }
+                }*/
                 break;
 
             default:
