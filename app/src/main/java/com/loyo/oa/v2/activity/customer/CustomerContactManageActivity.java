@@ -104,7 +104,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                //HttpErrorCheck.checkResponse("联系人详情：", response);
+                HttpErrorCheck.checkResponse("联系人详情：", response);
                 customerContact = customer;
                 initData();
             }
