@@ -52,6 +52,7 @@ import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.PusherTest;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Modules;
@@ -1129,6 +1130,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onResume();
         intentJpushInfo();
         requestNumber();
+        PusherTest.appTest();
     }
 
     /**

@@ -263,11 +263,11 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     jsonArray.put(app.longitude);
                     jsonArray.put(app.latitude);
                     jsonLoc.put("loc", jsonArray);
+
                     jsonObject.put("loc", jsonLoc);
                     jsonObject.put("pname", customerContract);
                     jsonObject.put("ptel", customerContractTel);
                     jsonObject.put("wiretel", customerWrietele);
-
                     if (tags != null && tags.size() > 0) {
                         JSONArray jsonArrayTagItems = new JSONArray();
                         for (NewTag tag : tags) {
