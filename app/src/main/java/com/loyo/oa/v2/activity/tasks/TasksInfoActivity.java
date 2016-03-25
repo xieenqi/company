@@ -293,7 +293,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         switch (mTask.getStatus()) {
             case 1:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_ing);
+                iv_task_status.setBackgroundResource(R.drawable.icon_project_processing);
                 break;
 
             case 2:
@@ -918,7 +918,7 @@ public class TasksInfoActivity extends BaseActivity {
             return;
         }
 
-        /*任务Status: 1-进行中 2-待点评 3-完成*/
+        /*任务Status: 1-未完成 2-待点评 3-完成*/
         if (mTask.getStatus() == 2 || mTask.getStatus() == 3) {
             isOver = true;
         }
