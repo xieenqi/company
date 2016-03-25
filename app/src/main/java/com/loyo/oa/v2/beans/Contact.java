@@ -25,6 +25,13 @@ public class Contact implements Serializable {
     public String deptName;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
 
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
 
     public String getMemo() {
         return memo;

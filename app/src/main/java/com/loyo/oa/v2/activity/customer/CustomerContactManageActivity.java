@@ -84,7 +84,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 getContactsField(new RCallback<ArrayList<ContactExtras>>() {
                     @Override
                     public void success(ArrayList<ContactExtras> fiedListData, Response response) {
-                        //HttpErrorCheck.checkResponse("联系人动态字段", response);
+                        HttpErrorCheck.checkResponse("联系人动态字段", response);
                         fiedList = fiedListData;
                         getData();
                     }

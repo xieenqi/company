@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.tool.customview;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
@@ -11,19 +12,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -36,6 +47,7 @@ public class ExtraDataViewforContact extends LinearLayout {
     private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ContactExtras> extras = new ArrayList<>();
+    private Contact mContact;
 
     public ExtraDataViewforContact(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -44,9 +56,10 @@ public class ExtraDataViewforContact extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ExtraDataViewforContact(Context context, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public ExtraDataViewforContact(Context context,Contact mContact, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
+        this.mContact = mContact;
         bindView(edit, valueColor, valueSize);
     }
 
@@ -89,7 +102,33 @@ public class ExtraDataViewforContact extends LinearLayout {
             }
             tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
-            //tv_content.setText(customerExtra.getVal());
+
+            LogUtil.dll("Contact:" + MainApp.gson.toJson(mContact));
+            LogUtil.dll("customerExtra:"+MainApp.gson.toJson(customerExtra));
+
+            /*编辑联系人，数据赋值*/
+
+            if(mContact != null){
+                if(customerExtra.fieldName.equals("name")){
+                    tv_content.setText(mContact.getName());
+                }else if(customerExtra.fieldName.equals("wiretel")){
+                    tv_content.setText(mContact.getWiretel());
+                }else if(customerExtra.fieldName.equals("tel")){
+                    tv_content.setText(mContact.getTel());
+                }else if(customerExtra.fieldName.equals("birth")){
+                    tv_content.setText(mContact.getBirthStr());
+                }else if(customerExtra.fieldName.equals("wx")){
+                    tv_content.setText(mContact.getWx());
+                }else if(customerExtra.fieldName.equals("qq")){
+                    tv_content.setText(mContact.getQq());
+                }else if(customerExtra.fieldName.equals("email")){
+                    tv_content.setText(mContact.getEmail());
+                }else if(customerExtra.fieldName.equals("memo")) {
+                    tv_content.setText(mContact.getMemo());
+                }else if(customerExtra.fieldName.equals("dept_name")){
+                    tv_content.setText(mContact.getDeptName());
+                }
+            }
 
             if (customerExtra.isList) {
                 tv_content.setEnabled(false);
@@ -233,18 +272,17 @@ public class ExtraDataViewforContact extends LinearLayout {
                 dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-
                         String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
-                        //extra.setVal(DateTool.getDateToTimestamp(str, MainApp.getMainApp().df2) + "");
-                        //extra.setVal(str);
+                        extra.val = str;
                     }
-                });
+                },true);
             }
         }
     }
 
-    AlertDialog initDialog_Wheel_one(final TextView textView, ContactExtras extra) {
+
+    AlertDialog initDialog_Wheel_one(final TextView textView, final ContactExtras extra) {
         final ArrayList<String> str = extra.defVal;
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override
@@ -270,6 +308,7 @@ public class ExtraDataViewforContact extends LinearLayout {
 
                 TextView tv = (TextView) convertView.findViewById(R.id.tv);
                 tv.setText(str.get(position));
+                extra.val = str.get(position);
 
                 return convertView;
             }
@@ -283,7 +322,7 @@ public class ExtraDataViewforContact extends LinearLayout {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 textView.setText(str.get(position));
-                //extra.setVal(str.get(position));
+                extra.val = str.get(position);
                 dialog.dismiss();
             }
         });

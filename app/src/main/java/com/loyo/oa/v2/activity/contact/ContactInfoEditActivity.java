@@ -585,7 +585,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                //((NumberPicker)((ViewGroup) ((ViewGroup) view.getChildAt(0)).getChildAt(0)).getChildAt(1)).setDisplayedValues(mounthArr);
                 int age = Utils.getAge(year + "");
                 if (age > 0) {
                     String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth);
@@ -596,18 +595,6 @@ public class ContactInfoEditActivity extends BaseActivity {
                 }
             }
         }, year, month, day);
-//        datePickerDialog.setButton("确定", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
-//        datePickerDialog.setButton2("取消", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
         datePickerDialog.show();
     }
 

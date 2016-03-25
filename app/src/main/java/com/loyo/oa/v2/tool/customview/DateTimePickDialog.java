@@ -62,6 +62,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      *
      * @param context      ：上下文
      * @param initDateTime 初始日期时间值，作为弹出窗口的标题和日期时间初始值
+     *
      */
     public DateTimePickDialog(Context context, String initDateTime) {
         mContext = context;
@@ -92,9 +93,10 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      * 弹出日期时间选择框方法
      *
      * @param :为需要设置的日期时间文本编辑框
+     * @param isOver: 是否判断 过去时间
      * @return
      */
-    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener) {
+    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver) {
 
         LinearLayout dateTimeLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.date_pick_layout, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
@@ -110,7 +112,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
                         try {
-                            if (Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
+                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
                                     < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"))) {
                                 Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
                             } else {

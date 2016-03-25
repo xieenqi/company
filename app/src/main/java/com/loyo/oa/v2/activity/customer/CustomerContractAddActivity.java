@@ -9,6 +9,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.ContactRequestParam;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -31,12 +32,14 @@ import retrofit.client.Response;
 
 public class CustomerContractAddActivity extends BaseActivity implements View.OnClickListener {
 
-    ViewGroup img_title_left;
-    ViewGroup img_title_right;
-    Customer mCustomer;
-    Contact mContact;
-    LinearLayout layout_contact_extra_info;
+    public ViewGroup img_title_left;
+    public ViewGroup img_title_right;
+    public Customer mCustomer;
+    public Contact mContact;
+    public LinearLayout layout_contact_extra_info;
+    public ContactRequestParam contactRequestParam;
     public ArrayList<ContactExtras> mContactExtras;
+    public ArrayList<ContactRequestParam> requestContactParam = new ArrayList<>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -61,7 +64,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
-
         getContactsFields();
     }
 
@@ -69,8 +71,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 绑定数据
      */
     void bindData() {
-        LogUtil.d("bindData");
-        layout_contact_extra_info.addView(new ExtraDataViewforContact(mContext, mContactExtras, true, R.color.title_bg1, 0));
+        layout_contact_extra_info.addView(new ExtraDataViewforContact(mContext,mContact,mContactExtras, true, R.color.title_bg1, 0));
     }
 
     @Override
@@ -81,48 +82,77 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 break;
             case R.id.img_title_right:
 
-                if (mContactExtras.get(0).val.isEmpty()) {
-                    Toast("联系人不能为空");
-                    return;
-                }
-                if (mContactExtras.get(1).val.isEmpty()) {
-                    Toast("手机号不能为空");
-                    return;
-                } else {//验证电话号码
-                    if (!RegularCheck.isMobilePhone(mContactExtras.get(1).val)) {
-                        Toast("手机号码格式不正确");
-                        return;
-                    }
-                }
-/*                //如果有输入座机就验证座机
-                if (!TextUtils.isEmpty(getEditTextContent(edt_wiretel))) {
-                    if (!RegularCheck.isPhone(getEditTextContent(edt_wiretel))) {
-                        Toast("座机号码格式不正确");
-                        return;
-                    }
-                }
-                //邮箱验证
-                if (!TextUtils.isEmpty(getEditTextContent(edt_email))) {
-                    if (!RegularCheck.checkEmail(getEditTextContent(edt_email))) {
-                        Toast("邮箱格式不正确");
-                        return;
-                    }
-                }*/
-
-
                 HashMap<String, Object> maps = new HashMap<>();
-/*                maps.put("name", mContactExtras.get(0).val);
-                maps.put("tel", mContactExtras.get(1).val);
-                maps.put("wiretel", mContactExtras.get(2).val);
-                maps.put("birth", mContactExtras.get(3).val);
-                maps.put("wx", mContactExtras.get(4).val);
-                maps.put("qq", mContactExtras.get(5).val);
-                maps.put("email", mContactExtras.get(6).val);
-                maps.put("memo", mContactExtras.get(7).val);*/
-                maps.put("extDatas",mContactExtras);
-                LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));
+                for(ContactExtras contactExtras : mContactExtras){
+                    if(contactExtras.fieldName.length() >20){
+                        contactRequestParam = new ContactRequestParam();
+                        contactRequestParam.setVal(contactExtras.val);
+                        contactRequestParam.properties = contactExtras;
+                        requestContactParam.add(contactRequestParam);
+                    }else{
+                        if(contactExtras.fieldName.equals("name")){
 
-/*                if (mCustomer != null) {
+                            if(contactExtras.val.isEmpty()){
+                                Toast("姓名不能为空");
+                                return;
+                            }
+                            maps.put("name", contactExtras.val);
+
+                        }else if(contactExtras.fieldName.equals("wiretel")){
+
+                            if(!contactExtras.val.isEmpty()){
+                                   if(!RegularCheck.isPhone(contactExtras.val)){
+                                       Toast("座机号码格式不正确");
+                                       return;
+                                   }
+                            }
+                            maps.put("wiretel", contactExtras.val);
+
+                        }else if(contactExtras.fieldName.equals("tel")){
+
+                            if(contactExtras.val.isEmpty()){
+                                Toast("手机号不能为空");
+                                return;
+                            }else{
+                                if(!RegularCheck.isMobilePhone(contactExtras.val)){
+                                    Toast("手机号码格式不正确");
+                                    return;
+                                }
+                            }
+                            maps.put("tel", contactExtras.val);
+
+                        }else if(contactExtras.fieldName.equals("birth")){
+                            if(contactExtras.val.isEmpty()){
+                                maps.put("birth",mContact.getBirthStr());
+                            }else{
+                                maps.put("birth", contactExtras.val);
+                            }
+                        }else if(contactExtras.fieldName.equals("wx")){
+                            maps.put("wx", contactExtras.val);
+                        }else if(contactExtras.fieldName.equals("qq")){
+                            maps.put("qq", contactExtras.val);
+                        }else if(contactExtras.fieldName.equals("email")){
+                            if(!contactExtras.val.isEmpty()){
+                                if(!RegularCheck.checkEmail(contactExtras.val)){
+                                    Toast("Email格式不正确");
+                                    return;
+                                }
+                            }
+                            maps.put("email", contactExtras.val);
+
+                        }else if(contactExtras.fieldName.equals("memo")) {
+                            maps.put("memo", contactExtras.val);
+                        }else if(contactExtras.fieldName.equals("dept_name")){
+                            maps.put("deptName",contactExtras.val);
+                        }
+                    }
+                }
+                maps.put("extDatas",requestContactParam);
+
+                LogUtil.d("原始map数据:" + MainApp.gson.toJson(mContactExtras));
+                LogUtil.d("添加联系人发送map：" + MainApp.gson.toJson(maps));
+
+                if (mCustomer != null) {
                     if (mContact == null) {
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
                             @Override
@@ -138,7 +168,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             }
                         });
                     } else {
-                        *//*修改联系人*//*
+                        //*修改联系人*//
                         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                                 create(ICustomer.class).updateContact(mCustomer.getId(), mContact.getId(), maps, new RCallback<Contact>() {
                             @Override
@@ -154,7 +184,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             }
                         });
                     }
-                }*/
+                }
                 break;
 
             default:
