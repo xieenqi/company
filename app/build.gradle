@@ -5,28 +5,21 @@ def AAVersion = '3.3.2'
 
 android {
     compileSdkVersion 22
-    //
-    // TODO: 22.0.1 -> 23.0.1
-      buildToolsVersion '23.0.1'
-//    buildToolsVersion '22.0.1'
-//    compileSdkVersion 23
-//    buildToolsVersion '23.0.1'
+    buildToolsVersion '22.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
 
     signingConfigs {
         debug {
-            // TODO :...
-//            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
-//            keyPassword 'android'
-//            keyAlias 'androiddebugkey'
-//            storePassword 'android'
+            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            keyPassword 'android'
+            keyAlias 'androiddebugkey'
+            storePassword 'android'
         }
         SignConfig {
-            //TODO ...
-//            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
-//            keyPassword 'Loyo2012'
+            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+            keyPassword 'Loyo2012'
         }
     }
 
@@ -52,7 +45,7 @@ android {
             minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.SignConfig
+            signingConfig signingConfigs.SignConfig
             // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
 // "6085830b754c86f0d9886b545f5b38f8"
