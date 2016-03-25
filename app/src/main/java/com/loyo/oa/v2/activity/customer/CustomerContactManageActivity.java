@@ -84,7 +84,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                 getContactsField(new RCallback<ArrayList<ContactExtras>>() {
                     @Override
                     public void success(ArrayList<ContactExtras> fiedListData, Response response) {
-                        //HttpErrorCheck.checkResponse("联系人动态字段", response);
+                        HttpErrorCheck.checkResponse("联系人动态字段", response);
                         fiedList = fiedListData;
                         getData();
                     }
@@ -104,7 +104,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                //HttpErrorCheck.checkResponse("联系人详情：", response);
+                HttpErrorCheck.checkResponse("联系人详情：", response);
                 customerContact = customer;
                 initData();
             }
