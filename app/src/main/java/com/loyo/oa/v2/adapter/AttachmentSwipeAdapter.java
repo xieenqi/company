@@ -1,10 +1,7 @@
 package com.loyo.oa.v2.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,13 +21,10 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,11 +33,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedString;
 
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
@@ -178,7 +170,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
 
         /**
          * 是自己的附件，才能设置权限\删除
-         非开启/进行中/待点评/待审批/不通过状态下，不允许删除附件
+         非开启/未完成/待点评/待审批/不通过状态下，不允许删除附件
          */
 
         if (!MainApp.user.id.equals(attachment.getCreator().getId())) {

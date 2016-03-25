@@ -14,7 +14,7 @@ public class WfInstance extends BaseBeans implements Serializable {
     public static final int STATUS_FINISHED = 5;
 
 //            New                 //新发起 流程可以被删除
-//    Processing          //进行中
+//    Processing          //未完成
 //            Abort               //中途审批不通过
 //    Approved            //审批通过
 //            Finished            //经办完成
