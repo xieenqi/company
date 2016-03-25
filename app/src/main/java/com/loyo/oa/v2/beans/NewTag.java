@@ -10,9 +10,9 @@ import java.io.Serializable;
  */
 public class NewTag implements Serializable {
 
-    private String tId;
-    private String itemId;
-    private String itemName;
+    public String tId;
+    public String itemId;
+    public String itemName;
 
     public String getItemName() {
         return itemName;

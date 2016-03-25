@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.customer.HttpCustomerContactFieds;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
