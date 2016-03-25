@@ -4,13 +4,13 @@ package com.loyo.oa.v2.beans;
  * Created by Administrator on 2014/12/31.
  */
 public class WfTplNodes {
-    private  String  createdAt ;//&{time Time}, optional): ,
+    private  int  createdAt ;//&{time Time}, optional): ,
 
     private  User  creator ;//&{organization User}, optional): ,
 
-    private  int   executionDeptId ;//int, optional): ,
+    private  String   executionDeptId ;//int, optional): ,
 
-    private  int   executionUserId ;//int, optional): ,
+    private  String   executionUserId ;//int, optional): ,
 
     private  long  id ;//int64, optional): ,
 
@@ -22,11 +22,11 @@ public class WfTplNodes {
 
     private  long   wftplId ;//int64, optional):
 
-    public String getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(int createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -38,19 +38,19 @@ public class WfTplNodes {
         this.creator = creator;
     }
 
-    public int getExecutionDeptId() {
+    public String getExecutionDeptId() {
         return executionDeptId;
     }
 
-    public void setExecutionDeptId(int executionDeptId) {
+    public void setExecutionDeptId(String executionDeptId) {
         this.executionDeptId = executionDeptId;
     }
 
-    public int getExecutionUserId() {
+    public String getExecutionUserId() {
         return executionUserId;
     }
 
-    public void setExecutionUserId(int executionUserId) {
+    public void setExecutionUserId(String executionUserId) {
         this.executionUserId = executionUserId;
     }
 
