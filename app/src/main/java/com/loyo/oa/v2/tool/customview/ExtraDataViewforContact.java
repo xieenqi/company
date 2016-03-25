@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 : 动态字段
+ * 描述 : 客户联系人 动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
@@ -110,7 +110,7 @@ public class ExtraDataViewforContact extends LinearLayout {
                     tv_content.setHint("必填");
                 }
 
-            } else if ("long".equals(customerExtra.type)) {
+            } else if ("long".equals(customerExtra.type) || "birth".equals(customerExtra.fieldName)) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
                 extra.setOnTouchListener(Global.GetTouch());

@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -20,10 +20,8 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.ExtraDataViewforContact;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -83,22 +81,20 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 break;
             case R.id.img_title_right:
 
-/*                String name = edt_name.getText().toString().trim();
-                String phone = edt_phone.getText().toString().trim();
-                if (name.isEmpty()) {
+                if (mContactExtras.get(0).val.isEmpty()) {
                     Toast("联系人不能为空");
                     return;
                 }
-                if (phone.isEmpty()) {
+                if (mContactExtras.get(1).val.isEmpty()) {
                     Toast("手机号不能为空");
                     return;
                 } else {//验证电话号码
-                    if (!RegularCheck.isMobilePhone(phone)) {
+                    if (!RegularCheck.isMobilePhone(mContactExtras.get(1).val)) {
                         Toast("手机号码格式不正确");
                         return;
                     }
                 }
-                //如果有输入座机就验证座机
+/*                //如果有输入座机就验证座机
                 if (!TextUtils.isEmpty(getEditTextContent(edt_wiretel))) {
                     if (!RegularCheck.isPhone(getEditTextContent(edt_wiretel))) {
                         Toast("座机号码格式不正确");
@@ -111,21 +107,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         Toast("邮箱格式不正确");
                         return;
                     }
-                }
+                }*/
 
-                HashMap<String, Object> maps = new HashMap<>();
-                maps.put("name", getContractName());
-                maps.put("tel", getContractTel());
-                maps.put("wiretel", getEditTextContent(edt_wiretel));
-                String birth = edt_birth.getText().toString().trim();
-                if (!TextUtils.isEmpty(birth)) {
-                    maps.put("birth", birth);
-                }// DateTool.getDateToTimestamp(birth, app.df4) / 1000+""
-                maps.put("wx", getEditTextContent(edt_wx));
-                maps.put("qq", getEditTextContent(edt_qq));
-                maps.put("email", getEditTextContent(edt_email));
-                maps.put("memo", getEditTextContent(edt_memo));
-                LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));*/
 
                 HashMap<String, Object> maps = new HashMap<>();
                 maps.put("name", mContactExtras.get(0).val);
@@ -136,6 +119,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 maps.put("qq", mContactExtras.get(5).val);
                 maps.put("email", mContactExtras.get(6).val);
                 maps.put("memo", mContactExtras.get(7).val);
+
+                maps.put("extDatas",mContactExtras);
                 LogUtil.d("添加联系人：" + MainApp.gson.toJson(maps));
 
                 if (mCustomer != null) {
@@ -198,7 +183,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 Toast("请求失败");
             }
         });
-
     }
 
     void sendBack() {
