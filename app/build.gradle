@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
+def outputPath = 'D:\\android\\apk'
 
 android {
     compileSdkVersion 22
@@ -66,7 +67,7 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def file = output.outputFile
-            output.outputFile = new File(file.parent, file.name.replace("app-release", "release-" + defaultConfig.versionCode + ".apk"))
+            output.outputFile = new File(outputPath, file.name.replace(file.name, "release-" + defaultConfig.versionCode + ".apk"))
         }
     }
 
