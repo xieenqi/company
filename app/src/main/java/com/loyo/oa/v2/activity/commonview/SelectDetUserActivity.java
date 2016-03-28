@@ -736,7 +736,11 @@ public class SelectDetUserActivity extends BaseActivity {
     }
 
     public interface SelectUserBase {
+        public static final String NULL_AVATAR = "NULL_AVATAR";
+
         String getId();
+
+        boolean isDepart();
 
         String getAvater();
 

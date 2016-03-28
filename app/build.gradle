@@ -52,14 +52,21 @@ android {
             resValue "string", "app_name", "快启"
         }
     }
+//
+//    build.doLast {
+//        def today = new Date().format('yyyyMMdd');
+//        copy{
+//            from('build/outputs/apk')
+//            into('D:\\android\\apk')
+//            include('app-release.apk')
+//            rename('app-release.apk','release' + "-" + defaultConfig.versionCode + '.apk')
+//        }
+//    }
 
-    build.doLast {
-        def today = new Date().format('yyyyMMdd');
-        copy{
-            from('build/outputs/apk')
-            into('D:\\android\\apk')
-            include('app-release.apk')
-            rename('app-release.apk','release' + "-" + defaultConfig.versionCode + '.apk')
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            output.outputFile = new File(file.parent, file.name.replace("app-release", "release-" + defaultConfig.versionCode + ".apk"))
         }
     }
 
