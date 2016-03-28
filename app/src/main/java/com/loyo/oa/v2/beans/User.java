@@ -85,6 +85,11 @@ public class User implements Serializable, SelectDetUserActivity.SelectUserBase 
     }
 
     @Override
+    public boolean isDepart() {
+        return false;
+    }
+
+    @Override
     public String getAvater() {
         return getAvatar();
     }

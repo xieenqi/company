@@ -63,6 +63,11 @@ public class Department implements Serializable, SelectDetUserActivity.SelectUse
     }
 
     @Override
+    public boolean isDepart() {
+        return true;
+    }
+
+    @Override
     public String getAvater() {
         return null;
     }
