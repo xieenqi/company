@@ -19,8 +19,12 @@ android {
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('D:\\android\\key\\/loyo_android_v2.jks')
-            keyPassword 'Loyo2012'
+//            storeFile file('D:\\android\\key\\/loyo_android_v2.jks')
+//            keyPassword 'Loyo2012'
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
+            keyPassword 'android'
+            keyAlias 'androiddebugkey'
+            storePassword 'android'
         }
     }
 
@@ -36,6 +40,11 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+
+            // 这里的作用是选择是否混淆代码
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
             //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
             //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
@@ -46,7 +55,7 @@ android {
             minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.SignConfig
+            signingConfig signingConfigs.SignConfig
             // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
 // "6085830b754c86f0d9886b545f5b38f8"
