@@ -1,17 +1,12 @@
 /*
  * DragSortListView.
- *
  * A subclass of the Android ListView component that enables drag
  * and drop re-ordering of list items.
- *
  * Copyright 2012 Carl Bauer
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *         http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -181,11 +176,11 @@ public class DragSortListView extends ListView {
     /**
      * Drag state enum.
      */
-    private final static int IDLE = 0;
-    private final static int REMOVING = 1;
-    private final static int DROPPING = 2;
-    private final static int STOPPED = 3;
-    private final static int DRAGGING = 4;
+    protected static final int IDLE = 0;
+    protected static final int REMOVING = 1;
+    protected static final int DROPPING = 2;
+    protected static final int STOPPED = 3;
+    protected static final int DRAGGING = 4;
 
     private int mDragState = IDLE;
 
@@ -303,13 +298,13 @@ public class DragSortListView extends ListView {
      * Drag flag bit. Floating View can move in the positive
      * x direction.
      */
-    public final static int DRAG_POS_X = 0x1;
+    public static final int DRAG_POS_X = 0x1;
 
     /**
      * Drag flag bit. Floating View can move in the negative
      * x direction.
      */
-    public final static int DRAG_NEG_X = 0x2;
+    public static final int DRAG_NEG_X = 0x2;
 
     /**
      * Drag flag bit. Floating View can move in the positive
@@ -317,7 +312,7 @@ public class DragSortListView extends ListView {
      * that, if enabled, the floating View can be dragged below its starting
      * position. Remove in favor of upper-bounding item position?
      */
-    public final static int DRAG_POS_Y = 0x4;
+    public static final int DRAG_POS_Y = 0x4;
 
     /**
      * Drag flag bit. Floating View can move in the negative
@@ -325,7 +320,7 @@ public class DragSortListView extends ListView {
      * that the floating View can be dragged above its starting
      * position. Remove in favor of lower-bounding item position?
      */
-    public final static int DRAG_NEG_Y = 0x8;
+    public static final int DRAG_NEG_Y = 0x8;
 
     /**
      * Flags that determine limits on the motion of the
@@ -842,7 +837,7 @@ public class DragSortListView extends ListView {
     }
 
     private void printPosData() {
-        LogUtil.d( "mSrcPos=" + mSrcPos + " mFirstExpPos=" + mFirstExpPos + " mSecondExpPos="
+        LogUtil.d("mSrcPos=" + mSrcPos + " mFirstExpPos=" + mFirstExpPos + " mSecondExpPos="
                 + mSecondExpPos);
     }
 
@@ -2428,7 +2423,7 @@ public class DragSortListView extends ListView {
          *                 to add {@link ListView#getHeaderViewsCount()} to the index).
          * @return The View you wish to display as the floating View.
          */
-        public View onCreateFloatView(int position);
+        View onCreateFloatView(int position);
 
         /**
          * Called whenever the floating View is dragged. Float View
@@ -2445,7 +2440,7 @@ public class DragSortListView extends ListView {
          *                      top-left).
          * @param pendingScroll
          */
-        public void onDragFloatView(View floatView, Point location, Point touch);
+        void onDragFloatView(View floatView, Point location, Point touch);
 
         /**
          * Called when the float View is dropped; lets you perform
@@ -2455,7 +2450,7 @@ public class DragSortListView extends ListView {
          * @param floatView The floating View passed to
          *                  {@link #onCreateFloatView(int)}.
          */
-        public void onDestroyFloatView(View floatView);
+        void onDestroyFloatView(View floatView);
     }
 
     public void setFloatViewManager(FloatViewManager manager) {
@@ -2515,7 +2510,7 @@ public class DragSortListView extends ListView {
     }
 
     public interface DragListener {
-        public void drag(int from, int to);
+        void drag(int from, int to);
     }
 
     /**
@@ -2527,7 +2522,7 @@ public class DragSortListView extends ListView {
      * @author heycosmo
      */
     public interface DropListener {
-        public void drop(int from, int to);
+        void drop(int from, int to);
     }
 
     /**
@@ -2538,7 +2533,7 @@ public class DragSortListView extends ListView {
      * @author heycosmo
      */
     public interface RemoveListener {
-        public void remove(int which);
+        void remove(int which);
     }
 
     public interface DragSortListener extends DropListener, DragListener, RemoveListener {
@@ -2800,9 +2795,9 @@ public class DragSortListView extends ListView {
         private long tStart;
         private int scrollDir;
 
-        public final static int STOP = -1;
-        public final static int UP = 0;
-        public final static int DOWN = 1;
+        private static final int STOP = -1;
+        private static final int UP = 0;
+        private static final int DOWN = 1;
 
         private float mScrollSpeed; // pixels per ms
 

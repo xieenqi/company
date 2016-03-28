@@ -52,13 +52,14 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            if(member.user!=null){
+            if (member.user != null) {
                 sb.append(member.user.id);
             }
         }
 
         return sb == null ? "" : sb.toString();
     }
+
     public static String GetMnagerUserIds(ArrayList<HttpProject.ProjectManaer> memberList) {
         if (ListUtil.IsEmpty(memberList)) {
             return "";
@@ -169,5 +170,9 @@ public class ProjectMember extends BaseBeans {
         return this.userId == ((ProjectMember) o).userId;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 
 }

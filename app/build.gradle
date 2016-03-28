@@ -28,8 +28,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016031801
-        versionName '1.0.5'
+        versionCode 2016032501
+        versionName '1.0.6'
     }
 
     buildTypes {
@@ -69,8 +69,6 @@ android {
         compile files('libs/bugly_1.2.3.6_release.jar')
         // debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
         //releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
-        //百度地图
-        //compile files('libs/BaiduLBS_Android.jar')
         //高德地图
         compile files('libs/Android_Map_V2.5.0.jar')
         //compile files('libs/MapApiLocation_1.3.3.jar')
@@ -85,7 +83,6 @@ android {
         compile files('libs/loyo-annotation.jar')
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
 
-        //微信
         compile files('libs/wup-1.0.0-SNAPSHOT.jar')
         compile files('libs/jg_filter_sdk_1.1.jar')
         compile 'com.nineoldandroids:library:2.4.0'
@@ -105,6 +102,8 @@ android {
 
         //友盟统计
         compile files('libs/umeng-analytics-v5.6.4.jar')
+        //pusher
+        compile 'com.pusher:pusher-java-client:0.3.3'
     }
     productFlavors {
     }

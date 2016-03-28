@@ -112,6 +112,11 @@ public class User implements Serializable {
         return id.equals(user.id);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public boolean isCurrentUser() {
         return equals(MainApp.user);
     }

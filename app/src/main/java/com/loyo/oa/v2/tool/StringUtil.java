@@ -13,8 +13,12 @@ import java.util.UUID;
 public class StringUtil {
     private static final String TAG = "StringUtil";
 
+    protected StringUtil() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     public static boolean isEmpty(String s) {
-        return (s == null || s.isEmpty() || s.equals("") || s.trim().equals(""));
+        return (s == null || s.isEmpty() || "".equals(s) || "".equals(s.trim()));
     }
 
     // 计算出该TextView中文字的长度(像素)

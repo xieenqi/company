@@ -22,8 +22,16 @@ public class Contact implements Serializable {
     private String email;
     private String memo;
     private boolean isDefault;
-    private ArrayList<ExtraData> extDatas =new ArrayList<>();
+    public String deptName;
+    public ArrayList<ExtraData> extDatas = new ArrayList<>();
 
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
 
     public String getMemo() {
         return memo;
@@ -73,9 +81,10 @@ public class Contact implements Serializable {
         this.extDatas = extDatas;
     }
 
-    public boolean isDefault(){
-        return  isDefault;
+    public boolean isDefault() {
+        return isDefault;
     }
+
     public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
@@ -88,7 +97,7 @@ public class Contact implements Serializable {
         return birth;
     }
 
-    public void setBirth(String  birth) {
+    public void setBirth(String birth) {
         this.birth = birth;
     }
 
@@ -118,6 +127,11 @@ public class Contact implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        return TextUtils.equals(getId(),((Contact)o).getId());
+        return TextUtils.equals(getId(), ((Contact) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

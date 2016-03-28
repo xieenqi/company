@@ -33,7 +33,9 @@ public class RestAdapterFactory {
      *
      * @return
      */
-    public synchronized static RestAdapterFactory getInstance() {
+    public static synchronized RestAdapterFactory
+
+    getInstance() {
         synchronized (RestAdapterFactory.class) {
             if (null == maker) {
                 synchronized (RestAdapterFactory.class) {
@@ -45,7 +47,6 @@ public class RestAdapterFactory {
     }
 
 
-
     /**
      * 创建RestAdapter
      *
@@ -53,19 +54,20 @@ public class RestAdapterFactory {
      * @return
      */
     CellInfo cellInfo;
-    public  RestAdapter build(final String url) {
 
-            RestAdapter adapter = null == adapters.get(url) ? null : adapters.get(url).get();
-            if (null == adapter) {
+    public RestAdapter build(final String url) {
 
-               // final CellInfo cellInfo = Utils.getCellInfo();
-                 cellInfo = new CellInfo();
+        RestAdapter adapter = null == adapters.get(url) ? null : adapters.get(url).get();
+        if (null == adapter) {
 
-                cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
+            // final CellInfo cellInfo = Utils.getCellInfo();
+            cellInfo = new CellInfo();
 
-                cellInfo.setLoyoOSVersion(cellInfo.getLoyoPlatform() + Build.VERSION.RELEASE);
+            cellInfo.setLoyoAgent(Build.BRAND + " " + Build.MODEL);
 
-                cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
+            cellInfo.setLoyoOSVersion(cellInfo.getLoyoPlatform() + Build.VERSION.RELEASE);
+
+            cellInfo.setLoyoHVersion(cellInfo.getLoyoPlatform() + Build.HARDWARE);
 
 
             RequestInterceptor requestInterceptor = new RequestInterceptor() {

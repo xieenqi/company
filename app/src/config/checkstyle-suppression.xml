@@ -4,7 +4,10 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <!--过滤器 那些项不检查-->
 <suppressions>
-    <suppress checks="[a-zA-Z0-9]*" files="R\.java" />
-    <suppress checks="." files="BuildConfig.java" />
-    <suppress checks="." files=".*\.properties" />
+    <suppress checks="[a-zA-Z0-9]*" files="R\.java"/>
+    <suppress checks="." files="BuildConfig.java"/>
+    <suppress checks="." files=".*\.properties"/>
+    <!--<suppress checks="." files="${proj.module.dir}/src/main/com/loyo/oa/v2/tool.java"/>-->
+    <!--<suppress files="[\\/]generated-sources[\\/]" checks="[a-zA-Z0-9]*"/>-->
+    <suppress files="\*generated-sources\*\*\.\*" checks="[a-zA-Z0-9]*"/>
 </suppressions>

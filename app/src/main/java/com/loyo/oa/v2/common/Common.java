@@ -26,6 +26,10 @@ public final class Common {
     public static final int WORK_PAGE = 2;
     public static final int WFIN_PAGE = 3;
 
+    protected Common() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     public static ArrayList<User> getUsersByProject(HttpProject project) {
         if (null == project) {
             return new ArrayList<>();
@@ -144,7 +148,7 @@ public final class Common {
                     continue;
                 }
 
-                try{
+                try {
                     if ((department.getSuperiorId()).equals(companyId)) {
                         String groupName_current = department.getGroupName();
                         if (!TextUtils.isEmpty(groupName_current) && groupName_current.charAt(0) == index) {
@@ -153,7 +157,7 @@ public final class Common {
                             departments.add(0, department);
                         }
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -442,11 +446,11 @@ public final class Common {
 
         /*全部人员获取*/
         for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            try{
+            try {
                 for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
                     userAllList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
                 }
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }
@@ -465,11 +469,11 @@ public final class Common {
         myUsers.clear();
         for (Department department : getLstDepartment()) {
             if (department.getXpath().contains(getLstDepartment().get(positions).getXpath())) {
-                try{
+                try {
                     for (User user : department.getUsers()) {
                         myUsers.add(user);
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }

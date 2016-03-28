@@ -152,7 +152,7 @@ public class TaskManagerFilterFragment extends Fragment implements View.OnClickL
                     cb1.setChecked(false);
                 }
                 break;
-            case R.id.layout_status1: //进行中
+            case R.id.layout_status1: //未完成
                 cb4.toggle();
                 status = cb4.isChecked() ? 1 : 0;
                 if (cb4.isChecked()) {

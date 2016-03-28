@@ -85,7 +85,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      * 获取项目 详细数据
      */
     private void getProject() {
-        DialogHelp.showLoading(this,"",true);
+        DialogHelp.showLoading(this, "", true);
         app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
@@ -122,7 +122,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     if (project.isCreator()) {
                         intent.putExtra("delete", true);
                         intent.putExtra("edit", true);
-                        intent.putExtra("extra", "结束项目"); //1:进行中
+                        intent.putExtra("extra", "结束项目"); //1:未完成
                     } else if (project.isManager()) {
                         intent.putExtra("edit", true);
                         intent.putExtra("editText", "修改参与人");
@@ -210,7 +210,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
 
         if (project.status == 1) {
-            img_project_status.setImageResource(R.drawable.icon_project_processing);
+            img_project_status.setImageResource(R.drawable.icon_project_run);
         } else {
             img_project_status.setImageResource(R.drawable.icon_project_completed);
         }

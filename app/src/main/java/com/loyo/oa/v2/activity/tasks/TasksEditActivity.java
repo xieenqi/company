@@ -350,7 +350,7 @@ public class TasksEditActivity extends BaseActivity {
                         mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
                         LogUtil.d("修改截至时间：" + Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
                     }
-                });
+                },false);
                 break;
 
 

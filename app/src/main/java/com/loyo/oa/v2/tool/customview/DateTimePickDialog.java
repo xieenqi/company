@@ -8,8 +8,10 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.DateTool;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -20,52 +22,50 @@ import java.util.Locale;
  * 作者 : ykb
  * 时间 : 15/7/17.
  */
-public class DateTimePickDialog implements DatePicker.OnDateChangedListener, TimePicker.OnTimeChangedListener
-{
+public class DateTimePickDialog implements DatePicker.OnDateChangedListener, TimePicker.OnTimeChangedListener {
     /**
      * 日期&时间改变的回调接口
      */
-    public interface OnDateTimeChangedListener
-    {
+    public interface OnDateTimeChangedListener {
         /**
          * 日期&时间变化的回调方法
-         * @param year 年
+         *
+         * @param year  年
          * @param month 月
-         * @param day 日
-         * @param hour 小时
-         * @param min 分钟
+         * @param day   日
+         * @param hour  小时
+         * @param min   分钟
          */
-        public void onDateTimeChanged(int year,int month,int day,int hour,int min);
+        void onDateTimeChanged(int year, int month, int day, int hour, int min);
     }
 
-    private int years,month,day,hour,minutes;
+    private int years, month, day, hour, minutes;
     private DatePicker datePicker;
     private TimePicker timePicker;
     private AlertDialog ad;
     private String dateTime;
     private String initDateTime;
     private Context mContext;
-    private String defaultFromat="yyyy年MM月dd日 HH:mm";
+    private String defaultFromat = "yyyy年MM月dd日 HH:mm";
 
     /**
      * 设置默认日期格式
+     *
      * @param fromat 格式字符串
      */
-    public void setmFromat(String fromat)
-    {
+    public void setmFromat(String fromat) {
         this.defaultFromat = fromat;
     }
 
     /**
      * 日期时间弹出选择框构造函数
      *
-     * @param context
-     *            ：上下文
-     * @param initDateTime
-     *            初始日期时间值，作为弹出窗口的标题和日期时间初始值
+     * @param context      ：上下文
+     * @param initDateTime 初始日期时间值，作为弹出窗口的标题和日期时间初始值
+     *
      */
     public DateTimePickDialog(Context context, String initDateTime) {
-        mContext= context;
+        mContext = context;
         this.initDateTime = initDateTime;
     }
 
@@ -93,9 +93,10 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      * 弹出日期时间选择框方法
      *
      * @param :为需要设置的日期时间文本编辑框
+     * @param isOver: 是否判断 过去时间
      * @return
      */
-    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener) {
+    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver) {
 
         LinearLayout dateTimeLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.date_pick_layout, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
@@ -111,7 +112,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
                         try {
-                            if (Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
+                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
                                     < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"))) {
                                 Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -140,11 +141,11 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                               int dayOfMonth) {
         // 获得日历实例
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
-        years=datePicker.getYear();
-        month=datePicker.getMonth();
-        day=datePicker.getDayOfMonth();
-        hour=timePicker.getCurrentHour();
-        minutes=timePicker.getCurrentMinute();
+        years = datePicker.getYear();
+        month = datePicker.getMonth();
+        day = datePicker.getDayOfMonth();
+        hour = timePicker.getCurrentHour();
+        minutes = timePicker.getCurrentMinute();
 
         calendar.set(datePicker.getYear(), datePicker.getMonth(),
                 datePicker.getDayOfMonth(), timePicker.getCurrentHour(),
@@ -159,8 +160,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     /**
      * 实现将初始日期时间2012年07月02日 16:45 拆分成年 月 日 时 分 秒,并赋值给calendar
      *
-     * @param initDateTime
-     *            初始日期时间值 字符串型
+     * @param initDateTime 初始日期时间值 字符串型
      * @return Calendar
      */
     private Calendar getCalendarByInintData(String initDateTime) {
@@ -193,10 +193,8 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
     /**
      * 截取子串
      *
-     * @param srcStr
-     *            源串
-     * @param pattern
-     *            匹配模式
+     * @param srcStr      源串
+     * @param pattern     匹配模式
      * @param indexOrLast
      * @param frontOrBack
      * @return
@@ -205,12 +203,12 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                                       String indexOrLast, String frontOrBack) {
         String result = "";
         int loc = -1;
-        if (indexOrLast.equalsIgnoreCase("index")) {
+        if ("index".equalsIgnoreCase(indexOrLast)) {
             loc = srcStr.indexOf(pattern); // 取得字符串第一次出现的位置
         } else {
             loc = srcStr.lastIndexOf(pattern); // 最后一个匹配串的位置
         }
-        if (frontOrBack.equalsIgnoreCase("front")) {
+        if ("front".equalsIgnoreCase(frontOrBack)) {
             if (loc != -1)
                 result = srcStr.substring(0, loc); // 截取子串
         } else {

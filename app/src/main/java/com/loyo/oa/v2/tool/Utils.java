@@ -63,9 +63,13 @@ import rx.Observable;
  * 时间 : 15/8/6.
  */
 public class Utils {
-
     static ProgressDialog progressDialog;
+
     static ProgressDialog progressDialogAtt;
+
+    protected Utils() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
 
     /**
@@ -133,7 +137,7 @@ public class Utils {
      * @param uuid
      * @param file
      */
-    public synchronized static Observable<Attachment> uploadAttachment(String uuid, int bizType, File file) {
+    public static synchronized Observable<Attachment> uploadAttachment(String uuid, int bizType, File file) {
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(uuid);
         return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid, bizType, typedFile);
@@ -145,7 +149,7 @@ public class Utils {
      * @param uuid
      * @param attachments
      */
-    public synchronized static void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
+    public static synchronized void getAttachments(String uuid, RCallback<ArrayList<Attachment>> attachments) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, attachments);
     }
 
@@ -503,9 +507,9 @@ public class Utils {
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             String type = networkInfo.getTypeName();
-            if (type.equalsIgnoreCase("WIFI")) {
+            if ("WIFI".equalsIgnoreCase(type)) {
                 return "WIFI网络";
-            } else if (type.equalsIgnoreCase("MOBILE")) {
+            } else if ("MOBILE".equalsIgnoreCase(type)) {
                 String proxyHost = android.net.Proxy.getDefaultHost();
                 return TextUtils.isEmpty(proxyHost)
                         ? (isFastMobileNetwork(context) ? "3G以上网络" : "2G网络")

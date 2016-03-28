@@ -26,15 +26,15 @@ public class SlideView extends LinearLayout {
     private static final int TAN = 2;
 
     public interface OnSlideListener {
-        public static final int SLIDE_STATUS_OFF = 0;
-        public static final int SLIDE_STATUS_START_SCROLL = 1;
-        public static final int SLIDE_STATUS_ON = 2;
+        int SLIDE_STATUS_OFF = 0;
+        int SLIDE_STATUS_START_SCROLL = 1;
+        int SLIDE_STATUS_ON = 2;
 
         /**
-         * @param view current SlideView
+         * @param view   current SlideView
          * @param status SLIDE_STATUS_ON or SLIDE_STATUS_OFF
          */
-        public void onSlide(View view, int status);
+         void onSlide(View view, int status);
     }
 
     public SlideView(Context context) {
@@ -76,12 +76,14 @@ public class SlideView extends LinearLayout {
             this.smoothScrollTo(0, 0);
         }
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    	Log.d(TAG, "onTouchEvent");
-    	onRequireTouchEvent(event);
-    	return super.onTouchEvent(event);
+        Log.d(TAG, "onTouchEvent");
+        onRequireTouchEvent(event);
+        return super.onTouchEvent(event);
     }
+
     public void onRequireTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
@@ -89,49 +91,49 @@ public class SlideView extends LinearLayout {
         Log.d(TAG, "x=" + x + "  y=" + y);
 
         switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN: {
-            if (!mScroller.isFinished()) {
-                mScroller.abortAnimation();
-            }
-            if (mOnSlideListener != null) {
-                mOnSlideListener.onSlide(this,
-                        OnSlideListener.SLIDE_STATUS_START_SCROLL);
-            }
-            break;
-        }
-        case MotionEvent.ACTION_MOVE: {
-            int deltaX = x - mLastX;
-            int deltaY = y - mLastY;
-            if (Math.abs(deltaX) < Math.abs(deltaY) * TAN) {
+            case MotionEvent.ACTION_DOWN: {
+                if (!mScroller.isFinished()) {
+                    mScroller.abortAnimation();
+                }
+                if (mOnSlideListener != null) {
+                    mOnSlideListener.onSlide(this,
+                            OnSlideListener.SLIDE_STATUS_START_SCROLL);
+                }
                 break;
             }
+            case MotionEvent.ACTION_MOVE: {
+                int deltaX = x - mLastX;
+                int deltaY = y - mLastY;
+                if (Math.abs(deltaX) < Math.abs(deltaY) * TAN) {
+                    break;
+                }
 
-            int newScrollX = scrollX - deltaX;
-            if (deltaX != 0) {
-                if (newScrollX < 0) {
-                    newScrollX = 0;
-                } else if (newScrollX > mHolderWidth) {
+                int newScrollX = scrollX - deltaX;
+                if (deltaX != 0) {
+                    if (newScrollX < 0) {
+                        newScrollX = 0;
+                    } else if (newScrollX > mHolderWidth) {
+                        newScrollX = mHolderWidth;
+                    }
+                    this.scrollTo(newScrollX, 0);
+                }
+                break;
+            }
+            case MotionEvent.ACTION_UP: {
+                int newScrollX = 0;
+                if (scrollX - mHolderWidth * 0.75 > 0) {
                     newScrollX = mHolderWidth;
                 }
-                this.scrollTo(newScrollX, 0);
+                this.smoothScrollTo(newScrollX, 0);
+                if (mOnSlideListener != null) {
+                    mOnSlideListener.onSlide(this,
+                            newScrollX == 0 ? OnSlideListener.SLIDE_STATUS_OFF
+                                    : OnSlideListener.SLIDE_STATUS_ON);
+                }
+                break;
             }
-            break;
-        }
-        case MotionEvent.ACTION_UP: {
-            int newScrollX = 0;
-            if (scrollX - mHolderWidth * 0.75 > 0) {
-                newScrollX = mHolderWidth;
-            }
-            this.smoothScrollTo(newScrollX, 0);
-            if (mOnSlideListener != null) {
-                mOnSlideListener.onSlide(this,
-                        newScrollX == 0 ? OnSlideListener.SLIDE_STATUS_OFF
-                                : OnSlideListener.SLIDE_STATUS_ON);
-            }
-            break;
-        }
-        default:
-            break;
+            default:
+                break;
         }
 
         mLastX = x;

@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WfInstance extends BaseBeans implements Serializable{
+public class WfInstance extends BaseBeans implements Serializable {
 
 
-    public final static int STATUS_NEW = 1;
-    public final static int STATUS_PROCESSING = 2;
-    public final static int STATUS_ABORT = 3;
-    public final static int STATUS_APPROVED = 4;
-    public final static int STATUS_FINISHED = 5;
+    public static final int STATUS_NEW = 1;
+    public static final int STATUS_PROCESSING = 2;
+    public static final int STATUS_ABORT = 3;
+    public static final int STATUS_APPROVED = 4;
+    public static final int STATUS_FINISHED = 5;
 
 //            New                 //新发起 流程可以被删除
-//    Processing          //进行中
+//    Processing          //未完成
 //            Abort               //中途审批不通过
 //    Approved            //审批通过
 //            Finished            //经办完成
@@ -28,6 +28,7 @@ public class WfInstance extends BaseBeans implements Serializable{
     public String attachmentUUId;//string, optional): ,
     public User creator;//&{organization User}, optional): ,
     public long createdAt;
+    public int serverTime;
     public int updatedAt;
     public int status;//int, optional):
     public String memo;
@@ -65,7 +66,7 @@ public class WfInstance extends BaseBeans implements Serializable{
 
     }
 
-    public class ProjectInfoName implements Serializable{
+    public class ProjectInfoName implements Serializable {
         public String title;
 
     }

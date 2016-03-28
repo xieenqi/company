@@ -25,7 +25,7 @@ public class SaleActivitiesGroupExpandableListAdapter extends BaseExpandableList
 
     private Item_info_Group item_info_Group;
 
-    public SaleActivitiesGroupExpandableListAdapter(Context context, ArrayList<PagingGroupData<SaleActivity>> lstSaleActivitiesGroupData) {
+    public SaleActivitiesGroupExpandableListAdapter(final Context context, final ArrayList<PagingGroupData<SaleActivity>> lstSaleActivitiesGroupData) {
         this.lstSaleActivitiesGroupData = lstSaleActivitiesGroupData;
         this.context = context;
         mainApp = MainApp.getMainApp();
@@ -38,27 +38,27 @@ public class SaleActivitiesGroupExpandableListAdapter extends BaseExpandableList
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
+    public int getChildrenCount(final int groupPosition) {
         return lstSaleActivitiesGroupData.get(groupPosition).getRecords().size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Object getGroup(final int groupPosition) {
         return null;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Object getChild(final int groupPosition, final int childPosition) {
         return lstSaleActivitiesGroupData.get(groupPosition).getRecords().get(childPosition);
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
+    public long getGroupId(final int groupPosition) {
         return groupPosition;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition) {
+    public long getChildId(final int groupPosition, final int childPosition) {
         return childPosition;
     }
 
@@ -68,7 +68,7 @@ public class SaleActivitiesGroupExpandableListAdapter extends BaseExpandableList
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
 
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_sign_show_group, null);
@@ -88,7 +88,7 @@ public class SaleActivitiesGroupExpandableListAdapter extends BaseExpandableList
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, final ViewGroup parent) {
 
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_saleactivities_group_child, null);
@@ -119,7 +119,7 @@ public class SaleActivitiesGroupExpandableListAdapter extends BaseExpandableList
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
+    public boolean isChildSelectable(final int groupPosition, final int childPosition) {
         return true;
     }
 

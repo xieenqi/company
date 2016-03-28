@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Task extends BaseBeans implements Serializable{
 
-    public static final int STATUS_PROCESSING = 1;  //进行中
+    public static final int STATUS_PROCESSING = 1;  //未完成
     public static final int STATUS_REVIEWING = 2;   //审核中
     public static final int STATUS_FINISHED = 3;    //已完成
 

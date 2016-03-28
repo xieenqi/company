@@ -251,7 +251,7 @@ public class ClipSquareImageView extends ImageView implements View.OnTouchListen
                 case MotionEvent.ACTION_MOVE: {
                     final float dx = x - lastTouchX, dy = y - lastTouchY;
 
-                    if (isDragging == false) {
+                    if (!isDragging) {
                         // Use Pythagoras to see if drag length is larger than
                         // touch slop
                         isDragging = Math.sqrt((dx * dx) + (dy * dy)) >= scaledTouchSlop;
