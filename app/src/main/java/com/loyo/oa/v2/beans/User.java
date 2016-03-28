@@ -2,12 +2,13 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements Serializable {
+public class User implements Serializable, SelectDetUserActivity.SelectUserBase {
 
     public String id;
     public String company_id;
@@ -81,6 +82,23 @@ public class User implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getAvater() {
+        return getAvatar();
+    }
+
+    @Override
+    public int getUserCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean equalsId(String id) {
+        if (TextUtils.isEmpty(id))
+            return false;
+        return id.equals(this.id);
     }
 
     public void setId(String id) {

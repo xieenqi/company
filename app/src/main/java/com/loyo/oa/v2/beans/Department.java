@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
+
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
  * 通讯录部门bean
  */
 
-public class Department implements Serializable {
+public class Department implements Serializable, SelectDetUserActivity.SelectUserBase {
 
     private String id;
     private String xpath;
@@ -58,6 +60,23 @@ public class Department implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getAvater() {
+        return null;
+    }
+
+    @Override
+    public int getUserCount() {
+        return users.size();
+    }
+
+    @Override
+    public boolean equalsId(String id) {
+        if (TextUtils.isEmpty(id))
+            return false;
+        return id.equals(this.id);
     }
 
     public void setId(String id) {
