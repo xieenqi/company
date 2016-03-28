@@ -67,7 +67,7 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def file = output.outputFile
-            output.outputFile = new File(outputPath, file.name.replace(file.name, "release-" + defaultConfig.versionCode + ".apk"))
+            output.outputFile = new File(outputPath, file.name.replace(filename, "release-" + defaultConfig.versionCode + ".apk"))
         }
     }
 
