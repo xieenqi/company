@@ -95,8 +95,21 @@
                 android:id="@+id/layout_touch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/margin_other_view">
+
+                <TextView
+                    android:id="@+id/tv_workContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_8"
+                    android:layout_marginLeft="@dimen/dimen_20"
+                    android:layout_marginRight="@dimen/dimen_16"
+                    android:layout_marginTop="@dimen/dimen_8"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp14"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"

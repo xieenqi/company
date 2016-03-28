@@ -100,7 +100,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     TextView tv_reviewer_;
     @ViewById
     TextView tv_ptoject;
-
+    @ViewById
+    TextView tv_workContent;
     @ViewById
     EditText edt_workReport_title;
     @ViewById
@@ -279,7 +280,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
         NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
-
+        tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
         tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
         tv_toUser.setText(getJoinUserNames().isEmpty() ? "无抄送人" : getJoinUserNames());
 
