@@ -178,7 +178,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 
             /*获取手指触点左边*/
             case MotionEvent.ACTION_DOWN:
-                xDistance = yDistance = 0f;
+                xDistance = 0f;
+                yDistance = 0f;
                 xLast = event.getX();
                 yLast = event.getY();
                 break;
@@ -214,7 +215,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 //                return false;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        xDistance = yDistance = 0f;
+                        xDistance = 0f;
+                        yDistance = 0f;
                         xLast = event.getX();
                         yLast = event.getY();
                         break;
@@ -262,16 +264,16 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     /**
      * 通用提示弹出框init
-     * */
-    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
-        generalPopView = new GeneralPopView(this,isKind);
+     */
+    public void showGeneralDialog(boolean isOut, boolean isKind, String message) {
+        generalPopView = new GeneralPopView(this, isKind);
         generalPopView.show();
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
     }
 
     /*重启当前Activity*/
-    public void restartActivity(){
+    public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -279,6 +281,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         overridePendingTransition(0, 0);
         startActivity(intent);
     }
+
     /**
      * 加载loading的方法
      */

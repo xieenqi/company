@@ -8,6 +8,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.loyo.oa.v2.application.MainApp;
 
+import java.util.Date;
+
 /**
  * Created by pj on 16/1/29.
  */
@@ -71,7 +73,8 @@ public class LocationUtilGD {
     void notifyLocation(AMapLocation location) {
         //友盟统计定位失败的信息
         UMengTools.sendCustomErroInfo(context, location);
-        LogUtil.d("手动试试定位：" + "时间 : " + location.getTime() +
+        String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
+        LogUtil.d("手动试试定位：" + "时间 : " + time +
                 " 模式 : " + location.getProvider()
                 + " 地址是否有效 : " + (!TextUtils.isEmpty(location.getAddress()))
                 + " 纬度 : " + location.getLatitude()

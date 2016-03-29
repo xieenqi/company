@@ -80,7 +80,7 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                 Task task = (Task) item;
                 switch (task.getStatus()) {
                     case 1:
-                        order = "进行中";
+                        order = "未完成";
                         break;
                     case 2:
                         order = "待审核";

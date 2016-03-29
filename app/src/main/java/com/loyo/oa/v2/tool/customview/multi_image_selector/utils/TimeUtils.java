@@ -1,9 +1,6 @@
 package com.loyo.oa.v2.tool.customview.multi_image_selector.utils;
 
-import android.media.ExifInterface;
-
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -13,19 +10,22 @@ import java.util.Locale;
  * Created by Nereo on 2015/4/8.
  */
 public class TimeUtils {
+    protected TimeUtils() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
-    public static String timeFormat(long timeMillis, String pattern){
+    public static String timeFormat(long timeMillis, String pattern) {
         SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.CHINA);
         return format.format(new Date(timeMillis));
     }
 
-    public static String formatPhotoDate(long time){
+    public static String formatPhotoDate(long time) {
         return timeFormat(time, "yyyy-MM-dd");
     }
 
-    public static String formatPhotoDate(String path){
+    public static String formatPhotoDate(String path) {
         File file = new File(path);
-        if(file.exists()){
+        if (file.exists()) {
             long time = file.lastModified();
             return formatPhotoDate(time);
         }

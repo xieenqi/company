@@ -2,6 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
@@ -69,17 +70,17 @@ public interface ICustomer {
     void getNearCustomers(@Query("lat") String lat, @Query("lon") String lon, retrofit.Callback<ArrayList<Customer>> cb);
 
     /**
-     * name "客户名称"	string	form<BR/>
-     * loc		"客户位置信息"	models.customer.Location	form<BR/>
+     * name "客户名称"	string
+     * loc		"客户位置信息"	models.customer.Location
      * industry		"行业"	models.Industry	form
-     * regional		"地区"	models.customer.Regional	form<BR/>
-     * tags		false "标签"	[]<BR/>
+     * regional		"地区"	models.customer.Regional
+     * tags		false "标签"
      * ModelModel Schema<BR/>
      * CustomerTag <BR/>
-     * summary		"简介"	string	form<BR/>
-     * owner		"项目负责人"	tmodels.Member	form<BR/>
-     * members		false "项目成员"	[]	Member<BR/>
-     * extDatas		false "自定义字段值"	[]	DynamicData<BR/>
+     * summary		"简介"	string
+     * owner		"项目负责人"	tmodels.Member
+     * members		false "项目成员"	[]
+     * extDatas		false "自定义字段值"	[]
      *
      * @param id
      * @param map
@@ -104,6 +105,7 @@ public interface ICustomer {
      */
     @GET("/customer/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
+
 
     /**
      * 丢入公海
@@ -267,11 +269,25 @@ public interface ICustomer {
     @GET("/customer/regional")
     void getDistricts(Callback<ArrayList<Province>> callback);
 
-
-
-    /**新建客户，查重*/
+    /**
+     * 新建客户，查重
+     */
     @GET("/customer/search")
-    void getSerachRepeat(@QueryMap Map<String, Object> params,Callback<PaginationX<CustomerRepeatList>> callback);
+    void getSerachRepeat(@QueryMap Map<String, Object> params, Callback<PaginationX<CustomerRepeatList>> callback);
 
+    /**
+     * 获取客户新建联系人的动态字段
+     *
+     * @param callback
+     */
+    @GET("/contact/fields")
+    void getContactsField(Callback<ArrayList<ContactExtras>> callback);
 
+    /**
+     * 获取客户联系人的详细数据
+     *
+     * @param callback
+     */
+    @GET("/contact/{customerId}")
+    void getCustomerContacts(@Path("customerId") String id, Callback<Customer> callback);
 }

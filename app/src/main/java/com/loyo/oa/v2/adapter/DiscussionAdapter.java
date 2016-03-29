@@ -12,6 +12,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.TimeFormatUtil;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+
 import java.util.ArrayList;
 
 /**
@@ -22,13 +23,13 @@ public class DiscussionAdapter extends CommonAdapter<Discussion> {
     MainApp app;
     private OnSelectUserCallback mOnSelectUserCallback;
 
-    public DiscussionAdapter(Context context, ArrayList<Discussion> discussions) {
+    public DiscussionAdapter(final Context context, final ArrayList<Discussion> discussions) {
         super(context, discussions, R.layout.item_listview_discussion);
         app = MainApp.getMainApp();
     }
 
     @Override
-    public void convert(ViewHolder holder, final Discussion discussion) {
+    public void convert(final ViewHolder holder, final Discussion discussion) {
         LogUtil.d(MainApp.gson.toJson(discussion) + " 讨2论的名 " + discussion.getCreator().getRealname());
         holder.setText(R.id.tv_creator, discussion.getCreator().getRealname())
                 .setText(R.id.tv_create_time, TimeFormatUtil.toFormat(discussion.getCreatedAt())).setText(R.id.tv_comment, discussion.getContent())
@@ -36,7 +37,7 @@ public class DiscussionAdapter extends CommonAdapter<Discussion> {
 
         holder.getView(R.id.img_disscution_creator).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(final View view) {
                 User user = discussion.getCreator();
                 HaitHelper.SelectUser selectUser = new HaitHelper.SelectUser(user.getRealname(), user.getId());
                 if (null != mOnSelectUserCallback) {
@@ -52,7 +53,7 @@ public class DiscussionAdapter extends CommonAdapter<Discussion> {
      *
      * @param callback
      */
-    public void setSelectUserCallback(OnSelectUserCallback callback) {
+    public void setSelectUserCallback(final OnSelectUserCallback callback) {
         this.mOnSelectUserCallback = callback;
     }
 

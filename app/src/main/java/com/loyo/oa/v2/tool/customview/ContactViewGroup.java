@@ -14,11 +14,9 @@ import com.loyo.oa.v2.activity.customer.CustomerContactManageActivity;
 import com.loyo.oa.v2.activity.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
 
 /**
  * com.loyo.oa.v2.tool.customview
@@ -29,8 +27,9 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
 public class ContactViewGroup extends LinearLayout {
 
     public interface OnContactProcessCallback {
-        public void onDel(Contact contact);
-        public void onSetDefault(Contact contact);
+        void onDel(Contact contact);
+
+        void onSetDefault(Contact contact);
     }
 
     private Context context;
@@ -79,10 +78,8 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView default_ = (ImageView) findViewById(R.id.img_default);
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
-            LogUtil.dll("isMyUser:"+isMyUser);
             /*判断是否有操作权限*/
             if (!isMyUser) {
-                LogUtil.dll("进入!isMyUser");
                 edit.setVisibility(View.GONE);
                 del.setVisibility(View.GONE);
                 default_.setVisibility(View.GONE);
@@ -120,6 +117,7 @@ public class ContactViewGroup extends LinearLayout {
             TextView tv_wx = (TextView) findViewById(R.id.tv_wx);
             TextView tv_email = (TextView) findViewById(R.id.tv_email);
             TextView tv_memo = (TextView) findViewById(R.id.tv_memo);
+            TextView tv_depart = (TextView) findViewById(R.id.tv_depart);
 
             tv_name.setText(mContact.getName());
             tv_tel.setText(mContact.getTel());
@@ -129,7 +127,7 @@ public class ContactViewGroup extends LinearLayout {
             tv_email.setText(mContact.getEmail());
             tv_memo.setText(mContact.getMemo());
             tv_birthday.setText(mContact.getBirthStr());
-
+            tv_depart.setText(mContact.deptName);
             if (mContact.isDefault()) {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
                 del.setVisibility(INVISIBLE);

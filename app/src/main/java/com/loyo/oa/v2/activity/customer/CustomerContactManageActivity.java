@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.ExtraData;
+import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -22,7 +25,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ContactViewGroup;
 
 import org.androidannotations.annotations.AfterViews;
@@ -49,36 +51,61 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @ViewById TextView tv_title;
     @ViewById LinearLayout layout_container;
     @ViewById ViewGroup layout_add;
-    @Extra("Customer") Customer mCustomer;
+    @Extra(ExtraAndResult.EXTRA_ID)
+    String customerId;
     @Extra("isMyUser") boolean isMyUser;
     @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
 
+    private Customer customerContact;
+    private ArrayList<ContactExtras> fiedList;
+
+
     @AfterViews
     void initViews() {
-
         if (!isMyUser || isMenber) {
             layout_add.setVisibility(View.GONE);
         }
-
         setTouchView(NO_SCROLL);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("联系人详情");
         layout_back.setOnTouchListener(Global.GetTouch());
         layout_add.setOnTouchListener(Global.GetTouch());
-        getData();
+        getContactsFields();
+        // getData();
 
+    }
+
+    /**
+     * 获取联系人的动态字段
+     */
+    private void getContactsFields() {
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getContactsField(new RCallback<ArrayList<ContactExtras>>() {
+                    @Override
+                    public void success(ArrayList<ContactExtras> fiedListData, Response response) {
+                        HttpErrorCheck.checkResponse("联系人动态字段", response);
+                        fiedList = fiedListData;
+                        getData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     /**
      * 获取客户详情
      */
     private void getData() {
-        Utils.dialogShow(this,"请稍候");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerById(mCustomer.getId(), new RCallback<Customer>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getCustomerContacts(customerId, new RCallback<Customer>() {
             @Override
             public void success(final Customer customer, final Response response) {
-                mCustomer = customer;
-                Utils.dialogDismiss();
+                HttpErrorCheck.checkResponse("联系人详情：", response);
+                customerContact = customer;
                 initData();
             }
 
@@ -86,8 +113,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Utils.dialogDismiss();
-                finish();
+                //finish();
             }
         });
     }
@@ -96,24 +122,52 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 初始化数据
      */
     private void initData() {
-        if (null == mCustomer || null == mCustomer.contacts || mCustomer.contacts.isEmpty()) {
+        if (null == fiedList || null == customerContact || null == customerContact.contacts
+                || customerContact.contacts.isEmpty()) {
             return;
         }
         layout_container.removeAllViews();
-        ArrayList<Contact> contacts = mCustomer.contacts;
-        app.logUtil.e("contacts : " + contacts.size());
+        //contactData();
+        ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
-            ContactViewGroup contactViewGroup = new ContactViewGroup(this, mCustomer, contact, this);
-            contactViewGroup.bindView(i + 1, layout_container, isMyUser ,isMenber);
+            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, contact, this);
+            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber);
         }
+        cancelLoading();
     }
 
+    public void contactData() {
+//        for (int i = 0; i < 9; i++) {
+//            fiedList.remove(9);
+//        }
+        for (Contact element : customerContact.contacts) {
+            for (int j = 0; j < fiedList.size(); j++) {
+                for (int f = 0; f < element.extDatas.size(); f++) {
+//                    listData = fiedList.get(j);
+                    if (!fiedList.get(j).name.equals(element.extDatas.get(f).getProperties().getName())) {
+                        ExtraData newExt = new ExtraData();
+                        ExtraProperties ept = new ExtraProperties();
+                        ept.setName(fiedList.get(j).name);
+                        ept.setEnabled(fiedList.get(j).enabled);
+                        ept.setIsList(fiedList.get(j).isList);
+                        ept.setRequired(fiedList.get(j).required);
+                        ept.setLabel(fiedList.get(j).label);
+//                        ept.setRegExpress(fiedList.get(j).name);
+//                        ept.setName(fiedList.get(j).name);
+//                        ept.setName(fiedList.get(j).name);
+                        newExt.setProperties(ept);
+                        element.extDatas.add(newExt);
+                    }
+                }
+            }
+        }
+    }
 
     @Click(R.id.layout_add)
     void addNewContact() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("customer", mCustomer);
+        bundle.putSerializable("customer", customerContact);
         app.startActivityForResult(this, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT, bundle);
     }
 
@@ -132,7 +186,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         switch (requestCode) {
             case CustomerAddActivity.REQUEST_CUSTOMER_NEW_CONTRACT:
                 Contact contact = (Contact) data.getSerializableExtra("data");
-                mCustomer.contacts.add(contact);
+                customerContact.contacts.add(contact);
                 initData();
                 break;
             case CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT:
@@ -141,10 +195,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                     return;
                 }
 
-                for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                    if (TextUtils.equals(contactUpdated.getId(), mCustomer.contacts.get(i).getId())) {
-                        contactUpdated.setIsDefault(mCustomer.contacts.get(i).isDefault());
-                        mCustomer.contacts.set(i, contactUpdated);
+                for (int i = 0; i < customerContact.contacts.size(); i++) {
+                    if (TextUtils.equals(contactUpdated.getId(), customerContact.contacts.get(i).getId())) {
+                        contactUpdated.setIsDefault(customerContact.contacts.get(i).isDefault());
+                        customerContact.contacts.set(i, contactUpdated);
                         break;
                     }
                 }
@@ -164,15 +218,15 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Override
     public void onDel(final Contact contact) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                deleteContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
+                deleteContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(Contact contact, Response response) {
                         LogUtil.dll("onDel");
-                        for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                            Contact newContact = mCustomer.contacts.get(i);
+                        for (int i = 0; i < customerContact.contacts.size(); i++) {
+                            Contact newContact = customerContact.contacts.get(i);
                             if (newContact.equals(contact)) {
                                 LogUtil.dll("if -- onDel");
-                                mCustomer.contacts.remove(i);
+                                customerContact.contacts.remove(i);
                                 initData();
                                 break;
                             }
@@ -186,10 +240,10 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
                         HttpErrorCheck.checkError(error);
                     }
                 });
-            }
+    }
 
     private void refresh() {
-      onCreate(null);
+        onCreate(null);
     }
 
     /**
@@ -200,23 +254,23 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Override
     public void onSetDefault(final Contact contact) {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                setDefaultContact(mCustomer.getId(), contact.getId(), new RCallback<Contact>() {
+                setDefaultContact(customerContact.getId(), contact.getId(), new RCallback<Contact>() {
                     @Override
                     public void success(final Contact _contact, final Response response) {
                         Intent intent = new Intent();
                         CustomerContactManageActivity.this.setResult(Activity.RESULT_OK, intent);//回调刷新界面
-                        for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                            Contact newContact = mCustomer.contacts.get(i);
+                        for (int i = 0; i < customerContact.contacts.size(); i++) {
+                            Contact newContact = customerContact.contacts.get(i);
                             if (newContact.isDefault()) {
                                 newContact.setIsDefault(false);
                                 break;
                             }
                         }
-                        for (int i = 0; i < mCustomer.contacts.size(); i++) {
-                            Contact newContact = mCustomer.contacts.get(i);
+                        for (int i = 0; i < customerContact.contacts.size(); i++) {
+                            Contact newContact = customerContact.contacts.get(i);
                             if (newContact.equals(contact)) {
                                 newContact.setIsDefault(true);
-                                mCustomer.contacts.set(i, newContact);
+                                customerContact.contacts.set(i, newContact);
                                 initData();
                                 break;
                             }

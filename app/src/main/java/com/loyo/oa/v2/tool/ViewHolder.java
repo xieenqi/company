@@ -9,21 +9,21 @@ import android.view.View;
  * 作者 : ykb
  * 时间 : 15/7/20.
  */
-public class ViewHolder
-{
+public class ViewHolder {
+    protected ViewHolder() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     @SuppressWarnings("unchecked")
-    public static <T extends View> T get(View view, int id)
-    {
+    public static <T extends View> T get(View view, int id) {
         SparseArray<View> viewHolder = (SparseArray<View>) view.getTag();
-        if (viewHolder == null)
-        {
+        if (viewHolder == null) {
             viewHolder = new SparseArray<View>();
             view.setTag(viewHolder);
         }
 
         View child = viewHolder.get(id);
-        if (child == null)
-        {
+        if (child == null) {
             child = view.findViewById(id);
             viewHolder.put(id, child);
         }

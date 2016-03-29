@@ -146,6 +146,11 @@ public class Department implements Serializable, SelectDetUserActivity.SelectUse
         return id.equals(that.id);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     /**
      * 获取首字母当作GroupName
      *

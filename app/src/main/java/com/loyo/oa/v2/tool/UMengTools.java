@@ -15,6 +15,10 @@ import java.util.Date;
  * Created by xeq on 16/3/22.
  */
 public class UMengTools {
+    protected UMengTools() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     /**
      * 自定义统计error信息
      */
@@ -23,7 +27,7 @@ public class UMengTools {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            String time = MainApp.getMainApp().df1.format(new Date(location.getTime()));
+            String time = MainApp.getMainApp().df10.format(new Date(location.getTime()));
             CellInfo cellInfo = Utils.getCellInfo();
             StringBuffer erroInfo = new StringBuffer();
             erroInfo.append("品牌：" + cellInfo.getLoyoAgent() + "<->");
@@ -33,8 +37,8 @@ public class UMengTools {
             erroInfo.append("网络状态（非数据）:" + network + "<->");
             erroInfo.append("定位结果:" + location.getErrorInfo() + "--" + location.getLocationDetail() + "<->");
             erroInfo.append("网络类型:" + Utils.getNetworkType(context) + "<->");
-            erroInfo.append("发生的时间:" + time + "");
-            erroInfo.append("用户信息:" + MainApp.gson.toJson(MainApp.user) + "");
+            erroInfo.append("发生的时间:" + time + "<->");
+            erroInfo.append("用户信息:" + MainApp.user.name + "-" + MainApp.user.mobile + "-" + MainApp.gson.toJson(MainApp.user.depts));
             MobclickAgent.reportError(context, erroInfo.toString());
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
         }

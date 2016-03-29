@@ -70,7 +70,7 @@ public class CommonTag implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (null == o || getClass() != o.getClass()) {
             return false;
         }
 
@@ -78,5 +78,10 @@ public class CommonTag implements Serializable {
 
         return id.equals(that.id);
 
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -181,7 +181,7 @@ public class WfinstanceViewGroup extends LinearLayout {
             if (s.toString().length() > 0) {
 
                 map_Values.put(lstData.get(position).getId(),
-                        !vv.getTag().toString().equals("double") ? s.toString() : Double.parseDouble(s.toString()));
+                        !"double".equals(vv.getTag().toString()) ? s.toString() : Double.parseDouble(s.toString()));
                 LogUtil.d(vv.getTag() + "审批输入的内容" + s.toString());
             } else {
                 if (map_Values.containsKey(lstData.get(position).getId())
@@ -263,7 +263,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                         map_Values.put(lstData.get(position).getId(), str);
 
                     }
-                });
+                },false);
             }
         }
     }

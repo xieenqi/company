@@ -46,7 +46,7 @@ public class Attachment implements Serializable {
     public String updatedAt;
     public File file;
     public Boolean isPublic;
-    public ArrayList<NewUser> viewers=new ArrayList<>();
+    public ArrayList<NewUser> viewers = new ArrayList<>();
 
     public String getLocalPath() {
         return localPath;
@@ -65,7 +65,7 @@ public class Attachment implements Serializable {
     }
 
     public ArrayList<NewUser> getViewers() {
-        if(null==viewers)
+        if (null == viewers)
             setViewers(new ArrayList<NewUser>());
         return viewers;
     }
@@ -177,7 +177,7 @@ public class Attachment implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass())
+        if (null == o || getClass() != o.getClass())
             return false;
 
         if (this == o) {
@@ -185,7 +185,12 @@ public class Attachment implements Serializable {
         }
 
         Attachment attachment = (Attachment) o;
-        return attachment.url.equals(this.url);
+        return this.url.equals(attachment.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     public AttachmentType getAttachmentType() {

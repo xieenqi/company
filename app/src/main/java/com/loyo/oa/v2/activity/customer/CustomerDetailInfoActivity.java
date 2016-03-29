@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activity.customer;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,8 +15,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.signin.SignInListActivity_;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activity.signin.SignInListActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
@@ -36,14 +35,12 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -143,6 +140,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
+                if(customer == null){
+                    Toast("获取数据失败");
+                    return;
+                }
                 LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
                 ownErId = customer.owner.id;
                 isLock = customer.lock;
@@ -412,7 +413,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case R.id.layout_contact:
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
-                bundle.putSerializable("Customer", mCustomer);
+                bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
                 _class = CustomerContactManageActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
                 break;

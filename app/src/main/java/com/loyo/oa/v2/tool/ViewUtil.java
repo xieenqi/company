@@ -9,6 +9,10 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
 public class ViewUtil {
+    protected ViewUtil() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     private static String TAG = "ViewUtil";
     public static final int DATE_NULL = 0;
 

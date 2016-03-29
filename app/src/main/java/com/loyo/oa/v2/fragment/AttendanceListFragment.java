@@ -493,19 +493,22 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 totState = recordOut.getState();
                 outTagstate = recordOut.getTagstate();
 
-                int extraTime = recordOut.getExtraTime();
-                if (extraTime > 60) {
-                    overTimes = extraTime / 60 + "小时" + extraTime % 60 + "分";
-                } else if (extraTime != 0) {
-                    overTimes = extraTime + "分钟";
-                }
+                if(recordOut.getState() == 5) {
+                    int extraTime = recordOut.getExtraTime();
+                    if (extraTime > 60) {
+                        overTimes = extraTime / 60 + "小时" + extraTime % 60 + "分";
+                    } else if (extraTime != 0) {
+                        overTimes = extraTime + "分钟";
+                    }
 
-                if (recordOut.getExtraState() == 1) {
-                    color = getActivity().getResources().getColor(R.color.gray);
-                } else if (recordOut.getExtraState() == 2) {
-                    color = getActivity().getResources().getColor(R.color.red);
+                    if (recordOut.getExtraState() == 1) {
+                        color = getActivity().getResources().getColor(R.color.gray);
+                    } else if (recordOut.getExtraState() == 2) {
+                        color = getActivity().getResources().getColor(R.color.red);
+                    }
                 }
             }
+
             tv_overtime.setTextColor(color);
             tv_overtime.setText(overTimes);
 
@@ -650,9 +653,14 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             layout_overtime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (null != recordOut && recordOut.getExtraTime() != 0) {
-                        previewAttendance(3, attendance, tv_overtime.getText().toString());
+                    if(null == recordOut){
+                        return;
                     }
+
+                    if(recordOut.getState() != 5){
+                        return;
+                    }
+                    previewAttendance(3, attendance, tv_overtime.getText().toString());
                 }
             });
 

@@ -46,6 +46,9 @@ import java.util.Locale;
 
 
 public final class Global {
+    protected Global() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
     //获取返回关闭手势的划动长度
     public static int GetBackGestureLength() {
@@ -320,7 +323,6 @@ public final class Global {
     public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
         //旋转图片 动作
         Matrix matrix = new Matrix();
-        ;
         matrix.postRotate(angle);
         System.out.println("angle2=" + angle);
         // 创建新的图片
