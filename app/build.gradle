@@ -73,12 +73,12 @@ android {
 //        }
 //    }
 
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def file = output.outputFile
-            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + defaultConfig.versionCode + ".apk"))
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            def file = output.outputFile
+//            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + defaultConfig.versionCode + ".apk"))
+//        }
+//    }
 
     //多渠道打包的配置
     dependencies {
