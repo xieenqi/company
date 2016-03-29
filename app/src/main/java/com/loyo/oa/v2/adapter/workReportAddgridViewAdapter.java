@@ -16,22 +16,23 @@ import java.util.ArrayList;
 /**
  * Created by yyy on 16/1/21.
  */
-public class workReportAddgridViewAdapter extends BaseAdapter{
+public class workReportAddgridViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<WorkReportDyn> dynList;
-    private int[] redGroup = {0,3,6,9,12,15};
-    private int[] greenGroup = {1,4,7,10,13,16};
-    private int[] blueGroup = {2,5,8,11,14,17};
+    private int[] redGroup = {0, 3, 6, 9, 12, 15};
+    private int[] greenGroup = {1, 4, 7, 10, 13, 16};
+    private int[] blueGroup = {2, 5, 8, 11, 14, 17};
 
-    public workReportAddgridViewAdapter(Context context,ArrayList<WorkReportDyn> dyn){
+    public workReportAddgridViewAdapter(Context context, ArrayList<WorkReportDyn> dyn) {
         this.mContext = context;
         this.dynList = dyn;
     }
 
-    public class ViewHolder{
+    public class ViewHolder {
         TextView name;
         TextView num;
+        View view_line;
     }
 
 
@@ -52,36 +53,38 @@ public class workReportAddgridViewAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-    LogUtil.dll("GridView Position:"+position);
-    ViewHolder holder = null;
-        if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_workreportgridview,null);
+        LogUtil.dll("GridView Position:" + position);
+        ViewHolder holder = null;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_workreportgridview, null);
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.tv_workdysn_item_name);
             holder.num = (TextView) convertView.findViewById(R.id.tv_workdysn_item_num);
+            holder.view_line = (View) convertView.findViewById(R.id.view_line);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.name.setText(dynList.get(position).name);
-        holder.num.setText(dynList.get(position).num+"");
+        holder.num.setText(dynList.get(position).num + "");
 
-        for(int i = 0;i<redGroup.length;i++){
-            if(position == redGroup[i]){
+        for (int i = 0; i < redGroup.length; i++) {
+            if (position == redGroup[i]) {
                 holder.num.setTextColor(mContext.getResources().getColor(R.color.red));
             }
         }
 
-        for(int i = 0;i<greenGroup.length;i++){
-            if(position == greenGroup[i]){
+        for (int i = 0; i < greenGroup.length; i++) {
+            if (position == greenGroup[i]) {
                 holder.num.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
             }
         }
 
-        for(int i = 0;i<blueGroup.length;i++){
-            if(position == blueGroup[i]){
+        for (int i = 0; i < blueGroup.length; i++) {
+            if (position == blueGroup[i]) {
                 holder.num.setTextColor(mContext.getResources().getColor(R.color.isfinish));
+                holder.view_line.setVisibility(View.GONE);
             }
         }
 

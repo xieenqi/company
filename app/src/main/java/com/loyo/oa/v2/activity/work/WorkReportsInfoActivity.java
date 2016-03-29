@@ -282,7 +282,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
         tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty() ? "无抄送人" : getJoinUserNames());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人： 无抄送人" : "抄送人： "+getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 

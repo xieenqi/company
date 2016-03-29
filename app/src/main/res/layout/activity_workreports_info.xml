@@ -92,19 +92,93 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_crm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10"
+                    android:background="@drawable/round_bg_shpe3"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_crm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginTop="@dimen/dimen_10"
+                        android:gravity="center_vertical"
+                        android:text="工作动态统计"
+                        android:textSize="18sp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_3"
+                        android:layout_margin="@dimen/dimen_10"
+                        android:background="@drawable/view_dashed_line"
+                        android:layerType="software"/>
+
+                    <com.loyo.oa.v2.common.NoScroolGridView
+                        android:id="@+id/info_gridview_workreports"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="3"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/no_dysndata_workreports"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/beogray"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/icon_dysn_nodata"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="5dp"
+                            android:text="暂无统计数据"
+                            android:textColor="@color/gray"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/layout_touch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/margin_other_view">
+                android:paddingBottom="@dimen/dimen_16">
 
                 <TextView
                     android:id="@+id/tv_workContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_8"
-                    android:layout_marginLeft="@dimen/dimen_20"
+                    android:layout_marginLeft="@dimen/dimen_16"
                     android:layout_marginRight="@dimen/dimen_16"
                     android:layout_marginTop="@dimen/dimen_8"
                     android:textColor="@color/text33"
@@ -113,27 +187,28 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_30"
+                    android:layout_height="@dimen/dimen_25"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/text_item1"
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
+                        android:gravity="center_vertical"
                         android:hint="点评人："
+                        android:textColor="@color/text33"
                         android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/tv_reviewer"
-                        style="@style/text_item2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/margin_side_edge"
                         android:layout_weight="1"
                         android:gravity="left|center_vertical"
+                        android:text="gggdf"
                         android:textColor="#999999"
                         android:textSize="14sp"/>
 
@@ -144,15 +219,17 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_16">
 
-                    <TextView
-                        style="@style/text_item1"
-                        android:layout_width="80dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        android:hint="抄送人："
-                        android:textSize="14sp"/>
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/dimen_20"-->
+                    <!--android:layout_marginLeft="@dimen/dimen_16"-->
+                    <!--android:hint="抄送人："-->
+                    <!--android:gravity="top|center_vertical"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:textSize="14sp"/>-->
 
                     <TextView
                         android:id="@+id/tv_toUser"
@@ -168,16 +245,17 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_30"
+                    android:layout_height="@dimen/dimen_25"
+                    android:layout_marginBottom="@dimen/dimen_10"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_16"
+                        android:gravity="center_vertical"
                         android:hint="所属项目："
                         android:textSize="14sp"/>
 
@@ -193,79 +271,6 @@
                         android:textSize="14sp"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/layout_crm"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_10"
-                        android:background="@drawable/round_bg_shpe3"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_crm"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/dimen_16"
-                            android:layout_marginTop="@dimen/dimen_10"
-                            android:gravity="center_vertical"
-                            android:text="工作动态统计"
-                            android:textSize="18sp"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dimen_3"
-                            android:layout_margin="@dimen/dimen_10"
-                            android:background="@drawable/view_dashed_line"
-                            android:layerType="software"/>
-
-                        <com.loyo.oa.v2.common.NoScroolGridView
-                            android:id="@+id/info_gridview_workreports"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="10dp"
-                            android:listSelector="@android:color/transparent"
-                            android:numColumns="3"
-                            />
-
-                        <LinearLayout
-                            android:id="@+id/no_dysndata_workreports"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/beogray"
-                            android:orientation="vertical"
-                            android:visibility="gone"
-                            >
-
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="60dp"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="10dp"
-                                android:background="@drawable/icon_dysn_nodata"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginBottom="10dp"
-                                android:layout_marginTop="5dp"
-                                android:text="暂无统计数据"
-                                android:textColor="@color/gray"
-                                />
-
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
 
                 <View
                     style="@style/view_split"
