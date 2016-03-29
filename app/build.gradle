@@ -75,7 +75,8 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            rename('app-release.apk','release' + "-" + defaultConfig.versionCode + '.apk')
+            def file = output.outputFile
+            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionCode + ".apk"))
         }
     }
 
