@@ -75,8 +75,9 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
+            def today = new Date().format('yyyyMMdd-HH');
             def file = output.outputFile
-            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionCode + ".apk"))
+            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" + today + ".apk"))
         }
     }
 
