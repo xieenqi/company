@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
-def outputPath = 'D:\\android\\apk'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 
 android {
     compileSdkVersion 22
@@ -77,7 +77,7 @@ android {
         variant.outputs.each { output ->
             def today = new Date().format('yyyyMMdd-HH');
             def file = output.outputFile
-            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" + today + ".apk"))
+            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
         }
     }
 
