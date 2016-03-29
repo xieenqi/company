@@ -20,6 +20,8 @@ import com.pusher.client.connection.ConnectionStateChange;
  * Created by xeq on 16/3/25.
  */
 public class PusherTest {
+    private PusherTest() {}
+
     public static void appTest() {
         PusherOptions options = new PusherOptions();
         options.setHost("192.168.31.131");

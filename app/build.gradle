@@ -135,7 +135,7 @@ apt {
         configFile file("src/config/checkstyle.xml")
         include '**/*.java'
         exclude '**/gen/**'
-        ignoreFailures true
+        ignoreFailures false
         classpath = files()
 
         def configProps = ['proj.module.dir': projectDir.absolutePath]
