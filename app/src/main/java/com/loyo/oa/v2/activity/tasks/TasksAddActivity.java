@@ -24,6 +24,7 @@ import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.beans.CornBody;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
@@ -131,6 +132,7 @@ public class TasksAddActivity extends BaseActivity {
     private AlertDialog dialog_Product;
     private SignInGridViewAdapter signInGridViewAdapter;
     private NewUser newUser;
+    private CornBody cornBody;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private StringBuffer strBuf;
     private Members members;
@@ -138,13 +140,14 @@ public class TasksAddActivity extends BaseActivity {
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
     private int remindTime;
-    private String uuid = StringUtil.getUUID();
     private long mDeadline;
     private int mRemind = 0;
     private boolean isCopy;
     private boolean isState = true;
     private StringBuffer joinName;
     private StringBuffer joinUserId;
+    private String uuid = StringUtil.getUUID();
+
 
     @AfterViews
     void initUI() {
@@ -159,6 +162,7 @@ public class TasksAddActivity extends BaseActivity {
         userss = new ArrayList<>();
         depts = new ArrayList<>();
         members = new Members();
+        cornBody = new CornBody();
         strBuf = new StringBuffer();
         switch_approve.setState(true);
 
@@ -257,7 +261,6 @@ public class TasksAddActivity extends BaseActivity {
         }else if(switch_approve.getState() == 4){
             isState = true;
         }
-
         map.put("reviewFlag", isState);
         map.put("bizExtData",bizExtData);
         map.put("attachmentUUId", uuid);
@@ -266,9 +269,9 @@ public class TasksAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
+        map.put("cornBody",cornBody);
 
-        LogUtil.dee("任务创建图片的数量:"+lstData_Attachment.size());
-        LogUtil.dee("任务创建 发送的数据:"+MainApp.gson.toJson(map));
+        LogUtil.d("任务创建 发送的数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task,final Response response) {
@@ -313,10 +316,16 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
 
-                if (mDeadline <= 0) {
-                    Toast("截止日期" + getString(R.string.app_no_null));
+                if (mDeadline <= 0 && tv_retask.getText().toString().isEmpty()) {
+                    Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
+
+                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")){
+                    Toast("截止日期或重复任务必选一个功能！");
+                    break;
+                }
+
 
                 if (newUser == null || TextUtils.isEmpty(newUser.getId())) {
                     Toast("负责人" + getString(R.string.app_no_null));
@@ -328,22 +337,20 @@ public class TasksAddActivity extends BaseActivity {
 
             //重复任务
             case R.id.layout_retask:
-                setRepeatTask();
+                if(tv_deadline.getText().toString().isEmpty() || tv_deadline.getText().toString().equals("不截止")){
+                    setRepeatTask();
+                }else{
+                    Toast("重复任务和截至日期只能选择一个！");
+                }
                  break;
 
             //截至时间
             case R.id.layout_deadline:
-                DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
-                dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
-                    @Override
-                    public void onDateTimeChanged(final int year,final int month,final int day,final int hour,final int min) {
-                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
-                                String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        tv_deadline.setText(str);
-                        mDeadline = Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm"));
-                        LogUtil.dll("截至时间:" + mDeadline + "");
-                    }
-                },false);
+                if(tv_retask.getText().toString().isEmpty() || tv_retask.getText().toString().equals("不重复")){
+                    setDeadLine();
+                }else{
+                    Toast("重复任务和截至日期只能选择一个！");
+                }
                 break;
 
             //负责人选项
@@ -416,7 +423,7 @@ public class TasksAddActivity extends BaseActivity {
         listView_products.setAdapter(productsRadioListViewAdapter);
         listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 mRemind = Task.RemindListSource.get(position);
                 remindTime = Task.RemindListSource.get(position);
                 tv_remind.setText(Task.RemindList.get(position));
@@ -424,6 +431,64 @@ public class TasksAddActivity extends BaseActivity {
             }
         });
     }
+
+    /**
+     * 截至日期选择框
+     * */
+    void setDeadLine(){
+        DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
+        dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
+            @Override
+            public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
+                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
+                        String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                tv_deadline.setText(str);
+                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm"));
+                LogUtil.dll("截至时间:" + mDeadline + "");
+            }
+            @Override
+            public void onCancel() {
+                tv_deadline.setText("不截止");
+            }
+
+        }, false);
+    }
+
+    /**
+     * 重复任务数据初始化
+     * */
+    void setRepeatParam(String[] str){
+
+        if(str[0].equals("每天")){
+            cornBody.setType(1);
+        }else if(str[0].equals("每周")){
+            cornBody.setType(2);
+
+            if(str[1].equals("周一")){
+            cornBody.setWeekDay(2);
+            }else if(str[1].equals("周二")){
+                cornBody.setWeekDay(3);
+            }else if(str[1].equals("周三")){
+                cornBody.setWeekDay(4);
+            }else if(str[1].equals("周四")){
+                cornBody.setWeekDay(5);
+            }else if(str[1].equals("周五")){
+                cornBody.setWeekDay(6);
+            }else if(str[1].equals("周六")){
+                cornBody.setWeekDay(7);
+            }else if(str[1].equals("周日")){
+                cornBody.setWeekDay(1);
+            }
+
+        }else if(str[0].equals("每月")){
+            cornBody.setType(3);
+            cornBody.setDay(Integer.parseInt(str[1].replaceAll("号","")));
+        }
+
+        cornBody.setHour(Integer.parseInt(str[2].replaceAll("时", "")));
+        cornBody.setMinute(Integer.parseInt(str[3].replaceAll("分", "")));
+    }
+
 
     /**
      * 重复任务功能
@@ -436,7 +501,12 @@ public class TasksAddActivity extends BaseActivity {
             @Override
             public void onClick(final View view) {
                 String[] cityArr = repeatTaskView.getResult();
-                tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2] + "" + cityArr[3]);
+                setRepeatParam(cityArr);
+                if(cityArr[1].equals("无")){
+                    tv_retask.setText(cityArr[0] + " " + cityArr[2].replaceAll("时","") + ":" + cityArr[3].replaceAll("分",""));
+                }else{
+                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2].replaceAll("时","") + ":" + cityArr[3].replaceAll("分",""));
+                }
                 repeatTaskView.dismiss();
             }
         });
@@ -449,6 +519,7 @@ public class TasksAddActivity extends BaseActivity {
             }
         });
     }
+
 
 
     /**

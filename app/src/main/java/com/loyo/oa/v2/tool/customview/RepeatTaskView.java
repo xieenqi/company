@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.CornBody;
 import com.loyo.oa.v2.beans.RepeatTaskCaseModel;
 import com.loyo.oa.v2.beans.RepeatTaskModel;
 import com.loyo.oa.v2.tool.XmlParserRepeatTask;
@@ -32,9 +33,9 @@ public class RepeatTaskView extends Dialog implements OnWheelChangedListener {
 
     private String[] OneDatas; //天月周数据层
 
-    private String[] hourDatas = new String[25]; //时
+    private String[] hourDatas = new String[24]; //时
 
-    private String[] minDatas = new String[61]; //分
+    private String[] minDatas = new String[60]; //分
 
     private Map<String, String[]> TwoDatasMap = new HashMap<String, String[]>();
 
@@ -42,12 +43,12 @@ public class RepeatTaskView extends Dialog implements OnWheelChangedListener {
     /**
      * 分钟
      * */
-    private String mDataMin = "0";
+    private String mDataMin = "0分";
 
     /**
      * 小时
      * */
-    private String mDataHour = "0";
+    private String mDataHour = "0时";
 
     /**
      * 选择类型(月 周 天)
@@ -121,11 +122,15 @@ public class RepeatTaskView extends Dialog implements OnWheelChangedListener {
             }
         }
 
-        for(int i = 0;i<25;i++){
-            hourDatas[i] = i+"";
+        for(int i = 0;i<24;i++){
+                hourDatas[i] = i+"时";
         }
-        for(int i = 0;i<61;i++){
-            minDatas[i] = i+"";
+        for(int i = 0;i<60;i++){
+            if(i<10 && i != 0){
+                minDatas[i] = "0"+i+"分";
+            }else{
+                minDatas[i] = i+"分";
+           }
         }
     }
 
@@ -166,10 +171,11 @@ public class RepeatTaskView extends Dialog implements OnWheelChangedListener {
         if (wheel == mViewWeek) {
             updateCities();
         }else if(wheel == mViewDay){
-            int timeCreen = mViewDay.getCurrentItem();
+            String[] timeKinds = TwoDatasMap.get(mDataCaseName);
+            mDataTimekind = timeKinds[newValue];
 
         }else if(wheel == mViewHour){
-            mDataHour = hourDatas[newValue];
+             mDataHour = hourDatas[newValue];
 
         }else if(wheel == mViewMin){
              mDataMin = minDatas[newValue];
@@ -183,11 +189,11 @@ public class RepeatTaskView extends Dialog implements OnWheelChangedListener {
     private void updateCities() {
         int weekCreen = mViewWeek.getCurrentItem();
         mDataCaseName = OneDatas[weekCreen];
-
         String[] timeKinds = TwoDatasMap.get(mDataCaseName);
         if (timeKinds == null) {
             timeKinds = new String[]{""};
         }
+        mDataTimekind = timeKinds[0];
         mViewDay.setViewAdapter(new ArrayWheelAdapter<String>(mContext, timeKinds));
         mViewDay.setCurrentItem(0);
     }

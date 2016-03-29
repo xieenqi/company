@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:background="@color/white"
+    >
 
     <include layout="@layout/include_item_title"/>
 
@@ -24,7 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_h_title"
                 android:background="@color/white"
-                android:hint="任务标题"/>
+                android:hint="任务标题"
+                android:textSize="15sp"
+                />
 
             <View
                 style="@style/view_split"
@@ -44,7 +47,9 @@
                 android:paddingLeft="@dimen/margin_side_edge"
                 android:paddingTop="10dp"
                 android:scrollbarStyle="insideInset"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:textSize="15sp"
+                />
 
             <LinearLayout
                 android:id="@+id/layout_photo"
@@ -66,6 +71,47 @@
 
             </LinearLayout>
 
+
+            <View
+                style="@style/view_split"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                />
+
+            <LinearLayout
+                android:id="@+id/layout_retask"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_item1"
+                    android:layout_width="80dp"
+                    android:layout_height="@dimen/view_h_title"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:text="重复"
+                    android:textSize="15sp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_retask"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:textColor="@color/title_bg1"
+                    android:textColorHint="#c9c9c9"
+                    android:textSize="15sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:src="@drawable/right_arrow"/>
+
+            </LinearLayout>
+
             <View
                 style="@style/view_split"
                 android:layout_width="match_parent"
@@ -83,7 +129,9 @@
                     android:layout_width="80dp"
                     android:layout_height="@dimen/view_h_title"
                     android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:text="截止日期"/>
+                    android:text="截止日期"
+                    android:textSize="15sp"
+                    />
 
                 <TextView
                     android:id="@+id/tv_deadline"
@@ -93,7 +141,8 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:textColorHint="#c9c9c9"
-                    android:textSize="17sp"/>
+                    android:textColor="@color/title_bg1"
+                    android:textSize="15sp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -120,7 +169,9 @@
                     android:layout_width="80dp"
                     android:layout_height="@dimen/view_h_title"
                     android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:text="提醒"/>
+                    android:text="提醒"
+                    android:textSize="15sp"
+                    />
 
                 <TextView
                     android:id="@+id/tv_remind"
@@ -130,7 +181,9 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:textColorHint="#c9c9c9"
-                    android:textSize="17sp"/>
+                    android:textSize="15sp"
+                    android:textColor="@color/title_bg1"
+                    />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -140,16 +193,19 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="17dp"
+                android:background="@color/activity_bg"
+                />
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_row_margin_top"
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"/>
 
                 <LinearLayout
                     android:id="@+id/layout_responsiblePerson"
@@ -164,7 +220,9 @@
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="负责人"/>
+                        android:text="负责人"
+                        android:textSize="15sp"
+                        />
 
                     <TextView
                         android:id="@+id/tv_responsiblePerson"
@@ -175,7 +233,9 @@
                         android:gravity="right|center_vertical"
                         android:hint="点击添加负责人"
                         android:textColorHint="#c9c9c9"
-                        android:textSize="17sp"/>
+                        android:textSize="15sp"
+                        android:textColor="@color/title_bg1"
+                        />
 
                     <ImageView
                         android:id="@+id/img_title_right_responsiblePerson"
@@ -203,7 +263,9 @@
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="参与人"/>
+                        android:text="参与人"
+                        android:textSize="15sp"
+                        />
 
                     <TextView
                         android:id="@+id/tv_toUsers"
@@ -215,7 +277,9 @@
                         android:minHeight="@dimen/view_h_title"
                         android:singleLine="false"
                         android:textColorHint="#c9c9c9"
-                        android:textSize="17sp"/>
+                        android:textSize="15sp"
+                        android:textColor="@color/title_bg1"
+                        />
 
                     <LinearLayout
                         android:id="@+id/layout_del"
@@ -260,7 +324,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_weight="1"
-                        android:text="是否审核"/>
+                        android:text="是否审核"
+                        android:textSize="15sp"
+                        />
 
                     <com.loyo.oa.v2.activity.commonview.SwitchView
                         android:id="@+id/switch_approve"
@@ -295,7 +361,9 @@
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="所属项目"/>
+                        android:text="所属项目"
+                        android:textSize="15sp"
+                        />
 
                     <TextView
                         android:id="@+id/tv_Project"
@@ -306,7 +374,8 @@
                         android:minHeight="@dimen/view_h_title"
                         android:singleLine="false"
                         android:textColorHint="#c9c9c9"
-                        android:textSize="17sp"/>
+                        android:textColor="@color/title_bg1"
+                        android:textSize="15sp"/>
 
                     <ImageView
                         android:id="@+id/img_title_right_project"
@@ -336,7 +405,9 @@
                         android:layout_width="80dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="关联客户"/>
+                        android:text="关联客户"
+                        android:textSize="15sp"
+                        />
 
                     <TextView
                         android:id="@+id/tv_mycustomer"
@@ -349,7 +420,8 @@
                         android:singleLine="false"
                         android:textColor="@color/title_bg1"
                         android:textColorHint="#c9c9c9"
-                        android:textSize="17sp"/>
+                        android:textSize="15sp"
+                        />
 
                     <ImageView
                         android:id="@+id/img_title_right_customer"

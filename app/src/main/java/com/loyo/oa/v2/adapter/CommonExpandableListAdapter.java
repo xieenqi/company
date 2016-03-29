@@ -35,6 +35,8 @@ import java.util.Date;
  */
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
+    private int textColor = R.color.tasklist_gray;
+
     public CommonExpandableListAdapter(final Context context, final ArrayList<PagingGroupData_<T>> data) {
         super();
         mContext = context;
@@ -60,6 +62,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         status.setVisibility(View.GONE);
 
         /**审批*/
+
         if (obj instanceof WfInstance) {
             WfInstance wfInstance = (WfInstance) obj;
             if (wfInstance.title != null) {
@@ -91,7 +94,10 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
                     break;
             }
-        } else if (obj instanceof Task) { /**任务*/
+
+            /**任务*/
+
+        } else if (obj instanceof Task) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
             if (task.getStatus() == Task.STATUS_PROCESSING) {
@@ -103,17 +109,97 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
             /*任务超时判断*/
             try {
-
-                Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"));
-                if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
-                    timeOut.setVisibility(View.VISIBLE);
-                } else {
+                /**重复任务赋值*/
+                if(null != task.getCornBody() && task.getCornBody().getType() != 0){
                     timeOut.setVisibility(View.GONE);
-                }
-                time.setText("任务截止时间: " + MainApp.getMainApp().df10.format(new Date(task.getPlanEndAt() * 1000)) + "");
-                LogUtil.dll("当前时间戳:" + nowTime);
-                LogUtil.dll("截至时间戳:" + task.getPlanEndAt());
+                    textColor = R.color.title_bg1;
+                    String caseName = "";
+                    String hourMins = "";
+                    String weekName = "";
+                    String dayName = "";
 
+                    String hour = "";
+                    String mins = "";
+                    switch(task.getCornBody().getType()){
+                        case 1:
+                            caseName = "每天";
+                            break;
+
+                        case 2:
+                            caseName = "每周";
+                            break;
+
+                        case 3:
+                            caseName = "每月";
+                            break;
+                    }
+                    hour = task.getCornBody().getHour()+"";
+                    mins = task.getCornBody().getMinute()+"";
+
+            /*如果小时分钟为单数，则前面拼上0*/
+                    if(hour.length() == 1){
+                        hour = "0"+hour;
+                    }
+
+                    if(mins.length() == 1){
+                        mins = "0"+mins;
+                    }
+                    hourMins = hour+":"+mins;
+
+                    //每天
+                    if(task.getCornBody().getType() == 1){
+                        time.setText(caseName+" "+hourMins+" 重复");
+                        //每周
+                    }else if(task.getCornBody().getType() == 2){
+                        switch (task.getCornBody().getWeekDay()){
+                            case 1:
+                                weekName = "日";
+                                break;
+
+                            case 2:
+                                weekName = "一";
+                                break;
+
+                            case 3:
+                                weekName = "二";
+                                break;
+
+                            case 4:
+                                weekName = "三";
+                                break;
+
+                            case 5:
+                                weekName = "四";
+                                break;
+
+                            case 6:
+                                weekName = "五";
+                                break;
+
+                            case 7:
+                                weekName = "六";
+                                break;
+
+                            default:
+                                break;
+                        }
+                        time.setText(caseName + weekName+" "+hourMins+" 重复");
+
+                        //每月
+                    }else if(task.getCornBody().getType() == 3){
+                        dayName = task.getCornBody().getDay()+"号";
+                        time.setText(caseName+" "+dayName+" "+hourMins+" 重复");
+                    }
+                }else{
+                    textColor = R.color.tasklist_gray;
+                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"));
+                    if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
+                        timeOut.setVisibility(View.VISIBLE);
+                    } else {
+                        timeOut.setVisibility(View.GONE);
+                    }
+                    time.setText("任务截止时间: " + MainApp.getMainApp().df10.format(new Date(task.getPlanEndAt() * 1000)) + "");
+                }
             } catch (Exception e) {
                 Global.ProcException(e);
             }
@@ -124,8 +210,11 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             if (!TextUtils.isEmpty(task.getTitle())) {
                 title.setText(task.getTitle());
             }
+            time.setTextColor(mContext.getResources().getColor(textColor));
 
-        } else if (obj instanceof WorkReport) { /**报告*/
+            /**报告*/
+
+        } else if (obj instanceof WorkReport) {
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;
             LogUtil.d(" 加载 报告 的数据： " + MainApp.gson.toJson(workReport));
