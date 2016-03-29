@@ -17,46 +17,42 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/layout_bg1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_16"
+                android:paddingRight="@dimen/dimen_16">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge">
+                    >
 
                     <EditText
                         android:id="@+id/edt_workReport_title"
-                        style="@style/text_item1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="@dimen/dimen_4"
                         android:layout_marginTop="4dp"
                         android:layout_toLeftOf="@+id/img_workreport_status"
                         android:background="@android:color/transparent"
                         android:focusable="false"
-                        android:singleLine="false"
-                        android:textColor="@color/text1"/>
+                        android:singleLine="true"
+                        android:text="fhdgfh"
+                        android:textColor="@color/text33"
+                        />
 
                     <TextView
                         android:id="@+id/tv_workReport_time"
-                        style="@style/textView_hint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/edt_workReport_title"
                         android:layout_marginBottom="4dp"
-                        android:layout_marginLeft="5dp"
                         android:text="2014.12.25 9:00"
+                        android:textColor="@color/grayC9"
                         android:textSize="13sp"/>
 
                     <ImageView
@@ -102,7 +98,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimen_10"
+                    android:layout_margin="@dimen/dimen_16"
                     android:background="@drawable/round_bg_shpe3"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
@@ -113,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/dimen_16"
-                        android:layout_marginTop="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_8"
                         android:gravity="center_vertical"
                         android:text="工作动态统计"
                         android:textSize="18sp"/>
@@ -180,7 +176,6 @@
                     android:layout_marginBottom="@dimen/dimen_8"
                     android:layout_marginLeft="@dimen/dimen_16"
                     android:layout_marginRight="@dimen/dimen_16"
-                    android:layout_marginTop="@dimen/dimen_8"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp14"
                     />
@@ -285,14 +280,15 @@
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/dimen_8">
 
                     <TextView
                         android:id="@+id/tv_discussion_count"
                         style="@style/text_item1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginLeft="@dimen/dimen_10"
                         android:layout_weight="1"
                         android:hint="讨论(0)"/>
 
@@ -317,14 +313,15 @@
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/dimen_8">
 
                     <TextView
                         android:id="@+id/tv_attachment_count"
                         style="@style/text_item1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginLeft="@dimen/dimen_10"
                         android:layout_weight="1"
                         android:hint="附件(0)"/>
 
@@ -349,7 +346,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginLeft="@dimen/dimen_10"
                         android:layout_marginTop="@dimen/dimen_10"
                         android:gravity="center_vertical"
                         android:text="点评"
@@ -452,8 +449,8 @@
                     android:id="@+id/btn_workreport_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginRight="@dimen/dimen_16"
                     android:layout_marginTop="@dimen/margin_other_view"
                     android:background="@color/title_bg1"
                     android:text="点评"
