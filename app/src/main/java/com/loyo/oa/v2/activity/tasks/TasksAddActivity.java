@@ -51,6 +51,8 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
+import com.loyo.oa.v2.tool.customview.RepeatTaskView;
+import com.loyo.oa.v2.tool.customview.SelectCityView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -88,7 +90,11 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     ViewGroup layout_project;
     @ViewById
+    ViewGroup layout_retask;
+    @ViewById
     ImageView img_title_right_toUsers;
+    @ViewById
+    TextView tv_retask;
     @ViewById
     TextView tv_responsiblePerson;
     @ViewById
@@ -287,7 +293,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
-            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer})
+            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer,R.id.layout_retask})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -319,6 +325,11 @@ public class TasksAddActivity extends BaseActivity {
 
                 requestCommitTask(title, content);
                 break;
+
+            //重复任务
+            case R.id.layout_retask:
+                setRepeatTask();
+                 break;
 
             //截至时间
             case R.id.layout_deadline:
@@ -413,6 +424,32 @@ public class TasksAddActivity extends BaseActivity {
             }
         });
     }
+
+    /**
+     * 重复任务功能
+     * */
+    void setRepeatTask(){
+        final RepeatTaskView repeatTaskView = new RepeatTaskView(this);
+        repeatTaskView.setCanceledOnTouchOutside(true);
+        repeatTaskView.show();
+        repeatTaskView.setConfirmOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                String[] cityArr = repeatTaskView.getResult();
+                tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2] + "" + cityArr[3]);
+                repeatTaskView.dismiss();
+            }
+        });
+
+        repeatTaskView.setCancelOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv_retask.setText("不重复");
+                repeatTaskView.dismiss();
+            }
+        });
+    }
+
 
     /**
      * 负责人值设置,这里User为老版本bean,NewUser为新版本bean,做了一个数据转移
