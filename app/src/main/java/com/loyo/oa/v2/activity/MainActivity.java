@@ -823,25 +823,27 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "个待点评";
+                    extra = num.bizNum + "待点评";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "个待处理";
+                    extra = num.bizNum + "未完成"
+//                    +"，"+num.bizNum+"待处理"
+                    ;
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "个待审批";
+                    extra = num.bizNum + "待审批";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    extra = num.bizNum + "个进行中";
+                    extra = num.bizNum + "进行中";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
-                    extra = num.bizNum + "个将掉公海";
+                    extra = num.bizNum + "将掉公海";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-                    extra = num.bizNum + "个需拜访";
+                    extra = num.bizNum + "需拜访";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                    extra = num.bizNum + "个外勤";
+                    extra = num.bizNum + "外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if (num.bizType == 19) {
                     if (!num.viewed) {
