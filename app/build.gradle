@@ -40,16 +40,15 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-
             // 这里的作用是选择是否混淆代码
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
             //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
             //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
+            debuggable false
         }
         release {
             minifyEnabled false
@@ -59,6 +58,8 @@ android {
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             // "6085830b754c86f0d9886b545f5b38f8"
             resValue "string", "app_name", "快启"
+            debuggable false
+            jniDebuggable false
         }
     }
 //
