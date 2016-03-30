@@ -2,24 +2,29 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '23.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
 
     signingConfigs {
         debug {
-            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
-            keyPassword 'Loyo2012'
+//            storeFile file('D:\\android\\key\\loyo_share.keystore')
+//            keyPassword 'Loyo2012'
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
+            keyPassword 'android'
+            keyAlias 'androiddebugkey'
+            storePassword 'android'
         }
     }
 
@@ -42,14 +47,32 @@ android {
             jniDebuggable true
         }
         release {
+//            minifyEnabled false
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.SignConfig
+//            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
+//            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
+//            // "6085830b754c86f0d9886b545f5b38f8"
+//            resValue "string", "app_name", "快启"
+
             minifyEnabled false
-            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
             // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
-// "6085830b754c86f0d9886b545f5b38f8"
+            // "6085830b754c86f0d9886b545f5b38f8"
             resValue "string", "app_name", "快启"
+            debuggable false
+            jniDebuggable false
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def today = new Date().format('yyyyMMdd-HH');
+            def file = output.outputFile
+            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
         }
     }
 
@@ -97,7 +120,7 @@ android {
         compile 'com.yalantis:contextmenu:1.0.4'
         //激光推送
         compile files('libs/jpush-android-2.0.5.jar')
-        //compile 'com.android.support:multidex-1.0.1'
+        //compile 'c.droid.support:mtidex-1.0.1'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
 
         //友盟统计
