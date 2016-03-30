@@ -92,7 +92,11 @@ public class TasksEditActivity extends BaseActivity {
     ViewGroup layout_retask;
     @ViewById
     ViewGroup task_ll_deadline;
+    @ViewById
+    ViewGroup linear_task_approve;
 
+    @ViewById
+    View view_task_approve;
     @ViewById
     View layout_retask_view;
     @ViewById
@@ -193,6 +197,9 @@ public class TasksEditActivity extends BaseActivity {
         if(mTask.getCornBody().getType() != 0){
             isKind = true;
             task_ll_deadline.setVisibility(View.GONE);
+            linear_task_approve.setVisibility(View.GONE);
+            view_task_approve.setVisibility(View.GONE);
+
         }else{
             isKind = false;
             layout_retask.setVisibility(View.GONE);
@@ -407,15 +414,16 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("content", content);
                 map.put("responsiblePerson", newUser);
                 map.put("members", member);
+                map.put("attachmentUUId", uuid);
+                map.put("customerId", mTask.getCustomerId());
+                map.put("customerName", mTask.getCustomerName());
+
                 if(switch_approve.getState() == 4){
                     isState = true;
                 }else if(switch_approve.getState() == 1){
                     isState = false;
                 }
-                map.put("reviewFlag",isState);
-                map.put("attachmentUUId", uuid);
-                map.put("customerId", mTask.getCustomerId());
-                map.put("customerName", mTask.getCustomerName());
+
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
                     map.put("projectId", mTask.getProjectId());
                 }
@@ -426,10 +434,10 @@ public class TasksEditActivity extends BaseActivity {
                     map.put("planendAt", mTask.getPlanEndAt());
                     map.put("remindflag", mTask.getRemindTime() > 0);
                     map.put("remindtime", mTask.getRemindTime());
+                    map.put("reviewFlag",isState);
                 }
 
                 LogUtil.d("任务编辑 发送的数据:" + MainApp.gson.toJson(map));
-
                 RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).update(mTask.getId(), map)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<Task>() {
@@ -612,6 +620,8 @@ public class TasksEditActivity extends BaseActivity {
                     tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
                 }
                 task_ll_deadline.setVisibility(View.GONE);
+                view_task_approve.setVisibility(View.GONE);
+                linear_task_approve.setVisibility(View.GONE);
                 repeatTaskView.dismiss();
 
 
@@ -624,6 +634,8 @@ public class TasksEditActivity extends BaseActivity {
                 isKind = false;
                 tv_retask.setText("不重复");
                 task_ll_deadline.setVisibility(View.VISIBLE);
+                view_task_approve.setVisibility(View.VISIBLE);
+                linear_task_approve.setVisibility(View.VISIBLE);
                 repeatTaskView.dismiss();
             }
         });

@@ -95,7 +95,11 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     ViewGroup task_ll_deadline;
     @ViewById
+    ViewGroup linear_task_approve;
+    @ViewById
     View layout_retask_view;
+    @ViewById
+    View view_task_approve;
 
     @ViewById
     ImageView img_title_right_toUsers;
@@ -256,16 +260,17 @@ public class TasksAddActivity extends BaseActivity {
         map.put("content", content);
         map.put("responsiblePerson", newUser);
         map.put("members", members);
+        map.put("bizExtData",bizExtData);
+        map.put("attachmentUUId", uuid);
+        map.put("customerId", customerId);
+        map.put("customerName", customerName);
+
         if(switch_approve.getState() == 1){
             isState = false;
         }else if(switch_approve.getState() == 4){
             isState = true;
         }
-        map.put("reviewFlag", isState);
-        map.put("bizExtData",bizExtData);
-        map.put("attachmentUUId", uuid);
-        map.put("customerId", customerId);
-        map.put("customerName", customerName);
+
         if (!TextUtils.isEmpty(projectId)) {
             map.put("projectId", projectId);
         }
@@ -277,6 +282,7 @@ public class TasksAddActivity extends BaseActivity {
                 map.put("remindflag", mRemind > 0);
                 map.put("remindtime", remindTime);
             }
+            map.put("reviewFlag", isState);
             map.put("planendAt", mDeadline);
         }
 
@@ -541,6 +547,9 @@ public class TasksAddActivity extends BaseActivity {
                     tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时","") + ":" + mins.replaceAll("分",""));
                 }
                 task_ll_deadline.setVisibility(View.GONE);
+                view_task_approve.setVisibility(View.GONE);
+                linear_task_approve.setVisibility(View.GONE);
+
                 repeatTaskView.dismiss();
             }
         });
@@ -551,12 +560,12 @@ public class TasksAddActivity extends BaseActivity {
                 isKind = false;
                 tv_retask.setText("不重复");
                 task_ll_deadline.setVisibility(View.VISIBLE);
+                view_task_approve.setVisibility(View.VISIBLE);
+                linear_task_approve.setVisibility(View.VISIBLE);
                 repeatTaskView.dismiss();
             }
         });
     }
-
-
 
     /**
      * 负责人值设置,这里User为老版本bean,NewUser为新版本bean,做了一个数据转移

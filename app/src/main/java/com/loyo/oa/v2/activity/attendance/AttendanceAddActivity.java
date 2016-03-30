@@ -354,7 +354,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         if (TextUtils.isEmpty(et_reason.getText().toString())) {
             int state = mAttendanceRecord.getState();
             if (state == AttendanceRecord.STATE_OVERWORK) {
-                if (needExtra) {
+                if (outKind == 2) {
                     Toast("加班原因不能为空");
                     return false;
                 }
