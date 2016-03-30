@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private final Context mContext;
     private List<User> users = new ArrayList<>();
+    // 用于保存可见的的CheckBox, 优化响应速度
+    private final List<CheckBox> mItemCheckBoxes = new ArrayList<>();
 
     public SelectUsersAdapter(Context context, List<User> users) {
         this.mContext = context;
@@ -59,16 +62,16 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case 0:
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
                 headerViewHolder.checkBox.setChecked(isAllSelect());
-
                 headerViewHolder.relAllcheck.setTag(headerViewHolder.checkBox);
-
                 headerViewHolder.relAllcheck.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v.getTag();
-
                         boolean isSelectAll = cb.isChecked();
                         cb.setChecked(!isSelectAll);
+                        for (int i = 0; i < mItemCheckBoxes.size(); i++) {
+                            mItemCheckBoxes.get(i).setChecked(!isSelectAll);
+                        }
                         for (int i = 0; i < users.size(); i++) {
                             User user = users.get(i);
                             user.setIndex(!isSelectAll);
@@ -77,7 +80,28 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 });
                 break;
             default:
-
+                ViewHolder userHolder = (ViewHolder) holder;
+                User user = users.get(position - 1);
+                String deptName = "无";
+                String npcName = "无";
+                /*部门名称*/
+                try {
+                    deptName = user.depts.get(0).getShortDept().getName();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                /*用户职称*/
+                try {
+                    npcName = user.getDepts().get(0).getTitle();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                userHolder.userName.setText(user.getRealname());
+                userHolder.dept.setText(deptName);
+                userHolder.worker.setText(npcName);
+                /*选中赋值*/
+                userHolder.checkBox.setChecked(user.isIndex());
+                ImageLoader.getInstance().displayImage(user.getAvatar(), userHolder.heading);
                 break;
         }
     }
@@ -107,7 +131,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return position;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView userName;
         private final TextView dept;
@@ -122,6 +146,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             worker = (TextView) itemView.findViewById(R.id.item_selectdu_right_worker);
             heading = (ImageView) itemView.findViewById(R.id.img_title_left);
             checkBox = (CheckBox) itemView.findViewById(R.id.item_selectdu_checkbox);
+            mItemCheckBoxes.add(checkBox);
         }
     }
 
