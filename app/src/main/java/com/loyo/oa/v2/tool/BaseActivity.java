@@ -91,6 +91,12 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             customProgressDialog.setCancelable(false);
         }
         registerBaseReceiver();
+        // 创建状态栏的管理实例
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        // 激活状态栏设置
+        tintManager.setStatusBarTintEnabled(true);
+        // 激活导航栏设置
+        tintManager.setNavigationBarTintEnabled(true);
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {

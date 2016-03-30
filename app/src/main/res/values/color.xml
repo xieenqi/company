@@ -304,7 +304,7 @@
     <!-- 黑色 -->
 
     <color name="iswrite">#2c9dfc</color>
-    <color name="isteston">#bf73e6</color>
+    <color name="isteston">#b779dc</color>
     <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
     <color name="dialog_blue">#2693FB</color>
