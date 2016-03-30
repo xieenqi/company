@@ -338,7 +338,7 @@
     <color name="wfinstance_notagree">#ff5652</color>
     <color name="wfinstance_notprocess">#939292</color>
     <color name="wfinstance_agree">#34D434</color>
-
+    <color name="tasklist_gray">#8a8a8a</color>
     <color name="diseditable">#999999</color>
 
     <!-- 多级筛选-->

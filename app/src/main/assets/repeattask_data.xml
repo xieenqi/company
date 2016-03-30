@@ -1,0 +1,49 @@
+<root>
+    <case name="每天">
+        <timekind name="无"/>
+    </case>
+
+    <case name="每周">
+        <timekind name="周一"/>
+        <timekind name="周二"/>
+        <timekind name="周三"/>
+        <timekind name="周四"/>
+        <timekind name="周五"/>
+        <timekind name="周六"/>
+        <timekind name="周日"/>
+    </case>
+
+    <case name="每月">
+        <timekind name="1号"/>
+        <timekind name="2号"/>
+        <timekind name="3号"/>
+        <timekind name="4号"/>
+        <timekind name="5号"/>
+        <timekind name="6号"/>
+        <timekind name="7号"/>
+        <timekind name="8号"/>
+        <timekind name="9号"/>
+        <timekind name="10号"/>
+        <timekind name="11号"/>
+        <timekind name="12号"/>
+        <timekind name="13号"/>
+        <timekind name="14号"/>
+        <timekind name="15号"/>
+        <timekind name="16号"/>
+        <timekind name="17号"/>
+        <timekind name="18号"/>
+        <timekind name="19号"/>
+        <timekind name="20号"/>
+        <timekind name="21号"/>
+        <timekind name="22号"/>
+        <timekind name="23号"/>
+        <timekind name="24号"/>
+        <timekind name="25号"/>
+        <timekind name="26号"/>
+        <timekind name="27号"/>
+        <timekind name="28号"/>
+        <timekind name="29号"/>
+        <timekind name="30号"/>
+        <timekind name="31号"/>
+    </case>
+</root>
