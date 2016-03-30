@@ -52,7 +52,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         }
 
         Object obj = getChild(groupPosition, childPosition);
-        ImageView status = ViewHolder.get(convertView, R.id.img_status);
         TextView title = ViewHolder.get(convertView, R.id.tv_title);
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
         TextView time = ViewHolder.get(convertView, R.id.tv_time);
@@ -62,7 +61,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
         TextView tv_discuss_num = ViewHolder.get(convertView, R.id.tv_disscuss_num);
         ImageView iv_disscuss_status = ViewHolder.get(convertView, R.id.img_discuss_status);
-        status.setVisibility(View.GONE);
 
         /**审批*/
 
@@ -77,39 +75,11 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
             //ack.setVisibility(wfInstance.ack ? View.GONE : View.VISIBLE);
 
-            switch (wfInstance.status) {
-                case WfInstance.STATUS_NEW:
-                    status.setImageResource(R.drawable.img_wfinstance_list_status1);
-                    break;
-                case WfInstance.STATUS_PROCESSING:
-                    status.setImageResource(R.drawable.img_wfinstance_list_status2);
-                    break;
-                case WfInstance.STATUS_ABORT:
-                    status.setImageResource(R.drawable.img_wfinstance_list_status3);
-                    break;
-                case WfInstance.STATUS_APPROVED:
-                    status.setImageResource(R.drawable.img_wfinstance_list_status4);
-                    break;
-                case WfInstance.STATUS_FINISHED:
-                    status.setImageResource(R.drawable.img_wfinstance_list_status5);
-                    break;
-                default:
-
-                    break;
-            }
-
             /**任务*/
 
         } else if (obj instanceof Task) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
-            if (task.getStatus() == Task.STATUS_PROCESSING) {
-                status.setImageResource(R.drawable.task_status_1);
-            } else if (task.getStatus() == Task.STATUS_REVIEWING) {
-                status.setImageResource(R.drawable.task_status_2);
-            } else if (task.getStatus() == Task.STATUS_FINISHED) {
-                status.setImageResource(R.drawable.task_status_3);
-            }
             /*任务超时判断*/
             try {
                 /**重复任务赋值*/
@@ -244,15 +214,12 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             switch (workReport.type) {
                 case WorkReport.DAY:
                     reportType = " 日报";
-                    //reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000));
                     break;
                 case WorkReport.WEEK:
                     reportType = " 周报";
-                    //reportDate = app.df4.format(new Date(workReport.getBeginAt() * 1000)) + "-" + app.df4.format(new Date(workReport.getEndAt() * 1000));
                     break;
                 case WorkReport.MONTH:
                     reportType = " 月报";
-                    //reportDate = app.df8.format(new Date(workReport.getBeginAt() * 1000));
                     break;
                 default:
 
@@ -268,7 +235,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
             time.setText(end);
             //ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
-            status.setImageResource(workReport.isReviewed() ? R.drawable.img_workreport_list_status2 : R.drawable.img_workreport_list_status1);
 
         }
         return convertView;

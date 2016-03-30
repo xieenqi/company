@@ -96,6 +96,8 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 //        tintManager.setStatusBarTintEnabled(true);
 //        // 激活导航栏设置
 //        tintManager.setNavigationBarTintEnabled(true);
+//        // 设置一个颜色给系统栏
+//        tintManager.setTintColor(Color.parseColor("#99000FF"));
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
