@@ -33,7 +33,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 import retrofit.RetrofitError;
@@ -249,7 +248,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);
         ExitActivity.getInstance().finishAllActivity();
-        MobclickAgent.onProfileSignOff();//暂停友盟账号统计
         app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
     }
 }
