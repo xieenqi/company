@@ -53,7 +53,6 @@ android {
         }
     }
 
-    //多渠道打包的配置
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         compile 'com.android.support:appcompat-v7:22.1.1'
@@ -132,7 +131,7 @@ apt {
         configFile file("src/config/checkstyle.xml")
         include '**/*.java'
         exclude '**/gen/**'
-        ignoreFailures true
+        ignoreFailures false
         classpath = files()
 
         def configProps = ['proj.module.dir': projectDir.absolutePath]
