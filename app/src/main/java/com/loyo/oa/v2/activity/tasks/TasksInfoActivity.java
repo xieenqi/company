@@ -626,8 +626,8 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 获取任务信息【子任务等】
      */
-    @Background
     void getTask() {
+        showLoading("");
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
@@ -649,7 +649,6 @@ public class TasksInfoActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                // LogUtil.d("任务错误信息："+error.getBody().toString());
             }
         });
     }

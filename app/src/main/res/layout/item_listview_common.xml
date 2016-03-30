@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="5dp"
                     android:text="时间"
                     android:textColor="#8a8a8a"
                     android:textSize="12sp"
@@ -95,7 +95,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="23dp"
-                    android:layout_marginTop="2dp"
                     android:text="(已超时)"
                     android:textColor="@color/tomato"
                     android:textSize="12sp"
@@ -106,6 +105,7 @@
                 android:layout_width="20dp"
                 android:layout_height="15dp"
                 android:background="@drawable/icon_repeattask"
+                android:visibility="gone"
                 />
 
             </LinearLayout>

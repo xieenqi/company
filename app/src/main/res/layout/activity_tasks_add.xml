@@ -313,12 +313,14 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/view_task_approve"
                     style="@style/view_split"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     />
 
                 <LinearLayout
+                    android:id="@+id/linear_task_approve"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:background="@drawable/layout_bg1"
