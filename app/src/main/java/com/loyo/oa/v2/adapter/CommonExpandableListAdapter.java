@@ -3,6 +3,7 @@ package com.loyo.oa.v2.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import java.util.Date;
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
 
     private int textColor = R.color.tasklist_gray;
+    private boolean isOk;
 
     public CommonExpandableListAdapter(final Context context, final ArrayList<PagingGroupData_<T>> data) {
         super();
@@ -55,6 +57,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
         TextView time = ViewHolder.get(convertView, R.id.tv_time);
         TextView timeOut = ViewHolder.get(convertView, R.id.tv_timeOut);
+        ImageView iv_repeattask = ViewHolder.get(convertView,R.id.iv_repeattask);
         View ack = ViewHolder.get(convertView, R.id.view_ack);
         ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
         TextView tv_discuss_num = ViewHolder.get(convertView, R.id.tv_disscuss_num);
@@ -111,6 +114,10 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             try {
                 /**重复任务赋值*/
                 if(null != task.getCornBody() && task.getCornBody().getType() != 0){
+                    isOk = true;
+                    Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_repeattask);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+
                     timeOut.setVisibility(View.GONE);
                     textColor = R.color.title_bg1;
                     String caseName = "";
@@ -148,7 +155,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
                     //每天
                     if(task.getCornBody().getType() == 1){
-                        time.setText(caseName+" "+hourMins+" 重复");
+                        time.setText(caseName + " " + hourMins + " 重复");
                         //每周
                     }else if(task.getCornBody().getType() == 2){
                         switch (task.getCornBody().getWeekDay()){
@@ -183,14 +190,14 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                             default:
                                 break;
                         }
-                        time.setText(caseName + weekName+" "+hourMins+" 重复");
-
+                        time.setText(caseName + weekName + " " + hourMins + " 重复");
                         //每月
                     }else if(task.getCornBody().getType() == 3){
                         dayName = task.getCornBody().getDay()+"号";
-                        time.setText(caseName+" "+dayName+" "+hourMins+" 重复");
+                        time.setText(caseName + " " + dayName + " " + hourMins + " 重复");
                     }
                 }else{
+                    isOk = false;
                     textColor = R.color.tasklist_gray;
                     Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"));
                     if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
@@ -211,7 +218,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 title.setText(task.getTitle());
             }
             time.setTextColor(mContext.getResources().getColor(textColor));
-
+            iv_repeattask.setVisibility(isOk ? View.VISIBLE:View.GONE);
             /**报告*/
 
         } else if (obj instanceof WorkReport) {

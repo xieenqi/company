@@ -90,7 +90,11 @@ public class TasksEditActivity extends BaseActivity {
     ViewGroup layout_project;
     @ViewById
     ViewGroup layout_retask;
+    @ViewById
+    ViewGroup task_ll_deadline;
 
+    @ViewById
+    View layout_retask_view;
     @ViewById
     ImageView img_title_right_toUsers;
     @ViewById
@@ -130,6 +134,7 @@ public class TasksEditActivity extends BaseActivity {
     private StringBuffer joinUser = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
+    private boolean isKind;
 
     @AfterViews
         //类似onCreate方法执行入口
@@ -183,6 +188,15 @@ public class TasksEditActivity extends BaseActivity {
         tv_mycustomer.setText(mTask.getCustomerName());
         if (mTask.getProject() != null) {
             tv_Project.setText(mTask.getProject().title);
+        }
+
+        if(mTask.getCornBody().getType() != 0){
+            isKind = true;
+            task_ll_deadline.setVisibility(View.GONE);
+        }else{
+            isKind = false;
+            layout_retask.setVisibility(View.GONE);
+            layout_retask_view.setVisibility(View.GONE);
         }
         setCornBodyinfo();
     }
@@ -360,7 +374,7 @@ public class TasksEditActivity extends BaseActivity {
                     break;
                 }
 
-                if ((mTask.getPlanEndAt() <= 0 && tv_retask.getText().toString().isEmpty())){
+                if (mTask.getPlanEndAt() <= 0 && tv_retask.getText().toString().trim().isEmpty()){
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
@@ -369,6 +383,19 @@ public class TasksEditActivity extends BaseActivity {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
+
+
+                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()){
+                    Toast("截止日期或重复任务必选一个功能！");
+                    break;
+                }
+
+                if(tv_retask.getText().toString().equals("不重复") && mTask.getPlanEndAt() <= 0){
+                    Toast("截止日期或重复任务必选一个功能！");
+                    break;
+                }
+
+
 
                 if (mTask.getResponsiblePerson() == null || TextUtils.isEmpty(mTask.getResponsiblePerson().getId())) {
                     Toast("负责人" + getString(R.string.app_no_null));
@@ -380,9 +407,6 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("content", content);
                 map.put("responsiblePerson", newUser);
                 map.put("members", member);
-                map.put("planendAt", mTask.getPlanEndAt());
-                map.put("remindflag", mTask.getRemindTime() > 0);
-                map.put("remindtime", mTask.getRemindTime());
                 if(switch_approve.getState() == 4){
                     isState = true;
                 }else if(switch_approve.getState() == 1){
@@ -395,7 +419,15 @@ public class TasksEditActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(mTask.getProjectId())) {
                     map.put("projectId", mTask.getProjectId());
                 }
-                map.put("cornBody",mTask.getCornBody());
+
+                if(isKind){
+                    map.put("cornBody",mTask.getCornBody());
+                }else if(!isKind){
+                    map.put("planendAt", mTask.getPlanEndAt());
+                    map.put("remindflag", mTask.getRemindTime() > 0);
+                    map.put("remindtime", mTask.getRemindTime());
+                }
+
                 LogUtil.d("任务编辑 发送的数据:" + MainApp.gson.toJson(map));
 
                 RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).update(mTask.getId(), map)
@@ -409,6 +441,7 @@ public class TasksEditActivity extends BaseActivity {
                             @Override
                             public void onError(final Throwable e) {
                                 e.printStackTrace();
+                                Toast("编辑失败");
                             }
 
                             @Override
@@ -447,22 +480,12 @@ public class TasksEditActivity extends BaseActivity {
 
             //重复任务
             case R.id.layout_retask:
-                if(tv_deadline.getText().toString().isEmpty() || tv_deadline.getText().toString().equals("不截止")){
-                    setRepeatTask();
-                }else{
-                    Toast("重复任务和截至日期只能选择一个！");
-                }
+                setRepeatTask();
                 break;
 
             /*截至时间*/
             case R.id.layout_deadline:
-
-                if(tv_retask.getText().toString().isEmpty() || tv_retask.getText().toString().equals("不重复")){
-                    setDeadLine();
-                }else{
-                    Toast("重复任务和截至日期只能选择一个！");
-                }
-
+                setDeadLine();
                 break;
 
 
@@ -504,12 +527,22 @@ public class TasksEditActivity extends BaseActivity {
                         String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                 tv_deadline.setText(str);
                 mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
+                isKind = false;
+                layout_retask.setVisibility(View.GONE);
+                layout_retask_view.setVisibility(View.GONE);
+                layout_remind.setEnabled(true);
+                tv_remind.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
             }
 
             @Override
             public void onCancel() {
                 mTask.setPlanEndAt(0);
+                isKind = true;
                 tv_deadline.setText("不截止");
+                tv_remind.setTextColor(mContext.getResources().getColor(R.color.gray0990));
+                layout_remind.setEnabled(false);
+                layout_retask.setVisibility(View.VISIBLE);
+                layout_retask_view.setVisibility(View.VISIBLE);
             }
         },false);
     }
@@ -560,21 +593,37 @@ public class TasksEditActivity extends BaseActivity {
         repeatTaskView.setConfirmOnClick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                isKind = true;
                 String[] cityArr = repeatTaskView.getResult();
                 setRepeatParam(cityArr);
-                if(cityArr[1].equals("无")){
-                    tv_retask.setText(cityArr[0] + " " + cityArr[2].replaceAll("时","") + ":" + cityArr[3].replaceAll("分",""));
-                }else{
-                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + cityArr[2].replaceAll("时","") + ":" + cityArr[3].replaceAll("分",""));
+                String hour = cityArr[2];
+                String mins = cityArr[3];
+                if(hour.equals("0时")){
+                    hour = "0"+hour;
                 }
+
+                if(mins.equals("0分")) {
+                    mins = "0"+mins;
+                }
+
+                if(cityArr[1].equals("无")){
+                    tv_retask.setText(cityArr[0] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
+                }else{
+                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
+                }
+                task_ll_deadline.setVisibility(View.GONE);
                 repeatTaskView.dismiss();
+
+
             }
         });
 
         repeatTaskView.setCancelOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isKind = false;
                 tv_retask.setText("不重复");
+                task_ll_deadline.setVisibility(View.VISIBLE);
                 repeatTaskView.dismiss();
             }
         });
