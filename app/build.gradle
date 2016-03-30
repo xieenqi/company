@@ -22,6 +22,7 @@ android {
 //            storeFile file('D:\\android\\key\\loyo_share.keystore')
 //            keyPassword 'Loyo2012'
             storeFile file('D:\\android\\key\\loyo_share.keystore')
+//            storeFile file('/Users/loyocloud/Desktop/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
