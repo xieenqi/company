@@ -297,6 +297,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 }
                 break;
             }
+//            case MotionEvent.ACTION_UP:
+//                LogUtil.d("up 离开屏幕");
+//                break;
         }
 
         return mIsBeingDragged;

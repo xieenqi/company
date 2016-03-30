@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseFragment extends Fragment implements ProjectInfoActivity.OnProjectChangeCallback {
 
@@ -37,6 +37,18 @@ public abstract class BaseFragment extends Fragment implements ProjectInfoActivi
         //            //TODO:提示错误
         //            Toast.makeText(this.getActivity(),"This is not CityBaseActivity!",Toast.LENGTH_SHORT).show();
         //        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(getActivity());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(getActivity());
     }
 
     private Toast mCurrentToast;

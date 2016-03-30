@@ -137,7 +137,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 }
 
                 if (TextUtils.isEmpty(tagItemIds)) {
-                    Toast("请选择行为");
+                    Toast("请选择跟进方式");
                     return;
                 }
 

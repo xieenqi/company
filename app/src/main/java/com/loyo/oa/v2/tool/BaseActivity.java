@@ -34,7 +34,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.Locale;
 
@@ -167,15 +166,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
-        //友盟统计代码
-        MobclickAgent.onResume(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        //友盟统计代码
-        MobclickAgent.onPause(this);
         super.onPause();
     }
 

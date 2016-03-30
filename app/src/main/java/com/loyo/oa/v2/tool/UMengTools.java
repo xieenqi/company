@@ -6,7 +6,6 @@ import android.location.LocationManager;
 import com.amap.api.location.AMapLocation;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CellInfo;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.Date;
 
@@ -39,7 +38,6 @@ public class UMengTools {
             erroInfo.append("网络类型:" + Utils.getNetworkType(context) + "<->");
             erroInfo.append("发生的时间:" + time + "<->");
             erroInfo.append("用户信息:" + MainApp.user.name + "-" + MainApp.user.mobile + "-" + MainApp.gson.toJson(MainApp.user.depts));
-            MobclickAgent.reportError(context, erroInfo.toString());
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
         }
     }
