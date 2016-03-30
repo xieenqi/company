@@ -123,7 +123,11 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
                         }else if(contactExtras.fieldName.equals("birth")){
                             if(contactExtras.val.isEmpty()){
-                                maps.put("birth",mContact.getBirthStr());
+                                try{
+                                    maps.put("birth",mContact.getBirthStr());
+                                }catch(NullPointerException e){
+                                    e.printStackTrace();
+                                }
                             }else{
                                 maps.put("birth", contactExtras.val);
                             }

@@ -35,6 +35,7 @@ public class Config_project {
          * 账号中心
          */
         public static String account = "http://user.ukuaiqi.com";
+
         /**
          * crm 客户管理
          */
@@ -43,6 +44,7 @@ public class Config_project {
          * oa 系统
          */
         public static String oa = "http://oa.ukuaiqi.com";
+
         /**
          * attachment 附件
          */

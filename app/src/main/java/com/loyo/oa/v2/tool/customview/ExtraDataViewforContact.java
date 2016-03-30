@@ -276,6 +276,11 @@ public class ExtraDataViewforContact extends LinearLayout {
                         textView.setText(str);
                         extra.val = str;
                     }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
                 },true);
             }
         }

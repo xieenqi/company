@@ -84,11 +84,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="23dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="20dp"
                     android:text="时间"
                     android:textColor="@color/text99"
                     android:textSize="12sp"/>
+                    />
 
                 <TextView
                     android:id="@+id/tv_timeOut"
@@ -101,6 +101,14 @@
                     android:textColor="@color/tomato"
                     android:textSize="12sp"
                     android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/iv_repeattask"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:background="@drawable/icon_repeattask"
+                />
+
             </LinearLayout>
         </LinearLayout>
 

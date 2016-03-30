@@ -85,8 +85,6 @@ public class AttachmentActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
-                LogUtil.dee("获取附件信息:" + MainApp.gson.toJson(attachments));
-                LogUtil.dee("获取附件URL:" + response.getUrl());
                 HttpErrorCheck.checkResponse(response);
                 mListAttachment = attachments;
                 bindAttachment();
@@ -95,7 +93,6 @@ public class AttachmentActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                LogUtil.dee("获取附件信息 失败:");
                 HttpErrorCheck.checkError(error);
                 finish();
             }

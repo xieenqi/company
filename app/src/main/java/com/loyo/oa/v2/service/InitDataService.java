@@ -17,7 +17,6 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.EIntentService;
 
@@ -50,11 +49,9 @@ public class InitDataService extends IntentService {
                 MainApp.user = user;
                 sendDataChangeBroad(user);
                 DBManager.Instance().putUser(json);//保存用户信息
-                MobclickAgent.onProfileSignIn(user.name);//友盟账号统计
                 HashMap<String, String> map = new HashMap<>();
                 map.put("name", user.name);
                 map.put("id", user.id);
-                MobclickAgent.onEvent(getApplicationContext(), "name_id", map);
 
             }
         });
