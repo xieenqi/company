@@ -227,7 +227,7 @@ public class TasksInfoActivity extends BaseActivity {
             layout_child_add_action.setVisibility(View.VISIBLE);
             layout_attachment.setVisibility(View.VISIBLE);
             v_split.setVisibility(View.VISIBLE);
-            img_title_right.setVisibility(View.VISIBLE);
+            //img_title_right.setVisibility(View.VISIBLE);
         } else {
             layout_child_add_action.setVisibility(View.GONE);
             layout_attachment.setVisibility(View.GONE);
@@ -247,19 +247,60 @@ public class TasksInfoActivity extends BaseActivity {
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
-
+        LogUtil.d("status:"+mTask.getStatus());
         childTastUsers.clear();
-        if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
+        //参与人
+        if (!IsResponsiblePerson() && !IsCreator()) {
             img_title_right.setVisibility(View.GONE);
-        } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED) {
-            img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//参与人
-            img_title_right.setVisibility(View.GONE);
-        } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
-            img_title_right.setVisibility(View.VISIBLE);
-        } else {
-            img_title_right.setVisibility(View.VISIBLE);
         }
+        //其他情况
+        switch (mTask.getStatus()){
+            case Task.STATUS_REVIEWING:
+                if(IsResponsiblePerson()){
+                    LogUtil.d("负责人 审核中");
+                    img_title_right.setVisibility(View.GONE);
+                }
+                break;
+
+            case Task.STATUS_FINISHED:
+                if(IsResponsiblePerson()){
+                    LogUtil.d("负责人 已完成");
+                    img_title_right.setVisibility(View.GONE);
+                }
+                break;
+        }
+
+
+/*                        *//*创建人*//*
+        if (IsCreator()) {
+            if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
+                intent.putExtra("edit", true);
+                intent.putExtra("delete", true);
+                intent.putExtra("extra", "复制任务");
+            } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
+                intent.putExtra("extra", "复制任务");
+            } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
+                intent.putExtra("extra", "复制任务");
+            }
+                    *//*负责人*//*
+        } else if (IsResponsiblePerson()) {
+            switch (mTask.getStatus()) {
+                case Task.STATUS_PROCESSING:
+                    intent.putExtra("edit", true);
+                    intent.putExtra("editText", "修改参与人");
+                    break;
+
+                case Task.STATUS_REVIEWING:
+                    intent.putExtra("extra", "复制任务");
+                    break;
+
+                case Task.STATUS_FINISHED:
+                    intent.putExtra("extra", "复制任务");
+                    break;
+            }
+        }*/
+
+
 
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
@@ -371,6 +412,7 @@ public class TasksInfoActivity extends BaseActivity {
                 dayName = mTask.getCornBody().getDay() + "号";
                 tv_repeatTask.setText("重复: " + caseName + " " + dayName + " " + hourMins + "重复");
             }
+            tv_task_audit.setVisibility(View.GONE);
         } else {
             tv_repeatTask.setVisibility(View.GONE);
         }
