@@ -9,7 +9,7 @@
         android:id="@+id/img_time_point"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginLeft="@dimen/dimen_16"
+        android:layout_marginLeft="@dimen/dimen_14"
         android:gravity="center_vertical"
         android:src="@drawable/task_time_point"/>
 
