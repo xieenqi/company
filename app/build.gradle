@@ -14,18 +14,20 @@ android {
     signingConfigs {
         debug {
             storeFile file('D:\\android\\key\\loyo_share.keystore')
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-//            storeFile file('D:\\android\\key\\loyo_share.keystore')
-//            keyPassword 'Loyo2012'
             storeFile file('D:\\android\\key\\loyo_share.keystore')
+            keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyocloud/Desktop/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+//            keyPassword 'Loyo2012'
         }
     }
 
@@ -77,7 +79,6 @@ android {
         }
     }
 
-    //多渠道打包的配置
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         compile 'com.android.support:appcompat-v7:22.1.1'
@@ -123,7 +124,6 @@ android {
         compile files('libs/jpush-android-2.0.5.jar')
         //compile 'c.droid.support:mtidex-1.0.1'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
-
         //友盟统计
         compile files('libs/umeng-analytics-v5.6.4.jar')
         //pusher

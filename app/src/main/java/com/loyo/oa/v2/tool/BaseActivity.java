@@ -34,7 +34,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.Locale;
 
@@ -91,6 +90,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             customProgressDialog.setCancelable(false);
         }
         registerBaseReceiver();
+        // 创建状态栏的管理实例
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//        // 激活状态栏设置
+//        tintManager.setStatusBarTintEnabled(true);
+//        // 激活导航栏设置
+//        tintManager.setNavigationBarTintEnabled(true);
+//        // 设置一个颜色给系统栏
+//        tintManager.setTintColor(Color.parseColor("#99000FF"));
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -167,15 +174,11 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
-        //友盟统计代码
-        MobclickAgent.onResume(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        //友盟统计代码
-        MobclickAgent.onPause(this);
         super.onPause();
     }
 

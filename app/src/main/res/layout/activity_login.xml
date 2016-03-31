@@ -38,10 +38,10 @@
             android:background="@null"
             android:gravity="center_vertical"
             android:hint="请输入帐号"
+            android:singleLine="true"
             android:textColor="@color/login"
             android:textColorHint="@color/login"
-            android:singleLine="true"
-            android:textCursorDrawable="@color/login_text"/>
+            android:textCursorDrawable="@null"/>
 
     </LinearLayout>
 
@@ -77,10 +77,10 @@
             android:gravity="center_vertical"
             android:hint="请输入密码"
             android:inputType="textPassword"
-            android:textColor="@color/login"
             android:singleLine="true"
-            android:textColorHint="@color/login"/>
-        F
+            android:textColor="@color/login"
+            android:textColorHint="@color/login"
+            android:textCursorDrawable="@null"/>
     </LinearLayout>
 
 

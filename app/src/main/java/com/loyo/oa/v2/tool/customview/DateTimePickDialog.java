@@ -37,6 +37,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
          * @param min   分钟
          */
         void onDateTimeChanged(int year, int month, int day, int hour, int min);
+        void onCancel();
     }
 
     private int years, month, day, hour, minutes;
@@ -125,6 +126,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        listener.onCancel();
                         ad.dismiss();
                     }
                 }).show();

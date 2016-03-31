@@ -232,7 +232,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             return false;
         }
 
-        final int action = event.getAction();
+        int action = event.getAction();
 
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             mIsBeingDragged = false;
@@ -244,7 +244,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         }
 
         switch (action) {
+            case MotionEvent.ACTION_UP:
+                LogUtil.d("up 离开屏幕");
+                break;
             case MotionEvent.ACTION_MOVE: {
+                LogUtil.d("  抬起！！！ ");
                 // If we're refreshing, and the flag is set. Eat all MOVE events
                 if (!mScrollingWhileRefreshingEnabled && isRefreshing()) {
                     return true;
@@ -290,6 +294,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 break;
             }
             case MotionEvent.ACTION_DOWN: {
+                LogUtil.d("  按下~~~ ");
                 if (isReadyForPull()) {
                     mLastMotionY = mInitialMotionY = event.getY();
                     mLastMotionX = mInitialMotionX = event.getX();
@@ -297,6 +302,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 }
                 break;
             }
+
         }
 
         return mIsBeingDragged;
@@ -542,7 +548,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     final void setState(State state, final boolean... params) {
         mState = state;
         if (DEBUG) {
-            Log.d(LOG_TAG, "State: " + mState.name());
+            LogUtil.d(LOG_TAG, "State: " + mState.name());
         }
 
         switch (mState) {

@@ -129,7 +129,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     }
                 } else {
                     if (project.isCreator()) {
-                        intent.putExtra("delete", true);
                         intent.putExtra("extra", "重启项目"); //0:关闭
                     }
                 }
@@ -141,7 +140,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 app.startActivity(this, ProjectDescriptionActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, b);
                 break;
             default:
-
                 break;
         }
     }

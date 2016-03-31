@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -308,13 +307,11 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             }
 
             Customer customer = lstData.get(i);
-            ImageView status = ViewHolder.get(convertView, R.id.img_status);
             TextView title = ViewHolder.get(convertView, R.id.tv_title);
             TextView content = ViewHolder.get(convertView, R.id.tv_content);
             TextView time = ViewHolder.get(convertView, R.id.tv_time);
             View ack = ViewHolder.get(convertView, R.id.view_ack);
             ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
-            status.setVisibility(View.GONE);
             layout_discuss.setVisibility(View.GONE);
             content.setVisibility(View.INVISIBLE);
 

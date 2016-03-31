@@ -466,20 +466,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                     @Override
                     public void failure(final RetrofitError error) {
+                        super.failure(error);
                         HttpErrorCheck.checkError(error);
-//                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                            Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
-//                        } else if (error.getResponse().getStatus() == 500) {
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(Utils.convertStreamToString(error.getResponse().getBody().in()));
-//                                Toast.makeText(CustomerInfoActivity.this, jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
-//                                LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
                     }
                 });
     }

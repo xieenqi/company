@@ -18,16 +18,13 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,14 +53,11 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_activities_manage);
-
-
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             customer = (Customer) bundle.getSerializable(Customer.class.getName());
             isMyUser = bundle.getBoolean("isMyUser");
         }
-
         setTitle("跟进动态");
         initUI();
         getData();
@@ -73,6 +67,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
      * 获取数据
      */
     private void getData() {
+        showLoading("");
         if (customer != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", paginationX.getPageIndex());
@@ -80,13 +75,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleactivity(customer.getId(), map, new RCallback<PaginationX<SaleActivity>>() {
                 @Override
                 public void success(final PaginationX<SaleActivity> paginationXes, final Response response) {
-
-                    try {
-                        LogUtil.dll("跟进动态数据:" + Utils.convertStreamToString(response.getBody().in()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    HttpErrorCheck.checkResponse("跟进动态数据:", response);
                     lv_saleActivity.onRefreshComplete();
                     if (!PaginationX.isEmpty(paginationXes)) {
                         paginationX = paginationXes;
@@ -109,7 +98,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
     }
 
     private void initUI() {
-
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
@@ -233,8 +221,8 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
 
             if (saleActivity.getRemindAt() != 0) {
-                tv_timenow.setText(DateTool.timet(saleActivity.getRemindAt() + "",DateTool.DATE_FORMATE_CUSTOM_2));
-            }else{
+                tv_timenow.setText(DateTool.timet(saleActivity.getRemindAt() + "", DateTool.DATE_FORMATE_CUSTOM_2));
+            } else {
                 tv_timenow.setText("无");
             }
 

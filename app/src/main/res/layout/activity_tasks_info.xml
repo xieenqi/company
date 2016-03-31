@@ -33,7 +33,7 @@
                     android:gravity="center_vertical|left"
                     android:paddingLeft="@dimen/margin_side_edge"
                     android:singleLine="false"
-                    android:text="123"
+                    android:text=""
                     android:textSize="17sp" />
 
 
@@ -92,18 +92,30 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/tv_repeatTask"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="#999999"
+                    android:textSize="13sp"
+                    />
+
+                <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_responsiblePerson"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="负责人:"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_toUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -111,34 +123,37 @@
                     android:singleLine="false"
                     android:text="参与人:"
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_task_audit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_task_project"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_task_aboutuser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
             </LinearLayout>
 

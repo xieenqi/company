@@ -128,7 +128,7 @@ public class DropDownMenu extends LinearLayout{
         mMenuBackColor=getResources().getColor(R.color.default_menu_back);
         mMenuListBackColor=getResources().getColor(R.color.white);
         mMenuListSelectorRes=R.color.white;
-        mMenuTitleTextSize=18;
+        mMenuTitleTextSize=14;
         mArrowMarginTitle=10;
         mShowCheck=true;
         mShowDivider=true;
