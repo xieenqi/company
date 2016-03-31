@@ -13,15 +13,6 @@
         android:layout_marginTop="@dimen/dimen_5"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/img_status"
-            android:layout_width="@dimen/dimen_36"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="11dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/img_workreport_list_status1"/>
 
         <LinearLayout
             android:id="@+id/layout_info"
@@ -36,8 +27,8 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginBottom="5dp"
+                android:layout_weight="1"
                 >
 
                 <View
@@ -56,7 +47,8 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="标题"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/text33"
+                    android:textSize="15sp"/>
 
             </RelativeLayout>
 
@@ -64,12 +56,12 @@
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="内容"
-                android:textColor="#8a8a8a"
+                android:textColor="@color/text99"
                 android:textSize="12sp"
-                android:layout_marginBottom="5dp"
                 />
 
             <LinearLayout
@@ -83,11 +75,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="23dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="5dp"
                     android:text="时间"
-                    android:textColor="#8a8a8a"
+                    android:textColor="@color/text99"
                     android:textSize="12sp"/>
+                />
 
                 <TextView
                     android:id="@+id/tv_timeOut"
@@ -95,11 +87,19 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="23dp"
-                    android:layout_marginTop="2dp"
                     android:text="(已超时)"
                     android:textColor="@color/tomato"
                     android:textSize="12sp"
                     android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/iv_repeattask"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:background="@drawable/icon_repeattask"
+                android:visibility="gone"
+                />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -131,4 +131,10 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_0.5"
+        android:layout_marginLeft="@dimen/dimen_16"
+        android:background="@color/colore6"
+        />
 </LinearLayout>

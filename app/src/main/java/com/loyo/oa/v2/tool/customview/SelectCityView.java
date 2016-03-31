@@ -12,7 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CityModel;
 import com.loyo.oa.v2.beans.DistrictModel;
 import com.loyo.oa.v2.beans.ProvinceModel;
-import com.loyo.oa.v2.tool.XmlParserHandler;
+import com.loyo.oa.v2.tool.XmlParserSelectCity;
 import com.loyo.oa.v2.tool.wheel.OnWheelChangedListener;
 import com.loyo.oa.v2.tool.wheel.WheelView;
 import com.loyo.oa.v2.tool.wheel.adapters.ArrayWheelAdapter;
@@ -87,7 +87,7 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
             InputStream input = asset.open("province_data.xml");
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser parser = spf.newSAXParser();
-            XmlParserHandler handler = new XmlParserHandler();
+            XmlParserSelectCity handler = new XmlParserSelectCity();
             parser.parse(input, handler);
             input.close();
             provinceList = handler.getDataList();

@@ -31,7 +31,9 @@
                 android:text=""
                 android:textColor="#383838"
                 android:textSize="15sp"
-                android:singleLine="false"
+                android:maxEms="17"
+                android:ellipsize="end"
+                android:singleLine="true"
                 />
 
             <TextView

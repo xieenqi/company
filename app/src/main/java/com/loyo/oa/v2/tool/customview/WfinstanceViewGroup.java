@@ -263,6 +263,11 @@ public class WfinstanceViewGroup extends LinearLayout {
                         map_Values.put(lstData.get(position).getId(), str);
 
                     }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
                 },false);
             }
         }

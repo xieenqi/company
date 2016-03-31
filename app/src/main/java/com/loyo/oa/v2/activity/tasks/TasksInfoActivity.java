@@ -106,6 +106,8 @@ public class TasksInfoActivity extends BaseActivity {
     LinearLayout layout_attachment;
 
     @ViewById
+    TextView tv_repeatTask;
+    @ViewById
     TextView tv_task_title;
     @ViewById
     TextView tv_sub_title;
@@ -261,7 +263,7 @@ public class TasksInfoActivity extends BaseActivity {
 
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
-            tv_responsiblePerson.setText("负责人:" + realName);
+            tv_responsiblePerson.setText("负责人: " + realName);
             childTastUsers.add(mTask.getResponsiblePerson());
             childTastUsers.add(mTask.getCreator());
         }
@@ -272,7 +274,7 @@ public class TasksInfoActivity extends BaseActivity {
                 for (NewUser element : mTask.members.getAllData()) {
                     userNames.append(element.getName() + ",");
                 }
-                tv_toUsers.setText("参与人:" + userNames.toString());
+                tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
                 getAboutUser();
             } else {
@@ -281,15 +283,98 @@ public class TasksInfoActivity extends BaseActivity {
         }
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
-            tv_task_project.setText("所属项目：" + beProjects);
+            tv_task_project.setText("所属项目: " + beProjects);
         } else {
             tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
-            tv_task_aboutuser.setText("关联客户:" + mTask.getCustomerName());
+            tv_task_aboutuser.setText("关联客户: " + mTask.getCustomerName());
         } else {
             tv_task_aboutuser.setText("关联客户: 无");
         }
+
+        /**重复任务赋值*/
+        if(null != mTask.getCornBody() && mTask.getCornBody().getType() != 0){
+            String caseName = "";
+            String hourMins = "";
+            String weekName = "";
+            String dayName = "";
+
+            String hour = "";
+            String mins = "";
+            switch(mTask.getCornBody().getType()){
+                case 1:
+                    caseName = "每天";
+                    break;
+
+                case 2:
+                    caseName = "每周";
+                    break;
+
+                case 3:
+                    caseName = "每月";
+                    break;
+            }
+            hour = mTask.getCornBody().getHour()+"";
+            mins = mTask.getCornBody().getMinute()+"";
+
+            /*如果小时分钟为单数，则前面拼上0*/
+            if(hour.length() == 1){
+                hour = "0"+hour;
+            }
+
+            if(mins.length() == 1){
+                mins = "0"+mins;
+            }
+            hourMins = hour+":"+mins;
+
+            //每天
+            if(mTask.getCornBody().getType() == 1){
+                tv_repeatTask.setText("重复: "+caseName+" "+hourMins+"重复");
+            //每周
+            }else if(mTask.getCornBody().getType() == 2){
+                switch (mTask.getCornBody().getWeekDay()){
+                    case 1:
+                    weekName = "日";
+                        break;
+
+                    case 2:
+                        weekName = "一";
+                        break;
+
+                    case 3:
+                        weekName = "二";
+                        break;
+
+                    case 4:
+                        weekName = "三";
+                        break;
+
+                    case 5:
+                        weekName = "四";
+                        break;
+
+                    case 6:
+                        weekName = "五";
+                        break;
+
+                    case 7:
+                        weekName = "六";
+                        break;
+
+                    default:
+                        break;
+                }
+                tv_repeatTask.setText("重复: "+caseName+weekName+" "+hourMins+"重复");
+            //每月
+            }else if(mTask.getCornBody().getType() == 3){
+                    dayName = mTask.getCornBody().getDay()+"号";
+                    tv_repeatTask.setText("重复: "+caseName+" "+dayName+" "+hourMins+"重复");
+            }
+        }else{
+            tv_repeatTask.setVisibility(View.GONE);
+        }
+
 
         switch (mTask.getStatus()) {
             case 1:
@@ -541,8 +626,8 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 获取任务信息【子任务等】
      */
-    @Background
     void getTask() {
+        showLoading("");
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
@@ -564,7 +649,6 @@ public class TasksInfoActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                // LogUtil.d("任务错误信息："+error.getBody().toString());
             }
         });
     }

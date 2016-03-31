@@ -11,14 +11,14 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XmlParserHandler extends DefaultHandler {
+public class XmlParserSelectCity extends DefaultHandler {
 
     /**
      * 存储所有的解析对象
      */
     private List<ProvinceModel> provinceList = new ArrayList<ProvinceModel>();
 
-    public XmlParserHandler() {
+    public XmlParserSelectCity() {
 
     }
 
