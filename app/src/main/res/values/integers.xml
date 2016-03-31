@@ -1,5 +1,3 @@
 <resources>
-    <integer name="card_flip_time_full">200</integer>
-    <integer name="card_flip_time_half">150</integer>
-    <integer name="animator_activity">200</integer>
+    <integer name="animator_activity">100</integer>
 </resources>

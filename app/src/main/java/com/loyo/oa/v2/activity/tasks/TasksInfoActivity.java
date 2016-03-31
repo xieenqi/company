@@ -294,7 +294,7 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         /**重复任务赋值*/
-        if(null != mTask.getCornBody() && mTask.getCornBody().getType() != 0){
+        if (null != mTask.getCornBody() && mTask.getCornBody().getType() != 0) {
             String caseName = "";
             String hourMins = "";
             String weekName = "";
@@ -302,7 +302,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             String hour = "";
             String mins = "";
-            switch(mTask.getCornBody().getType()){
+            switch (mTask.getCornBody().getType()) {
                 case 1:
                     caseName = "每天";
                     break;
@@ -315,27 +315,27 @@ public class TasksInfoActivity extends BaseActivity {
                     caseName = "每月";
                     break;
             }
-            hour = mTask.getCornBody().getHour()+"";
-            mins = mTask.getCornBody().getMinute()+"";
+            hour = mTask.getCornBody().getHour() + "";
+            mins = mTask.getCornBody().getMinute() + "";
 
             /*如果小时分钟为单数，则前面拼上0*/
-            if(hour.length() == 1){
-                hour = "0"+hour;
+            if (hour.length() == 1) {
+                hour = "0" + hour;
             }
 
-            if(mins.length() == 1){
-                mins = "0"+mins;
+            if (mins.length() == 1) {
+                mins = "0" + mins;
             }
-            hourMins = hour+":"+mins;
+            hourMins = hour + ":" + mins;
 
             //每天
-            if(mTask.getCornBody().getType() == 1){
-                tv_repeatTask.setText("重复: "+caseName+" "+hourMins+"重复");
-            //每周
-            }else if(mTask.getCornBody().getType() == 2){
-                switch (mTask.getCornBody().getWeekDay()){
+            if (mTask.getCornBody().getType() == 1) {
+                tv_repeatTask.setText("重复: " + caseName + " " + hourMins + "重复");
+                //每周
+            } else if (mTask.getCornBody().getType() == 2) {
+                switch (mTask.getCornBody().getWeekDay()) {
                     case 1:
-                    weekName = "日";
+                        weekName = "日";
                         break;
 
                     case 2:
@@ -365,13 +365,13 @@ public class TasksInfoActivity extends BaseActivity {
                     default:
                         break;
                 }
-                tv_repeatTask.setText("重复: "+caseName+weekName+" "+hourMins+"重复");
-            //每月
-            }else if(mTask.getCornBody().getType() == 3){
-                    dayName = mTask.getCornBody().getDay()+"号";
-                    tv_repeatTask.setText("重复: "+caseName+" "+dayName+" "+hourMins+"重复");
+                tv_repeatTask.setText("重复: " + caseName + weekName + " " + hourMins + "重复");
+                //每月
+            } else if (mTask.getCornBody().getType() == 3) {
+                dayName = mTask.getCornBody().getDay() + "号";
+                tv_repeatTask.setText("重复: " + caseName + " " + dayName + " " + hourMins + "重复");
             }
-        }else{
+        } else {
             tv_repeatTask.setVisibility(View.GONE);
         }
 
@@ -681,15 +681,26 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
                     } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
-                        intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
-                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
-                        intent.putExtra("delete", true);
+                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
+                        intent.putExtra("extra", "复制任务");
                     }
                     /*负责人*/
-                } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
-                    intent.putExtra("edit", true);
-                    intent.putExtra("editText", "修改参与人");
+                } else if (IsResponsiblePerson()) {
+                    switch (mTask.getStatus()) {
+                        case Task.STATUS_PROCESSING:
+                            intent.putExtra("edit", true);
+                            intent.putExtra("editText", "修改参与人");
+                            break;
+
+                        case Task.STATUS_REVIEWING:
+                            intent.putExtra("extra", "复制任务");
+                            break;
+
+                        case Task.STATUS_FINISHED:
+                            intent.putExtra("extra", "复制任务");
+                            break;
+                    }
                 }
 
                 startActivityForResult(intent, REQUEST_EDIT_DELETE);
