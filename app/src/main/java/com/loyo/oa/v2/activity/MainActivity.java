@@ -86,7 +86,6 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -1135,13 +1134,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         requestNumber();
         PusherTest.appTest();
         LogUtil.d("友盟设备：" + PusherTest.getDeviceInfo(this));
-        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onResume(this);
     }
 
     /**

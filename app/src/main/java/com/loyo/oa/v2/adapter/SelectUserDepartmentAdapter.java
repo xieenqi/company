@@ -1,10 +1,12 @@
 package com.loyo.oa.v2.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -19,12 +21,14 @@ import java.util.List;
 public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUserDepartmentAdapter.ViewHolder> {
 
     private final Context mContext;
+    private static int screenWidth;
     private List<Department> mDepartments = new ArrayList<>();
     private int mSelectIndex = 0;
     private OnSelectIndexChangeCallback mIndexCallback;
 
     public SelectUserDepartmentAdapter(Context context, List<Department> datas) {
         this.mContext = context;
+        screenWidth = ((Activity) mContext).getWindowManager().getDefaultDisplay().getWidth();
         updataList(datas);
     }
 
@@ -46,15 +50,15 @@ public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUser
             return;
         int oldIndex = mSelectIndex;
         mSelectIndex = index;
-        notifyItemChanged(oldIndex);
         if (mIndexCallback != null) {
             mIndexCallback.onChange(index);
         }
+        notifyItemChanged(oldIndex);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = View.inflate(mContext, R.layout.item_selectcustomer_left_lv, null);
+        View v = View.inflate(mContext, R.layout.item_selectcustomer_left_lv1, null);
         return new ViewHolder(v);
     }
 
@@ -63,6 +67,8 @@ public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUser
         holder.detName.setText(mDepartments.get(position).getName());
         if (mDepartments.get(position).getXpath().split("/").length > 2) {
             holder.detName.setTextColor(Color.parseColor("#c9c9c9"));
+        } else {
+            holder.detName.setTextColor(mContext.getResources().getColor(R.color.text_black_1));
         }
 
         if (position == mSelectIndex) {
@@ -95,6 +101,8 @@ public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUser
             super(itemView);
             detName = (TextView) itemView.findViewById(R.id.item_selectdu_left_tv);
             convertView = itemView;
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(screenWidth / 3, WindowManager.LayoutParams.MATCH_PARENT);
+            convertView.setLayoutParams(lp);
         }
     }
 

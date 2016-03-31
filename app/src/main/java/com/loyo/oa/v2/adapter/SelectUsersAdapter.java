@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -23,10 +25,12 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private final Context mContext;
     private List<User> users = new ArrayList<>();
-    // 用于保存可见的的CheckBox, 优化响应速度
-    private final List<CheckBox> mItemCheckBoxes = new ArrayList<>();
+    private boolean isAlone = false;
+    private Department mDepartment;
+    private OnUserSelectCallback mUserSlectCallback;
+    private OnDepartmentAllSelectCallback mDepartmentAllSelectCallback;
 
-    public SelectUsersAdapter(Context context, List<User> users) {
+    public SelectUsersAdapter(Context context) {
         this.mContext = context;
         updataList(users);
     }
@@ -39,29 +43,49 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    /**
+     * 设置当前选中的部门信息
+     *
+     * @param mDepartment
+     */
+    public void setCurrentDepartment(Department mDepartment) {
+        this.mDepartment = mDepartment;
+    }
+
+    /**
+     * 设置是不是单选, 是单选隐藏全选的headerView，反之显示
+     *
+     * @param isAlone
+     */
+    public void setAlone(boolean isAlone) {
+        this.isAlone = isAlone;
+        notifyDataSetChanged();
+    }
+
+    public boolean isAlone() {
+        return isAlone;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder = null;
         View view = null;
-        switch (viewType) {
-            case 0:
-                view = View.inflate(mContext, R.layout.item_header_selectdetuser, null);
-                holder = new HeaderViewHolder(view);
-                break;
-            default:
-                view = View.inflate(mContext, R.layout.item_selectcustomer_right_lv, null);
-                holder = new ViewHolder(view);
-                break;
+        if (viewType == -1) {
+            view = View.inflate(mContext, R.layout.item_header_selectdetuser1, null);
+            holder = new HeaderViewHolder(view);
+        } else {
+            view = View.inflate(mContext, R.layout.item_selectcustomer_right_lv1, null);
+            holder = new ViewHolder(view);
         }
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (position) {
-            case 0:
+        switch (getItemViewType(position)) {
+            case -1:
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-                headerViewHolder.checkBox.setChecked(isAllSelect());
+                headerViewHolder.checkBox.setChecked(mDepartment.isIndex());
                 headerViewHolder.relAllcheck.setTag(headerViewHolder.checkBox);
                 headerViewHolder.relAllcheck.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -69,19 +93,21 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         CheckBox cb = (CheckBox) v.getTag();
                         boolean isSelectAll = cb.isChecked();
                         cb.setChecked(!isSelectAll);
-                        for (int i = 0; i < mItemCheckBoxes.size(); i++) {
-                            mItemCheckBoxes.get(i).setChecked(!isSelectAll);
-                        }
-                        for (int i = 0; i < users.size(); i++) {
-                            User user = users.get(i);
-                            user.setIndex(!isSelectAll);
+//                        for (int i = 0; i < users.size(); i++) {
+//                            User user = users.get(i);
+//                            user.setIndex(!isSelectAll);
+//                        }
+                        if (mDepartmentAllSelectCallback != null) {
+                            if (mDepartmentAllSelectCallback.onSelect(!isSelectAll)) {
+                                notifyDataSetChanged();
+                            }
                         }
                     }
                 });
                 break;
             default:
                 ViewHolder userHolder = (ViewHolder) holder;
-                User user = users.get(position - 1);
+                final User user = users.get(position - (isAlone() ? 0 : 1));
                 String deptName = "无";
                 String npcName = "无";
                 /*部门名称*/
@@ -101,6 +127,22 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 userHolder.worker.setText(npcName);
                 /*选中赋值*/
                 userHolder.checkBox.setChecked(user.isIndex());
+                userHolder.convertView.setTag(userHolder.checkBox);
+                userHolder.convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CheckBox checkBox = (CheckBox) v.getTag();
+                        boolean isSelect = checkBox.isChecked();
+                        checkBox.setChecked(!isSelect);
+                        user.setIndex(!isSelect);
+                        if (!isAlone()) {
+                            notifyItemChanged(0);
+                        }
+                        if (mUserSlectCallback != null) {
+                            mUserSlectCallback.onUserSelect(user);
+                        }
+                    }
+                });
                 ImageLoader.getInstance().displayImage(user.getAvatar(), userHolder.heading);
                 break;
         }
@@ -112,6 +154,8 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * @return
      */
     private boolean isAllSelect() {
+        if (users.isEmpty())
+            return false;
         for (User user :
                 users) {
             if (!user.isIndex()) {
@@ -123,12 +167,30 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return users.size() + 1;
+        return users.isEmpty() ? 0 : !isAlone() ? users.size() + 1 : users.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        return !isAlone() && position == 0 ? -1 : position;
+    }
+
+    /**
+     * 设置用户单选的回调
+     *
+     * @param callback
+     */
+    public void setOnUserSelectCallback(OnUserSelectCallback callback) {
+        this.mUserSlectCallback = callback;
+    }
+
+    /**
+     * 设置部门全选和取消的回调
+     *
+     * @param callback
+     */
+    public void setOnDepartmentAllSelectCallback(OnDepartmentAllSelectCallback callback) {
+        this.mDepartmentAllSelectCallback = callback;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -138,6 +200,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private final TextView worker;
         private final ImageView heading;
         private final CheckBox checkBox;
+        private final View convertView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -146,7 +209,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             worker = (TextView) itemView.findViewById(R.id.item_selectdu_right_worker);
             heading = (ImageView) itemView.findViewById(R.id.img_title_left);
             checkBox = (CheckBox) itemView.findViewById(R.id.item_selectdu_checkbox);
-            mItemCheckBoxes.add(checkBox);
+            convertView = itemView;
         }
     }
 
@@ -160,5 +223,13 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             relAllcheck = (RelativeLayout) itemView.findViewById(R.id.selectdetuser_allcheck);
             checkBox = (CheckBox) itemView.findViewById(R.id.selectdetuser_checkbox);
         }
+    }
+
+    public interface OnDepartmentAllSelectCallback {
+        boolean onSelect(boolean isSelect);
+    }
+
+    public interface OnUserSelectCallback {
+        void onUserSelect(User user);
     }
 }
