@@ -63,25 +63,20 @@ public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUser
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.detName.setText(mDepartments.get(position).getName());
         if (mDepartments.get(position).getXpath().split("/").length > 2) {
             holder.detName.setTextColor(Color.parseColor("#c9c9c9"));
         } else {
             holder.detName.setTextColor(mContext.getResources().getColor(R.color.text_black_1));
         }
-
-        if (position == mSelectIndex) {
-            holder.convertView.setBackgroundResource(R.color.beogray);
-        } else {
-            holder.convertView.setBackgroundResource(R.color.white);
-        }
-        holder.convertView.setOnClickListener(new View.OnClickListener() {
+        holder.detName.setSelected(position == mSelectIndex);
+        holder.detName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (position == mSelectIndex)
                     return;
-                v.setBackgroundResource(R.color.beogray);
+                v.setSelected(!v.isSelected());
                 setSelectIndex(position);
             }
         });

@@ -139,7 +139,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             notifyItemChanged(0);
                         }
                         if (mUserSlectCallback != null) {
-                            mUserSlectCallback.onUserSelect(user);
+                            mUserSlectCallback.onUserSelect(mDepartment, user);
                         }
                     }
                 });
@@ -230,6 +230,6 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public interface OnUserSelectCallback {
-        void onUserSelect(User user);
+        void onUserSelect(Department department, User user);
     }
 }
