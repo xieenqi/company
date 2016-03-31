@@ -58,7 +58,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
             select_type = bundle.getInt(DepartmentUserActivity.STR_SELECT_TYPE, 0);
             show_type = bundle.getInt(DepartmentUserActivity.STR_SHOW_TYPE, 0);
-//            title = bundle.getString(DepartmentUserActivity.STR_TITEL);
+//          title = bundle.getString(DepartmentUserActivity.STR_TITEL);
             deptId = bundle.getString(DepartmentUserActivity.STR_SUPER_ID, "");
             DeptName = bundle.getString(DepartmentUserActivity.STR_SUPER_NAME, "");
         }

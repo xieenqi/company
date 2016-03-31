@@ -1,88 +1,31 @@
 package com.loyo.oa.v2.activity.commonview;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.customview.RoundImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by loyocloud on 16/3/29.
  */
 public class SelectUserHelper {
-
-    private List<SelectUserBase> mSelectDepartOrUserList = new ArrayList<>();
-    private Map<String, Integer> mSelectDepartCounts = new HashMap<>();
-
-    public List<SelectUserBase> getmSelectDepartOrUserList() {
-        return mSelectDepartOrUserList;
-    }
-
-    public SelectUserBase get(int postition) {
-        return mSelectDepartOrUserList.get(postition);
-    }
-
-    public void add(SelectUserBase userBase) {
-        if (!userBase.isDepart()) {
-            pushSelectCounts(userBase.getDepartId(), true);
-        } else {
-            removeById(userBase.getId());
-        }
-        mSelectDepartOrUserList.add(0, userBase);
-    }
-
-    /**
-     * 移除id相等的
-     *
-     * @param id
-     */
-    public void removeById(String id) {
-        for (int i = mSelectDepartOrUserList.size() - 1; i >= 0; i--) {
-            if (!mSelectDepartOrUserList.get(i).isDepart() && mSelectDepartOrUserList.get(i).equalsId(id)) {
-                mSelectDepartOrUserList.remove(i);
-            }
-        }
-    }
-
-    /**
-     * 用于保存部门中被选中人的数量
-     *
-     * @param departId
-     * @param isAdd
-     */
-    public void pushSelectCounts(String departId, boolean isAdd) {
-        if (mSelectDepartCounts.containsKey(departId)) {
-            int count = mSelectDepartCounts.get(departId);
-            if (!isAdd && count == 1) {
-                mSelectDepartCounts.remove(departId);
-            } else {
-                mSelectDepartCounts.put(departId, isAdd ? ++count : --count);
-            }
-        } else {
-            if (isAdd) {
-                mSelectDepartCounts.put(departId, 1);
-            } else {
-                LogUtil.d(" 选择数据错误：当前hashmap不存在该departId ");
-            }
-        }
-    }
-
-    /**
-     * 用于保存部门中被选中人指定数量
-     *
-     * @param departId
-     * @param count
-     */
-    public void pushDepartAllCounts(String departId, int count) {
-        mSelectDepartCounts.put(departId, count);
-    }
-
-    public boolean isDepartAllSelect(int userSize, String departId) {
-        int count = mSelectDepartCounts.get(departId);
-        return userSize >= count;
-    }
-
 
     public interface SelectUserBase {
 
@@ -99,5 +42,63 @@ public class SelectUserHelper {
         boolean equalsId(String id); //判断id是否相等
 
         String getAvater(); // 获取头像信息, 部门暂返回NULL_AVATAR
+    }
+
+    /**
+     * 选择的人员的显示
+     */
+    public static class SelectDataAdapter extends BaseAdapter {
+
+        private final Context mContext;
+        private List<SelectUserBase> mSelectDatas = new ArrayList();
+
+        public SelectDataAdapter(Context context) {
+            this.mContext = context;
+        }
+
+        public void updataList(List<SelectUserBase> datas) {
+            if (datas == null)
+                datas = new ArrayList<>();
+            this.mSelectDatas = datas;
+            this.notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mSelectDatas.size();
+        }
+
+        @Override
+        public SelectUserBase getItem(final int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(final int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, final ViewGroup parent) {
+            Holder holder = null;
+            if (convertView == null) {
+                holder = new Holder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_select_user, null);
+                holder.head = (RoundImageView) convertView.findViewById(R.id.riv_head);
+                holder.name = (TextView) convertView.findViewById(R.id.tv_name);
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
+            }
+            ImageLoader.getInstance().displayImage(getItem(position).getAvater(), holder.head);
+            //holder.name.setText(selectUserList.get(position).name);
+            LogUtil.d("刷新的数九：" + mSelectDatas.size());
+            return convertView;
+        }
+
+        class Holder {
+            RoundImageView head;
+            TextView name;
+        }
     }
 }
