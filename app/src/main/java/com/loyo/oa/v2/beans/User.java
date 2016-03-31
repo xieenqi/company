@@ -96,9 +96,21 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
     @Override
     public String getDepartId() {
-        if (shortDept == null)
+        if (depts == null)
             return null;
-        return this.shortDept.getId();
+        return this.depts.get(0).getShortDept().getId();
+    }
+
+    public boolean isExistDepartment (String id){
+        if (TextUtils.isEmpty(id))
+            return false;
+        for (int i = 0; i < depts.size(); i++) {
+            UserInfo info = depts.get(i);
+            if (id.equals(info.getShortDept().getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
