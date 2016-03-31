@@ -40,7 +40,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private boolean isCreator;
     private boolean localpic = false; //是否可以选择相册
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean isCreator, int fromPage) {
+    public SignInGridViewAdapter(final Activity mActivity, ArrayList<Attachment> lstData, final boolean mIsAdd, final boolean isCreator, final int fromPage) {
         if (lstData == null) {
             lstData = new ArrayList<>();
         }
@@ -58,12 +58,12 @@ public class SignInGridViewAdapter extends BaseAdapter {
         }
     }
 
-    public SignInGridViewAdapter(Activity mActivity, ArrayList<Attachment> lstData, boolean mIsAdd, boolean _localpic, boolean isCreator, int fromPage) {
+    public SignInGridViewAdapter(final Activity mActivity, final ArrayList<Attachment> lstData, final boolean mIsAdd, final boolean _localpic, final boolean isCreator, final int fromPage) {
         this(mActivity, lstData, mIsAdd, isCreator, fromPage);
         localpic = _localpic;
     }
 
-    public void setDataSource(ArrayList<Attachment> lstData) {
+    public void setDataSource(final ArrayList<Attachment> lstData) {
         this.mListData = lstData;
     }
 
@@ -79,17 +79,17 @@ public class SignInGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return null;
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
         Item_info item_info;
         if (convertView == null) {
@@ -111,7 +111,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
         ImageView imageView;
         TextView textView;
 
-        public void setContent(int position) {
+        public void setContent(final int position) {
 
             if (position == mListData.size()) {
                 if (mListData.size() <= 9) {
@@ -140,7 +140,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(final View view) {
                             LogUtil.d(" 预览文件的URL：" + attachment.getUrl());
                             //预览文件
                             Bundle bundle = new Bundle();
@@ -158,13 +158,13 @@ public class SignInGridViewAdapter extends BaseAdapter {
      */
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
 
-            LogUtil.dll("mListData Size:"+mListData.size());
+            LogUtil.dll("mListData Size:" + mListData.size());
 
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
-                if(mListData.size() == 3){
+                if (mListData.size() == 3) {
                     Toast.makeText(mActivity, "最多只能上传3张考勤照片！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -184,7 +184,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
     }
 
 
-    public static void setAdapter(GridView gv, SignInGridViewAdapter adapter) {
+    public static void setAdapter(final GridView gv, final SignInGridViewAdapter adapter) {
         gv.setAdapter(adapter);
         if (adapter.getCount() % 3 == 0) {
             ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
@@ -199,7 +199,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
      * @param url
      * @return
      */
-    public String setImgUrl(String url) {
+    public String setImgUrl(final String url) {
         //http://loyocloud-01.oss-cn-qingdao.aliyuncs.com/86bdfcb2-9a4e-4629-9f01-9d7f849ec6ae.png
 //loyocloud-01.img-cn-qingdao.aliyuncs.com
         //@1e_1c_0o_0l_100h_100w_90q.src

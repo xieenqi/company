@@ -4,6 +4,9 @@ import com.loyo.oa.v2.tool.Config_project;
 
 
 public final class FinalVariables {
+    protected FinalVariables() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
     public static final int APP_RELOGIN = -4;
 
@@ -193,7 +196,7 @@ public final class FinalVariables {
     public static final String GET_ORGANIZATION = Config_project.SERVER_URL_LOGIN() + "/api/v2/user/organization/";
     /**
      * 刷新首页红点数据
-     * */
+     */
     public static final String RUSH_HOMEDATA = Config_project.SERVER_URL() + "/api/v2/oa/rectify";
 
 

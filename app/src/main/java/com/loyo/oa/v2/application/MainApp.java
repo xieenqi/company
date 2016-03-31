@@ -206,19 +206,6 @@ public class MainApp extends Application {
 
 
     void init() {
-//        CrashReport.initCrashReport(getApplicationContext(), "900001993", Config_project.is_developer_mode);  //初始化SDK
-//        if (BuildConfig.DEBUG) {
-//            try {
-//                Class c = Class.forName("com.squareup.leakcanary.LeakCanary");
-//                Method m = c.getMethod("install", Application.class);
-//                if (m != null) {
-//                    m.invoke(null, this);
-//                }
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-        //        init_StrictMode();
         Configuration config = getResources().getConfiguration();
         config.locale = Locale.CHINA;
         getBaseContext().getResources().updateConfiguration(config, null);
@@ -245,7 +232,7 @@ public class MainApp extends Application {
         df_api_get = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());//设置日期格式
         df_api_get2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+08:00", Locale.getDefault());//设置日期格式，2015-01-15T05:30:00+08:00
         gson = new Gson();
-
+        Utils.openGPS(this);
         DBManager.init(this);
 
         try {
@@ -610,4 +597,23 @@ public class MainApp extends Application {
 //        }
 //        return mTracker;
 //    }
+
+
+    @Override
+    public void onTerminate() {
+        // 程序终止的时候执行
+        super.onTerminate();
+    }
+
+    @Override
+    public void onLowMemory() {
+        // 低内存的时候执行
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        // 程序在内存清理的时候执行
+        super.onTrimMemory(level);
+    }
 }

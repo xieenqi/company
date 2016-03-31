@@ -31,7 +31,9 @@
                 android:text=""
                 android:textColor="#383838"
                 android:textSize="15sp"
-                android:singleLine="false"
+                android:maxEms="17"
+                android:ellipsize="end"
+                android:singleLine="true"
                 />
 
             <TextView
@@ -53,7 +55,7 @@
 
             <ImageView
                 android:id="@+id/img_project_status"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_vertical"

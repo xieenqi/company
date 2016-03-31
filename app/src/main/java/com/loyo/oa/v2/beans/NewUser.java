@@ -30,7 +30,7 @@ public class NewUser implements Serializable {
     }
 
     public static String GetNewUserNames(List<NewUser> users) {
-        if (users == null || users.isEmpty()){
+        if (users == null || users.isEmpty()) {
             return "";
         }
         StringBuffer sb = null;
@@ -90,7 +90,7 @@ public class NewUser implements Serializable {
             return true;
         }
         if (o instanceof User) {
-                return ((User) o).id.equals(id);
+            return ((User) o).id.equals(id);
         }
 
         if (!(o instanceof NewUser)) {
@@ -102,16 +102,21 @@ public class NewUser implements Serializable {
         return (user.id).equals(id);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public boolean isCurrentUser() {
         return equals(MainApp.user);
     }
 
     public User toUser() {
         User user = new User();
-        user.avatar=this.getAvatar();
-        user.id=this.getId();
-        user.realname=this.getName();
-        user.name=this.getName();
+        user.avatar = this.getAvatar();
+        user.id = this.getId();
+        user.realname = this.getName();
+        user.name = this.getName();
 
         return user;
     }

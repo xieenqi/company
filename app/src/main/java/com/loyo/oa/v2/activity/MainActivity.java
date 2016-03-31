@@ -62,6 +62,7 @@ import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.PusherTest;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
@@ -85,7 +86,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
+import com.umeng.analytics.MobclickAgent;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -821,25 +822,27 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "个待点评";
+                    extra = num.bizNum + "待点评";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "个待处理";
+                    extra = num.bizNum + "未完成"
+//                    +"，"+num.bizNum+"待处理"
+                    ;
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "个待审批";
+                    extra = num.bizNum + "待审批";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    extra = num.bizNum + "个进行中";
+                    extra = num.bizNum + "进行中";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
-                    extra = num.bizNum + "个将掉公海";
+                    extra = num.bizNum + "将掉公海";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-                    extra = num.bizNum + "个需拜访";
+                    extra = num.bizNum + "需拜访";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                    extra = num.bizNum + "个外勤";
+                    extra = num.bizNum + "外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if (num.bizType == 19) {
                     if (!num.viewed) {
@@ -1127,9 +1130,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     protected void onResume() {
         super.onResume();
-
         intentJpushInfo();
         requestNumber();
+        PusherTest.appTest();
+        LogUtil.d("友盟设备：" + PusherTest.getDeviceInfo(this));
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onResume(this);
     }
 
     /**
@@ -1183,11 +1194,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     startActivity(intent);
                     MainApp.jpushData = null;
                     break;
-                case 111://暂时定为审批提醒
-                    intent.setClass(MainActivity.this,WfinstanceInfoActivity_.class);
-                    startActivity(intent);
-                    break;
-
                 default:
                     break;
             }

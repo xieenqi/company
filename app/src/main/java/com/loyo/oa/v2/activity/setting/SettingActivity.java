@@ -173,8 +173,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 刷新首页红点数据
-     * */
-    void rushHomeData(){
+     */
+    void rushHomeData() {
         RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
             @Override
             public void success(final User user, final Response response) {

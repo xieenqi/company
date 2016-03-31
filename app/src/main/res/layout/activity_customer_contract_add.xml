@@ -1,278 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/activity_bg"
+    <include layout="@layout/include_common_title1" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/include_common_title1" />
-
-        <LinearLayout
-            android:background="@color/white"
-            android:layout_width="fill_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/view_h_title">
-
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_width="80dp"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:text="姓名" />
-
-            <EditText
-                android:id="@+id/edt_name"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                style="@style/edtText_normal"
-                android:gravity="center_vertical"
-                android:hint="姓名"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"
-            style="@style/view_split" />
-
-        <LinearLayout
-            android:id="@+id/layout_phone"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/view_h_title">
-
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:id="@+id/tv_phone_label"
-                android:layout_width="80dp"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:text="手机" />
-
-            <EditText
-                android:id="@+id/edt_phone"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:inputType="phone"
-                android:background="@android:color/transparent"
-                style="@style/edtText_normal"
-                android:gravity="center_vertical"
-                android:hint="手机"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"
-            style="@style/view_split" />
-
-        <LinearLayout
-            android:id="@+id/layout_wiretel"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/view_h_title">
-
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:id="@+id/tv_wiretel_label"
-                android:layout_width="80dp"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:text="座机" />
-
-            <EditText
-                android:id="@+id/edt_wiretel"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:inputType="phone"
-                android:background="@android:color/transparent"
-                style="@style/edtText_normal"
-                android:gravity="center_vertical"
-                android:hint="座机"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"
-            style="@style/view_split" />
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/contact_extra_layout"
-            >
-            <LinearLayout
-                android:id="@+id/layout_qq"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_height="@dimen/view_h_title">
+            android:background="@color/activity_bg"
+            android:orientation="vertical">
 
-                <TextView
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:id="@+id/tv_qq_label"
-                    android:layout_width="80dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="match_parent"
-                    android:text="QQ" />
-
-                <EditText
-                    android:id="@+id/edt_qq"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:inputType="phone"
-                    android:background="@android:color/transparent"
-                    style="@style/edtText_normal"
-                    android:gravity="center_vertical"
-                    android:hint="QQ"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginRight="@dimen/margin_side_edge"
-                style="@style/view_split" />
 
             <LinearLayout
-                android:id="@+id/layout_birthday"
+                android:id="@+id/layout_contact_extra_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_height="@dimen/view_h_title">
+                android:orientation="vertical"></LinearLayout>
 
-                <TextView
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:id="@+id/tv_birthday_label"
-                    android:layout_width="80dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="match_parent"
-                    android:text="生日" />
-
-                <TextView
-                    android:id="@+id/edt_birthday"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    style="@style/edtText_normal"
-                    android:gravity="center_vertical"
-                    android:hint="生日"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginRight="@dimen/margin_side_edge"
-                style="@style/view_split" />
-
-            <LinearLayout
-                android:id="@+id/layout_wx"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_height="@dimen/view_h_title">
-
-                <TextView
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:id="@+id/tv_wx_label"
-                    android:layout_width="80dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="match_parent"
-                    android:text="微信" />
-
-                <EditText
-                    android:id="@+id/edt_wx"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    style="@style/edtText_normal"
-                    android:gravity="center_vertical"
-                    android:hint="微信"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginRight="@dimen/margin_side_edge"
-                style="@style/view_split" />
-
-            <LinearLayout
-                android:id="@+id/layout_email"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_height="@dimen/view_h_title">
-
-                <TextView
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:id="@+id/tv_email_label"
-                    android:layout_width="80dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="match_parent"
-                    android:text="邮箱" />
-
-                <EditText
-                    android:id="@+id/edt_email"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:inputType="textEmailAddress"
-                    android:background="@android:color/transparent"
-                    style="@style/edtText_normal"
-                    android:gravity="center_vertical"
-                    android:hint="邮箱"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginRight="@dimen/margin_side_edge"
-                style="@style/view_split" />
 
             <EditText
                 android:id="@+id/edt_remark"
-                android:layout_width="match_parent"
-                android:inputType="textMultiLine"
-                android:background="@color/white"
                 style="@style/edtText_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:gravity="center_vertical"
                 android:hint="输入备注信息"
-                android:minHeight="@dimen/dimen_70"
+                android:inputType="textMultiLine"
                 android:maxHeight="140dp"
-                android:layout_height="wrap_content" />
-
-
-
+                android:minHeight="@dimen/dimen_70" />
 
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>
 

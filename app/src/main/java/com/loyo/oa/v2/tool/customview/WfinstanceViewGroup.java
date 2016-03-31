@@ -99,7 +99,7 @@ public class WfinstanceViewGroup extends LinearLayout {
             view.setLayoutParams(new ViewGroup.LayoutParams(-1, 1));
             addView(view);
             BizFormFields bizFormFields = lstData.get(i);
-            LogUtil.dll("类型TYPE："+bizFormFields.getDbtype());
+            LogUtil.dll("类型TYPE：" + bizFormFields.getDbtype());
             View convertView = inflater.inflate(R.layout.item_bizform_string, this, false);
             TextView label = (TextView) convertView.findViewById(R.id.tv_label);
             EditText value = (EditText) convertView.findViewById(R.id.edt_value);
@@ -142,15 +142,16 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.setOnClickListener(null);
                     value.addTextChangedListener(new BizFiedTextWatcher(i, value));
                     value.requestFocus();
+                    value.setTag("double");
                     value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 }
                 label.setText(bizFormFields.getName() + "：");
             }
-            if (!bizFormFields.isRequired()){
+            if (!bizFormFields.isRequired()) {
                 value.setHint("");
                 value.setText((String) map_Values.get(bizFormFields.getId()));
             }
-            if(bizFormFields.isEnable()){
+            if (bizFormFields.isEnable()) {
                 addView(convertView);
             }
         }
@@ -178,7 +179,10 @@ public class WfinstanceViewGroup extends LinearLayout {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.toString().length() > 0) {
-                map_Values.put(lstData.get(position).getId(), s.toString());
+
+                map_Values.put(lstData.get(position).getId(),
+                        !"double".equals(vv.getTag().toString()) ? s.toString() : Double.parseDouble(s.toString()));
+                LogUtil.d(vv.getTag() + "审批输入的内容" + s.toString());
             } else {
                 if (map_Values.containsKey(lstData.get(position).getId())
                         && map_Values.get(lstData.get(position).getId()).toString().length() == 1) {
@@ -196,11 +200,16 @@ public class WfinstanceViewGroup extends LinearLayout {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
         }
+
+        public void getNuber() {
+
+        }
     }
 
 
     private class ValueOnClickListener_list implements View.OnClickListener {
         AlertDialog dialog_Wheel_one;
+
         private ValueOnClickListener_list(AlertDialog _dialog, int position) {
             this.dialog_Wheel_one = _dialog;
         }
@@ -254,14 +263,19 @@ public class WfinstanceViewGroup extends LinearLayout {
                         map_Values.put(lstData.get(position).getId(), str);
 
                     }
-                });
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                },false);
             }
         }
     }
 
     /*列表选择*/
-   public AlertDialog initDialog_Wheel_one(final TextView textView, String src, int position) {
-       final AlertDialog dialog;
+    public AlertDialog initDialog_Wheel_one(final TextView textView, String src, int position) {
+        final AlertDialog dialog;
 
         String[] str = src.split(",");
         final ArrayList<HashMap<String, String>> lstData1 = new ArrayList<HashMap<String, String>>();

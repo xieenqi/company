@@ -15,16 +15,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
@@ -84,8 +83,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     /**
      * 初始化
-     * */
-    void initView(){
+     */
+    void initView() {
         vs_nodata = findViewById(R.id.vs_nodata);
         mBundle = getIntent().getExtras();
         mInflater = LayoutInflater.from(this);
@@ -194,7 +193,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     case CUSTOMER_MANAGE:
                         mIntent = new Intent(getApplicationContext(), CustomerDetailInfoActivity_.class);
                         mIntent.putExtra("Id", lstData.get(position - 2).getId());
-                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE,customerType);
+                        mIntent.putExtra(ExtraAndResult.EXTRA_TYPE, customerType);
                         startActivity(mIntent);
                         break;
                     //任务管理
@@ -239,7 +238,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     /**
      * 搜索操作
-     * */
+     */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
         if (strSearch.length() > 0) {
@@ -252,9 +251,9 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     /**
      * 根据业务 展示"无"Item
-     * */
-    public void switchPage(int befromPage){
-        switch (befromPage){
+     */
+    public void switchPage(int befromPage) {
+        switch (befromPage) {
             case WFIN_ADD:
                 headerViewBtn.setVisibility(View.VISIBLE);
                 break;
@@ -406,16 +405,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
             }
-
             Object o = getItem(i);
-
-            ImageView status = ViewHolder.get(convertView, R.id.img_status);
             TextView title = ViewHolder.get(convertView, R.id.tv_title);
             TextView content = ViewHolder.get(convertView, R.id.tv_content);
             TextView time = ViewHolder.get(convertView, R.id.tv_time);
             View ack = ViewHolder.get(convertView, R.id.view_ack);
             ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
-            status.setVisibility(View.GONE);
             layout_discuss.setVisibility(View.GONE);
             time.setVisibility(View.VISIBLE);
             //审批
@@ -430,34 +425,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 }
                 //                ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
-                switch (wfInstance.status) {
-                    case WfInstance.STATUS_NEW:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status1);
-                        break;
-                    case WfInstance.STATUS_PROCESSING:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status2);
-                        break;
-                    case WfInstance.STATUS_ABORT:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status3);
-                        break;
-                    case WfInstance.STATUS_APPROVED:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status4);
-                        break;
-                    case WfInstance.STATUS_FINISHED:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status5);
-                        break;
-                }
             }
             //任务
             else if (o instanceof Task) {
                 Task task = (Task) o;
-                if (task.getStatus() == Task.STATUS_PROCESSING) {
-                    status.setImageResource(R.drawable.task_status_1);
-                } else if (task.getStatus() == Task.STATUS_REVIEWING) {
-                    status.setImageResource(R.drawable.task_status_2);
-                } else if (task.getStatus() == Task.STATUS_FINISHED) {
-                    status.setImageResource(R.drawable.task_status_3);
-                }
 
                 try {
                     //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
@@ -495,7 +466,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                     case WorkReport.MONTH:
                         reportType = " 月报";
                         reportDate = DateTool.toDateStr(workReport.beginAt * 1000, "yyyy.MM");
-                        ;
                         break;
                 }
                 reportTitle.append(reportDate + reportType);
@@ -508,18 +478,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
                 time.setText(end);
                 //                ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
-                status.setImageResource(workReport.isReviewed() ? R.drawable.img_workreport_list_status2 : R.drawable.img_workreport_list_status1);
 
             }
             //项目
             else if (o instanceof Project) {
                 Project project = (Project) o;
-                if (project.status == 1) {
-                    status.setImageResource(R.drawable.task_status_1);
-                } else {
-                    status.setImageResource(R.drawable.img_project_complete);
-                }
-
                 try {
                     time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
                 } catch (Exception e) {
@@ -536,7 +499,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 customer = (Customer) o;
                 time.setText("跟进时间：" + app.df3.format(new Date(customer.lastActAt * 1000)));
                 title.setText(customer.name);
-                content.setText("标签"+Utils.getTagItems(customer));
+                content.setText("标签" + Utils.getTagItems(customer));
 
               /*  if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);

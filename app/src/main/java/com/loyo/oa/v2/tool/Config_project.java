@@ -7,9 +7,9 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static final Boolean isRelease = true; //是否是正式产品
+    public static final Boolean isRelease = false; //是否是正式产品
 
-    // public static final Boolean is_developer_mode = false; //生产模式
+    //public static final Boolean is_developer_mode = false; //生产模式
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG;//dbug模式`
 
@@ -23,6 +23,9 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.136";
 
+    protected Config_project() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
     /**
      * 正式产品的域名
@@ -32,6 +35,7 @@ public class Config_project {
          * 账号中心
          */
         public static String account = "http://user.ukuaiqi.com";
+
         /**
          * crm 客户管理
          */
@@ -40,6 +44,7 @@ public class Config_project {
          * oa 系统
          */
         public static String oa = "http://oa.ukuaiqi.com";
+
         /**
          * attachment 附件
          */

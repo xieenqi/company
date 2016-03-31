@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Task extends BaseBeans implements Serializable{
 
-    public static final int STATUS_PROCESSING = 1;  //进行中
+    public static final int STATUS_PROCESSING = 1;  //未完成
     public static final int STATUS_REVIEWING = 2;   //审核中
     public static final int STATUS_FINISHED = 3;    //已完成
 
@@ -34,17 +34,26 @@ public class Task extends BaseBeans implements Serializable{
     public ArrayList<Attachment> attachments;
     public ArrayList<TaskCheckPoint> checklists;
     public ArrayList<TaskReviewComment> reviewComments;
-    public Members members = new Members();
-    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
     public NewUser responsiblePerson;
     public NewUser creator;
+    public Members members = new Members();
     public ArrayList<Reviewer> reviewers = new ArrayList<>();
+    public CornBody cornBody;
+    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
 
     /*保存本地使用*/
     public String responsiblePersonId;
     public String responsiblePersonName;
     public String TaskComment;
 
+
+    public CornBody getCornBody() {
+        return cornBody;
+    }
+
+    public void setCornBody(CornBody cornBody) {
+        this.cornBody = cornBody;
+    }
 
     public ArrayList<Reviewer> getReviewers() {
         return reviewers;

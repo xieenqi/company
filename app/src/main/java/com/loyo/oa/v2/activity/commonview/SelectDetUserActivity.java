@@ -121,7 +121,7 @@ public class SelectDetUserActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_selectdetuser);
-        Data = MainApp.lstDepartment;// 转存组织架构数据
+        Data = MainApp.lstDepartment; // 转存组织架构数据
 //        for (Department element : Data) {
 //            for (User eleUser : element.getUsers()) {
 //                eleUser.index = false;

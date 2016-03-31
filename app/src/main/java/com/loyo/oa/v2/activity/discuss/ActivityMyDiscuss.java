@@ -54,7 +54,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mydiscuss);
         initView();
@@ -85,7 +85,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class).
                 getDisscussList(map, new RCallback<PaginationX<HttpDiscussItem>>() {
                     @Override
-                    public void success(PaginationX<HttpDiscussItem> discuss, Response response) {
+                    public void success(final PaginationX<HttpDiscussItem> discuss, final Response response) {
                         cancelLoading();
                         HttpErrorCheck.checkResponse(" 我的讨论数据： ", response);
                         if (!PaginationX.isEmpty(discuss)) {
@@ -101,7 +101,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(final RetrofitError error) {
                         cancelLoading();
                         HttpErrorCheck.checkError(error);
                         super.failure(error);
@@ -127,7 +127,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
                 finish();
@@ -138,11 +138,14 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
 //                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
                 startActivity(intent);
                 break;
+            default:
+
+                break;
         }
     }
 
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         pageIndex = 1;
         isTopAdd = true;
         getData();
@@ -150,7 +153,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+    public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         pageIndex++;
         isTopAdd = false;
         getData();
@@ -163,13 +166,16 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case ExtraAndResult.REQUEST_CODE:
                     adapter.cleanData();
                     LogUtil.d("数组刷新了红点数据");
+                    break;
+                default:
+
                     break;
             }
         }
@@ -192,13 +198,13 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         }
 
         @Override
-        public DiscussViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public DiscussViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
             View view = View.inflate(ActivityMyDiscuss.this, R.layout.item_mydiscuss_layout, null);
             return new DiscussViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(DiscussViewHolder holder, int position) {
+        public void onBindViewHolder(final DiscussViewHolder holder, final int position) {
             HttpDiscussItem info = datas.get(position);
             holder.tv_title.setText(info.title);
             holder.tv_time.setText(info.updatedAt.substring(11, 19));
@@ -220,7 +226,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         private TextView tv_content;
         private TextView tv_dateTime;
 
-        public DiscussViewHolder(View itemView) {
+        public DiscussViewHolder(final View itemView) {
             super(itemView);
             iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
             v_msgPoint = (ImageView) itemView.findViewById(R.id.v_msgPoint);
@@ -235,7 +241,7 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
         public void openItem(final HttpDiscussItem itemData) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     Intent intent = new Intent(ActivityMyDiscuss.this, ActivityDiscussDet.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
@@ -257,6 +263,9 @@ public class ActivityMyDiscuss extends BaseActivity implements View.OnClickListe
                 case 5:
                     iv_icon.setImageResource(R.drawable.ic_discuss_project);
                     tv_dateTime.setVisibility(View.GONE);
+                    break;
+                default:
+
                     break;
 
             }

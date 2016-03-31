@@ -25,6 +25,10 @@ public class HttpErrorCheck {
     private static String TAG = "LogoServerV2";
     private static String MSG = "msg";
 
+    protected HttpErrorCheck() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
     private static void Toast(String msg) {
         if (null != mCurrentToast) {
             mCurrentToast.cancel();

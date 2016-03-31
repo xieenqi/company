@@ -103,9 +103,13 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                 tv_remain_time.setText(str);
             }
-        });
-    }
 
+            @Override
+            public void onCancel() {
+
+            }
+        },false);
+    }
 
     @Override
     public void onClick(final View v) {
@@ -133,7 +137,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 }
 
                 if (TextUtils.isEmpty(tagItemIds)) {
-                    Toast("请选择行为");
+                    Toast("请选择跟进方式");
                     return;
                 }
 

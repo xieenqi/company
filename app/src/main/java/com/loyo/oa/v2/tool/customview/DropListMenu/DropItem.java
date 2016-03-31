@@ -117,4 +117,8 @@ public class DropItem {
         return Name.equals(item.Name);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

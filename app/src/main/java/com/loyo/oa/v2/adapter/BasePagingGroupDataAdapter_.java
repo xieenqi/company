@@ -95,7 +95,8 @@ public abstract class BasePagingGroupDataAdapter_<T extends BaseBeans> extends B
             if (data.getOrderStr().contains("已")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isfinish));
                 img_status.setImageResource(R.drawable.bg_view_green_circle);
-            } else if (data.getOrderStr().contains("进行中") || data.getOrderStr().contains("待点评") || data.getOrderStr().contains("待审批")) {
+            } else if (data.getOrderStr().contains("未完成") || data.getOrderStr().contains("待点评")
+                    || data.getOrderStr().contains("待审批") || data.getOrderStr().contains("进行中")) {
                 tv_title.setTextColor(mContext.getResources().getColor(R.color.isteston));
                 img_status.setImageResource(R.drawable.bg_view_purple_circle);
             } else if (data.getOrderStr().contains("待审核") || data.getOrderStr().contains("审")) {

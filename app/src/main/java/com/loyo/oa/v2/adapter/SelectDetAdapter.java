@@ -25,7 +25,7 @@ public class SelectDetAdapter extends BaseAdapter {
     public LayoutInflater mInflater;
     public int selectedPosition;
 
-    public SelectDetAdapter(Context mContext, ArrayList<Department> listDepartment) {
+    public SelectDetAdapter(final Context mContext, final ArrayList<Department> listDepartment) {
         this.mContext = mContext;
         this.listDepartment = listDepartment;
         mInflater = LayoutInflater.from(mContext);
@@ -37,21 +37,21 @@ public class SelectDetAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return listDepartment.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
-    public void setSelectedPosition(int position) {
+    public void setSelectedPosition(final int position) {
         selectedPosition = position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, final ViewGroup viewGroup) {
 
         convertView = mInflater.inflate(R.layout.item_selectcustomer_left_lv, null);
         TextView detName = (TextView) convertView.findViewById(R.id.item_selectdu_left_tv);

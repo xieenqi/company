@@ -13,22 +13,25 @@ import java.util.Locale;
  * Created by Nereo on 2015/4/8.
  */
 public class FileUtils {
+    protected FileUtils() {
+        throw new UnsupportedOperationException(); // 防止子类调用
+    }
 
-    public static File createTmpFile(Context context){
+    public static File createTmpFile(Context context) {
 
         String state = Environment.getExternalStorageState();
-        if(state.equals(Environment.MEDIA_MOUNTED)){
+        if (state.equals(Environment.MEDIA_MOUNTED)) {
             // 已挂载
             File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
-            String fileName = "multi_image_"+timeStamp+"";
-            File tmpFile = new File(pic, fileName+".jpg");
+            String fileName = "multi_image_" + timeStamp + "";
+            File tmpFile = new File(pic, fileName + ".jpg");
             return tmpFile;
-        }else{
+        } else {
             File cacheDir = context.getCacheDir();
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
-            String fileName = "multi_image_"+timeStamp+"";
-            File tmpFile = new File(cacheDir, fileName+".jpg");
+            String fileName = "multi_image_" + timeStamp + "";
+            File tmpFile = new File(cacheDir, fileName + ".jpg");
             return tmpFile;
         }
 

@@ -90,6 +90,14 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             customProgressDialog.setCancelable(false);
         }
         registerBaseReceiver();
+        // 创建状态栏的管理实例
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//        // 激活状态栏设置
+//        tintManager.setStatusBarTintEnabled(true);
+//        // 激活导航栏设置
+//        tintManager.setNavigationBarTintEnabled(true);
+//        // 设置一个颜色给系统栏
+//        tintManager.setTintColor(Color.parseColor("#99000FF"));
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
@@ -166,7 +174,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
-
         super.onResume();
     }
 
@@ -247,7 +254,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * 老版弹出框
-     * */
+     */
     protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(message);
@@ -369,7 +376,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * 加载loading的方法
-     * */
+     */
     public void showLoading(String msg) {
         DialogHelp.showLoading(this, msg, true);
     }
@@ -385,16 +392,16 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     /**
      * 通用提示弹出框init
-     * */
-    public void showGeneralDialog(boolean isOut,boolean isKind,String message){
-        generalPopView = new GeneralPopView(this,isKind);
+     */
+    public void showGeneralDialog(boolean isOut, boolean isKind, String message) {
+        generalPopView = new GeneralPopView(this, isKind);
         generalPopView.show();
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
     }
 
     /*重启当前Activity*/
-    public void restartActivity(){
+    public void restartActivity() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

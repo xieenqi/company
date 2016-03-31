@@ -106,6 +106,8 @@ public class TasksInfoActivity extends BaseActivity {
     LinearLayout layout_attachment;
 
     @ViewById
+    TextView tv_repeatTask;
+    @ViewById
     TextView tv_task_title;
     @ViewById
     TextView tv_sub_title;
@@ -225,7 +227,7 @@ public class TasksInfoActivity extends BaseActivity {
             layout_child_add_action.setVisibility(View.VISIBLE);
             layout_attachment.setVisibility(View.VISIBLE);
             v_split.setVisibility(View.VISIBLE);
-            img_title_right.setVisibility(View.VISIBLE);
+            //img_title_right.setVisibility(View.VISIBLE);
         } else {
             layout_child_add_action.setVisibility(View.GONE);
             layout_attachment.setVisibility(View.GONE);
@@ -236,7 +238,7 @@ public class TasksInfoActivity extends BaseActivity {
             btn_complete.setVisibility(View.GONE);
         }
 
-        if(!IsCreator() && !IsResponsiblePerson()){
+        if (!IsCreator() && !IsResponsiblePerson()) {
             img_title_right.setVisibility(View.GONE);
         }
     }
@@ -245,23 +247,64 @@ public class TasksInfoActivity extends BaseActivity {
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
-
+        LogUtil.d("status:"+mTask.getStatus());
         childTastUsers.clear();
-        if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
+        //参与人
+        if (!IsResponsiblePerson() && !IsCreator()) {
             img_title_right.setVisibility(View.GONE);
-        } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED) {
-            img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//参与人
-            img_title_right.setVisibility(View.GONE);
-        } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
-            img_title_right.setVisibility(View.VISIBLE);
-        } else {
-            img_title_right.setVisibility(View.VISIBLE);
         }
+        //其他情况
+        switch (mTask.getStatus()){
+            case Task.STATUS_REVIEWING:
+                if(IsResponsiblePerson()){
+                    LogUtil.d("负责人 审核中");
+                    img_title_right.setVisibility(View.GONE);
+                }
+                break;
+
+            case Task.STATUS_FINISHED:
+                if(IsResponsiblePerson()){
+                    LogUtil.d("负责人 已完成");
+                    img_title_right.setVisibility(View.GONE);
+                }
+                break;
+        }
+
+
+/*                        *//*创建人*//*
+        if (IsCreator()) {
+            if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
+                intent.putExtra("edit", true);
+                intent.putExtra("delete", true);
+                intent.putExtra("extra", "复制任务");
+            } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
+                intent.putExtra("extra", "复制任务");
+            } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
+                intent.putExtra("extra", "复制任务");
+            }
+                    *//*负责人*//*
+        } else if (IsResponsiblePerson()) {
+            switch (mTask.getStatus()) {
+                case Task.STATUS_PROCESSING:
+                    intent.putExtra("edit", true);
+                    intent.putExtra("editText", "修改参与人");
+                    break;
+
+                case Task.STATUS_REVIEWING:
+                    intent.putExtra("extra", "复制任务");
+                    break;
+
+                case Task.STATUS_FINISHED:
+                    intent.putExtra("extra", "复制任务");
+                    break;
+            }
+        }*/
+
+
 
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
-            tv_responsiblePerson.setText("负责人:" + realName);
+            tv_responsiblePerson.setText("负责人: " + realName);
             childTastUsers.add(mTask.getResponsiblePerson());
             childTastUsers.add(mTask.getCreator());
         }
@@ -272,7 +315,7 @@ public class TasksInfoActivity extends BaseActivity {
                 for (NewUser element : mTask.members.getAllData()) {
                     userNames.append(element.getName() + ",");
                 }
-                tv_toUsers.setText("参与人:" + userNames.toString());
+                tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
                 getAboutUser();
             } else {
@@ -281,19 +324,103 @@ public class TasksInfoActivity extends BaseActivity {
         }
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
-            tv_task_project.setText("所属项目：" + beProjects);
+            tv_task_project.setText("所属项目: " + beProjects);
         } else {
             tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
-            tv_task_aboutuser.setText("关联客户:" + mTask.getCustomerName());
+            tv_task_aboutuser.setText("关联客户: " + mTask.getCustomerName());
         } else {
             tv_task_aboutuser.setText("关联客户: 无");
         }
 
+        /**重复任务赋值*/
+        if (null != mTask.getCornBody() && mTask.getCornBody().getType() != 0) {
+            String caseName = "";
+            String hourMins = "";
+            String weekName = "";
+            String dayName = "";
+
+            String hour = "";
+            String mins = "";
+            switch (mTask.getCornBody().getType()) {
+                case 1:
+                    caseName = "每天";
+                    break;
+
+                case 2:
+                    caseName = "每周";
+                    break;
+
+                case 3:
+                    caseName = "每月";
+                    break;
+            }
+            hour = mTask.getCornBody().getHour() + "";
+            mins = mTask.getCornBody().getMinute() + "";
+
+            /*如果小时分钟为单数，则前面拼上0*/
+            if (hour.length() == 1) {
+                hour = "0" + hour;
+            }
+
+            if (mins.length() == 1) {
+                mins = "0" + mins;
+            }
+            hourMins = hour + ":" + mins;
+
+            //每天
+            if (mTask.getCornBody().getType() == 1) {
+                tv_repeatTask.setText("重复: " + caseName + " " + hourMins + "重复");
+                //每周
+            } else if (mTask.getCornBody().getType() == 2) {
+                switch (mTask.getCornBody().getWeekDay()) {
+                    case 1:
+                        weekName = "日";
+                        break;
+
+                    case 2:
+                        weekName = "一";
+                        break;
+
+                    case 3:
+                        weekName = "二";
+                        break;
+
+                    case 4:
+                        weekName = "三";
+                        break;
+
+                    case 5:
+                        weekName = "四";
+                        break;
+
+                    case 6:
+                        weekName = "五";
+                        break;
+
+                    case 7:
+                        weekName = "六";
+                        break;
+
+                    default:
+                        break;
+                }
+                tv_repeatTask.setText("重复: " + caseName + weekName + " " + hourMins + "重复");
+                //每月
+            } else if (mTask.getCornBody().getType() == 3) {
+                dayName = mTask.getCornBody().getDay() + "号";
+                tv_repeatTask.setText("重复: " + caseName + " " + dayName + " " + hourMins + "重复");
+            }
+            tv_task_audit.setVisibility(View.GONE);
+        } else {
+            tv_repeatTask.setVisibility(View.GONE);
+        }
+
+
         switch (mTask.getStatus()) {
             case 1:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_ing);
+                iv_task_status.setBackgroundResource(R.drawable.icon_project_processing);
                 break;
 
             case 2:
@@ -342,7 +469,7 @@ public class TasksInfoActivity extends BaseActivity {
                 tv_task_content.setText(reviewer.getComment());
             }
 
-            if (reviewer.getStatus().equals("0")) {
+            if ("0".equals(reviewer.getStatus())) {
                 item_tasks_sorece.setVisibility(View.GONE);
             }
 
@@ -351,7 +478,7 @@ public class TasksInfoActivity extends BaseActivity {
                 ratingBar_Task.setRating((float) (rat / 1.0));
             }
 
-            if (reviewer.getStatus().equals("1")) {
+            if ("1".equals(reviewer.getStatus())) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
             } else {
@@ -442,7 +569,7 @@ public class TasksInfoActivity extends BaseActivity {
 
             /*Checkbox勾选,赋值*/
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
-            boolean isStatus = subTask.getStatus().equals("1") ? true : false;
+            boolean isStatus = "1".equals(subTask.getStatus()) ? true : false;
 
             /*子任务个数设置*/
             if (isStatus) {
@@ -541,8 +668,8 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 获取任务信息【子任务等】
      */
-    @Background
     void getTask() {
+        showLoading("");
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
@@ -564,7 +691,6 @@ public class TasksInfoActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                // LogUtil.d("任务错误信息："+error.getBody().toString());
             }
         });
     }
@@ -597,15 +723,26 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
                     } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
-                        intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
-                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
-                        intent.putExtra("delete", true);
+                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
+                        intent.putExtra("extra", "复制任务");
                     }
                     /*负责人*/
-                } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
-                    intent.putExtra("edit", true);
-                    intent.putExtra("editText", "修改参与人");
+                } else if (IsResponsiblePerson()) {
+                    switch (mTask.getStatus()) {
+                        case Task.STATUS_PROCESSING:
+                            intent.putExtra("edit", true);
+                            intent.putExtra("editText", "修改参与人");
+                            break;
+
+                        case Task.STATUS_REVIEWING:
+                            intent.putExtra("extra", "复制任务");
+                            break;
+
+                        case Task.STATUS_FINISHED:
+                            intent.putExtra("extra", "复制任务");
+                            break;
+                    }
                 }
 
                 startActivityForResult(intent, REQUEST_EDIT_DELETE);
@@ -918,7 +1055,7 @@ public class TasksInfoActivity extends BaseActivity {
             return;
         }
 
-        /*任务Status: 1-进行中 2-待点评 3-完成*/
+        /*任务Status: 1-未完成 2-待点评 3-完成*/
         if (mTask.getStatus() == 2 || mTask.getStatus() == 3) {
             isOver = true;
         }

@@ -81,7 +81,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
         mMenu.setmShowCount(6);//Menu展开list数量最多只显示的个数
         mMenu.setShowCheck(true);//是否显示展开list的选中项
         mMenu.setmMenuTitleTextSize(14);//Menu的文字大小
-        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+        mMenu.setmMenuTitleTextColor(getResources().getColor(R.color.text33));//Menu的文字颜色
         mMenu.setmMenuListTextSize(14);//Menu展开list的文字大小
         mMenu.setmMenuListTextColor(Color.BLACK);//Menu展开list的文字颜色
         mMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色

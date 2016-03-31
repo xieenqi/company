@@ -46,10 +46,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -259,12 +256,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             industry = mCustomer.industry;
         }
 
-        try{
+        try {
             if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
                 lat = mCustomer.loc.loc[1];
                 lng = mCustomer.loc.loc[0];
-        }
-        }catch (NullPointerException e){
+            }
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         tv_customer_name.setText(mCustomer.name);
@@ -428,7 +425,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 更新客戶
      */
     private void updateCustomer() {
-
+        showLoading("");
         String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
         String summary = edt_customer_memo.getText().toString().trim();
@@ -459,6 +456,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
+                        HttpErrorCheck.checkResponse("更新客户信息",response);
                         app.isCutomerEdit = true;
                         Intent intent = new Intent();
                         customer.loc = mLocate;
@@ -468,19 +466,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
                     @Override
                     public void failure(final RetrofitError error) {
-                        if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                            Toast.makeText(CustomerInfoActivity.this, "请检查您的网络连接", Toast.LENGTH_SHORT).show();
-                        } else if (error.getResponse().getStatus() == 500) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(Utils.convertStreamToString(error.getResponse().getBody().in()));
-                                Toast.makeText(CustomerInfoActivity.this, jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
-                                LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
                     }
                 });
     }

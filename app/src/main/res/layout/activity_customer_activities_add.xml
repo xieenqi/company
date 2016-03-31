@@ -21,6 +21,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_16"
                 >
 
                 <EditText
@@ -30,23 +31,22 @@
                     android:layout_height="0px"
                     android:layout_weight="1"
                     android:gravity="left|top"
-                    android:hint="请输入内容"
+                    android:hint="请填写跟进内容"
                     android:minHeight="100dp"
                     android:padding="5dp"/>
 
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
                     />
 
             </LinearLayout>
 
             <LinearLayout
-                android:background="@color/white"
                 android:id="@+id/layout_sale_action"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_48"
+                android:background="@color/white"
                 android:orientation="horizontal"
                 >
 
@@ -90,13 +90,13 @@
                 style="@style/view_split"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-               />
+                />
 
             <LinearLayout
-                android:background="@color/white"
                 android:id="@+id/layout_remain_time"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_48"
+                android:background="@color/white"
                 android:orientation="horizontal"
                 >
 

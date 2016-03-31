@@ -25,11 +25,11 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.Proj
         return mProjectMembers;
     }
 
-    public void SetAction(ProjectMemberAction action) {
+    public void SetAction(final ProjectMemberAction action) {
         mAction = action;
     }
 
-    public ProjectMemberListViewAdapter(Context context, ArrayList<HttpProject.ProjectMember> projectMembers) {
+    public ProjectMemberListViewAdapter(final Context context, final ArrayList<HttpProject.ProjectMember> projectMembers) {
         super(context, projectMembers, R.layout.item_listview_project_members);
         mProjectMembers = projectMembers;
     }
@@ -47,7 +47,7 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.Proj
         ImageView view = holder.getView(R.id.img_project_member_delete);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (mAction != null) {
                     mProjectMembers.remove(projectMember);
                     mAction.DeleteMember();
@@ -59,7 +59,7 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.Proj
         sw.setChecked(projectMember.canReadAll);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 HttpProject.ProjectMember p = mProjectMembers.get(holder.getPosition());
                 if (p != null) {
                     p.canReadAll = isChecked;
