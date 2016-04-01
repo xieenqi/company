@@ -5,19 +5,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/layout_cb"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/layout_cb"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="70dp"
             android:clickable="false"
             >
-
             <CheckBox
                 android:id="@+id/cb"
                 android:layout_width="wrap_content"
@@ -29,13 +27,17 @@
 
         </LinearLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/item_childtask_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
         <TextView
             android:id="@+id/item_tv_child_task_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_10"
             android:layout_marginTop="@dimen/dimen_10"
-            android:layout_toRightOf="@+id/layout_cb"
             android:gravity="center_vertical"
             android:text="@string/child_task_content_default"
             android:textColor="@color/text33"
@@ -47,7 +49,6 @@
             android:layout_height="1dp"
             android:layout_below="@+id/item_tv_child_task_content"
             android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_toRightOf="@+id/layout_cb"
             android:background="@color/white"/>
 
         <TextView
@@ -55,8 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_below="@+id/view_splite"
-            android:layout_marginLeft="@dimen/dimen_10"
-            android:layout_toRightOf="@+id/layout_cb"
             android:gravity="center_vertical"
             android:text="负责人:"
             android:textColor="@color/text99"
@@ -89,6 +88,7 @@
             android:src="@drawable/right_arrow"/>
     </RelativeLayout>
 
+    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"

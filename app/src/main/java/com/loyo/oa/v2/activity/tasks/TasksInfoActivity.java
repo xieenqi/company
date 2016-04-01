@@ -550,6 +550,7 @@ public class TasksInfoActivity extends BaseActivity {
         for (final TaskCheckPoint subTask : mTask.getchecklists()) {
 
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            RelativeLayout childView = (RelativeLayout)view.findViewById(R.id.item_childtask_info);
 
             //子任务标题
             TextView viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
@@ -604,8 +605,8 @@ public class TasksInfoActivity extends BaseActivity {
                 /**
                  * 子任务编辑跳转
                  * */
-                view.setTag(subTask);
-                view.setOnClickListener(new View.OnClickListener() {
+                childView.setTag(subTask);
+                childView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
 
@@ -694,7 +695,7 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 标题左右监听
      */
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete,R.id.layout_cb})
     void onClick(final View v) {
 
         switch (v.getId()) {
@@ -752,6 +753,12 @@ public class TasksInfoActivity extends BaseActivity {
                     Toast("子任务尚未完成，不能提交！");
                 }
                 break;
+
+            case R.id.layout_cb:
+
+
+                break;
+
 
             default:
                 break;
