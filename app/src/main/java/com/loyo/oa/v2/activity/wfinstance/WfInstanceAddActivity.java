@@ -193,27 +193,27 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
     };
 
-    /**
-     * 获取审批模板
-     */
-    void getTempWfintance() {
-
-        WfInstance wfInstance = DBManager.Instance().getWfInstance();
-        if (wfInstance == null) {
-            return;
-        }
-
-        if (!TextUtils.isEmpty(wfInstance.wftemplateId)) {
-            mTemplateId = wfInstance.wftemplateId;
-        }
-
-        if (wfInstance.bizForm != null) {
-            mBizForm = wfInstance.bizForm;
-            intBizForm();
-        }
-        edt_memo.setText(wfInstance.memo);
-
-    }
+//    /**
+//     * 获取审批模板
+//     */
+//    void getTempWfintance() {
+//
+//        WfInstance wfInstance = DBManager.Instance().getWfInstance();
+//        if (wfInstance == null) {
+//            return;
+//        }
+//
+//        if (!TextUtils.isEmpty(wfInstance.wftemplateId)) {
+//            mTemplateId = wfInstance.wftemplateId;
+//        }
+//
+//        if (wfInstance.bizForm != null) {
+//            mBizForm = wfInstance.bizForm;
+//            intBizForm();
+//        }
+//        edt_memo.setText(wfInstance.memo);
+//
+//    }
 
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
@@ -221,17 +221,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     void initUI_Dialog_WfTemplate() {
-        /**
-         * 过滤流程节点是否可用
-         */
-        ArrayList<WfTemplate> newWfTemplateData = new ArrayList<>();
-        for (WfTemplate element : wfTemplateArrayList) {
-            if (element.isEnable()) {
-                newWfTemplateData.add(element);
-            }
-        }
 
-        wfTemplateArrayList = newWfTemplateData;
         if (wfTemplateArrayList == null || wfTemplateArrayList.size() == 0) {
             Toast("错误:没有配置流程!");
             mTemplateId = "";
@@ -262,7 +252,8 @@ public class WfInstanceAddActivity extends BaseActivity {
 
         builder.setView(layout);
         dialog_follow = builder.create();
-
+        mTemplateId = wfTemplateArrayList.get(0).getId();
+        tv_WfTemplate.setText(wfTemplateArrayList.get(0).getTitle());
         if (!TextUtils.isEmpty(mTemplateId)) {
             for (int i = 0; i < wfTemplateArrayList.size(); i++) {
                 WfTemplate t = wfTemplateArrayList.get(i);
@@ -271,8 +262,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 }
             }
         }
-        mTemplateId = wfTemplateArrayList.get(0).getId();
-        tv_WfTemplate.setText(wfTemplateArrayList.get(0).getTitle());
+
     }
 
     @Override
@@ -384,6 +374,20 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse("获取审批流程", response);
+//                /**
+//                 * 过滤流程节点是否可用
+//                 */
+//                if (null != wfTemplateArrayList) {
+//                    mTemplateId = "";
+//                    wfTemplateArrayList = null;
+//                }
+//                ArrayList<WfTemplate> newWfTemplateData = new ArrayList<>();
+//                for (WfTemplate element : bizFormFieldsPaginationX) {
+//                    if (element.isEnable() && null != element.getWfTplNodes()) {
+//                        newWfTemplateData.add(element);
+//                    }
+//                }
+//                wfTemplateArrayList = newWfTemplateData;
                 wfTemplateArrayList = bizFormFieldsPaginationX;
                 initUI_Dialog_WfTemplate();
             }
@@ -439,7 +443,6 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 界面上 新增加审批内容 栏目
      */
     void addTypeData() {
-
         if (mBizForm == null) {
             Toast("请选择类型");
             return;
