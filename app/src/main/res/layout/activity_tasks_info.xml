@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:orientation="vertical">
 
-    <include layout="@layout/include_common_title_edit"/>
+    <include layout="@layout/include_common_title_edit" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -21,54 +21,53 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:gravity="center_vertical"
-                >
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_task_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/white"
-                    android:ellipsize="end"
                     android:gravity="center_vertical|left"
-                    android:maxEms="10"
                     android:paddingLeft="@dimen/margin_side_edge"
+                    android:text="asdsad"
+                    android:textSize="15sp"
+                    android:maxEms="10"
+                    android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="标题"
-                    android:textColor="@color/text33"
-                    android:textSize="@dimen/text_sp16"
                     />
 
                 <ImageView
                     android:id="@+id/iv_task_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                    android:layout_marginRight="10dp" />
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_sub_title"
+                style="@style/textView_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_8"
-                android:layout_marginTop="@dimen/dimen_5"
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:text="付标题"
-                android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp12"/>
+                android:textSize="13sp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:text="asdsadsad"
+                />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_0.5"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:background="@color/colore6"
-                android:layerType="software"/>
+                android:layout_height="@dimen/dimen_3"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/view_dashed_line"
+                android:layerType="software" />
 
             <TextView
                 android:id="@+id/tv_content"
@@ -77,94 +76,92 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="left|top"
-                android:paddingBottom="@dimen/dimen_12"
+                android:minHeight="60dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="@dimen/margin_side_edge"
                 android:paddingRight="@dimen/margin_side_edge"
-                android:paddingTop="@dimen/dimen_10"
+                android:paddingTop="10dp"
                 android:singleLine="false"
-                android:text="@string/app_content"
-                android:textSize="@dimen/text_sp15"/>
+                android:text="asdsadas"
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_3"
-                android:layout_marginLeft="@dimen/dimen_14"
-                android:background="@drawable/view_dashed_line"
-                android:layerType="software"/>
+                />
 
             <LinearLayout
+                android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/dimen_10"
-                android:paddingLeft="@dimen/margin_side_edge"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_remind"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:text="截至时间"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"/>
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_repeatTask"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="重复任务"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="#999999"
+                    android:textSize="13sp"
                     />
 
                 <TextView
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_responsiblePerson"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="负责人:"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"/>
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_toUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
                     android:singleLine="false"
                     android:text="参与人:"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"/>
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_task_audit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="是否审核:"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"/>
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_task_project"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="所属项目"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"/>
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
 
                 <TextView
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_task_aboutuser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="关联客户"
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/dimen_12"/>
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="13sp" />
 
             </LinearLayout>
 
@@ -172,7 +169,7 @@
                 style="@style/view_split"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
-                />
+                android:layout_marginRight="@dimen/margin_side_edge" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -180,78 +177,102 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layout_discussion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal"
-                    android:paddingRight="@dimen/dimen_5">
+                    android:minHeight="55dp"
+                    >
 
                     <TextView
-                        style="@style/text_item1"
+                        android:id="@+id/tv_tasks_dis"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="讨论"/>
+                        android:layout_marginLeft="16dp"
+                        android:text="讨论"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        />
+
 
                     <TextView
                         android:id="@+id/tv_discussion_count"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_weight="1"
-                        android:text="(0)"/>
+                        android:text="(0)"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tv_tasks_dis"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="5dp"
+                        />
 
                     <ImageView
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
 
-                </LinearLayout>
+
+                </RelativeLayout>
 
                 <View
                     android:id="@+id/v_splite"
                     style="@style/view_split"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_14"
-                    />
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/margin_side_edge"/>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layout_attachment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal"
-                    android:paddingRight="@dimen/dimen_5">
+                    android:minHeight="55dp"
+                    >
 
                     <TextView
-                        style="@style/text_item1"
+                        android:id="@+id/tv_tasks_att"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="附件"/>
+                        android:text="附件"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        />
 
                     <TextView
+                        android:layout_toRightOf="@+id/tv_tasks_att"
                         android:id="@+id/tv_attachment_count"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_weight="1"
-                        android:text="(0)"/>
+                        android:text="(0)"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_centerVertical="true"
+                        />
 
                     <ImageView
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
-                        android:src="@drawable/right_arrow"/>
+                        android:src="@drawable/right_arrow" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <!--<View-->
                 <!--style="@style/view_split"-->
@@ -261,21 +282,19 @@
 
                 <View
                     style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_14"
-                    />
+                    android:layout_width="match_parent" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="15dp"
-                android:background="@color/activity_bg"/>
+                android:background="@color/activity_bg" />
 
             <LinearLayout
                 android:id="@+id/layout_child_add_action"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="55dp"
                 android:background="@drawable/attendance_popview_selector"
                 android:orientation="horizontal">
 
@@ -284,7 +303,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:text="子任务"/>
+                    android:text="子任务" />
 
                 <TextView
                     android:id="@+id/tv_children_info"
@@ -293,30 +312,30 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_weight="1"
-                    android:text=""/>
+                    android:text="" />
 
 
                 <ImageView
-                    android:layout_width="25dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/dimen_20"
-                    android:layout_marginRight="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/dimen_20"
                     android:scaleType="centerInside"
-                    android:src="@drawable/img_add"/>
+                    android:src="@drawable/img_add" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="fill_parent"
-                android:layout_height="10dp"
-                android:background="@color/beogray"/>
+                android:layout_height="1dp"
+                android:background="@color/beogray" />
 
             <LinearLayout
                 android:id="@+id/layout_child_Add_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:id="@+id/layout_task_testfather"
@@ -332,13 +351,13 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginTop="10dp"
                     android:text="审核"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:id="@+id/layout_test_Add_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" />
             </LinearLayout>
 
 
@@ -347,12 +366,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_other_view"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginRight="@dimen/margin_side_edge"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="@dimen/margin_other_view"
                 android:background="@color/title_bg1"
                 android:textColor="@color/white"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
