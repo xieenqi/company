@@ -520,13 +520,13 @@ public class WorkReportAddActivity extends BaseActivity {
                     mBundle = new Bundle();
                     mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
                     mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUEST_CODE, mBundle);
                 } else {
                     Bundle bundle1 = new Bundle();
                     bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
                     bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
+                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUEST_CODE, bundle1);
                 }
 
