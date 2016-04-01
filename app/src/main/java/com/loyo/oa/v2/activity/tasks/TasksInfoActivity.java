@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -155,12 +156,19 @@ public class TasksInfoActivity extends BaseActivity {
     public TextView tv_task_content;
     public TextView tv_task_status;
     public TextView tv_reviewer;
+    public TextView viewName;
+    public TextView viewContent;
 
     public android.os.Handler mHandler = new android.os.Handler() {
-
         public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
+            }else if(msg.what == 0x02){
+                viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text99));
+            }else if(msg.what == 0x03){
+                viewContent.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.black));
             }
         }
     };
@@ -265,37 +273,6 @@ public class TasksInfoActivity extends BaseActivity {
                 }
                 break;
         }
-
-
-/*                        *//*创建人*//*
-        if (IsCreator()) {
-            if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
-                intent.putExtra("edit", true);
-                intent.putExtra("delete", true);
-                intent.putExtra("extra", "复制任务");
-            } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
-                intent.putExtra("extra", "复制任务");
-            } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
-                intent.putExtra("extra", "复制任务");
-            }
-                    *//*负责人*//*
-        } else if (IsResponsiblePerson()) {
-            switch (mTask.getStatus()) {
-                case Task.STATUS_PROCESSING:
-                    intent.putExtra("edit", true);
-                    intent.putExtra("editText", "修改参与人");
-                    break;
-
-                case Task.STATUS_REVIEWING:
-                    intent.putExtra("extra", "复制任务");
-                    break;
-
-                case Task.STATUS_FINISHED:
-                    intent.putExtra("extra", "复制任务");
-                    break;
-            }
-        }*/
-
 
 
         if (mTask.getResponsiblePerson() != null) {
@@ -553,13 +530,13 @@ public class TasksInfoActivity extends BaseActivity {
             RelativeLayout childView = (RelativeLayout)view.findViewById(R.id.item_childtask_info);
 
             //子任务标题
-            TextView viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
+            viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
             if (subTask.getResponsiblePerson() != null) {
                 viewName.setText(subTask.getResponsiblePerson().getName());
             }
 
             //子任务内容
-            TextView viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
+            viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
             if (!TextUtils.isEmpty(subTask.getcontent())) {
                 viewContent.setText(subTask.getcontent());
             }
@@ -587,10 +564,12 @@ public class TasksInfoActivity extends BaseActivity {
                             if (isCheck) {
                                 statusSize++;
                                 mHandler.sendEmptyMessage(0x01);
+                                mHandler.sendEmptyMessage(0x02);
                                 requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
                             } else {
                                 statusSize--;
                                 mHandler.sendEmptyMessage(0x01);
+                                mHandler.sendEmptyMessage(0x03);
                                 requestTaskupdates(taskId, subTask.getId(), 0);
                             }
                         } else {
