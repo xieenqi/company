@@ -131,6 +131,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void initTimeStr(long mills) {
         String time = app.df12.format(new Date(mills));
+//        tv_time.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);//文字加注释线
         tv_time.setText(time);
     }
 

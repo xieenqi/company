@@ -38,7 +38,7 @@
                     android:maxEms="10"
                     android:singleLine="true"
                     android:text="标题"
-                    android:textSize="16sp"
+                    android:textSize="16.5sp"
                     />
 
                 <ImageView
@@ -55,8 +55,7 @@
                 style="@style/textView_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_12"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/dimen_8"
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
@@ -91,7 +90,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_3"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="@dimen/dimen_14"
                 android:background="@drawable/view_dashed_line"
                 android:layerType="software"/>
 
