@@ -28,11 +28,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/white"
                     android:gravity="center_vertical|left"
                     android:paddingLeft="@dimen/margin_side_edge"
-                    android:text=""
+                    android:text="asdsad"
                     android:textSize="15sp"
                     android:maxEms="10"
                     android:ellipsize="end"
@@ -56,12 +56,16 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:text="asdsadsad"
+                />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_3"
-                android:layout_margin="@dimen/dimen_10"
+                android:layout_marginLeft="16dp"
                 android:background="@drawable/view_dashed_line"
                 android:layerType="software" />
 
@@ -73,13 +77,17 @@
                 android:background="@color/white"
                 android:gravity="left|top"
                 android:minHeight="60dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="@dimen/margin_side_edge"
                 android:paddingRight="@dimen/margin_side_edge"
-                android:paddingTop="8dp"
-                android:singleLine="false" />
+                android:paddingTop="10dp"
+                android:singleLine="false"
+                android:text="asdsadas"
+
+                />
 
             <LinearLayout
+                android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -89,12 +97,13 @@
                     android:id="@+id/tv_remind"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:textColor="#999999"
                     android:textSize="13sp" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_repeatTask"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,7 +113,7 @@
                     />
 
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_responsiblePerson"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,7 +123,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_toUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -125,7 +134,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_task_audit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,7 +144,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_task_project"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -145,7 +154,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     android:id="@+id/tv_task_aboutuser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -168,37 +177,51 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layout_discussion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:minHeight="55dp"
+                    >
 
                     <TextView
-                        style="@style/text_item1"
+                        android:id="@+id/tv_tasks_dis"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="讨论" />
+                        android:layout_marginLeft="16dp"
+                        android:text="讨论"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        />
+
 
                     <TextView
                         android:id="@+id/tv_discussion_count"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_weight="1"
-                        android:text="(0)" />
+                        android:text="(0)"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tv_tasks_dis"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="5dp"
+                        />
 
                     <ImageView
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
                         android:src="@drawable/right_arrow" />
 
-                </LinearLayout>
+
+                </RelativeLayout>
 
                 <View
                     android:id="@+id/v_splite"
@@ -207,37 +230,49 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginRight="@dimen/margin_side_edge"/>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layout_attachment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:minHeight="55dp"
+                   >
 
                     <TextView
-                        style="@style/text_item1"
+                        android:id="@+id/tv_tasks_att"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="附件" />
+                        android:text="附件"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        />
 
                     <TextView
+                        android:layout_toRightOf="@+id/tv_tasks_att"
                         android:id="@+id/tv_attachment_count"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_weight="1"
-                        android:text="(0)" />
+                        android:text="(0)"
+                        android:textColorHint="@color/text99"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_centerVertical="true"
+                        />
 
                     <ImageView
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="center"
                         android:src="@drawable/right_arrow" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <!--<View-->
                 <!--style="@style/view_split"-->
@@ -259,7 +294,7 @@
             <LinearLayout
                 android:id="@+id/layout_child_add_action"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="55dp"
                 android:background="@drawable/attendance_popview_selector"
                 android:orientation="horizontal">
 
@@ -293,7 +328,7 @@
 
             <View
                 android:layout_width="fill_parent"
-                android:layout_height="10dp"
+                android:layout_height="1dp"
                 android:background="@color/beogray" />
 
             <LinearLayout

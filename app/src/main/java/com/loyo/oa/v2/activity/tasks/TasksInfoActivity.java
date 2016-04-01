@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -103,7 +104,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     View v_split;
     @ViewById
-    LinearLayout layout_attachment;
+    RelativeLayout layout_attachment;
 
     @ViewById
     TextView tv_repeatTask;
