@@ -20,9 +20,10 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
         mLayoutId = layoutId;
         mInflater = LayoutInflater.from(context);
     }
-    public void setmDatas(List<T> datas){
-        if(null!=datas){
-            this.mDatas=datas;
+
+    public void setmDatas(List<T> datas) {
+        if (null != datas) {
+            this.mDatas = datas;
             notifyDataSetChanged();
         }
     }
@@ -46,9 +47,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertview, ViewGroup parent) {
         ViewHolder holder = ViewHolder.get(mContext, convertview, parent, mLayoutId, position);
-
         convert(holder, getItem(position));
-
         return holder.getConvertView();
     }
 
