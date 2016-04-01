@@ -12,13 +12,13 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
         }
     }
@@ -28,15 +28,13 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016032501
-        versionName '1.0.6'
+        versionCode 2016040101
+        versionName '1.0.7'
     }
 
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
-            //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
@@ -46,9 +44,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
-            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
-// "6085830b754c86f0d9886b545f5b38f8"
             resValue "string", "app_name", "快启"
         }
     }
