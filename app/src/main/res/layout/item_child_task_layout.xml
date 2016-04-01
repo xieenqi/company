@@ -9,6 +9,7 @@
         android:layout_width="@dimen/view_h_title"
         android:layout_height="@dimen/view_h_title"
         android:clickable="false"
+        android:background="@color/gray"
         android:gravity="center">
 
         <CheckBox
@@ -23,52 +24,58 @@
         android:id="@+id/item_tv_child_task_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginTop="@dimen/dimen_8"
         android:layout_toRightOf="@+id/layout_cb"
         android:gravity="center_vertical"
-        android:minHeight="@dimen/view_h_title"
         android:text="@string/child_task_content_default"
-        android:textColor="@color/black"/>
+        android:textColor="@color/text33"/>
+
+    <LinearLayout
+        android:id="@+id/ll_person"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_tv_child_task_content"
+        android:layout_marginLeft="48dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_toRightOf="@+id/layout_cb"
+            android:gravity="center_vertical"
+            android:text="负责人:"
+            android:textColor="@color/text99"/>
+
+        <TextView
+            android:id="@+id/item_tv_child_principal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_tv_child_task_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_toLeftOf="@+id/view_arrow"
+            android:layout_toRightOf="@+id/tv_label"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/dimen_40"
+            android:text="张可"
+            android:textColor="@color/text99"
+            android:textSize="@dimen/dimen_12"/>
+
+        <ImageView
+            android:id="@+id/view_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/item_tv_child_task_content"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"/>
+    </LinearLayout>
 
     <View
-        android:id="@+id/view_splite"
         style="@style/view_split"
         android:layout_width="match_parent"
-        android:layout_below="@+id/item_tv_child_task_content"
-        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_below="@+id/ll_person"
         android:layout_toRightOf="@+id/layout_cb"/>
-
-    <TextView
-        android:id="@+id/tv_label"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/view_h_title"
-        android:layout_below="@+id/view_splite"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_toRightOf="@+id/layout_cb"
-        android:gravity="center_vertical"
-        android:text="负责人:"/>
-
-    <TextView
-        android:id="@+id/item_tv_child_principal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view_splite"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_toLeftOf="@+id/view_arrow"
-        android:layout_toRightOf="@+id/tv_label"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/view_h_title"
-        android:text="张可"
-        android:textSize="@dimen/dimen_18"/>
-
-    <ImageView
-        android:id="@+id/view_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/view_h_title"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/view_splite"
-        android:scaleType="center"
-        android:src="@drawable/right_arrow"/>
-
 
 </RelativeLayout>

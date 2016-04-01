@@ -27,6 +27,7 @@
     <dimen name="text_sp18">18sp</dimen>
     <dimen name="text_sp16">16sp</dimen>
     <dimen name="text_sp14">14sp</dimen>
+    <dimen name="text_sp15">15sp</dimen>
     <dimen name="text_sp13">13sp</dimen>
     <dimen name="text_sp12">12sp</dimen>
     <dimen name="text_sp11">11sp</dimen>
@@ -35,7 +36,7 @@
 
     <!--新版标注-->
     <dimen name="view_first_margin_top">20dp</dimen>
-    <dimen name="margin_side_edge">16dp</dimen>
+    <dimen name="margin_side_edge">14dp</dimen>
     <dimen name="margin_other_view">12dp</dimen>
     <dimen name="layout_row_margin_top">17dp</dimen>
 

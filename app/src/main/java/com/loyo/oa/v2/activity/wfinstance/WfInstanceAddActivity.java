@@ -221,6 +221,17 @@ public class WfInstanceAddActivity extends BaseActivity {
     }
 
     void initUI_Dialog_WfTemplate() {
+        /**
+         * 过滤流程节点是否可用
+         */
+        ArrayList<WfTemplate> newWfTemplateData = new ArrayList<>();
+        for (WfTemplate element : wfTemplateArrayList) {
+            if (element.isEnable()) {
+                newWfTemplateData.add(element);
+            }
+        }
+
+        wfTemplateArrayList = newWfTemplateData;
         if (wfTemplateArrayList == null || wfTemplateArrayList.size() == 0) {
             Toast("错误:没有配置流程!");
             mTemplateId = "";
@@ -551,7 +562,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 super.failure(error);
             }
         });
-        LogUtil.dll("新建审批发送数据:" + MainApp.gson.toJson(map));
+        LogUtil.d("新建审批发送数据:" + MainApp.gson.toJson(map));
     }
 
     boolean isSave = true;
