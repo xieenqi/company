@@ -41,7 +41,7 @@
             android:gravity="center_vertical"
             android:text="@string/child_task_content_default"
             android:textColor="@color/text33"
-            android:textSize="@dimen/text_sp16"/>
+            android:textSize="14sp"/>
 
         <View
             android:id="@+id/view_splite"
@@ -59,7 +59,7 @@
             android:gravity="center_vertical"
             android:text="负责人:"
             android:textColor="@color/text99"
-            android:textSize="15sp"
+            android:textSize="14sp"
             />
 
         <TextView
@@ -74,7 +74,7 @@
             android:minHeight="40dp"
             android:text="张可"
             android:textColor="@color/text99"
-            android:textSize="15sp"
+            android:textSize="14sp"
             />
 
         <ImageView
