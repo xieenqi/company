@@ -11,7 +11,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="false">
+        android:focusable="false"
+        android:scrollbars="none"
+        >
 
         <LinearLayout
             android:id="@+id/layout_body"
@@ -23,7 +25,7 @@
                 android:id="@+id/edt_title"
                 style="@style/edtText_normal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
+                android:layout_height="@dimen/view_h_fif"
                 android:background="@color/white"
                 android:hint="任务标题"
                 android:textSize="15sp"
@@ -45,7 +47,7 @@
                 android:inputType="textMultiLine"
                 android:minHeight="120dp"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:paddingTop="10dp"
+                android:paddingTop="15dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
                 android:textSize="15sp"
@@ -62,7 +64,7 @@
                     android:id="@+id/gridView_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:layout_margin="16dp"
                     android:gravity="center"
                     android:horizontalSpacing="@dimen/activity_horizontal_margin"
                     android:listSelector="@android:color/transparent"
@@ -82,13 +84,13 @@
             <LinearLayout
                 android:id="@+id/layout_retask"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
+                android:layout_height="@dimen/view_h_fif"
                 android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_item1"
                     android:layout_width="80dp"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="@dimen/view_h_fif"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="重复"
                     android:textSize="15sp"
@@ -106,6 +108,7 @@
                     android:textSize="15sp"/>
 
                 <ImageView
+                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="center"
@@ -128,14 +131,14 @@
             <LinearLayout
                 android:id="@+id/layout_deadline"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
+                android:layout_height="@dimen/view_h_fif"
                 android:background="@drawable/layout_bg1"
                 android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_item1"
                     android:layout_width="80dp"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="@dimen/view_h_fif"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="截止日期"
                     android:textSize="15sp"
@@ -153,6 +156,7 @@
                     android:textSize="15sp"/>
 
                 <ImageView
+                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="center"
@@ -168,14 +172,14 @@
             <LinearLayout
                 android:id="@+id/layout_remind"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_title"
+                android:layout_height="@dimen/view_h_fif"
                 android:background="@drawable/layout_bg1"
                 android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_item1"
                     android:layout_width="80dp"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="@dimen/view_h_fif"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="提醒"
                     android:textSize="15sp"
@@ -194,6 +198,7 @@
                     />
 
                 <ImageView
+                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="center"
@@ -220,7 +225,7 @@
                 <LinearLayout
                     android:id="@+id/layout_responsiblePerson"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="@dimen/view_h_fif"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -248,6 +253,7 @@
                         />
 
                     <ImageView
+                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_responsiblePerson"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -265,7 +271,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
+                    android:minHeight="@dimen/view_h_fif"
                     android:orientation="horizontal">
 
                     <TextView
@@ -284,11 +290,13 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint="点击添加参与人"
-                        android:minHeight="@dimen/view_h_title"
-                        android:singleLine="false"
+                        android:minHeight="@dimen/view_h_fif"
                         android:textColorHint="#c9c9c9"
                         android:textSize="15sp"
                         android:textColor="@color/title_bg1"
+                        android:maxEms="15"
+                        android:ellipsize="end"
+                        android:singleLine="true"
                         />
 
                     <LinearLayout
@@ -308,6 +316,7 @@
                     </LinearLayout>
 
                     <ImageView
+                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_toUsers"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -326,7 +335,7 @@
                 <LinearLayout
                     android:id="@+id/linear_task_approve"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="@dimen/view_h_fif"
                     android:background="@drawable/layout_bg1"
                     android:gravity="center_vertical">
 
@@ -364,7 +373,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
+                    android:minHeight="@dimen/view_h_fif"
                     android:orientation="horizontal">
 
                     <TextView
@@ -383,12 +392,16 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:minHeight="@dimen/view_h_title"
-                        android:singleLine="false"
                         android:textColorHint="#c9c9c9"
                         android:textColor="@color/title_bg1"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp"
+                        android:maxEms="17"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        />
 
                     <ImageView
+                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_project"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -408,7 +421,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="@dimen/view_h_title"
+                    android:minHeight="@dimen/view_h_fif"
                     android:orientation="horizontal">
 
                     <TextView
@@ -435,6 +448,7 @@
                         />
 
                     <ImageView
+                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_customer"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
