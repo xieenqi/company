@@ -78,13 +78,13 @@
             <LinearLayout
                 android:id="@+id/layout_retask"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="50dp"
                 android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_item1"
                     android:layout_width="80dp"
-                    android:layout_height="55dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="重复"
                     android:textSize="15sp" />
@@ -124,13 +124,13 @@
                 <LinearLayout
                     android:id="@+id/layout_deadline"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_item1"
                         android:layout_width="80dp"
-                        android:layout_height="55dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:text="截止日期"
                         android:textSize="15sp" />
@@ -163,13 +163,13 @@
                 <LinearLayout
                     android:id="@+id/layout_remind"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_item1"
                         android:layout_width="80dp"
-                        android:layout_height="55dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:text="提醒"
                         android:textSize="15sp" />
@@ -210,7 +210,7 @@
                 <LinearLayout
                     android:id="@+id/layout_responsiblePerson"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -253,7 +253,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="55dp"
+                    android:minHeight="50dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -273,7 +273,6 @@
                         android:gravity="right|center_vertical"
                         android:hint="点击添加参与人"
                         android:maxEms="15"
-                        android:minHeight="55dp"
                         android:singleLine="true"
                         android:textColor="@color/title_bg1"
                         android:textColorHint="#c9c9c9"
@@ -314,7 +313,7 @@
                 <LinearLayout
                     android:id="@+id/linear_task_approve"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/layout_bg1"
                     android:gravity="center_vertical">
 
@@ -350,7 +349,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="55dp"
+                    android:minHeight="50dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -368,7 +367,6 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint="无"
-                        android:minHeight="55dp"
                         android:textColor="@color/title_bg1"
                         android:textColorHint="#c9c9c9"
                         android:textSize="15sp"
@@ -397,7 +395,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:minHeight="55dp"
+                    android:minHeight="50dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -415,7 +413,6 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint="无"
-                        android:minHeight="55dp"
                         android:singleLine="false"
                         android:textColor="@color/title_bg1"
                         android:textColorHint="#c9c9c9"
