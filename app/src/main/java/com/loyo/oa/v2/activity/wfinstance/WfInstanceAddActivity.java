@@ -356,14 +356,13 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 审批 类型 选择 初始化 流程列表
      */
     private void intBizForm() {
-
-        tv_bizform.setText(mBizForm.getName());
-        wfInstanceAdd.setBizformId(mBizForm.getId());
-
-        if (null == mBizForm.getFields()) {
+        if (!mBizForm.isEnable() && null == mBizForm.getFields()) {
             Toast("该审批类型没有配置流程，请重新选择!");
+//            layout_wfinstance_data.setVisibility(View.GONE);
             return;
         }
+        tv_bizform.setText(mBizForm.getName());
+        wfInstanceAdd.setBizformId(mBizForm.getId());
 
         layout_wfinstance_data.setVisibility(View.VISIBLE);
         submitData.clear();
