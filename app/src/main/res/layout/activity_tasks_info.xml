@@ -32,7 +32,7 @@
                     android:background="@color/white"
                     android:gravity="center_vertical|left"
                     android:paddingLeft="@dimen/margin_side_edge"
-                    android:text="asdsad"
+                    android:text=""
                     android:textSize="15sp"
                     android:maxEms="10"
                     android:ellipsize="end"
@@ -59,14 +59,14 @@
                 android:textSize="13sp"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="10dp"
-                android:text="asdsadsad"
+                android:text=""
                 />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_3"
+                android:layout_height="0.5dp"
                 android:layout_marginLeft="16dp"
-                android:background="@drawable/view_dashed_line"
+                android:background="@color/colore6"
                 android:layerType="software" />
 
             <TextView
@@ -82,9 +82,15 @@
                 android:paddingRight="@dimen/margin_side_edge"
                 android:paddingTop="10dp"
                 android:singleLine="false"
-                android:text="asdsadas"
-
+                android:text=""
                 />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_3"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/view_dashed_line"
+                android:layerType="software" />
 
             <LinearLayout
                 android:layout_marginBottom="10dp"
@@ -100,16 +106,16 @@
                     android:layout_marginTop="7dp"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_marginTop="7dp"
                     android:id="@+id/tv_repeatTask"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="14dp"
                     android:textColor="#999999"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     />
 
                 <TextView
@@ -120,7 +126,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="负责人:"
                     android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_marginTop="7dp"
@@ -131,7 +137,7 @@
                     android:singleLine="false"
                     android:text="参与人:"
                     android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_marginTop="7dp"
@@ -141,7 +147,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_marginTop="7dp"
@@ -151,7 +157,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_marginTop="7dp"
@@ -161,7 +167,7 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text=""
                     android:textColor="#999999"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -190,7 +196,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="14dp"
                         android:text="讨论"
                         android:textColorHint="@color/text99"
                         android:textColor="@color/text33"
