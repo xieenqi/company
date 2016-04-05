@@ -680,6 +680,9 @@ public class WorkReportAddActivity extends BaseActivity {
                                 joinUserId.append(newUser.getId() + ",");
                             }
                         }
+                        if (!TextUtils.isEmpty(joinName)) {
+                            joinName.deleteCharAt(joinName.length() - 1);
+                        }
                         tv_toUser.setText(joinName.toString());
                     }
                 }
