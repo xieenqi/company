@@ -213,9 +213,9 @@ public final class FinalVariables {
     public static final String LAST_CHECK_TRACKLOG = "last_check_track_log";
 
     //小米推送
-    public static final String XM_APP_ALIAS = "loyosharecloud";
-    public static final String XM_APP_ID = "2882303761517371532";
-    public static final String XM_APP_KEY = "5681737162532";
+//    public static final String XM_APP_ALIAS = "loyosharecloud";
+//    public static final String XM_APP_ID = "2882303761517371532";
+//    public static final String XM_APP_KEY = "5681737162532";
 
     public static final String ACTION_DATA_CHANGE = "com.loyo.oa.v2.ACTION_DATA_CHANGE";
 

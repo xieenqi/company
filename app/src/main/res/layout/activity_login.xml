@@ -121,7 +121,6 @@
 
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/layout_check_debug"
         android:layout_marginTop="50dp"
         android:layout_width="fill_parent"
