@@ -37,6 +37,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -456,8 +457,16 @@ public class SelectDetUserActivity extends BaseActivity {
         selectUserIds.clear();
 
         for (Department department : newDeptSource) {
+            List<User> currentDepartmentUsers = new ArrayList<>();
+            for (int i = 0; i < newDeptSource.size(); i++) {
+                Department d = newDeptSource.get(i);
+                if (department.getXpath().contains(d.getXpath())) {
+                    if (d.getUsers() != null && d.getUsers().size() > 0)
+                        currentDepartmentUsers.addAll(d.getUsers());
+                }
+            }
             try {
-                dealisAllSelect(department.getUsers());
+                dealisAllSelect(currentDepartmentUsers);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -498,8 +507,7 @@ public class SelectDetUserActivity extends BaseActivity {
     /**
      * 判断本次集合中 是否被全选
      */
-    void dealisAllSelect(final ArrayList<User> users) {
-
+    void dealisAllSelect(final List<User> users) {
         for (User user : users) {
             if (user.isIndex()) {
                 popy = true;

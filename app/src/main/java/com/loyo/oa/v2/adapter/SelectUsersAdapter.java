@@ -26,9 +26,9 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final Context mContext;
     private List<User> users = new ArrayList<>();
     private boolean isAlone = false;
-    private Department mDepartment;
     private OnUserSelectCallback mUserSlectCallback;
-    private OnDepartmentAllSelectCallback mDepartmentAllSelectCallback;
+    private Department mDepartment;
+    private OnDepartmentAllSelectCallback mDepartmentCallback;
 
     public SelectUsersAdapter(Context context) {
         this.mContext = context;
@@ -43,12 +43,11 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-    /**
-     * 设置当前选中的部门信息
-     *
-     * @param mDepartment
-     */
-    public void setCurrentDepartment(Department mDepartment) {
+    public Department getDepartment() {
+        return mDepartment;
+    }
+
+    public void setDepartment(Department mDepartment) {
         this.mDepartment = mDepartment;
     }
 
@@ -97,8 +96,9 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                            User user = users.get(i);
 //                            user.setIndex(!isSelectAll);
 //                        }
-                        if (mDepartmentAllSelectCallback != null) {
-                            if (mDepartmentAllSelectCallback.onSelect(!isSelectAll)) {
+//                        notifyDataSetChanged();
+                        if (mDepartmentCallback != null) {
+                            if (mDepartmentCallback.onSelect(!isSelectAll)) {
                                 notifyDataSetChanged();
                             }
                         }
@@ -131,12 +131,14 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 userHolder.convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        CheckBox checkBox = (CheckBox) v.getTag();
-                        boolean isSelect = checkBox.isChecked();
-                        checkBox.setChecked(!isSelect);
-                        user.setIndex(!isSelect);
                         if (!isAlone()) {
-                            notifyItemChanged(0);
+                            CheckBox checkBox = (CheckBox) v.getTag();
+                            boolean isSelect = checkBox.isChecked();
+                            checkBox.setChecked(!isSelect);
+                            user.setIndex(!isSelect);
+                            if (!isAlone()) {
+                                notifyItemChanged(0);
+                            }
                         }
                         if (mUserSlectCallback != null) {
                             mUserSlectCallback.onUserSelect(mDepartment, user);
@@ -154,8 +156,6 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * @return
      */
     private boolean isAllSelect() {
-        if (users.isEmpty())
-            return false;
         for (User user :
                 users) {
             if (!user.isIndex()) {
@@ -167,7 +167,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return users.isEmpty() ? 0 : !isAlone() ? users.size() + 1 : users.size();
+        return !isAlone() ? users.size() + 1 : users.size();
     }
 
     @Override
@@ -175,22 +175,12 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return !isAlone() && position == 0 ? -1 : position;
     }
 
-    /**
-     * 设置用户单选的回调
-     *
-     * @param callback
-     */
     public void setOnUserSelectCallback(OnUserSelectCallback callback) {
         this.mUserSlectCallback = callback;
     }
 
-    /**
-     * 设置部门全选和取消的回调
-     *
-     * @param callback
-     */
-    public void setOnDepartmentAllSelectCallback(OnDepartmentAllSelectCallback callback) {
-        this.mDepartmentAllSelectCallback = callback;
+    public void setOnDepartmentAllSelectCallback(OnDepartmentAllSelectCallback onDepartmentAllSelectCallback) {
+        this.mDepartmentCallback = onDepartmentAllSelectCallback;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -217,19 +207,21 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         private final RelativeLayout relAllcheck;
         private final CheckBox checkBox;
+        private final TextView tv_noUser;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
             relAllcheck = (RelativeLayout) itemView.findViewById(R.id.selectdetuser_allcheck);
             checkBox = (CheckBox) itemView.findViewById(R.id.selectdetuser_checkbox);
+            tv_noUser = (TextView) itemView.findViewById(R.id.tv_noUser);
         }
-    }
-
-    public interface OnDepartmentAllSelectCallback {
-        boolean onSelect(boolean isSelect);
     }
 
     public interface OnUserSelectCallback {
         void onUserSelect(Department department, User user);
+    }
+
+    public interface OnDepartmentAllSelectCallback {
+        boolean onSelect(boolean isSelect);
     }
 }

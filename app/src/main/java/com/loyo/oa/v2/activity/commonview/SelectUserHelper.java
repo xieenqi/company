@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.commonview;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +28,27 @@ import java.util.Set;
  * Created by loyocloud on 16/3/29.
  */
 public class SelectUserHelper {
+//
+//    public interface SelectDepartmentCallback extends Serializable {
+//        /**
+//         * 回调部门被选中
+//         *
+//         * @param department  被选中的部门
+//         * @param oldSelected 部门的上一个状态
+//         * @param isUserSelet 是否是单个用户选择触发
+//         */
+//        void onSelectDepartment(Department department, boolean oldSelected, boolean isUserSelet);
+//    }
+//
+//    public interface SelectUserCallback extends Serializable {
+//        /**
+//         * 用户选择回调
+//         *
+//         * @param user //
+//         * @param notify
+//         */
+//        void onSelectUser(User user, boolean notify);
+////    }
 
     public interface SelectUserBase {
 
@@ -40,6 +63,8 @@ public class SelectUserHelper {
         String getDepartId(); //获取部门id
 
         boolean equalsId(String id); //判断id是否相等
+
+        String getName();
 
         String getAvater(); // 获取头像信息, 部门暂返回NULL_AVATAR
     }
@@ -70,7 +95,7 @@ public class SelectUserHelper {
 
         @Override
         public SelectUserBase getItem(final int position) {
-            return null;
+            return mSelectDatas.get(position);
         }
 
         @Override
@@ -90,7 +115,26 @@ public class SelectUserHelper {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            ImageLoader.getInstance().displayImage(getItem(position).getAvater(), holder.head);
+            SelectUserBase base = getItem(position);
+            if (base.isDepart()) {
+                holder.name.setVisibility(View.VISIBLE);
+                holder.head.setVisibility(View.INVISIBLE);
+                String name = base.getName();
+                if (TextUtils.isEmpty(name)) {
+                    holder.name.setText("暂无");
+                } else {
+                    if (name.length() == 1 && name.length() == 2) {
+                        holder.name.setText(name);
+                    } else {
+                        String str = name.substring(0, 2);
+                        holder.name.setText(str);
+                    }
+                }
+            } else {
+                holder.name.setVisibility(View.INVISIBLE);
+                holder.head.setVisibility(View.VISIBLE);
+                ImageLoader.getInstance().displayImage(getItem(position).getAvater(), holder.head);
+            }
             //holder.name.setText(selectUserList.get(position).name);
             LogUtil.d("刷新的数九：" + mSelectDatas.size());
             return convertView;

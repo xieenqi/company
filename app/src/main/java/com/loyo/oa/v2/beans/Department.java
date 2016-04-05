@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 
 public class Department implements Serializable, SelectUserHelper.SelectUserBase {
-
     private String id;
     private String xpath;
     private String name;
@@ -26,6 +25,64 @@ public class Department implements Serializable, SelectUserHelper.SelectUserBase
     private ArrayList<User> users = new ArrayList<>();
     public String title = "";//职务名称
 
+    // 部门被选中, 或部门中的用户被全选时的回调
+//    private SelectUserHelper.SelectDepartmentCallback mSelectDepartmentCallback;
+//    private SelectUserHelper.SelectUserCallback mUserCallback = new SelectUserHelper.SelectUserCallback() {
+//        @Override
+//        public void onSelectUser(User user, boolean notify) {
+//            if (user.isIndex()) {
+//                boolean change = false;
+//                boolean toUserIndex = false;
+//                for (int i = 0; i < users.size(); i++) {
+//                    User u = users.get(i);
+////                    if (!u.isIndex() && !u.equalsId(user.getId())) {
+////                        return;
+////                    }
+//                    if (u.equalsId(user.getId()) && u.isIndex() != user.isIndex()  ) {
+//                        u.setIndex_(user.isIndex());
+//                        toUserIndex = true;
+//                    } else {
+//                        if (!u.isIndex()) {
+//                            change = true;
+//                        }
+//                    }
+//                    if (change && toUserIndex) {
+//                        break;
+//                    }
+//                }
+//                setIsIndex(true, true, notify);
+//            } else {
+//                for (int i = 0; i < getUsers().size(); i++) {
+//                    User u = users.get(i);
+//                    if (u.equalsId(user.getId())) {
+//                        u.setIndex(user.isIndex());
+//                        break;
+//                    }
+//                }
+//                if (isIndex()) {
+//                    setIsIndex(false, true, notify);
+//                }
+//            }
+//        }
+//    };
+
+//    /**
+//     * 为部门类中所有人添加选中回调
+//     */
+//    public void startUserSelectCallback() {
+//        for (int i = 0; i < users.size(); i++) {
+//            users.get(i).addSelectUserCallback(mUserCallback);
+//        }
+//    }
+//
+//    /**
+//     * 为Department添加选中监听
+//     *
+//     * @param mSelectUserCallback
+//     */
+//    public void setSelectDepartmentCallback(SelectUserHelper.SelectDepartmentCallback mSelectUserCallback) {
+//        this.mSelectDepartmentCallback = mSelectUserCallback;
+//    }
 
     public boolean isIndex() {
         return isIndex;
@@ -34,6 +91,32 @@ public class Department implements Serializable, SelectUserHelper.SelectUserBase
     public void setIsIndex(boolean isIndex) {
         this.isIndex = isIndex;
     }
+
+//    /**
+//     * 设置选中状态
+//     *
+//     * @param isIndex
+//     * @param isUserSelect 判断是否是单个用户操作触发
+//     * @param notify       是否回调
+//     */
+//    public void setIsIndex(boolean isIndex, boolean isUserSelect, boolean notify) {
+//        if (isIndex == this.isIndex)
+//            return;
+//        if (!isUserSelect) {
+//            for (int i = 0; i < users.size(); i++) {
+//                users.get(i).setIndex(isIndex, false);
+//            }
+//        }
+//        boolean oldIndex = this.isIndex;
+//        this.isIndex = isIndex;
+//        if (mSelectDepartmentCallback != null && notify) {
+//            mSelectDepartmentCallback.onSelectDepartment(this, oldIndex, isUserSelect);
+//        }
+//    }
+//
+//    public void setIsIndex(boolean isIndex, boolean isUserSelect) {
+//        setIsIndex(isIndex, isUserSelect, true);
+//    }
 
     public String getXpath() {
         return xpath;

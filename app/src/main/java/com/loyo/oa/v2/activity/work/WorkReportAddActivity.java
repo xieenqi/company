@@ -529,7 +529,6 @@ public class WorkReportAddActivity extends BaseActivity {
                     app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUEST_CODE, bundle1);
                 }
-
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -680,6 +679,9 @@ public class WorkReportAddActivity extends BaseActivity {
                                 joinName.append(newUser.getName() + ",");
                                 joinUserId.append(newUser.getId() + ",");
                             }
+                        }
+                        if (!TextUtils.isEmpty(joinName)) {
+                            joinName.deleteCharAt(joinName.length() - 1);
                         }
                         tv_toUser.setText(joinName.toString());
                     }
