@@ -38,6 +38,7 @@ public class ViewHolder {
         View view = mViews.get(viewId);
         if (view == null) {
             view = mConvertView.findViewById(viewId);
+
             mViews.put(viewId, view);
         }
 

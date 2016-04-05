@@ -236,6 +236,7 @@ public class TasksEditActivity extends BaseActivity {
     public void setCornBodyinfo() {
 
         if (null != mTask.getCornBody() && mTask.getCornBody().getType() != 0) {
+
             String caseName = "";
             String hourMins = "";
             String weekName = "";

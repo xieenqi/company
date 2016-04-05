@@ -87,6 +87,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -291,7 +292,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
         swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
-        //首页刷新监听
+        //首页刷新监听R.color.title_bg1, R.color.greenyellow, R.color.aquamarine
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

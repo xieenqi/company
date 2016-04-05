@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -35,6 +36,7 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
         TextView time = ViewHolder.get(convertView, R.id.tv_time);
         View ack = ViewHolder.get(convertView, R.id.view_ack);
+        LinearLayout ll_time = ViewHolder.get(convertView, R.id.ll_time);
 
 //        try {
 //            time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
@@ -44,7 +46,7 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
 
         content.setText(TextUtils.isEmpty(project.content) ? "(无简介)" : project.content);
         ack.setVisibility(project.viewed ? View.GONE : View.VISIBLE);
-        time.setVisibility(View.GONE);
+        ll_time.setVisibility(View.GONE);
         title.setText(project.title);
 
         return convertView;

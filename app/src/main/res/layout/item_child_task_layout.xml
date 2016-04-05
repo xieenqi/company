@@ -1,74 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_cb"
-        android:layout_width="@dimen/view_h_title"
-        android:layout_height="@dimen/view_h_title"
-        android:clickable="false"
-        android:gravity="center">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/cb"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="70dp"
+            android:clickable="false"
+            >
+            <CheckBox
+                android:id="@+id/cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:button="@drawable/selector_task_checkbox"
+                />
+
+        </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/item_childtask_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/item_tv_child_task_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:gravity="center_vertical"
+            android:text="@string/child_task_content_default"
+            android:textColor="@color/text33"
+            android:textSize="14sp"/>
+
+        <View
+            android:id="@+id/view_splite"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/item_tv_child_task_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/view_splite"
+            android:gravity="center_vertical"
+            android:text="负责人:"
+            android:textColor="@color/text99"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/item_tv_child_principal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_splite"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_toLeftOf="@+id/view_arrow"
+            android:layout_toRightOf="@+id/tv_label"
+            android:gravity="center_vertical"
+            android:minHeight="40dp"
+            android:text="张可"
+            android:textColor="@color/text99"
+            android:textSize="14sp"
+            />
+
+        <ImageView
+            android:id="@+id/view_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="5dp"
+            android:scaleType="center"
+            android:src="@drawable/right_arrow"/>
+    </RelativeLayout>
 
     </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/item_tv_child_task_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_toRightOf="@+id/layout_cb"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/view_h_title"
-        android:text="@string/child_task_content_default"
-        android:textColor="@color/black"/>
-
     <View
-        android:id="@+id/view_splite"
-        style="@style/view_split"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/item_tv_child_task_content"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_toRightOf="@+id/layout_cb"/>
-
-    <TextView
-        android:id="@+id/tv_label"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/view_h_title"
-        android:layout_below="@+id/view_splite"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_toRightOf="@+id/layout_cb"
-        android:gravity="center_vertical"
-        android:text="负责人:"/>
-
-    <TextView
-        android:id="@+id/item_tv_child_principal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view_splite"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_toLeftOf="@+id/view_arrow"
-        android:layout_toRightOf="@+id/tv_label"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/view_h_title"
-        android:text="张可"
-        android:textSize="@dimen/dimen_18"/>
-
-    <ImageView
-        android:id="@+id/view_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/view_h_title"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/view_splite"
-        android:scaleType="center"
-        android:src="@drawable/right_arrow"/>
-
-
-</RelativeLayout>
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="14dp"
+        android:background="@color/lineCC"
+        />
+</LinearLayout>

@@ -23,8 +23,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.Serializable;
 
@@ -159,7 +157,7 @@ public class CheckUpdateService extends Service {
 
             @Override
             public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
+//                HttpErrorCheck.checkError(error);
                 super.failure(error);
                 Global.ProcException(error);
                 stopSelf();
