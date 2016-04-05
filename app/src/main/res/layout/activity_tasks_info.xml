@@ -38,7 +38,8 @@
                     android:maxEms="10"
                     android:singleLine="true"
                     android:text="标题"
-                    android:textSize="16.5sp"
+                    android:textSize="16sp"
+
                     />
 
                 <ImageView
@@ -59,7 +60,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:text="付标题"
+                android:text=""
                 android:textColor="@color/text99"
                 android:textSize="12sp"
                 />
