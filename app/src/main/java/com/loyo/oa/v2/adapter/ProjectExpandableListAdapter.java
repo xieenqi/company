@@ -38,12 +38,6 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
         View ack = ViewHolder.get(convertView, R.id.view_ack);
         LinearLayout ll_time = ViewHolder.get(convertView, R.id.ll_time);
 
-//        try {
-//            time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
-//        } catch (Exception e) {
-//            Global.ProcException(e);
-//        }
-
         content.setText(TextUtils.isEmpty(project.content) ? "(无简介)" : project.content);
         ack.setVisibility(project.viewed ? View.GONE : View.VISIBLE);
         ll_time.setVisibility(View.GONE);
@@ -51,5 +45,4 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
 
         return convertView;
     }
-
 }
