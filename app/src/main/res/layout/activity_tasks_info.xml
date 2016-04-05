@@ -372,10 +372,17 @@
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15"/>
 
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_0.5"
+                    android:layout_marginLeft="@dimen/margin_side_edge"/>
+
                 <LinearLayout
                     android:id="@+id/layout_test_Add_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_12"
                     android:orientation="vertical"/>
             </LinearLayout>
 
