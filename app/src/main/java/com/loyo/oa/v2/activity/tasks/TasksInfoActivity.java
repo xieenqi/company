@@ -168,7 +168,7 @@ public class TasksInfoActivity extends BaseActivity {
                 viewContent.setTextColor(getResources().getColor(R.color.text99));
             }else if(msg.what == 0x03){
                 viewContent.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
-                viewContent.setTextColor(getResources().getColor(R.color.black));
+                viewContent.setTextColor(getResources().getColor(R.color.text33));
             }
         }
     };

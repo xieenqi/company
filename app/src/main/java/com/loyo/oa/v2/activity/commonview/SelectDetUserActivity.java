@@ -431,6 +431,7 @@ public class SelectDetUserActivity extends BaseActivity {
                 }
                 mIntent.putExtras(mBundle);
                 app.finishActivity(SelectDetUserActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, mIntent);
+                LogUtil.d("选取的参与人", app.gson.toJson(members));
             }
         });
 
@@ -637,9 +638,9 @@ public class SelectDetUserActivity extends BaseActivity {
 
         public String selectDept(final String xpath) {
             for (Department user : Data) {
-//                if (xpath.equals(user.getDepts().get(0).getShortDept().getXpath())) {
-//                    return user.getDepts().get(0).getShortDept().getXpath() ;
-//                }
+                if (xpath.equals(user.getXpath())) {
+                    return user.getXpath();
+                }
             }
             return "";
         }
