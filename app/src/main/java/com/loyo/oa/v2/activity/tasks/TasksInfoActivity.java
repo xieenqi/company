@@ -143,6 +143,7 @@ public class TasksInfoActivity extends BaseActivity {
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
+    public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
     public ArrayList<NewUser> requestDepts = new ArrayList<>();
     public ArrayList<User> aboutDepts = new ArrayList<>();
@@ -251,7 +252,6 @@ public class TasksInfoActivity extends BaseActivity {
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
-        LogUtil.d("status:"+mTask.getStatus());
         childTastUsers.clear();
         //参与人
         if (!IsResponsiblePerson() && !IsCreator()) {
@@ -522,11 +522,13 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         layout_child_Add_area.removeAllViews();
+        taskChildView.clear();
 
         //子任务列表内容，遍历
-        for (final TaskCheckPoint subTask : mTask.getchecklists()) {
+            for(int i = 0;i<mTask.getchecklists().size();i++){
 
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            final TaskCheckPoint subTask = mTask.getchecklists().get(i);
+            final View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
             RelativeLayout childView = (RelativeLayout)view.findViewById(R.id.item_childtask_info);
 
             //子任务标题
@@ -540,6 +542,7 @@ public class TasksInfoActivity extends BaseActivity {
             if (!TextUtils.isEmpty(subTask.getcontent())) {
                 viewContent.setText(subTask.getcontent());
             }
+                taskChildView.add(viewContent);
 
             /*Checkbox勾选,赋值*/
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
@@ -550,6 +553,12 @@ public class TasksInfoActivity extends BaseActivity {
                 statusSize++;
             }
 
+            /*初始化完成/未完成状态*/
+            if(isStatus){
+                viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text99));
+            }
+
             childCheckbox.setChecked(isStatus);
 
             if (mTask.getStatus() != Task.STATUS_PROCESSING) {
@@ -557,16 +566,19 @@ public class TasksInfoActivity extends BaseActivity {
                 view.setEnabled(false);
                 layout_child_add_action.setVisibility(View.GONE);
             } else {
+                final int finalI = i;
                 childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(final CompoundButton compoundButton, final boolean isCheck) {
                         if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
                             if (isCheck) {
+                                viewContent = taskChildView.get(finalI);
                                 statusSize++;
                                 mHandler.sendEmptyMessage(0x01);
                                 mHandler.sendEmptyMessage(0x02);
                                 requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
                             } else {
+                                viewContent = taskChildView.get(finalI);
                                 statusSize--;
                                 mHandler.sendEmptyMessage(0x01);
                                 mHandler.sendEmptyMessage(0x03);
@@ -591,7 +603,6 @@ public class TasksInfoActivity extends BaseActivity {
 
                         //组装 负责人 于 参与人
                         ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
-                        //reponserData.addAll(mTask.getMembers().getUsers());
                         reponserData.addAll(mTask.responsiblePersons);
                         ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
                         for (Reviewer element : reponserData) {
@@ -667,6 +678,8 @@ public class TasksInfoActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
+                Toast("网络异常，请稍后再试");
+                finish();
             }
         });
     }
