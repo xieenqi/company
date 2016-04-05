@@ -189,8 +189,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             }
             time.setTextColor(mContext.getResources().getColor(textColor));
             iv_repeattask.setVisibility(isOk ? View.VISIBLE:View.GONE);
-            /**报告*/
 
+            /**报告*/
         } else if (obj instanceof WorkReport) {
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
             final WorkReport workReport = (WorkReport) obj;

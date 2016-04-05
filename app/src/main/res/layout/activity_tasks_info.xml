@@ -37,7 +37,7 @@
                     android:gravity="center_vertical|left"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text=""
+                    android:text="任务"
                     android:textSize="16sp"
                     />
 
@@ -60,7 +60,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:text=""
+                android:text="时间"
                 android:textColor="@color/text99"
                 android:textSize="12sp"
                 />
