@@ -677,7 +677,6 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
                 Toast("网络异常，请稍后再试");
                 finish();
             }
