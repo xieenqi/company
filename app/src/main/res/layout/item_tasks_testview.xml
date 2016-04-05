@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
 
     <LinearLayout
         android:id="@+id/layout_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        android:background="@drawable/round_bg_shpe3"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_15"
+        android:layout_marginBottom="@dimen/dimen_15"
         >
-
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -26,11 +25,10 @@
                 android:id="@+id/tv_task_tester"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                android:layout_marginTop="10dp"
-                android:text="审核人:"
                 android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:text="审核人:"
+                android:textColor="@color/text99"
                 android:textSize="15sp"
                 />
 
@@ -40,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/tv_task_tester"
-                android:text="XXX" />
+                android:text="XXX"
+                android:textColor="@color/text99"/>
 
             <TextView
                 android:id="@+id/tv_reviewtime"
@@ -49,10 +48,16 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:text="2015-2-21" />
+                android:text="2015-2-21"
+                android:textColor="@color/text99"/>
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_3"
+            android:background="@drawable/view_dashed_line"
+            android:layerType="software"/>
 
         <LinearLayout
             android:id="@+id/item_tasks_sorece"
@@ -61,24 +66,16 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_marginLeft="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="任务评分"
-                android:textSize="15sp"
-                />
-
             <RatingBar
                 android:id="@+id/ratingBar_Task"
                 style="@style/roomRatingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="30dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10"
                 android:isIndicator="true"
                 android:max="100"
                 android:numStars="5"
-                android:stepSize="1" />
+                android:stepSize="1"/>
 
         </LinearLayout>
 
@@ -91,9 +88,9 @@
                 android:id="@+id/tv_task_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="status"
-                android:layout_marginLeft="@dimen/margin_side_edge"
                 android:layout_marginBottom="@dimen/dimen_5"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:text="status"
                 android:textSize="15sp"
                 />
 
@@ -102,17 +99,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_side_edge"
+                android:textColor="@color/text33"
                 android:text="content"
-                android:layout_marginBottom="5dp"
                 />
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge" />
 
     </LinearLayout>
 </LinearLayout>

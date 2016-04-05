@@ -7,6 +7,7 @@ import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
@@ -39,6 +40,21 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public long updatedAt;
     public long createdAt;
 
+//    // 监听用户被选中时
+//    private List<SelectUserHelper.SelectUserCallback> userCallbacks = new ArrayList<>();
+//
+//    public void addSelectUserCallback(SelectUserHelper.SelectUserCallback mSelectUserCallback) {
+//        this.userCallbacks.add(mSelectUserCallback);
+//    }
+//
+//    public List<SelectUserHelper.SelectUserCallback> getUserCallbacks() {
+//        return userCallbacks;
+//    }
+//
+//    public void addAllSelectUserCallback(List<SelectUserHelper.SelectUserCallback> callbacks) {
+//        this.userCallbacks.addAll(callbacks);
+//    }
+
     public boolean isSuperUser() {
         return isSuperUser;
     }
@@ -62,6 +78,26 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public void setIndex(boolean index) {//是否选中
         this.index = index;
     }
+
+//    public void setIndex(boolean index) {//是否选中
+//        setIndex(index, true);
+//    }
+//
+//    /**
+//     * 设置选中状态, 用于部门全选
+//     *
+//     * @param index
+//     * @param notify 是否回调给所属部门
+//     */
+//    public void setIndex(boolean index, boolean notify) {//是否选中
+//        this.index = index;
+//        for (int i = 0; i < userCallbacks.size(); i++) {
+//            SelectUserHelper.SelectUserCallback callback = userCallbacks.get(i);
+//            if (callback != null) {
+//                callback.onSelectUser(this, notify);
+//            }
+//        }
+//    }
 
     public String getAvatar() {
         return avatar;
@@ -101,7 +137,7 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
         return this.depts.get(0).getShortDept().getId();
     }
 
-    public boolean isExistDepartment (String id){
+    public boolean isExistDepartment(String id) {
         if (TextUtils.isEmpty(id))
             return false;
         for (int i = 0; i < depts.size(); i++) {
@@ -118,6 +154,11 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
         if (TextUtils.isEmpty(id))
             return false;
         return id.equals(this.id);
+    }
+
+    @Override
+    public String getName() {
+        return realname;
     }
 
     @Override

@@ -2,29 +2,31 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/whitesmoke"
     android:layout_height="match_parent">
 
     <com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu
-        android:gravity="center_vertical"
         android:id="@+id/droplist_menu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_50"
         android:background="@color/white"
+        android:gravity="center_vertical"
         android:visibility="visible"/>
+
     <View
         android:id="@+id/customer_list_view"
-        android:layout_below="@+id/droplist_menu"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#DDDDDD"
+        android:layout_below="@+id/droplist_menu"
+        android:background="@color/whitesmoke"
         />
+
     <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/listView_customers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_add"
         android:layout_below="@+id/customer_list_view"
-        android:background="@color/white"
         android:cacheColorHint="#00000000"
         android:drawSelectorOnTop="true"
         android:fadingEdge="none"
@@ -56,12 +58,12 @@
             android:src="@drawable/icon_near_customer_count_bg"/>
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
             android:id="@+id/tv_near_customers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:textColor="@color/title_bg1"
             />
