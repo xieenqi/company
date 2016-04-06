@@ -5,7 +5,7 @@
 
     <!--<dimen name="view_h_title">50dp</dimen>-->
 
-    <dimen name="view_h_title">48dp</dimen>
+    <dimen name="view_h_title">50dp</dimen>
     <dimen name="view_h_fif">55dp</dimen>
     <dimen name="view_h_title_sum">51dp</dimen>
     <dimen name="view_h_item_title">34dp</dimen>

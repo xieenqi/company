@@ -24,7 +24,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textColor="#ff5959"
-                android:textSize="21sp"/>
+                android:textSize="22sp"/>
 
             <TextView
                 android:id="@+id/tv_workdysn_item_name"
@@ -35,7 +35,7 @@
                 android:text="新增客戶"
                 android:textColor="@color/text33"
                 android:textSize="12sp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 />
 
         </LinearLayout>
@@ -45,9 +45,9 @@
             android:layout_width="@dimen/dimen_0.5"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:background="@color/activity_split"
             />
     </LinearLayout>
