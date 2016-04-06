@@ -10,13 +10,12 @@
         android:id="@+id/tv_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_10"
-        android:layout_marginTop="@dimen/dimen_5"
+        android:layout_marginTop="@dimen/dimen_8"
         android:gravity="center_horizontal"
         android:singleLine="true"
         android:text="shijsin"
         android:textColor="@color/text99"
-        android:textSize="@dimen/text_sp13"/>
+        android:textSize="@dimen/text_sp11"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,12 +24,12 @@
 
         <com.loyo.oa.v2.tool.customview.RoundImageView
             android:id="@+id/iv_avatar"
-            android:layout_width="@dimen/dimen_50"
-            android:layout_height="@dimen/dimen_50"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
             android:layout_below="@+id/tv_notice_publisher"
             android:layout_marginBottom="@dimen/dimen_7"
-            android:layout_marginLeft="@dimen/dimen_16"
-            android:layout_marginRight="@dimen/dimen_8"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginRight="@dimen/dimen_10"
             android:layout_marginTop="@dimen/dimen_8"
             android:src="@drawable/img_default_user"
             imagecontrol:border_inside_color="#a8d4e9"
@@ -41,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_7"
-            android:layout_marginLeft="@dimen/dimen_8"
-            android:layout_marginRight="@dimen/dimen_16"
+            android:layout_marginRight="@dimen/dimen_14"
             android:layout_marginTop="@dimen/dimen_8"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -52,16 +50,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="ghfnfn"
+                android:text="名字"
                 android:textColor="@color/text99"
-                android:textSize="@dimen/text_sp14"/>
+                android:textSize="@dimen/text_sp12"/>
 
             <TextView
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_8"
-                android:text="bfddbd"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:gravity="left"
+                android:paddingBottom="@dimen/dimen_5"
+                android:text="内容"
                 android:textColor="@color/text33"
                 android:textSize="@dimen/text_sp14"/>
 
@@ -69,10 +69,6 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1"
-        android:layout_marginLeft="@dimen/dimen_16"
-        android:background="@color/md_grey_300"></View>
+    <include layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>
