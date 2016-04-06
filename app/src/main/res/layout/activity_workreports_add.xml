@@ -185,14 +185,14 @@
                             android:id="@+id/no_dysndata_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/beogray"
+                            android:background="@color/white"
                             android:orientation="vertical"
                             android:visibility="gone"
                             >
 
                             <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="60dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/icon_dysn_nodata"
@@ -205,7 +205,8 @@
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginTop="5dp"
                                 android:text="暂无统计数据"
-                                android:textColor="@color/gray"
+                                android:textSize="11.5sp"
+                                android:textColor="@color/text99"
                                 />
 
                         </LinearLayout>
