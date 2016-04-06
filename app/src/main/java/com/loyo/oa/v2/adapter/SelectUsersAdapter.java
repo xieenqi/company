@@ -86,6 +86,8 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
                 headerViewHolder.checkBox.setChecked(mDepartment.isIndex());
                 headerViewHolder.relAllcheck.setTag(headerViewHolder.checkBox);
+                headerViewHolder.tv_noUser.setVisibility(users.size() == 0 ? View.VISIBLE : View.GONE);
+                headerViewHolder.relAllcheck.setEnabled(!(users.size() == 0));
                 headerViewHolder.relAllcheck.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

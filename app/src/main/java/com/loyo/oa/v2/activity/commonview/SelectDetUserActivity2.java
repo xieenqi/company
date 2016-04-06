@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.commonview;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -252,6 +253,32 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
             }
         }
         return department;
+    }
+
+    /**
+     * 获取当前部门人员
+     *
+     * @deprecated 根据部门Xpath获取人员
+     */
+    void getInfoUser(final int positions) {
+        for (Department department : newDeptSource) {
+            if (department.getXpath().contains(newDeptSource.get(positions).getXpath())) {
+                try {
+                    for (User user : department.getUsers()) {
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void getSelectUser(final String userId) {
+        for (User user : userAllList) {
+            if (user.getId().equals(userId)) {
+                user.setIndex(true);
+            }
+        }
     }
 
     private void toAllUserByUserSelect1(User user) {
