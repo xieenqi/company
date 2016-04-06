@@ -331,6 +331,8 @@
     <color name="login_text">#6b6b6b</color>
     <color name="task_agree">#92d754</color>
     <color name="task_notagree">#bfbfbf</color>
+    <color name="work_info_gray">#fbfbfb</color>
+    <color name="work_info_solid">#e6e6e6</color>
 
     <color name="task_discussion_attachment_color">#a0a0a0</color>
 

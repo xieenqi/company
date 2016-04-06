@@ -39,7 +39,6 @@
                     android:singleLine="true"
                     android:text="标题"
                     android:textSize="16sp"
-
                     />
 
                 <ImageView
@@ -60,7 +59,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|left"
                 android:paddingLeft="@dimen/margin_side_edge"
-                android:text=""
+                android:text="时间"
                 android:textColor="@color/text99"
                 android:textSize="12sp"
                 />
@@ -350,6 +349,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="15dp"
+                android:background="@color/activity_bg"/>
+
             <LinearLayout
                 android:id="@+id/layout_task_testfather"
                 android:layout_width="fill_parent"
@@ -364,12 +368,20 @@
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginTop="10dp"
                     android:text="审核"
-                    android:textSize="20sp"/>
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15"/>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_0.5"
+                    android:layout_marginLeft="@dimen/margin_side_edge"/>
 
                 <LinearLayout
                     android:id="@+id/layout_test_Add_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_12"
                     android:orientation="vertical"/>
             </LinearLayout>
 

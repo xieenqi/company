@@ -18,6 +18,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
@@ -49,16 +50,19 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -164,10 +168,10 @@ public class TasksInfoActivity extends BaseActivity {
         public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
-            }else if(msg.what == 0x02){
+            } else if (msg.what == 0x02) {
                 viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                 viewContent.setTextColor(getResources().getColor(R.color.text99));
-            }else if(msg.what == 0x03){
+            } else if (msg.what == 0x03) {
                 viewContent.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
                 viewContent.setTextColor(getResources().getColor(R.color.text33));
             }
@@ -258,16 +262,16 @@ public class TasksInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.GONE);
         }
         //其他情况
-        switch (mTask.getStatus()){
+        switch (mTask.getStatus()) {
             case Task.STATUS_REVIEWING:
-                if(IsResponsiblePerson()){
+                if (IsResponsiblePerson()) {
                     LogUtil.d("负责人 审核中");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
 
             case Task.STATUS_FINISHED:
-                if(IsResponsiblePerson()){
+                if (IsResponsiblePerson()) {
                     LogUtil.d("负责人 已完成");
                     img_title_right.setVisibility(View.GONE);
                 }
@@ -454,6 +458,7 @@ public class TasksInfoActivity extends BaseActivity {
             if ("1".equals(reviewer.getStatus())) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
+                tv_task_status.setVisibility(View.GONE);
             } else {
                 tv_task_status.setText("不通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.red));
@@ -525,11 +530,11 @@ public class TasksInfoActivity extends BaseActivity {
         taskChildView.clear();
 
         //子任务列表内容，遍历
-            for(int i = 0;i<mTask.getchecklists().size();i++){
+        for (int i = 0; i < mTask.getchecklists().size(); i++) {
 
             final TaskCheckPoint subTask = mTask.getchecklists().get(i);
             final View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
-            RelativeLayout childView = (RelativeLayout)view.findViewById(R.id.item_childtask_info);
+            RelativeLayout childView = (RelativeLayout) view.findViewById(R.id.item_childtask_info);
 
             //子任务标题
             viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
@@ -542,7 +547,7 @@ public class TasksInfoActivity extends BaseActivity {
             if (!TextUtils.isEmpty(subTask.getcontent())) {
                 viewContent.setText(subTask.getcontent());
             }
-                taskChildView.add(viewContent);
+            taskChildView.add(viewContent);
 
             /*Checkbox勾选,赋值*/
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
@@ -554,7 +559,7 @@ public class TasksInfoActivity extends BaseActivity {
             }
 
             /*初始化完成/未完成状态*/
-            if(isStatus){
+            if (isStatus) {
                 viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                 viewContent.setTextColor(getResources().getColor(R.color.text99));
             }
@@ -686,7 +691,7 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 标题左右监听
      */
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete,R.id.layout_cb})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete, R.id.layout_cb})
     void onClick(final View v) {
 
         switch (v.getId()) {
