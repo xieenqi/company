@@ -35,6 +35,7 @@ import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -227,7 +228,7 @@ public class TasksInfoActivity extends BaseActivity {
         boolean isInTask = false; //判断当前用户是否在任务中
         for (int i = 0; i < users.size(); i++) {
             if (MainApp.user.id.equals(users.get(i).getId())
-                    || MainApp.user.depts.get(0).getShortDept().getId().equals(users.get(i).getId())//部门的人员有权限
+                    || isMenberShortDept(users.get(i).getId())
                     ) {
                 isInTask = true;
                 break;
@@ -252,6 +253,21 @@ public class TasksInfoActivity extends BaseActivity {
         if (!IsCreator() && !IsResponsiblePerson()) {
             img_title_right.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 多部门的人员有权限
+     *
+     * @param id
+     * @return
+     */
+    private boolean isMenberShortDept(String id) {
+        for (UserInfo element : MainApp.user.depts) {
+            if (element.getShortDept().getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
