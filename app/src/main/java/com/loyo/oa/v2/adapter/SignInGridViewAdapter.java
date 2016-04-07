@@ -22,6 +22,7 @@ import com.loyo.oa.v2.tool.BitmapUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
+import com.loyo.oa.v2.tool.customview.multi_image_selector.bean.Image;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;

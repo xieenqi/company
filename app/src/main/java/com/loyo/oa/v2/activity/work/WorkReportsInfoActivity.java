@@ -293,7 +293,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
             tv_ptoject.setText("无");
         }
 
-
         showAttachment();
         if (mWorkReport.isReviewed()) {
             layout_score.setVisibility(View.VISIBLE);

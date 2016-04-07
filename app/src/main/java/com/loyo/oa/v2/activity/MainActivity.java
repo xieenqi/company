@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
 import com.loyo.oa.v2.beans.Modules;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Suites;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
@@ -127,6 +129,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     ImageView img_home_head, img_fast_add, img_bulletinStatus;
     @ViewById
     RelativeLayout group_home_relative;
+    @ViewById
+    ImageButton img_contact;
 
     private Intent mIntentCheckUpdate;
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
@@ -515,7 +519,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
-        intent.putExtra("needExtra", validateInfo.isNeedExtra());
+        intent.putExtra("isPopup", validateInfo.isPopup());
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
@@ -1027,8 +1031,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
-        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
-                0 == MainApp.user.permission.suites.size()) {
+
+        if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
+                0 == MainApp.user.newpermission.size()) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -1036,44 +1041,29 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     testJurl();
                 }
             }, 5000);
-            LogUtil.d("没有配置权限");
             return;
         }
 
         ArrayList<ClickItem> itemsNew = new ArrayList<>();
-        ArrayList<Suites> suitesNew = new ArrayList<>();
-        suitesNew.add(new Suites());
-        suitesNew.add(new Suites());
-        suitesNew.add(new Suites());
-        for (Suites stuites : MainApp.user.permission.suites) {
-            if ("客户管理".equals(stuites.name)) {
-                suitesNew.remove(0);
-                suitesNew.add(0, stuites);
-            } else if ("协同办公".equals(stuites.name)) {
-                suitesNew.remove(1);
-                suitesNew.add(1, stuites);
-            } else if ("其他".equals(stuites.name)) {
-                suitesNew.remove(2);
-                suitesNew.add(2, stuites);
-            }
-        }
+        ArrayList<Permission> suitesNew = MainApp.user.newpermission;
+
         for (int i = 0; i < suitesNew.size(); i++) {
             for (int k = 0; k < items.size(); k++) {
-                for (Modules modules : suitesNew.get(i).getModules()) {
-                    if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
+                    if (items.get(k).title.equals(suitesNew.get(i).getName()) && suitesNew.get(i).isEnable()) {
                         itemsNew.add(items.get(k));
                         continue;
-                    }
                 }
             }
         }
 
         items.clear();
         items = itemsNew;
+
         //默认添加有
         items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));
         lv_main.setAdapter(adapter);//为了业务使用权限
         lv_main.setDragEnabled(true);
+        //img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
         cancelLoading();
     }
 

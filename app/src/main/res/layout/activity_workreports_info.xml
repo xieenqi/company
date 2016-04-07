@@ -180,11 +180,12 @@
                     android:id="@+id/tv_workContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_marginLeft="@dimen/dimen_15"
                     android:layout_marginRight="@dimen/dimen_15"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15"
+                    android:text="Content"
                     />
 
                 <LinearLayout
@@ -212,7 +213,7 @@
                         android:layout_marginRight="@dimen/margin_side_edge"
                         android:layout_weight="1"
                         android:gravity="left|center_vertical"
-                        android:text="gggdf"
+                        android:text=""
                         android:textColor="#999999"
                         android:textSize="13sp"/>
 
@@ -236,7 +237,9 @@
                         android:layout_weight="1"
                         android:gravity="left|center_vertical"
                         android:textColor="#999999"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp"
+                        android:text="抄送人:"
+                        />
 
                 </LinearLayout>
 
@@ -263,7 +266,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#999999"
                         android:textSize="13sp"
-                        android:text="asdsadsa"
+                        android:text=""
                         android:ellipsize="end"
                         android:maxEms="17"
                         android:singleLine="true"
@@ -476,6 +479,7 @@
                     android:background="@color/title_bg1"
                     android:text="点评"
                     android:textColor="@color/white"/>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

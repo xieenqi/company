@@ -23,6 +23,7 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.136";
 
+
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
@@ -84,9 +85,8 @@ public class Config_project {
      * 登录地址
      */
     public static String SERVER_URL_LOGIN() {
-        return isRelease ? Domain.account : IP + ":8080";
+        return isRelease ? Domain.account : "http://192.168.31.10" + ":8080";
     }
-    //产品预上线环境服务器 88端口  131的是8080
 
     /**
      * oa 系统

@@ -95,8 +95,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     GridView gridView_photo;
     @Extra
     AttendanceRecord mAttendanceRecord;
-    @Extra("needExtra")
-    boolean needExtra;
+    @Extra("isPopup")
+    boolean isPopup;
     @Extra("needPhoto")
     boolean NeedPhoto;
     @Extra("outKind")
@@ -444,6 +444,13 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("outstate", mAttendanceRecord.getOutstate());
         map.put("extraWorkStartTime", extraWorkStartTime);
         map.put("extraWorkEndTime", serverTime);
+        if(isPopup){
+            if(outKind == 1){
+                map.put("extraChooseState",1);
+            }else if(outKind == 2){
+                map.put("extraChooseState",2);
+            }
+        }
         if (attachments.size() != 0) {
             map.put("attachementuuid", uuid);
         }
