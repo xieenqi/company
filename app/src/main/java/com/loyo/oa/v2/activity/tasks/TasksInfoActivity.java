@@ -226,7 +226,9 @@ public class TasksInfoActivity extends BaseActivity {
 
         boolean isInTask = false; //判断当前用户是否在任务中
         for (int i = 0; i < users.size(); i++) {
-            if (MainApp.user.id.equals(users.get(i).getId())) {
+            if (MainApp.user.id.equals(users.get(i).getId())
+                    || MainApp.user.depts.get(0).getShortDept().getId().equals(users.get(i).getId())//部门的人员有权限
+                    ) {
                 isInTask = true;
                 break;
             }

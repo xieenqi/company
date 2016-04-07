@@ -50,7 +50,7 @@
                 android:id="@+id/layout_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_6"
+                android:layout_marginLeft="@dimen/dimen_12"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
@@ -81,7 +81,7 @@
                 android:id="@+id/layout_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_6"
+                android:layout_marginLeft="@dimen/dimen_12"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -112,6 +112,7 @@
                 android:id="@+id/layout_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_12"
                 android:orientation="horizontal">
 
                 <ImageView
