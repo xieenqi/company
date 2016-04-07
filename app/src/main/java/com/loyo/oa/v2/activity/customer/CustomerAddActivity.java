@@ -288,6 +288,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult((Activity) mContext, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_NEW_CONTRACT, null);
                 break;*/
             default:
+
                 break;
         }
     }
@@ -412,7 +413,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             default:
 
                 break;
-
         }
     }
 
