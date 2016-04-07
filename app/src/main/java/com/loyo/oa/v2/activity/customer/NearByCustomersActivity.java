@@ -111,7 +111,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
      * 初始化选项卡
      */
     private void initTabs() {
-        tabs.setTextSize(app.spTopx(18));
+        tabs.setTextSize(app.spTopx(14));
         adapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
