@@ -55,9 +55,7 @@ import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
-import com.loyo.oa.v2.beans.Modules;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.beans.Suites;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
@@ -830,9 +828,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     extra = num.bizNum + "待点评";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "未完成"
-//                    +"，"+num.bizNum+"待处理"
-                    ;
+                    extra = num.bizNum + "未完成";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
                     extra = num.bizNum + "待审批";
@@ -970,7 +966,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class),
-                // TODO: 添加我的讨论界面
                 new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class)));
 
         if (MainApp.user == null) {
@@ -1032,38 +1027,55 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     public void testJurl() {
 
-        if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
-                0 == MainApp.user.newpermission.size()) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    testJurl();
-                }
-            }, 5000);
-            return;
-        }
+        //超级管理员判断
+        if(!MainApp.user.isSuperUser()){
 
-        ArrayList<ClickItem> itemsNew = new ArrayList<>();
-        ArrayList<Permission> suitesNew = MainApp.user.newpermission;
+            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
+                    0 == MainApp.user.newpermission.size()) {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        testJurl();
+                    }
+                }, 5000);
+                return;
+            }
 
-        for (int i = 0; i < suitesNew.size(); i++) {
-            for (int k = 0; k < items.size(); k++) {
+            ArrayList<ClickItem> itemsNew = new ArrayList<>();
+            ArrayList<Permission> suitesNew = MainApp.user.newpermission;
+
+/*            for (int i = 0; i < suitesNew.size(); i++) {
+                for (int k = 0; k < items.size(); k++) {
                     if (items.get(k).title.equals(suitesNew.get(i).getName()) && suitesNew.get(i).isEnable()) {
                         itemsNew.add(items.get(k));
                         continue;
+                    }
+                }
+            }*/
+
+/*            items.clear();
+            items = itemsNew;*/
+
+            for(Permission permission : suitesNew){
+                for(int i = 0;i<items.size();i++){
+                    if(items.get(i).title.contains(permission.getName())) {
+                        LogUtil.d("当前title:"+permission.getName());
+                        LogUtil.d("当前enabke:"+permission.isEnable());
+                        if(!permission.isEnable()){
+                            items.remove(i);
+                        }
+                    }
                 }
             }
+
+            //items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));
+            img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
         }
 
-        items.clear();
-        items = itemsNew;
-
-        //默认添加有
-        items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));
-        lv_main.setAdapter(adapter);//为了业务使用权限
+        //为了业务使用权限
+        lv_main.setAdapter(adapter);
         lv_main.setDragEnabled(true);
-        //img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
         cancelLoading();
     }
 
