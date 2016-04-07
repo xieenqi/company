@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
-def outputPath = 'D:\\jenkins\\workspace\\loyo-android-v2\\app\\build\\apk'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-develop\\app\\build\\apk'
 
 android {
     compileSdkVersion 22
