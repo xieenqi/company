@@ -104,7 +104,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         bundle.putSerializable("customers", customers);
         bundle.putInt(ExtraAndResult.EXTRA_DATA, fragmentXes.get(0).getmCustomers().size());
         bundle.putInt(ExtraAndResult.EXTRA_TYPE, type);
-        app.startActivity(this, NearByCustomersMapActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
+        app.startActivity(this, NearByCustomersMapActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
     }
 
     /**
