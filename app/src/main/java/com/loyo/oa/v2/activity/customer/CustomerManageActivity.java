@@ -69,6 +69,8 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     public String[] CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户", "公海客户"};
     public float mRotation = 0;
     public int mIndex = -1;
+    public int type = 1;
+    public boolean publicOrTeam;
 
     @AfterViews
     void initUI() {
@@ -84,22 +86,30 @@ public class CustomerManageActivity extends BaseFragmentActivity {
                 perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
                 if(!perTeam.isEnable() && !perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户"};
+                    imageArrow.setVisibility(View.INVISIBLE);
                 }else if(perTeam.isEnable() && !perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户"};
+                    publicOrTeam = true;
+                    imageArrow.setVisibility(View.VISIBLE);
                 }else if(!perTeam.isEnable() && perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
+                    publicOrTeam = false;
+                    imageArrow.setVisibility(View.VISIBLE);
+                }else{
+                    imageArrow.setVisibility(View.VISIBLE);
                 }
             }catch(NullPointerException e){
                 e.printStackTrace();
-                Toast("团队/公海客户,code错误");
+                Toast("团队/公海客户,code错误:0308,0309");
             }
+        }else{
+            imageArrow.setVisibility(View.VISIBLE);
         }
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         initCategoryUI();
         rotateAnimation = getArrowAnimation();
-        imageArrow.setVisibility(View.VISIBLE);
         initFragments();
         layout_category.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,18 +117,29 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
             }
         });
+
+
     }
 
+    /**
+     * 初始化Fragment
+     * */
     void initFragments() {
-
         int len = CUSTOMER_FILTER_STRS.length;
-        int type = -1;
         for (int i = 0; i < len; i++) {
             if (len == 2) {
-                if (i == 0) {
-                    type = Customer.CUSTOMER_TYPE_MINE;
-                } else {
-                    type = Customer.CUSTOMER_TYPE_PUBLIC;
+                if(publicOrTeam){
+                    if (i == 0) {
+                        type = Customer.CUSTOMER_TYPE_MINE;
+                    } else {
+                        type = Customer.CUSTOMER_TYPE_TEAM;
+                    }
+                }else{
+                    if (i == 0) {
+                        type = Customer.CUSTOMER_TYPE_MINE;
+                    } else {
+                        type = Customer.CUSTOMER_TYPE_PUBLIC;
+                    }
                 }
             } else if (len == 3) {
                 if (i == 0) {
@@ -135,7 +156,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
             fragments.add(fragment);//添加fragment 界面
         }
         changeChild(0);
-
     }
 
     void initCategoryUI() {
@@ -164,9 +184,14 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         return rotateAnimation;
     }
 
+    /**
+     * 顶部(我的，团队，公海)tab选择监听
+     * */
     @Click(R.id.layout_title_action)
     void onClickChangeCategory() {
-        changeCategoryView();
+        if(CUSTOMER_FILTER_STRS.length != 1){
+            changeCategoryView();
+        }
     }
 
     void changeChild(final int index) {

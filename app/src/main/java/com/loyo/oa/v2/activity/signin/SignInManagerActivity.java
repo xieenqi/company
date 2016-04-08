@@ -54,6 +54,7 @@ public class SignInManagerActivity extends FragmentActivity {
     @ViewById(R.id.lv_signin_category)
     ListView categoryListView;
 
+
     private Permission permission;
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
@@ -70,36 +71,45 @@ public class SignInManagerActivity extends FragmentActivity {
         findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
         findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
-        imageArrow.setVisibility(View.VISIBLE);
-        rotateAnimation = initAnimation();
-
+        /*超级管理员,Web权限判断*/
         if(!MainApp.user.isSuperUser()){
             try{
                 permission = (Permission) MainApp.rootMap.get("0310");
                 if(!permission.isEnable()){
                     LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
+                    imageArrow.setVisibility(View.INVISIBLE);
+                }else{
+                    imageArrow.setVisibility(View.VISIBLE);
                 }
             }catch (NullPointerException e){
                 e.printStackTrace();
-                Toast.makeText(this,"团队拜访权限，code错误",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"团队拜访权限，code错误:0310",Toast.LENGTH_SHORT).show();
             }
+        }else{
+            imageArrow.setVisibility(View.VISIBLE);
         }
 
+        rotateAnimation = initAnimation();
         initCategoryUI();
         initChildren();
+
+        if(LEGWORK_FILTER_STRS.length == 1){
+            layout_title_action.setEnabled(false);
+        }
     }
 
     @Click({R.id.img_title_left, R.id.layout_title_action})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                changeCategoryView();
+                if(LEGWORK_FILTER_STRS.length != 1){
+                    changeCategoryView();
+                }
                 break;
             case R.id.img_title_left:
                 onBackPressed();
                 break;
             default:
-
                 break;
         }
     }

@@ -1045,18 +1045,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             ArrayList<ClickItem> itemsNew = new ArrayList<>();
             ArrayList<Permission> suitesNew = MainApp.user.newpermission;
 
-/*            for (int i = 0; i < suitesNew.size(); i++) {
-                for (int k = 0; k < items.size(); k++) {
-                    if (items.get(k).title.equals(suitesNew.get(i).getName()) && suitesNew.get(i).isEnable()) {
-                        itemsNew.add(items.get(k));
-                        continue;
-                    }
-                }
-            }
-            items.clear();
-            items = itemsNew;
-            items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));*/
-
             for(Permission permission : suitesNew){
                 for(int i = 0;i<items.size();i++){
                     if(items.get(i).title.contains(permission.getName())) {
@@ -1071,7 +1059,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
             }catch(NullPointerException e){
                 e.printStackTrace();
-                Toast("通讯录权限，code错误");
+//                Toast("通讯录权限，code错误");
             }
         }
 
