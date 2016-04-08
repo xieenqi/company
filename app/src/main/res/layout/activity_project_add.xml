@@ -34,10 +34,13 @@
                     android:id="@+id/edt_title"
                     style="@style/text_item2"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
+                    android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="left|center_vertical"
                     android:hint="添加项目名称"
+                    android:maxLength="50"
+                    android:singleLine="false"
+                    android:minHeight="@dimen/dimen_50"
                     android:paddingLeft="@dimen/margin_other_view"/>
 
                 <View

@@ -37,10 +37,11 @@
                     android:id="@+id/tv_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_marginTop="5dp"
                     android:text="23"
                     android:textColor="#2c9dfc"
+                    android:textSize="@dimen/text_sp11"
                     android:visibility="gone"
                     />
             </FrameLayout>
