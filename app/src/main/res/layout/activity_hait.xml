@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.discuss.hait.ActivityHait">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/activity_bg"
+                tools:context=".activity.discuss.hait.ActivityHait">
 
     <include
         android:id="@+id/actionbar"
@@ -14,6 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/actionbar"
-        android:clickable="false" />
+        android:clickable="false"/>
 
 </RelativeLayout>

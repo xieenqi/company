@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.login;
 
 import android.os.Bundle;
-import android.os.Debug;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,9 +44,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private EditText edt_username, edt_password;
     private WaveView layout_login;
     private TextView tv_resetPassword, tv_qqLogin;
-    private LinearLayout serverTest,serverFormal,layout_check_debug;
-    private ImageView serverTestImg,serverFormalImg;
-    private TextView serverTestTv,serverFormalTv;
+    private LinearLayout serverTest, serverFormal, layout_check_debug;
+    private ImageView serverTestImg, serverFormalImg;
+    private TextView serverTestTv, serverFormalTv;
 
 
     @Override
@@ -89,15 +88,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if (Config_project.is_developer_mode) {
             edt_username.setText("18235169100");
             edt_password.setText("123456");
-            //layout_check_debug.setVisibility(View.VISIBLE);
-
-            if(Config_project.isRelease){
+//            layout_check_debug.setVisibility(View.VISIBLE);
+            if (Config_project.isRelease) {
                 serverFormalTv.setTextColor(getResources().getColor(R.color.black));
                 serverTestTv.setTextColor(getResources().getColor(R.color.gray));
 
                 serverTestImg.setVisibility(View.INVISIBLE);
                 serverFormalImg.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 serverTestTv.setTextColor(getResources().getColor(R.color.black));
                 serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
 
@@ -109,28 +107,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         serverTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Config_project.isRelease){
-                    Config_project.isRelease = false;
-                    serverTestTv.setTextColor(getResources().getColor(R.color.black));
-                    serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
+                Config_project.isRelease = false;
+                serverTestTv.setTextColor(getResources().getColor(R.color.black));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
 
-                    serverTestImg.setVisibility(View.VISIBLE);
-                    serverFormalImg.setVisibility(View.INVISIBLE);
-                }
+                serverTestImg.setVisibility(View.VISIBLE);
+                serverFormalImg.setVisibility(View.INVISIBLE);
+                LogUtil.d("test ："+Config_project.isRelease);
             }
         });
 
         serverFormal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(! Config_project.isRelease){
-                    Config_project.isRelease = true;
-                    serverFormalTv.setTextColor(getResources().getColor(R.color.black));
-                    serverTestTv.setTextColor(getResources().getColor(R.color.gray));
+                Config_project.isRelease = true;
+                serverFormalTv.setTextColor(getResources().getColor(R.color.black));
+                serverTestTv.setTextColor(getResources().getColor(R.color.gray));
 
-                    serverTestImg.setVisibility(View.INVISIBLE);
-                    serverFormalImg.setVisibility(View.VISIBLE);
-                }
+                serverTestImg.setVisibility(View.INVISIBLE);
+                serverFormalImg.setVisibility(View.VISIBLE);
+                LogUtil.d("common ：" + Config_project.isRelease);
             }
         });
     }
@@ -182,6 +178,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 body.put("username", username);
                 body.put("password", password);
                 login(body);
+                LogUtil.d("login ：" + Config_project.isRelease);
                 break;
             case R.id.tv_qqLogin://企业qq登陆
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
@@ -221,7 +218,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      *
      * @param body 表单
      *             、 @param type 1，微信登录；2，普通登录
-     *             <p>
+     *             <p/>
      *             成功 getStatus 状态码
      *             失败 getKind 状态码
      */

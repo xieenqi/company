@@ -444,6 +444,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("outstate", mAttendanceRecord.getOutstate());
         map.put("extraWorkStartTime", extraWorkStartTime);
         map.put("extraWorkEndTime", serverTime);
+
         if(isPopup){
             if(outKind == 1){
                 map.put("extraChooseState",1);

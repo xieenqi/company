@@ -110,7 +110,7 @@ public class WorkReportAddActivity extends BaseActivity {
     @ViewById
     GridView gridView_photo;
     @ViewById
-    GridView gridview_workreports;
+    GridView gv_workreports;
     @ViewById
     ViewGroup no_dysndata_workreports;
 
@@ -149,12 +149,12 @@ public class WorkReportAddActivity extends BaseActivity {
             if (msg.what == UPDATE_SUCCESS) {
                 if (null == dynList || dynList.size() == 0) {
                     no_dysndata_workreports.setVisibility(View.VISIBLE);
-                    gridview_workreports.setVisibility(View.GONE);
+                    gv_workreports.setVisibility(View.GONE);
                 } else {
                     no_dysndata_workreports.setVisibility(View.GONE);
-                    gridview_workreports.setVisibility(View.VISIBLE);
+                    gv_workreports.setVisibility(View.VISIBLE);
                     workGridViewAdapter = new workReportAddgridViewAdapter(mContext, dynList);
-                    gridview_workreports.setAdapter(workGridViewAdapter);
+                    gv_workreports.setAdapter(workGridViewAdapter);
                 }
             }
         }

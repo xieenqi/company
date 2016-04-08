@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -49,6 +50,8 @@ public class SelectUserHelper {
 //         */
 //        void onSelectUser(User user, boolean notify);
 ////    }
+
+    public static final Map<NewUser, List<User>> mSelectDatas = new HashMap<>();
 
     public interface SelectUserBase {
 
@@ -145,4 +148,46 @@ public class SelectUserHelper {
             TextView name;
         }
     }
+
+    public static class SelectThread extends Thread {
+
+        private final List<Department> mDepartmentDatas;
+
+        public SelectThread(List<Department> datas) {
+            this.mDepartmentDatas = datas;
+        }
+
+        @Override
+        public void run() {
+            mSelectDatas.clear();
+            if (mDepartmentDatas != null) {
+                for (int i = 0; i < mDepartmentDatas.size(); i++) {
+                    bindUser(mDepartmentDatas.get(i));
+                }
+            }
+        }
+
+        /**
+         * 获取当前部门人员
+         *
+         * @deprecated 根据部门Xpath获取人员
+         */
+        private synchronized void bindUser(Department department) {
+            List<User> users = new ArrayList<>();
+            for (Department d : mDepartmentDatas) {
+                if (department.getXpath().contains(d.getXpath())) {
+                    if (d.getUsers() != null && d.getUsers().size() > 0)
+                        users.addAll(d.getUsers());
+                }
+            }
+            NewUser newUser = new NewUser();
+            newUser.setId(department.getId());
+            newUser.setAvatar(department.getAvater());
+            newUser.setName(department.getName());
+            newUser.setXpath(department.getXpath());
+            mSelectDatas.put(newUser, users);
+//            newUser.setUsers(users);
+        }
+    }
+
 }
