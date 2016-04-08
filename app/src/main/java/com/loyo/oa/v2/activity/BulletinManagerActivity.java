@@ -77,7 +77,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 }
             }catch(NullPointerException e){
                 e.printStackTrace();
-                Toast("发布公告权限,code错误");
+                Toast("发布公告权限,code错误:0402");
             }
         }
 
