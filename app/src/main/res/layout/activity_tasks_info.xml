@@ -20,23 +20,22 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="@dimen/dimen_12"
-                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingLeft="@dimen/margin_side_edge">
 
                 <TextView
                     android:id="@+id/tv_task_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:ellipsize="end"
                     android:gravity="center_vertical|left"
-                    android:maxEms="10"
-                    android:singleLine="true"
+                    android:layout_weight="1"
                     android:text="标题"
                     android:textSize="16sp"
                     />
@@ -47,8 +46,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:gravity="top"
                     android:src="@drawable/icon_project_processing"/>
-            </RelativeLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_sub_title"
