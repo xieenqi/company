@@ -262,9 +262,10 @@ public class TasksInfoActivity extends BaseActivity {
      * @return
      */
     private boolean isMenberShortDept(String id, String xpath) {
+        LogUtil.d("部门的值："+xpath);
         for (UserInfo element : MainApp.user.depts) {
             if (element.getShortDept().getId().equals(id)
-                    || element.getShortDept().getXpath().contains(xpath)) {
+                    || (null != xpath && element.getShortDept().getXpath().contains(xpath))) {
                 return true;
             }
         }
