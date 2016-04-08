@@ -22,6 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Member;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -116,11 +117,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @Extra("Id")
     String id;
     @Extra(ExtraAndResult.EXTRA_TYPE)
-    int customerType;//"1,我的客户", "2,团队客户", "3,公海客户"
-    String ownErId;
-    boolean isLock;
-    boolean isMyUser;
-    boolean isPutOcen;
+    public int customerType;//"1,我的客户", "2,团队客户", "3,公海客户"
+    public boolean isLock;
+    public boolean isMyUser;
+    public boolean isPutOcen;
+    public Permission perDelete;
+    public Permission perOcean;
+    public Permission perGet;
 
     @AfterViews
     void initViews() {
@@ -140,12 +143,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             @Override
             public void success(final Customer customer, final Response response) {
                 HttpErrorCheck.checkResponse("客户详情-->", response);
-                if(customer == null){
+                if (customer == null) {
                     Toast("获取数据失败");
                     return;
                 }
                 LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
-                ownErId = customer.owner.id;
                 isLock = customer.lock;
                 mCustomer = customer;
                 initData();
@@ -169,8 +171,22 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-        if (customerType == 3) {
+
+        /*超级管理员,我的客户,Web权限控制判断*/
+        if(MainApp.user.isSuperUser()){
             img_public.setVisibility(View.VISIBLE);
+        }else{
+            if (customerType == 3) {
+                try{
+                    perGet = (Permission)MainApp.rootMap.get("0404");
+                    if(perGet.isEnable()){
+                        img_public.setVisibility(View.VISIBLE);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Toast("客户挑入权限,code错误");
+                }
+            }
         }
 
         /*判断是否有操作权限，来操作改客户信息
@@ -242,10 +258,24 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         btnUpdate.setText("投入公海");
         btn_child_delete_task.setText("删除");
-        /*超级管理员 才能删除客户*/
+
+        /*超级管理员\web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            btn_child_delete_task.setVisibility(View.GONE);
+            try{
+                perDelete = (Permission)MainApp.rootMap.get("0405");
+                perOcean = (Permission)MainApp.rootMap.get("0403");
+                if(!perDelete.isEnable()){
+                    btn_child_delete_task.setVisibility(View.GONE);
+                }
+                if(!perOcean.isEnable()){
+                    btnUpdate.setVisibility(View.GONE);
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                Toast("客户挑入,删除权限,code错误");
+            }
         }
+
         btn_child_delete_task.setOnTouchListener(Global.GetTouch());
         btnCancel.setOnTouchListener(Global.GetTouch());
         btnUpdate.setOnTouchListener(Global.GetTouch());

@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.ProjectAddActivity_;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -20,7 +20,6 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +36,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
     private static final int[] FILTER_TYPEID_ARRAY = new int[]{0, 3, 2, 1};
     private static final String[] FILTER_STATUS_ARRAY = new String[]{"全部状态", "进行中", "已结束"};
     private ProjectExpandableListAdapter adapter;
+    private Permission permission = (Permission) MainApp.rootMap.get("0201");
     private int type = 0;
     private int status = 0;
 
@@ -131,6 +131,12 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void addNewItem() {
+        if(!MainApp.user.isSuperUser()){
+            if(!permission.isEnable()){
+                Toast("你没有操作权限!");
+                return;
+            }
+        }
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectAddActivity_.class);
         startActivityForResult(intent, REQUEST_CREATE);

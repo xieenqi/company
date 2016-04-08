@@ -13,10 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.SignInOfTeamFragment;
 import com.loyo.oa.v2.fragment.SignInOfUserFragment;
@@ -52,6 +54,7 @@ public class SignInManagerActivity extends FragmentActivity {
     @ViewById(R.id.lv_signin_category)
     ListView categoryListView;
 
+    private Permission permission;
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
     private float mRotation = 0;
@@ -70,9 +73,18 @@ public class SignInManagerActivity extends FragmentActivity {
         imageArrow.setVisibility(View.VISIBLE);
         rotateAnimation = initAnimation();
 
-        if (!Utils.hasRights()) {
-            LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
+        if(!MainApp.user.isSuperUser()){
+            try{
+                permission = (Permission) MainApp.rootMap.get("0310");
+                if(!permission.isEnable()){
+                    LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                Toast.makeText(this,"团队拜访权限，code错误",Toast.LENGTH_SHORT).show();
+            }
         }
+
         initCategoryUI();
         initChildren();
     }

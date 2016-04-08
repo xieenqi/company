@@ -16,6 +16,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
@@ -61,10 +62,25 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     private NoticeAdapter adapter;
     public final int REQUEST_NEW = 1;
     private LinearLayoutManager layoutManager;
+    private Permission permission;
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
+
+        //超级管理员\权限判断
+        if(!MainApp.user.isSuperUser()){
+            try{
+                permission = (Permission)MainApp.rootMap.get("0402");
+                if(!permission.isEnable()){
+                    btn_notice_add.setVisibility(View.INVISIBLE);
+                }
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("发布公告权限,code错误");
+            }
+        }
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         btn_notice_add.setOnTouchListener(Global.GetTouch());
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
