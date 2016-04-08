@@ -11,23 +11,15 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.SelectDepData;
 import com.loyo.oa.v2.beans.SelectUserData;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by loyocloud on 16/3/29.
@@ -267,6 +259,10 @@ public class SelectUserHelper {
         }
     }
 
+    /**
+     * 更新部门的选择状态
+     * @param data
+     */
     public static void addDepNoChangeItem(SelectDepData data) {
         removeSelectItem(data);
         for (int i = 0; i < mSelectDatas.size(); i++) {
@@ -311,6 +307,9 @@ public class SelectUserHelper {
         }
     }
 
+    /**
+     * 重构组织架构数据【重新封装】
+     */
     public static class SelectThread extends Thread {
         public static final int OK = 0x00001;
         public static final int FAILURE = 0x00000;
@@ -402,6 +401,12 @@ public class SelectUserHelper {
             return userDatas;
         }
 
+        /**
+         * 组装部门的数据
+         *
+         * @param department
+         * @return
+         */
         private SelectDepData newDepSource(Department department) {
             SelectDepData userData = new SelectDepData();
             userData.setId(department.getId());

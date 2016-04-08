@@ -69,7 +69,10 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
             }
         }
     };
-
+    /**
+     * 数据状态变化回调
+     *
+     */
     private SelectUserData.OnDepChangeCallback mDepChangeCallback = new SelectUserData.OnDepChangeCallback() {
 
         @Override
