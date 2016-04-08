@@ -68,7 +68,7 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
             permission = (Permission) MainApp.rootMap.get("0401");
         }catch (NullPointerException e){
             e.printStackTrace();
-            Toast("项目创建权限,code错误");
+            Toast("项目创建权限,code错误:0401");
         }
     }
 

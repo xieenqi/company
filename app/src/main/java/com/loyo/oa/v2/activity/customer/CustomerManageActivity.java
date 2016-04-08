@@ -100,7 +100,7 @@ public class CustomerManageActivity extends BaseFragmentActivity {
                 }
             }catch(NullPointerException e){
                 e.printStackTrace();
-                Toast("团队/公海客户,code错误");
+                Toast("团队/公海客户,code错误:0308,0309");
             }
         }else{
             imageArrow.setVisibility(View.VISIBLE);

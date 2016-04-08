@@ -272,7 +272,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 }
             }catch (NullPointerException e){
                 e.printStackTrace();
-                Toast("客户挑入,删除权限,code错误");
+                Toast("客户挑入/删除权限,code错误:0405,0403");
             }
         }
 
