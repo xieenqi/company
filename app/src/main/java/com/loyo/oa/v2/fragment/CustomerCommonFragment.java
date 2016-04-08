@@ -78,7 +78,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private ViewStub emptyView;
 
     private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private int customer_type;//"1,我的客户", "2,团队客户", "3,公海客户"
+    private int customer_type = 1;//"1,我的客户", "2,团队客户", "3,公海客户"
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isPullUp = false;
@@ -86,7 +86,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String position;
     private NearCount nearCount;
     private Permission permission = (Permission)MainApp.rootMap.get("0404");
-
 
     private DropListMenu mDropMenu;
     private ArrayList<DropItem> source = new ArrayList<>();
@@ -163,6 +162,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtil.dee("当前页面:" + customer_type);
         if (customer_type != Customer.CUSTOMER_TYPE_MINE) {
             btn_add.setVisibility(View.GONE);
         }
@@ -749,7 +749,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 tv_content1.setText("标签：" + tagItems);
                 tv_content2.setText("跟进时间：" + lastActivityAt);
-
             }
             //团队
             else if (customer_type == Customer.CUSTOMER_TYPE_TEAM) {
