@@ -112,7 +112,8 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
         showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", pagination.getPageIndex());
-        params.put("pageSize", isTopAdd ? lstData_BizForm.size() >= 20 ? lstData_BizForm.size() : 20 : 20);
+        params.put("pageSize", isTopAdd ? lstData_BizForm.size() >= 2000 ? lstData_BizForm.size() : 2000 : 2000);
+//        params.put("pageSize", 1000);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override

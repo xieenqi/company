@@ -71,7 +71,7 @@ public class workReportAddgridViewAdapter extends BaseAdapter {
 
         for (int i = 0; i < redGroup.length; i++) {
             if (position == redGroup[i]) {
-                holder.num.setTextColor(mContext.getResources().getColor(R.color.red));
+                holder.num.setTextColor(mContext.getResources().getColor(R.color.red1));
             }
         }
 
@@ -83,7 +83,7 @@ public class workReportAddgridViewAdapter extends BaseAdapter {
 
         for (int i = 0; i < blueGroup.length; i++) {
             if (position == blueGroup[i]) {
-                holder.num.setTextColor(mContext.getResources().getColor(R.color.isfinish));
+                holder.num.setTextColor(mContext.getResources().getColor(R.color.green51));
                 holder.view_line.setVisibility(View.GONE);
             }
         }

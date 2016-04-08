@@ -2,8 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/whitesmoke"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/whitesmoke">
 
     <com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu
         android:id="@+id/droplist_menu"
@@ -28,6 +28,7 @@
         android:layout_above="@+id/layout_add"
         android:layout_below="@+id/customer_list_view"
         android:cacheColorHint="#00000000"
+        android:divider="@null"
         android:drawSelectorOnTop="true"
         android:fadingEdge="none"
         android:fastScrollEnabled="false"
