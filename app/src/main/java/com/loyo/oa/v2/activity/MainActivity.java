@@ -1052,16 +1052,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                         continue;
                     }
                 }
-            }*/
-
-/*            items.clear();
-            items = itemsNew;*/
+            }
+            items.clear();
+            items = itemsNew;
+            items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));*/
 
             for(Permission permission : suitesNew){
                 for(int i = 0;i<items.size();i++){
                     if(items.get(i).title.contains(permission.getName())) {
-                        LogUtil.d("当前title:"+permission.getName());
-                        LogUtil.d("当前enabke:"+permission.isEnable());
                         if(!permission.isEnable()){
                             items.remove(i);
                         }
@@ -1069,8 +1067,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
             }
 
-            //items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));
-            img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
+            try{
+                img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("通讯录权限，code错误");
+            }
         }
 
         //为了业务使用权限

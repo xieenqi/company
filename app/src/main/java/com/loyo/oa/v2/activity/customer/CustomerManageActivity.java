@@ -79,14 +79,19 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
         //超级管理员权限判断
         if(!MainApp.user.isSuperUser()){
-            perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
-            perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
-            if(!perTeam.isEnable() && !perOcean.isEnable()){
-                CUSTOMER_FILTER_STRS = new String[]{"我的客户"};
-            }else if(perTeam.isEnable() && !perOcean.isEnable()){
-                CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户"};
-            }else if(!perTeam.isEnable() && perOcean.isEnable()){
-                CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
+            try{
+                perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
+                perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
+                if(!perTeam.isEnable() && !perOcean.isEnable()){
+                    CUSTOMER_FILTER_STRS = new String[]{"我的客户"};
+                }else if(perTeam.isEnable() && !perOcean.isEnable()){
+                    CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户"};
+                }else if(!perTeam.isEnable() && perOcean.isEnable()){
+                    CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
+                }
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("团队/公海客户,code错误");
             }
         }
 

@@ -177,9 +177,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             img_public.setVisibility(View.VISIBLE);
         }else{
             if (customerType == 3) {
-                perGet = (Permission)MainApp.rootMap.get("0404");
-                if(perGet.isEnable()){
-                    img_public.setVisibility(View.VISIBLE);
+                try{
+                    perGet = (Permission)MainApp.rootMap.get("0404");
+                    if(perGet.isEnable()){
+                        img_public.setVisibility(View.VISIBLE);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Toast("客户挑入权限,code错误");
                 }
             }
         }
@@ -256,13 +261,18 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         /*超级管理员\web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            perDelete = (Permission)MainApp.rootMap.get("0405");
-            perOcean = (Permission)MainApp.rootMap.get("0403");
-            if(!perDelete.isEnable()){
-                btn_child_delete_task.setVisibility(View.GONE);
-            }
-            if(!perOcean.isEnable()){
-                btnUpdate.setVisibility(View.GONE);
+            try{
+                perDelete = (Permission)MainApp.rootMap.get("0405");
+                perOcean = (Permission)MainApp.rootMap.get("0403");
+                if(!perDelete.isEnable()){
+                    btn_child_delete_task.setVisibility(View.GONE);
+                }
+                if(!perOcean.isEnable()){
+                    btnUpdate.setVisibility(View.GONE);
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                Toast("客户挑入,删除权限,code错误");
             }
         }
 

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.ProjectAddActivity_;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
@@ -21,7 +20,6 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.filterview.OnMenuSelectedListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

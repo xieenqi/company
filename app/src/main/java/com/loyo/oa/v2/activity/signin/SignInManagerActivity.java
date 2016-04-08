@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
@@ -73,9 +74,14 @@ public class SignInManagerActivity extends FragmentActivity {
         rotateAnimation = initAnimation();
 
         if(!MainApp.user.isSuperUser()){
-            permission = (Permission) MainApp.rootMap.get("0310");
-            if(!permission.isEnable()){
-                LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
+            try{
+                permission = (Permission) MainApp.rootMap.get("0310");
+                if(!permission.isEnable()){
+                    LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                Toast.makeText(this,"团队拜访权限，code错误",Toast.LENGTH_SHORT).show();
             }
         }
 

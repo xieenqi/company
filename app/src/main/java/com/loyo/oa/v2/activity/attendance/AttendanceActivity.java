@@ -84,9 +84,14 @@ public class AttendanceActivity extends BaseFragmentActivity {
 
         //超级管理员判断
         if(!MainApp.user.isSuperUser()){
-             permission = (Permission) MainApp.rootMap.get("0317");
-            if(!permission.isEnable()){
-                ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
+            try{
+                permission = (Permission) MainApp.rootMap.get("0317");
+                if(!permission.isEnable()){
+                    ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                Toast("团队考勤权限,code错误");
             }
         }
 
