@@ -69,6 +69,8 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     public String[] CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户", "公海客户"};
     public float mRotation = 0;
     public int mIndex = -1;
+    public int type = 1;
+    public boolean publicOrTeam;
 
     @AfterViews
     void initUI() {
@@ -86,8 +88,10 @@ public class CustomerManageActivity extends BaseFragmentActivity {
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户"};
                 }else if(perTeam.isEnable() && !perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户"};
+                    publicOrTeam = true;
                 }else if(!perTeam.isEnable() && perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
+                    publicOrTeam = false;
                 }
             }catch(NullPointerException e){
                 e.printStackTrace();
@@ -109,16 +113,25 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         });
     }
 
+    /**
+     * 初始化Fragment
+     * */
     void initFragments() {
-
         int len = CUSTOMER_FILTER_STRS.length;
-        int type = -1;
         for (int i = 0; i < len; i++) {
             if (len == 2) {
-                if (i == 0) {
-                    type = Customer.CUSTOMER_TYPE_MINE;
-                } else {
-                    type = Customer.CUSTOMER_TYPE_PUBLIC;
+                if(publicOrTeam){
+                    if (i == 0) {
+                        type = Customer.CUSTOMER_TYPE_MINE;
+                    } else {
+                        type = Customer.CUSTOMER_TYPE_TEAM;
+                    }
+                }else{
+                    if (i == 0) {
+                        type = Customer.CUSTOMER_TYPE_MINE;
+                    } else {
+                        type = Customer.CUSTOMER_TYPE_PUBLIC;
+                    }
                 }
             } else if (len == 3) {
                 if (i == 0) {
@@ -135,7 +148,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
             fragments.add(fragment);//添加fragment 界面
         }
         changeChild(0);
-
     }
 
     void initCategoryUI() {
