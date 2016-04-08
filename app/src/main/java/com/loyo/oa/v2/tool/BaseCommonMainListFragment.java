@@ -121,7 +121,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);
             tv_title_1.setText(GetTitle());
 
-
             //底部创建按钮
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             btn_add.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
@@ -132,23 +131,17 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 }
             });
 
-            //先判断当前使用Fragment的是项目管理，然后再判断超级管理员\Web控制权限
-/*            if(pagination.getRecords().get(0) instanceof Project){
-                LogUtil.d("项目");
-                if(!MainApp.user.isSuperUser()){
-                    permission = (Permission)MainApp.rootMap.get("0201");
-                    if(!permission.isEnable()){
+            if(!MainApp.user.isSuperUser()){
+                try{
+                    permission = (Permission)MainApp.rootMap.get("0401");
+                    if(!permission.isEnable() && MainApp.permissionPage == 1){
                         btn_add.setVisibility(View.INVISIBLE);
                     }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Toast("创建项目权限,code错误");
                 }
-            }else if(pagination.getRecords().get(0) instanceof Task){
-                LogUtil.d("任务");
-            }else if(pagination.getRecords().get(0) instanceof WorkReport){
-                LogUtil.d("报告");
-            }else if(pagination.getRecords().get(0) instanceof WfInstance){
-                LogUtil.d("审批");
-            }*/
-
+            }
 
             img_title_left = (ViewGroup) mView.findViewById(R.id.img_title_left);
             img_title_left.setOnClickListener(new View.OnClickListener() {
