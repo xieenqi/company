@@ -81,6 +81,7 @@ public class SelectUserHelper {
 
         private final Context mContext;
         private List<SelectUserData> mSelectDatas = new ArrayList();
+        private OnDataChangeCallback mDataChangeCallback;
 
         public SelectDataAdapter(Context context) {
             this.mContext = context;
@@ -91,6 +92,14 @@ public class SelectUserHelper {
                 datas = new ArrayList<>();
             this.mSelectDatas = datas;
             this.notifyDataSetChanged();
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            if (mDataChangeCallback != null) {
+                mDataChangeCallback.onChange(getCount());
+            }
         }
 
         @Override
@@ -184,14 +193,14 @@ public class SelectUserHelper {
         mCurrentSelectDatas.clear();
     }
 
-    /**
-     * 删除传入部门之前, 所选中的该部门下属用户或子部门...并添加传入的部门
-     *
-     * @param data
-     */
-    public static boolean removeSelectItemByDepAndAdd(SelectDepData data) {
-        return delAllSelectDepAndAdd(data);
-    }
+//    /**
+//     * 删除传入部门之前, 所选中的该部门下属用户或子部门...并添加传入的部门
+//     *
+//     * @param data
+//     */
+//    public static boolean removeSelectItemByDepAndAdd(SelectDepData data) {
+//        return delAllSelectDepAndAdd(data);
+//    }
 
     /**
      * 删除子部门, 子用户数据, 如果列表中没有其对应的父部门, 添加该数据到列表中
@@ -200,19 +209,33 @@ public class SelectUserHelper {
      * @return
      */
     public static boolean delAllSelectDepAndAdd(SelectDepData data) {
-        mCurrentSelectDatas.add(0, data);
+        addSelectItem(data);
         for (int i = 0; i < mCurrentSelectDatas.size(); i++) {
             SelectUserData userData = mCurrentSelectDatas.get(i);
-            if (userData instanceof SelectDepData) {
-                if (userData.getXpath().contains(data.getXpath())) {
+            if (userData.getClass() == SelectDepData.class) {
+                if (userData.getXpath().contains(data.getXpath())
+                        && !data.getId().equals(userData.getId())) {
                     mCurrentSelectDatas.remove(userData);
+                    i--;
                 } else if (data.getXpath().contains(userData.getXpath())
                         && !data.getId().equals(userData.getId())) {
                     mCurrentSelectDatas.remove(data);
+                    i--;
                 }
             } else {
+//                lable:
+//                for (int j = 0; j < data.getUsers().size(); j++) {
+//                    SelectUserData d = data.getUsers().get(j);
+//                    if (TextUtils.isEmpty(d.getId())) {
+//                        continue lable;
+//                    }
+//                    if (d.getId().equals(userData.getId())) {
+//                        removeSelectItem(userData);
+//                    }
+//                }
                 if (data.getUsers().contains(userData)) {
                     mCurrentSelectDatas.remove(userData);
+                    i--;
                 }
             }
         }
@@ -237,7 +260,7 @@ public class SelectUserHelper {
      */
     public static boolean addSelectUserChangeDep(SelectDepData data) {
         if (data.isSelect()) {
-            return removeSelectItemByDepAndAdd(data);
+            return delAllSelectDepAndAdd(data);
         } else {
             addDepNoChangeItem(data);
             return true;
@@ -277,10 +300,12 @@ public class SelectUserHelper {
             if (userData instanceof SelectDepData) {
                 if (userData.getXpath().contains(data.getXpath())) {
                     mCurrentSelectDatas.remove(userData);
+                    i--;
                 }
             } else {
                 if (data.getUsers().contains(userData)) {
                     mCurrentSelectDatas.remove(userData);
+                    i--;
                 }
             }
         }
@@ -470,6 +495,10 @@ public class SelectUserHelper {
                 }
             }
         }
+    }
+
+    public interface OnDataChangeCallback {
+        void onChange(int count);
     }
 
 }

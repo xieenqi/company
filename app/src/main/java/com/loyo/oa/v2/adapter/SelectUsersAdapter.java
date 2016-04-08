@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.Department;
@@ -119,12 +120,12 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 /*用户职称*/
                 npcName = user.getNpcName();
                 userHolder.userName.setText(user.getName());
-                userHolder.dept.setText(TextUtils.isEmpty(deptName) ? "无" : deptName);
-                userHolder.worker.setText(TextUtils.isEmpty(npcName) ? "无" : npcName);
+                userHolder.dept.setText(TextUtils.isEmpty(deptName) ? mDepartment.getName() : deptName);
+                userHolder.worker.setText(TextUtils.isEmpty(npcName) ? "" : npcName);
                 /*选中赋值*/
                 userHolder.checkBox.setChecked(user.isSelect());
                 userHolder.convertView.setTag(userHolder.checkBox);
-                userHolder.convertView.setEnabled(!mDepartment.isSelect());
+//                userHolder.convertView.setEnabled(!mDepartment.isSelect());
                 userHolder.convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
