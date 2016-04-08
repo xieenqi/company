@@ -101,26 +101,12 @@ public class SelectDepData extends SelectUserData implements Serializable {
         SelectUserHelper.mAllSelectDatas.clear();
         for (int i = 0; i < users.size(); i++) {
             SelectUserData user = users.get(i);
-            user.setCallbackSelect(isSelect, i == users.size() - 1);
+            user.setAllCallbackSelect(isSelect);
         }
-//        mSelectCount = isSelect ? users.size() : 0; // 刷新当前部门的选中数量
-//        List<SelectDepData> datas = new ArrayList<>();
-//        if (!TextUtils.isEmpty(getXpath()))
-//            for (int i = 0; i < SelectUserHelper.mSelectDatas.size(); i++) {
-//                SelectDepData data = SelectUserHelper.mSelectDatas.get(i);
-//                if (data.getXpath().contains(getXpath())
-//                        && !getId().equals(data.getId())) { // 刷新子部门的的选中数量
-//
-//                    data.mSelectCount = isSelect ? data.getUsers().size() : 0;
-//                } else if (getXpath().contains(data.getXpath())
-//                        && !getId().equals(data.getId())) { // 刷新父部门选中的数量
-//
-//                    data.refreshSelectCount();
-//                }
-//            }
-//        if (mDepChangeCallback != null) {
-//            mDepChangeCallback.onDepAllChange(this);
-//        }
+        if (SelectUserHelper.mAllSelectDatas.size() > 0 && mDepChangeCallback != null) {
+            checkSameXPath(SelectUserHelper.mAllSelectDatas);
+            mDepChangeCallback.onDepChange(SelectUserHelper.mAllSelectDatas);
+        }
     }
 
     public void setmDepChangeCallback(OnDepChangeCallback mDepChangeCallback) {
