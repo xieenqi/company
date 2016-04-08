@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
-//def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 
 android {
     compileSdkVersion 22
@@ -13,17 +13,17 @@ android {
 
     signingConfigs {
         debug {
-//          storeFile file('D:\\android\\key\\loyo_share.keystore')
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-//          storeFile file('D:\\android\\key\\loyo_share.keystore')
+           storeFile file('D:\\android\\key\\loyo_share.keystore')
             keyPassword 'Loyo2012'
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
-            keyPassword 'android'
+           // storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+           // keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
 //          storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
@@ -48,40 +48,27 @@ android {
             jniDebuggable true
         }
         release {
-//            minifyEnabled false
-//            shrinkResources true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.SignConfig
-//            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
-//            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
-//            // "6085830b754c86f0d9886b545f5b38f8"
-//            resValue "string", "app_name", "快启"
-
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
-            debuggable false
-            jniDebuggable false
         }
     }
 
-/*    android.applicationVariants.all { variant ->
+    android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def today = new Date().format('yyyyMMdd-HH');
             def file = output.outputFile
             output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
         }
-    }*/
+    }
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         compile 'com.android.support:appcompat-v7:22.1.1'
         compile 'com.android.support:recyclerview-v7:22.1.1'
-//        compile 'com.android.support:appcompat-v7:23.1.1'
-//        compile 'com.android.support:recyclerview-v7:23.1.1'
-
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile files('libs/android-async-http-1.4.6.jar')
@@ -118,7 +105,7 @@ android {
         compile 'com.yalantis:contextmenu:1.0.4'
         //激光推送
         compile files('libs/jpush-android-2.0.5.jar')
-        //compile 'c.droid.support:mtidex-1.0.1'
+        //compile 'com.android.support:multidex-1.0.1'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
         //友盟统计
         compile files('libs/umeng-analytics-v5.6.4.jar')
@@ -155,7 +142,7 @@ apt {
         configFile file("src/config/checkstyle.xml")
         include '**/*.java'
         exclude '**/gen/**'
-        ignoreFailures false
+        ignoreFailures true
         classpath = files()
 
         def configProps = ['proj.module.dir': projectDir.absolutePath]

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.SelectDepData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +23,16 @@ public class SelectUserDepartmentAdapter extends RecyclerView.Adapter<SelectUser
 
     private final Context mContext;
     private static int screenWidth;
-    private List<Department> mDepartments = new ArrayList<>();
+    private List<SelectDepData> mDepartments = new ArrayList<>();
     private int mSelectIndex = 0;
     private OnSelectIndexChangeCallback mIndexCallback;
 
-    public SelectUserDepartmentAdapter(Context context, List<Department> datas) {
+    public SelectUserDepartmentAdapter(Context context) {
         this.mContext = context;
         screenWidth = ((Activity) mContext).getWindowManager().getDefaultDisplay().getWidth();
-        updataList(datas);
     }
 
-    private void updataList(List<Department> datas) {
+    public void updataList(List<SelectDepData> datas) {
         if (datas == null) {
             datas = new ArrayList<>();
         }

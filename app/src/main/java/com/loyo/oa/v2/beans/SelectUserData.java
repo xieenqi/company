@@ -1,5 +1,9 @@
 package com.loyo.oa.v2.beans;
 
+import android.text.TextUtils;
+
+import com.loyo.oa.v2.activity.commonview.SelectUserHelper;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +18,12 @@ public class SelectUserData implements Serializable {
     private String avatar;
     private String xpath;
 
+    private String deptName; // 部门名称
+    private String npcName; // 用户职称
+
     private boolean isSelect;
     private List<OnUserChangeCallback> mUserChangeCallback = new ArrayList<>();
+    private OnDepChangeCallback mDepChangeCallback;
 
     public boolean isSelect() {
         return isSelect;
@@ -29,26 +37,96 @@ public class SelectUserData implements Serializable {
      * 设置用户选中状态, 并回调部门选中状态
      *
      * @param isSelect
-     * @param call
      */
-    public final void setCallbackSelect(boolean isSelect, OnDepChangeCallback call) {
+    public final boolean setCallbackSelect(boolean isSelect) {
         if (isSelect == this.isSelect) {
-            return;
+            return false;
         }
         this.isSelect = isSelect;
         if (mUserChangeCallback != null && mUserChangeCallback.size() > 0) {
-            List<SelectUserData> changeDatas = new ArrayList<>();
+            List<SelectDepData> changeDepDatas = new ArrayList<>();
             for (OnUserChangeCallback callback :
                     mUserChangeCallback) {
-                SelectUserData d = callback.onUserChange(isSelect);
-                if (d != null) {
-                    changeDatas.add(d);
+                SelectDepData changeDep = callback.onUserChange(isSelect, SelectUserData.this, false);
+                if (changeDep == null) {
+                    continue;
                 }
+                changeDepDatas.add(changeDep);
             }
-            if (call != null) {
-                call.onDepChange(changeDatas);
+            if (changeDepDatas.size() > 0 && mDepChangeCallback != null) {
+//                removeSameXPath(changeDepDatas)
+                checkSameXPath(changeDepDatas);
+                mDepChangeCallback.onDepChange(changeDepDatas);
             }
         }
+        return true;
+    }
+
+    /**
+     * 设置用户选中状态, 并回调部门选中状态
+     *
+     * @param isSelect
+     */
+    public final boolean setCallbackSelect(boolean isSelect, boolean notify) {
+        if (isSelect == this.isSelect) {
+            return false;
+        }
+        this.isSelect = isSelect;
+        if (mUserChangeCallback != null && mUserChangeCallback.size() > 0) {
+            for (OnUserChangeCallback callback :
+                    mUserChangeCallback) {
+                SelectDepData changeDep = callback.onUserChange(isSelect, SelectUserData.this, true);
+                if (changeDep == null) {
+                    continue;
+                }
+                SelectUserHelper.mAllSelectDatas.add(changeDep);
+            }
+            if (SelectUserHelper.mAllSelectDatas.size() > 0 && mDepChangeCallback != null && notify) {
+                checkSameXPath(SelectUserHelper.mAllSelectDatas);
+                mDepChangeCallback.onDepChange(SelectUserHelper.mAllSelectDatas);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查列表中, 如果有传入选的子部门, 移除该子部门并添加,
+     *
+     * @param changeDatas
+     * @param
+     * @return
+     */
+    private void checkSameXPath(List<SelectDepData> changeDatas) {
+        for (int i = 0; i < changeDatas.size(); i++) {
+            SelectDepData data = changeDatas.get(i);
+            lable:
+            for (int j = 0; j < changeDatas.size(); j++) {
+                SelectDepData depData = changeDatas.get(i);
+                if (depData.getId().equals(data.getId())) {
+                    continue lable;
+                }
+                if (depData.getXpath().contains(data.getXpath())) {
+                    changeDatas.remove(j);
+                    j--;
+                }
+            }
+        }
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getNpcName() {
+        return npcName;
+    }
+
+    public void setNpcName(String npcName) {
+        this.npcName = npcName;
     }
 
     public final String getId() {
@@ -76,11 +154,15 @@ public class SelectUserData implements Serializable {
     }
 
     public final String getXpath() {
-        return xpath;
+        return TextUtils.isEmpty(xpath) ? "" : xpath;
     }
 
     public final void setXpath(String xpath) {
         this.xpath = xpath;
+    }
+
+    public void setmDepChangeCallback(OnDepChangeCallback mDepChangeCallback) {
+        this.mDepChangeCallback = mDepChangeCallback;
     }
 
     /**
@@ -99,6 +181,10 @@ public class SelectUserData implements Serializable {
      */
     public final void removeUserChangeCallback(OnUserChangeCallback callback) {
         this.mUserChangeCallback.remove(callback);
+    }
+
+    public List<OnUserChangeCallback> getmUserChangeCallback() {
+        return mUserChangeCallback;
     }
 
     @Override
@@ -124,14 +210,30 @@ public class SelectUserData implements Serializable {
                 ", name='" + name + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", xpath='" + xpath + '\'' +
+                ", deptName='" + deptName + '\'' +
+                ", npcName='" + npcName + '\'' +
+                ", isSelect=" + isSelect +
+                ", mUserChangeCallback=" + +
                 '}';
     }
 
     public interface OnDepChangeCallback {
-        void onDepChange(List<SelectUserData> datas);
+
+        void onDepAllChange(SelectDepData data);
+
+        void onDepChange(List<SelectDepData> datas);
+
+        void addSelectUserItem(SelectUserData data);
+
+        void removeSelectUserItem(SelectUserData data);
     }
 
     public interface OnUserChangeCallback {
-        SelectUserData onUserChange(boolean isSelect);
+        SelectDepData onUserChange(boolean isSelect, SelectUserData user, boolean isAllSelect);
+    }
+
+    public boolean isExistThis(SelectUserData data) {
+
+        return false;
     }
 }

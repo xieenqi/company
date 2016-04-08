@@ -1,5 +1,10 @@
 package com.loyo.oa.v2.beans;
 
+import android.text.TextUtils;
+
+import com.loyo.oa.v2.activity.commonview.SelectUserHelper;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +20,55 @@ public class SelectDepData extends SelectUserData implements Serializable {
 
     private List<SelectUserData> users = new ArrayList<>(); // 选择的用户
 
-    private int mSelectCount = 0; // 当前已选择的用户数量
+    public int mSelectCount = 0; // 当前已选择的用户数量
 
-    private OnUserChangeCallback mUserChangeCallback = new OnUserChangeCallback() {
+    private OnDepChangeCallback mDepChangeCallback;
+
+    public OnUserChangeCallback mUserChangeCallback = new OnUserChangeCallback() {
         @Override
-        public SelectDepData onUserChange(boolean isSelect) {
+        public SelectDepData onUserChange(boolean isSelect, SelectUserData user, boolean isAllSelect) {
+            boolean oldSelect = isSelect();
             if (isSelect) {
                 addSelectCount();
             } else {
                 minusSelectCount();
             }
-            return SelectDepData.this;
+            LogUtil.err(getName() + "; count = " + SelectDepData.this.mSelectCount);
+            if ((isSelect() && !oldSelect) || (oldSelect && !isSelect()) || mSelectCount == 0) {
+//                    mDepChangeCallback.onDepChange(SelectDepData.this, oldSelect);
+                return SelectDepData.this;
+            }
+            if (mDepChangeCallback != null) {
+                if (!isAllSelect) {
+                    if (isSelect) {
+                        mDepChangeCallback.addSelectUserItem(user);
+                    } else {
+                        mDepChangeCallback.removeSelectUserItem(user);
+                    }
+                }
+            }
+            return null;
         }
     };
+
+    public void startCallback() {
+        for (SelectUserData user :
+                users) {
+            user.addUserChangeCallback(mUserChangeCallback);
+            if (mDepChangeCallback != null) {
+                user.setmDepChangeCallback(mDepChangeCallback);
+            }
+        }
+    }
+
+    private SelectUserData getUserById(String id) {
+        for (SelectUserData data :
+                users) {
+            if (id.equals(data.getId()))
+                return data;
+        }
+        return null;
+    }
 
     /**
      * 添加被选中的数量
@@ -51,11 +92,58 @@ public class SelectDepData extends SelectUserData implements Serializable {
         return users.size() == mSelectCount /*|| isSelect()*/;
     }
 
-    public void setAllSelect(boolean isSelect) {
-        for (SelectUserData user :
-                users) {
-            user.setCallbackSelect(isSelect, null);
+    /**
+     * 部门全选
+     *
+     * @param isSelect
+     */
+    public void setAllSelect(final boolean isSelect) {
+        SelectUserHelper.mAllSelectDatas.clear();
+        for (int i = 0; i < users.size(); i++) {
+            SelectUserData user = users.get(i);
+            user.setCallbackSelect(isSelect, i == users.size() - 1);
         }
+//        mSelectCount = isSelect ? users.size() : 0; // 刷新当前部门的选中数量
+//        List<SelectDepData> datas = new ArrayList<>();
+//        if (!TextUtils.isEmpty(getXpath()))
+//            for (int i = 0; i < SelectUserHelper.mSelectDatas.size(); i++) {
+//                SelectDepData data = SelectUserHelper.mSelectDatas.get(i);
+//                if (data.getXpath().contains(getXpath())
+//                        && !getId().equals(data.getId())) { // 刷新子部门的的选中数量
+//
+//                    data.mSelectCount = isSelect ? data.getUsers().size() : 0;
+//                } else if (getXpath().contains(data.getXpath())
+//                        && !getId().equals(data.getId())) { // 刷新父部门选中的数量
+//
+//                    data.refreshSelectCount();
+//                }
+//            }
+//        if (mDepChangeCallback != null) {
+//            mDepChangeCallback.onDepAllChange(this);
+//        }
+    }
+
+    public void setmDepChangeCallback(OnDepChangeCallback mDepChangeCallback) {
+        this.mDepChangeCallback = mDepChangeCallback;
+        if (users.size() > 0) {
+            for (int i = 0; i < users.size(); i++) {
+                users.get(i).setmDepChangeCallback(mDepChangeCallback);
+            }
+        }
+    }
+
+    /**
+     * 刷新选中的数量
+     */
+    public SelectDepData refreshSelectCount() {
+        int count = 0;
+        for (int i = 0; i < getUsers().size(); i++) {
+            if (users.get(i).isSelect()) {
+                count++;
+            }
+        }
+        mSelectCount = count;
+        return this;
     }
 
     public List<SelectUserData> getUsers() {
@@ -67,10 +155,23 @@ public class SelectDepData extends SelectUserData implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public String toString() {
-        return super.toString() + " ::: SelectDepData{" +
-                "users=" + users +
+        return "SelectDepData{" +
                 ", mSelectCount=" + mSelectCount +
+                ", mDepChangeCallback=" + mDepChangeCallback +
+                ", mUserChangeCallback=" + mUserChangeCallback +
                 '}';
     }
+
+
 }
