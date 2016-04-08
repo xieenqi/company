@@ -70,9 +70,14 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
         //超级管理员\权限判断
         if(!MainApp.user.isSuperUser()){
-            permission = (Permission)MainApp.rootMap.get("0402");
-            if(!permission.isEnable()){
-                btn_notice_add.setVisibility(View.INVISIBLE);
+            try{
+                permission = (Permission)MainApp.rootMap.get("0402");
+                if(!permission.isEnable()){
+                    btn_notice_add.setVisibility(View.INVISIBLE);
+                }
+            }catch(NullPointerException e){
+                e.printStackTrace();
+                Toast("发布公告权限,code错误");
             }
         }
 
