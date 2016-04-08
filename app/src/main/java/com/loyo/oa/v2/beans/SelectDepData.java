@@ -13,7 +13,7 @@ import java.util.List;
  * 用户选择及界面部门数据封装
  */
 public class SelectDepData extends SelectUserData implements Serializable {
-//    private String id;
+    private String id;
 //    private String name;
 //    private String avatar;
 //    private String xpath;
@@ -132,6 +132,35 @@ public class SelectDepData extends SelectUserData implements Serializable {
         }
     }
 
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SelectDepData depData = (SelectDepData) o;
+
+        return !(id != null ? !id.equals(depData.id) : depData.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
+    }
+
     /**
      * 刷新选中的数量
      */
@@ -152,16 +181,6 @@ public class SelectDepData extends SelectUserData implements Serializable {
 
     public void setUsers(List<SelectUserData> users) {
         this.users = users;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     @Override
