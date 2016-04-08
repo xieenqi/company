@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.commonview;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +14,13 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.SelectUserDepartmentAdapter;
 import com.loyo.oa.v2.adapter.SelectUsersAdapter;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.SelectDepData;
+import com.loyo.oa.v2.beans.SelectUserData;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.customview.HorizontalScrollListView;
-import com.loyo.oa.v2.tool.customview.dragSortListView.DragSortListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,60 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
     private int mCurrentDepartmentIndex = 0; // 当前选中的部门
     private SelectUserHelper.SelectDataAdapter mSelectUserOrDepartmentAdapter;
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SelectUserHelper.SelectThread.OK:
+                    cancelLoading();
+                    updata();
+                    break;
+                case SelectUserHelper.SelectThread.FAILURE:
+                    cancelLoading();
+                    break;
+            }
+        }
+    };
+
+    private SelectUserData.OnDepChangeCallback mDepChangeCallback = new SelectUserData.OnDepChangeCallback() {
+
+        @Override
+        public void onDepAllChange(SelectDepData data) {
+            SelectUserHelper.addDepNoChangeItem(data);
+            mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
+            mSelectUsersAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onDepChange(List<SelectDepData> datas) {
+            boolean ischange = false;
+            for (int i = 0; i < datas.size(); i++) {
+                if (SelectUserHelper.addSelectUserChangeDep(datas.get(i))) {
+                    ischange = true;
+                }
+            }
+            mSelectUsersAdapter.notifyDataSetChanged();
+            if (ischange) {
+                mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void addSelectUserItem(SelectUserData data) {
+            if (SelectUserHelper.addSelectItem(data)) {
+                mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void removeSelectUserItem(SelectUserData data) {
+            if (SelectUserHelper.removeSelectItem(data)) {
+                mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+    private boolean isOnce = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,48 +122,21 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         // 获取屏幕高度\宽度
         screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
         screenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
-
-        mDeptSource = Common.getLstDepartment();
-
-        /*全部人员获取*/
-        for (int i = 0; i < MainApp.lstDepartment.size(); i++) {
-            try {
-                for (int k = 0; k < MainApp.lstDepartment.get(i).getUsers().size(); k++) {
-                    localCacheUserList.add(MainApp.lstDepartment.get(i).getUsers().get(k));
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        }
-
-        userAllList.addAll(RemoveSame(localCacheUserList));
-
-        deptSort(); //重新排序
-
-        newDeptSource.get(0).getUsers().clear();
-        newDeptSource.get(0).getUsers().addAll(userAllList);
-
     }
 
     /**
-     * 去掉人员重复数据
+     * 判断数据是否生成
+     *
+     * @return
      */
-    private List RemoveSame(final List<User> list) {
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(i).getId().equals(list.get(j).getId())) {
-                    list.remove(j);
-                    j--;
-                }
-            }
-        }
-        return list;
+    public boolean isDataBinded() {
+        return SelectUserHelper.mSelectDatas == null && SelectUserHelper.mSelectDatas.size() > 0;
     }
 
     /**
      * 根据部门业务结构，对部门列表重新排序
      */
-    void deptSort() {
+    private void deptSort() {
         /*分别获取一级/其他级部门*/
         for (Department department : mDeptSource) {
             if (department.getXpath().split("/").length == 2) {
@@ -160,20 +188,72 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         rvDepartments.setLayoutManager(mDepartmentLayoutManager);
         rvUsers.setLayoutManager(mUserLayoutManager);
 
-        // 部门列表
-        mSelectUserDepartmentAdapter = new SelectUserDepartmentAdapter(this, newDeptSource);
-        // 用户列表
-        mSelectUsersAdapter = new SelectUsersAdapter(this);
-        // 多选是横向列表
-        mSelectUserOrDepartmentAdapter = new SelectUserHelper.SelectDataAdapter(this);
+        if (!isDataBinded()) {
+            showLoading("数据正在加载...");
+            mDeptSource = Common.getLstDepartment();
+            deptSort(); //重新排序
+            SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
+            thread.start();
+        } else {
+            updata();
+        }
+    }
 
-        mSelectUserOrDepartmentAdapter.updataList(mSelectUserOrDepartment);
+    /**
+     * 刷新界面数据
+     */
+    public void updata() {
+        if (isOnce) {
+            isOnce = false;
+            // 界面第一次进入时为部门数据添加选中监听
+            for (int i = 0; i < SelectUserHelper.mSelectDatas.size(); i++) {
+                SelectUserHelper.mSelectDatas.get(i).setmDepChangeCallback(mDepChangeCallback);
+            }
+        }
+        if (mSelectUserDepartmentAdapter == null) {
+            // 部门列表
+            mSelectUserDepartmentAdapter = new SelectUserDepartmentAdapter(this);
+            rvDepartments.setAdapter(mSelectUserDepartmentAdapter);
+            mSelectUserDepartmentAdapter.setOnSelectIndexChangeCallback(new SelectUserDepartmentAdapter.OnSelectIndexChangeCallback() {
+                @Override
+                public void onChange(int index) {
+                    mCurrentDepartmentIndex = index;
+                    bindDataToUserAdapter();
+                }
+            });
+        }
 
-        rvDepartments.setAdapter(mSelectUserDepartmentAdapter);
-        rvUsers.setAdapter(mSelectUsersAdapter);
-        lvSelectUser.setAdapter(mSelectUserOrDepartmentAdapter);
+        if (mSelectUserOrDepartmentAdapter == null) {
+            // 多选是横向列表
+            mSelectUserOrDepartmentAdapter = new SelectUserHelper.SelectDataAdapter(this);
+            lvSelectUser.setAdapter(mSelectUserOrDepartmentAdapter);
+        }
 
-        bindingDataUserToAdapter();
+        if (mSelectUsersAdapter == null) {
+            // 用户列表
+            mSelectUsersAdapter = new SelectUsersAdapter(this);
+            rvUsers.setAdapter(mSelectUsersAdapter);
+        }
+
+        mSelectUserOrDepartmentAdapter.updataList(SelectUserHelper.mCurrentSelectDatas);
+        mSelectUserDepartmentAdapter.updataList(SelectUserHelper.mSelectDatas);
+        bindDataToUserAdapter();
+    }
+
+    /**
+     * 绑定数据到用户adapter
+     */
+    private void bindDataToUserAdapter() {
+        if (SelectUserHelper.mSelectDatas.size() == 0) {
+            return;
+        }
+        mSelectUsersAdapter.setDepartment(SelectUserHelper
+                .mSelectDatas
+                .get(mCurrentDepartmentIndex));
+        mSelectUsersAdapter.updataList(SelectUserHelper
+                .mSelectDatas
+                .get(mCurrentDepartmentIndex)
+                .getUsers());
     }
 
     private void assignViews() {
@@ -190,113 +270,30 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         btnTitleRight.setOnClickListener(this);
         tv_toSearch.setOnClickListener(this);
 
-        mSelectUserDepartmentAdapter.setOnSelectIndexChangeCallback(new SelectUserDepartmentAdapter.OnSelectIndexChangeCallback() {
-            @Override
-            public void onChange(int index) {
-                mCurrentDepartmentIndex = index;
-//                mSelectUsersAdapter.updataList(mDeptSource.get(mCurrentDepartmentIndex).getUsers());
-                bindingDataUserToAdapter();
-            }
-        });
-        mSelectUsersAdapter.setOnUserSelectCallback(new SelectUsersAdapter.OnUserSelectCallback() {
-            @Override
-            public void onUserSelect(Department department, User user) {
-                if (mCurrentDepartmentIndex == 0) {
-                    isDepartmentAllSelect(getDepartmentByUser(user), user);
-                } else {
-                    isDepartmentAllSelect(department, user);
-                }
-            }
-        });
-        mSelectUsersAdapter.setOnDepartmentAllSelectCallback(new SelectUsersAdapter.OnDepartmentAllSelectCallback() {
-            @Override
-            public boolean onSelect(boolean isSelect) {
-                if (mCurrentDepartmentIndex == 0) {
-                    mSelectUserOrDepartment.clear();
-                    selectAllDepartmentAndUser(isSelect);
-                } else {
-                    toSelectAllUserByCurrentDepartment(isSelect);
-                }
-                return true; // 返回true以刷新列表
-            }
-        });
-    }
-
-    private void selectAllDepartmentAndUser(boolean isSelect) {
-        for (int i = 0; i < newDeptSource.size(); i++) {
-            newDeptSource.get(i).setIsIndex(isSelect);
-        }
-        for (int i = 0; i < userAllList.size(); i++) {
-            userAllList.get(i).setIndex(isSelect);
-        }
-        if (isSelect) {
-            addDataToUserOrDepartmentAdapter(newDeptSource.get(0), true);
-        } else {
-            removeDataInUserOrDepartmentAdapter(newDeptSource.get(0), true);
-        }
-    }
-
-    /**
-     * 获取
-     *
-     * @param user
-     * @return
-     */
-    public Department getDepartmentByUser(User user) {
-        String departmentId = user.getDepts().get(0).getShortDept().getId();
-        Department department = null;
-        for (Department d :
-                newDeptSource) {
-            if (d.equalsId(departmentId)){
-                department = d;
-                break;
-            }
-        }
-        return department;
-    }
-
-    /**
-     * 获取当前部门人员
-     *
-     * @deprecated 根据部门Xpath获取人员
-     */
-    void getInfoUser(final int positions) {
-        for (Department department : newDeptSource) {
-            if (department.getXpath().contains(newDeptSource.get(positions).getXpath())) {
-                try {
-                    for (User user : department.getUsers()) {
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void getSelectUser(final String userId) {
-        for (User user : userAllList) {
-            if (user.getId().equals(userId)) {
-                user.setIndex(true);
-            }
-        }
-    }
-
-    private void toAllUserByUserSelect1(User user) {
-        if (user.isIndex()) {
-            for (int i = 0; i < userAllList.size(); i++) {
-                if (!userAllList.get(i).isIndex()) {
-
-//                    if (department == null)
-//                        return;
+//        mSelectUsersAdapter.setOnUserSelectCallback(new SelectUsersAdapter.OnUserSelectCallback() {
+//            @Override
+//            public void onUserSelect(Department department, User user) {
+//                if (mCurrentDepartmentIndex == 0) {
+//                    isDepartmentAllSelect(getDepartmentByUser(user), user);
+//                } else {
 //                    isDepartmentAllSelect(department, user);
-                    return;
-                }
-            }
-            selectAllDepartmentAndUser(true);
-        } else {
-            boolean oldSelectStatus = newDeptSource.get(0).isIndex();
-        }
+//                }
+//            }
+//        });
+//        mSelectUsersAdapter.setOnDepartmentAllSelectCallback(new SelectUsersAdapter.OnDepartmentAllSelectCallback() {
+//            @Override
+//            public boolean onSelect(boolean isSelect) {
+//                if (mCurrentDepartmentIndex == 0) {
+//                    mSelectUserOrDepartment.clear();
+//                    selectAllDepartmentAndUser(isSelect);
+//                } else {
+//                    toSelectAllUserByCurrentDepartment(isSelect);
+//                }
+//                return true; // 返回true以刷新列表
+//            }
+//        });
     }
+
 
     /**
      * 选择后，选横向列表添加数据
@@ -366,46 +363,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         }
     }
 
-    /**
-     * 判断当前用户被选择时, 他所属的部门是否被全选
-     *
-     * @param user
-     */
-    private void isDepartmentAllSelect(Department department, User user) {
-        if (!user.isIndex()) {
-            boolean isSelectAll = department.isIndex();
-            if (isSelectAll) {
-                department.setIsIndex(false);
-                removeDataInUserOrDepartmentAdapter(department, false);
-                for (int i = 0; i < department.getUsers().size(); i++) {
-                    addDataToUserOrDepartmentAdapter(department.getUsers().get(i), false);
-                }
-                removeDataInUserOrDepartmentAdapter(user, true);
-                mSelectUsersAdapter.notifyDataSetChanged();
-            } else {
-                removeDataInUserOrDepartmentAdapter(user, true);
-            }
-            return;
-        }
-        for (User u : department.getUsers()) {
-            if (!u.isIndex()) {
-                if (user.isIndex()) {
-                    addDataToUserOrDepartmentAdapter(user, true);
-                }
-                return;
-            }
-        }
-        department.setIsIndex(true);
-        addDataToUserOrDepartmentAdapter(department, true);
-    }
-
-    /**
-     * 当选中不同部门, 更新用户列表
-     */
-    private void bindingDataUserToAdapter() {
-        mSelectUsersAdapter.updataList(mCurrentDepartmentIndex == 0 ? userAllList : newDeptSource.get(mCurrentDepartmentIndex).getUsers());
-        mSelectUsersAdapter.setDepartment(newDeptSource.get(mCurrentDepartmentIndex));
-    }
 
     @Override
     public void onClick(View v) {

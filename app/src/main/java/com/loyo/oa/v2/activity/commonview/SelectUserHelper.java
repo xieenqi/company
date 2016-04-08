@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.commonview;
 
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,11 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.NewUser;
+import com.loyo.oa.v2.beans.SelectDepData;
+import com.loyo.oa.v2.beans.SelectUserData;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
+import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -51,8 +55,6 @@ public class SelectUserHelper {
 //        void onSelectUser(User user, boolean notify);
 ////    }
 
-    public static final Map<NewUser, List<User>> mSelectDatas = new HashMap<>();
-
     public interface SelectUserBase {
 
         public static final String NULL_AVATAR = "NULL_AVATAR";
@@ -78,13 +80,13 @@ public class SelectUserHelper {
     public static class SelectDataAdapter extends BaseAdapter {
 
         private final Context mContext;
-        private List<SelectUserBase> mSelectDatas = new ArrayList();
+        private List<SelectUserData> mSelectDatas = new ArrayList();
 
         public SelectDataAdapter(Context context) {
             this.mContext = context;
         }
 
-        public void updataList(List<SelectUserBase> datas) {
+        public void updataList(List<SelectUserData> datas) {
             if (datas == null)
                 datas = new ArrayList<>();
             this.mSelectDatas = datas;
@@ -97,7 +99,7 @@ public class SelectUserHelper {
         }
 
         @Override
-        public SelectUserBase getItem(final int position) {
+        public SelectUserData getItem(final int position) {
             return mSelectDatas.get(position);
         }
 
@@ -118,15 +120,15 @@ public class SelectUserHelper {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            SelectUserBase base = getItem(position);
-            if (base.isDepart()) {
+            SelectUserData base = getItem(position);
+            if (base instanceof SelectDepData) {
                 holder.name.setVisibility(View.VISIBLE);
                 holder.head.setVisibility(View.INVISIBLE);
                 String name = base.getName();
                 if (TextUtils.isEmpty(name)) {
                     holder.name.setText("暂无");
                 } else {
-                    if (name.length() == 1 && name.length() == 2) {
+                    if (name.length() == 1 || name.length() == 2) {
                         holder.name.setText(name);
                     } else {
                         String str = name.substring(0, 2);
@@ -136,7 +138,7 @@ public class SelectUserHelper {
             } else {
                 holder.name.setVisibility(View.INVISIBLE);
                 holder.head.setVisibility(View.VISIBLE);
-                ImageLoader.getInstance().displayImage(getItem(position).getAvater(), holder.head);
+                ImageLoader.getInstance().displayImage(getItem(position).getAvatar(), holder.head);
             }
             //holder.name.setText(selectUserList.get(position).name);
             LogUtil.d("刷新的数九：" + mSelectDatas.size());
@@ -149,44 +151,324 @@ public class SelectUserHelper {
         }
     }
 
+    public static final List<SelectDepData> mSelectDatas = new ArrayList<>(); // 组织架构数据
+    public static final List<SelectUserData> mCurrentSelectDatas = new ArrayList<>(); // 多选时选中项列表
+    public static final List<SelectDepData> mAllSelectDatas = new ArrayList<>();
+
+    /**
+     * 为选中列表添加数据
+     *
+     * @param data
+     */
+    public static boolean addSelectItem(SelectUserData data) {
+        if (!mCurrentSelectDatas.contains(data)) {
+            mCurrentSelectDatas.add(0, data);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 为选中列表移除数据
+     *
+     * @param data
+     */
+    public static boolean removeSelectItem(SelectUserData data) {
+        return mCurrentSelectDatas.remove(data);
+    }
+
+    /**
+     * 清空选中列表
+     */
+    public static void clear() {
+        mCurrentSelectDatas.clear();
+    }
+
+    /**
+     * 删除传入部门之前, 所选中的该部门下属用户或子部门...并添加传入的部门
+     *
+     * @param data
+     */
+    public static boolean removeSelectItemByDepAndAdd(SelectDepData data) {
+        return delAllSelectDepAndAdd(data);
+    }
+
+    /**
+     * 删除子部门, 子用户数据, 如果列表中没有其对应的父部门, 添加该数据到列表中
+     *
+     * @param data
+     * @return
+     */
+    public static boolean delAllSelectDepAndAdd(SelectDepData data) {
+        mCurrentSelectDatas.add(0, data);
+        for (int i = 0; i < mCurrentSelectDatas.size(); i++) {
+            SelectUserData userData = mCurrentSelectDatas.get(i);
+            if (userData instanceof SelectDepData) {
+                if (userData.getXpath().contains(data.getXpath())) {
+                    mCurrentSelectDatas.remove(userData);
+                } else if (data.getXpath().contains(userData.getXpath())
+                        && !data.getId().equals(userData.getId())) {
+                    mCurrentSelectDatas.remove(data);
+                }
+            } else {
+                if (data.getUsers().contains(userData)) {
+                    mCurrentSelectDatas.remove(userData);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 移除选中的部门
+     *
+     * @param data
+     * @return
+     */
+    public static boolean removeSelectItemAllDep(SelectDepData data) {
+        return removeSelectItem(data);
+    }
+
+    /**
+     * 点击单个用户触发操作
+     *
+     * @param data
+     * @return
+     */
+    public static boolean addSelectUserChangeDep(SelectDepData data) {
+        if (data.isSelect()) {
+            return removeSelectItemByDepAndAdd(data);
+        } else {
+            addDepNoChangeItem(data);
+            return true;
+        }
+    }
+
+    public static void addDepNoChangeItem(SelectDepData data) {
+        removeSelectItem(data);
+        for (int i = 0; i < mSelectDatas.size(); i++) {
+            SelectDepData depData = mSelectDatas.get(i);
+            if (depData.getXpath().contains(data.getXpath())) {
+                if (depData.isSelect()) {
+                    addSelectItem(depData);
+                } else if (depData.mSelectCount == 0) {
+                    delAllSelectDep(data);
+                } else {
+                    for (int j = 0; j < depData.getUsers().size(); j++) {
+                        if (depData.getUsers().get(j).isSelect() && !depData.isSelect()) {
+                            addSelectItem(depData.getUsers().get(j));
+                        } else {
+                            removeSelectItem(depData.getUsers().get(j));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 仅删除相关的部门和用户不添加
+     *
+     * @param data
+     */
+    private static void delAllSelectDep(SelectDepData data) {
+        for (int i = 0; i < mCurrentSelectDatas.size(); i++) {
+            SelectUserData userData = mCurrentSelectDatas.get(i);
+            if (userData instanceof SelectDepData) {
+                if (userData.getXpath().contains(data.getXpath())) {
+                    mCurrentSelectDatas.remove(userData);
+                }
+            } else {
+                if (data.getUsers().contains(userData)) {
+                    mCurrentSelectDatas.remove(userData);
+                }
+            }
+        }
+    }
+
     public static class SelectThread extends Thread {
+        public static final int OK = 0x00001;
+        public static final int FAILURE = 0x00000;
 
         private final List<Department> mDepartmentDatas;
+        private final List<SelectDepData> mDepSource = new ArrayList<>();
+        private final List<SelectUserData> mUserSource = new ArrayList<>();
+        private final Handler mHandler;
 
-        public SelectThread(List<Department> datas) {
+        public SelectThread(List<Department> datas, Handler handler) {
             this.mDepartmentDatas = datas;
+            this.mHandler = handler;
         }
 
         @Override
         public void run() {
             mSelectDatas.clear();
-            if (mDepartmentDatas != null) {
-                for (int i = 0; i < mDepartmentDatas.size(); i++) {
-                    bindUser(mDepartmentDatas.get(i));
+            mDepSource.clear();
+            mUserSource.clear();
+            try {
+                if (mDepartmentDatas != null) {
+                    bindAllUser(mDepartmentDatas.get(0));
+                    for (int i = 1; i < mDepartmentDatas.size(); i++) {
+                        SelectDepData data = newDepSource(mDepartmentDatas.get(i));
+                        mDepSource.add(data);
+                    }
+                    for (int i = 1; i < mDepSource.size(); i++) {
+                        bindUserInfos(mDepSource.get(i));
+                    }
+                    mSelectDatas.addAll(mDepSource);
+                }
+                mHandler.sendEmptyMessage(OK);
+            } catch (Exception e) {
+                e.printStackTrace();
+                mHandler.sendEmptyMessage(FAILURE);
+            }
+        }
+
+        /**
+         * 获取所有用户信息, 默认取第一个部门
+         *
+         * @param department
+         */
+        private void bindAllUser(Department department) {
+            SelectDepData userData = new SelectDepData();
+            userData.setId(department.getId());
+            userData.setName(department.getName());
+            userData.setAvatar(department.getAvater());
+            userData.setXpath(department.getXpath());
+
+            mUserSource.addAll(newDepSourceAll());
+
+            userData.setUsers(mUserSource);
+            userData.startCallback(); //为部门中的所有用户添加回调
+            mDepSource.add(0, userData);
+        }
+
+        /**
+         * 更新所有用户的组织架构
+         *
+         * @param
+         */
+        private List<SelectUserData> newDepSourceAll() {
+            List<SelectUserData> userDatas = new ArrayList<>();
+            for (int i = 0; i < mDepartmentDatas.size(); i++) {
+                Department dep = mDepartmentDatas.get(i);
+                for (int j = 0; j < dep.getUsers().size(); j++) {
+                    User user = dep.getUsers().get(j);
+                    SelectUserData data = new SelectUserData();
+                    data.setAvatar(user.getAvatar());
+                    data.setName(user.getRealname());
+                    data.setId(user.getId());
+                    try {
+                        data.setDeptName(user.depts.get(0).getShortDept().getName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        data.setDeptName("暂无");
+                    }
+                    try {
+                        data.setDeptName(user.depts.get(0).getTitle());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        data.setDeptName("暂无");
+                    }
+                    userDatas.add(data);
+                }
+            }
+            removeSameAll(userDatas);
+            return userDatas;
+        }
+
+        private SelectDepData newDepSource(Department department) {
+            SelectDepData userData = new SelectDepData();
+            userData.setId(department.getId());
+            userData.setName(department.getName());
+            userData.setAvatar(department.getAvater());
+            userData.setXpath(department.getXpath());
+
+            List<SelectUserData> userDatas = new ArrayList<>();
+            for (int i = 0; i < department.getUsers().size(); i++) {
+                User user = department.getUsers().get(i);
+                int index = -1;
+                if ((index = getUserIndex(user)) > -1 && index < mUserSource.size()) {
+                    userDatas.add(mUserSource.get(index));
+                } else {
+                    SelectUserData data = new SelectUserData();
+                    data.setAvatar(user.getAvatar());
+                    data.setName(user.getRealname());
+                    data.setId(user.getId());
+                    try {
+                        data.setDeptName(user.depts.get(0).getShortDept().getName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        data.setDeptName("暂无");
+                    }
+                    try {
+                        data.setDeptName(user.depts.get(0).getTitle());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        data.setDeptName("暂无");
+                    }
+                    userDatas.add(data);
+                }
+            }
+            userData.setUsers(userDatas);
+            return userData;
+        }
+
+        private int getUserIndex(User user) {
+            String id = user.getId();
+            if (TextUtils.isEmpty(id)) {
+                return -1;
+            }
+            for (int i = 0; i < mUserSource.size(); i++) {
+                if (id.equals(mUserSource.get(i).getId())) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * 获取部门用户与其子部门的用户
+         *
+         * @param depData
+         * @return
+         */
+        private void bindUserInfos(SelectDepData depData) {
+            for (SelectDepData d : mDepSource) {
+                if (d.getXpath().contains(depData.getXpath())) {
+                    depData.getUsers().addAll(d.getUsers());
+                }
+            }
+            removeSame(depData.getUsers());
+            depData.startCallback();
+        }
+
+        /**
+         * 去掉人员重复数据
+         */
+        private void removeSame(final List<SelectUserData> list) {
+            for (int i = 0; i < list.size() - 1; i++) {
+                for (int j = i + 1; j < list.size(); j++) {
+                    if (list.get(i).getId().equals(list.get(j).getId())) {
+                        SelectUserData data = list.remove(j);
+                        j--;
+                    }
                 }
             }
         }
 
         /**
-         * 获取当前部门人员
-         *
-         * @deprecated 根据部门Xpath获取人员
+         * 去掉人员重复数据
          */
-        private synchronized void bindUser(Department department) {
-            List<User> users = new ArrayList<>();
-            for (Department d : mDepartmentDatas) {
-                if (department.getXpath().contains(d.getXpath())) {
-                    if (d.getUsers() != null && d.getUsers().size() > 0)
-                        users.addAll(d.getUsers());
+        private void removeSameAll(final List<SelectUserData> list) {
+            for (int i = 0; i < list.size() - 1; i++) {
+                for (int j = i + 1; j < list.size(); j++) {
+                    if (list.get(i).getId().equals(list.get(j).getId())) {
+                        SelectUserData data = list.remove(j);
+                        j--;
+                    }
                 }
             }
-            NewUser newUser = new NewUser();
-            newUser.setId(department.getId());
-            newUser.setAvatar(department.getAvater());
-            newUser.setName(department.getName());
-            newUser.setXpath(department.getXpath());
-            mSelectDatas.put(newUser, users);
-//            newUser.setUsers(users);
         }
     }
 
