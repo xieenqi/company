@@ -101,12 +101,6 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         cb.setChecked(!isSelectAll);
 
                         mDepartment.setAllSelect(!isSelectAll);
-
-                        if (mDepartmentCallback != null) {
-                            if (mDepartmentCallback.onSelect(!isSelectAll)) {
-                                notifyDataSetChanged();
-                            }
-                        }
                     }
                 });
                 break;
@@ -129,20 +123,21 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 userHolder.convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        CheckBox checkBox = (CheckBox) v.getTag();
+                        boolean isSelect = checkBox.isChecked();
+                        checkBox.setChecked(!isSelect);
                         if (!isAlone()) {
-                            CheckBox checkBox = (CheckBox) v.getTag();
-                            boolean isSelect = checkBox.isChecked();
-                            checkBox.setChecked(!isSelect);
-
                             //TODO : ....
                             user.setCallbackSelect(!isSelect);
 
                             if (!isAlone()) {
                                 notifyItemChanged(0);
                             }
-                        }
-                        if (mUserSlectCallback != null) {
-                            mUserSlectCallback.onUserSelect();
+                        } else {
+                            user.setCallbackSelect(!isSelect);
+                            if (mUserSlectCallback != null) {
+                                mUserSlectCallback.onUserSelect(user);
+                            }
                         }
                     }
                 });
@@ -204,7 +199,7 @@ public class SelectUsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public interface OnUserSelectCallback {
-        void onUserSelect();
+        void onUserSelect(SelectUserData data);
     }
 
     public interface OnDepartmentAllSelectCallback {
