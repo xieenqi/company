@@ -86,24 +86,30 @@ public class CustomerManageActivity extends BaseFragmentActivity {
                 perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
                 if(!perTeam.isEnable() && !perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户"};
+                    imageArrow.setVisibility(View.INVISIBLE);
                 }else if(perTeam.isEnable() && !perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户"};
                     publicOrTeam = true;
+                    imageArrow.setVisibility(View.VISIBLE);
                 }else if(!perTeam.isEnable() && perOcean.isEnable()){
                     CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
                     publicOrTeam = false;
+                    imageArrow.setVisibility(View.VISIBLE);
+                }else{
+                    imageArrow.setVisibility(View.VISIBLE);
                 }
             }catch(NullPointerException e){
                 e.printStackTrace();
                 Toast("团队/公海客户,code错误");
             }
+        }else{
+            imageArrow.setVisibility(View.VISIBLE);
         }
 
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         initCategoryUI();
         rotateAnimation = getArrowAnimation();
-        imageArrow.setVisibility(View.VISIBLE);
         initFragments();
         layout_category.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +117,8 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
             }
         });
+
+
     }
 
     /**
@@ -176,9 +184,14 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         return rotateAnimation;
     }
 
+    /**
+     * 顶部(我的，团队，公海)tab选择监听
+     * */
     @Click(R.id.layout_title_action)
     void onClickChangeCategory() {
-        changeCategoryView();
+        if(CUSTOMER_FILTER_STRS.length != 1){
+            changeCategoryView();
+        }
     }
 
     void changeChild(final int index) {

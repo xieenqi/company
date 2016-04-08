@@ -79,22 +79,26 @@ public class AttendanceActivity extends BaseFragmentActivity {
         findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
         findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
-        imageArrow.setVisibility(View.VISIBLE);
-        rotateAnimation = initAnimation();
 
         //超级管理员判断
         if(!MainApp.user.isSuperUser()){
             try{
                 permission = (Permission) MainApp.rootMap.get("0317");
                 if(!permission.isEnable()){
+                    imageArrow.setVisibility(View.INVISIBLE);
                     ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
+                }else{
+                    imageArrow.setVisibility(View.VISIBLE);
                 }
             }catch (NullPointerException e){
                 e.printStackTrace();
-                Toast("团队考勤权限,code错误");
+                Toast("团队考勤权限,code错误:0317");
             }
+        }else{
+            imageArrow.setVisibility(View.VISIBLE);
         }
 
+        rotateAnimation = initAnimation();
         initCategoryUI();
         initChildren();
 
@@ -112,13 +116,14 @@ public class AttendanceActivity extends BaseFragmentActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                changeCategoryView();
+                if(ATTENDANCE_FILTER_STRS.length != 1){
+                    changeCategoryView();
+                }
                 break;
             case R.id.img_title_left:
                 onBackPressed();
                 break;
             default:
-
                 break;
         }
     }
