@@ -591,5 +591,4 @@ public class WfInstanceAddActivity extends BaseActivity {
             DBManager.Instance().putWfInstance(MainApp.gson.toJson(wfInstance));
         }
     }
-
 }

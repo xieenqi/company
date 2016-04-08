@@ -17,6 +17,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
@@ -59,6 +60,8 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     @ViewById(R.id.img_title_arrow)
     ImageView imageArrow;
 
+    public Permission perTeam;
+    public Permission perOcean;
     public CommonCategoryAdapter mCategoryAdapter;
     public Animation rotateAnimation;
     public FragmentManager fragmentManager = getSupportFragmentManager();
@@ -73,9 +76,20 @@ public class CustomerManageActivity extends BaseFragmentActivity {
         setTitle("我的客户");
         setTouchView(-1);
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
-        if (!Utils.hasRights()) {
-            CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
+
+        //超级管理员权限判断
+        if(!MainApp.user.isSuperUser()){
+            perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
+            perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
+            if(!perTeam.isEnable() && !perOcean.isEnable()){
+                CUSTOMER_FILTER_STRS = new String[]{"我的客户"};
+            }else if(perTeam.isEnable() && !perOcean.isEnable()){
+                CUSTOMER_FILTER_STRS = new String[]{"我的客户", "团队客户"};
+            }else if(!perTeam.isEnable() && perOcean.isEnable()){
+                CUSTOMER_FILTER_STRS = new String[]{"我的客户", "公海客户"};
+            }
         }
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         initCategoryUI();

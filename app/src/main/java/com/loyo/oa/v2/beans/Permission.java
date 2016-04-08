@@ -6,28 +6,37 @@ import java.util.ArrayList;
 /**
  * Created by loyo_dev1 on 16/1/20.
  */
+
 public class Permission implements Serializable{
 
-    public String id;
+    public String name;
 
-    public String roleId;
+    public String code;
 
-    public ArrayList<Suites> suites = new ArrayList<>();
+    public boolean enable;
 
-    public String getId() {
-        return id;
+
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public boolean isEnable() {
+        return enable;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }
