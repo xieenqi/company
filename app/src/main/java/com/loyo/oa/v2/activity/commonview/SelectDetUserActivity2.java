@@ -439,10 +439,10 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.btn_title_right:
-                if (mCurrentSelectCount == 0) {
-                    finish();
-                    return;
-                }
+//                if (mCurrentSelectCount == 0) {
+//                    finish();
+//                    return;
+//                }
                 Bundle extras = new Bundle();
                 Members members = new Members();
 
