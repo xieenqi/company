@@ -10,24 +10,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.SelectDepData;
 import com.loyo.oa.v2.beans.SelectUserData;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by loyocloud on 16/3/29.
@@ -102,6 +95,10 @@ public class SelectUserHelper {
             }
         }
 
+        public void setDataChangeCallback(OnDataChangeCallback mDataChangeCallback) {
+            this.mDataChangeCallback = mDataChangeCallback;
+        }
+
         @Override
         public int getCount() {
             return mSelectDatas.size();
@@ -163,6 +160,7 @@ public class SelectUserHelper {
     public static final List<SelectDepData> mSelectDatas = new ArrayList<>(); // 组织架构数据
     public static final List<SelectUserData> mCurrentSelectDatas = new ArrayList<>(); // 多选时选中项列表
     public static final List<SelectDepData> mAllSelectDatas = new ArrayList<>();
+    public static final ArrayList<User> useAlllist = new ArrayList<>();
 
     /**
      * 为选中列表添加数据
@@ -170,11 +168,32 @@ public class SelectUserHelper {
      * @param data
      */
     public static boolean addSelectItem(SelectUserData data) {
-        if (!mCurrentSelectDatas.contains(data)) {
-            mCurrentSelectDatas.add(0, data);
-            return true;
+//        if (!mCurrentSelectDatas.contains(data)) {
+//            mCurrentSelectDatas.add(0, data);
+//            return true;
+//        }
+        if (data.getClass() == SelectDepData.class) {
+            if (mCurrentSelectDatas.contains(data)) {
+                return false;
+            } else {
+                delAllSelectDep((SelectDepData) data);
+            }
+        } else {
+            for (int i = 0; i < mCurrentSelectDatas.size(); i++) {
+                SelectUserData d = mCurrentSelectDatas.get(i);
+                if (d.getClass() == SelectDepData.class) {
+                    if (((SelectDepData) d).getUsers().contains(data)) {
+                        return false;
+                    }
+                } else {
+                    if (d.equals(data)) {
+                        return false;
+                    }
+                }
+            }
         }
-        return false;
+        mCurrentSelectDatas.add(0, data);
+        return true;
     }
 
     /**
@@ -267,6 +286,10 @@ public class SelectUserHelper {
         }
     }
 
+    /**
+     * 更新部门的选择状态
+     * @param data
+     */
     public static void addDepNoChangeItem(SelectDepData data) {
         removeSelectItem(data);
         for (int i = 0; i < mSelectDatas.size(); i++) {
@@ -275,13 +298,15 @@ public class SelectUserHelper {
                 if (depData.isSelect()) {
                     addSelectItem(depData);
                 } else if (depData.mSelectCount == 0) {
-                    delAllSelectDep(data);
+                    delAllSelectDep(depData);
                 } else {
                     for (int j = 0; j < depData.getUsers().size(); j++) {
-                        if (depData.getUsers().get(j).isSelect() && !depData.isSelect()) {
+                        if (depData.getUsers().get(j).isSelect()) {
                             addSelectItem(depData.getUsers().get(j));
                         } else {
-                            removeSelectItem(depData.getUsers().get(j));
+                            if (removeSelectItem(depData.getUsers().get(j))) {
+                                j--;
+                            }
                         }
                     }
                 }
@@ -311,6 +336,9 @@ public class SelectUserHelper {
         }
     }
 
+    /**
+     * 重构组织架构数据【重新封装】
+     */
     public static class SelectThread extends Thread {
         public static final int OK = 0x00001;
         public static final int FAILURE = 0x00000;
@@ -330,6 +358,7 @@ public class SelectUserHelper {
             mSelectDatas.clear();
             mDepSource.clear();
             mUserSource.clear();
+            useAlllist.clear();
             try {
                 if (mDepartmentDatas != null) {
                     bindAllUser(mDepartmentDatas.get(0));
@@ -341,12 +370,44 @@ public class SelectUserHelper {
                         bindUserInfos(mDepSource.get(i));
                     }
                     mSelectDatas.addAll(mDepSource);
+
+                    getAllUsers();
                 }
                 mHandler.sendEmptyMessage(OK);
             } catch (Exception e) {
                 e.printStackTrace();
                 mHandler.sendEmptyMessage(FAILURE);
             }
+        }
+
+        private void getAllUsers() {
+            /*全部人员获取*/
+            List<User> localCacheUserList = new ArrayList<>();
+            for (int i = 0; i < mDepartmentDatas.size(); i++) {
+                try {
+                    for (int k = 0; k < mDepartmentDatas.get(i).getUsers().size(); k++) {
+                        localCacheUserList.add(mDepartmentDatas.get(i).getUsers().get(k));
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+            useAlllist.addAll(RemoveSame(localCacheUserList));
+        }
+
+        /**
+         * 去掉人员重复数据
+         */
+        private List RemoveSame(final List<User> list) {
+            for (int i = 0; i < list.size() - 1; i++) {
+                for (int j = i + 1; j < list.size(); j++) {
+                    if (list.get(i).getId().equals(list.get(j).getId())) {
+                        list.remove(j);
+                        j--;
+                    }
+                }
+            }
+            return list;
         }
 
         /**
@@ -402,6 +463,12 @@ public class SelectUserHelper {
             return userDatas;
         }
 
+        /**
+         * 组装部门的数据
+         *
+         * @param department
+         * @return
+         */
         private SelectDepData newDepSource(Department department) {
             SelectDepData userData = new SelectDepData();
             userData.setId(department.getId());

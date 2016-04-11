@@ -136,7 +136,6 @@ public class SelectDetUserActivity extends BaseActivity {
      * 初始化
      */
     void initView() {
-
         mIntent = getIntent();
         mBundle = mIntent.getExtras();
         selectType = mBundle.getInt(ExtraAndResult.STR_SELECT_TYPE);

@@ -62,14 +62,23 @@ public class SelectUserData implements Serializable {
         return true;
     }
 
+    public NewUser toNewUser() {
+        NewUser newUser = new NewUser();
+        newUser.setId(getId());
+        newUser.setName(this.name);
+        newUser.setAvatar(this.avatar);
+        newUser.setXpath(this.xpath);
+        return newUser;
+    }
+
     /**
      * 设置用户选中状态, 并回调部门选中状态
      *
      * @param isSelect
      */
-    public final boolean setCallbackSelect(boolean isSelect, boolean notify) {
+    public final void setAllCallbackSelect(boolean isSelect) {
         if (isSelect == this.isSelect) {
-            return false;
+            return;
         }
         this.isSelect = isSelect;
         if (mUserChangeCallback != null && mUserChangeCallback.size() > 0) {
@@ -81,12 +90,7 @@ public class SelectUserData implements Serializable {
                 }
                 SelectUserHelper.mAllSelectDatas.add(changeDep);
             }
-            if (SelectUserHelper.mAllSelectDatas.size() > 0 && mDepChangeCallback != null && notify) {
-                checkSameXPath(SelectUserHelper.mAllSelectDatas);
-                mDepChangeCallback.onDepChange(SelectUserHelper.mAllSelectDatas);
-            }
         }
-        return true;
     }
 
     /**
@@ -96,7 +100,7 @@ public class SelectUserData implements Serializable {
      * @param
      * @return
      */
-    private void checkSameXPath(List<SelectDepData> changeDatas) {
+    protected void checkSameXPath(List<SelectDepData> changeDatas) {
         for (int i = 0; i < changeDatas.size(); i++) {
             SelectDepData data = changeDatas.get(i);
             lable:

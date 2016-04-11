@@ -21,7 +21,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
@@ -160,6 +159,8 @@ public class WorkReportAddActivity extends BaseActivity {
             }
         }
     };
+//    private SelectResultData resultData;
+//    private SelectUserResult userData;
 
     @SuppressLint("WrongViewCast")
     @AfterViews
@@ -506,32 +507,33 @@ public class WorkReportAddActivity extends BaseActivity {
             /*点评人*/
             case R.id.layout_reviewer:
 
-                mBundle = new Bundle();
-                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.REQUEST_CODE, mBundle);
-
+//                mBundle = new Bundle();
+//                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+//                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+//                        ExtraAndResult.REQUEST_CODE, mBundle);
+                SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
                 break;
 
             /*抄送人*/
             case R.id.layout_toUser:
 
-                if (joinUserId != null) {
-                    mBundle = new Bundle();
-                    mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
-                    mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                    //TODO:修改跳转界面
-                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-                            ExtraAndResult.REQUEST_CODE, mBundle);
-                    joinUserId.reverse();
-                } else {
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                    //TODO:修改跳转界面
-                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-                            ExtraAndResult.REQUEST_CODE, bundle1);
-                }
+//                if (joinUserId != null) {
+//                    mBundle = new Bundle();
+//                    mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, SelectDetUserActivity2.TYPE_ALL_SELECT);
+//                    mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
+//                    //TODO:修改跳转界面
+//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
+//                            ExtraAndResult.REQUEST_CODE, mBundle);
+//                    joinUserId.reverse();
+//                } else {
+//                    Bundle bundle1 = new Bundle();
+//                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+//                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, SelectDetUserActivity2.TYPE_ALL_SELECT);
+//                    //TODO:修改跳转界面
+//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
+//                            ExtraAndResult.REQUEST_CODE, bundle1);
+//                }
+                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString());
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -661,33 +663,33 @@ public class WorkReportAddActivity extends BaseActivity {
                 /*点评人*/
                 User user = (User) data.getSerializableExtra(User.class.getName());
                 if (user != null) {
-                    mReviewer = new Reviewer(user.toShortUser());
-                    mReviewer.setUser(user.toShortUser());
-                    tv_reviewer.setText(user.getRealname());
+//                    mReviewer = new Reviewer(user.toShortUser());
+//                    mReviewer.setUser(user.toShortUser());
+//                    tv_reviewer.setText(user.getRealname());
                 } else {  /*抄送人*/
-                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
-                    if (null == members) {
-                        tv_toUser.setText("无参与人");
-                    } else {
-                        joinName = new StringBuffer();
-                        joinUserId = new StringBuffer();
-                        if (null != members.depts) {
-                            for (NewUser newUser : members.depts) {
-                                joinName.append(newUser.getName() + ",");
-                                joinUserId.append(newUser.getId() + ",");
-                            }
-                        }
-                        if (null != members.users) {
-                            for (NewUser newUser : members.users) {
-                                joinName.append(newUser.getName() + ",");
-                                joinUserId.append(newUser.getId() + ",");
-                            }
-                        }
-                        if (!TextUtils.isEmpty(joinName)) {
-                            joinName.deleteCharAt(joinName.length() - 1);
-                        }
-                        tv_toUser.setText(joinName.toString());
-                    }
+//                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
+//                    if (null == members) {
+//                        tv_toUser.setText("无参与人");
+//                    } else {
+//                        joinName = new StringBuffer();
+//                        joinUserId = new StringBuffer();
+//                        if (null != members.depts) {
+//                            for (NewUser newUser : members.depts) {
+//                                joinName.append(newUser.getName() + ",");
+//                                joinUserId.append(newUser.getId() + ",");
+//                            }
+//                        }
+//                        if (null != members.users) {
+//                            for (NewUser newUser : members.users) {
+//                                joinName.append(newUser.getName() + ",");
+//                                joinUserId.append(newUser.getId() + ",");
+//                            }
+//                        }
+//                        if (!TextUtils.isEmpty(joinName)) {
+//                            joinName.deleteCharAt(joinName.length() - 1);
+//                        }
+//                        tv_toUser.setText(joinName.toString());
+//                    }
                 }
 
                 break;
@@ -744,6 +746,64 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
+            case SelectDetUserActivity2.REQUEST_ONLY://用户单选, 点评人
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+                mReviewer = new Reviewer(u);
+                mReviewer.setUser(u);
+                tv_reviewer.setText(u.getRealname());
+                break;
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
+//                resultData = (SelectResultData) data.getSerializableExtra("data");
+//                if (resultData == null)
+//                    return;
+//                if (resultData.isNull()) {
+//                    tv_toUser.setText("无参与人");
+//                } else {
+//                    joinName = new StringBuffer();
+//                    joinUserId = new StringBuffer();
+//                    if (null != resultData.getDepResults()) {
+//                        for (int i = 0; i < resultData.getDepResults().size(); i++) {
+//                            SelectDepResult result = resultData.getDepResults().get(i);
+//                            joinName.append(result.getName() + ",");
+//                            joinUserId.append(result.getId() + ",");
+//                        }
+//                    }
+//                    if (null != resultData.getUserResults()) {
+//                        for (int i = 0; i < resultData.getUserResults().size(); i++) {
+//                            SelectUserResult result = resultData.getUserResults().get(i);
+//                            joinName.append(result.getName() + ",");
+//                            joinUserId.append(result.getId() + ",");
+//                        }
+//                    }
+//                    if (!TextUtils.isEmpty(joinName)) {
+//                        joinName.deleteCharAt(joinName.length() - 1);
+//                    }
+//                    tv_toUser.setText(joinName.toString());
+//                }
+                members = (Members) data.getSerializableExtra("data");
+                if (null == members) {
+                    tv_toUser.setText("无参与人");
+                } else {
+                    joinName = new StringBuffer();
+                    joinUserId = new StringBuffer();
+                    if (null != members.depts) {
+                        for (NewUser newUser : members.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != members.users) {
+                        for (NewUser newUser : members.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    tv_toUser.setText(joinName.toString());
+                }
+                break;
             default:
                 break;
         }
