@@ -481,7 +481,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*任务计划*/
             case R.id.layout_task:
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putSerializable("mCustomer", mCustomer);
                 _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
                 break;
