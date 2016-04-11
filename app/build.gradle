@@ -6,7 +6,7 @@ def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '23.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
