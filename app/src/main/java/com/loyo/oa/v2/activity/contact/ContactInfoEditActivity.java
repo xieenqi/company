@@ -2,11 +2,13 @@ package com.loyo.oa.v2.activity.contact;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.DialogPreference;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -129,7 +131,9 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private String[] mounthArr = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+
+    private String birthStr;
+    private int age;
 
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
@@ -157,6 +161,11 @@ public class ContactInfoEditActivity extends BaseActivity {
             if (null != tvtime) {
                 tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.title_bg1));
                 tvtime.setText(des);
+            }
+
+            if(msg.what == 0x01){
+                Utils.setContent(tv_birthday, birthStr);
+                Utils.setContent(tv_age, age + "");
             }
         }
     }
@@ -205,7 +214,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_IMAGE);
                 break;
             case R.id.layout_birthday:
-                selectBirthDay();
+                pickDate();
                 break;
             case R.id.iv_submit:
                 //关闭键盘
@@ -219,7 +228,6 @@ public class ContactInfoEditActivity extends BaseActivity {
                 showUpdateMobileDialog();
                 break;
             default:
-
                 break;
         }
     }
@@ -551,52 +559,46 @@ public class ContactInfoEditActivity extends BaseActivity {
         });
     }
 
-
-    private DatePicker findDatePicker(final ViewGroup group) {
-        if (group != null) {
-            for (int i = 0, j = group.getChildCount(); i < j; i++) {
-                View child = group.getChildAt(i);
-                if (child instanceof DatePicker) {
-                    return (DatePicker) child;
-                } else if (child instanceof ViewGroup) {
-                    DatePicker result = findDatePicker((ViewGroup) child);
-                    if (result != null)
-                        return result;
-                }
-            }
-        }
-        return null;
-    }
-
     /**
-     * 设置生日
-     */
-    private void selectBirthDay() {
+     * 功 能: 生日选择器
+     * 说 明: 控件自带按钮错显为英文，找不到原因，只能手动设置按钮监听。
+     * */
 
-        Calendar calendar = Calendar.getInstance(Locale.CHINA);
-        Date date = new Date();
-        calendar.setTime(date);
+    public void pickDate() {
+        Calendar cal = Calendar.getInstance();
+        final DatePickerDialog mDialog = new DatePickerDialog(this, null,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        //手动设置按钮
+        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
-            public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                int age = Utils.getAge(year + "");
+            public void onClick(DialogInterface dialog, int which) {
+                DatePicker datePicker = mDialog.getDatePicker();
+                int year = datePicker.getYear();
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+
+                age = Utils.getAge(year + "");
                 if (age > 0) {
-                    String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth);
-                    Utils.setContent(tv_birthday, str);
-                    Utils.setContent(tv_age, age + "");
+                    birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
+                    mHandler.sendEmptyMessage(0x01);
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
             }
-        }, year, month, day);
-        datePickerDialog.show();
+        });
+
+        //取消按钮，如果不需要直接不设置即可
+        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                System.out.println("BUTTON_NEGATIVE~~");
+            }
+        });
+
+        mDialog.show();
     }
+
 
     /**
      * 电话号码编辑框的文本观察器
