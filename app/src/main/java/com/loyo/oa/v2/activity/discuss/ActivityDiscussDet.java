@@ -159,9 +159,13 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
             tv_edit.setVisibility(View.VISIBLE);
         }
 
-        if (mStatus == 3) {
+        /**
+         * 说 明: 取消讨论权限
+         * 时 间:2016.4.11
+         * */
+/*        if (mStatus == 3) {
             ll_edit.setVisibility(View.GONE);
-        }
+        }*/
 
         linearLayoutManager = new LinearLayoutManager(this);
         // linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

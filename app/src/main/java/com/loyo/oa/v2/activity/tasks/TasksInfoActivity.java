@@ -1110,10 +1110,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status", mTask.getStatus());
         bundle.putInt("bizType", 2);
-
         ActivityDiscussDet.startThisActivity(this, 2, mTask.getAttachmentUUId(), mTask.getStatus(), MSG_DISCUSSION);
-
-//        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
     /**
