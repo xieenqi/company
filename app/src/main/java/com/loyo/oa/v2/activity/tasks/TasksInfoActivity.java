@@ -417,15 +417,15 @@ public class TasksInfoActivity extends BaseActivity {
 
         switch (mTask.getStatus()) {
             case 1:
-                iv_task_status.setBackgroundResource(R.drawable.icon_project_processing);
+                iv_task_status.setImageResource(R.drawable.icon_project_processing);
                 break;
 
             case 2:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_wite);
+                iv_task_status.setImageResource(R.drawable.img_task_wite);
                 break;
 
             case 3:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_status_finish);
+                iv_task_status.setImageResource(R.drawable.img_task_status_finish);
                 break;
 
             default:
