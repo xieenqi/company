@@ -386,8 +386,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putInt("bizType", 1);
         int status = Integer.parseInt(mWorkReport.reviewer.getStatus());
         ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
-
-//        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
     /**

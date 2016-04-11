@@ -79,11 +79,16 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         if (layout_discuss_action == null) {
             return;
         }
-        if (status == Project.STATUS_FINISHED) {
+
+        /**
+         * 说 明: 取消讨论权限
+         * 时 间:2016.4.11
+         * */
+/*        if (status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
         } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     /**
@@ -177,11 +182,15 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (project != null && project.status == Project.STATUS_FINISHED) {
+        /**
+         * 说 明: 取消讨论权限
+         * 时 间:2016.4.11
+         * */
+        /*if (project != null && project.status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
         } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     @Override
