@@ -151,7 +151,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
-                LogUtil.dll("进入主页广播回调 launch");
                 launch();
                 testJurl();
             }
@@ -337,7 +336,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 LogUtil.d(MainApp.user + " 激光的alias： " + s);
                 isQQLogin();
-
             }
         });
     }

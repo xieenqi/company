@@ -86,7 +86,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String position;
     private NearCount nearCount;
     private Permission permission = (Permission)MainApp.rootMap.get("0404");
-
     private DropListMenu mDropMenu;
     private ArrayList<DropItem> source = new ArrayList<>();
     private String filed = "";
@@ -114,6 +113,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             }
         }
     }
+
 
     @Nullable
     @Override
@@ -181,7 +181,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
             //附近的客户
             case R.id.layout_near_customers:
                 Bundle bundle = new Bundle();
@@ -451,7 +450,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 sb.append(items.get(items.keyAt(i)).getName()).append(" ").append(items.get(items.keyAt(i)).getValue()).append(",");
             }
             getData();
-            //Toast("选择的内容AAA：" + sb.toString());
         }
     }
 
@@ -661,6 +659,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
+
+            Intent intent = new Intent();
+            intent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
+            getActivity().sendBroadcast(intent);
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {

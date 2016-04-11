@@ -100,7 +100,6 @@ public class TasksAddActivity extends BaseActivity {
     View layout_retask_view;
     @ViewById
     View view_task_approve;
-
     @ViewById
     ImageView img_title_right_toUsers;
     @ViewById
