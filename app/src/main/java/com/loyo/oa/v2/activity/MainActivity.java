@@ -142,7 +142,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind; //0上班  1下班  2加班
-    private String[] itemArrs = {"0205","0206","0201","0202","0203","0204","0211","0000"};
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -958,15 +957,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 显示用户名字和部门的名字,头像，高斯模糊背景处理
      */
     void updateUser() {
-
-        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class),
-                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
-                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
-                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
-                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class),
-                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class)));
+        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class,"0205"),
+                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class,"0206"),
+                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class,"0201"),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class,"0202"),
+                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class,"0203"),
+                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class,"0204"),
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class,"0211"),
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class,"0")));
 
         if (MainApp.user == null) {
             return;
@@ -1045,12 +1043,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }, 5000);
                 return;
             }
-            ArrayList<Permission> suitesNew = MainApp.user.newpermission;
+
+            ArrayList<Permission> suitesNew = new ArrayList<>();
+            suitesNew.clear();
+            suitesNew.addAll(MainApp.user.newpermission);
 
             for(Permission permission : suitesNew){
-                LogUtil.d(permission.getName()+":"+permission.getCode());
-                for(int i = 0;i<itemArrs.length;i++){
-                    if(itemArrs[i].equals(permission.getCode())) {
+                LogUtil.d(permission.getName()+":"+permission.getCode()+"-"+permission.isEnable());
+                for(int i = 0;i<items.size();i++){
+                    if(items.get(i).code.equals(permission.getCode())) {
                         if(!permission.isEnable()){
                             items.remove(i);
                         }
@@ -1114,12 +1115,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public class ClickItem {
         public int imageViewRes;
         public String title;
+        public String code;
         public Class<?> cls;
 
-        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls) {
+        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls,final String _code) {
             imageViewRes = _imageViewRes;
             title = _title;
             cls = _cls;
+            code = _code;
         }
     }
 
