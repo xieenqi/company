@@ -1028,38 +1028,39 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public void testJurl() {
 
         //超级管理员判断
-        if(!MainApp.user.isSuperUser()){
-
+        if (!MainApp.user.isSuperUser()) {
             if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
                     0 == MainApp.user.newpermission.size()) {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        testJurl();
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                testJurl();
+                            }
+                        });
                     }
                 }, 5000);
                 return;
             }
-
-            ArrayList<ClickItem> itemsNew = new ArrayList<>();
             ArrayList<Permission> suitesNew = MainApp.user.newpermission;
-
-            for(Permission permission : suitesNew){
-                for(int i = 0;i<items.size();i++){
-                    if(items.get(i).title.contains(permission.getName())) {
-                        if(!permission.isEnable()){
+            for (Permission permission : suitesNew) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (items.get(i).title.contains(permission.getName())) {
+                        if (!permission.isEnable()) {
                             items.remove(i);
                         }
                     }
                 }
             }
 
-            try{
+            try {
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-//                Toast("通讯录权限，code错误");
+                Toast("通讯录权限，code错误");
             }
         }
 
