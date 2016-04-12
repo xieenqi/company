@@ -252,13 +252,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         unregisterReceiver(baseReceiver);
     }
 
-    /**
-     * 初始化UI处理器
-     */
-    private void handlerEvent() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
-        mHandler = new MHandler(this);
-    }
 
     //刷新数据
     private void onRefresh() {
@@ -311,6 +304,23 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         lv_main.setMaxScrollSpeed(100f);
         adapter = new ClickItemAdapter();
 
+    }
+
+    /**
+     * 初始化UI处理器
+     */
+    private void handlerEvent() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
+        mHandler = new MHandler(this);
+    }
+
+    /**
+     * 版本更新检查
+     */
+    @Background
+    void checkUpdateService() {
+        mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
+        startService(mIntentCheckUpdate);
     }
 
     /**
@@ -752,15 +762,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
-    /**
-     * 版本更新检查
-     */
-    @Background
-    void checkUpdateService() {
-        mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
-        startService(mIntentCheckUpdate);
-    }
-
     class ViewHolder {
         RippleView layout_item;
         ImageView img_item;
@@ -1060,7 +1061,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("通讯录权限，code错误");
+                Toast("通讯录权限，code错误：0213");
             }
         }
 
