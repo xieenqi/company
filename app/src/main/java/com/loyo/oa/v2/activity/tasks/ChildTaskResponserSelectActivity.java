@@ -53,13 +53,15 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
     void initUi() {
         img_title_left.setOnTouchListener(Global.GetTouch());
         ((TextView) findViewById(R.id.tv_title_1)).setText("选择");
-        if (null == mUsers)
+        if (null == mUsers) {
             mUsers = new ArrayList<NewUser>();
+        }
+        userDuplicateRemoval();
         adapter = new UserListAdapter();
         usersListeView.setAdapter(adapter);
         usersListeView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> adapterView,final View view,final int i,final long l) {
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
                 UserListAdapter.Item_info item_info = (UserListAdapter.Item_info) view.getTag();
                 //在每次获取点击的item时将对于的checkbox状态改变，同时修改map的值。
                 item_info.cBox.toggle();
@@ -73,10 +75,25 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
         usersListeView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
+    /**
+     * 选择人员去除重复
+     */
+    private void userDuplicateRemoval() {
+        for (int i = 0; i < mUsers.size() - 1; i++) {
+            for (int j = i + 1; j < mUsers.size(); j++) {
+                if (mUsers.get(i).getId().equals(mUsers.get(j).getId())) {
+                    mUsers.remove(j);
+                    j--;
+                }
+            }
+        }
+    }
+
     public class UserListAdapter extends BaseAdapter {
         LayoutInflater layoutInflater;
         HashMap<Integer, Boolean> isSelected = new HashMap<Integer, Boolean>();
         private Item_info item_info;
+
         public UserListAdapter() {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //这儿定义isSelected这个map是记录每个listitem的状态，初始状态全部为false。
@@ -101,7 +118,7 @@ public class ChildTaskResponserSelectActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(final int position,View convertView,final ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             if (convertView == null) {
                 convertView = layoutInflater.inflate(R.layout.item_usergroup_child, null);
                 item_info = new Item_info();

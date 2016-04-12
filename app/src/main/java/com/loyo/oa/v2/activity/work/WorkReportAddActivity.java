@@ -33,7 +33,6 @@ import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Reviewer;
-import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -636,6 +635,42 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
+//            /*点评人 抄送人回调*/
+//            case ExtraAndResult.REQUEST_CODE:
+//                /*点评人*/
+//                User user = (User) data.getSerializableExtra(User.class.getName());
+//                if (user != null) {
+////                    mReviewer = new Reviewer(user.toShortUser());
+////                    mReviewer.setUser(user.toShortUser());
+////                    tv_reviewer.setText(user.getRealname());
+//                } else {  /*抄送人*/
+////                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
+////                    if (null == members) {
+////                        tv_toUser.setText("无参与人");
+////                    } else {
+////                        joinName = new StringBuffer();
+////                        joinUserId = new StringBuffer();
+////                        if (null != members.depts) {
+////                            for (NewUser newUser : members.depts) {
+////                                joinName.append(newUser.getName() + ",");
+////                                joinUserId.append(newUser.getId() + ",");
+////                            }
+////                        }
+////                        if (null != members.users) {
+////                            for (NewUser newUser : members.users) {
+////                                joinName.append(newUser.getName() + ",");
+////                                joinUserId.append(newUser.getId() + ",");
+////                            }
+////                        }
+////                        if (!TextUtils.isEmpty(joinName)) {
+////                            joinName.deleteCharAt(joinName.length() - 1);
+////                        }
+////                        tv_toUser.setText(joinName.toString());
+////                    }
+//                }
+//
+//                break;
+
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
@@ -696,11 +731,12 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
             case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
                 members = (Members) data.getSerializableExtra("data");
-                if (null == members) {
-                    tv_toUser.setText("无参与人");
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (members.users.size() == 0 && members.depts.size() == 0) {
+                    tv_toUser.setText("无抄送人");
+                    joinUserId.reverse();
                 } else {
-                    joinName = new StringBuffer();
-                    joinUserId = new StringBuffer();
                     if (null != members.depts) {
                         for (NewUser newUser : members.depts) {
                             joinName.append(newUser.getName() + ",");

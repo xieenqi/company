@@ -32,10 +32,10 @@
                     android:id="@+id/tv_task_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@color/white"
                     android:ellipsize="end"
                     android:gravity="center_vertical|left"
-                    android:layout_weight="1"
                     android:text="标题"
                     android:textSize="16sp"
                     />
