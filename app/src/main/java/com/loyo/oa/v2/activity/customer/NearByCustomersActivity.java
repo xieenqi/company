@@ -71,7 +71,9 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         @Override
     public void handleMessage(Message msg){
             if(msg.what == 0x01){
-
+                TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
+                TITLES[0] += nearCount.count + ")";
+                initTabs();
             }
         }
     };
@@ -82,13 +84,12 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
             String action = intent.getAction();
             if(action.equals(FinalVariables.ACTION_DATA_CUSTOMER)){
                 if(nearCount.count != 0){
-                    /*nearCount.count -= 1;
-                    mHandler.sendEmptyMessage(0x01);*/
+                    nearCount.count -= 1;
+                    mHandler.sendEmptyMessage(0x01);
                 }
             }
         }
     };
-
 
     @AfterViews
     void initViews() {

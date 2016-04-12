@@ -634,11 +634,15 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent();
-                intent.putExtra("Id", mCustomers.get((int) l).getId());
-                intent.putExtra(ExtraAndResult.EXTRA_TYPE, customer_type);
-                intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                if(customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY){
+                          Toast("你没有查看权限");
+                }else{
+                    Intent intent = new Intent();
+                    intent.putExtra("Id", mCustomers.get((int) l).getId());
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, customer_type);
+                    intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
+                    startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                }
             }
         });
     }
