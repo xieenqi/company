@@ -506,33 +506,11 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*点评人*/
             case R.id.layout_reviewer:
-
-//                mBundle = new Bundle();
-//                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-//                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-//                        ExtraAndResult.REQUEST_CODE, mBundle);
                 SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
                 break;
 
             /*抄送人*/
             case R.id.layout_toUser:
-
-//                if (joinUserId != null) {
-//                    mBundle = new Bundle();
-//                    mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, SelectDetUserActivity2.TYPE_ALL_SELECT);
-//                    mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-//                    //TODO:修改跳转界面
-//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-//                            ExtraAndResult.REQUEST_CODE, mBundle);
-//                    joinUserId.reverse();
-//                } else {
-//                    Bundle bundle1 = new Bundle();
-//                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-//                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, SelectDetUserActivity2.TYPE_ALL_SELECT);
-//                    //TODO:修改跳转界面
-//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-//                            ExtraAndResult.REQUEST_CODE, bundle1);
-//                }
                 SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString());
                 break;
             case R.id.layout_del:
@@ -658,42 +636,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-            /*点评人 抄送人回调*/
-            case ExtraAndResult.REQUEST_CODE:
-                /*点评人*/
-                User user = (User) data.getSerializableExtra(User.class.getName());
-                if (user != null) {
-//                    mReviewer = new Reviewer(user.toShortUser());
-//                    mReviewer.setUser(user.toShortUser());
-//                    tv_reviewer.setText(user.getRealname());
-                } else {  /*抄送人*/
-//                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
-//                    if (null == members) {
-//                        tv_toUser.setText("无参与人");
-//                    } else {
-//                        joinName = new StringBuffer();
-//                        joinUserId = new StringBuffer();
-//                        if (null != members.depts) {
-//                            for (NewUser newUser : members.depts) {
-//                                joinName.append(newUser.getName() + ",");
-//                                joinUserId.append(newUser.getId() + ",");
-//                            }
-//                        }
-//                        if (null != members.users) {
-//                            for (NewUser newUser : members.users) {
-//                                joinName.append(newUser.getName() + ",");
-//                                joinUserId.append(newUser.getId() + ",");
-//                            }
-//                        }
-//                        if (!TextUtils.isEmpty(joinName)) {
-//                            joinName.deleteCharAt(joinName.length() - 1);
-//                        }
-//                        tv_toUser.setText(joinName.toString());
-//                    }
-                }
-
-                break;
-
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
@@ -753,33 +695,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 tv_reviewer.setText(u.getRealname());
                 break;
             case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
-//                resultData = (SelectResultData) data.getSerializableExtra("data");
-//                if (resultData == null)
-//                    return;
-//                if (resultData.isNull()) {
-//                    tv_toUser.setText("无参与人");
-//                } else {
-//                    joinName = new StringBuffer();
-//                    joinUserId = new StringBuffer();
-//                    if (null != resultData.getDepResults()) {
-//                        for (int i = 0; i < resultData.getDepResults().size(); i++) {
-//                            SelectDepResult result = resultData.getDepResults().get(i);
-//                            joinName.append(result.getName() + ",");
-//                            joinUserId.append(result.getId() + ",");
-//                        }
-//                    }
-//                    if (null != resultData.getUserResults()) {
-//                        for (int i = 0; i < resultData.getUserResults().size(); i++) {
-//                            SelectUserResult result = resultData.getUserResults().get(i);
-//                            joinName.append(result.getName() + ",");
-//                            joinUserId.append(result.getId() + ",");
-//                        }
-//                    }
-//                    if (!TextUtils.isEmpty(joinName)) {
-//                        joinName.deleteCharAt(joinName.length() - 1);
-//                    }
-//                    tv_toUser.setText(joinName.toString());
-//                }
                 members = (Members) data.getSerializableExtra("data");
                 if (null == members) {
                     tv_toUser.setText("无参与人");

@@ -116,7 +116,6 @@ public class MainApp extends Application {
         if (!StringUtil.isEmpty(token)) {
             return token;
         }
-
         return SharedUtil.get(getMainApp().getBaseContext(), FinalVariables.TOKEN);
     }
 
