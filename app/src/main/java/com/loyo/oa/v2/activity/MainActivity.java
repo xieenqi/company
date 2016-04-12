@@ -142,6 +142,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind; //0上班  1下班  2加班
+    private String[] itemArrs = {"0205","0206","0201","0202","0203","0204","0211","0000"};
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -151,7 +152,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
-                LogUtil.dll("进入主页广播回调 launch");
                 launch();
                 testJurl();
             }
@@ -347,7 +347,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 LogUtil.d(MainApp.user + " 激光的alias： " + s);
                 isQQLogin();
-
             }
         });
     }
@@ -1047,10 +1046,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 return;
             }
             ArrayList<Permission> suitesNew = MainApp.user.newpermission;
-            for (Permission permission : suitesNew) {
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i).title.contains(permission.getName())) {
-                        if (!permission.isEnable()) {
+
+            for(Permission permission : suitesNew){
+                LogUtil.d(permission.getName()+":"+permission.getCode());
+                for(int i = 0;i<itemArrs.length;i++){
+                    if(itemArrs[i].equals(permission.getCode())) {
+                        if(!permission.isEnable()){
                             items.remove(i);
                         }
                     }
@@ -1061,7 +1062,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("通讯录权限，code错误：0213");
+                Toast("通讯录权限，code错误:0213");
             }
         }
 

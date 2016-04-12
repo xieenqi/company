@@ -1,6 +1,12 @@
 package com.loyo.oa.v2.activity.customer;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,6 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -60,6 +67,29 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     @Extra
     int type;//客户类型
 
+    private Handler mHandler = new Handler(){
+        @Override
+    public void handleMessage(Message msg){
+            if(msg.what == 0x01){
+
+            }
+        }
+    };
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals(FinalVariables.ACTION_DATA_CUSTOMER)){
+                if(nearCount.count != 0){
+                    /*nearCount.count -= 1;
+                    mHandler.sendEmptyMessage(0x01);*/
+                }
+            }
+        }
+    };
+
+
     @AfterViews
     void initViews() {
         setTouchView(-1);
@@ -81,6 +111,11 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         initFragments();
         initTabs();
         LogUtil.d(position + " 附近客户数据： " + type);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(FinalVariables.ACTION_DATA_CUSTOMER);
+        this.registerReceiver(mReceiver, intentFilter);
+
     }
 
     @Click(R.id.layout_back)

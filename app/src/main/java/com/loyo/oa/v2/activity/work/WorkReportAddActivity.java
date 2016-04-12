@@ -505,33 +505,11 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*点评人*/
             case R.id.layout_reviewer:
-
-//                mBundle = new Bundle();
-//                mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-//                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-//                        ExtraAndResult.REQUEST_CODE, mBundle);
                 SelectDetUserActivity2.startThisForOnly(WorkReportAddActivity.this, null);
                 break;
 
             /*抄送人*/
             case R.id.layout_toUser:
-
-//                if (joinUserId != null) {
-//                    mBundle = new Bundle();
-//                    mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, SelectDetUserActivity2.TYPE_ALL_SELECT);
-//                    mBundle.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-//                    //TODO:修改跳转界面
-//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-//                            ExtraAndResult.REQUEST_CODE, mBundle);
-//                    joinUserId.reverse();
-//                } else {
-//                    Bundle bundle1 = new Bundle();
-//                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-//                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, SelectDetUserActivity2.TYPE_ALL_SELECT);
-//                    //TODO:修改跳转界面
-//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-//                            ExtraAndResult.REQUEST_CODE, bundle1);
-//                }
                 SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString());
                 break;
             case R.id.layout_del:

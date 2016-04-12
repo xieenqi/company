@@ -218,5 +218,6 @@ public final class FinalVariables {
 //    public static final String XM_APP_KEY = "5681737162532";
 
     public static final String ACTION_DATA_CHANGE = "com.loyo.oa.v2.ACTION_DATA_CHANGE";
+    public static final String ACTION_DATA_CUSTOMER = "com.loyo.oa.v2.ACTION_DATA_CUSTOMER";
 
 }

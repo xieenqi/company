@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
@@ -30,6 +31,7 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -100,7 +102,6 @@ public class TasksAddActivity extends BaseActivity {
     View layout_retask_view;
     @ViewById
     View view_task_approve;
-
     @ViewById
     ImageView img_title_right_toUsers;
     @ViewById
@@ -373,28 +374,12 @@ public class TasksAddActivity extends BaseActivity {
 
             //负责人选项
             case R.id.layout_responsiblePerson:
-                Bundle bundle = new Bundle();
-                bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                        ExtraAndResult.REQUEST_CODE, bundle);
+                SelectDetUserActivity2.startThisForOnly(TasksAddActivity.this, null);
                 break;
 
             //参与人选项
             case R.id.tv_toUsers:
-
-                if(joinUserId != null){
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
-                    bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);
-                }else{
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                    bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
-                            ExtraAndResult.REQUEST_CODE, bundle1);
-                }
-
+                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString());
                 break;
 
             case R.id.layout_del:
@@ -629,37 +614,6 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
-            case ExtraAndResult.REQUEST_CODE:
-
-                User user = (User) data.getSerializableExtra(User.class.getName());
-                /*负责人回调*/
-                if (user != null) {
-                    setResponsiblePersion(user);
-                }else { /*参与人回调*/
-                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
-                    if (null == members) {
-                        tv_toUsers.setText("无参与人");
-                    } else {
-                        joinName = new StringBuffer();
-                        joinUserId = new StringBuffer();
-                        if (null != members.depts) {
-                            for (NewUser newUser : members.depts) {
-                                joinName.append(newUser.getName() + ",");
-                                joinUserId.append(newUser.getId() + ",");
-                            }
-                        }
-                        if (null != members.users) {
-                            for (NewUser newUser : members.users) {
-                                joinName.append(newUser.getName() + ",");
-                                joinUserId.append(newUser.getId() + ",");
-                            }
-                        }
-                        tv_toUsers.setText(joinName.toString());
-                    }
-                }
-
-                break;
-
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>)
@@ -712,6 +666,39 @@ public class TasksAddActivity extends BaseActivity {
                         super.failure(error);
                     }
                 });
+                break;
+
+            //用户单选, 负责人
+            case SelectDetUserActivity2.REQUEST_ONLY:
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+                newUser = u;
+                tv_responsiblePerson.setText(newUser.getName());
+                break;
+            //用户选择, 参与人
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+                members = (Members) data.getSerializableExtra("data");
+                if (null == members) {
+                    tv_toUsers.setText("无参与人");
+                } else {
+                    joinName = new StringBuffer();
+                    joinUserId = new StringBuffer();
+                    if (null != members.depts) {
+                        for (NewUser newUser : members.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != members.users) {
+                        for (NewUser newUser : members.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    tv_toUsers.setText(joinName.toString());
+                }
                 break;
 
             default:
