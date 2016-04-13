@@ -13,7 +13,7 @@
 
         <TextView
             android:textSize="16sp"
-            android:minWidth="@dimen/dimen_110"
+            android:minWidth="80dp"
             android:id="@+id/tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -28,15 +28,16 @@
 
             <EditText
                 android:singleLine="false"
-                android:text=""
                 android:layout_toLeftOf="@+id/img_right_arrow"
                 style="@style/text_item1"
+                android:paddingLeft="14dp"
                 android:background="@null"
                 android:id="@+id/et_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|right"
-                android:textColor="@color/title_bg1"/>
+                android:gravity="center_vertical|left"
+                android:textColor="@color/title_bg1"
+                />
 
             <ImageView
                 android:layout_alignParentRight="true"
