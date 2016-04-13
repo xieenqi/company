@@ -59,7 +59,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     private Customer customerContact;
     private ArrayList<ContactExtras> fiedList;
 
-
     @AfterViews
     void initViews() {
         if (!isMyUser || isMenber) {
@@ -135,33 +134,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber);
         }
         cancelLoading();
-    }
-
-    public void contactData() {
-//        for (int i = 0; i < 9; i++) {
-//            fiedList.remove(9);
-//        }
-        for (Contact element : customerContact.contacts) {
-            for (int j = 0; j < fiedList.size(); j++) {
-                for (int f = 0; f < element.extDatas.size(); f++) {
-//                    listData = fiedList.get(j);
-                    if (!fiedList.get(j).name.equals(element.extDatas.get(f).getProperties().getName())) {
-                        ExtraData newExt = new ExtraData();
-                        ExtraProperties ept = new ExtraProperties();
-                        ept.setName(fiedList.get(j).name);
-                        ept.setEnabled(fiedList.get(j).enabled);
-                        ept.setIsList(fiedList.get(j).isList);
-                        ept.setRequired(fiedList.get(j).required);
-                        ept.setLabel(fiedList.get(j).label);
-//                        ept.setRegExpress(fiedList.get(j).name);
-//                        ept.setName(fiedList.get(j).name);
-//                        ept.setName(fiedList.get(j).name);
-                        newExt.setProperties(ept);
-                        element.extDatas.add(newExt);
-                    }
-                }
-            }
-        }
     }
 
     @Click(R.id.layout_add)

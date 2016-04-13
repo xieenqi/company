@@ -45,9 +45,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_contract_add);
-
         super.setTitle("新增联系人");
-
         if (getIntent() != null && getIntent().getExtras() != null) {
             mCustomer = (Customer) getIntent().getExtras().getSerializable("customer");
             mContact = (Contact) getIntent().getExtras().getSerializable("contract");
@@ -56,7 +54,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
     }
 
     void initUI() {
-
         layout_contact_extra_info = (LinearLayout) findViewById(R.id.layout_contact_extra_info);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);

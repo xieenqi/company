@@ -245,7 +245,7 @@ public class ExtraDataView extends LinearLayout {
                     public void onCancel() {
 
                     }
-                },false);
+                },true);
             }
         }
     }
