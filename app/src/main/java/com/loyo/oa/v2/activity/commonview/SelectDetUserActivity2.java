@@ -53,7 +53,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
     private LinearLayoutManager mDepartmentLayoutManager;
     private LinearLayoutManager mUserLayoutManager;
-
     private List<Department> mDeptSource = new ArrayList<>(); // 部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//部门新的顺序
     private List<Department> deptHead = new ArrayList<>();//一级部门
