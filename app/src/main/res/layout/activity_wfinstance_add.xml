@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:text="选择类型"/>
+                    android:text="选择类别"/>
 
                 <TextView
                     android:id="@+id/tv_bizform"
@@ -114,7 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:text="选择部门"/>
+                        android:text="所属部门"/>
 
                     <TextView
                         android:id="@+id/tv_dept"

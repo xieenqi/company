@@ -11,6 +11,7 @@ import com.loyo.oa.v2.adapter.WfInstanceTypeSelectListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.WfTemplate;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
@@ -53,7 +55,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
 
 
     private void initUI() {
-        super.setTitle("选择类型");
+        super.setTitle("选择类别");
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
@@ -75,9 +77,17 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                             public void success(final BizForm bizForm, final Response response) {
                                 HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
                                 if (bizForm != null) {
-                                    Intent intent = new Intent();
-                                    intent.putExtra(BizForm.class.getName(), bizForm);
-                                    app.finishActivity(WfInstanceTypeSelectManageActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                                    if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {//没有审批内容
+                                        final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置审批内容,\n请选择其它类别！");
+                                        dailog.setNoCancelOnclick(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dailog.dismisDialog();
+                                            }
+                                        });
+                                    } else {
+                                        getBiaFormDitial(bizForm);
+                                    }
                                 }
                             }
 
@@ -137,6 +147,40 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                 HttpErrorCheck.checkError(error);
                 Toast("获取审批类型失败");
                 listView_bizform.onRefreshComplete();
+                super.failure(error);
+            }
+        });
+    }
+
+    /**
+     * 获取审批流程详情
+     */
+    private void getBiaFormDitial(final BizForm bizForm) {
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfTemplate(bizForm.getId(), new RCallback<ArrayList<WfTemplate>>() {
+            @Override
+            public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
+                HttpErrorCheck.checkResponse("获取选择审批流程", response);
+                if (null == bizFormFieldsPaginationX || bizFormFieldsPaginationX.size() == 0) {
+                    // Toast("错误:没有配置流程!");
+                    final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置审批流程,\n请选择其它类别！");
+                    dailog.setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dailog.dismisDialog();
+                        }
+                    });
+                    return;
+                }
+                Intent intent = new Intent();
+                intent.putExtra(BizForm.class.getName(), bizForm);
+                app.finishActivity(WfInstanceTypeSelectManageActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+//                Toast("获取审批流程失败");
                 super.failure(error);
             }
         });
