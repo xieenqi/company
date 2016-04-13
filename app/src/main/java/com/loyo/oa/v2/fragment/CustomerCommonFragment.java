@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.NearByCustomersActivity;
 import com.loyo.oa.v2.activity.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -169,6 +171,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             btn_add.setVisibility(View.GONE);
         }
         getData();
+        //broadMessage();
     }
 
     @Override
@@ -601,6 +604,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM) {
                             getNearCustomersInfo();
                         }
+                        countSize = customerPaginationX.getRecords().size();
+                        LogUtil.dee("broadMessage countsize:"+countSize);
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }
@@ -658,6 +663,18 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
     }
 
+    /**
+     * 广播通知列表数量
+     * */
+    public void broadMessage(){
+        if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+            broacdIntent = new Intent();
+            broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
+            broacdIntent.putExtra("count", countSize + "");
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broacdIntent);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -665,14 +682,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-            if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
-                countSize = mCustomers.size();
-                LogUtil.dee("fragment countsize:"+countSize);
-                broacdIntent = new Intent();
-                broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
-                broacdIntent.putExtra("count", countSize + "");
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broacdIntent);
-            }
+            broadMessage();
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
