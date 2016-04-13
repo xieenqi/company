@@ -67,12 +67,13 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     @Extra
     int type;//客户类型
 
+    private int countSize;
     private Handler mHandler = new Handler(){
         @Override
     public void handleMessage(Message msg){
             if(msg.what == 0x01){
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
-                TITLES[0] += nearCount.count + ")";
+                TITLES[0] += countSize + ")";
                 initTabs();
             }
         }
@@ -83,10 +84,10 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(FinalVariables.ACTION_DATA_CUSTOMER)){
-                if(nearCount.count != 0){
-                    nearCount.count -= 1;
+                    Toast("count:"+countSize);
+                    countSize = Integer.parseInt(intent.getStringExtra("count"));
                     mHandler.sendEmptyMessage(0x01);
-                }
+                    context.unregisterReceiver(this);
             }
         }
     };
@@ -102,21 +103,20 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
             if (type == 1) {
+                countSize = nearCount.count;
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
-                TITLES[0] += nearCount.count + ")";
+                TITLES[0] += countSize + ")";
                 TITLES[1] = "公司已赢单客戶(" + nearCount.winCount + ")";
             } else {
                 tabs.setVisibility(View.GONE);
             }
         }
-        initFragments();
-        initTabs();
-        LogUtil.d(position + " 附近客户数据： " + type);
-
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(FinalVariables.ACTION_DATA_CUSTOMER);
         this.registerReceiver(mReceiver, intentFilter);
 
+        initFragments();
+        initTabs();
     }
 
     @Click(R.id.layout_back)

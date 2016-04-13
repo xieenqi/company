@@ -94,6 +94,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String departmentId = "";
     private String userId = "";
     private int page = 1;
+    private int countSize;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -504,7 +505,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         super.failure(error);
                         HttpErrorCheck.checkError(error);
                     }
-
                 });
             }
 
@@ -597,18 +597,26 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             mCustomers.addAll(customerPaginationX.getRecords());
                             bindData();
                         }
-                        if (!isPullUp && (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM)) {
+                        if (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM) {
                             getNearCustomersInfo();
                         }
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
+
+                        if(customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+                            countSize = mCustomers.size();
+                            Intent intent = new Intent();
+                            intent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
+                            intent.putExtra("count", countSize + "");
+                            getActivity().sendBroadcast(intent);
+                            Toast("fragment count:"+countSize);
+                        }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         listView.onRefreshComplete();
-
                     }
                 }
         );
@@ -621,6 +629,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      */
 
     private void bindData() {
+
         if (null == adapter) {
             adapter = new CustomerCommonAdapter();
             listView.setAdapter(adapter);
@@ -663,10 +672,11 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-
+/*            countSize = mCustomers.size();
             Intent intent = new Intent();
             intent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
-            getActivity().sendBroadcast(intent);
+            intent.putExtra("count", countSize + "");
+            getActivity().sendBroadcast(intent);*/
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {

@@ -12,6 +12,4 @@ public class NearCount implements Serializable {
     public int count;
     public int total;
     public int winCount;
-
-
 }
