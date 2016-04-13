@@ -136,7 +136,7 @@ public class ProjectAddActivity extends BaseActivity {
     //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
-        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this, null);
+        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this, mManagerIds == null ? null : mManagerIds.toString());
     }
 
     //选【参与人】

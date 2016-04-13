@@ -27,6 +27,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HorizontalScrollListView;
 
 import java.util.ArrayList;
@@ -114,8 +115,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
         @Override
         public void onDepAllChange(SelectDepData data) {
-            if (!isAllowAllSelect())
-                return;
+            /*if (!isAllowAllSelect())
+                return;*/
             SelectUserHelper.addDepNoChangeItem(data);
             mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
             mSelectUsersAdapter.notifyDataSetChanged();
@@ -123,8 +124,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
         @Override
         public void onDepChange(List<SelectDepData> datas) {
-            if (!isAllowAllSelect())
-                return;
+            /*if (!isAllowAllSelect())
+                return;*/
             for (int i = 0; i < datas.size(); i++) {
                 SelectUserHelper.addSelectUserChangeDep(datas.get(i));
             }
@@ -134,8 +135,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
         @Override
         public void addSelectUserItem(SelectUserData data) {
-            if (!isAllowAllSelect())
-                return;
+            /*if (!isAllowAllSelect())
+                return;*/
             if (SelectUserHelper.addSelectItem(data)) {
                 mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
             }
@@ -143,8 +144,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 
         @Override
         public void removeSelectUserItem(SelectUserData data) {
-            if (!isAllowAllSelect())
-                return;
+            /*if (!isAllowAllSelect())
+                return;*/
             if (SelectUserHelper.removeSelectItem(data)) {
                 mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
             }
@@ -421,10 +422,13 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
                 if (data.getClass() == SelectDepData.class) {
                     ((SelectDepData) data).setAllSelect(false);
+                    LogUtil.dee("1");
                 } else if (data.getClass() == SelectUserData.class) {
                     ((SelectUserData) data).setCallbackSelect(false);
                     mSelectUsersAdapter.notifyDataSetChanged();
+                    LogUtil.dee("2");
                 } else {
+                    LogUtil.dee("3");
                     data.setCallbackSelect(false);
                 }
             }

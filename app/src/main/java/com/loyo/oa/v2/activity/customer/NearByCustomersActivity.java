@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -44,7 +45,7 @@ import java.util.ArrayList;
  * 时间 : 15/9/17.
  */
 @EActivity(R.layout.activity_nearbycustomers)
-public class NearByCustomersActivity extends BaseFragmentActivity {
+public class NearByCustomersActivity extends BaseFragmentActivity{
 
     private String[] TITLES = {"我的客戶(0)", "公司已赢单客户(0)"};
     private MyPagerAdapter adapter;
@@ -68,33 +69,41 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     int type;//客户类型
 
     private int countSize;
-    private Handler mHandler = new Handler(){
+    private LocalBroadcastManager localBroadcastManager;
+
+
+    public Handler handler = new Handler(){
         @Override
     public void handleMessage(Message msg){
             if(msg.what == 0x01){
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
                 TITLES[0] += countSize + ")";
                 initTabs();
+            }else if(msg.what == 0x02){
+                Toast("给我发消息勒");
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(mReceiver);
+    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(action.equals(FinalVariables.ACTION_DATA_CUSTOMER)){
-                    Toast("count:"+countSize);
-                    countSize = Integer.parseInt(intent.getStringExtra("count"));
-                    mHandler.sendEmptyMessage(0x01);
-                    context.unregisterReceiver(this);
+            LogUtil.dee("收到广播:" + countSize);
+            countSize = Integer.parseInt(intent.getStringExtra("count"));
+            handler.sendEmptyMessage(0x01);
             }
-        }
-    };
+        };
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
+        mContext = this;
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
         iv_submit.setVisibility(View.VISIBLE);
@@ -103,6 +112,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
             if (type == 1) {
+                LogUtil.dee("nearCount.count:"+nearCount.count);
                 countSize = nearCount.count;
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
                 TITLES[0] += countSize + ")";
@@ -113,7 +123,8 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         }
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(FinalVariables.ACTION_DATA_CUSTOMER);
-        this.registerReceiver(mReceiver, intentFilter);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(mReceiver, intentFilter);
 
         initFragments();
         initTabs();

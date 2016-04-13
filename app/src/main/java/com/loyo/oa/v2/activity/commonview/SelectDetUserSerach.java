@@ -86,7 +86,7 @@ public class SelectDetUserSerach extends Activity {
 
             @Override
             public void afterTextChanged(final Editable s) {
-                doSearch();
+                //doSearch();
             }
         });
 
@@ -151,7 +151,6 @@ public class SelectDetUserSerach extends Activity {
         tv_selectuser_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                LogUtil.dll("点击搜索");
                 doSearch();
             }
         });
