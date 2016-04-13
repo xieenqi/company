@@ -112,14 +112,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tv_version = (TextView) findViewById(R.id.tv_version);
         try {
             PackageInfo pi = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-            tv_version.setText(pi.versionName);
+            tv_version.setText("当前版本" + pi.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             Global.ProcException(e);
         }
         tv_title_1.setText("设置");
 
         if (app.hasNewVersion) {
-            tv_new_version.setHint("有新版本");
+            tv_new_version.setVisibility(View.VISIBLE);
         }
     }
 

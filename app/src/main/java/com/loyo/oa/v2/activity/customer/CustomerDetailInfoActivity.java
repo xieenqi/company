@@ -173,16 +173,16 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         }
 
         /*超级管理员,我的客户,Web权限控制判断*/
-        if(MainApp.user.isSuperUser()){
+        if (MainApp.user.isSuperUser()) {
             img_public.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             if (customerType == 3) {
-                try{
-                    perGet = (Permission)MainApp.rootMap.get("0404");
-                    if(perGet.isEnable()){
+                try {
+                    perGet = (Permission) MainApp.rootMap.get("0404");
+                    if (perGet.isEnable()) {
                         img_public.setVisibility(View.VISIBLE);
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                     Toast("客户挑入权限,code错误");
                 }
@@ -261,16 +261,16 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         /*超级管理员\web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            try{
-                perDelete = (Permission)MainApp.rootMap.get("0405");
-                perOcean = (Permission)MainApp.rootMap.get("0403");
-                if(!perDelete.isEnable()){
+            try {
+                perDelete = (Permission) MainApp.rootMap.get("0405");
+                perOcean = (Permission) MainApp.rootMap.get("0403");
+                if (!perDelete.isEnable()) {
                     btn_child_delete_task.setVisibility(View.GONE);
                 }
-                if(!perOcean.isEnable()){
+                if (!perOcean.isEnable()) {
                     btnUpdate.setVisibility(View.GONE);
                 }
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 Toast("客户挑入/删除权限,code错误:0405,0403");
             }
@@ -481,6 +481,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*任务计划*/
             case R.id.layout_task:
                 bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putSerializable("mCustomer", mCustomer);
                 _class = TaskListActivity_.class;
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS;
                 break;
