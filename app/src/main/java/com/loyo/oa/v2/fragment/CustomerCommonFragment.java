@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -76,7 +77,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private TextView tv_near_customers;
     private ViewGroup layout_near_customers;
     private ViewStub emptyView;
-
+    private Intent broacdIntent;
     private ArrayList<Customer> mCustomers = new ArrayList<>();
     private int customer_type = 1;//"1,我的客户", "2,团队客户", "3,公海客户"
     private CustomerCommonAdapter adapter;
@@ -84,6 +85,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private boolean isPullUp = false;
     private boolean isNear = false;//附近客户传的值过来
     private String position;
+
     private NearCount nearCount;
     private Permission permission = (Permission)MainApp.rootMap.get("0404");
     private DropListMenu mDropMenu;
@@ -163,7 +165,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LogUtil.dee("当前页面:" + customer_type);
         if (customer_type != Customer.CUSTOMER_TYPE_MINE) {
             btn_add.setVisibility(View.GONE);
         }
@@ -602,15 +603,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         }
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
-
-                        if(customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
-                            countSize = mCustomers.size();
-                            Intent intent = new Intent();
-                            intent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
-                            intent.putExtra("count", countSize + "");
-                            getActivity().sendBroadcast(intent);
-                            Toast("fragment count:"+countSize);
-                        }
                     }
 
                     @Override
@@ -618,6 +610,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         HttpErrorCheck.checkError(error);
                         listView.onRefreshComplete();
                     }
+
                 }
         );
         tagItemIds = "";
@@ -672,11 +665,14 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-/*            countSize = mCustomers.size();
-            Intent intent = new Intent();
-            intent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
-            intent.putExtra("count", countSize + "");
-            getActivity().sendBroadcast(intent);*/
+            if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+                countSize = mCustomers.size();
+                LogUtil.dee("fragment countsize:"+countSize);
+                broacdIntent = new Intent();
+                broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
+                broacdIntent.putExtra("count", countSize + "");
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broacdIntent);
+            }
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {

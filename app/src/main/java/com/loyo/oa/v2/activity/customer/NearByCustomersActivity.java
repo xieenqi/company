@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -68,6 +69,9 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     int type;//客户类型
 
     private int countSize;
+    private LocalBroadcastManager localBroadcastManager;
+
+
     private Handler mHandler = new Handler(){
         @Override
     public void handleMessage(Message msg){
@@ -79,22 +83,25 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(mReceiver);
+    }
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(action.equals(FinalVariables.ACTION_DATA_CUSTOMER)){
-                    Toast("count:"+countSize);
-                    countSize = Integer.parseInt(intent.getStringExtra("count"));
-                    mHandler.sendEmptyMessage(0x01);
-                    context.unregisterReceiver(this);
+            LogUtil.dee("收到广播:" + countSize);
+            countSize = Integer.parseInt(intent.getStringExtra("count"));
+            mHandler.sendEmptyMessage(0x01);
             }
-        }
-    };
+        };
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
+        mContext = this;
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
         iv_submit.setVisibility(View.VISIBLE);
@@ -113,7 +120,8 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         }
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(FinalVariables.ACTION_DATA_CUSTOMER);
-        this.registerReceiver(mReceiver, intentFilter);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(mReceiver, intentFilter);
 
         initFragments();
         initTabs();
