@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -187,9 +188,11 @@ public class SelectDetUserSerach extends Activity {
             }
         }
 
-        if (resultData.size() > 0) {
-            adapter.notifyDataSetChanged();
+        if (resultData.size() == 0) {
+            Toast.makeText(this,"未搜索到相关结果",Toast.LENGTH_SHORT).show();
         }
+
+        adapter.notifyDataSetChanged();
     }
 
 

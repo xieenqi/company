@@ -902,6 +902,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
+
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
