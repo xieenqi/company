@@ -21,10 +21,10 @@ import java.util.List;
 
 public final class Common {
 
-    public static final int CUSTOMER_PAGE = 0;
-    public static final int TASK_PAGE = 1;
-    public static final int WORK_PAGE = 2;
-    public static final int WFIN_PAGE = 3;
+    public static final int CUSTOMER_PAGE = 0x01;
+    public static final int TASK_PAGE = 0x02;
+    public static final int WORK_PAGE = 0x03;
+    public static final int WFIN_PAGE = 0x04;
 
     protected Common() {
         throw new UnsupportedOperationException(); // 防止子类调用
