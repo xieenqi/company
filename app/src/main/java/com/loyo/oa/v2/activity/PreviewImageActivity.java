@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -16,8 +17,10 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.io.File;
 import java.util.ArrayList;
+
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -99,13 +102,19 @@ public class PreviewImageActivity extends BaseActivity {
 
             }
         });
+//        mViewPager.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
     }
 
     /**
      * 删除提示框
-     * */
-    public void dialogToast(){
-        showGeneralDialog(true,true,"是否删除附件?");
+     */
+    public void dialogToast() {
+        showGeneralDialog(true, true, "是否删除附件?");
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -151,12 +160,17 @@ public class PreviewImageActivity extends BaseActivity {
             LogUtil.d("预览 转换 的url：" + bigImagUrl(attachment.getUrl()));
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
+            photoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LogUtil.d("点击图片：");
+                }
+            });
             return photoView;
         }
 
         @Override
-        public void destroyItem(final ViewGroup container,final int position,final Object object) {
+        public void destroyItem(final ViewGroup container, final int position, final Object object) {
             container.removeView((View) object);
         }
 
