@@ -20,7 +20,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.tool.customview.ExtraDataViewforContact;
+import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import retrofit.RetrofitError;
@@ -68,7 +68,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 绑定数据
      */
     void bindData() {
-        layout_contact_extra_info.addView(new ExtraDataViewforContact(mContext,mContact,mContactExtras, true, R.color.title_bg1, 0));
+        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext,mContact,mContactExtras, true, R.color.title_bg1, 0));
     }
 
     @Override

@@ -37,7 +37,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.ExtraDataView;
+import com.loyo.oa.v2.tool.customview.ContactInfoExtraData;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -210,7 +210,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private void initExtra(final boolean ismy) {
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new ExtraDataView(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
+            container.addView(new ContactInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
         }
     }
 

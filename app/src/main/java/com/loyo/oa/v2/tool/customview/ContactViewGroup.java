@@ -20,7 +20,7 @@ import com.loyo.oa.v2.tool.Utils;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 :客户联系人信息详情条目
+ * 描述 :客户联系人 非动态字段 信息详情条目
  * 作者 : ykb
  * 时间 : 15/9/24.
  */
@@ -126,6 +126,7 @@ public class ContactViewGroup extends LinearLayout {
             tv_email.setText(mContact.getEmail());
             tv_memo.setText(mContact.getMemo());
             tv_birthday.setText(mContact.getBirthStr());
+
             tv_depart.setText(mContact.deptName);
             if (mContact.isDefault()) {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
@@ -166,7 +167,7 @@ public class ContactViewGroup extends LinearLayout {
             });
         }
 
-        addView(new ExtraDataView(context, mContact.getExtDatas(), false, R.color.diseditable, 14));
+        addView(new ContactInfoExtraData(context, mContact.getExtDatas(), false, R.color.diseditable, 14));
         //加载子条目
         parent.addView(this);
     }

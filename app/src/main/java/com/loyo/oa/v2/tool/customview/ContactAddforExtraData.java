@@ -3,6 +3,7 @@ package com.loyo.oa.v2.tool.customview;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -20,12 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
-import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -33,30 +31,31 @@ import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 : 客户联系人 动态字段
+ * 描述 : 新增客户联系人 动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
-public class ExtraDataViewforContact extends LinearLayout {
+public class ContactAddforExtraData extends LinearLayout {
 
     private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ContactExtras> extras = new ArrayList<>();
     private Contact mContact;
 
-    public ExtraDataViewforContact(Context context, AttributeSet attrs, int defStyleAttr) {
+    private String birthStr;
+    private int age;
+
+    public ContactAddforExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         setOrientation(VERTICAL);
     }
 
-    public ExtraDataViewforContact(Context context,Contact mContact, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         this.mContact = mContact;
@@ -75,7 +74,6 @@ public class ExtraDataViewforContact extends LinearLayout {
      * @param valueSize
      */
     private void bindView(boolean edit, int valueColor, int valueSize) {
-
         if (null == extras || extras.isEmpty()) {
             return;
         }
@@ -103,11 +101,9 @@ public class ExtraDataViewforContact extends LinearLayout {
             tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
 
-            LogUtil.dll("Contact:" + MainApp.gson.toJson(mContact));
-            LogUtil.dll("customerExtra:"+MainApp.gson.toJson(customerExtra));
-
-            /*编辑联系人，数据赋值*/
-
+            /**
+             * 编辑联系人，数据赋值
+             * */
             if(mContact != null){
                 if(customerExtra.fieldName.equals("name")){
                     tv_content.setText(mContact.getName());
@@ -149,11 +145,23 @@ public class ExtraDataViewforContact extends LinearLayout {
                     tv_content.setHint("必填");
                 }
 
-            } else if ("long".equals(customerExtra.type) || "birth".equals(customerExtra.fieldName)) {
+            }else if("birth".equals(customerExtra.fieldName)){
+                LogUtil.dll("生日");
+                LogUtil.dll("long enable:" + customerExtra.enabled);
+                extra.setOnTouchListener(Global.GetTouch());
+                extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra,true));
+                tv_content.setFocusable(false);
+                tv_content.setFocusableInTouchMode(false);
+                tv_content.setOnFocusChangeListener(null);
+                tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
+                if (customerExtra.required) {
+                    tv_content.setHint("必填");
+                }
+            }else if ("long".equals(customerExtra.type)) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
                 extra.setOnTouchListener(Global.GetTouch());
-                extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
+                extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra,false));
                 tv_content.setFocusable(false);
                 tv_content.setFocusableInTouchMode(false);
                 tv_content.setOnFocusChangeListener(null);
@@ -204,6 +212,46 @@ public class ExtraDataViewforContact extends LinearLayout {
         }
     }
 
+
+    /**
+     * 功 能: 生日选择器
+     * */
+    public void pickDate(final ContactExtras extra,final TextView textView) {
+        final Calendar cal = Calendar.getInstance();
+        final DatePickerDialog mDialog = new DatePickerDialog(mContext, null,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
+        //手动设置按钮
+        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DatePicker datePicker = mDialog.getDatePicker();
+                int year = datePicker.getYear();
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+
+                age = Utils.getAge(year + "");
+                if (age > 0) {
+                    birthStr = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day);
+                    extra.val = birthStr;
+                    textView.setText(birthStr);
+                } else {
+                    Toast.makeText(mContext,"出生日期不能是未来时间，请重新设置",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //取消按钮，如果不需要直接不设置即可
+        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDialog.dismiss();
+            }
+        });
+
+        mDialog.show();
+    }
+
     private class BizFiedTextWatcher implements TextWatcher {
         private ContactExtras extra;
 
@@ -242,14 +290,18 @@ public class ExtraDataViewforContact extends LinearLayout {
         }
     }
 
-    /*动态字段，时间选择监听*/
+    /**
+     * 动态字段，时间选择监听
+     * */
     class ValueOnClickListener_dateTime implements OnClickListener {
         private TextView textView;
         private ContactExtras extra;
+        private boolean isBrith;
 
-        private ValueOnClickListener_dateTime(TextView textView, ContactExtras extra) {
+        private ValueOnClickListener_dateTime(TextView textView, ContactExtras extra,boolean isBrith) {
             this.textView = textView;
             this.extra = extra;
+            this.isBrith = isBrith;
         }
 
         @Override
@@ -268,20 +320,24 @@ public class ExtraDataViewforContact extends LinearLayout {
                     }
                 });
 
-                DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
-                dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
-                    @Override
-                    public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
-                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
-                        textView.setText(str);
-                        extra.val = str;
-                    }
+                if(isBrith){
+                    pickDate(extra,textView);
+                }else{
+                    DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(mContext, null);
+                    dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
+                        @Override
+                        public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
+                            String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                            textView.setText(str);
+                            String times = DateTool.getDataOne(str,DateTool.DATE_FORMATE_SPLITE_BY_POINT);
+                            extra.val = str;
+                        }
+                        @Override
+                        public void onCancel() {
 
-                    @Override
-                    public void onCancel() {
-
-                    }
-                },true);
+                        }
+                    },true);
+                }
             }
         }
     }
