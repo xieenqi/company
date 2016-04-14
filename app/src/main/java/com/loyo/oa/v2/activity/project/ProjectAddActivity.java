@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.project;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +9,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
-import com.loyo.oa.v2.adapter.SelectDetAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Member;
 import com.loyo.oa.v2.beans.Members;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
@@ -31,7 +26,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -147,7 +141,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 负责人回调
-     * */
+     */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_MULTI_SELECT)
     void OnResultManagers(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
@@ -158,7 +152,7 @@ public class ProjectAddActivity extends BaseActivity {
         mManagerNames = new StringBuffer();
         mManagerIds = new StringBuffer();
 
-        if(members != null){
+        if (members != null) {
             if (null != members.depts) {
                 for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
                     mManagerNames.append(newUser.getName() + ",");
@@ -192,7 +186,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 参与人回调
-     * */
+     */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void OnResultMembers(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
@@ -265,12 +259,14 @@ public class ProjectAddActivity extends BaseActivity {
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
+                mMemberIds.delete(0,mMemberIds.length());
                 for (HttpProject.ProjectMember ele : mAdapter.GetProjectMembers()) {
                     HttpProject.ProjectMember mm = new HttpProject().new ProjectMember();
                     mm.canReadAll = ele.canReadAll;
                     mm.user.id = ele.user.id;
                     mm.user.name = ele.user.realname;
                     mProjectMember.add(mm);
+                    mMemberIds.append(ele.user.id+",");
                 }
                 mAdapter.notifyDataSetInvalidated();
             }
@@ -279,6 +275,7 @@ public class ProjectAddActivity extends BaseActivity {
         lv_project_members.setAdapter(mAdapter);
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
+
 
     /**
      * 参与人的数据  adapter列表

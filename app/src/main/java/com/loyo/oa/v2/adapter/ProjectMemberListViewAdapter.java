@@ -40,7 +40,7 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.Proj
         LogUtil.d(" 参与人的数据： " + MainApp.gson.toJson(projectMember));
         if (!TextUtils.isEmpty(projectMember.user.getRealname())) {
             holder.setText(R.id.tv_member, projectMember.user.getRealname());
-        }else if(projectMember.dept != null){
+        } else if (projectMember.dept != null) {
             holder.setText(R.id.tv_member, projectMember.dept.name);
         }
 

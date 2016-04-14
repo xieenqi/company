@@ -323,6 +323,137 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     /**
+     * 显示用户名字和部门的名字,头像，高斯模糊背景处理
+     */
+    void updateUser() {
+        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class, "0205"),
+                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class, "0206"),
+                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class, "0201"),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class, "0202"),
+                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class, "0203"),
+                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class, "0204"),
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class, "0211"),
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")));
+
+        if (MainApp.user == null) {
+            return;
+        }
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            img_user.setImageResource(R.drawable.img_default_user);
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
+            Bitmap blur = Utils.doBlur(bitmap, 50, false);
+            img_home_head.setImageResource(android.R.color.transparent);
+            container.setBackgroundDrawable(new BitmapDrawable(blur));
+        } else {
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(final String s, final View view) {
+
+                }
+
+                @Override
+                public void onLoadingFailed(final String s, final View view, final FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(final String s, final View view, final Bitmap bitmap) {
+                    if (null != bitmap) {
+                        Bitmap blur = Utils.doBlur(bitmap, 50, false);
+                        img_home_head.setImageResource(android.R.color.transparent);
+                        container.setBackgroundDrawable(new BitmapDrawable(blur));
+                        testJurl();
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(final String s, final View view) {
+
+                }
+            });
+        }
+        tv_user_name.setText(MainApp.user.getRealname());
+//        initBugly();
+        initPopupMenu();
+    }
+
+//    @Background
+//    void initBugly() {
+//        String info = "companyId=" + MainApp.user.company_id;
+//        if (null != MainApp.user.departmentsName) {
+//            info = info + "," + MainApp.user.departmentsName;
+//        }
+//        if (null != MainApp.user.getRealname()) {
+//            info = info + "," + MainApp.user.getRealname();
+//        }
+//    }
+
+    /**
+     * 初始化弹出菜单
+     */
+    private void initPopupMenu() {
+        popupMenu = new PopupMenu(this);
+        popupMenu.setBackGroundResId(R.drawable.icon_home_menubg);
+        popupMenu.setMenuItems(getPopupMenus());
+        popupMenu.setDismissListener(this);
+        popupMenu.setListener(this);
+    }
+
+    /**
+     * 首页业务显示\隐藏权限 判断设置
+     */
+    public void testJurl() {
+
+        //超级管理员判断
+        if (!MainApp.user.isSuperUser()) {
+            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
+                    0 == MainApp.user.newpermission.size()) {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                testJurl();
+                            }
+                        });
+                    }
+                }, 5000);
+                return;
+            }
+
+            ArrayList<Permission> suitesNew = new ArrayList<>();
+            suitesNew.clear();
+            suitesNew.addAll(MainApp.user.newpermission);
+
+            for (Permission permission : suitesNew) {
+                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+                for (int i = 0; i < items.size(); i++) {
+                    if (items.get(i).code.equals(permission.getCode())) {
+                        if (!permission.isEnable()) {
+                            items.remove(i);
+                        }
+                    }
+                }
+            }
+
+            try {
+                img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("通讯录权限，code错误:0213");
+            }
+        }
+
+        //为了业务使用权限
+        lv_main.setAdapter(adapter);
+        lv_main.setDragEnabled(true);
+        cancelLoading();
+    }
+
+    /**
      * 给激光推送 设置别名
      */
     public void setJpushAlias() {
@@ -350,16 +481,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         });
     }
 
-    /**
-     * 初始化弹出菜单
-     */
-    private void initPopupMenu() {
-        popupMenu = new PopupMenu(this);
-        popupMenu.setBackGroundResId(R.drawable.icon_home_menubg);
-        popupMenu.setMenuItems(getPopupMenus());
-        popupMenu.setDismissListener(this);
-        popupMenu.setListener(this);
-    }
 
     /**
      * 获取弹出菜单条目
@@ -954,124 +1075,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
-    /**
-     * 显示用户名字和部门的名字,头像，高斯模糊背景处理
-     */
-    void updateUser() {
-        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class,"0205"),
-                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class,"0206"),
-                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class,"0201"),
-                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class,"0202"),
-                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class,"0203"),
-                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class,"0204"),
-                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class,"0211"),
-                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class,"0")));
-
-        if (MainApp.user == null) {
-            return;
-        }
-
-        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            img_user.setImageResource(R.drawable.img_default_user);
-            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
-            Bitmap blur = Utils.doBlur(bitmap, 50, false);
-            img_home_head.setImageResource(android.R.color.transparent);
-            container.setBackgroundDrawable(new BitmapDrawable(blur));
-
-        } else {
-
-            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
-            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(final String s, final View view) {
-
-                }
-
-                @Override
-                public void onLoadingFailed(final String s, final View view, final FailReason failReason) {
-
-                }
-
-                @Override
-                public void onLoadingComplete(final String s, final View view, final Bitmap bitmap) {
-                    if (null != bitmap) {
-                        Bitmap blur = Utils.doBlur(bitmap, 50, false);
-                        img_home_head.setImageResource(android.R.color.transparent);
-                        container.setBackgroundDrawable(new BitmapDrawable(blur));
-                        testJurl();
-                    }
-                }
-
-                @Override
-                public void onLoadingCancelled(final String s, final View view) {
-
-                }
-            });
-        }
-        tv_user_name.setText(MainApp.user.getRealname());
-        initBugly();
-        initPopupMenu();
-    }
-
     @Background
     void initData() {
         Intent intent = new Intent(mContext, InitDataService_.class);
         startService(intent);
         setJpushAlias();
         requestNumber();
-    }
-
-    /**
-     * 首页业务显示\隐藏权限 判断设置
-     */
-    public void testJurl() {
-
-        //超级管理员判断
-        if (!MainApp.user.isSuperUser()) {
-            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
-                    0 == MainApp.user.newpermission.size()) {
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                testJurl();
-                            }
-                        });
-                    }
-                }, 5000);
-                return;
-            }
-
-            ArrayList<Permission> suitesNew = new ArrayList<>();
-            suitesNew.clear();
-            suitesNew.addAll(MainApp.user.newpermission);
-
-            for(Permission permission : suitesNew){
-                LogUtil.d(permission.getName()+":"+permission.getCode()+"-"+permission.isEnable());
-                for(int i = 0;i<items.size();i++){
-                    if(items.get(i).code.equals(permission.getCode())) {
-                        if(!permission.isEnable()){
-                            items.remove(i);
-                        }
-                    }
-                }
-            }
-
-            try {
-                img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Toast("通讯录权限，code错误:0213");
-            }
-        }
-
-        //为了业务使用权限
-        lv_main.setAdapter(adapter);
-        lv_main.setDragEnabled(true);
-        cancelLoading();
     }
 
     /**
@@ -1099,19 +1108,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         app.isQQLogin = false;
     }
 
-    @Background
-    void initBugly() {
-        String info = "companyId=" + MainApp.user.company_id;
-        if (MainApp.user.departmentsName != null) {
-            info = info + "," + MainApp.user.departmentsName;
-        }
-
-        if (MainApp.user.getRealname() != null) {
-            info = info + "," + MainApp.user.getRealname();
-        }
-        //CrashReport.setUserId(info);//leak 的东西
-
-    }
 
     public class ClickItem {
         public int imageViewRes;
@@ -1119,7 +1115,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         public String code;
         public Class<?> cls;
 
-        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls,final String _code) {
+        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls, final String _code) {
             imageViewRes = _imageViewRes;
             title = _title;
             cls = _cls;

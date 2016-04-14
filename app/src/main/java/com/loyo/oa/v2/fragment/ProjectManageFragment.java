@@ -137,12 +137,6 @@ public class ProjectManageFragment extends BaseCommonMainListFragment<Project> {
 
     @Override
     public void addNewItem() {
-        if(!MainApp.user.isSuperUser()){
-            if(!permission.isEnable()){
-                Toast("你没有操作权限!");
-                return;
-            }
-        }
         Intent intent = new Intent();
         intent.setClass(mActivity, ProjectAddActivity_.class);
         startActivityForResult(intent, REQUEST_CREATE);

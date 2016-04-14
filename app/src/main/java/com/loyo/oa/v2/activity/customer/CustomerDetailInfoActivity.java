@@ -173,7 +173,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         }
 
         /*超级管理员,我的客户,Web权限控制判断*/
-        if (MainApp.user.isSuperUser()) {
+        if (MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
         } else {
             if (customerType == 3) {
