@@ -51,7 +51,7 @@ public class DateTool {
     /**
      * yyyy-MM-dd
      */
-    public static final String DATE_DEFAULT_FORMATE1 = "yyyy-MM-dd";
+    public static final String DATE_DEFAULT_FORMATE1 = "yyyy.MM.dd";
 
     public static final String DATE_FORMATE_DAY = "MM.dd";
 
@@ -508,6 +508,7 @@ public class DateTool {
         return times;
     }
 
+
     /**
      * 自定义格式转时间戳
      */
@@ -521,6 +522,7 @@ public class DateTool {
             long l = date.getTime();
             String stf = String.valueOf(l);
             times = stf.substring(0, 10);
+            times = stf;
         } catch (ParseException e) {
             e.printStackTrace();
         }

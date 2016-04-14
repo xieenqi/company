@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import java.io.Serializable;
