@@ -11,6 +11,7 @@ import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
@@ -59,6 +60,12 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("isOver")
     boolean isOver; //当前业务已经结束
 
+    @Extra("isMyUser")
+    boolean isMyUser;
+
+    @Extra("fromPage")
+    int fromPage;
+
     @ViewById(R.id.listView_attachment)
     SwipeListView mListViewAttachment;
     @ViewById(R.id.tv_upload)
@@ -70,8 +77,14 @@ public class AttachmentActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("附件");
-        if (isOver) {
-            tv_upload.setVisibility(View.GONE);
+        if(fromPage == Common.CUSTOMER_PAGE){
+            if (!isMyUser) {
+                tv_upload.setVisibility(View.GONE);
+            }
+        }else{
+            if (isOver) {
+                tv_upload.setVisibility(View.GONE);
+            }
         }
         setTouchView(NO_SCROLL);
         getAttachments();
