@@ -45,7 +45,7 @@ import java.util.ArrayList;
  * 时间 : 15/9/17.
  */
 @EActivity(R.layout.activity_nearbycustomers)
-public class NearByCustomersActivity extends BaseFragmentActivity{
+public class NearByCustomersActivity extends BaseFragmentActivity {
 
     private String[] TITLES = {"我的客戶(0)", "公司已赢单客户(0)"};
     private MyPagerAdapter adapter;
@@ -72,14 +72,14 @@ public class NearByCustomersActivity extends BaseFragmentActivity{
     private LocalBroadcastManager localBroadcastManager;
 
 
-    public Handler handler = new Handler(){
+    public Handler handler = new Handler() {
         @Override
-    public void handleMessage(Message msg){
-            if(msg.what == 0x01){
+        public void dispatchMessage(Message msg) {
+            if (msg.what == 0x01) {
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
                 TITLES[0] += countSize + ")";
                 initTabs();
-            }else if(msg.what == 0x02){
+            } else if (msg.what == 0x02) {
                 Toast("给我发消息勒");
             }
         }
@@ -97,8 +97,8 @@ public class NearByCustomersActivity extends BaseFragmentActivity{
             LogUtil.dee("收到广播:" + countSize);
             countSize = Integer.parseInt(intent.getStringExtra("count"));
             handler.sendEmptyMessage(0x01);
-            }
-        };
+        }
+    };
 
     @AfterViews
     void initViews() {
@@ -112,7 +112,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity{
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
             if (type == 1) {
-                LogUtil.dee("nearCount.count:"+nearCount.count);
+                LogUtil.dee("nearCount.count:" + nearCount.count);
                 countSize = nearCount.count;
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
                 TITLES[0] += countSize + ")";
