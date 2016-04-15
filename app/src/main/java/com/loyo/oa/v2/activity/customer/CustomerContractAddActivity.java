@@ -201,7 +201,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             @Override
             public void success(ArrayList<ContactExtras> ContactExtras, Response response) {
                 HttpErrorCheck.checkResponse("联系人动态字段", response);
-                LogUtil.d("联系人动态字段 toJson:" + MainApp.gson.toJson(ContactExtras));
                 mContactExtras = ContactExtras;
                 bindData();
             }

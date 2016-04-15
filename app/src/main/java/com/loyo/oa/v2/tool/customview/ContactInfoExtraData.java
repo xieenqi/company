@@ -66,7 +66,6 @@ public class ContactInfoExtraData extends LinearLayout {
         if (null == extras || extras.isEmpty()) {
             return;
         }
-//        valueSize=MainApp.getMainApp().diptoPx(valueSize);
         for (int i = 0; i < extras.size(); i++) {
             ExtraData customerExtra = extras.get(i);
             final ExtraProperties properties = customerExtra.getProperties();

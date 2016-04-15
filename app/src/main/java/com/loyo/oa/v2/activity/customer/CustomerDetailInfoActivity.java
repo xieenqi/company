@@ -320,7 +320,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     setPopView(false, "投入公海，相当于放弃此客户所有数据和管理权限，您确定要投入公海?");
                     break;
                 default:
-
                     break;
             }
             mWindow.dismiss();

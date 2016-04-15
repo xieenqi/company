@@ -14,8 +14,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.beans.ExtraData;
-import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -70,8 +68,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         layout_back.setOnTouchListener(Global.GetTouch());
         layout_add.setOnTouchListener(Global.GetTouch());
         getContactsFields();
-        // getData();
-
     }
 
     /**

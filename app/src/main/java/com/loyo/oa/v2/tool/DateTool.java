@@ -522,7 +522,6 @@ public class DateTool {
             long l = date.getTime();
             String stf = String.valueOf(l);
             times = stf.substring(0, 10);
-            times = stf;
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -550,7 +549,7 @@ public class DateTool {
      * 获取当前时间
      */
     public static String getNowTime() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES);
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT);
         return sDateFormat.format(new java.util.Date());
     }
 

@@ -272,7 +272,9 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
-                        android:hint=""/>
+                        android:hint=""
+                        android:textColor="@color/title_bg1"
+                        />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -308,7 +310,9 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
-                        android:hint=""/>
+                        android:hint=""
+                        android:textColor="@color/title_bg1"
+                        />
 
                     <ImageView
                         android:id="@+id/img_del_join_users"

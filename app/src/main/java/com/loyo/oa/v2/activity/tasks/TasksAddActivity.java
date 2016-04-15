@@ -443,11 +443,10 @@ public class TasksAddActivity extends BaseActivity {
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
             public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
-                String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
+                String str = year + "." + String.format("%02d", (month + 1)) + "." +
                         String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                 tv_deadline.setText(str);
-                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm"));
-                LogUtil.dll("截至时间:" + mDeadline + "");
+                mDeadline = Long.parseLong(DateTool.getDataOne(str, "yyyy.MM.dd HH:mm"));
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);

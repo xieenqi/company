@@ -169,13 +169,13 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 }else{
                     isOk = false;
                     textColor = R.color.tasklist_gray;
-                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"));
+                    Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"));
                     if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
                         timeOut.setVisibility(View.VISIBLE);
                     } else {
                         timeOut.setVisibility(View.GONE);
                     }
-                    time.setText("任务截止时间: " + MainApp.getMainApp().df10.format(new Date(task.getPlanEndAt() * 1000)) + "");
+                    time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.getPlanEndAt() * 1000)) + "");
                 }
             } catch (Exception e) {
                 Global.ProcException(e);
