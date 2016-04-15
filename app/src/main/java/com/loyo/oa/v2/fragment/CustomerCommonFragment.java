@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.customer.NearByCustomersActivity;
 import com.loyo.oa.v2.activity.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -89,7 +87,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private String position;
 
     private NearCount nearCount;
-    private Permission permission = (Permission)MainApp.rootMap.get("0404");
+    private Permission permission = (Permission) MainApp.rootMap.get("0404");
     private DropListMenu mDropMenu;
     private ArrayList<DropItem> source = new ArrayList<>();
     private String filed = "";
@@ -577,7 +575,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         if (TextUtils.isEmpty(url)) {
             return;
         }
-
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
@@ -605,7 +602,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             getNearCustomersInfo();
                         }
                         countSize = customerPaginationX.getRecords().size();
-                        LogUtil.dee("broadMessage countsize:"+countSize);
+                        LogUtil.dee("broadMessage countsize:" + countSize);
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }
@@ -641,9 +638,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY){
-                          Toast("你没有查看权限");
-                }else{
+                if (customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY) {
+                    Toast("你没有查看权限");
+                } else {
                     Intent intent = new Intent();
                     intent.putExtra("Id", mCustomers.get((int) l).getId());
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, customer_type);
@@ -654,10 +651,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         });
     }
 
-    public void permissionTest(ImageView img){
+    public void permissionTest(ImageView img) {
             /*超级管理员/Web控制权限判断*/
-        if(!MainApp.user.isSuperUser()){
-            if(!permission.isEnable()){
+        if (!MainApp.user.isSuperUser()) {
+            if (!permission.isEnable()) {
                 img.setVisibility(View.INVISIBLE);
             }
         }
@@ -665,9 +662,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
     /**
      * 广播通知列表数量
-     * */
-    public void broadMessage(){
-        if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+     */
+    public void broadMessage() {
+        if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {
             broacdIntent = new Intent();
             broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
             broacdIntent.putExtra("count", countSize + "");
@@ -696,6 +693,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         switch (requestCode) {
             case BaseMainListFragment.REQUEST_CREATE:
                 mCustomers.add(0, customer);
+                getData();
                 break;
             case BaseMainListFragment.REQUEST_REVIEW:
                 for (int i = 0; i < mCustomers.size(); i++) {
@@ -704,6 +702,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         break;
                     }
                 }
+                getData();
                 break;
         }
 
@@ -816,6 +815,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 if (isNear && customer.winCount != 0) {
                     imgWin.setVisibility(View.VISIBLE);
                 }
+                broadMessage();
             }
             //附近 - 团队
             else if (customer_type == Customer.CUSTOMER_TYPE_NEAR_TEAM) {
@@ -851,7 +851,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             img_public.setOnTouchListener(Global.GetTouch());
             img_public.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v) {//挑入公海客户
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                             create(ICustomer.class).pickedIn(customer.getId(), new RCallback<Customer>() {
                         @Override

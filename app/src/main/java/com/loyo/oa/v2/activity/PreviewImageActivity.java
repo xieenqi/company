@@ -159,13 +159,7 @@ public class PreviewImageActivity extends BaseActivity {
             }
             LogUtil.d("预览 转换 的url：" + bigImagUrl(attachment.getUrl()));
             // Now just add PhotoView to ViewPager and return it
-            container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            photoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LogUtil.d("点击图片：");
-                }
-            });
+            container.addView(photoView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             return photoView;
         }
 
