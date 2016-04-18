@@ -122,7 +122,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             return;
         }
         layout_container.removeAllViews();
-        //contactData();
         ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);

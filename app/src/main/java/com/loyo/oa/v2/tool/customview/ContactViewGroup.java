@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 /**
@@ -167,6 +168,9 @@ public class ContactViewGroup extends LinearLayout {
             });
         }
 
+        LogUtil.dee("客户详情，动态字段getExtDatas():"+MainApp.gson.toJson(mContact.getExtDatas()));
+
+        //添加动态字段
         addView(new ContactInfoExtraData(context, mContact.getExtDatas(), false, R.color.diseditable, 14));
         //加载子条目
         parent.addView(this);

@@ -21,8 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
@@ -44,7 +46,6 @@ public class ContactAddforExtraData extends LinearLayout {
     private Context mContext;
     private ArrayList<ContactExtras> extras = new ArrayList<>();
     private Contact mContact;
-
     private String birthStr;
     private int age;
 
@@ -60,6 +61,10 @@ public class ContactAddforExtraData extends LinearLayout {
         this.extras = extras;
         this.mContact = mContact;
         bindView(edit, valueColor, valueSize);
+
+        LogUtil.dee("新增联系人 动态字段Contact:" + MainApp.gson.toJson(mContact));
+        LogUtil.dee("新增联系人 动态字段ContactExtras:" + MainApp.gson.toJson(extras));
+
     }
 
     public ArrayList<ContactExtras> getExtras() {
@@ -100,6 +105,7 @@ public class ContactAddforExtraData extends LinearLayout {
             }
             tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
+
 
             /**
              * 编辑联系人，数据赋值
