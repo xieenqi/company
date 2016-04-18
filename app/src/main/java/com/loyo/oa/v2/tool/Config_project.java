@@ -75,9 +75,12 @@ public class Config_project {
 
     /**
      * 客户地址
+     *
+     * staging端口号依然是:8090
+     * 131 136等内网端口号:8070
      */
     public static String SERVER_URL_CUSTOMER() {
-        return isRelease ? Domain.crm : IP + ":8070";
+        return isRelease ? Domain.crm : IP + ":8090";
     }
 
     /**

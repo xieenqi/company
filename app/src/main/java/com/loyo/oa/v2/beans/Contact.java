@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * 时间 : 15/9/30.
  */
 public class Contact implements Serializable {
+
     private String id;
     private String name;
     private String tel;

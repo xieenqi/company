@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
@@ -44,7 +44,7 @@ public class ContactAddforExtraData extends LinearLayout {
 
     private AlertDialog dialog;
     private Context mContext;
-    private ArrayList<ContactExtras> extras = new ArrayList<>();
+    private ArrayList<ContactLeftExtras> extras = new ArrayList<>();
     private Contact mContact;
     private String birthStr;
     private int age;
@@ -56,7 +56,7 @@ public class ContactAddforExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactExtras> extras, boolean edit, int valueColor, int valueSize) {
+    public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         this.mContact = mContact;
@@ -64,10 +64,9 @@ public class ContactAddforExtraData extends LinearLayout {
 
         LogUtil.dee("新增联系人 动态字段Contact:" + MainApp.gson.toJson(mContact));
         LogUtil.dee("新增联系人 动态字段ContactExtras:" + MainApp.gson.toJson(extras));
-
     }
 
-    public ArrayList<ContactExtras> getExtras() {
+    public ArrayList<ContactLeftExtras> getExtras() {
         return extras;
     }
 
@@ -84,7 +83,7 @@ public class ContactAddforExtraData extends LinearLayout {
         }
 
         for (int i = 0; i < extras.size(); i++) {
-            ContactExtras customerExtra = extras.get(i);
+            ContactLeftExtras customerExtra = extras.get(i);
             if (null == customerExtra) {
                 continue;
             }
@@ -105,7 +104,6 @@ public class ContactAddforExtraData extends LinearLayout {
             }
             tv_content.setTextColor(valueColor);
             tv_tag.setText(customerExtra.label);
-
 
             /**
              * 编辑联系人，数据赋值
@@ -129,6 +127,13 @@ public class ContactAddforExtraData extends LinearLayout {
                     tv_content.setText(mContact.getMemo());
                 }else if(customerExtra.fieldName.equals("dept_name")){
                     tv_content.setText(mContact.getDeptName());
+                }else if(!customerExtra.isSystem){
+                    for(ExtraData extraData : mContact.getExtDatas()){
+                        if(customerExtra.label.equals(extraData.getProperties().getLabel())){
+                            tv_content.setText(extraData.getVal());
+                            customerExtra.val = extraData.getVal();
+                        }
+                    }
                 }
             }
 
@@ -222,7 +227,7 @@ public class ContactAddforExtraData extends LinearLayout {
     /**
      * 功 能: 生日选择器
      * */
-    public void pickDate(final ContactExtras extra,final TextView textView) {
+    public void pickDate(final ContactLeftExtras extra,final TextView textView) {
         final Calendar cal = Calendar.getInstance();
         final DatePickerDialog mDialog = new DatePickerDialog(mContext, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
@@ -259,9 +264,9 @@ public class ContactAddforExtraData extends LinearLayout {
     }
 
     private class BizFiedTextWatcher implements TextWatcher {
-        private ContactExtras extra;
+        private ContactLeftExtras extra;
 
-        private BizFiedTextWatcher(ContactExtras extra) {
+        private BizFiedTextWatcher(ContactLeftExtras extra) {
             this.extra = extra;
         }
 
@@ -301,10 +306,10 @@ public class ContactAddforExtraData extends LinearLayout {
      * */
     class ValueOnClickListener_dateTime implements OnClickListener {
         private TextView textView;
-        private ContactExtras extra;
+        private ContactLeftExtras extra;
         private boolean isBrith;
 
-        private ValueOnClickListener_dateTime(TextView textView, ContactExtras extra,boolean isBrith) {
+        private ValueOnClickListener_dateTime(TextView textView, ContactLeftExtras extra,boolean isBrith) {
             this.textView = textView;
             this.extra = extra;
             this.isBrith = isBrith;
@@ -349,7 +354,7 @@ public class ContactAddforExtraData extends LinearLayout {
     }
 
 
-    AlertDialog initDialog_Wheel_one(final TextView textView, final ContactExtras extra) {
+    AlertDialog initDialog_Wheel_one(final TextView textView, final ContactLeftExtras extra) {
         final ArrayList<String> str = extra.defVal;
         BaseAdapter followAdapter = new BaseAdapter() {
             @Override

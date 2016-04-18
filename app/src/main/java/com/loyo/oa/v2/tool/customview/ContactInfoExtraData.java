@@ -95,6 +95,9 @@ public class ContactInfoExtraData extends LinearLayout {
              * 解析格式: yyyy-MM-dd HH:mm
              * */
             if("long".equals(properties.getType())){
+                if(properties.isEnabled()){
+
+                }
                 try{
                     tv_content.setText(DateTool.timet(customerExtra.getVal(),DateTool.DATE_FORMATE_SPLITE_BY_POINT));
                 }catch (NumberFormatException e){

@@ -122,7 +122,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
-
             mView = inflater.inflate(R.layout.fragment_customer_common, container, false);
             mDropMenu = (DropListMenu) mView.findViewById(R.id.droplist_menu);
             emptyView = (ViewStub) mView.findViewById(R.id.vs_nodata);
@@ -235,7 +234,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     }
 
     /**
-     * 初始化客户标签筛选menu
+     * 获取客户标签 筛选menu
      */
     private void initTagsMenu() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).GetTags(new RCallback<ArrayList<Tag>>() {
@@ -336,6 +335,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
         page = 1;
         if (items != null && items.size() > 0) {
+            LogUtil.dee("进入if循环");
             switch (customer_type) {
                 /**我的客户*/
                 case Customer.CUSTOMER_TYPE_MINE:

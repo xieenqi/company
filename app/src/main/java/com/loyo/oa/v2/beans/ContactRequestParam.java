@@ -7,7 +7,7 @@ package com.loyo.oa.v2.beans;
 public class ContactRequestParam {
 
     public String val;
-    public ContactExtras properties = new ContactExtras();
+    public ContactLeftExtras properties = new ContactLeftExtras();
 
     public String getVal() {
         return val;

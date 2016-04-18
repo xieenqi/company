@@ -12,8 +12,9 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.ExtraProperties;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -55,7 +56,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
 
     private Customer customerContact;
-    private ArrayList<ContactExtras> fiedList;
+    private ArrayList<ContactLeftExtras> leftExtrases;
 
     @AfterViews
     void initViews() {
@@ -71,16 +72,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     }
 
     /**
-     * 获取联系人的动态字段
+     * 获取最新 左侧动态字段
      */
     private void getContactsFields() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getContactsField(new RCallback<ArrayList<ContactExtras>>() {
+                getContactsField(new RCallback<ArrayList<ContactLeftExtras>>() {
                     @Override
-                    public void success(ArrayList<ContactExtras> fiedListData, Response response) {
+                    public void success(ArrayList<ContactLeftExtras> fiedListData, Response response) {
                         HttpErrorCheck.checkResponse("联系人动态字段", response);
-                        fiedList = fiedListData;
+                        leftExtrases = fiedListData;
                         getData();
                     }
 
@@ -108,7 +109,6 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                //finish();
             }
         });
     }
@@ -117,15 +117,16 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
      * 初始化数据
      */
     private void initData() {
-        if (null == fiedList || null == customerContact || null == customerContact.contacts
+        if (null == leftExtrases || null == customerContact || null == customerContact.contacts
                 || customerContact.contacts.isEmpty()) {
             return;
         }
+
         layout_container.removeAllViews();
         ArrayList<Contact> contacts = customerContact.contacts;
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
-            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact, contact, this);
+            ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact,leftExtrases, contact, this);
             contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber);
         }
         cancelLoading();
