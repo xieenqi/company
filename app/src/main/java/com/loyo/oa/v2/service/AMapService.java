@@ -167,7 +167,9 @@ public class AMapService extends Service {
             }
 
             if (aMapLocation != null) {
-                getCurrentTime(aMapLocation);
+                /*不获取服务器时间*/
+                //getCurrentTime(aMapLocation);
+                dealLocation(aMapLocation, System.currentTimeMillis());
             } else {
                 LogUtil.d(TAG + "位置回调失败！");
             }
@@ -192,11 +194,12 @@ public class AMapService extends Service {
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置
-        if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
+        /*if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 ||
                 accuracy > MIN_SCAN_SPAN_DISTANCE || isCache) {
+            LogUtil.d("当前位置偏移量很大，直接return");
             return;
-        }
+        }*/
         if (isEmptyStr(address)) {
             StringBuilder addressBuilder = new StringBuilder();
             combineAddress(aMapLocation.getProvince(), addressBuilder);
@@ -230,8 +233,8 @@ public class AMapService extends Service {
         mRestAdapter.create(IMain.class).getServerTime(new RCallback<ServerTime>() {
             @Override
             public void success(ServerTime serverTime, Response response) {
+                HttpErrorCheck.checkResponse("轨迹定位－获取当前时间",response);
                 long time = 0;
-
                 if (null != serverTime) {
                     time = serverTime.getNow();
                 }
@@ -239,13 +242,13 @@ public class AMapService extends Service {
                 if (time <= 0) {
                     time = System.currentTimeMillis();
                 }
-
                 dealLocation(aMapLocation, time);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 dealLocation(aMapLocation, System.currentTimeMillis());
             }
         });
@@ -343,8 +346,11 @@ public class AMapService extends Service {
             LatLng lastLatLng = new LatLng(tempLat, tempLng);
             LatLng newLatLng = new LatLng(latitude, longitude);
             double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);
-            LogUtil.d(TAG + " processLocation,distance ,distance : " + distance);
-            if (distance < MIN_SCAN_SPAN_DISTANCE - 50) {
+            LogUtil.d("获取到的distance : " + distance);
+            LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE - 50));
+
+            if (distance != 0.0 && distance< MIN_SCAN_SPAN_DISTANCE - 50) {
+                LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
         }
