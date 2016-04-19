@@ -299,6 +299,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         source.add(dropItemTag);
     }
 
+    /**
+     * 【标签筛选 取消监听】
+     * */
     @Override
     public void onCancelAll(int ColumnIndex) {
         page = 1;
@@ -324,8 +327,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         getData();
     }
 
+
     /**
-     * 【筛选 选择监听】
+     * 【筛选选择 确认监听】
      *
      * @param listview
      * @param ColumnIndex
@@ -335,7 +339,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
         page = 1;
         if (items != null && items.size() > 0) {
-            LogUtil.dee("进入if循环");
             switch (customer_type) {
                 /**我的客户*/
                 case Customer.CUSTOMER_TYPE_MINE:
@@ -452,8 +455,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             for (int i = 0; i < items.size(); i++) {
                 sb.append(items.get(items.keyAt(i)).getName()).append(" ").append(items.get(items.keyAt(i)).getValue()).append(",");
             }
-            getData();
         }
+        getData();
     }
 
     /**
@@ -573,6 +576,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
 
         if (TextUtils.isEmpty(url)) {
+            LogUtil.d("没有url return");
             return;
         }
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
