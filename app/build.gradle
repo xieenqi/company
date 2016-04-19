@@ -2,10 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '23.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
@@ -18,15 +19,15 @@ android {
         debug {
             storeFile file('D:\\android\\key\\loyo_share.keystore')
 //            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
-            //storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
             keyPassword 'Loyo2012'
-            //storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
 //            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
@@ -39,28 +40,43 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016041401
-        versionName '1.0.9'
+        versionCode 2016041901
+        versionName '1.0.10'
     }
 
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            //resValue "string", "baidu_maps_api_key", "5HIPSGuHZZG9nGMpn5CfGKF3"
-            //resValue "string", "amaps_api_key", "8a9215e7133b2e9923bdef127bbf17b1"
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
         }
         release {
+//            minifyEnabled false
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.SignConfig
+//            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
+//            resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
+//            // "6085830b754c86f0d9886b545f5b38f8"
+//            resValue "string", "app_name", "快启"
+
             minifyEnabled false
-            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.SignConfig
-            // resValue "string", "baidu_maps_api_key", "dw2iAmSRNacThaGXEpv2GIOs"//Q3aVfvUow9EL32m6IcGFecTf
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
-// "6085830b754c86f0d9886b545f5b38f8"
             resValue "string", "app_name", "快启"
+            debuggable false
+            jniDebuggable false
+        }
+    }
+
+    //jenkins 构建文件输出
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def today = new Date().format('yyyyMMdd-HH');
+            def file = output.outputFile
+            output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
         }
     }
 
@@ -68,6 +84,9 @@ android {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         compile 'com.android.support:appcompat-v7:22.1.1'
         compile 'com.android.support:recyclerview-v7:22.1.1'
+//        compile 'com.android.support:appcompat-v7:23.1.1'
+//        compile 'com.android.support:recyclerview-v7:23.1.1'
+
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile files('libs/android-async-http-1.4.6.jar')
@@ -103,8 +122,6 @@ android {
         //菜单
         compile 'com.yalantis:contextmenu:1.0.4'
         //激光推送
-        compile files('libs/jpush-android-2.0.5.jar')
-        //compile 'com.android.support:multidex-1.0.1'
         compile files('libs/jpush-android-2.1.3.jar')
         //compile 'c.droid.support:mtidex-1.0.1'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
@@ -143,7 +160,7 @@ apt {
         configFile file("src/config/checkstyle.xml")
         include '**/*.java'
         exclude '**/gen/**'
-        ignoreFailures true
+        ignoreFailures false
         classpath = files()
 
         def configProps = ['proj.module.dir': projectDir.absolutePath]
