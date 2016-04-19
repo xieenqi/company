@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * 客户联系人 左侧Lable数据
+ *
  * Created by loyo_dev1 on 16/3/24.
  */
-public class ContactExtras implements Serializable {
+public class ContactLeftExtras implements Serializable {
 
     public String name;
     public String fieldName;

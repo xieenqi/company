@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.project;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
 import com.loyo.oa.v2.beans.User;
@@ -26,7 +26,6 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -53,22 +52,18 @@ public class ProjectAddActivity extends BaseActivity {
     TextView tv_managers;
     @ViewById
     TextView tv_members;
-
     @ViewById
     EditText edt_title;
     @ViewById
     EditText edt_content;
-
     @ViewById
     ViewGroup layout_managers;
     @ViewById
     ViewGroup layout_members;
     @ViewById
     ViewGroup ll_managerGon;
-
     @ViewById
     ListView lv_project_members;
-
     @Extra(ExtraAndResult.EXTRA_OBJ)
     HttpProject mProject;
     @Extra("mUpdate")
@@ -77,9 +72,13 @@ public class ProjectAddActivity extends BaseActivity {
     ProjectMemberListViewAdapter mAdapter;
     ArrayList<HttpProject.ProjectMember> mProjectMember = new ArrayList<>();
     private boolean isEditMember = false;
+    private StringBuffer mMemberIds = new StringBuffer();
+    private StringBuffer mMemberNames = new StringBuffer();
 
-    String mManagerIds = "", mManagerNames = "", mMemberIds = "", mMemberNames = "";
-    // boolean mUpdate = false;
+    private StringBuffer mManagerIds = new StringBuffer();
+    private StringBuffer mManagerNames = new StringBuffer();
+    private Members members = new Members();
+
 
     @AfterViews
     void initViews() {
@@ -111,13 +110,13 @@ public class ProjectAddActivity extends BaseActivity {
         if (mProject.isManager() && !mProject.isCreator()) {
             ll_managerGon.setVisibility(View.GONE);
         }
-        mManagerIds = ProjectMember.GetMnagerUserIds(mProject.managers);
+        mManagerIds.append(ProjectMember.GetMnagerUserIds(mProject.managers));
         LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.members));
         if (mProject.members != null) {
-            mMemberIds = ProjectMember.GetMenberUserIds(mProject.members);
+            mMemberIds.append(ProjectMember.GetMenberUserIds(mProject.members));
         }
-        mManagerNames = ProjectMember.getManagersName(mProject.managers);
-        mMemberNames = ProjectMember.GetUserNames(mProject.members);
+        mManagerNames.append(ProjectMember.getManagersName(mProject.managers));
+        mMemberNames.append(ProjectMember.GetUserNames(mProject.members));
 
         tv_managers.setText(mManagerNames);
         setMemberOnActivityResult();
@@ -131,28 +130,45 @@ public class ProjectAddActivity extends BaseActivity {
     //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
-        Bundle bundle1 = new Bundle();
-        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MANAGERS, bundle1);
+        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this, mManagerIds == null ? null : mManagerIds.toString());
     }
 
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
-        Bundle bundle1 = new Bundle();
-        bundle1.putInt(DepartmentUserActivity.STR_SHOW_TYPE, DepartmentUserActivity.TYPE_SHOW_USER);
-        bundle1.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_MULTUI);
-        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_MEMBERS, bundle1);
+        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString());
     }
 
-    @OnActivityResult(REQUEST_MANAGERS)
+    /**
+     * 负责人回调
+     */
+    @OnActivityResult(SelectDetUserActivity2.REQUEST_MULTI_SELECT)
     void OnResultManagers(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
-        mManagerIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-        mManagerNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+
+        members = (Members) data.getSerializableExtra("data");
+        mManagerNames = new StringBuffer();
+        mManagerIds = new StringBuffer();
+
+        if (members != null) {
+            if (null != members.depts) {
+                for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
+                    mManagerNames.append(newUser.getName() + ",");
+                    mManagerIds.append(newUser.getId() + ",");
+                }
+            }
+            if (null != members.users) {
+                for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
+                    mManagerNames.append(newUser.getName() + ",");
+                    mManagerIds.append(newUser.getId() + ",");
+                }
+            }
+            if (!TextUtils.isEmpty(mManagerNames)) {
+                mManagerNames.deleteCharAt(mManagerNames.length() - 1);
+            }
+        }
 
         tv_managers.setText(mManagerNames);
 
@@ -168,14 +184,38 @@ public class ProjectAddActivity extends BaseActivity {
         }
     }
 
-    @OnActivityResult(REQUEST_MEMBERS)
+    /**
+     * 参与人回调
+     */
+    @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void OnResultMembers(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
         isEditMember = true;
-        mMemberIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-        mMemberNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
+
+        members = (Members) data.getSerializableExtra("data");
+        if (null == members) {
+            tv_members.setText("无参与人");
+        } else {
+            mMemberNames = new StringBuffer();
+            mMemberIds = new StringBuffer();
+            if (null != members.depts) {
+                for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
+                    mMemberNames.append(newUser.getName() + ",");
+                    mMemberIds.append(newUser.getId() + ",");
+                }
+            }
+            if (null != members.users) {
+                for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
+                    mMemberNames.append(newUser.getName() + ",");
+                    mMemberIds.append(newUser.getId() + ",");
+                }
+            }
+            if (!TextUtils.isEmpty(mMemberNames)) {
+                mMemberNames.deleteCharAt(mMemberNames.length() - 1);
+            }
+        }
         setMemberOnActivityResult();
     }
 
@@ -186,8 +226,8 @@ public class ProjectAddActivity extends BaseActivity {
             mProjectMember.clear();
         }
         if (!TextUtils.isEmpty(mMemberIds)) {
-            String[] memberIds = mMemberIds.split(",");
-            String[] memberNames = mMemberNames.split(",");
+            String[] memberIds = mMemberIds.toString().split(",");
+            String[] memberNames = mMemberNames.toString().split(",");
 
             for (int i = 0; i < memberIds.length; i++) {
                 String uId = memberIds[i];
@@ -214,16 +254,19 @@ public class ProjectAddActivity extends BaseActivity {
                 mProjectMember.removeAll(projectManagers);
             }
         }
+
         mAdapter = new ProjectMemberListViewAdapter(this, createData());//?????mProjectMember
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
+                mMemberIds.delete(0,mMemberIds.length());
                 for (HttpProject.ProjectMember ele : mAdapter.GetProjectMembers()) {
                     HttpProject.ProjectMember mm = new HttpProject().new ProjectMember();
                     mm.canReadAll = ele.canReadAll;
                     mm.user.id = ele.user.id;
                     mm.user.name = ele.user.realname;
                     mProjectMember.add(mm);
+                    mMemberIds.append(ele.user.id+",");
                 }
                 mAdapter.notifyDataSetInvalidated();
             }
@@ -232,6 +275,7 @@ public class ProjectAddActivity extends BaseActivity {
         lv_project_members.setAdapter(mAdapter);
         Global.setListViewHeightBasedOnChildren(lv_project_members);
     }
+
 
     /**
      * 参与人的数据  adapter列表
@@ -341,8 +385,8 @@ public class ProjectAddActivity extends BaseActivity {
         if (TextUtils.isEmpty(mManagerIds)) {
             return new ArrayList<>();
         }
-        String[] arr = mManagerIds.split(",");
-        String[] arrName = mManagerNames.split(",");
+        String[] arr = mManagerIds.toString().split(",");
+        String[] arrName = mManagerNames.toString().split(",");
         ArrayList<HttpProject.ProjectManaer> mManager = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             if (!TextUtils.isEmpty(arr[i])) {

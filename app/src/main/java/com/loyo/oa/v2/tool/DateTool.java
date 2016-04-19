@@ -51,7 +51,7 @@ public class DateTool {
     /**
      * yyyy-MM-dd
      */
-    public static final String DATE_DEFAULT_FORMATE1 = "yyyy-MM-dd";
+    public static final String DATE_DEFAULT_FORMATE1 = "yyyy.MM.dd";
 
     public static final String DATE_FORMATE_DAY = "MM.dd";
 
@@ -508,6 +508,7 @@ public class DateTool {
         return times;
     }
 
+
     /**
      * 自定义格式转时间戳
      */
@@ -548,7 +549,7 @@ public class DateTool {
      * 获取当前时间
      */
     public static String getNowTime() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES);
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT);
         return sDateFormat.format(new java.util.Date());
     }
 

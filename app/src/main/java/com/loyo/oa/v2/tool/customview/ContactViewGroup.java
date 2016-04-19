@@ -15,12 +15,16 @@ import com.loyo.oa.v2.activity.customer.CustomerContractAddActivity;
 import com.loyo.oa.v2.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
+
+import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 :客户联系人信息详情条目
+ * 描述 :客户联系人 非动态字段 信息详情条目
  * 作者 : ykb
  * 时间 : 15/9/24.
  */
@@ -28,14 +32,15 @@ public class ContactViewGroup extends LinearLayout {
 
     public interface OnContactProcessCallback {
         void onDel(Contact contact);
-
         void onSetDefault(Contact contact);
     }
+
 
     private Context context;
     private Contact mContact;
     private MainApp app = MainApp.getMainApp();
     private Customer mCustomer;
+    private ArrayList<ContactLeftExtras>  leftExtrases;//左侧lable数据
     private OnContactProcessCallback contactProcessCallback;
 
     private ContactViewGroup(Context c) {
@@ -43,7 +48,7 @@ public class ContactViewGroup extends LinearLayout {
         context = c;
     }
 
-    public ContactViewGroup(Context _context, Customer customer, Contact contact, OnContactProcessCallback callback) {
+    public ContactViewGroup(Context _context, Customer customer,ArrayList<ContactLeftExtras> leftExtrases, Contact contact, OnContactProcessCallback callback) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
@@ -51,6 +56,7 @@ public class ContactViewGroup extends LinearLayout {
         contactProcessCallback = callback;
         mCustomer = customer;
         mContact = contact;
+        this.leftExtrases = leftExtrases;
     }
 
     /**
@@ -127,6 +133,7 @@ public class ContactViewGroup extends LinearLayout {
             tv_email.setText(mContact.getEmail());
             tv_memo.setText(mContact.getMemo());
             tv_birthday.setText(mContact.getBirthStr());
+
             tv_depart.setText(mContact.deptName);
             if (mContact.isDefault()) {
                 default_.setImageResource(R.drawable.icon_contact_default_selected);
@@ -167,7 +174,11 @@ public class ContactViewGroup extends LinearLayout {
             });
         }
 
-        addView(new ExtraDataView(context, mContact.getExtDatas(), false, R.color.diseditable, 14));
+        LogUtil.dee("客户详情，动态字段getExtDatas():" + MainApp.gson.toJson(mContact.getExtDatas()));
+
+        //添加动态字段
+        addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.diseditable, 14));
+
         //加载子条目
         parent.addView(this);
     }

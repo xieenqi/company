@@ -189,9 +189,10 @@ public class DropListMenu extends LinearLayout {
                     mSelectedItem.get(mColumnSelected).clear();
                     syncConfirmButton();
                     popupWindow.dismiss();
-                    if (mSelectedItem.get(mColumnSelected).size() > 0 && mMenuSelectedListener != null) {
+                    if (mMenuSelectedListener != null) {
                         mMenuSelectedListener.onCancelAll(mColumnSelected);
                     }
+
                 }
             });
 

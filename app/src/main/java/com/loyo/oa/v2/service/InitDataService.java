@@ -18,11 +18,9 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.EIntentService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,6 +43,9 @@ public class InitDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         app = (MainApp) getApplicationContext();
+        if (null != DBManager.Instance().getUser()) {
+            setRootMap(DBManager.Instance().getUser());//取缓存的用户对象
+        }
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
@@ -74,11 +75,11 @@ public class InitDataService extends IntentService {
 
     /**
      * 权限数据保存为Map
-     * */
-    void setRootMap(User user){
-        HashMap<String,Object> map = new HashMap<>();
-        for(Permission permission : user.newpermission){
-            map.put(permission.getCode(),permission);
+     */
+    void setRootMap(User user) {
+        HashMap<String, Object> map = new HashMap<>();
+        for (Permission permission : user.newpermission) {
+            map.put(permission.getCode(), permission);
         }
         MainApp.rootMap = map;
     }

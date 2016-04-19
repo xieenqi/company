@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
+import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerRegional;
@@ -23,6 +25,7 @@ import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.Locate;
 import com.loyo.oa.v2.beans.Member;
+import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
@@ -32,12 +35,13 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.ExtraDataView;
+import com.loyo.oa.v2.tool.customview.ContactInfoExtraData;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -130,9 +134,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private Locate mLocate = new Locate();
     private User owner = new User();
     private ArrayList<Member> members = new ArrayList<>();
+    private Members cusMembers = new Members();
     private CustomerRegional regional = new CustomerRegional();
     private Industry industry = new Industry();
     private Animation animation;
+    private StringBuffer mManagerIds = new StringBuffer();
+    private StringBuffer mManagerNames = new StringBuffer();
 
 
     @AfterViews
@@ -210,7 +217,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private void initExtra(final boolean ismy) {
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new ExtraDataView(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
+            container.addView(new ContactInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
         }
     }
 
@@ -279,16 +286,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         tv_customer_creator.setText(mCustomer.creator.getName());
-        //if (isPublic) {//是公海客户
         String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
         tv_customer_responser.setText(responser);
         if (members.size() != 0) {
             if (isMyUser && !isMenber) {
                 img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
             }
-            tv_customer_join_users.setText(Utils.getMembers(members));
+                tv_customer_join_users.setText(Utils.getMembers(members));
+        }else{
+            tv_customer_join_users.setText("无参与人");
         }
-        // }
         if (regional.province != null) {
             tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
@@ -311,7 +318,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     /**
-     * 显示对话框
+     * 显示修改负责任 对话框
      */
     private void showLeaveDialog() {
         showGeneralDialog(true, true, getString(R.string.app_userdetalis_message));
@@ -320,10 +327,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             @Override
             public void onClick(final View view) {
                 generalPopView.dismiss();
-                Bundle bundle = new Bundle();
-                bundle.putInt(DepartmentUserActivity.STR_SELECT_TYPE, DepartmentUserActivity.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(CustomerInfoActivity.this, DepartmentUserActivity.class,
-                        MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, bundle);
+                SelectDetUserActivity2.startThisForOnly(CustomerInfoActivity.this, null);
+
             }
         });
         //取消
@@ -378,12 +383,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 }
                 app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
                 break;
-
+            /*刷新地理位置*/
             case R.id.img_refresh_address:
                 new LocationUtilGD(this, this);
                 img_refresh_address.startAnimation(animation);
                 break;
-
+            /*路径规划*/
             case R.id.img_go_where:
                 Utils.goWhere(this, lat, lng);
                 break;
@@ -393,30 +398,33 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 tv_customer_join_users.setText("");
                 img_del_join_users.setVisibility(View.GONE);
                 break;
-
+            /*选负责人*/
             case R.id.layout_customer_responser:
                 showLeaveDialog();
                 break;
-
+            /*选参与人*/
             case R.id.layout_customer_join_users:
-                app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
+                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this, mManagerIds == null ? null : mManagerIds.toString());
                 break;
-
+            /*地区选择*/
             case R.id.layout_customer_district:
                 loadAreaCodeTable();
                 break;
 
-//            case R.id.layout_customer_industry:
-//                new DialogFragmentIndustryCast().show(getSupportFragmentManager(), "行业选择", new OnMenuSelectCallback() {
-//                    @Override
-//                    public void onMenuSelected(Object o) {
-//                        industry = (Industry) o;
-//                        tv_industry.setText(industry.getName());
-//                    }
-//                });
-//                break;
-            default:
+            /**
+             * 行业取消不做
+             * */
+/*            case R.id.layout_customer_industry:
+                new DialogFragmentIndustryCast().show(getSupportFragmentManager(), "行业选择", new OnMenuSelectCallback() {
+                    @Override
+                    public void onMenuSelected(Object o) {
+                        industry = (Industry) o;
+                        tv_industry.setText(industry.getName());
+                    }
+                });
+                break;*/
 
+            default:
                 break;
         }
     }
@@ -489,26 +497,53 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         }
 
         switch (requestCode) {
-            case DepartmentUserActivity.request_Code:
-                /*负责人人*/
-                User user = (User) data.getSerializableExtra(User.class.getName());
-                if (user != null) {
-                    NewUser u = new NewUser();
-                    u.setId(user.id);
-                    u.setName(user.getRealname());
-                    owner.id = u.getId();
-                    owner.name = u.getName();
-                    owner.avatar = u.getAvatar();
-                    tv_customer_responser.setText(u.getName());
-                } else { //参与人
-                    String userIds = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-                    String userNames = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-                    members = Utils.convert2Members(userIds, userNames);
-                    if (members.size() != 0) {
-                        img_del_join_users.setVisibility(View.VISIBLE);
-                        tv_customer_join_users.setText(userNames);
+
+            /**
+             * 负责人回调
+             * */
+            case SelectDetUserActivity2.REQUEST_ONLY:
+                NewUser nu = (NewUser) data.getSerializableExtra("data");
+                owner.id = nu.getId();
+                owner.name = nu.getName();
+                owner.avatar = nu.getAvatar();
+                tv_customer_responser.setText(nu.getName());
+                break;
+
+            /**
+             * 参与人回调
+             * */
+            case SelectDetUserActivity2.REQUEST_MULTI_SELECT:
+
+                cusMembers = (Members) data.getSerializableExtra("data");
+                mManagerNames = new StringBuffer();
+                mManagerIds = new StringBuffer();
+
+                if (members != null) {
+                    if (null != cusMembers.depts) {
+                        for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != cusMembers.users) {
+                        for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
+                            mManagerNames.append(newUser.getName() + ",");
+                            mManagerIds.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(mManagerNames)) {
+                        mManagerNames.deleteCharAt(mManagerNames.length() - 1);
                     }
                 }
+
+                members = Utils.convert2Members(mManagerIds.toString(), mManagerNames.toString());
+                if (members.size() != 0) {
+                    img_del_join_users.setVisibility(View.VISIBLE);
+                    tv_customer_join_users.setText(mManagerNames);
+                }else{
+                    tv_customer_join_users.setText("无参与人");
+                }
+
                 break;
 
             case REQUEST_CUSTOMER_EDIT_BASEINFO:

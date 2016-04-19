@@ -73,6 +73,7 @@ public class ContactInfoActivity extends BaseActivity {
     User user;
 
     private StringBuffer myDeptName;
+    private int defaultAvatar;
 
 
     @AfterViews
@@ -158,8 +159,18 @@ public class ContactInfoActivity extends BaseActivity {
             }
         }
 
-        ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
-        LogUtil.dll("头像地址:"+user.getAvatar());
+        //默认头像，头像获取
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            if(MainApp.user.gender == 2){
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            }else{
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            img_title_user.setImageResource(defaultAvatar);
+        }else{
+            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+        }
+
         Utils.setContent(tv_realname, user.getRealname());
         Utils.setContent(tv_deptname, myDeptName.toString());
 

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.beans;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  * 时间 : 15/9/30.
  */
 public class Contact implements Serializable {
+
     private String id;
     private String name;
     private String tel;

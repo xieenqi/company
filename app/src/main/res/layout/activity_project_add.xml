@@ -39,9 +39,9 @@
                     android:gravity="left|center_vertical"
                     android:hint="添加项目名称"
                     android:maxLength="50"
-                    android:singleLine="false"
                     android:minHeight="@dimen/dimen_50"
-                    android:paddingLeft="@dimen/margin_other_view"/>
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:singleLine="false"/>
 
                 <View
                     style="@style/view_split"
@@ -137,6 +137,8 @@
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"/>
             </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left"/>
 
             <ListView
                 android:id="@+id/lv_project_members"

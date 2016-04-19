@@ -29,6 +29,7 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
@@ -223,6 +224,8 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 String customerContract = edt_contract.getText().toString().trim();
                 String customerContractTel = edt_contract_tel.getText().toString().trim();
                 String customerWrietele = edt_contract_telnum.getText().toString().trim();
+
+
                 if (customer_name.isEmpty()) {
                     Toast("请输入客户名称");
                     break;
@@ -230,6 +233,21 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     Toast("请输入的客户地址");
                     break;
                 }
+
+                if(!customerContractTel.isEmpty()){
+                    if(!RegularCheck.isMobilePhone(customerContractTel)){
+                        Toast("手机号码格式不正确");
+                        return;
+                    }
+                }
+
+                if(!customerWrietele.isEmpty()){
+                    if(!RegularCheck.isPhone(customerWrietele)){
+                        Toast("座机号码格式不正确");
+                        return;
+                    }
+                }
+
                 if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
                     Contact defaultContact;
                     defaultContact = new Contact();

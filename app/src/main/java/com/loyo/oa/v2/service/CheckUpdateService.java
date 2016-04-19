@@ -16,7 +16,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -126,7 +125,7 @@ public class CheckUpdateService extends Service {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_CHECK_UPDATE).create(IMain.class).checkUpdate(new RCallback<UpdateInfo>() {
             @Override
             public void success(UpdateInfo updateInfo, Response response) {
-                HttpErrorCheck.checkResponse(response);
+//                HttpErrorCheck.checkResponse(response);
                 mUpdateInfo = updateInfo;
                 LogUtil.dll("版本更新信息:"+MainApp.gson.toJson(updateInfo));
 

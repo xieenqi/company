@@ -393,11 +393,12 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     /**
      * 通用提示弹出框init
      */
-    public void showGeneralDialog(boolean isOut, boolean isKind, String message) {
+    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
         generalPopView = new GeneralPopView(this, isKind);
         generalPopView.show();
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
+        return generalPopView;
     }
 
     /*重启当前Activity*/

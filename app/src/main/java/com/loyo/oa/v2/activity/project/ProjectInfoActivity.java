@@ -42,7 +42,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -205,7 +204,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
         User creator = project.creator;
         tv_project_title.setText(project.title);
-        tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
+//        tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
+        tv_project_extra.setText("负责人：" + managersPersion(project.managers));
 
         if (project.status == 1) {
             img_project_status.setImageResource(R.drawable.icon_project_run);
@@ -223,6 +223,20 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             }
         }
 
+    }
+
+    /**
+     * 负责人的名字
+     *
+     * @param managers
+     * @return
+     */
+    private String managersPersion(ArrayList<HttpProject.ProjectManaer> managers) {
+        String manaderName = "";
+        for (HttpProject.ProjectManaer ele : managers) {
+            manaderName += ele.user.name + ",";
+        }
+        return manaderName.substring(0, manaderName.length() - 1);
     }
 
     /**

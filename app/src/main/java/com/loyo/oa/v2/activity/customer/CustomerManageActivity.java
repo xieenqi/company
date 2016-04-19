@@ -117,8 +117,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
 
             }
         });
-
-
     }
 
     /**
@@ -202,7 +200,6 @@ public class CustomerManageActivity extends BaseFragmentActivity {
     }
 
     void changeCategoryView() {
-
         imageArrow.setRotation(mRotation);
         imageArrow.startAnimation(rotateAnimation);
         mRotation = (mRotation == 0f ? 180f : 0f);

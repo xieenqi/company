@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -111,14 +112,14 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                 .setView(dateTimeLayout)
                 .setPositiveButton("完成", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
+                        String timeFu = years + "." + String.format("%02d", (month + 1)) + "." + day + " " + hour + ":" + minutes;
                         try {
-                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
-                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"))) {
-                                Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                listener.onDateTimeChanged(years, month, day, hour, minutes);
-                            }
+                        if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy.MM.dd HH:mm"))
+                                < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"))) {
+                            Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            listener.onDateTimeChanged(years, month, day, hour, minutes);
+                        }
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }

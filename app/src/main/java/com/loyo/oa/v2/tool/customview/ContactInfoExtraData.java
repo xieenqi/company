@@ -28,24 +28,24 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 : 客户联系人 动态字段
+ * 描述 : 客户联系人详情 动态字段
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
-public class ExtraDataView extends LinearLayout {
+public class ContactInfoExtraData extends LinearLayout {
 
     private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ExtraData> extras = new ArrayList<>();
 
-    public ExtraDataView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ContactInfoExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         setOrientation(VERTICAL);
     }
 
-    public ExtraDataView(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize) {
+    public ContactInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
         bindView(edit, valueColor, valueSize);
@@ -66,7 +66,6 @@ public class ExtraDataView extends LinearLayout {
         if (null == extras || extras.isEmpty()) {
             return;
         }
-//        valueSize=MainApp.getMainApp().diptoPx(valueSize);
         for (int i = 0; i < extras.size(); i++) {
             ExtraData customerExtra = extras.get(i);
             final ExtraProperties properties = customerExtra.getProperties();
@@ -90,7 +89,24 @@ public class ExtraDataView extends LinearLayout {
             }
             tv_content.setTextColor(valueColor);
             tv_tag.setText(properties.getLabel());
-            tv_content.setText(customerExtra.getVal());
+
+            /**
+             * 说   明: 创建时发送时间戳，获取也是时间戳，但是之前服务器数据存在2015-2-3这种时间格式数据，所以这里判断一下。
+             * 解析格式: yyyy-MM-dd HH:mm
+             * */
+            if("long".equals(properties.getType())){
+                if(properties.isEnabled()){
+
+                }
+                try{
+                    tv_content.setText(DateTool.timet(customerExtra.getVal(),DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                }catch (NumberFormatException e){
+                    e.printStackTrace();
+                    tv_content.setText(customerExtra.getVal());
+                }
+            }else{
+                tv_content.setText(customerExtra.getVal());
+            }
 
             if (properties.isList()) {
                 tv_content.setEnabled(false);
@@ -110,7 +126,6 @@ public class ExtraDataView extends LinearLayout {
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
                 }
-
             } else if ("long".equals(properties.getType())) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:" + properties.isEnabled());
@@ -235,9 +250,8 @@ public class ExtraDataView extends LinearLayout {
                     @Override
                     public void onDateTimeChanged(int year, int month, int day, int hour, int min) {
 
-                        String str = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
+                        String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
-                        //extra.setVal(DateTool.getDateToTimestamp(str, MainApp.getMainApp().df2) + "");
                         extra.setVal(str);
                     }
 
@@ -245,7 +259,7 @@ public class ExtraDataView extends LinearLayout {
                     public void onCancel() {
 
                     }
-                },false);
+                },true);
             }
         }
     }

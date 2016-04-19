@@ -1,9 +1,16 @@
 package com.loyo.oa.v2.activity.customer;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -16,6 +23,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
@@ -60,9 +68,42 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     @Extra
     int type;//客户类型
 
+    private int countSize;
+    private LocalBroadcastManager localBroadcastManager;
+
+
+    public Handler handler = new Handler() {
+        @Override
+        public void dispatchMessage(Message msg) {
+            if (msg.what == 0x01) {
+                TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
+                TITLES[0] += countSize + ")";
+                initTabs();
+            } else if (msg.what == 0x02) {
+                Toast("给我发消息勒");
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(mReceiver);
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtil.dee("收到广播:" + countSize);
+            countSize = Integer.parseInt(intent.getStringExtra("count"));
+            handler.sendEmptyMessage(0x01);
+        }
+    };
+
     @AfterViews
     void initViews() {
         setTouchView(-1);
+        mContext = this;
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
         iv_submit.setVisibility(View.VISIBLE);
@@ -71,16 +112,22 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
             if (type == 1) {
+                LogUtil.dee("nearCount.count:" + nearCount.count);
+                countSize = nearCount.count;
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
-                TITLES[0] += nearCount.count + ")";
+                TITLES[0] += countSize + ")";
                 TITLES[1] = "公司已赢单客戶(" + nearCount.winCount + ")";
             } else {
                 tabs.setVisibility(View.GONE);
             }
         }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(FinalVariables.ACTION_DATA_CUSTOMER);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(mReceiver, intentFilter);
+
         initFragments();
         initTabs();
-        LogUtil.d(position + " 附近客户数据： " + type);
     }
 
     @Click(R.id.layout_back)

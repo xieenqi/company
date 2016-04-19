@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
@@ -135,7 +136,7 @@ public class TasksEditActivity extends BaseActivity {
     private ArrayList<NewUser> depts;
     private Members member;
     private NewUser newUser;
-    private StringBuffer joinUser = new StringBuffer();
+    private StringBuffer joinName = new StringBuffer();
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
     private boolean isKind;
@@ -181,7 +182,7 @@ public class TasksEditActivity extends BaseActivity {
         }
 
         savePostData();
-        tv_toUsers.setText(joinUser.toString());
+        tv_toUsers.setText(joinName.toString());
         if(mTask.getPlanEndAt() != 0){
             tv_deadline.setText(MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)));
         }
@@ -341,7 +342,7 @@ public class TasksEditActivity extends BaseActivity {
 
         for (int i = 0; i < mTask.getMembers().getAllData().size(); i++) {
 
-            joinUser.append(mTask.getMembers().getAllData().get(i).getName() + ",");
+            joinName.append(mTask.getMembers().getAllData().get(i).getName() + ",");
             joinUserId.append(mTask.getMembers().getAllData().get(i).getId() + ",");
 
             NewUser newUser = new NewUser();
@@ -470,20 +471,22 @@ public class TasksEditActivity extends BaseActivity {
             /*编辑负责人*/
             case R.id.layout_responsiblePerson:
 
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);*/
 
+                SelectDetUserActivity2.startThisForOnly(TasksEditActivity.this, null);
                 break;
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
 
-                Bundle bundle1 = new Bundle();
+                /*Bundle bundle1 = new Bundle();
                 bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
                 bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);
+                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);*/
 
+                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString());
                 break;
 
 
@@ -706,33 +709,39 @@ public class TasksEditActivity extends BaseActivity {
                 }
                 break;
 
-            /*负责人 参与人选人回调*/
-            case ExtraAndResult.REQUEST_CODE:
-                User user = (User) data.getSerializableExtra(User.class.getName());
-                if (user != null) {
-                    setResponsiblePersion(user);
-                    /*参与人回调*/
-                }else {
-                    member = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
-                    if (null == member) {
-                        tv_toUsers.setText("无参与人");
-                    }else{
-                        StringBuffer joinName  = new StringBuffer();
-                        if(null != member.depts){
-                            for(NewUser newUser : member.depts){
-                                joinName.append(newUser.getName()+",");
-                            }
-                        }
-                        if(null != member.users){
-                            for(NewUser newUser : member.users){
-                                joinName.append(newUser.getName()+",");
-                            }
-                        }
-                        tv_toUsers.setText(joinName.toString());
-                    }
-                }
-
+            //用户单选, 负责人
+            case SelectDetUserActivity2.REQUEST_ONLY:
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+                newUser = u;
+                tv_responsiblePerson.setText(newUser.getName());
                 break;
+            //用户选择, 参与人
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+                member = (Members) data.getSerializableExtra("data");
+                if (null == member) {
+                    tv_toUsers.setText("无参与人");
+                } else {
+                    joinName = new StringBuffer();
+                    joinUserId = new StringBuffer();
+                    if (null != member.depts) {
+                        for (NewUser newUser : member.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != member.users) {
+                        for (NewUser newUser : member.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    tv_toUsers.setText(joinName.toString());
+                }
+                break;
+
 
             case SelectPicPopupWindow.GET_IMG:
                 try {

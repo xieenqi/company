@@ -51,7 +51,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
         departmentFragment = new ContactsDepartmentFragment();
         userFragment = new ContactsInMyDeptFragment();
-
         initUI();
     }
 
@@ -59,9 +58,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         setTouchView(-1);
         getUserAndDepartmentSize();
 
-
         ((TextView) findViewById(R.id.tv_title_1)).setText("通讯录");
-
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);

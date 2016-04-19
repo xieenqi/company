@@ -9,10 +9,16 @@ android {
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
     }
-
+    sourceSets {//.so文件的资源设置
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     signingConfigs {
         debug {
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+            storeFile file('D:\\android\\key\\loyo_share.keystore')
+//            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            //storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -20,6 +26,11 @@ android {
         SignConfig {
             storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
             keyPassword 'Loyo2012'
+            //storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+//            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+            keyPassword 'android'
+            keyAlias 'androiddebugkey'
+            storePassword 'android'
         }
     }
 
@@ -28,8 +39,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016032501
-        versionName '1.0.6'
+        versionCode 2016041401
+        versionName '1.0.9'
     }
 
     buildTypes {
@@ -94,6 +105,8 @@ android {
         //激光推送
         compile files('libs/jpush-android-2.0.5.jar')
         //compile 'com.android.support:multidex-1.0.1'
+        compile files('libs/jpush-android-2.1.3.jar')
+        //compile 'c.droid.support:mtidex-1.0.1'
         compile "org.androidannotations:androidannotations-api:$AAVersion"
         //友盟统计
         compile files('libs/umeng-analytics-v5.6.4.jar')

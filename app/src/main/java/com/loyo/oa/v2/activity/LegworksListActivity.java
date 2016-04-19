@@ -6,14 +6,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.SignInOfUserFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -47,7 +45,6 @@ public class LegworksListActivity extends FragmentActivity {
 
     @Click({R.id.img_title_left})
     void onClick() {
-        //onBackPressed();
         finish();
     }
 }
