@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.work;
 
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -51,18 +52,18 @@ public class WorkReportReviewActivity extends BaseActivity {
     void initViews(){
         img_title_left.setOnTouchListener(Global.GetTouch());
         tv_title_1.setText("报告点评");
+
+        ratingBar_workReport.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                isPc = true;
+            }
+        });
     }
 
     @Click(R.id.btn_workreport_review)
     void review(){
         String content=edt_content.getText().toString();
-        ratingBar_workReport.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                LogUtil.d("操作了！！！！！！！！");
-                isPc = true;
-            }
-        });
 
         if(TextUtils.isEmpty(content)){
             Toast("点评内容不能为空!");

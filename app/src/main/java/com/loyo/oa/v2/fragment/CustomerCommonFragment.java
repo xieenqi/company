@@ -168,7 +168,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             btn_add.setVisibility(View.GONE);
         }
         getData();
-        //broadMessage();
     }
 
     @Override
@@ -605,6 +604,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         if (customer_type == Customer.CUSTOMER_TYPE_MINE || customer_type == Customer.CUSTOMER_TYPE_TEAM) {
                             getNearCustomersInfo();
                         }
+
                         countSize = customerPaginationX.getRecords().size();
                         LogUtil.dee("broadMessage countsize:" + countSize);
                         listView.onRefreshComplete();
@@ -666,6 +666,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
     /**
      * 广播通知列表数量
+     * 通过广播，更新我的客户数量,还存在问题
+     * 方法会不断执行，那不断发送广播，导致崩溃
      */
     public void broadMessage() {
         if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {
@@ -683,7 +685,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-            broadMessage();
+            //broadMessage();
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
@@ -819,7 +821,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 if (isNear && customer.winCount != 0) {
                     imgWin.setVisibility(View.VISIBLE);
                 }
-                broadMessage();
+                //broadMessage();
             }
             //附近 - 团队
             else if (customer_type == Customer.CUSTOMER_TYPE_NEAR_TEAM) {
