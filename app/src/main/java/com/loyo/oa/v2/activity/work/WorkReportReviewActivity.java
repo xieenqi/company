@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.work;
 
 import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -13,6 +14,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
@@ -38,12 +40,12 @@ public class WorkReportReviewActivity extends BaseActivity {
 
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
-
     @ViewById EditText edt_content;
     @ViewById RatingBar ratingBar_workReport;
-
     @Extra
     String mWorkReportId;
+
+    private boolean isPc = false;
 
     @AfterViews
     void initViews(){
@@ -54,10 +56,24 @@ public class WorkReportReviewActivity extends BaseActivity {
     @Click(R.id.btn_workreport_review)
     void review(){
         String content=edt_content.getText().toString();
+        ratingBar_workReport.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                LogUtil.d("操作了！！！！！！！！");
+                isPc = true;
+            }
+        });
+
         if(TextUtils.isEmpty(content)){
-            Toast("点评内容不能为空");
+            Toast("点评内容不能为空!");
             return;
         }
+
+        if(!isPc){
+            Toast("请评分!");
+            return;
+        }
+
         HashMap<String ,Object> map=new HashMap<>();
         map.put("score",ratingBar_workReport.getProgress()*20);
         map.put("comment",content);

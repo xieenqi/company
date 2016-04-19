@@ -183,7 +183,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_mobile.setOnTouchListener(Global.GetTouch());
         //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
-
     }
 
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
@@ -372,6 +371,15 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 编辑个人信息
      */
     private void updateProfile() {
+
+        if(!et_weixin.getText().toString().isEmpty()){
+            if(!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)){
+                Toast("微信号码不正确");
+                return;
+            }
+        }
+
+
         showLoading("");
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
@@ -398,9 +406,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                // Toast("修改个人信息失败");
                 HttpErrorCheck.checkError(error);
-                // finish();
             }
         });
     }
@@ -492,20 +498,25 @@ public class ContactInfoEditActivity extends BaseActivity {
      * @param tel
      */
     private void verifyPhone(final String tel) {
+        //验证手机号
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
+                HttpErrorCheck.checkResponse("验证手机号",response);
                 tv_get_code.setEnabled(false);
                 countDown();
+                //请求验证码
                 RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
                     @Override
                     public void success(final Object o, final Response response) {
+                        HttpErrorCheck.checkResponse("请求手机验证码",response);
                         Toast("发送验证码成功");
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
+                        HttpErrorCheck.checkError(error);
                         Toast("发送验证码失败");
                     }
                 });
@@ -514,6 +525,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 if ("500".equals(error.getMessage().substring(0, 3))) {
                     Toast("该手机号已被录入本系统,请勿重复使用!");
                 }
@@ -544,6 +556,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         app.getRestAdapter(mobile_phone).create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 dialog.dismiss();
                 Toast("修改手机号码成功");
                 tv_mobile.setText(mobile);
@@ -553,8 +566,9 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 dialog.dismiss();
-                Toast("修改手机号码失败" + error.getMessage());
+                Toast("修改手机号码失败");
             }
         });
     }
@@ -626,26 +640,26 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
     }
 
-//    /**
-//     * 微信编辑框的文本观察器
-//     */
-//    private class WxTextWatcher extends ITextWatcher {
-//        private String mDes;
-//        private EditText mEt;
-//
-//        private WxTextWatcher(EditText tv, String des) {
-//            mEt = tv;
-//            mDes = des;
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable editable) {
-//            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
-//            if (!isMobile) {
-//                mEt.setError(mDes);
-//            }
-//        }
-//    }
+    /**
+     * 微信编辑框的文本观察器
+     */
+/*    private class WxTextWatcher extends ITextWatcher {
+        private String mDes;
+        private EditText mEt;
+
+        private WxTextWatcher(EditText tv, String des) {
+            mEt = tv;
+            mDes = des;
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
+            if (!isMobile) {
+                mEt.setError(mDes);
+            }
+        }
+    }*/
 
     /**
      * 弹出框控件点击事件
@@ -660,14 +674,16 @@ public class ContactInfoEditActivity extends BaseActivity {
         @Override
         public void onClick(final View view) {
             switch (view.getId()) {
+                //获取验证码
                 case R.id.btn_get_code:
                     getVerifyCode();
-
                     break;
+                //确认修改手机号
                 case R.id.btn_confirm:
                     modifyMobile(mDialog);
                     recycle();
                     break;
+                //取消
                 case R.id.btn_cancel:
                     mDialog.dismiss();
                     recycle();
