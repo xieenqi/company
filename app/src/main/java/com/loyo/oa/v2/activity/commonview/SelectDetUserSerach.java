@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
  * 新版选人搜索
  * Created by yyy on 16/1/11.
  */
-public class SelectDetUserSerach extends Activity{
+public class SelectDetUserSerach extends Activity {
 
 
     private TextView tv_selectuser_search;
@@ -62,14 +63,14 @@ public class SelectDetUserSerach extends Activity{
     }
 
     /*初始化*/
-    public void initView(){
+    public void initView() {
 
-         userAllList = MainApp.selectAllUsers;
-         selectType = getIntent().getExtras().getInt(ExtraAndResult.STR_SELECT_TYPE);
-         tv_selectuser_search = (TextView) findViewById(R.id.tv_selectuser_search);
-         edt_selectuser_search = (EditText) findViewById(R.id.edt_selectuser_search);
-         lv_selectuser_serach = (ListView) findViewById(R.id.lv_selectuser_serach);
-         img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
+        userAllList = MainApp.selectAllUsers;
+        selectType = getIntent().getExtras().getInt(ExtraAndResult.STR_SELECT_TYPE);
+        tv_selectuser_search = (TextView) findViewById(R.id.tv_selectuser_search);
+        edt_selectuser_search = (EditText) findViewById(R.id.edt_selectuser_search);
+        lv_selectuser_serach = (ListView) findViewById(R.id.lv_selectuser_serach);
+        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
 
         /*输入框监听*/
         edt_selectuser_search.addTextChangedListener(new TextWatcher() {
@@ -95,14 +96,14 @@ public class SelectDetUserSerach extends Activity{
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 
-                 mIntent = new Intent();
-                 mBundle = new Bundle();
-                switch(selectType){
+                mIntent = new Intent();
+                mBundle = new Bundle();
+                switch (selectType) {
 
                     /*参与人*/
                     case ExtraAndResult.TYPE_SELECT_MULTUI:
 
-                        mBundle.putString("userId",resultData.get(position).getId());
+                        mBundle.putString("userId", resultData.get(position).getId());
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         mIntent.putExtras(mBundle);
                         app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
@@ -121,7 +122,7 @@ public class SelectDetUserSerach extends Activity{
                     /*编辑参与人*/
                     case ExtraAndResult.TYPE_SELECT_EDT:
 
-                        mBundle.putString("userId",resultData.get(position).getId());
+                        mBundle.putString("userId", resultData.get(position).getId());
                         mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
                         mIntent.putExtras(mBundle);
                         app.finishActivity(SelectDetUserSerach.this, MainApp.ENTER_TYPE_LEFT, ExtraAndResult.REQUEST_CODE, mIntent);
@@ -158,7 +159,7 @@ public class SelectDetUserSerach extends Activity{
 
     /**
      * 搜索操作
-     * */
+     */
 
     void doSearch() {
         key = edt_selectuser_search.getText().toString().trim();
@@ -195,7 +196,7 @@ public class SelectDetUserSerach extends Activity{
 
     /**
      * 适配器
-     * */
+     */
 
     BaseAdapter adapter = new BaseAdapter() {
         @Override
@@ -224,23 +225,23 @@ public class SelectDetUserSerach extends Activity{
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             tv_content.setText(user.getRealname());
-            String deptName,workName;
+            String deptName, workName;
 
-            try{
+            try {
                 deptName = user.depts.get(0).getShortDept().getName();
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 deptName = "无";
             }
 
-            try{
+            try {
                 workName = user.role.name;
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 workName = "无";
             }
 
-            tv_position.setText(deptName+"  "+workName);
+            tv_position.setText(deptName + "  " + workName);
 
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);

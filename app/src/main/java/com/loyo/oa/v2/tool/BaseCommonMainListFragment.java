@@ -18,6 +18,11 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
+import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.beans.Project;
+import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
@@ -49,14 +54,12 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     protected TextView tv_title_1;
     protected DropDownMenu mMenu;
     private ViewStub emptyView;
-
+    private Permission permission;
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
-
     protected PaginationX<T> pagination = new PaginationX<T>(20);
     protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();
     protected ArrayList<T> lstData = new ArrayList<>();
-
     protected PullToRefreshExpandableListView mExpandableListView;
     protected boolean isTopAdd = true;
 
@@ -95,17 +98,17 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        //        switch (scrollState) {
-        //            case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-        //                break;
-        //            case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-        //            case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-        //                if(btn_add.getVisibility()!=View.VISIBLE) {
-        //                    btn_add.setVisibility(View.VISIBLE);
-        //                    mView.postDelayed(UiRunner,5000);
-        //                }
-        //                break;
-        //        }
+/*                switch (scrollState) {
+                   case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        break;
+                   case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                   case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                       if(btn_add.getVisibility()!=View.VISIBLE) {
+                           btn_add.setVisibility(View.VISIBLE);
+                            mView.postDelayed(UiRunner,5000);
+                       }
+                       break;
+                }*/
     }
 
     @Override
@@ -117,6 +120,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
             tv_title_1 = (TextView) mView.findViewById(R.id.tv_title_1);
             tv_title_1.setText(GetTitle());
+
             //底部创建按钮
             btn_add = (Button) mView.findViewById(R.id.btn_add);
             btn_add.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
@@ -126,6 +130,18 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                     addNewItem();
                 }
             });
+
+            if(!MainApp.user.isSuperUser()){
+                try{
+                    permission = (Permission)MainApp.rootMap.get("0401");
+                    if(!permission.isEnable() && MainApp.permissionPage == 1){
+                        btn_add.setVisibility(View.INVISIBLE);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Toast("创建项目权限,code错误");
+                }
+            }
 
             img_title_left = (ViewGroup) mView.findViewById(R.id.img_title_left);
             img_title_left.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +260,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-        //LogUtil.d("项目、任务、报告、审批的统一界面 result:" + MainApp.gson.toJson(tPaginationX));
         HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
 
     }

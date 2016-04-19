@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -50,7 +53,6 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -103,7 +105,7 @@ public class TasksInfoActivity extends BaseActivity {
 
     View v_split;
     @ViewById
-    LinearLayout layout_attachment;
+    RelativeLayout layout_attachment;
 
     @ViewById
     TextView tv_repeatTask;
@@ -146,6 +148,7 @@ public class TasksInfoActivity extends BaseActivity {
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
+    public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
     public ArrayList<NewUser> requestDepts = new ArrayList<>();
     public ArrayList<User> aboutDepts = new ArrayList<>();
@@ -159,12 +162,19 @@ public class TasksInfoActivity extends BaseActivity {
     public TextView tv_task_content;
     public TextView tv_task_status;
     public TextView tv_reviewer;
+    public TextView viewName;
+    public TextView viewContent;
 
     public android.os.Handler mHandler = new android.os.Handler() {
-
         public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
+            } else if (msg.what == 0x02) {
+                viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text99));
+            } else if (msg.what == 0x03) {
+                viewContent.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text33));
             }
         }
     };
@@ -217,7 +227,9 @@ public class TasksInfoActivity extends BaseActivity {
 
         boolean isInTask = false; //判断当前用户是否在任务中
         for (int i = 0; i < users.size(); i++) {
-            if (MainApp.user.id.equals(users.get(i).getId())) {
+            if (MainApp.user.id.equals(users.get(i).getId())
+                    || isMenberShortDept(users.get(i).getId(), users.get(i).getXpath())
+                    ) {
                 isInTask = true;
                 break;
             }
@@ -244,62 +256,47 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     /**
+     * 多部门的人员有权限
+     *
+     * @param id
+     * @return
+     */
+    private boolean isMenberShortDept(String id, String xpath) {
+        LogUtil.d("部门的值："+xpath);
+        for (UserInfo element : MainApp.user.depts) {
+            if (element.getShortDept().getId().equals(id)
+                    || (null != xpath && element.getShortDept().getXpath().contains(xpath))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
-        LogUtil.d("status:"+mTask.getStatus());
         childTastUsers.clear();
         //参与人
         if (!IsResponsiblePerson() && !IsCreator()) {
             img_title_right.setVisibility(View.GONE);
         }
         //其他情况
-        switch (mTask.getStatus()){
+        switch (mTask.getStatus()) {
             case Task.STATUS_REVIEWING:
-                if(IsResponsiblePerson()){
+                if (IsResponsiblePerson()) {
                     LogUtil.d("负责人 审核中");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
 
             case Task.STATUS_FINISHED:
-                if(IsResponsiblePerson()){
+                if (IsResponsiblePerson()) {
                     LogUtil.d("负责人 已完成");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
         }
-
-
-/*                        *//*创建人*//*
-        if (IsCreator()) {
-            if (mTask.getStatus() == Task.STATUS_PROCESSING) {//创建者 任务进行中
-                intent.putExtra("edit", true);
-                intent.putExtra("delete", true);
-                intent.putExtra("extra", "复制任务");
-            } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
-                intent.putExtra("extra", "复制任务");
-            } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
-                intent.putExtra("extra", "复制任务");
-            }
-                    *//*负责人*//*
-        } else if (IsResponsiblePerson()) {
-            switch (mTask.getStatus()) {
-                case Task.STATUS_PROCESSING:
-                    intent.putExtra("edit", true);
-                    intent.putExtra("editText", "修改参与人");
-                    break;
-
-                case Task.STATUS_REVIEWING:
-                    intent.putExtra("extra", "复制任务");
-                    break;
-
-                case Task.STATUS_FINISHED:
-                    intent.putExtra("extra", "复制任务");
-                    break;
-            }
-        }*/
-
 
 
         if (mTask.getResponsiblePerson() != null) {
@@ -420,15 +417,15 @@ public class TasksInfoActivity extends BaseActivity {
 
         switch (mTask.getStatus()) {
             case 1:
-                iv_task_status.setBackgroundResource(R.drawable.icon_project_processing);
+                iv_task_status.setImageResource(R.drawable.icon_project_processing);
                 break;
 
             case 2:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_wite);
+                iv_task_status.setImageResource(R.drawable.img_task_wite);
                 break;
 
             case 3:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_status_finish);
+                iv_task_status.setImageResource(R.drawable.img_task_status_finish);
                 break;
 
             default:
@@ -481,6 +478,7 @@ public class TasksInfoActivity extends BaseActivity {
             if ("1".equals(reviewer.getStatus())) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
+                tv_task_status.setVisibility(View.GONE);
             } else {
                 tv_task_status.setText("不通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.red));
@@ -549,23 +547,27 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         layout_child_Add_area.removeAllViews();
+        taskChildView.clear();
 
         //子任务列表内容，遍历
-        for (final TaskCheckPoint subTask : mTask.getchecklists()) {
+        for (int i = 0; i < mTask.getchecklists().size(); i++) {
 
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            final TaskCheckPoint subTask = mTask.getchecklists().get(i);
+            final View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            RelativeLayout childView = (RelativeLayout) view.findViewById(R.id.item_childtask_info);
 
             //子任务标题
-            TextView viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
+            viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
             if (subTask.getResponsiblePerson() != null) {
                 viewName.setText(subTask.getResponsiblePerson().getName());
             }
 
             //子任务内容
-            TextView viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
+            viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
             if (!TextUtils.isEmpty(subTask.getcontent())) {
                 viewContent.setText(subTask.getcontent());
             }
+            taskChildView.add(viewContent);
 
             /*Checkbox勾选,赋值*/
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
@@ -576,6 +578,12 @@ public class TasksInfoActivity extends BaseActivity {
                 statusSize++;
             }
 
+            /*初始化完成/未完成状态*/
+            if (isStatus) {
+                viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text99));
+            }
+
             childCheckbox.setChecked(isStatus);
 
             if (mTask.getStatus() != Task.STATUS_PROCESSING) {
@@ -583,17 +591,22 @@ public class TasksInfoActivity extends BaseActivity {
                 view.setEnabled(false);
                 layout_child_add_action.setVisibility(View.GONE);
             } else {
+                final int finalI = i;
                 childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(final CompoundButton compoundButton, final boolean isCheck) {
                         if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
                             if (isCheck) {
+                                viewContent = taskChildView.get(finalI);
                                 statusSize++;
                                 mHandler.sendEmptyMessage(0x01);
+                                mHandler.sendEmptyMessage(0x02);
                                 requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
                             } else {
+                                viewContent = taskChildView.get(finalI);
                                 statusSize--;
                                 mHandler.sendEmptyMessage(0x01);
+                                mHandler.sendEmptyMessage(0x03);
                                 requestTaskupdates(taskId, subTask.getId(), 0);
                             }
                         } else {
@@ -608,14 +621,13 @@ public class TasksInfoActivity extends BaseActivity {
                 /**
                  * 子任务编辑跳转
                  * */
-                view.setTag(subTask);
-                view.setOnClickListener(new View.OnClickListener() {
+                childView.setTag(subTask);
+                childView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
 
                         //组装 负责人 于 参与人
                         ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
-                        //reponserData.addAll(mTask.getMembers().getUsers());
                         reponserData.addAll(mTask.responsiblePersons);
                         ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
                         for (Reviewer element : reponserData) {
@@ -690,7 +702,8 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                Toast("网络异常，请稍后再试");
+                finish();
             }
         });
     }
@@ -698,7 +711,7 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 标题左右监听
      */
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete, R.id.layout_cb})
     void onClick(final View v) {
 
         switch (v.getId()) {
@@ -756,6 +769,12 @@ public class TasksInfoActivity extends BaseActivity {
                     Toast("子任务尚未完成，不能提交！");
                 }
                 break;
+
+            case R.id.layout_cb:
+
+
+                break;
+
 
             default:
                 break;
@@ -1091,10 +1110,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status", mTask.getStatus());
         bundle.putInt("bizType", 2);
-
         ActivityDiscussDet.startThisActivity(this, 2, mTask.getAttachmentUUId(), mTask.getStatus(), MSG_DISCUSSION);
-
-//        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
     /**

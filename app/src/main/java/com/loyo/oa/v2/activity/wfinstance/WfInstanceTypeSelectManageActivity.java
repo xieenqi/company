@@ -47,7 +47,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wfinstance_type_select);
-
         initUI();
         onPullDownToRefresh(null);
     }
@@ -67,13 +66,14 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
             listView_bizform.setAdapter(wfInstanceTypeSelectListViewAdapter);
             listView_bizform.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
+                public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                     bizForm = lstData_BizForm.get((int) id);
                     if (bizForm != null) {
+                        showLoading("");
                         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForm(bizForm.getId(), new RCallback<BizForm>() {
                             @Override
-                            public void success(final BizForm bizForm,final Response response) {
-                                HttpErrorCheck.checkResponse("获取审批类型详情:", response);
+                            public void success(final BizForm bizForm, final Response response) {
+                                HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
                                 if (bizForm != null) {
                                     Intent intent = new Intent();
                                     intent.putExtra(BizForm.class.getName(), bizForm);
@@ -84,7 +84,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                             @Override
                             public void failure(final RetrofitError error) {
                                 HttpErrorCheck.checkError(error);
-                                Toast("获取审批类型详情失败");
                                 super.failure(error);
                             }
                         });
@@ -110,14 +109,16 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
     }
 
     private void getData_BizForm() {
+        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", pagination.getPageIndex());
-        params.put("pageSize", isTopAdd ? lstData_BizForm.size() >= 20 ? lstData_BizForm.size() : 20 : 20);
+        params.put("pageSize", isTopAdd ? lstData_BizForm.size() >= 2000 ? lstData_BizForm.size() : 2000 : 2000);
+//        params.put("pageSize", 1000);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override
-            public void success(final PaginationX<BizForm> bizFormPaginationX,final Response response) {
-                HttpErrorCheck.checkResponse("获取审批类型", response);
+            public void success(final PaginationX<BizForm> bizFormPaginationX, final Response response) {
+                HttpErrorCheck.checkResponse("获取审批【类型列表】", response);
                 listView_bizform.onRefreshComplete();
 
                 if (null != bizFormPaginationX) {

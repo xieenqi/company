@@ -91,7 +91,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     private int scrollOffset = 52;
     private int indicatorHeight = 18;
-    private int underlineHeight = 2;
+    private int underlineHeight = 1;
     private int dividerPadding = 12;
     private int tabPadding = 20;
     private int dividerWidth = 1;//间隔条的宽度

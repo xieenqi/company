@@ -45,6 +45,7 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import cn.jpush.android.api.JPushInterface;
@@ -63,13 +64,14 @@ public class MainApp extends Application {
     public static final int ENTER_TYPE_ZOOM_OUT = 5;
     public static final int ENTER_TYPE_ZOOM_IN = 6;
 
+    public static DisplayImageOptions options_3;
     private static MainApp mainApp;
     public static Gson gson;
     public static HttpJpushNotification jpushData;
     public boolean isCutomerEdit = false;//客户信息是否编辑过
+    public static int permissionPage;
 
     public DisplayImageOptions options_rounded;
-    public static DisplayImageOptions options_3;
 
     public SimpleDateFormat df1;//设置日期格式
     public SimpleDateFormat df2;//设置日期格式
@@ -97,6 +99,7 @@ public class MainApp extends Application {
     public String address;
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
+    public static HashMap<String,Object> rootMap;
 
 
     //-------这些数据需要保存在本地-------------

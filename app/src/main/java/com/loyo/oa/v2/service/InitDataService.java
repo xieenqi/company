@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -17,12 +18,15 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.EIntentService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -47,12 +51,18 @@ public class InitDataService extends IntentService {
                 HttpErrorCheck.checkResponse("获取user", response);
                 String json = MainApp.gson.toJson(user);
                 MainApp.user = user;
+                setRootMap(user);
                 sendDataChangeBroad(user);
                 DBManager.Instance().putUser(json);//保存用户信息
                 HashMap<String, String> map = new HashMap<>();
                 map.put("name", user.name);
                 map.put("id", user.id);
+            }
 
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
         try {
@@ -63,15 +73,14 @@ public class InitDataService extends IntentService {
     }
 
     /**
-     * 刷新首页红点数据
-     */
-    void rushHomeData() {
-        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
-            @Override
-            public void success(User user, Response response) {
-                HttpErrorCheck.checkResponse(response);
-            }
-        });
+     * 权限数据保存为Map
+     * */
+    void setRootMap(User user){
+        HashMap<String,Object> map = new HashMap<>();
+        for(Permission permission : user.newpermission){
+            map.put(permission.getCode(),permission);
+        }
+        MainApp.rootMap = map;
     }
 
     /**

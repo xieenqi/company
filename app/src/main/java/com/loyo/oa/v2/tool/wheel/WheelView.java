@@ -116,6 +116,7 @@ public class WheelView extends View {
 	public WheelView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		initData(context);
+//		getLocationInWindow();
 	}
 
 	/**
@@ -772,7 +773,7 @@ public class WheelView extends View {
 
 	/**
 	 * Scroll the wheel
-	 * @param itemsToSkip items to scroll
+	 * @param itemsToScroll items to scroll
 	 * @param time scrolling duration
 	 */
 	public void scroll(int itemsToScroll, int time) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.fragment.ProjectManageFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
@@ -21,6 +22,7 @@ public class ProjectManageActivity extends BaseFragmentActivity {
 
     @AfterViews
     void initUI() {
+        MainApp.permissionPage = 1;
         setTouchView(-1);
         getSupportFragmentManager().beginTransaction().add(R.id.project_container,
                 Fragment.instantiate(this, ProjectManageFragment.class.getName())).commit();

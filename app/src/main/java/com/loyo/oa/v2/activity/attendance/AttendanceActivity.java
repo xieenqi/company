@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.AttendanceListFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -53,9 +54,10 @@ public class AttendanceActivity extends BaseFragmentActivity {
     @ViewById(R.id.lv_attendance_category)
     ListView categoryListView;
 
-    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
+    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};;
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
+    private Permission permission;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private List<BaseFragment> fragments = new ArrayList<>();
     private int mIndex = -1, Identity;
@@ -77,12 +79,26 @@ public class AttendanceActivity extends BaseFragmentActivity {
         findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
         findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
-        imageArrow.setVisibility(View.VISIBLE);
-        rotateAnimation = initAnimation();
 
-        if (!Utils.hasRights()) {
-            ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
+        //超级管理员判断
+        if(!MainApp.user.isSuperUser()){
+            try{
+                permission = (Permission) MainApp.rootMap.get("0317");
+                if(!permission.isEnable()){
+                    imageArrow.setVisibility(View.INVISIBLE);
+                    ATTENDANCE_FILTER_STRS = new String[]{"我的考勤"};
+                }else{
+                    imageArrow.setVisibility(View.VISIBLE);
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                Toast("团队考勤权限,code错误:0317");
+            }
+        }else{
+            imageArrow.setVisibility(View.VISIBLE);
         }
+
+        rotateAnimation = initAnimation();
         initCategoryUI();
         initChildren();
 
@@ -100,13 +116,14 @@ public class AttendanceActivity extends BaseFragmentActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                changeCategoryView();
+                if(ATTENDANCE_FILTER_STRS.length != 1){
+                    changeCategoryView();
+                }
                 break;
             case R.id.img_title_left:
                 onBackPressed();
                 break;
             default:
-
                 break;
         }
     }

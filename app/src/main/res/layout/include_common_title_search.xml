@@ -16,7 +16,7 @@
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_12"
+            android:layout_marginLeft="@dimen/dimen_10"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
 
@@ -54,7 +54,7 @@
             android:layout_width="@dimen/dimen_23"
             android:layout_height="@dimen/dimen_23"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/dimen_12"
+            android:layout_marginRight="@dimen/dimen_14"
             android:scaleType="fitCenter"
             android:src="@drawable/img_search"/>
 

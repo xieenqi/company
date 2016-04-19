@@ -57,7 +57,8 @@
             android:background="@color/title_bg1"
             android:text="确定"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:paddingRight="@dimen/dimen_4" />
     </RelativeLayout>
 
     <LinearLayout

@@ -3,7 +3,7 @@
               xmlns:ptr="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/white"
+              android:background="@color/whitesmoke"
               android:orientation="vertical">
 
     <include layout="@layout/include_common_title_search"/>
@@ -12,13 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1"
-            android:layout_marginBottom="@dimen/dimen_5"
-            android:layout_marginTop="@dimen/dimen_50"
-            android:alpha="0.3"
-            android:src="@color/lightgray"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -44,6 +37,7 @@
                     android:groupIndicator="@null"
                     android:headerDividersEnabled="true"
                     android:orientation="vertical"
+                    android:scrollbars="none"
                     android:smoothScrollbar="true"
                     ptr:ptrMode="both"/>
 
@@ -72,7 +66,8 @@
                         android:choiceMode="singleChoice"
                         android:divider="@color/activity_split"
                         android:dividerHeight="@dimen/dimen_0.5"
-                        android:padding="@dimen/dimen_0.5">
+                        android:padding="@dimen/dimen_0.5"
+                        android:scrollbars="none">
                     </ListView>
 
                 </FrameLayout>

@@ -60,7 +60,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/grayC9"
+        android:background="@color/whitesmoke"
         />
 
     <LinearLayout
@@ -136,7 +136,7 @@
             android:id="@+id/listView_legworks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@color/whitesmoke"
             android:cacheColorHint="#00000000"
             android:drawSelectorOnTop="true"
             android:fadingEdge="none"

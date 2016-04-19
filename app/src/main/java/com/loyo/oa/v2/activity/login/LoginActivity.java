@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -19,6 +21,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ILogin;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -41,6 +44,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private EditText edt_username, edt_password;
     private WaveView layout_login;
     private TextView tv_resetPassword, tv_qqLogin;
+    private LinearLayout serverTest, serverFormal, layout_check_debug;
+    private ImageView serverTestImg, serverFormalImg;
+    private TextView serverTestTv, serverFormalTv;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -59,15 +66,69 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         tv_qqLogin.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         tv_resetPassword.setOnTouchListener(Global.GetTouch());
         tv_resetPassword.setOnClickListener(this);
+
         edt_username = (EditText) findViewById(R.id.edt_username);
         edt_password = (EditText) findViewById(R.id.edt_password);
+
+        layout_check_debug = (LinearLayout) findViewById(R.id.layout_check_debug);
+        serverTest = (LinearLayout) findViewById(R.id.layout_server_test);
+        serverFormal = (LinearLayout) findViewById(R.id.layout_server_formal);
+
+        serverTestImg = (ImageView) findViewById(R.id.iv_server_test);
+        serverFormalImg = (ImageView) findViewById(R.id.iv_server_formal);
+
+        serverTestTv = (TextView) findViewById(R.id.tv_server_test);
+        serverFormalTv = (TextView) findViewById(R.id.tv_server_formal);
+
         edt_username.addTextChangedListener(nameWatcher);
         edt_password.addTextChangedListener(nameWatcher);
         layout_login.setOnClickListener(this);
+
+        /*Debug模式下*/
         if (Config_project.is_developer_mode) {
-            edt_username.setText("18235169100");//15928564313
+            edt_username.setText("18235169100");
             edt_password.setText("123456");
+//            layout_check_debug.setVisibility(View.VISIBLE);
+            if (Config_project.isRelease) {
+                serverFormalTv.setTextColor(getResources().getColor(R.color.black));
+                serverTestTv.setTextColor(getResources().getColor(R.color.gray));
+
+                serverTestImg.setVisibility(View.INVISIBLE);
+                serverFormalImg.setVisibility(View.VISIBLE);
+            } else {
+                serverTestTv.setTextColor(getResources().getColor(R.color.black));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
+
+                serverTestImg.setVisibility(View.VISIBLE);
+                serverFormalImg.setVisibility(View.INVISIBLE);
+            }
         }
+
+        serverTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Config_project.isRelease = false;
+                serverTestTv.setTextColor(getResources().getColor(R.color.black));
+                serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
+
+                serverTestImg.setVisibility(View.VISIBLE);
+                serverFormalImg.setVisibility(View.INVISIBLE);
+                LogUtil.d("test ："+Config_project.isRelease);
+            }
+        });
+
+        serverFormal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Config_project.isRelease = true;
+                serverFormalTv.setTextColor(getResources().getColor(R.color.black));
+                serverTestTv.setTextColor(getResources().getColor(R.color.gray));
+
+                serverTestImg.setVisibility(View.INVISIBLE);
+                serverFormalImg.setVisibility(View.VISIBLE);
+                LogUtil.d("common ：" + Config_project.isRelease);
+            }
+        });
     }
 
     TextWatcher nameWatcher = new TextWatcher() {
@@ -117,6 +178,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 body.put("username", username);
                 body.put("password", password);
                 login(body);
+                LogUtil.d("login ：" + Config_project.isRelease);
                 break;
             case R.id.tv_qqLogin://企业qq登陆
                 app.startActivity(this, LoginBQQActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
@@ -156,7 +218,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      *
      * @param body 表单
      *             、 @param type 1，微信登录；2，普通登录
-     *             <p>
+     *             <p/>
      *             成功 getStatus 状态码
      *             失败 getKind 状态码
      */

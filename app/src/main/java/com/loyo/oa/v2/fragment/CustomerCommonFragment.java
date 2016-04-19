@@ -28,6 +28,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Tag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.beans.User;
@@ -77,13 +78,14 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private ViewStub emptyView;
 
     private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private int customer_type;//"1,我的客户", "2,团队客户", "3,公海客户"
+    private int customer_type = 1;//"1,我的客户", "2,团队客户", "3,公海客户"
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private boolean isPullUp = false;
     private boolean isNear = false;//附近客户传的值过来
     private String position;
     private NearCount nearCount;
+    private Permission permission = (Permission)MainApp.rootMap.get("0404");
 
     private DropListMenu mDropMenu;
     private ArrayList<DropItem> source = new ArrayList<>();
@@ -160,6 +162,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtil.dee("当前页面:" + customer_type);
         if (customer_type != Customer.CUSTOMER_TYPE_MINE) {
             btn_add.setVisibility(View.GONE);
         }
@@ -642,6 +645,15 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         });
     }
 
+    public void permissionTest(ImageView img){
+            /*超级管理员/Web控制权限判断*/
+        if(!MainApp.user.isSuperUser()){
+            if(!permission.isEnable()){
+                img.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -649,7 +661,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-            LogUtil.dll("投入公海，公海挑入，刷新");
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
@@ -738,7 +749,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 tv_content1.setText("标签：" + tagItems);
                 tv_content2.setText("跟进时间：" + lastActivityAt);
-
             }
             //团队
             else if (customer_type == Customer.CUSTOMER_TYPE_TEAM) {
@@ -758,7 +768,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             }
             //公海
             else if (customer_type == Customer.CUSTOMER_TYPE_PUBLIC) {
-                img_public.setVisibility(View.VISIBLE);
+                permissionTest(img_public);
                 layout_go_where.setVisibility(View.GONE);
                 layout2.setVisibility(View.VISIBLE);
                 layout3.setVisibility(View.GONE);

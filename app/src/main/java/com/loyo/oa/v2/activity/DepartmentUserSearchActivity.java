@@ -79,7 +79,6 @@ public class DepartmentUserSearchActivity extends Activity {
         listView.setAdapter(adapter);
         listView.setPullToRefreshEnabled(false);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 User user = resultData.get((int) id);
@@ -93,7 +92,6 @@ public class DepartmentUserSearchActivity extends Activity {
                     MainApp.getMainApp().finishActivity(DepartmentUserSearchActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                 }
             }
-
         });
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);

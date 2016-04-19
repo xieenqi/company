@@ -169,7 +169,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                Toast("网络异常，请稍后再试");
+                finish();
             }
         });
     }
@@ -282,7 +283,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
         tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人： 无抄送人" : "抄送人： "+getJoinUserNames());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: "+getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
@@ -291,7 +292,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         } else {
             tv_ptoject.setText("无");
         }
-
 
         showAttachment();
         if (mWorkReport.isReviewed()) {
@@ -386,8 +386,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putInt("bizType", 1);
         int status = Integer.parseInt(mWorkReport.reviewer.getStatus());
         ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
-
-//        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
     /**

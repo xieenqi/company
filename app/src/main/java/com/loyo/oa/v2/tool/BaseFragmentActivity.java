@@ -129,9 +129,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         LogUtil.d(this.getClass().getName() + "-恢复实例状态: 完成");
     }
 
-    DrawerLayout main_layout;
-//    View f;
-
     protected void setTitle(String title) {
         ((TextView) findViewById(R.id.tv_title_1)).setText(title);
     }
@@ -139,8 +136,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        main_layout = (DrawerLayout) findViewById(R.id.main_layout);
-//        f = this.findViewById(R.id.navigation_drawer);
     }
 
     @Override

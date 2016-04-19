@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activity.signin.SignInActivity;
 import com.loyo.oa.v2.beans.PaginationLegWork;
 import com.loyo.oa.v2.beans.TeamLegworkDetail;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -295,6 +296,7 @@ public class SignInOfTeamFragment extends BaseFragment implements View.OnClickLi
     private void previewLegWorks(User user) {
         Intent intent = new Intent(mActivity, LegworksListActivity_.class);
         intent.putExtra("data", user);
+        intent.putExtra(ExtraAndResult.EXTRA_DATA, endAt);
         startActivity(intent);
     }
 

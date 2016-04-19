@@ -119,6 +119,73 @@
 
     </RelativeLayout>
 
+
+    <LinearLayout
+        android:id="@+id/layout_check_debug"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:id="@+id/layout_server_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tv_server_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="测试环境"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/iv_server_test"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/img_check1"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout_server_formal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tv_server_formal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="正式环境"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/iv_server_formal"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/img_check1"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -6,7 +6,9 @@ import com.loyo.oa.v2.activity.commonview.SelectUserHelper;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
@@ -31,13 +33,14 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public Position shortPosition;
     public Department shortDept;
     public ArrayList<UserInfo> depts = new ArrayList<>();
-    public Permission permission;
+    public ArrayList<Permission> newpermission = new ArrayList<>();
     public boolean isBQQ;
     public boolean index;
     public boolean isSuperUser;
     public int gender;
     public long updatedAt;
     public long createdAt;
+
 
     public boolean isSuperUser() {
         return isSuperUser;
@@ -101,7 +104,7 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
         return this.depts.get(0).getShortDept().getId();
     }
 
-    public boolean isExistDepartment (String id){
+    public boolean isExistDepartment(String id) {
         if (TextUtils.isEmpty(id))
             return false;
         for (int i = 0; i < depts.size(); i++) {
@@ -118,6 +121,11 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
         if (TextUtils.isEmpty(id))
             return false;
         return id.equals(this.id);
+    }
+
+    @Override
+    public String getName() {
+        return realname;
     }
 
     @Override

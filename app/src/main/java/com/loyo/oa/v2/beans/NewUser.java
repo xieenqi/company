@@ -18,14 +18,14 @@ public class NewUser implements Serializable {
     private String name;
     private String avatar;
     private String xpath;
-    private ArrayList<NewUser> users = new ArrayList<>();
+    private List<NewUser> users = new ArrayList<>();
 
 
-    public ArrayList<NewUser> getUsers() {
+    public List<NewUser> getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<NewUser> users) {
+    public void setUsers(List<NewUser> users) {
         this.users = users;
     }
 
