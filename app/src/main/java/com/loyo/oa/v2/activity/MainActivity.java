@@ -339,8 +339,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            img_user.setImageResource(R.drawable.img_default_user);
-            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
+            int defaultAcatar;
+            if(MainApp.user.gender == 2){
+                defaultAcatar = R.drawable.icon_contact_avatar;
+            }else{
+                defaultAcatar = R.drawable.img_default_user;
+            }
+            img_user.setImageResource(defaultAcatar);
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), defaultAcatar);
             Bitmap blur = Utils.doBlur(bitmap, 50, false);
             img_home_head.setImageResource(android.R.color.transparent);
             container.setBackgroundDrawable(new BitmapDrawable(blur));
@@ -374,20 +380,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             });
         }
         tv_user_name.setText(MainApp.user.getRealname());
-//        initBugly();
         initPopupMenu();
     }
-
-//    @Background
-//    void initBugly() {
-//        String info = "companyId=" + MainApp.user.company_id;
-//        if (null != MainApp.user.departmentsName) {
-//            info = info + "," + MainApp.user.departmentsName;
-//        }
-//        if (null != MainApp.user.getRealname()) {
-//            info = info + "," + MainApp.user.getRealname();
-//        }
-//    }
 
     /**
      * 初始化弹出菜单

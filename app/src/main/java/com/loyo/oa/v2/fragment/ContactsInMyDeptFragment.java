@@ -21,7 +21,6 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.PinyinComparator;
 import com.loyo.oa.v2.common.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public CharacterParser characterParser;
     public PinyinComparator pinyinComparator;
     public LayoutInflater mInflater;
+    public int defaultAvatar;
 
     public ArrayList<User> myUserList;
     public ArrayList<UserInfo> myDepts;
@@ -50,7 +50,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public TextView deptInfoTv;
     public TextView catalogTv;
     public LinearLayout item_medleft_top;
-
     public StringBuffer myDeptBuffer;
 
     @Override
@@ -67,7 +66,16 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         super.onResume();
         /*及时刷新头像*/
         heading = (ImageView)headView.findViewById(R.id.img);
-        ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), heading);
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            if(MainApp.user.gender == 2){
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            }else{
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            heading.setImageResource(defaultAvatar);
+        }else{
+            ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), heading);
+        }
     }
 
     public void initView(View view) {

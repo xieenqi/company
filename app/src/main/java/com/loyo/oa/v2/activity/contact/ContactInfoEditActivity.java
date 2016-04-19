@@ -320,9 +320,23 @@ public class ContactInfoEditActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.isEmpty(user.avatar)) {
+/*        if (!TextUtils.isEmpty(user.avatar)) {
+            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+        }*/
+
+        int defaultAvatao;
+
+        if(null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")){
+            if(MainApp.user.gender == 2){
+                defaultAvatao = R.drawable.icon_contact_avatar;
+            }else{
+                defaultAvatao = R.drawable.img_default_user;
+            }
+            img_title_user.setImageResource(defaultAvatao);
+        }else{
             ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         }
+
 
         path = user.getAvatar();
         Utils.setContent(tv_mobile, user.mobile);
