@@ -293,7 +293,6 @@ public class DropListMenu extends LinearLayout {
     public void setmMenuItems(ArrayList<DropItem> menuItems) {
         mMenuItems = menuItems;
         mDrawable = true;
-
         initPopopWindows();
         invalidate();
     }
