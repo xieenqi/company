@@ -54,7 +54,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
     @ViewById(R.id.lv_attendance_category)
     ListView categoryListView;
 
-    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};;
+    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
     private Permission permission;
