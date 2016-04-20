@@ -10,6 +10,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.WfInstanceTypeSelectListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
+import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfTemplate;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -77,6 +78,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                             public void success(final BizForm bizForm, final Response response) {
                                 HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
                                 if (bizForm != null) {
+                                    bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                                     if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {//没有审批内容
                                         final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置审批内容,\n请选择其它类别！");
                                         dailog.setNoCancelOnclick(new View.OnClickListener() {
@@ -104,6 +106,22 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                 }
             });
         }
+    }
+
+    /**
+     * 过滤审批内容没有被启用的数据
+     *
+     * @param field
+     * @return
+     */
+    private ArrayList<BizFormFields> filedWfinstanceInfo(ArrayList<BizFormFields> field) {
+        ArrayList<BizFormFields> newField = new ArrayList<>();
+        for (BizFormFields ele : field) {
+            if (ele.isEnable()) {
+                newField.add(ele);
+            }
+        }
+        return newField;
     }
 
     @Override
