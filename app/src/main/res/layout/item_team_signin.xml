@@ -72,4 +72,5 @@
 
 
     </LinearLayout>
+    <include layout="@layout/include_solid_line_left"/>
 </LinearLayout>
