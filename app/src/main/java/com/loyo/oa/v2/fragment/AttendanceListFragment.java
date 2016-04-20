@@ -369,33 +369,38 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtype", type);
         map.put("qtime", qtime);
         map.put("pageIndex", page);
-        map.put("pageSize", 50);
+        map.put("pageSize", 5);
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
                 HttpErrorCheck.checkResponse(type + " 考勤列表的数据：", response);
-                if (type == 1) {
-                    attendanceList = result.records;
-                    initStatistics();
-                } else {
-                    getTeamData();
-                }
+                    if (type == 1) {
+                        attendanceList = result.records;
+                        initStatistics();
+                    } else {
+                        getTeamData();
+                    }
 
-                if (isPullDowne || page == 1) {
-                    attendances = result.records.getAttendances();
-                } else {
-                    attendances.addAll(result.records.getAttendances());
-                }
-                bindData();
-                if (page != 1) {
-                    adapter.notifyDataSetChanged();
-                }
+                    if (isPullDowne || page == 1) {
+                        attendances = result.records.getAttendances();
+                    } else {
+                        attendances.addAll(result.records.getAttendances());
+                    }
+                    bindData();
+                    if (page != 1) {
+                        adapter.notifyDataSetChanged();
+                    }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                HttpErrorCheck.checkError(error);
+                cancelLoading();
+                if(error.getMessage().contains("JsonSyntaxException")){
+                    Toast("没有更多数据了");
+                }else{
+                    HttpErrorCheck.checkError(error);
+                }
             }
         });
     }
