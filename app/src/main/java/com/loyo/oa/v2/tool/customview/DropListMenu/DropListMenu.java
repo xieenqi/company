@@ -198,7 +198,7 @@ public class DropListMenu extends LinearLayout {
 
             Global.SetTouchView(buttonConfirm, buttonCancel);
             menuList.setBackgroundColor(mMenuListBackColor);
-            menuList.setSelector(mMenuListSelectorRes);
+            //menuList.setSelector(mMenuListSelectorRes);
 
             /**
              * 左侧Listiew

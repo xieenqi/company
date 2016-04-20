@@ -33,6 +33,7 @@ import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Tag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -279,22 +280,99 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 初始化部门筛选menu
      */
     private void initOrganizationMenu() {
+        /*数据权限判断*/
+        int dataRange = MainApp.user.role.getDataRange();
+        //获取所有部门
         ArrayList<Department> departments = Common.getLstDepartment();
+        //标签名字设置
         DropItem dropItemTag = new DropItem("部门");
-        dropItemTag.setSelectType(DropItem.GROUP_SINGLE);
-        for (int i = 0; i < departments.size(); i++) {
-            ArrayList<User> users = Common.getUsersByDeptId(departments.get(i).getId(), new ArrayList<User>());
-            ArrayList<DropItem> dropItems = new ArrayList<>();
-            DropItem parentItem = new DropItem(departments.get(i).getName(), i, departments.get(i).getId());
-            if (!users.isEmpty()) {
-                for (int j = 0; j < users.size(); j++) {
-                    DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
-                    dropItems.add(dropItem);
+        StringBuffer stringBuffer;
+        String[] deptIds;
+
+        switch(dataRange){
+
+            //全公司
+            case 1:
+                dropItemTag = new DropItem("全公司");
+                for (int i = 0; i < departments.size(); i++) {
+                    //每个部门下 人员获取
+                    ArrayList<User> users = Common.getUsersByDeptId(departments.get(i).getId(), new ArrayList<User>());
+                    //把每个部门 队列放进菜单
+                    ArrayList<DropItem> dropItems = new ArrayList<>();
+                    DropItem parentItem = new DropItem(departments.get(i).getName(), i, departments.get(i).getId());
+                    //每个人员 队列放进菜单
+                    if (!users.isEmpty()) {
+                        for (int j = 0; j < users.size(); j++) {
+                            DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
+                            dropItems.add(dropItem);
+                        }
+                    }
+                    parentItem.setSubDropItem(dropItems);
+                    dropItemTag.addSubDropItem(parentItem);
                 }
-            }
-            parentItem.setSubDropItem(dropItems);
-            dropItemTag.addSubDropItem(parentItem);
+
+                break;
+
+            //部门
+            case 2:
+                dropItemTag = new DropItem("本部门");
+                stringBuffer = new StringBuffer();
+                //得到我的部门id
+                for(UserInfo userInfo : MainApp.user.getDepts()){
+                    stringBuffer.append(userInfo.getShortDept().getId()+",");
+                }
+                deptIds = stringBuffer.toString().split(",");
+
+                for(int i = 0;i<deptIds.length;i++){
+                    ArrayList<User> users = Common.getUsersByDeptId(deptIds[i], new ArrayList<User>());
+                    //把每个部门 队列放进菜单
+                    ArrayList<DropItem> dropItems = new ArrayList<>();
+                    DropItem parentItem = new DropItem(Common.getMyDeptment(deptIds[i]).getName(), i, Common.getMyDeptment(deptIds[i]).getId());
+                    //每个人员 队列放进菜单
+                    if (!users.isEmpty()) {
+                        for (int j = 0; j < users.size(); j++) {
+                            DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
+                            dropItems.add(dropItem);
+                        }
+                    }
+                    parentItem.setSubDropItem(dropItems);
+                    dropItemTag.addSubDropItem(parentItem);
+                }
+
+                break;
+
+            //个人
+            case 3:
+                dropItemTag = new DropItem("本人");
+                stringBuffer = new StringBuffer();
+                //得到我的部门id
+                for(UserInfo userInfo : MainApp.user.getDepts()){
+                    stringBuffer.append(userInfo.getShortDept().getId()+",");
+                }
+                deptIds = stringBuffer.toString().split(",");
+
+                for(int i = 0;i<deptIds.length;i++){
+                    ArrayList<User> users = Common.getUsersByDeptId(deptIds[i], new ArrayList<User>());
+                    //把每个部门 队列放进菜单
+                    ArrayList<DropItem> dropItems = new ArrayList<>();
+                    DropItem parentItem = new DropItem(Common.getMyDeptment(deptIds[i]).getName(), i, Common.getMyDeptment(deptIds[i]).getId());
+                    //每个人员 队列放进菜单
+                    if (!users.isEmpty()) {
+                        for (int j = 0; j < users.size(); j++) {
+                            if(users.get(j).getId().equals(MainApp.user.getId())){
+                                DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
+                                dropItems.add(dropItem);
+                            }
+                        }
+                    }
+                    parentItem.setSubDropItem(dropItems);
+                    dropItemTag.addSubDropItem(parentItem);
+                }
+
+                break;
         }
+        //按钮模式设置
+        dropItemTag.setSelectType(DropItem.GROUP_SINGLE);
         source.add(dropItemTag);
     }
 

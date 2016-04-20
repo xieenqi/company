@@ -78,6 +78,20 @@ public final class Common {
     }
 
     /**
+     * 获取我的部门
+     * */
+    public static Department getMyDeptment(String deptId){
+        Department department = new Department();
+        for(Department department2 : getLstDepartment()){
+            if(department2.getId().equals(deptId)){
+                department = department2;
+            }
+        }
+        return department;
+    }
+
+
+    /**
      * 获取部门所有人员（包含部门下属所有部门里的人员）
      *
      * @param deptId
@@ -128,8 +142,6 @@ public final class Common {
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
-
-
         List<Department> departmentList = getLstDepartment(deptId);//全部 组织 架构
         if (departmentList == null || departmentList.isEmpty()) {
             return new ArrayList<>();
