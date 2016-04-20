@@ -15,6 +15,7 @@
             android:id="@id/layout_drag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dimen_19"
             android:gravity="center_vertical"
             >
 
@@ -22,13 +23,13 @@
                 android:id="@+id/img_item_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_20"
+
                 android:layout_marginTop="18dp">
 
                 <ImageView
                     android:id="@+id/img_item"
-                    android:layout_width="@dimen/dimen_25"
-                    android:layout_height="@dimen/dimen_25"
+                    android:layout_width="@dimen/dimen_21"
+                    android:layout_height="@dimen/dimen_21"
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_launcher_bg"
                     />
@@ -41,7 +42,7 @@
                     android:layout_marginTop="5dp"
                     android:text="23"
                     android:textColor="#2c9dfc"
-                    android:textSize="@dimen/text_sp11"
+                    android:textSize="9sp"
                     android:visibility="gone"
                     />
             </FrameLayout>
@@ -50,7 +51,7 @@
             <RelativeLayout
                 android:id="@+id/layout_text_task"
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_height="56dp"
                 android:layout_toRightOf="@+id/img_item_all"
                 android:gravity="bottom">
 
@@ -63,23 +64,20 @@
                     android:gravity="center"
                     android:text="任务"
                     android:textColor="@color/text33"
-                    android:textSize="@dimen/text_sp18"/>
+                    android:textSize="@dimen/text_sp15"/>
 
                 <ImageView
                     android:id="@+id/view_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dimen_9"
+                    android:layout_height="@dimen/dimen_9"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dimen_2"
+                    android:layout_marginLeft="@dimen/dimen_5"
                     android:layout_toRightOf="@+id/tv_item"
                     android:scaleType="fitCenter"
                     android:src="@drawable/bg_view_red_circle"
+                    android:layout_marginBottom="20dp"
                     android:visibility="gone"/>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_alignParentBottom="true"/>
 
                 <TextView
                     android:id="@+id/tv_extra"
@@ -87,14 +85,20 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dimen_30"
+                    android:layout_marginRight="@dimen/dimen_19"
                     android:gravity="center"
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
+                    android:textSize="@dimen/text_sp12"
+                    />
 
             </RelativeLayout>
+
+            <View
+                style="@style/view_split"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
     </com.loyo.oa.v2.tool.customview.RippleView>
 </RelativeLayout>
