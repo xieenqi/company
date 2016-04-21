@@ -45,6 +45,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -177,7 +178,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
                     EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
                     tv_value.setEnabled(false);
-                    tv_value.setText(jsonObject.get(field.getId()) + "");
+                    tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
                     tv_key.setText(field.getName());
                     layout_wfinstance_content.addView(view_value);
@@ -191,6 +192,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private String wfinstanceInfoValue(Object obj) {
+        if (obj.getClass().toString().contains("Double")) {
+            BigDecimal bigDecimal = new BigDecimal(obj + "");
+            return bigDecimal.longValue()+"";
+        } else {
+            return obj + "";
+        }
     }
 
     void initUI_listView_workflowNodes() {
