@@ -78,7 +78,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                             public void success(final BizForm bizForm, final Response response) {
                                 HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
                                 if (bizForm != null) {
-                                    bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                                     if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {//没有审批内容
                                         final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置审批内容,\n请选择其它类别！");
                                         dailog.setNoCancelOnclick(new View.OnClickListener() {
@@ -88,6 +87,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                                             }
                                         });
                                     } else {
+                                        bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                                         getBiaFormDitial(bizForm);
                                     }
                                 }
