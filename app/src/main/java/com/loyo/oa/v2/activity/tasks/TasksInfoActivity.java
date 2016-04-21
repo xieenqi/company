@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -164,6 +164,8 @@ public class TasksInfoActivity extends BaseActivity {
     public TextView tv_reviewer;
     public TextView viewName;
     public TextView viewContent;
+    private StringBuffer joinUserId;
+    private StringBuffer joinName;
 
     public android.os.Handler mHandler = new android.os.Handler() {
         public void handleMessage(final Message msg) {
@@ -262,7 +264,7 @@ public class TasksInfoActivity extends BaseActivity {
      * @return
      */
     private boolean isMenberShortDept(String id, String xpath) {
-        LogUtil.d("部门的值："+xpath);
+        LogUtil.d("部门的值：" + xpath);
         for (UserInfo element : MainApp.user.depts) {
             if (element.getShortDept().getId().equals(id)
                     || (null != xpath && element.getShortDept().getXpath().contains(xpath))) {
@@ -878,15 +880,39 @@ public class TasksInfoActivity extends BaseActivity {
         switch (requestCode) {
 
             /*选择完参与人后，回调*/
-            case ExtraAndResult.REQUEST_CODE:
-                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-                if (cc_user_id != null && cc_user_name != null) {
-                    setJoinUsers(cc_user_id, cc_user_name);
-                } else {
-                    Toast("未选择相关人员");
-                }
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+//                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
+//                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
+//                if (cc_user_id != null && cc_user_name != null) {
+//                    setJoinUsers(cc_user_id, cc_user_name);
+//                } else {
+//                    Toast("未选择相关人员");
+//                }
 
+                member = (Members) data.getSerializableExtra("data");
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (member.users.size() == 0 && member.depts.size() == 0) {
+                    Toast("未选择相关人员");
+                    joinUserId.reverse();
+                } else {
+                    if (null != member.depts) {
+                        for (NewUser newUser : member.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != member.users) {
+                        for (NewUser newUser : member.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    setJoinUsers(joinUserId.toString(), joinName.toString());
+                }
                 break;
 
             //编辑 子任务 返回
@@ -917,10 +943,12 @@ public class TasksInfoActivity extends BaseActivity {
                         bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
-                        Bundle mBundle = new Bundle();
-                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, mBundle);
+//                        Bundle mBundle = new Bundle();
+//                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
+//                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
+//                        app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
+//                                SelectDetUserActivity2.REQUEST_ALL_SELECT, mBundle);
+                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString());
                     }
                                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
@@ -941,10 +969,10 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);
+                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString());
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
+//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT, SelectDetUserActivity2.REQUEST_ALL_SELECT, bundle);
 
                 }
                 break;
