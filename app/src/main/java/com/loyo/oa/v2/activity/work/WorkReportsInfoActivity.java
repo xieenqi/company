@@ -266,7 +266,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         tv_crm.setText(crmName);
         tv_discussion_count.setText("讨论 (" + mWorkReport.bizExtData.getDiscussCount() + ")");
-        tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
+        //tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
 
         edt_workReport_title.setText(title.toString());
 //        webView_content.getSettings().setJavaScriptEnabled(true);
@@ -283,7 +283,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
         tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: "+getJoinUserNames());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: " + getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
@@ -332,10 +332,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     void showAttachment() {
-        if (ListUtil.IsEmpty(mWorkReport.attachments)) {
-            return;
+        if (null != mWorkReport.bizExtData) {
+            tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
         }
-        tv_attachment_count.setText("附件 (" + (mWorkReport.attachments == null ? 0 : mWorkReport.attachments.size()) + ")");
     }
 
     void showDiscussion() {
@@ -503,18 +502,18 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
             case MSG_ATTACHMENT:
                 LogUtil.dll("MSG_ATTACHMENT");
-                if (data == null || data.getExtras() == null) {
+                if (null == data || null == data.getExtras()) {
                     LogUtil.dll("MSG_ATTACHMENT return");
                     return;
                 }
                 ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWorkReport.attachments = attachments;
+                mWorkReport.bizExtData.setAttachmentCount(attachments.size());
                 showAttachment();
                 break;
 
             case MSG_DISCUSSION:
                 LogUtil.dll("MSG_DISCUSSION");
-                if (data == null || data.getExtras() == null) {
+                if (null == data || null == data.getExtras()) {
                     LogUtil.dll("MSG_DISCUSSION return");
                     return;
                 }
