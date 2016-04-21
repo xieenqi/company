@@ -14,7 +14,7 @@
             android:id="@+id/tv_label"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/view_h_title"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:gravity="left|center_vertical"
             android:text="标题："
             android:textColor="#999999"
@@ -32,4 +32,6 @@
             />
 
     </LinearLayout>
+
+    <include layout="@layout/include_solid_line_left"/>
 </LinearLayout>

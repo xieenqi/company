@@ -447,13 +447,25 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
                 break;
             case R.id.layout_send_sms:
-                Utils.sendSms(this, mCustomer.contacts.get(0).getTel());
+                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
+                    Utils.sendSms(this, mCustomer.contacts.get(0).getTel());
+                } else {
+                    Toast("没有号码");
+                }
                 break;
             case R.id.layout_call:
-                Utils.call(this, mCustomer.contacts.get(0).getTel());
+                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
+                    Utils.call(this, mCustomer.contacts.get(0).getTel());
+                } else {
+                    Toast("没有号码");
+                }
                 break;
             case R.id.layout_wiretel_call:
-                Utils.call(this, mCustomer.contacts.get(0).getWiretel());
+                if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
+                    Utils.call(this, mCustomer.contacts.get(0).getWiretel());
+                } else {
+                    Toast("没有号码");
+                }
                 break;
             /*跟进动态*/
             case R.id.layout_sale_activity:
