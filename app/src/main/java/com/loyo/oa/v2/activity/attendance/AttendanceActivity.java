@@ -79,7 +79,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
         findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
         findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
-
         //超级管理员判断
         if(!MainApp.user.isSuperUser()){
             try{
@@ -102,14 +101,14 @@ public class AttendanceActivity extends BaseFragmentActivity {
         initCategoryUI();
         initChildren();
 
-        //获得权限
-        if (null != MainApp.user.role) {
+        //数据权限 暂时取消
+/*        if (null != MainApp.user.role) {
             Identity = MainApp.user.role.getDataRange();
         }
         if (Identity == mIdentity) {
             imageArrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
-        }
+        }*/
     }
 
     @Click({R.id.img_title_left, R.id.layout_title_action})
