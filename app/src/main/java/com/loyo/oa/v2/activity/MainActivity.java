@@ -62,7 +62,6 @@ import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.PusherTest;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
@@ -1122,8 +1121,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onResume();
         intentJpushInfo();
         requestNumber();
-        PusherTest.appTest();
-        LogUtil.d("友盟设备：" + PusherTest.getDeviceInfo(this));
         MobclickAgent.onResume(this);
     }
 

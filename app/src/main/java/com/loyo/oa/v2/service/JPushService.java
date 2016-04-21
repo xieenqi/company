@@ -54,8 +54,11 @@ public class JPushService extends BroadcastReceiver {
             /**
              * 轨迹改变 收到推送重新获取轨迹规则
              */
-            if(7==pushMsgData.buzzType){
+            if (7 == pushMsgData.silentType) {
                 TrackRule.InitTrackRule();
+            } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新组织架构与个人信息
+                LogUtil.d("更新数据禁魔推送： ");
+                TrackRule.initUserData(MainApp.getMainApp());
             }
 
 
@@ -77,7 +80,7 @@ public class JPushService extends BroadcastReceiver {
 //                App.notiflyNews = null;
             ExitActivity.getInstance().finishAllActivity();
             Intent in = new Intent();
-            in.setClass(context,MainActivity_.class);
+            in.setClass(context, MainActivity_.class);
             in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             context.startActivity(in);
             //清除所有通知

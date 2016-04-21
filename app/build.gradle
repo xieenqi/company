@@ -127,8 +127,8 @@ android {
         compile "org.androidannotations:androidannotations-api:$AAVersion"
         //友盟统计
         compile files('libs/umeng-analytics-v5.6.4.jar')
-        //pusher
-        compile 'com.pusher:pusher-java-client:0.3.3'
+//        //pusher
+//        compile 'com.pusher:pusher-java-client:0.3.3'
     }
     productFlavors {
     }
