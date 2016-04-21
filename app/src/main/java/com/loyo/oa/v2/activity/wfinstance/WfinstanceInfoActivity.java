@@ -170,7 +170,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
             for (int j = 0; j < wfInstanceValuesDatas.size(); j++) {
                 HashMap<String, Object> jsonObject = wfInstanceValuesDatas.get(j);
                 for (int i = 0; i < fields.size(); i++) {
-
+                    if (!fields.get(i).isEnable()) {
+                        continue;
+                    }
                     BizFormFields field = fields.get(i);
                     View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
                     EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
