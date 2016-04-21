@@ -21,7 +21,11 @@
         android:layout_toRightOf="@+id/img_project_member_delete"
         android:text="姓名"
         android:textColor="#262626"
-        android:textSize="17sp"/>
+        android:textSize="14sp"
+        android:maxEms="8"
+        android:ellipsize="end"
+        android:singleLine="true"
+        />
 
     <Switch
         android:id="@+id/switch_member"

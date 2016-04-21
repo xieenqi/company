@@ -47,7 +47,7 @@ public class HttpProject implements Serializable {
 
     public class ProjectMember implements Serializable {
         public User user = new User();
-        public Dept dept;
+        public Dept dept = new Dept();
         public boolean canReadAll;
     }
 

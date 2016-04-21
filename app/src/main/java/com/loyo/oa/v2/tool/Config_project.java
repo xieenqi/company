@@ -8,7 +8,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = false; //是否是正式产品
+    public static boolean isRelease = true; //是否是正式产品
 
     //public static final Boolean is_developer_mode = false; //生产模式
 
@@ -73,7 +73,7 @@ public class Config_project {
      * 讨论地址
      */
     public static String SERVER_URL_EXTRA() {
-        return isRelease ? Domain.discuss : IP + ":8050";
+        return isRelease ? Domain.discuss : IP + ":8070";
     }
 
     /**
