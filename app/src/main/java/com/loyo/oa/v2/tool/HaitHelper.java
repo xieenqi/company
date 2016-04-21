@@ -17,6 +17,7 @@ import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class HaitHelper {
     private EditText et_scanner;
     private String oldScanner;
 
-    public HaitHelper(Fragment fragment, EditText et_scanner){
+    public HaitHelper(Fragment fragment, EditText et_scanner) {
         this.et_scanner = et_scanner;
         this.mFragment = fragment;
 
@@ -81,7 +82,7 @@ public class HaitHelper {
         private void toSelectUserByHait() {
             Bundle bundle = new Bundle();
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-            if (null == mFragment){
+            if (null == mFragment) {
                 MainApp.getMainApp().startActivityForResult((Activity) et_scanner.getContext(),
                         SelectDetUserActivity.class,
                         MainApp.ENTER_TYPE_RIGHT,
@@ -89,7 +90,7 @@ public class HaitHelper {
                         bundle);
             } else {
                 mFragment.startActivityForResult(new Intent(mFragment.getActivity(),
-                        SelectDetUserActivity.class).putExtras(bundle),
+                                SelectDetUserActivity.class).putExtras(bundle),
                         ExtraAndResult.REQUEST_CODE);
             }
         }
@@ -180,15 +181,13 @@ public class HaitHelper {
 
     /**
      * 清空已选择的@用户
-     *
      */
-    public void clear(){
+    public void clear() {
         mHaitSelectUsers.clear();
     }
 
     /**
      * 隐藏输入法
-     *
      */
     public void hitKeyBoard() {
         InputMethodManager imm = (InputMethodManager) et_scanner.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -197,7 +196,6 @@ public class HaitHelper {
 
     /**
      * 弹出输入法
-     *
      */
     public void showKeyBoard() {
         InputMethodManager imm = (InputMethodManager) et_scanner.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -219,12 +217,13 @@ public class HaitHelper {
      * @param data
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && data != null) {
+        if (resultCode == Activity.RESULT_OK && null != data) {
             User user = (User) data.getSerializableExtra(User.class.getName());
             if (user != null) {
                 String id = user.toShortUser().getId();
                 if (TextUtils.isEmpty(id) || id.equals(MainApp.user.id)) {
-                    ((BaseActivity) (mFragment != null ? mFragment.getActivity() : et_scanner.getContext())).Toast("不能@自己");
+                    Global.Toast("不能@自己");
+                           // ((BaseActivity) (mFragment != null ? mFragment.getActivity() : et_scanner.getContext())).Toast("不能@自己");
                     return;
                 }
                 String name = user.toShortUser().getName();
@@ -243,7 +242,7 @@ public class HaitHelper {
      *
      * @param user
      */
-    public void addSelectUser(SelectUser user){
+    public void addSelectUser(SelectUser user) {
         showKeyBoard();
         int selection = et_scanner.getSelectionStart();
         et_scanner.getText().insert(selection, add$Name_real(user.name));

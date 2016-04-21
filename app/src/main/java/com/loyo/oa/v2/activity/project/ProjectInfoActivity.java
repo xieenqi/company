@@ -71,6 +71,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
+    BaseFragment fragmentX = null;
 
     @AfterViews
     void initViews() {
@@ -165,7 +166,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 TITLES[i] += "(" + sizes[i] + ")";
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("project", project);
-                BaseFragment fragmentX = null;
+
                 if (i == 0) {
                     bundle.putInt("type", 2);
                 } else if (i == 1) {
@@ -330,9 +331,16 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     });
                 }
                 break;
-            default:
+            case ExtraAndResult.REQUEST_CODE://讨论不能够@自己196708
+                if (fragmentX instanceof DiscussionFragment) {
+                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
+                }
 
                 break;
+
+        }
+        if (fragmentX instanceof DiscussionFragment) {
+            ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
         }
     }
 
