@@ -24,6 +24,8 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.136";
 
+    //public static String IP = "http://192.168.31.155";
+
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用
     }
