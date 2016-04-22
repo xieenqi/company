@@ -61,6 +61,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
     private long endAt, teamAt = 0;
+    private String startTime,endTime;
     private Calendar cal;
     private View mView;
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
@@ -139,7 +140,14 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      */
     private void initTimeStr(long mills) {
         String time = app.df12.format(new Date(mills));
-//        tv_time.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);//文字加注释线
+        String startTimestr = app.df5.format(new Date(mills)) + " 00:00:00";
+        String endTimestr = app.df5.format(new Date(mills)) + " 23:59:59";
+        LogUtil.d("开始时间:"+startTimestr);
+        LogUtil.d("结束时间:"+endTimestr);
+        startTime = DateTool.getDataOne(startTimestr,DateTool.DATE_FORMATE_ALL);
+        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
+        LogUtil.d("开始时间时间戳:"+startTime);
+        LogUtil.d("结束时间时间戳:"+endTime);
         tv_time.setText(time);
     }
 
@@ -270,10 +278,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         map.put("userId", mUser.id);
         /*map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
         map.put("endAt", endAt / 1000);*/
-
-        map.put("startAt", (endAt - 1000) / 1000);
-        map.put("endAt", endAt / 1000);
-
+        map.put("startAt", Long.parseLong(startTime));
+        map.put("endAt",  Long.parseLong(endTime));
         map.put("custId", "");
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
