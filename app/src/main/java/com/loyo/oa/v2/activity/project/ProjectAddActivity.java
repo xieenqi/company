@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
@@ -23,14 +24,17 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -111,7 +115,7 @@ public class ProjectAddActivity extends BaseActivity {
         mManagerIds.append(ProjectMember.GetMnagerUserIds(mProject.managers));
         mManagerNames.append(ProjectMember.getManagersName(mProject.managers));
 
-        if(null != mProject.members){
+        if (null != mProject.members) {
             mMemberIds.append(ProjectMember.GetMenberUserIds(mProject.members));
             mMemberNames.append(ProjectMember.GetUserNames(mProject.members));
         }
@@ -140,7 +144,7 @@ public class ProjectAddActivity extends BaseActivity {
     /**
      * 负责人回调
      * 说  明:组装StringBuffer用于显示名字
-     *       权限控制view设置
+     * 权限控制view设置
      */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_MULTI_SELECT)
     void OnResultManagers(final int resultCode, final Intent data) {
@@ -187,7 +191,7 @@ public class ProjectAddActivity extends BaseActivity {
     /**
      * 参与人回调
      * 说  明:组装StringBuffer用于显示名字
-     *       权限控制view设置
+     * 权限控制view设置
      */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void OnResultMembers(final int resultCode, final Intent data) {
@@ -261,7 +265,7 @@ public class ProjectAddActivity extends BaseActivity {
         /**
          * 新建编辑，给adapter不同的数据源
          * */
-        mAdapter = new ProjectMemberListViewAdapter(this,membersNowData);
+        mAdapter = new ProjectMemberListViewAdapter(this, membersNowData);
 
         /**
          * 适配器初始化 删除item监听
@@ -335,7 +339,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 项目创建
-     * */
+     */
     void CreateProject(final ProjectTransObj obj) {
         LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
         showLoading("");
@@ -360,7 +364,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 项目编辑
-     * */
+     */
     void UpdateProject(final ProjectTransObj obj) {
         LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
         showLoading("");
@@ -414,8 +418,8 @@ public class ProjectAddActivity extends BaseActivity {
      */
     public ArrayList<ManagersMembers> getMenbersEdit() {
         ArrayList<ManagersMembers> newData = new ArrayList<>();
-        for(HttpProject.ProjectMember mm : mProject.members){
-            if(null != mm.dept.name){
+        for (HttpProject.ProjectMember mm : mProject.members) {
+            if (null != mm.dept && null != mm.dept.name) {
                 ManagersMembers menb = new ManagersMembers();
                 menb.dept.name = mm.dept.name;
                 menb.dept.id = mm.dept.id;
@@ -423,7 +427,7 @@ public class ProjectAddActivity extends BaseActivity {
                 newData.add(menb);
             }
 
-            if(null != mm.user.name){
+            if (null != mm.user && null != mm.user.name) {
                 ManagersMembers menb = new ManagersMembers();
                 menb.user.name = mm.user.name;
                 menb.user.id = mm.user.id;
@@ -442,8 +446,8 @@ public class ProjectAddActivity extends BaseActivity {
      */
     public ArrayList<ManagersMembers> getMenbersAdd() {
         ArrayList<ManagersMembers> newData = new ArrayList<>();
-        if(null != members.depts){
-            for(com.loyo.oa.v2.beans.NewUser newUser : members.depts){
+        if (null != members.depts) {
+            for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
                 ManagersMembers menb = new ManagersMembers();
                 menb.dept.name = newUser.getName();
                 menb.dept.id = newUser.getId();
@@ -452,8 +456,8 @@ public class ProjectAddActivity extends BaseActivity {
             }
         }
 
-        if(null != members.users){
-            for(com.loyo.oa.v2.beans.NewUser newUser : members.users){
+        if (null != members.users) {
+            for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
                 ManagersMembers menb = new ManagersMembers();
                 menb.user.name = newUser.getName();
                 menb.user.id = newUser.getId();

@@ -6,9 +6,7 @@ import com.loyo.oa.v2.activity.commonview.SelectUserHelper;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
@@ -36,7 +34,7 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public ArrayList<Permission> newpermission = new ArrayList<>();
     public boolean isBQQ;
     public boolean index;
-    public boolean isSuperUser;
+    public boolean isSuperUser=false;
     public int gender;
     public long updatedAt;
     public long createdAt;

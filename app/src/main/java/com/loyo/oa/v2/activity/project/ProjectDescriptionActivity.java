@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -82,13 +81,13 @@ public class ProjectDescriptionActivity extends BaseActivity {
         if (null != members && !members.isEmpty()) {
             StringBuilder subMembers = new StringBuilder();
 
-            for(int i = 0;i<members.size();i++){
-                if(null != members.get(i).user.name){
-                    subMembers.append(members.get(i).user.name+",");
+            for (int i = 0; i < members.size(); i++) {
+                if (null != members.get(i).user && null != members.get(i).user.name) {
+                    subMembers.append(members.get(i).user.name + ",");
                 }
 
-                if(null != members.get(i).dept.name){
-                    subMembers.append(members.get(i).dept.name+",");
+                if (null != members.get(i).dept && null != members.get(i).dept.name) {
+                    subMembers.append(members.get(i).dept.name + ",");
                 }
             }
             tv_members.setText(subMembers.toString());

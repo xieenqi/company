@@ -253,7 +253,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         JPushInterface.setAlias(getApplicationContext(), "", new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                //设置别名 为空 取消
+                //设置别名 为空
             }
         });
         ExitActivity.getInstance().finishAllActivity();

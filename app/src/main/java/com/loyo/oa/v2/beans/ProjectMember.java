@@ -49,11 +49,11 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            if (member.user.id != null) {
+            if (null != member.user && null != member.user.id) {
                 sb.append(member.user.id);
             }
 
-            if(member.dept.id != null){
+            if (null != member.dept && null != member.dept.id) {
                 sb.append(member.dept.id);
             }
         }
@@ -93,11 +93,11 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            if (member.user.name != null) {
+            if (null != member.user && null != member.user.name) {
                 sb.append(member.user.name);
             }
 
-            if(member.dept.name != null){
+            if (null != member.dept && null != member.dept.name) {
                 sb.append(member.dept.name);
             }
         }
