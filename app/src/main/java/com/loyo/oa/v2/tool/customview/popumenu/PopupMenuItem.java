@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.ViewHolder;
 
+import java.text.SimpleDateFormat;
+
 /**
  * com.loyo.oa.v2.tool.customview.popumenu
  * 描述 :弹出窗条目
@@ -23,12 +25,14 @@ public class PopupMenuItem {
     private TextView menuTitle;
     private ImageView divider;
     private View convertView;
+    private TextView tv_time;
 
     public PopupMenuItem(Context context) {
         convertView = LayoutInflater.from(context).inflate(R.layout.item_popumenu, null, false);
-        menuIcon= ViewHolder.get(convertView,R.id.iv_popu_menu_icon);
-        menuTitle=ViewHolder.get(convertView,R.id.tv_popu_menu_title);
-        divider=ViewHolder.get(convertView,R.id.iv_popu_menu_divider);
+        menuIcon = ViewHolder.get(convertView, R.id.iv_popu_menu_icon);
+        menuTitle = ViewHolder.get(convertView, R.id.tv_popu_menu_title);
+        divider = ViewHolder.get(convertView, R.id.iv_popu_menu_divider);
+        tv_time = ViewHolder.get(convertView, R.id.tv_time);
     }
 
     public View getConvertView() {
@@ -39,7 +43,16 @@ public class PopupMenuItem {
         return divider;
     }
 
-    public void setText(String title){
+    public void setText(String title) {
+        if ("提交报告".equals(title)) {
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String date = sDateFormat.format(new java.util.Date());
+            String dayNum = date.substring(8, 10);
+            tv_time.setText(dayNum);
+            tv_time.setVisibility(View.VISIBLE);
+        } else {
+            tv_time.setVisibility(View.INVISIBLE);
+        }
         menuTitle.setText(title);
     }
 
