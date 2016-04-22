@@ -118,7 +118,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initData_WorkflowValues() {
-        if (wfInstance == null || wfInstance.workflowValues == null) {
+        if (null == wfInstance || null == wfInstance.workflowValues) {
             return;
         }
         wfInstanceValuesDatas.clear();
@@ -129,7 +129,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (wfInstance != null && wfInstance.workflowValues != null && wfInstance.workflowValues != null) {
+        if (null != wfInstance && null != wfInstance.workflowValues && null != wfInstance.workflowValues) {
             wfInstance.ack = true;
             wfInstance.workflowValues.clear();
             Intent intent = new Intent();
@@ -195,9 +195,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     private String wfinstanceInfoValue(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+
         if (obj.getClass().toString().contains("Double")) {
             BigDecimal bigDecimal = new BigDecimal(obj + "");
-            return bigDecimal.longValue()+"";
+            return bigDecimal.doubleValue() + "";
         } else {
             return obj + "";
         }

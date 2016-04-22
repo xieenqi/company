@@ -169,7 +169,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                Toast("网络异常，请稍后再试");
+                HttpErrorCheck.checkError(error);
                 finish();
             }
         });
@@ -347,7 +347,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        if (mWorkReport != null) {
+        if (null != mWorkReport) {
             mWorkReport.ack = true;
             intent.putExtra("review", mWorkReport);
         }
