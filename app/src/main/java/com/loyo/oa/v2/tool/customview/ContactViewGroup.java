@@ -35,7 +35,6 @@ public class ContactViewGroup extends LinearLayout {
         void onSetDefault(Contact contact);
     }
 
-
     private Context context;
     private Contact mContact;
     private MainApp app = MainApp.getMainApp();

@@ -56,9 +56,15 @@ public class JPushService extends BroadcastReceiver {
              */
             if (7 == pushMsgData.silentType) {
                 TrackRule.InitTrackRule();
-            } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新组织架构与个人信息
-                LogUtil.d("更新数据禁魔推送： ");
+            } else if (8 == pushMsgData.silentType || 9 == pushMsgData.silentType) {//更新8组织架构与9个人信息
+                LogUtil.d("更新数据激光推送：更新8组织架构与9个人信息 ");
                 TrackRule.initUserData(MainApp.getMainApp());
+            } else if (10 == pushMsgData.silentType) {//动态字段
+
+            } else if (11 == pushMsgData.silentType) {//客户标签
+
+            } else if (12 == pushMsgData.silentType) {//审批类别
+
             }
 
 
