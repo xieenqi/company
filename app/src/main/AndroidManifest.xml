@@ -64,9 +64,10 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="cn.jpush.android.ui.PushActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="${applicationId}" />
+                <action android:name="cn.jpush.android.ui.PushActivity"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="${applicationId}"/>
             </intent-filter>
         </activity>
 
@@ -167,7 +168,7 @@
             android:name=".activity.project.ProjectManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.project.ProjectInfoActivity_"
             android:launchMode="standard"
@@ -223,7 +224,7 @@
             android:name=".activity.customer.CustomerManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.customer.CustomerAddActivity_"
             android:launchMode="singleTop"
@@ -265,7 +266,7 @@
             android:name=".activity.contact.ContactsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"

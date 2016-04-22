@@ -180,7 +180,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
     private ArrayList<BizForm> filedBizFormInfo(ArrayList<BizForm> field) {
         ArrayList<BizForm> newField = new ArrayList<>();
         for (BizForm ele : field) {
-            if (ele.isEnable()) {
+            if (ele.isEnable() && !"赢单审核".equals(ele.getName())) {//yaoq过滤赢单审核160422
                 newField.add(ele);
             }
         }
