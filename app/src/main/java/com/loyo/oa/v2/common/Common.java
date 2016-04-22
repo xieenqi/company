@@ -90,9 +90,51 @@ public final class Common {
         return department;
     }
 
-
     /**
      * 获取部门所有人员（包含部门下属所有部门里的人员）
+     *
+     * @param deptId
+     * @param result
+     * @return
+     */
+    public static ArrayList<User> getAllUsersByDeptId(String deptId, ArrayList<User> result) {
+        ArrayList<Department> departments = getLstDepartment(deptId);
+        ArrayList<User> users = getListUser(deptId);
+
+        if (null != users && !users.isEmpty()) {
+            for (int i = 0; i < users.size(); i++) {
+                User u = users.get(i);
+                if (!result.contains(u)) {
+                    result.add(u);
+                }
+            }
+        }
+
+        if (null != departments && !departments.isEmpty()) {
+            for (int i = 0; i < departments.size(); i++) {
+                getUsersByDeptId(departments.get(i).getId(), result);
+            }
+        }
+        if (null != departments && !departments.isEmpty()) {
+            for (int i = 0; i < departments.size(); i++) {
+                ArrayList<User> mUsers = departments.get(i).getUsers();
+                if (null != mUsers && !mUsers.isEmpty()) {
+                    for (int j = 0; j < mUsers.size(); j++) {
+                        User u = mUsers.get(j);
+                        if (!result.contains(u)) {
+                            result.add(u);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 获取部门所有人员
      *
      * @param deptId
      * @param result
@@ -113,7 +155,7 @@ public final class Common {
 
         if (null != departments && !departments.isEmpty()) {
             for (int i = 0; i < departments.size(); i++) {
-//                getUsersByDeptId(departments.get(i).getId(), result);
+                getUsersByDeptId(departments.get(i).getId(), result);
             }
         }
         if (null != departments && !departments.isEmpty()) {

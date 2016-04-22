@@ -448,9 +448,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 //                }
                 Bundle extras = new Bundle();
                 Members members = new Members();
-
                 getResultData(members, SelectUserHelper.mCurrentSelectDatas);
-
                 extras.putSerializable("data", members);
                 setResult(RESULT_OK, new Intent().putExtras(extras));
                 finish();
@@ -535,5 +533,4 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
             }
         }
     }
-
 }

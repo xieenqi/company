@@ -135,19 +135,15 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     /**
      * 初始化时间显示
-     *
+     * 获取某天开始时间和结束时间
      * @param mills
      */
     private void initTimeStr(long mills) {
         String time = app.df12.format(new Date(mills));
         String startTimestr = app.df5.format(new Date(mills)) + " 00:00:00";
         String endTimestr = app.df5.format(new Date(mills)) + " 23:59:59";
-        LogUtil.d("开始时间:"+startTimestr);
-        LogUtil.d("结束时间:"+endTimestr);
         startTime = DateTool.getDataOne(startTimestr,DateTool.DATE_FORMATE_ALL);
         endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
-        LogUtil.d("开始时间时间戳:"+startTime);
-        LogUtil.d("结束时间时间戳:"+endTime);
         tv_time.setText(time);
     }
 

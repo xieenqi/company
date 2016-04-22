@@ -471,7 +471,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         map.put("extDatas", mCustomer.extDatas);
         map.put("regional", regional);
 
-        LogUtil.dll("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
+        LogUtil.d("提交客户信息，发送的数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
