@@ -8,6 +8,7 @@ import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.MembersRoot;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Product;
@@ -106,6 +107,12 @@ public interface ICustomer {
     @GET("/customer/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
+
+    /**
+     * 获取参与人权限
+     * */
+    @GET("/config/?key=cust_member_canedit")
+    void getMembersRoot(Callback<MembersRoot> callback);
 
     /**
      * 丢入公海

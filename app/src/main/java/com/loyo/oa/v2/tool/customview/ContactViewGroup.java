@@ -65,7 +65,7 @@ public class ContactViewGroup extends LinearLayout {
      * @param id     视图id
      * @param parent 视图父容器
      */
-    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber) {
+    public void bindView(final int id, final ViewGroup parent, boolean isMyUser, boolean isMber,boolean isRoot) {
         setId(id);
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -85,10 +85,12 @@ public class ContactViewGroup extends LinearLayout {
             final ImageView edit = (ImageView) findViewById(R.id.img_edit);
 
             /*判断是否有操作权限*/
-            if (!isMyUser) {
-                edit.setVisibility(View.GONE);
-                del.setVisibility(View.GONE);
-                default_.setVisibility(View.GONE);
+            if (!isMyUser || isMber) {
+                if(!isRoot){
+                    edit.setVisibility(View.GONE);
+                    del.setVisibility(View.GONE);
+                    default_.setVisibility(View.GONE);
+                }
             }
 
             ViewGroup call = (ViewGroup) findViewById(R.id.layout_call);

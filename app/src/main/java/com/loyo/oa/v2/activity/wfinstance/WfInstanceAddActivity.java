@@ -278,6 +278,14 @@ public class WfInstanceAddActivity extends BaseActivity {
                 if (mBizForm != null) {
                     intBizForm();
                 }
+
+                /*审批开始时间不能小于结束时间，
+                从审批内容里获取到 开始时间 结束时间 的id
+                再根据这个id去获取 开始结束 时间的值    */
+                /*for(int i = 0;i<mBizForm.getFields().size();i++){
+                    if(mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).is)
+                    LogUtil.d("审批内容:"+mBizForm.getFields().get(i).getName().equals("开始时间"));
+                }*/
                 break;
 
             case SelectPicPopupWindow.GET_IMG:

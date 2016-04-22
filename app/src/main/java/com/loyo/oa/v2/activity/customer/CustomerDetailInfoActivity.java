@@ -22,6 +22,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Member;
+import com.loyo.oa.v2.beans.MembersRoot;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -121,9 +122,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     public boolean isLock;
     public boolean isMyUser;
     public boolean isPutOcen;
+    public boolean isRoot = false;
     public Permission perDelete;
     public Permission perOcean;
     public Permission perGet;
+    private MembersRoot memRoot;
+
 
     @AfterViews
     void initViews() {
@@ -133,6 +137,29 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         getData();
 
     }
+
+
+    /**
+     * 获取参与人权限
+     * */
+    void getMembersRoot(){
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getMembersRoot(new RCallback<MembersRoot>() {
+                    @Override
+                    public void success(MembersRoot membersRoot, Response response) {
+                        HttpErrorCheck.checkResponse("参与人权限", response);
+                        memRoot = membersRoot;
+                        initData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
 
     /**
      * 获取数据
@@ -147,10 +174,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Toast("获取数据失败");
                     return;
                 }
-                LogUtil.dll("客户详情:" + MainApp.gson.toJson(customer));
                 isLock = customer.lock;
                 mCustomer = customer;
-                initData();
+                getMembersRoot();
                 cancelLoading();
             }
 
@@ -187,6 +213,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Toast("客户挑入权限,code错误");
                 }
             }
+        }
+
+        if(memRoot.getValue().equals("0")){
+            isRoot = false;
+        }else{
+            isRoot = true;
         }
 
         /*判断是否有操作权限，来操作改客户信息
@@ -413,6 +445,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 showEditPopu();
                 break;
             case R.id.layout_customer_info:
+                bundle.putBoolean("isRoot",isRoot);
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 3);
@@ -441,6 +474,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             /*联系人*/
             case R.id.layout_contact:
                 bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putBoolean("isRoot",isRoot);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
                 _class = CustomerContactManageActivity_.class;

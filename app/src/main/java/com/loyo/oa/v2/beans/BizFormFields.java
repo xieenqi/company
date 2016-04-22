@@ -17,7 +17,6 @@ public class BizFormFields implements Serializable {
     private boolean required;
     private boolean enable;
     private boolean canUpdate;
-
     private long updatedAt;
 
     public String getValue() {
