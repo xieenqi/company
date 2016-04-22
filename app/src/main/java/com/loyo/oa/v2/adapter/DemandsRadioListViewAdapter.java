@@ -76,12 +76,14 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
 
         final Demand demand = lstData.get(position);
         if (demand.getProduct() != null) {
-            tv_customer_name.setText(TextUtils.isEmpty(demand.getProduct().getName()) ? "无" : demand.getProduct().getName());
+            tv_customer_name.setText(TextUtils.isEmpty(demand.getProduct().name) ? "无" : demand.getProduct().name);
         }
 
-        tv_phase.setText("阶段：" + demand.getSaleStage().getName()+wfStatusText(demand.getWfState()));
-        tv_content_plan.setText("预估：\t数量\t\t" + demand.getEstimatedNum() + "\t\t\t\t单价\t\t" + demand.getEstimatedPrice()+demand.getProduct().getUnid());
-        tv_content_act.setText("成交：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice()+demand.getProduct().getUnid());
+        tv_phase.setText("阶段：" + demand.getSaleStage().getName() + wfStatusText(demand.getWfState()));
+        tv_content_plan.setText("预估：\t数量\t\t" + demand.getEstimatedNum() + "\t\t\t\t单价\t\t" + demand.getEstimatedPrice() + " "
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));
+        tv_content_act.setText("成交：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice() + " "
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));
         if (demand.getSaleStage().getProb() == 0) {
             tv_lose_reason.setVisibility(View.VISIBLE);
             StringBuilder reason = new StringBuilder("输单原因：");
@@ -101,9 +103,9 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
 
         tv_memo.setText("备注：" + demand.getMemo());
 
-        if (!isMyUser||1==demand.getWfState()||2==demand.getWfState()||4==demand.getWfState()||5==demand.getWfState()) {
+        if (!isMyUser || 1 == demand.getWfState() || 2 == demand.getWfState() || 4 == demand.getWfState() || 5 == demand.getWfState()) {
             img_edit_damand.setVisibility(View.GONE);
-        }else if(3==demand.getWfState()||isMyUser){
+        } else if (3 == demand.getWfState() || isMyUser) {
             img_edit_damand.setVisibility(View.VISIBLE);
         }
 
@@ -116,7 +118,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         /**
          * 赢单状态可以看审批详情
          */
-        if (0!=demand.getWfState()) {
+        if (0 != demand.getWfState()) {
             convertView.setOnTouchListener(Global.GetTouch());
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,8 +154,9 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         MainApp.getMainApp().startActivityForResult((Activity) mContext, DemandsAddActivity.class,
                 MainApp.ENTER_TYPE_BUTTOM, DemandsManageActivity.VIEW_DEMANDS, bundle);
     }
-    private String wfStatusText(final int index){
-        switch (index){
+
+    private String wfStatusText(final int index) {
+        switch (index) {
             case WfInstance.STATUS_NEW:
                 return "(待审核)";
             case WfInstance.STATUS_PROCESSING:

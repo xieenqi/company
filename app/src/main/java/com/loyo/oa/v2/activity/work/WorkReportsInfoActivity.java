@@ -308,7 +308,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
             } else {
                 layout_content.setVisibility(View.GONE);
             }
-
+            if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
+                //显示编辑、删除按钮
+                img_title_right.setVisibility(View.GONE);
+            }
         } else {
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
@@ -397,11 +400,11 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                if (mWorkReport.isReviewed()) {
-                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                    intent.putExtra("extra", "复制报告");
-                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
-                } else {
+                if (null != mWorkReport.creator && app.user.id.equals(mWorkReport.creator.getId())) {
+//                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+//                    intent.putExtra("extra", "复制报告");
+//                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+//                } else {//只有创建者才可以负责报告
                     LogUtil.dll("报告详情，右上角按钮 else");
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("delete", true);

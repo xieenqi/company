@@ -164,7 +164,8 @@ public class BulletinAddActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
+            public void success(ArrayList<Attachment> attachments, Response response) {
+                HttpErrorCheck.checkResponse("获取通知附件：", response);
                 mAttachment = attachments;
                 init_gridView_photo();
             }
@@ -173,7 +174,6 @@ public class BulletinAddActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
             }
         });
     }
@@ -213,6 +213,7 @@ public class BulletinAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), map, new RCallback<Attachment>() {
             @Override
             public void success(final Attachment attachment, final Response response) {
+                HttpErrorCheck.checkResponse("删除通知附件：", response);
                 Toast("删除附件成功!");
                 mAttachment.remove(delAttachment);
                 mGridViewAdapter.setDataSource(mAttachment);
@@ -221,7 +222,7 @@ public class BulletinAddActivity extends BaseActivity {
 
             @Override
             public void failure(final RetrofitError error) {
-                Toast("删除附件失败!");
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
         });

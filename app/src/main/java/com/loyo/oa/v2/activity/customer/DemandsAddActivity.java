@@ -164,9 +164,9 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
         }
         super.setTitle("更新购买意向");
         if (demand.getProduct() != null) {
-            productIdSelect = demand.getProduct().getId();
-            productNameSelect = demand.getProduct().getName();
-            tv_products.setText(demand.getProduct().getName());
+            productIdSelect = demand.getProduct().id;
+            productNameSelect = demand.getProduct().name;
+            tv_products.setText(demand.getProduct().name);
         }
 
         edt_num.setText(String.valueOf(demand.getEstimatedNum()));
@@ -312,12 +312,12 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         productsRadioListViewAdapter.notifyDataSetChanged();
                         productsRadioListViewAdapter.isSelected = id;
 
-                        productIdSelect = lstData_Product.get((int) id).getId();
-                        productNameSelect = lstData_Product.get((int) id).getName();
-                        tv_products.setText(lstData_Product.get((int) id).getName());
+                        productIdSelect = lstData_Product.get((int) id).id;
+                        productNameSelect = lstData_Product.get((int) id).name;
+                        tv_products.setText(lstData_Product.get((int) id).name);
 
-                        edt_price.setHint("请输入单价("+lstData_Product.get(position).getUnid()+")");
-                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).getUnid()+")");
+                        edt_price.setHint("请输入单价("+lstData_Product.get(position).unit+")");
+                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).unit+")");
 
                         dialog_Product.dismiss();
                     }

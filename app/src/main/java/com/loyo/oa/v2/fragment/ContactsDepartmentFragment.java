@@ -87,6 +87,8 @@ public class ContactsDepartmentFragment extends BaseFragment {
             view = inflater.inflate(R.layout.fragment_user, container, false);
             mInflater = LayoutInflater.from(getActivity());
 
+            LogUtil.d("全公司人员数据:"+MainApp.gson.toJson(lstUserGroupData));
+
             /*我的部门View初始化*/
             headView = mInflater.inflate(R.layout.item_mydept_layout, null);
             nameTv =  (TextView)headView.findViewById(R.id.tv_mydept_content);
@@ -417,7 +419,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
                 return true;
             }
-
         });
 
         for (int i = 0; i < lstUserGroupData.size(); i++) {

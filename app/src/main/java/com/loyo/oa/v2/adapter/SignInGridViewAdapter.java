@@ -206,7 +206,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
 //loyocloud-01.img-cn-qingdao.aliyuncs.com
         //@1e_1c_0o_0l_100h_100w_90q.src
 //        String newUrl = url.replaceAll("loyocloud-01.oss-cn-qingdao.aliyuncs.com", "loyocloud-01.img-cn-qingdao.aliyuncs.com");
-        String newUrl = url + "@1e_1c_0o_0l_200h_200w_80q.src";
+        String newUrl = url + "@1e_1c_0o_0l_400h_400w_80q.src";
         LogUtil.d("小图片的url：" + newUrl);
         return newUrl;
 
