@@ -301,6 +301,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
                         @Override
                         public void success(final Project o, final Response response) {
+                            HttpErrorCheck.checkResponse("删除项目：", response);
                             Intent intent = new Intent();
                             intent.putExtra("delete", project);
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
@@ -316,7 +317,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
                         @Override
                         public void success(final Project o, final Response response) {
-                            DialogHelp.cancelLoading();
                             HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                             project.status = (project.status == 1 ? 0 : 1);
                             restartActivity();//重启Activity
@@ -324,23 +324,18 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
                         @Override
                         public void failure(final RetrofitError error) {
-                            DialogHelp.cancelLoading();
-                            Toast("有任务未结束,不能结束项目!");
                             HttpErrorCheck.checkError(error);
                         }
                     });
                 }
                 break;
-            case ExtraAndResult.REQUEST_CODE://讨论不能够@自己196708
+            case 196708://讨论不能够@自己196708
                 if (fragmentX instanceof DiscussionFragment) {
                     ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
                 }
 
                 break;
 
-        }
-        if (fragmentX instanceof DiscussionFragment) {
-            ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
         }
     }
 

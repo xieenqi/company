@@ -23,7 +23,6 @@ import retrofit.client.Response;
 public class HttpErrorCheck {
     private static Toast mCurrentToast;
     private static String TAG = "LogoServerV2";
-    private static String MSG = "msg";
 
     protected HttpErrorCheck() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -81,8 +80,8 @@ public class HttpErrorCheck {
     }
 
     public static void checkResponse(String tag, Response response) {
-        DialogHelp.cancelLoading();
-        MSG = tag;
+//        DialogHelp.cancelLoading();
+        TAG = tag;
         checkResponse(response);
     }
 
@@ -90,8 +89,8 @@ public class HttpErrorCheck {
         DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(MSG + " 接口成功result：" + result);
-            LogUtil.d(MSG + " 接口成功URL：" + response.getUrl());
+            LogUtil.d(TAG + " 接口成功result：" + result);
+            LogUtil.d(TAG + " 接口成功URL：" + response.getUrl());
         } catch (IOException e) {
 
         } catch (NullPointerException e) {
