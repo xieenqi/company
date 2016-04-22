@@ -52,14 +52,14 @@ public class SideBar extends View {
         int singleHeight = height / b.length;
 
         for (int i = 0; i < b.length; i++) {
-            paint.setColor(getResources().getColor(R.color.title_bg1));
+            paint.setColor(getResources().getColor(R.color.text99));
             // paint.setColor(Color.WHITE);
             paint.setTypeface(Typeface.DEFAULT_BOLD);
             paint.setAntiAlias(true);
             paint.setTextSize(25);
 
             if (i == choose) {
-                paint.setColor(Color.parseColor("#3399ff"));
+                paint.setColor(Color.parseColor("#4db1fe"));
                 paint.setFakeBoldText(true);
             }
 
@@ -83,7 +83,7 @@ public class SideBar extends View {
 
         switch (action) {
             case MotionEvent.ACTION_UP:
-                setBackgroundDrawable(new ColorDrawable(0x00000000));
+                setBackgroundDrawable(new ColorDrawable(0x00ffffff));
                 choose = -1;//
                 invalidate();
                 if (mTextDialog != null) {
