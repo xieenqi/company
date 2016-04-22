@@ -54,7 +54,6 @@ public class SignInManagerActivity extends FragmentActivity {
     @ViewById(R.id.lv_signin_category)
     ListView categoryListView;
 
-
     private Permission permission;
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
