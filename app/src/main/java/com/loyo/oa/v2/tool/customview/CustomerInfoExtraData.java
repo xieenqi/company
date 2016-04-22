@@ -32,21 +32,21 @@ import java.util.ArrayList;
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
-public class ContactInfoExtraData extends LinearLayout {
+public class CustomerInfoExtraData extends LinearLayout {
 
     private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ExtraData> extras = new ArrayList<>();
     private boolean isRoot;
 
-    public ContactInfoExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomerInfoExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
         setOrientation(VERTICAL);
     }
 
-    public ContactInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize,boolean isRoot) {
+    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize, boolean isRoot) {
         this(context, null, 0);
         this.extras = extras;
         this.isRoot = isRoot;
@@ -78,7 +78,7 @@ public class ContactInfoExtraData extends LinearLayout {
                 continue;
             }
 
-            View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_extra, null, false);
+            View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_customerextra, null, false);
             extra.setEnabled(edit);
             LogUtil.d("isRoot:"+isRoot);
             if(!isRoot){
@@ -210,7 +210,7 @@ public class ContactInfoExtraData extends LinearLayout {
         }
     }
 
-    class ValueOnClickListener_list implements View.OnClickListener {
+    class ValueOnClickListener_list implements OnClickListener {
         AlertDialog dialog_Wheel_one;
 
         private ValueOnClickListener_list(AlertDialog _dialog, int position) {
@@ -226,7 +226,7 @@ public class ContactInfoExtraData extends LinearLayout {
     }
 
     /*动态字段，时间选择监听*/
-    class ValueOnClickListener_dateTime implements View.OnClickListener {
+    class ValueOnClickListener_dateTime implements OnClickListener {
         private TextView textView;
         private ExtraData extra;
 

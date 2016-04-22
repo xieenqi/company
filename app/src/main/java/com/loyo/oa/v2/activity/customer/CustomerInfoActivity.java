@@ -13,11 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerRegional;
@@ -35,27 +32,24 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ContactInfoExtraData;
+import com.loyo.oa.v2.tool.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -128,6 +122,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     boolean isMenber;
     @Extra("CustomerId")
     String mCustomerId;
+    @Extra("isRoot")
+    boolean isRoot;
 
     private double lat, lng;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -140,7 +136,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private Animation animation;
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
-
 
     @AfterViews
     void initUI() {
@@ -158,11 +153,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
 
         if (!isMyUser || isMenber) {
-            imgview_title_right.setVisibility(View.GONE);
+            if(!isRoot){
+                imgview_title_right.setVisibility(View.GONE);
+            }
         }
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
     }
+
 
     /**
      * 获取用户信息
@@ -170,15 +168,14 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     void getCustomer() {
         Utils.dialogShow(this, "请稍候");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getCustomerById(mCustomer == null ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
+                getCustomerById(null == mCustomer ? mCustomerId : mCustomer.getId(), new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
                         mCustomer = customer;
-                        Utils.dialogDismiss();
                         initData();
+                        Utils.dialogDismiss();
                     }
-
 
                     @Override
                     public void failure(final RetrofitError error) {
@@ -217,27 +214,42 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private void initExtra(final boolean ismy) {
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new ContactInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0));
+            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0,isRoot));
         }
     }
 
     void initData() {
 
+        initExtra(isMyUser);
         /*如果不是自己的客户，不允许操作*/
         if (!isMyUser || isMenber) {
-            layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
-            img_refresh_address.setVisibility(View.GONE);
-            tv_customer_name.setEnabled(false);
-            tv_address.setEnabled(false);
-            edt_customer_memo.setEnabled(false);
-            layout_customer_industry.setEnabled(false);
-            layout_customer_district.setEnabled(false);
-            layout_customer_label.setEnabled(false);
-            layout_customer_responser.setEnabled(false);
-            layout_customer_join_users.setEnabled(false);
-            img_refresh_address.setEnabled(false);
+            if(!isRoot) {
+                layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
+                img_refresh_address.setVisibility(View.GONE);
+                tv_customer_name.setEnabled(false);
+                tv_address.setEnabled(false);
+                edt_customer_memo.setEnabled(false);
+                layout_customer_industry.setEnabled(false);
+                layout_customer_district.setEnabled(false);
+                layout_customer_label.setEnabled(false);
+                layout_customer_responser.setEnabled(false);
+                layout_customer_join_users.setEnabled(false);
+                img_refresh_address.setEnabled(false);
+
+                container.setClickable(false);
+                container.setEnabled(false);
+                tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
+                tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
+                tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
+                tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
+                tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
+            }else{
+                layout_customer_responser.setEnabled(false);
+                layout_customer_join_users.setEnabled(false);
+                tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
+                tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
+            }
         }
-        initExtra(isMyUser);
 
         if (mCustomer == null) {
             return;
