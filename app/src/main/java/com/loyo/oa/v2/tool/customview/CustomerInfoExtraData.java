@@ -38,6 +38,7 @@ public class CustomerInfoExtraData extends LinearLayout {
     private Context mContext;
     private ArrayList<ExtraData> extras = new ArrayList<>();
     private boolean isRoot;
+    private boolean isMenber;
 
     public CustomerInfoExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -46,10 +47,11 @@ public class CustomerInfoExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize, boolean isRoot) {
+    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize, boolean isRoot,boolean isMenber) {
         this(context, null, 0);
         this.extras = extras;
         this.isRoot = isRoot;
+        this.isMenber = isMenber;
         bindView(edit, valueColor, valueSize);
     }
 
@@ -79,10 +81,14 @@ public class CustomerInfoExtraData extends LinearLayout {
             }
 
             View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_customerextra, null, false);
-            extra.setEnabled(edit);
+
+            LogUtil.d("isMyUser:"+edit);
             LogUtil.d("isRoot:"+isRoot);
-            if(!isRoot){
-                extra.setEnabled(false);
+
+            if(!edit || isMenber) {
+                if (!isRoot) {
+                    extra.setEnabled(false);
+                }
             }
 
             TextView tv_tag = (TextView) extra.findViewById(R.id.tv_tag);
