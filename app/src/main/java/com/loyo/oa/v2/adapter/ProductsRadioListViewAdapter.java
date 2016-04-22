@@ -53,7 +53,7 @@ public class ProductsRadioListViewAdapter extends BaseAdapter {
 
         Product product = lstData.get(position);
         if (product != null) {
-            item_info.tv.setText(product.getName());
+            item_info.tv.setText(product.name);
         }
 
         return convertView;
