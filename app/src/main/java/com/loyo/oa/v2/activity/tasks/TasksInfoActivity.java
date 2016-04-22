@@ -142,8 +142,8 @@ public class TasksInfoActivity extends BaseActivity {
 
     private boolean isOver = false;
     private int statusSize;
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
+//    private ArrayList<NewUser> userss;
+//    private ArrayList<NewUser> depts;
     private Members member;
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
@@ -191,8 +191,8 @@ public class TasksInfoActivity extends BaseActivity {
     void initUI() {
         super.setTitle("任务详情");
         userId = DBManager.Instance().getUser().getId();
-        userss = new ArrayList<>();
-        depts = new ArrayList<>();
+//        userss = new ArrayList<>();
+//        depts = new ArrayList<>();
         member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -911,7 +911,8 @@ public class TasksInfoActivity extends BaseActivity {
                     if (!TextUtils.isEmpty(joinName)) {
                         joinName.deleteCharAt(joinName.length() - 1);
                     }
-                    setJoinUsers(joinUserId.toString(), joinName.toString());
+                    editJoiner();
+//                    setJoinUsers(joinUserId.toString(), joinName.toString());
                 }
                 break;
 
@@ -1039,23 +1040,23 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 参与人组装
      */
-    void setJoinUsers(final String joinedUserIds, final String joinedUserName) {
-        userss.clear();
-        depts.clear();
-
-        String[] userIds = joinedUserIds.split(",");
-        String[] userNames = joinedUserName.split(",");
-
-        for (int i = 0; i < userIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(userNames[i]);
-            newUser.setId(userIds[i]);
-            userss.add(newUser);
-        }
-
-        member.users = userss;
-        editJoiner();
-    }
+//    void setJoinUsers(final String joinedUserIds, final String joinedUserName) {
+////        userss.clear();
+////        depts.clear();
+//
+////        String[] userIds = joinedUserIds.split(",");
+////        String[] userNames = joinedUserName.split(",");
+////
+////        for (int i = 0; i < userIds.length; i++) {
+////            NewUser newUser = new NewUser();
+////            newUser.setName(userNames[i]);
+////            newUser.setId(userIds[i]);
+////            userss.add(newUser);
+////        }
+////
+////        member.users = userss;
+//        editJoiner();
+//    }
 
     /**
      * 修改参与人
@@ -1076,7 +1077,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mTask.getProjectId())) {
             map.put("projectId", mTask.getProjectId());
         }
-
+        LogUtil.d("修改参与人传递数据：" + app.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {

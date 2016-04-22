@@ -11,6 +11,7 @@ public class HttpJpushNotification implements Serializable {
     public int buzzType;
     public String operationType;
     public String uuid;//暂时没有用到
+    public int silentType;
 
 }
 //{"operationType":"discuss","buzzId":"56a1c8a6526f152ed6000001","buzzType":1,"uuid":"e891057a-4b88-4b11-87dd-cfa99ed1a0f1"}
