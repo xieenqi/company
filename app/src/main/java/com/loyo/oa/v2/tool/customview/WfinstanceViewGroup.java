@@ -271,7 +271,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     public void onCancel() {
 
                     }
-                }, false);
+                }, true);
             }
         }
     }

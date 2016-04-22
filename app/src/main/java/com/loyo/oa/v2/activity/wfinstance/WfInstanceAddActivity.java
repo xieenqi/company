@@ -131,7 +131,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         btn_add.setOnTouchListener(Global.GetTouch());
         ll_project.setOnClickListener(click);
         init_gridView_photo();
-        //getTempWfintance();
         projectAddWfinstance();
         setDefaultDept();
     }
@@ -373,20 +372,6 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse("获取审批流程", response);
-//                /**
-//                 * 过滤流程节点是否可用
-//                 */
-//                if (null != wfTemplateArrayList) {
-//                    mTemplateId = "";
-//                    wfTemplateArrayList = null;
-//                }
-//                ArrayList<WfTemplate> newWfTemplateData = new ArrayList<>();
-//                for (WfTemplate element : bizFormFieldsPaginationX) {
-//                    if (element.isEnable() && null != element.getWfTplNodes()) {
-//                        newWfTemplateData.add(element);
-//                    }
-//                }
-//                wfTemplateArrayList = newWfTemplateData;
                 wfTemplateArrayList = bizFormFieldsPaginationX;
                 initUI_Dialog_WfTemplate();
             }
@@ -468,7 +453,6 @@ public class WfInstanceAddActivity extends BaseActivity {
 //        }
 
     void addIsRequired() {
-        LogUtil.dll("执行 addIsRequired");
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
         }
