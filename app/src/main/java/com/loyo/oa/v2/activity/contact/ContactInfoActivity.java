@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -43,6 +45,8 @@ public class ContactInfoActivity extends BaseActivity {
     ViewGroup layout_back;
     @ViewById
     RoundImageView img_title_user;
+    @ViewById
+    TextView tv_title;
     @ViewById
     TextView tv_edit;
     @ViewById
@@ -139,33 +143,34 @@ public class ContactInfoActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        if (null == user){
+        tv_title.setText("通讯录");
+        if (null == user) {
             return;
         }
 
         myDeptName = new StringBuffer();
 
         /*获取部门名字和职位名字，包括多部门情况下*/
-        for(int i = 0;i<user.getDepts().size();i++){
+        for (int i = 0; i < user.getDepts().size(); i++) {
             myDeptName.append(user.getDepts().get(i).getShortDept().getName());
-            if(!user.getDepts().get(i).getTitle().isEmpty()
-                    && user.getDepts().get(i).getTitle().length() >0){
-                myDeptName.append(" | "+user.getDepts().get(i).getTitle());
+            if (!user.getDepts().get(i).getTitle().isEmpty()
+                    && user.getDepts().get(i).getTitle().length() > 0) {
+                myDeptName.append(" | " + user.getDepts().get(i).getTitle());
             }
-            if(i != user.getDepts().size()-1){
+            if (i != user.getDepts().size() - 1) {
                 myDeptName.append(" ; ");
             }
         }
 
         //默认头像，头像获取
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            if(MainApp.user.gender == 2){
+            if (MainApp.user.gender == 2) {
                 defaultAvatar = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAvatar = R.drawable.img_default_user;
             }
             img_title_user.setImageResource(defaultAvatar);
-        }else{
+        } else {
             ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         }
 
