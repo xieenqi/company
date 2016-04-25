@@ -369,7 +369,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtype", type);
         map.put("qtime", qtime);
         map.put("pageIndex", page);
-        map.put("pageSize", 5);
+        map.put("pageSize", 20);
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {

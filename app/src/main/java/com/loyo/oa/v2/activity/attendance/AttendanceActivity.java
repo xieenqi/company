@@ -161,7 +161,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private Animation initAnimation() {
         RotateAnimation rotateAnimation = new RotateAnimation(ROTATE_START, ROTATE_END, Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_X,// X轴
                 Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_Y);// y轴
-
         rotateAnimation.setDuration(ROTATE_TIME);
         rotateAnimation.setFillAfter(true);             //保留在终止位置
         rotateAnimation.setFillEnabled(true);

@@ -443,7 +443,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
         expandableListView_user.addHeaderView(headView);
         expandableListView_user.addFooterView(footView);
         expandableListView_user.setAdapter(userGroupExpandableListAdapter);
-        Global.setListViewHeightBasedOnChildren(expandableListView_user);
+        //Global.setListViewHeightBasedOnChildren(expandableListView_user);
         expandableListView_user.setGroupIndicator(null);
         expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

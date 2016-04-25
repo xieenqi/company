@@ -40,6 +40,7 @@ import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -49,19 +50,19 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -80,6 +81,9 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 部门选择 请求码
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
+
+    private String startTimeId;
+    private String endTimeId;
 
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
@@ -282,10 +286,14 @@ public class WfInstanceAddActivity extends BaseActivity {
                 /*审批开始时间不能小于结束时间，
                 从审批内容里获取到 开始时间 结束时间 的id
                 再根据这个id去获取 开始结束 时间的值    */
-                /*for(int i = 0;i<mBizForm.getFields().size();i++){
-                    if(mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).is)
-                    LogUtil.d("审批内容:"+mBizForm.getFields().get(i).getName().equals("开始时间"));
-                }*/
+                for(int i = 0;i<mBizForm.getFields().size();i++){
+                    if(mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()){
+                        startTimeId = mBizForm.getFields().get(i).getId();
+                    }
+                    if(mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()){
+                        endTimeId = mBizForm.getFields().get(i).getId();
+                    }
+                }
                 break;
 
             case SelectPicPopupWindow.GET_IMG:
@@ -421,15 +429,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
     }
 
-    public void info() {
-        if (WfinObj == null)
-            return;
-        HashMap<String, Object> mapInfo = WfinObj.get(0).getInfoData();
-        for (Map.Entry<String, Object> entry : mapInfo.entrySet()) {
-            LogUtil.dll("KEY:" + entry.getKey() + "Value:" + entry.getValue());
-        }
-    }
-
     /**
      * xnq
      * 界面上 新增加审批内容 栏目
@@ -514,6 +513,38 @@ public class WfInstanceAddActivity extends BaseActivity {
                 Toast("请填写\"必填项\"");
                 return;
             }
+        }
+
+        /**
+         * 获取请假/出差系统字段的 开始结束时间
+         * */
+        String startTimeDate = "";
+        String endTimeDate = "";
+
+        long startTimelong;
+        long endTimelong;
+
+        for(HashMap<String, Object> map : workflowValues){
+                Set set = map.entrySet();
+            Iterator it=set.iterator();
+            while(it.hasNext()){
+                Map.Entry me=(Map.Entry)it.next();
+                if(startTimeId.equals(me.getKey())){
+                    startTimeDate = (String) map.get(startTimeId);
+                }
+
+                if(endTimeId.equals(me.getKey())){
+                    endTimeDate = (String) map.get(endTimeId);
+                }
+            }
+        }
+
+        startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+        endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+
+        if(startTimelong > endTimelong && startTimelong != endTimelong){
+            Toast("开始时间不能大于结束时间!");
+            return;
         }
 
         bizExtData = new PostBizExtData();
