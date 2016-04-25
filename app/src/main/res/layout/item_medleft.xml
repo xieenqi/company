@@ -72,14 +72,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <!--    <ImageView
-            android:id="@+id/devider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1"
-            android:layout_marginLeft="@dimen/dimen_66"
-            android:layout_marginRight="@dimen/dimen_8"
-            android:scaleType="fitXY"
-            android:src="#e1e1e1"/>-->
     <include layout="@layout/include_solid_line_left"/>
 </LinearLayout>
