@@ -45,6 +45,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,7 +118,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initData_WorkflowValues() {
-        if (wfInstance == null || wfInstance.workflowValues == null) {
+        if (null == wfInstance || null == wfInstance.workflowValues) {
             return;
         }
         wfInstanceValuesDatas.clear();
@@ -128,7 +129,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (wfInstance != null && wfInstance.workflowValues != null && wfInstance.workflowValues != null) {
+        if (null != wfInstance && null != wfInstance.workflowValues && null != wfInstance.workflowValues) {
             wfInstance.ack = true;
             wfInstance.workflowValues.clear();
             Intent intent = new Intent();
@@ -170,12 +171,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
             for (int j = 0; j < wfInstanceValuesDatas.size(); j++) {
                 HashMap<String, Object> jsonObject = wfInstanceValuesDatas.get(j);
                 for (int i = 0; i < fields.size(); i++) {
-
+                    if (!fields.get(i).isEnable()) {
+                        continue;
+                    }
                     BizFormFields field = fields.get(i);
                     View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
                     EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
                     tv_value.setEnabled(false);
-                    tv_value.setText(jsonObject.get(field.getId()) + "");
+                    tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
                     tv_key.setText(field.getName());
                     layout_wfinstance_content.addView(view_value);
@@ -189,6 +192,19 @@ public class WfinstanceInfoActivity extends BaseActivity {
             img_title_right.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private String wfinstanceInfoValue(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+
+        if (obj.getClass().toString().contains("Double")) {
+            BigDecimal bigDecimal = new BigDecimal(obj + "");
+            return bigDecimal.doubleValue() + "";
+        } else {
+            return obj + "";
+        }
     }
 
     void initUI_listView_workflowNodes() {

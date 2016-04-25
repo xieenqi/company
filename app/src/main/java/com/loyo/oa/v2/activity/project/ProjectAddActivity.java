@@ -77,8 +77,8 @@ public class ProjectAddActivity extends BaseActivity {
 
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
-    private Members members = new Members();
-
+    private Members members = new Members();//参与人回传数据
+    private ArrayList<ManagersMembers> membersNowData = new ArrayList<>();//当前参与人数据
 
     @AfterViews
     void initViews() {
@@ -97,6 +97,8 @@ public class ProjectAddActivity extends BaseActivity {
             if (!mProject.isCreator()) {//非创建者不能修改负责人
                 layout_managers.setOnClickListener(null);
             }
+            membersNowData.clear();
+            membersNowData.addAll(getMenbersEdit());
             setProjectExtra();
         }
     }
@@ -111,12 +113,12 @@ public class ProjectAddActivity extends BaseActivity {
             ll_managerGon.setVisibility(View.GONE);
         }
         mManagerIds.append(ProjectMember.GetMnagerUserIds(mProject.managers));
-        LogUtil.d(mManagerIds + " deao得到的负责人： " + MainApp.gson.toJson(mProject.members));
-        if (mProject.members != null) {
-            mMemberIds.append(ProjectMember.GetMenberUserIds(mProject.members));
-        }
         mManagerNames.append(ProjectMember.getManagersName(mProject.managers));
-        mMemberNames.append(ProjectMember.GetUserNames(mProject.members));
+
+        if (null != mProject.members) {
+            mMemberIds.append(ProjectMember.GetMenberUserIds(mProject.members));
+            mMemberNames.append(ProjectMember.GetUserNames(mProject.members));
+        }
 
         tv_managers.setText(mManagerNames);
         setMemberOnActivityResult();
@@ -141,6 +143,8 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 负责人回调
+     * 说  明:组装StringBuffer用于显示名字
+     * 权限控制view设置
      */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_MULTI_SELECT)
     void OnResultManagers(final int resultCode, final Intent data) {
@@ -186,6 +190,8 @@ public class ProjectAddActivity extends BaseActivity {
 
     /**
      * 参与人回调
+     * 说  明:组装StringBuffer用于显示名字
+     * 权限控制view设置
      */
     @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void OnResultMembers(final int resultCode, final Intent data) {
@@ -216,6 +222,7 @@ public class ProjectAddActivity extends BaseActivity {
                 mMemberNames.deleteCharAt(mMemberNames.length() - 1);
             }
         }
+        membersNowData = getMenbersAdd();
         setMemberOnActivityResult();
     }
 
@@ -255,18 +262,34 @@ public class ProjectAddActivity extends BaseActivity {
             }
         }
 
-        mAdapter = new ProjectMemberListViewAdapter(this, createData());//?????mProjectMember
+        /**
+         * 新建编辑，给adapter不同的数据源
+         * */
+        mAdapter = new ProjectMemberListViewAdapter(this, membersNowData);
+
+        /**
+         * 适配器初始化 删除item监听
+         * */
         mAdapter.SetAction(new ProjectMemberListViewAdapter.ProjectMemberAction() {
             @Override
             public void DeleteMember() {
-                mMemberIds.delete(0,mMemberIds.length());
-                for (HttpProject.ProjectMember ele : mAdapter.GetProjectMembers()) {
+                mMemberIds.delete(0, mMemberIds.length());
+                for (ManagersMembers ele : mAdapter.GetProjectMembers()) {
                     HttpProject.ProjectMember mm = new HttpProject().new ProjectMember();
                     mm.canReadAll = ele.canReadAll;
-                    mm.user.id = ele.user.id;
-                    mm.user.name = ele.user.realname;
-                    mProjectMember.add(mm);
-                    mMemberIds.append(ele.user.id+",");
+                    if (null != ele.user) {
+                        mm.user.id = ele.user.id;
+                        mm.user.name = ele.user.name;
+                        mProjectMember.add(mm);
+                        mMemberIds.append(ele.user.id + ",");
+                    }
+
+                    if (null != ele.dept) {
+                        mm.dept.id = ele.dept.id;
+                        mm.dept.name = ele.dept.name;
+                        mProjectMember.add(mm);
+                        mMemberIds.append(ele.dept.id + ",");
+                    }
                 }
                 mAdapter.notifyDataSetInvalidated();
             }
@@ -274,26 +297,6 @@ public class ProjectAddActivity extends BaseActivity {
 
         lv_project_members.setAdapter(mAdapter);
         Global.setListViewHeightBasedOnChildren(lv_project_members);
-    }
-
-
-    /**
-     * 参与人的数据  adapter列表
-     *
-     * @return
-     */
-    public ArrayList<HttpProject.ProjectMember> createData() {
-        ArrayList<HttpProject.ProjectMember> obj = new ArrayList<>();
-        for (HttpProject.ProjectMember ele : mProjectMember) {
-            HttpProject.ProjectMember pm = new HttpProject().new ProjectMember();
-            pm.canReadAll = ele.canReadAll;
-            User uu = new User();
-            uu.id = ele.user.id;
-            uu.name = ele.user.name;
-            pm.user = uu;
-            obj.add(pm);
-        }
-        return obj;
     }
 
     @Click(R.id.img_title_right)
@@ -322,8 +325,9 @@ public class ProjectAddActivity extends BaseActivity {
 
         projectTransObj.managers = getProjectManager();
 
+        /*获取post参与人数据*/
         if (!TextUtils.isEmpty(mMemberIds) && mAdapter != null) {
-            projectTransObj.members = getProjectMenbers(mAdapter.GetProjectMembers());
+            projectTransObj.members = mAdapter.GetProjectMembers();
         }
 
         if (mUpdate) {
@@ -333,6 +337,9 @@ public class ProjectAddActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 项目创建
+     */
     void CreateProject(final ProjectTransObj obj) {
         LogUtil.d(" 创建项目传递数据： " + MainApp.gson.toJson(obj));
         showLoading("");
@@ -355,6 +362,9 @@ public class ProjectAddActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 项目编辑
+     */
     void UpdateProject(final ProjectTransObj obj) {
         LogUtil.d(" 编辑项目传递数据: " + MainApp.gson.toJson(obj));
         showLoading("");
@@ -377,7 +387,7 @@ public class ProjectAddActivity extends BaseActivity {
     }
 
     /**
-     * 组装 【负责人】
+     * 组装【负责人】的请求参数
      *
      * @return
      */
@@ -400,21 +410,60 @@ public class ProjectAddActivity extends BaseActivity {
         return mManager;
     }
 
+
     /**
-     * 组装 【参与人】
+     * 编辑 组装【参与人】的请求参数
      *
      * @return
      */
-    public List<HttpProject.ProjectMember> getProjectMenbers(final ArrayList<HttpProject.ProjectMember> data) {
-        ArrayList<HttpProject.ProjectMember> newData = new ArrayList<>();
-        for (HttpProject.ProjectMember element : data) {
-            HttpProject.ProjectMember menb = new HttpProject().new ProjectMember();
-            menb.canReadAll = element.canReadAll;
-            User userOlde = element.user;
-            menb.user.id = userOlde.id;
-            menb.user.avatar = userOlde.avatar;
-            menb.user.name = userOlde.name;
-            newData.add(menb);
+    public ArrayList<ManagersMembers> getMenbersEdit() {
+        ArrayList<ManagersMembers> newData = new ArrayList<>();
+        for (HttpProject.ProjectMember mm : mProject.members) {
+            if (null != mm.dept && null != mm.dept.name) {
+                ManagersMembers menb = new ManagersMembers();
+                menb.dept.name = mm.dept.name;
+                menb.dept.id = mm.dept.id;
+                menb.dept.xpath = mm.dept.xpath;
+                newData.add(menb);
+            }
+
+            if (null != mm.user && null != mm.user.name) {
+                ManagersMembers menb = new ManagersMembers();
+                menb.user.name = mm.user.name;
+                menb.user.id = mm.user.id;
+                menb.user.avatar = mm.user.avatar;
+                newData.add(menb);
+            }
+        }
+        return newData;
+    }
+
+
+    /**
+     * 新建 组装【参与人】的请求参数
+     *
+     * @return
+     */
+    public ArrayList<ManagersMembers> getMenbersAdd() {
+        ArrayList<ManagersMembers> newData = new ArrayList<>();
+        if (null != members.depts) {
+            for (com.loyo.oa.v2.beans.NewUser newUser : members.depts) {
+                ManagersMembers menb = new ManagersMembers();
+                menb.dept.name = newUser.getName();
+                menb.dept.id = newUser.getId();
+                menb.dept.xpath = newUser.getXpath();
+                newData.add(menb);
+            }
+        }
+
+        if (null != members.users) {
+            for (com.loyo.oa.v2.beans.NewUser newUser : members.users) {
+                ManagersMembers menb = new ManagersMembers();
+                menb.user.name = newUser.getName();
+                menb.user.id = newUser.getId();
+                menb.user.avatar = newUser.getAvatar();
+                newData.add(menb);
+            }
         }
         return newData;
     }
@@ -422,19 +471,20 @@ public class ProjectAddActivity extends BaseActivity {
     public class ProjectTransObj {
         public String title;
         public String content;
-        public List<HttpProject.ProjectMember> members;
+        public List<ManagersMembers> members;
         public List<HttpProject.ProjectManaer> managers;
     }
 
     public class ManagersMembers {
-        public boolean canreadall;
+        public boolean canReadAll;
         public NewUser user = new NewUser();
-
+        public NewUser dept = new NewUser();
     }
 
     public class NewUser {
         public String avatar;
         public String id;
         public String name;
+        public String xpath;
     }
 }

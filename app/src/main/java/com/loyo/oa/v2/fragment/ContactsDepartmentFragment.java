@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -32,9 +34,15 @@ import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.fragment
- * 描述 :【公司 的 部门】   列表页
+ * 描述 :【公司的部门】   列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
+ *
+ * 2015-4-22 21:02
+ * 备注 : 一个严重Bug,全公司通讯录不能显示出与公司同级的人员(新建时人员时，部门选择位公司)
+ * 解决方案: 获取到同级人员，在listView1加footerView，footerView里装入Listview2,ListView2加载同级人员。
+ *         参照点击部门后的二级部门页面 ContactsSubdivisionsFragment（人员，部门同在）
+ *
  */
 public class ContactsDepartmentFragment extends BaseFragment {
 
@@ -47,6 +55,16 @@ public class ContactsDepartmentFragment extends BaseFragment {
     private ViewGroup layout_toast;
     private TextView tv_toast;
     private String mIndex;
+    private String myDeptId;
+    private String myDeptName;
+
+    public View headView;
+    public View footView;
+    public LayoutInflater mInflater;
+    public TextView nameTv;
+    public RelativeLayout item_mydept;
+
+    public ArrayList<User> commyUsers = new ArrayList<>();//与部门同级的人员
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,10 +94,15 @@ public class ContactsDepartmentFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_user, container, false);
+            mInflater = LayoutInflater.from(getActivity());
+
+            /*我的部门View初始化*/
+            headView = mInflater.inflate(R.layout.item_mydept_layout, null);
+            nameTv =  (TextView)headView.findViewById(R.id.tv_mydept_content);
+            item_mydept = (RelativeLayout)headView.findViewById(R.id.des_mydept_layout);
 
             layout_toast = (ViewGroup) view.findViewById(R.id.layout_toast);
             tv_toast = (TextView) view.findViewById(R.id.tv_toast);
-
             IndexCursor cursor = new IndexCursor(lstUserGroupData);
             index = new AlphabetIndexer(cursor, 0, mIndex);
 
@@ -95,11 +118,11 @@ public class ContactsDepartmentFragment extends BaseFragment {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
                             //layout_toast.setVisibility(View.VISIBLE);
                             tv_toast.setText(sectionLetter);
-                            scroll(position -1);
+                            scroll(position - 1);
                             break;
                         case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
                             tv_toast.setText(sectionLetter);
-                            scroll(position -1);
+                            scroll(position - 1);
                             break;
                         case MyLetterListView.FINGER_ACTION_UP:
                             //layout_toast.setVisibility(View.GONE);// 手指离开
@@ -370,9 +393,39 @@ public class ContactsDepartmentFragment extends BaseFragment {
             return;
         }
 
+        /**
+         * 获取全公司与部门平级的人员
+         * */
+/*        ArrayList<Department> allDepet = Common.getLstDepartment();
+        Department commy = allDepet.get(0);
+        for(User users : commy.getUsers()){
+            commyUsers.add(users);
+        }*/
+
+        /**
+         * 设置我的部门排在首位，整个部门中移除自己部门
+         * */
+        myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
+        myDeptName = MainApp.user.depts.get(0).getShortDept().getName();
+
+        int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
+        String members = "(" + userSize + "人)";
+        myDeptName = myDeptName.concat(members);
+        nameTv.setText(myDeptName);
+
+        for(ContactsGroup contactsGroup : lstUserGroupData){
+            for(Department department : contactsGroup.getDepartments()){
+                if(myDeptId.equals(department.getId())){
+                    contactsGroup.getDepartments().remove(department);
+                    break;
+                }
+            }
+        }
+
         expandableListView_user = (ExpandableListView) view.findViewById(R.id.expandableListView_user);
         expandableListView_user.setDivider(null);
         userGroupExpandableListAdapter = new ContactsDepartmentExpandableListAdapter();
+        expandableListView_user.addHeaderView(headView);
         expandableListView_user.setAdapter(userGroupExpandableListAdapter);
         expandableListView_user.setGroupIndicator(null);
         expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -385,7 +438,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
                 return true;
             }
-
         });
 
         for (int i = 0; i < lstUserGroupData.size(); i++) {
@@ -396,6 +448,17 @@ public class ContactsDepartmentFragment extends BaseFragment {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 return true;
+            }
+        });
+
+        /*本部门监听器*/
+        item_mydept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle b = new Bundle();
+                b.putString("depId", myDeptId);
+                b.putString("depName", myDeptName);
+                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
             }
         });
     }
@@ -449,7 +512,6 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 convertView = layoutInflater.inflate(R.layout.item_usergroup_group, null);
             TextView title = ViewHolder.get(convertView, R.id.textView_item_titel);
             title.setText(getGroup(groupPosition).getGroupName());
-
             return convertView;
         }
 
@@ -464,7 +526,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 if (null != department) {
 
                     String departmentName = department.getName();
-                    int userSize = Common.getUsersByDeptId(department.getId(), new ArrayList<User>()).size();
+                    int userSize = Common.getAllUsersByDeptId(department.getId(), new ArrayList<User>()).size();
                     String members = "(" + userSize + "人)";
                     departmentName = departmentName.concat(members);
                     tv_content.setText(departmentName);

@@ -10,6 +10,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -117,6 +118,13 @@ public class TrackRule implements Serializable {
                 SendTrackRuleBroadcast(app, trackRule);
             }
         }
+    }
+
+    public static void initUserData(Context context) {
+//        Intent intent = new Intent(context, InitDataService.class);
+//        context.startService(intent);
+
+        InitDataService_.intent(context).start();
     }
 
     /**

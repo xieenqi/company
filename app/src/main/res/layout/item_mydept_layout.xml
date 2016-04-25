@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:id="@+id/item_medleft_top"
+    android:background="@color/white"
+    >
+
+    <TextView
+        android:id="@+id/catalog"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#E0E0E0"
+        android:textColor="#454545"
+        android:layout_weight="1.0"
+        android:paddingLeft="5dip"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+        android:text="我"
+        android:textStyle="bold"
+        android:textSize="@dimen/textsize_content_label"
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/des_mydept_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_5"
+        android:paddingTop="@dimen/dimen_5">
+
+        <com.loyo.oa.v2.tool.customview.RoundImageView
+            android:id="@+id/mydept_img"
+            android:layout_width="@dimen/dimen_50"
+            android:layout_height="@dimen/dimen_50"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:src="@drawable/icon_department_avatar"
+            imagecontrol:border_inside_color="#a8d4e9"
+            imagecontrol:border_outside_color="#a8d4e9"
+            imagecontrol:border_thickness="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_mydept_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_toRightOf="@+id/mydept_img"
+            android:text=""
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

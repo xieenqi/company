@@ -75,16 +75,19 @@ public class ProjectDescriptionActivity extends BaseActivity {
             tv_managers.setText(managers.toString());
         }
 
+        /**
+         * 组装参与人String展示数据
+         * */
         if (null != members && !members.isEmpty()) {
             StringBuilder subMembers = new StringBuilder();
+
             for (int i = 0; i < members.size(); i++) {
-                User u = members.get(i).user;
-                if (null == u) {
-                    continue;
+                if (null != members.get(i).user && null != members.get(i).user.name) {
+                    subMembers.append(members.get(i).user.name + ",");
                 }
-                subMembers.append(members.get(i).user.getRealname());
-                if (i != members.size() - 1) {
-                    subMembers.append(",");
+
+                if (null != members.get(i).dept && null != members.get(i).dept.name) {
+                    subMembers.append(members.get(i).dept.name + ",");
                 }
             }
             tv_members.setText(subMembers.toString());

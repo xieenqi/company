@@ -16,6 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
 import com.loyo.oa.v2.activity.signin.SignInfoActivity;
 import com.loyo.oa.v2.adapter.SignInListAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.User;
@@ -60,6 +61,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
     private long endAt, teamAt = 0;
+    private String startTime,endTime;
     private Calendar cal;
     private View mView;
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
@@ -133,12 +135,15 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     /**
      * 初始化时间显示
-     *
+     * 获取某天开始时间和结束时间
      * @param mills
      */
     private void initTimeStr(long mills) {
         String time = app.df12.format(new Date(mills));
-//        tv_time.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);//文字加注释线
+        String startTimestr = app.df5.format(new Date(mills)) + " 00:00:00";
+        String endTimestr = app.df5.format(new Date(mills)) + " 23:59:59";
+        startTime = DateTool.getDataOne(startTimestr,DateTool.DATE_FORMATE_ALL);
+        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
         tv_time.setText(time);
     }
 
@@ -196,7 +201,6 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         } else {
             cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
         }
-
         refreshData();
     }
 
@@ -226,10 +230,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private void refreshData() {
         endAt = cal.getTime().getTime();
         //nextTime=app.df12.format(new Date(endAt));
-        LogUtil.d(" 获得的时间 " + endAt);
         initTimeStr(cal.getTime().getTime());
         onPullDownToRefresh(lv);
-
     }
 
     /**
@@ -270,11 +272,14 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", mUser.id);
-        map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
-        map.put("endAt", endAt / 1000);
+        /*map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
+        map.put("endAt", endAt / 1000);*/
+        map.put("startAt", Long.parseLong(startTime));
+        map.put("endAt",  Long.parseLong(endTime));
         map.put("custId", "");
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
+        LogUtil.d("获取拜访列表map数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {

@@ -48,7 +48,11 @@
                 android:layout_height="wrap_content"
                 android:text="董事长"
                 android:textColor="#999999"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:maxEms="18"
+                android:ellipsize="end"
+                android:singleLine="true"
+                />
         </LinearLayout>
 
     </RelativeLayout>

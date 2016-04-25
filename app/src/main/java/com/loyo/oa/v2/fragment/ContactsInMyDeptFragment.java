@@ -155,7 +155,6 @@ public class ContactsInMyDeptFragment extends BaseFragment {
      * 遍历数据排序
      */
     void sortDataList(){
-
         for (User user : myUserList){
             String pinyin = characterParser.getSelling(user.getRealname());
             String sortString = pinyin.substring(0, 1).toUpperCase();

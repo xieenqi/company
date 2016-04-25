@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool;
 
 import com.loyo.oa.v2.BuildConfig;
 
+
 /**
  * http 配置文件
  */
@@ -13,7 +14,7 @@ public class Config_project {
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG; //dbug模式`
 
-    //public static String IP = "http://192.168.31.131";        //内部测试环境
+    //    public static String IP = "http://192.168.31.131";        //内部测试环境
 
     public static String IP = "http://staging.ukuaiqi.com"; //产品预上线环境
 
@@ -22,6 +23,8 @@ public class Config_project {
     //public static String IP = "http://ukuaiqi.com";         //网站产品正式环境
 
     //public static String IP = "http://192.168.31.136";
+
+    //public static String IP = "http://192.168.31.155";
 
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -70,12 +73,12 @@ public class Config_project {
      * 讨论地址
      */
     public static String SERVER_URL_EXTRA() {
-        return isRelease ? Domain.discuss : IP + ":8050";
+        return isRelease ? Domain.discuss : IP + ":8070";
     }
 
     /**
      * 客户地址
-     *
+     * <p/>
      * staging端口号依然是:8090
      * 131 136等内网端口号:8070
      */

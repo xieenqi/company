@@ -77,11 +77,11 @@ public class DropListAdapter extends BaseAdapter {
             ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             imageView.setVisibility(View.VISIBLE);
         }
-//        if (selectItem == position) {
-//            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
-//        } else {
-//            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-//        }
+/*        if (selectItem == position) {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
+        } else {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        }*/
         return convertView;
     }
 

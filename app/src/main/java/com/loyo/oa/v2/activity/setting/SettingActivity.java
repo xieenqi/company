@@ -34,7 +34,10 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
+import java.util.Set;
+
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -247,6 +250,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         //清楚sp
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);
+        JPushInterface.setAlias(getApplicationContext(), "", new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                //设置别名 为空
+            }
+        });
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
     }

@@ -15,9 +15,6 @@ import java.util.ArrayList;
  */
 public class ProjectMember extends BaseBeans {
 
-    public ProjectMember() {
-
-    }
 
     public ProjectMember(String userId, boolean canreadall) {
         this.userId = userId;
@@ -34,7 +31,7 @@ public class ProjectMember extends BaseBeans {
 
 
 //    public class Dept {
-//        public String id;
+//        public String id;09p-
 //        public String xpath;
 //        public String name;
 //    }
@@ -52,8 +49,12 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            if (member.user != null) {
+            if (null != member.user && null != member.user.id) {
                 sb.append(member.user.id);
+            }
+
+            if (null != member.dept && null != member.dept.id) {
+                sb.append(member.dept.id);
             }
         }
 
@@ -92,8 +93,12 @@ public class ProjectMember extends BaseBeans {
                 sb.append(",");
             }
 
-            if (member.user != null) {
-                sb.append(member.user.getRealname());
+            if (null != member.user && null != member.user.name) {
+                sb.append(member.user.name);
+            }
+
+            if (null != member.dept && null != member.dept.name) {
+                sb.append(member.dept.name);
             }
         }
 

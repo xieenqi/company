@@ -24,11 +24,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/dimen_5"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:layout_weight="1.2"
+                android:gravity="center|left"
                 android:textColor="#383838"
                 android:textSize="14sp"
                 android:text="3月"
+                android:paddingLeft="7dp"
+                android:ellipsize="end"
+                android:maxEms="4"
+                android:singleLine="true"
                 />
 
             <TextView

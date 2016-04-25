@@ -325,13 +325,15 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     return;
                 }
 
-                if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
+                /*暂时取消外勤判断 */
+                /*if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
                         && mAttendanceRecord.getState() != 5) {
                     showOutAttendanceDialog();
                 } else {
                     commitAttendance();
-                }
+                }*/
 
+                commitAttendance();
                 break;
 
             case R.id.iv_refresh_address:
