@@ -140,6 +140,7 @@ public final class Global {
 //        return false;
 //    }
 
+
     /**
      * 检查是否有网络
      *
@@ -227,8 +228,10 @@ public final class Global {
         return R.drawable.other_file;
     }
 
+    /**
+     * ScroView嵌套listView，手动计算ListView高度
+     * */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
-
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;
