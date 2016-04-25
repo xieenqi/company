@@ -34,27 +34,32 @@ public class Config_project {
      * 正式产品的域名
      */
     private static class Domain {
+
         /**
          * 账号中心
          */
         public static String account = "http://user.ukuaiqi.com";
+
         /**
-         * crm 客户管理
+         * crm 客户管理crm.ukuaiqi.co
          */
-        public static String crm = "http://crm.ukuaiqi.com";
+        public static String crm = "http://ukuaiqi.com/p/oa";
+
         /**
-         * oa 系统
+         * oa 系统oa.ukuaiqi.com
          */
-        public static String oa = "http://oa.ukuaiqi.com";
+        public static String oa = "http://ukuaiqi.com/p/oa";
 
         /**
          * attachment 附件
          */
         public static String attachment = "http://attachment.ukuaiqi.com";
+
         /**
-         * discuss 讨论
+         * discuss 讨论discuss.ukuaiqi.com
          */
-        public static String discuss = "http://discuss.ukuaiqi.com";
+        public static String discuss = "http://ukuaiqi.com/p/oa";
+
         /**
          * statistics 统计
          */
