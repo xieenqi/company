@@ -36,12 +36,10 @@ public class Config_project {
     private static class Domain {
         /**
          * 账号中心
-         * oa
          */
         public static String account = "http://user.ukuaiqi.com";
         /**
          * crm 客户管理
-         * oa
          */
         public static String crm = "http://crm.ukuaiqi.com";
         /**
@@ -55,7 +53,6 @@ public class Config_project {
         public static String attachment = "http://attachment.ukuaiqi.com";
         /**
          * discuss 讨论
-         * oa
          */
         public static String discuss = "http://discuss.ukuaiqi.com";
         /**
