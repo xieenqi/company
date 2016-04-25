@@ -59,7 +59,7 @@ public class MyLetterListView extends View {
             paint.setTypeface(Typeface.DEFAULT_BOLD);
             //			paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.navigation_fontsize));//设置字体的大小
             //paint.setTextSize(16 * density);//设置字体的大小
-            paint.setTextSize(25);//设置字体的大小
+            paint.setTextSize(32);//设置字体的大小
             paint.setAntiAlias(true);
             if (i == choose) {
                 paint.setColor(Color.parseColor("#3399ff"));
