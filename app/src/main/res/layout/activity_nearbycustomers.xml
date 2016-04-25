@@ -23,7 +23,7 @@
         <com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="46dp"
             android:background="@android:color/white"
             app:pstsIndicatorColor="@color/title_bg1"
             app:pstsIndicatorHeight="1dp"
