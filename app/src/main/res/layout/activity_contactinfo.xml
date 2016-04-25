@@ -5,6 +5,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
     >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,22 +16,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/icon_contactinfo_bg">
+                android:layout_height="wrap_content"
+                android:background="@color/title_bg1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <include layout="@layout/include_common_title_2"/>
 
                 <com.loyo.oa.v2.tool.customview.RoundImageView
                     android:id="@+id/img_title_user"
-                    android:layout_width="@dimen/dimen_110"
-                    android:layout_height="@dimen/dimen_110"
+                    android:layout_width="@dimen/dimen_90"
+                    android:layout_height="@dimen/dimen_90"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="30dp"
                     android:src="@drawable/icon_contact_avatar"
-                    imagecontrol:border_inside_color="#a8d4e9"
-                    imagecontrol:border_outside_color="#a8d4e9"
                     imagecontrol:border_thickness="1dp"/>
 
                 <RelativeLayout
@@ -46,68 +47,68 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:textColor="@color/white"
                         android:text="名字"
+                        android:textColor="@color/white"
                         android:textSize="20sp"/>
 
                     <TextView
-                        android:layout_marginRight="10dp"
-                        android:layout_marginLeft="10dp"
                         android:id="@+id/tv_deptname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_realname"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_marginTop="11dp"
-                        android:textColor="@color/white"
                         android:text="部门-职位"
+                        android:textColor="@color/white"
                         android:textSize="15sp"/>
                 </RelativeLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:id="@+id/layout_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dimen_30">
+                android:layout_marginTop="@dimen/dimen_30"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"/>
 
-                    <TextView
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:id="@+id/tv_phone_title"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_alignParentLeft="true"
-                        android:text="手机"
-                        android:textColor="#383838"
-                        android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/tv_phone_title"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="手机"
+                    android:textColor="#383838"
+                    android:textSize="20sp"/>
 
-                    <TextView
-                        android:layout_marginRight="@dimen/dimen_5"
-                        android:layout_weight="1.5"
-                        android:id="@+id/tv_phone"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_30"
-                        android:textColor="#999999"
-                        android:textSize="17sp"/>
+                <TextView
+                    android:id="@+id/tv_phone"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_30"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_weight="1.5"
+                    android:textColor="#999999"
+                    android:textSize="17sp"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:id="@+id/layout_qq"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:visibility="gone">
 
                 <TextView
@@ -115,27 +116,27 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"/>
 
-                    <TextView
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:id="@+id/tv_qq_title"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:text="Q Q"
-                        android:textColor="#383838"
-                        android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/tv_qq_title"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Q Q"
+                    android:textColor="#383838"
+                    android:textSize="20sp"/>
 
-                    <TextView
-                        android:layout_marginRight="@dimen/dimen_5"
-                        android:layout_weight="1.5"
-                        android:id="@+id/tv_qq"
-                        style="@style/text_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_30"
-                        android:textColor="#999999"
-                        android:textSize="17sp"/>
+                <TextView
+                    android:id="@+id/tv_qq"
+                    style="@style/text_item1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_30"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_weight="1.5"
+                    android:textColor="#999999"
+                    android:textSize="17sp"/>
 
             </LinearLayout>
 
@@ -176,83 +177,83 @@
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:id="@+id/layout_sex"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"/>
 
-                    <TextView
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:id="@+id/tv_sex_title"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:text="性别"
-                        android:textColor="#383838"
-                        android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/tv_sex_title"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="性别"
+                    android:textColor="#383838"
+                    android:textSize="20sp"/>
 
-                    <TextView
-                        android:layout_marginRight="@dimen/dimen_5"
-                        android:layout_weight="1.5"
-                        android:id="@+id/tv_sex"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_30"
-                        android:text=""
-                        android:textColor="#999999"
-                        android:textSize="17sp"/>
+                <TextView
+                    android:id="@+id/tv_sex"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_30"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_weight="1.5"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="17sp"/>
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:id="@+id/layout_birthday"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"/>
 
-                    <TextView
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:id="@+id/tv_birthday_title"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:text="生日"
-                        android:textColor="#383838"
-                        android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/tv_birthday_title"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="生日"
+                    android:textColor="#383838"
+                    android:textSize="20sp"/>
 
-                    <TextView
-                        android:layout_weight="1.5"
-                        android:layout_marginRight="@dimen/dimen_5"
-                        android:id="@+id/tv_birthday"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_30"
-                        android:textColor="#999999"
-                        android:textSize="17sp"/>
+                <TextView
+                    android:id="@+id/tv_birthday"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_30"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_weight="1.5"
+                    android:textColor="#999999"
+                    android:textSize="17sp"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:id="@+id/layout_age"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
@@ -260,27 +261,27 @@
                     android:layout_weight="0.5"/>
 
                 <TextView
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:id="@+id/tv_age_title"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:text="年龄"
-                        android:textColor="#383838"
-                        android:textSize="20sp"/>
+                    android:id="@+id/tv_age_title"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="年龄"
+                    android:textColor="#383838"
+                    android:textSize="20sp"/>
 
-                    <TextView
-                        android:layout_marginRight="@dimen/dimen_5"
-                        android:layout_weight="1.5"
-                        android:id="@+id/tv_age"
-                        style="@style/text_item1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_30"
-                        android:text=""
-                        android:textColor="#999999"
-                        android:textSize="17sp"/>
+                <TextView
+                    android:id="@+id/tv_age"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_30"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_weight="1.5"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="17sp"/>
 
             </LinearLayout>
 

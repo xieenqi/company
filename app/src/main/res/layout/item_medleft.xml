@@ -30,8 +30,8 @@
         android:id="@+id/des_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dimen_10"
-        android:paddingTop="@dimen/dimen_10">
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_10">
 
         <com.loyo.oa.v2.tool.customview.RoundImageView
             android:id="@+id/img"
@@ -56,6 +56,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_5"
                 android:text="XXX"
                 android:textColor="@color/text33"
                 android:textSize="15sp"/>

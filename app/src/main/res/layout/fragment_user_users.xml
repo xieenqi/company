@@ -34,7 +34,7 @@
     <com.loyo.oa.v2.common.SideBar
         android:id="@+id/sidrbar"
         android:layout_width="30dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="30dp"
         />

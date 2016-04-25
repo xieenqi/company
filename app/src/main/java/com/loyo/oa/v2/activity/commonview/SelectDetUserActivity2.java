@@ -66,7 +66,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
     private SelectUserHelper.SelectDataAdapter mSelectUserOrDepartmentAdapter; // 选中列表
     private boolean isOnce = true;
     private int mCurrentDepartmentIndex = 0; // 当前选中的部门
-
+    private static boolean isSelctDepat = true;//是否要可以选择部门 默认可以选择部门
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -127,7 +127,9 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
             /*if (!isAllowAllSelect())
                 return;*/
             for (int i = 0; i < datas.size(); i++) {
-                SelectUserHelper.addSelectUserChangeDep(datas.get(i));
+                if (isSelctDepat) {
+                    SelectUserHelper.addSelectUserChangeDep(datas.get(i));
+                }
             }
             mSelectUsersAdapter.notifyDataSetChanged();
             mSelectUserOrDepartmentAdapter.notifyDataSetChanged();
@@ -174,6 +176,16 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         intent.putExtra(ExtraAndResult.STR_SELECT_TYPE, TYPE_ONLY);
         intent.putExtra(ExtraAndResult.STR_SUPER_ID, joinUserId);
         act.startActivityForResult(intent, REQUEST_ONLY);
+    }
+
+    /**
+     * 启动多选不支持全选的界面  设置是否选择呢部门
+     *
+     * @param act
+     */
+    public static void startThisForMulitSelect(Activity act, String joinUserId, boolean isSelctDept) {
+        isSelctDepat = isSelctDept;
+        startThisForMulitSelect(act, joinUserId);
     }
 
     /**
@@ -533,4 +545,5 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
             }
         }
     }
+
 }
