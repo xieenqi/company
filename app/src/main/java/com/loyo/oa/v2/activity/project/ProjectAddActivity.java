@@ -325,9 +325,20 @@ public class ProjectAddActivity extends BaseActivity {
 
         projectTransObj.managers = getProjectManager();
 
-        /*获取post参与人数据*/
+        /**
+         * 获取post参与人数据
+         * 过滤为空的dept或user
+         * */
         if (!TextUtils.isEmpty(mMemberIds) && mAdapter != null) {
             projectTransObj.members = mAdapter.GetProjectMembers();
+            for(ManagersMembers managersMembers : projectTransObj.members){
+                if(null == managersMembers.dept.id){
+                    managersMembers.dept = null;
+                }
+                if(null == managersMembers.user.id){
+                    managersMembers.user = null;
+                }
+            }
         }
 
         if (mUpdate) {

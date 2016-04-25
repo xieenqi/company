@@ -47,11 +47,6 @@ import java.util.List;
  * 作者 : ykb
  * 时间 : 15/8/24.
  *
- * 2015-4-22 21:02
- * 备注 : 一个严重Bug,全公司通讯录不能显示出与公司同级的人员(新建时人员时，部门选择位公司)
- * 解决方案: 获取到同级人员，在listView1加footerView，footerView里装入Listview2,ListView2加载同级人员。
- *         参照点击部门后的二级部门页面 ContactsSubdivisionsFragment（人员，部门同在）
- *
  */
 public class ContactsDepartmentFragment extends BaseFragment {
 
