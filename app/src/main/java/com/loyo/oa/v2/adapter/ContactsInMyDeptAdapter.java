@@ -6,20 +6,17 @@ package com.loyo.oa.v2.adapter;
  * Created by yyy on 15/12/30.
  */
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -76,11 +73,10 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
         User user = list.get(position);
         deptName = new StringBuffer();
-        Utils.getDeptName(deptName,user.getDepts());
+        Utils.getDeptName(deptName, user.getDepts());
         viewHolder.name.setText(this.list.get(position).getRealname());
         viewHolder.deptInf.setText(deptName.toString());
         ImageLoader.getInstance().displayImage(this.list.get(position).getAvatar(), viewHolder.img);
-
         return view;
     }
 

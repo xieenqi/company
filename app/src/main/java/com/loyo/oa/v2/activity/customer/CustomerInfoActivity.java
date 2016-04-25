@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.application.MainApp;
@@ -37,19 +38,21 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.ContactInfoExtraData;
 import com.loyo.oa.v2.tool.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -153,7 +156,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
 
         if (!isMyUser || isMenber) {
-            if(!isRoot){
+            if (!isRoot) {
                 imgview_title_right.setVisibility(View.GONE);
             }
         }
@@ -214,7 +217,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private void initExtra(final boolean ismy) {
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0,isRoot,isMenber));
+            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber));
         }
     }
 
@@ -223,7 +226,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         initExtra(isMyUser);
         /*如果不是自己的客户，不允许操作*/
         if (!isMyUser || isMenber) {
-            if(!isRoot) {
+            if (!isRoot) {
                 layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
                 img_refresh_address.setVisibility(View.GONE);
                 tv_customer_name.setEnabled(false);
@@ -243,7 +246,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
                 tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
                 tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
-            }else{
+            } else {
                 layout_customer_responser.setEnabled(false);
                 layout_customer_join_users.setEnabled(false);
                 tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
@@ -304,8 +307,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             if (isMyUser && !isMenber) {
                 img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
             }
-                tv_customer_join_users.setText(Utils.getMembers(members));
-        }else{
+            tv_customer_join_users.setText(Utils.getMembers(members));
+        } else {
             tv_customer_join_users.setText("无参与人");
         }
         if (regional.province != null) {
@@ -416,7 +419,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             /*选参与人*/
             case R.id.layout_customer_join_users:
-                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this, mManagerIds == null ? null : mManagerIds.toString());
+                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this, mManagerIds == null ? null : mManagerIds.toString(), false);
                 break;
             /*地区选择*/
             case R.id.layout_customer_district:
@@ -476,7 +479,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
-                        HttpErrorCheck.checkResponse("更新客户信息",response);
+                        HttpErrorCheck.checkResponse("更新客户信息", response);
                         app.isCutomerEdit = true;
                         Intent intent = new Intent();
                         customer.loc = mLocate;
@@ -552,7 +555,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (members.size() != 0) {
                     img_del_join_users.setVisibility(View.VISIBLE);
                     tv_customer_join_users.setText(mManagerNames);
-                }else{
+                } else {
                     tv_customer_join_users.setText("无参与人");
                 }
 
