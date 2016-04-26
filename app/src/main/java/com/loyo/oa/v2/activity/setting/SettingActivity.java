@@ -256,8 +256,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         JPushInterface.setAliasAndTags(getApplicationContext(), "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                if (i == 0)
-                    LogUtil.d("激光推送已经成功停止（注销）");
+                    LogUtil.d("激光推送已经成功停止（注销）状态"+i);
                 //设置别名 为空
             }
         });

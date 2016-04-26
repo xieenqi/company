@@ -15,42 +15,16 @@
         android:id="@+id/catalog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:background="@color/activity_bg"
+        android:gravity="center_vertical"
         android:minHeight="22dp"
         android:paddingLeft="@dimen/margin_side_edge"
         android:text="我"
         android:textColor="@color/text99"
+        android:textSize="@dimen/text_sp12"
         android:textStyle="bold"
         />
 
-    <RelativeLayout
-        android:id="@+id/des_mydept_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dimen_5"
-        android:paddingTop="@dimen/dimen_5">
-
-        <com.loyo.oa.v2.tool.customview.RoundImageView
-            android:id="@+id/mydept_img"
-            android:layout_width="@dimen/dimen_40"
-            android:layout_height="@dimen/dimen_40"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:src="@drawable/icon_department_avatar"
-            />
-
-        <TextView
-            android:id="@+id/tv_mydept_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_toRightOf="@+id/mydept_img"
-            android:text=""
-            android:textColor="@color/text33"
-            android:textSize="15sp"/>
-
-    </RelativeLayout>
+    <include layout="@layout/item_contacts_department_child"/>
 
 </LinearLayout>

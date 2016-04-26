@@ -2,47 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="@dimen/dimen_70"
+              android:layout_height="wrap_content"
               android:background="@color/white"
               android:orientation="vertical">
 
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/des_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:paddingBottom="@dimen/dimen_5"-->
+    <!--android:paddingTop="@dimen/dimen_5">-->
+
+    <!--<com.loyo.oa.v2.tool.customview.RoundImageView-->
+    <!--android:id="@+id/img"-->
+    <!--android:layout_width="@dimen/dimen_50"-->
+    <!--android:layout_height="@dimen/dimen_50"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginLeft="@dimen/dimen_8"-->
+    <!--android:src="@drawable/icon_department_avatar"-->
+    <!--imagecontrol:border_inside_color="#a8d4e9"-->
+    <!--imagecontrol:border_outside_color="#a8d4e9"-->
+    <!--imagecontrol:border_thickness="1dp"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_content"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginLeft="@dimen/dimen_8"-->
+    <!--android:layout_toRightOf="@+id/img"-->
+    <!--android:text=""-->
+    <!--android:textSize="18sp"/>-->
+
+    <!--</RelativeLayout>-->
     <RelativeLayout
-        android:id="@+id/des_layout"
+        android:id="@+id/des_mydept_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dimen_5"
-        android:paddingTop="@dimen/dimen_5">
+        android:paddingBottom="@dimen/dimen_10"
+        android:paddingTop="@dimen/dimen_10">
 
         <com.loyo.oa.v2.tool.customview.RoundImageView
-            android:id="@+id/img"
-            android:layout_width="@dimen/dimen_50"
-            android:layout_height="@dimen/dimen_50"
+            android:id="@+id/mydept_img"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginLeft="@dimen/margin_side_edge"
             android:src="@drawable/icon_department_avatar"
-            imagecontrol:border_inside_color="#a8d4e9"
-            imagecontrol:border_outside_color="#a8d4e9"
-            imagecontrol:border_thickness="1dp"/>
+            />
 
         <TextView
-            android:id="@+id/tv_content"
+            android:id="@+id/tv_mydept_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_8"
-            android:layout_toRightOf="@+id/img"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_toRightOf="@+id/mydept_img"
             android:text=""
-            android:textSize="18sp"/>
+            android:textColor="@color/text33"
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/devider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1"
-        android:layout_marginLeft="@dimen/dimen_66"
-        android:layout_marginRight="@dimen/dimen_8"
-        android:scaleType="fitXY"
-        android:src="#e1e1e1"/>
+    <include
+        android:id="@+id/line"
+        layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>
