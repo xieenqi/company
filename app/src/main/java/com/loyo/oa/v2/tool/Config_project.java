@@ -14,7 +14,7 @@ public class Config_project {
 
     public static final Boolean is_developer_mode = BuildConfig.DEBUG; //dbug模式`
 
-//    public static String IP = "http://192.168.31.131";        //内部测试环境
+//    public static String IP = "http://192.168.31.131";        //内部测试环
 
     public static String IP = "http://staging.ukuaiqi.com"; //产品预上线环境
 
@@ -34,15 +34,17 @@ public class Config_project {
      * 正式产品的域名
      */
     private static class Domain {
+
         /**
          * 账号中心
-         * oa
          */
         public static String account = "http://user.ukuaiqi.com";
+
         /**
          * crm 客户管理crm.ukuaiqi.co
          */
         public static String crm = "http://ukuaiqi.com/p/oa";
+
         /**
          * oa 系统oa.ukuaiqi.com
          */
@@ -52,10 +54,12 @@ public class Config_project {
          * attachment 附件
          */
         public static String attachment = "http://attachment.ukuaiqi.com";
+
         /**
          * discuss 讨论discuss.ukuaiqi.com
          */
         public static String discuss = "http://ukuaiqi.com/p/oa";
+
         /**
          * statistics 统计
          */
