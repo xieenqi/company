@@ -7,16 +7,16 @@
 
     <LinearLayout
         android:id="@+id/img_title_left"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_10"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
 
@@ -27,7 +27,8 @@
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sp16"/>
+            android:textSize="@dimen/text_sp16"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -51,10 +52,10 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="@dimen/dimen_23"
-            android:layout_height="@dimen/dimen_23"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/dimen_14"
+            android:layout_marginRight="@dimen/margin_other_view"
             android:scaleType="fitCenter"
             android:src="@drawable/img_search"/>
 

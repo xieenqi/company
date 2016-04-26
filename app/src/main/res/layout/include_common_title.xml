@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/view_h_title"
-    android:layout_gravity="fill_horizontal"
-    android:background="@color/title_bg1">
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:layout_gravity="fill_horizontal"
+                android:background="@color/title_bg1">
 
     <LinearLayout
         android:id="@+id/img_title_left"
@@ -14,12 +14,12 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="@dimen/dimen_23"
-            android:layout_height="@dimen/dimen_23"
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="@dimen/dimen_20"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:scaleType="fitCenter"
-            android:src="@drawable/back_left1" />
+            android:src="@drawable/back_left1"/>
 
         <TextView
             android:id="@+id/tv_back"
@@ -29,7 +29,8 @@
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sp16" />
+            android:textSize="@dimen/text_sp16"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -38,13 +39,13 @@
         style="@style/text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="" />
+        android:text=""/>
 
- <!--   <ImageView
-    android:id="@+id/img_title_right"
-    android:layout_width="@dimen/view_h_title"
-    android:layout_height="@dimen/view_h_title"
-    android:scaleType="center" />-->
+    <!--   <ImageView
+       android:id="@+id/img_title_right"
+       android:layout_width="@dimen/view_h_title"
+       android:layout_height="@dimen/view_h_title"
+       android:scaleType="center" />-->
 
 </RelativeLayout>
 
