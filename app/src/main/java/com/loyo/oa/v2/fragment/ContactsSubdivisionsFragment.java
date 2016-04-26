@@ -235,5 +235,4 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             return convertView;
         }
     }
-
 }
