@@ -142,8 +142,6 @@ public class TasksInfoActivity extends BaseActivity {
 
     private boolean isOver = false;
     private int statusSize;
-//    private ArrayList<NewUser> userss;
-//    private ArrayList<NewUser> depts;
     private Members member;
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
@@ -152,6 +150,8 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
     public ArrayList<NewUser> requestDepts = new ArrayList<>();
     public ArrayList<User> aboutDepts = new ArrayList<>();
+    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
+
     public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
@@ -191,8 +191,6 @@ public class TasksInfoActivity extends BaseActivity {
     void initUI() {
         super.setTitle("任务详情");
         userId = DBManager.Instance().getUser().getId();
-//        userss = new ArrayList<>();
-//        depts = new ArrayList<>();
         member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -264,7 +262,6 @@ public class TasksInfoActivity extends BaseActivity {
      * @return
      */
     private boolean isMenberShortDept(String id, String xpath) {
-        LogUtil.d("部门的值：" + xpath);
         for (UserInfo element : MainApp.user.depts) {
             if (element.getShortDept().getId().equals(id)
                     || (null != xpath && element.getShortDept().getXpath().contains(xpath))) {
@@ -312,11 +309,25 @@ public class TasksInfoActivity extends BaseActivity {
             if (mTask.members.getAllData().size() > 0) {
                 StringBuffer userNames = new StringBuffer();
                 for (NewUser element : mTask.members.getAllData()) {
-                    userNames.append(element.getName() + ",");
+                    userNames.append(element.getName() + " ");
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
+                if(null != mTask.members.depts){
+                    for(NewUser newUser : mTask.members.depts){
+                        Common.getAllUsersByDeptId(newUser.getId(),childTaskUsers2);
+                    }
+                }
+
+                for(User user : childTaskUsers2){
+                    childTastUsers.add(user.toShortUser());
+                }
+
+                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
+                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
+
                 getAboutUser();
+
             } else {
                 tv_toUsers.setText("没有参与人");
             }
