@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -22,13 +21,11 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -163,8 +160,8 @@ public class ContactInfoActivity extends BaseActivity {
         }
 
         //默认头像，头像获取
-        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            if (MainApp.user.gender == 2) {
+        if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
+            if (user.gender == 2) {
                 defaultAvatar = R.drawable.icon_contact_avatar;
             } else {
                 defaultAvatar = R.drawable.img_default_user;

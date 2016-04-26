@@ -55,6 +55,11 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectAddActivi
             }
         });
 
+        /*默认设置参与人可看全部*/
+        ProjectAddActivity.ManagersMembers p = mProjectMembers.get(holder.getPosition());
+        p.canReadAll = true;
+
+        /*隐藏参与人权限，弃用*/
         Switch sw = holder.getView(R.id.switch_member);
         sw.setChecked(projectMember.canReadAll);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.common;
 
 import com.loyo.oa.v2.beans.Department;
-
 import java.util.Comparator;
 
 /**
