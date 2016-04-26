@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 
 /**
@@ -20,7 +22,7 @@ public class ContactsMyDeptOtherAdapter extends BaseAdapter {
     private ArrayList<User> commyUsers;
     private Context mContext;
 
-    public ContactsMyDeptOtherAdapter(ArrayList<User> commyUsers, Context mContext){
+    public ContactsMyDeptOtherAdapter(ArrayList<User> commyUsers, Context mContext) {
         this.commyUsers = commyUsers;
         this.mContext = mContext;
     }
@@ -47,10 +49,10 @@ public class ContactsMyDeptOtherAdapter extends BaseAdapter {
         final User mContent = commyUsers.get(position);
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_mydept_otheruser, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_contacts_department_child, null);
 
-            viewHolder.name = (TextView) convertView.findViewById(R.id.contact_dept_othername);
-            viewHolder.img = (ImageView) convertView.findViewById(R.id.contact_dept_img);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.tv_mydept_content);
+            viewHolder.img = (RoundImageView) convertView.findViewById(R.id.mydept_img);
 
             convertView.setTag(viewHolder);
         } else {
@@ -63,8 +65,8 @@ public class ContactsMyDeptOtherAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder{
-        ImageView img;
+    class ViewHolder {
+        RoundImageView img;
         TextView name;
     }
 }

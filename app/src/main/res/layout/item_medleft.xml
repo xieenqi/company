@@ -30,8 +30,8 @@
         android:id="@+id/des_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_12"
-        android:layout_marginTop="@dimen/dimen_12"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_10"
         android:gravity="center_vertical">
 
         <com.loyo.oa.v2.tool.customview.RoundImageView

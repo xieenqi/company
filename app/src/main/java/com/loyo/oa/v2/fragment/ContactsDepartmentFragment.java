@@ -51,12 +51,10 @@ public class ContactsDepartmentFragment extends BaseFragment {
     private MyLetterListView letterView;
     private ListView listView_otheruser;
     private AlphabetIndexer index;
-    //    private ViewGroup layout_toast;
     private TextView tv_dialog;
     private String mIndex;
     private String myDeptId;
     private String myDeptName;
-
     public View headView;
     public View footView;
     public LayoutInflater mInflater;
@@ -116,7 +114,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
                     switch (state) {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                            tv_dialog.setVisibility(View.VISIBLE);
+//                            tv_dialog.setVisibility(View.VISIBLE);
                             tv_dialog.setText(sectionLetter);
                             scroll(position - 1);
                             break;
@@ -538,7 +536,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
             if (convertView == null)
                 convertView = layoutInflater.inflate(R.layout.item_contacts_department_child, null);
             final ContactsGroup group = getGroup(groupPosition);
-            TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
+            TextView tv_content = ViewHolder.get(convertView, R.id.tv_mydept_content);
             if (null != group.getDepartments() && !group.getDepartments().isEmpty()) {
                 Department department = group.getDepartments().get(childPosition);
                 if (null != department) {
@@ -552,9 +550,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 }
             }
             if (childPosition == getChildrenCount(groupPosition) - 1)
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.GONE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
             else
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.VISIBLE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
 
             return convertView;
         }
