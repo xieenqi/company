@@ -154,12 +154,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_district.setOnTouchListener(Global.GetTouch());
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-
-        if (!isMyUser || isMenber) {
-            if (!isRoot) {
-                imgview_title_right.setVisibility(View.GONE);
-            }
-        }
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
     }
@@ -217,35 +211,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private void initExtra(final boolean ismy) {
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
             container.setVisibility(View.VISIBLE);
-            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber));
+            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber,mCustomer.lock));
         }
     }
 
     void initData() {
 
         initExtra(isMyUser);
-        /*如果不是自己的客户，不允许操作*/
-        if (!isMyUser || isMenber) {
+        /*公海客户*/
+        if (!mCustomer.lock) {
+            setEnable();
+            /*如果不是自己的客户，不允许操作*/
+        } else if (!isMyUser || isMenber) {
             if (!isRoot) {
-                layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
-                img_refresh_address.setVisibility(View.GONE);
-                tv_customer_name.setEnabled(false);
-                tv_address.setEnabled(false);
-                edt_customer_memo.setEnabled(false);
-                layout_customer_industry.setEnabled(false);
-                layout_customer_district.setEnabled(false);
-                layout_customer_label.setEnabled(false);
-                layout_customer_responser.setEnabled(false);
-                layout_customer_join_users.setEnabled(false);
-                img_refresh_address.setEnabled(false);
-
-                container.setClickable(false);
-                container.setEnabled(false);
-                tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
+                setEnable();
             } else {
                 layout_customer_responser.setEnabled(false);
                 layout_customer_join_users.setEnabled(false);
@@ -330,6 +309,29 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         if (!TextUtils.isEmpty(tag)) {
             tv_labels.setText(tag);
         }
+    }
+
+    void setEnable() {
+        img_title_right.setVisibility(View.GONE);
+        layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
+        img_refresh_address.setVisibility(View.GONE);
+        tv_customer_name.setEnabled(false);
+        tv_address.setEnabled(false);
+        edt_customer_memo.setEnabled(false);
+        layout_customer_industry.setEnabled(false);
+        layout_customer_district.setEnabled(false);
+        layout_customer_label.setEnabled(false);
+        layout_customer_responser.setEnabled(false);
+        layout_customer_join_users.setEnabled(false);
+        img_refresh_address.setEnabled(false);
+
+        container.setClickable(false);
+        container.setEnabled(false);
+        tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
     }
 
     /**

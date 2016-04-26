@@ -39,6 +39,7 @@ public class CustomerInfoExtraData extends LinearLayout {
     private ArrayList<ExtraData> extras = new ArrayList<>();
     private boolean isRoot;
     private boolean isMenber;
+    private boolean isLock;
 
     public CustomerInfoExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -47,11 +48,12 @@ public class CustomerInfoExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize, boolean isRoot,boolean isMenber) {
+    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize, boolean isRoot,boolean isMenber,boolean isLock) {
         this(context, null, 0);
         this.extras = extras;
         this.isRoot = isRoot;
         this.isMenber = isMenber;
+        this.isLock = isLock;
         bindView(edit, valueColor, valueSize);
     }
 
@@ -82,10 +84,11 @@ public class CustomerInfoExtraData extends LinearLayout {
 
             View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_customerextra, null, false);
 
-            LogUtil.d("isMyUser:"+edit);
-            LogUtil.d("isRoot:"+isRoot);
-
-            if(!edit || isMenber) {
+            /*是否为公海客户*/
+            if(!isLock){
+                extra.setEnabled(false);
+                /*是否有权限*/
+            }else if(!edit || isMenber){
                 if (!isRoot) {
                     extra.setEnabled(false);
                 }

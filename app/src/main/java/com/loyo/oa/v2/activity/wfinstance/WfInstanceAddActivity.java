@@ -524,27 +524,28 @@ public class WfInstanceAddActivity extends BaseActivity {
         long startTimelong;
         long endTimelong;
 
-        for(HashMap<String, Object> map : workflowValues){
+        if(null != startTimeId){
+            for(HashMap<String, Object> map : workflowValues){
                 Set set = map.entrySet();
-            Iterator it=set.iterator();
-            while(it.hasNext()){
-                Map.Entry me=(Map.Entry)it.next();
-                if(startTimeId.equals(me.getKey())){
-                    startTimeDate = (String) map.get(startTimeId);
-                }
+                Iterator it=set.iterator();
+                while(it.hasNext()){
+                    Map.Entry me=(Map.Entry)it.next();
+                    if(startTimeId.equals(me.getKey())){
+                        startTimeDate = (String) map.get(startTimeId);
+                    }
 
-                if(endTimeId.equals(me.getKey())){
-                    endTimeDate = (String) map.get(endTimeId);
+                    if(endTimeId.equals(me.getKey())){
+                        endTimeDate = (String) map.get(endTimeId);
+                    }
                 }
             }
-        }
+            startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+            endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
 
-        startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-        endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-
-        if(startTimelong > endTimelong && startTimelong != endTimelong){
-            Toast("开始时间不能大于结束时间!");
-            return;
+            if (startTimelong > endTimelong && startTimelong != endTimelong) {
+                Toast("开始时间不能大于结束时间!");
+                return;
+            }
         }
 
         bizExtData = new PostBizExtData();

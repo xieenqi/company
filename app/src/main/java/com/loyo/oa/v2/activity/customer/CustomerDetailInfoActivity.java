@@ -473,6 +473,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*联系人*/
             case R.id.layout_contact:
+                bundle.putBoolean("isLock",mCustomer.lock);
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean("isRoot",isRoot);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
