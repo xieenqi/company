@@ -24,12 +24,13 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * 【本部门】人员列表页
- *
+ * <p/>
  * Created by yyy on 15/12/30.
  */
 public class ContactsInMyDeptFragment extends BaseFragment {
@@ -50,6 +51,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public TextView nameTv;
     public TextView deptInfoTv;
     public TextView catalogTv;
+    public TextView tv_dialog;
     public LinearLayout item_medleft_top;
     public StringBuffer myDeptBuffer;
 
@@ -66,15 +68,15 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         /*及时刷新头像*/
-        heading = (ImageView)headView.findViewById(R.id.img);
+        heading = (ImageView) headView.findViewById(R.id.img);
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            if(MainApp.user.gender == 2){
+            if (MainApp.user.gender == 2) {
                 defaultAvatar = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAvatar = R.drawable.img_default_user;
             }
             heading.setImageResource(defaultAvatar);
-        }else{
+        } else {
             ImageLoader.getInstance().displayImage(MainApp.user.getAvatar(), heading);
         }
     }
@@ -86,29 +88,30 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         sortListView = (ListView) view.findViewById(R.id.expandableListView_user);
         sideBar = (SideBar) view.findViewById(R.id.sidrbar);
         mInflater = LayoutInflater.from(getActivity());
-
+        tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
         headView = mInflater.inflate(R.layout.item_medleft, null);
-        nameTv =  (TextView)headView.findViewById(R.id.tv_name);
-        deptInfoTv = (TextView)headView.findViewById(R.id.tv_position);
-        catalogTv = (TextView)headView.findViewById(R.id.catalog);
-        item_medleft_top = (LinearLayout)headView.findViewById(R.id.item_medleft_top);
+        nameTv = (TextView) headView.findViewById(R.id.tv_name);
+        deptInfoTv = (TextView) headView.findViewById(R.id.tv_position);
+        catalogTv = (TextView) headView.findViewById(R.id.catalog);
+
+        item_medleft_top = (LinearLayout) headView.findViewById(R.id.item_medleft_top);
         pinyinComparator = new PinyinComparator();
         characterParser = CharacterParser.getInstance();
 
-        Utils.getDeptName(myDeptBuffer,myDepts);
+        Utils.getDeptName(myDeptBuffer, myDepts);
         nameTv.setText(MainApp.user.getRealname());
         deptInfoTv.setText(myDeptBuffer.toString());
         catalogTv.setText("我");
         myUserList = Common.getMyUserDept();
 
         /*我的部门数据中，移除自己*/
-        for(int i = 0;i<myUserList.size();i++){
-            if(myUserList.get(i).getId().equals(MainApp.user.getId())){
+        for (int i = 0; i < myUserList.size(); i++) {
+            if (myUserList.get(i).getId().equals(MainApp.user.getId())) {
                 myUserList.remove(i);
                 break;
             }
         }
-
+        sideBar.setTextView(tv_dialog);
         //设置右侧触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -135,7 +138,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 //adapterView.getAdapter().getItem(position);
                 LogUtil.d("User数据:"+MainApp.gson.toJson(myUserList.get(position -1)));
                 Bundle b = new Bundle();
-                b.putSerializable("user", myUserList.get(position -1));
+                b.putSerializable("user", myUserList.get(position - 1));
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
 
             }
@@ -147,7 +150,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
             public void onClick(View view) {
                 LogUtil.d("User数据:"+MainApp.gson.toJson(MainApp.user));
                 Bundle b = new Bundle();
-                b.putSerializable("user",MainApp.user);
+                b.putSerializable("user", MainApp.user);
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
             }
         });
@@ -156,8 +159,8 @@ public class ContactsInMyDeptFragment extends BaseFragment {
     /**
      * 遍历数据排序
      */
-    void sortDataList(){
-        for (User user : myUserList){
+    void sortDataList() {
+        for (User user : myUserList) {
             String pinyin = characterParser.getSelling(user.getRealname());
             String sortString = pinyin.substring(0, 1).toUpperCase();
 

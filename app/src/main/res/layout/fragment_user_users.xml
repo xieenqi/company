@@ -39,4 +39,15 @@
         android:layout_marginBottom="30dp"
         />
 
+    <TextView
+        android:id="@+id/tv_dialog"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
+        android:layout_centerInParent="true"
+        android:background="@color/gray"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:visibility="invisible"
+        />
 </RelativeLayout>
