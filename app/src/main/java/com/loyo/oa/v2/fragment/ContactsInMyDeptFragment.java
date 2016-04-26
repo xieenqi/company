@@ -111,7 +111,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
                 break;
             }
         }
-        sideBar.setTextView(tv_dialog);
+//        sideBar.setTextView(tv_dialog);//暂时不上此dialog
         //设置右侧触摸监听
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -136,7 +136,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //adapterView.getAdapter().getItem(position);
-                LogUtil.d("User数据:"+MainApp.gson.toJson(myUserList.get(position -1)));
+                LogUtil.d("User数据:" + MainApp.gson.toJson(myUserList.get(position - 1)));
                 Bundle b = new Bundle();
                 b.putSerializable("user", myUserList.get(position - 1));
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
@@ -148,7 +148,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         item_medleft_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LogUtil.d("User数据:"+MainApp.gson.toJson(MainApp.user));
+                LogUtil.d("User数据:" + MainApp.gson.toJson(MainApp.user));
                 Bundle b = new Bundle();
                 b.putSerializable("user", MainApp.user);
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
