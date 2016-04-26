@@ -27,6 +27,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     private List<User> list = null;
     private Context mContext;
     private StringBuffer deptName;
+    private int defaultAvatar;
 
     public ContactsInMyDeptAdapter(final Context mContext, final List<User> list) {
         this.mContext = mContext;
@@ -74,9 +75,19 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         User user = list.get(position);
         deptName = new StringBuffer();
         Utils.getDeptName(deptName, user.getDepts());
-        viewHolder.name.setText(this.list.get(position).getRealname());
+        viewHolder.name.setText(user.getRealname());
         viewHolder.deptInf.setText(deptName.toString());
-        ImageLoader.getInstance().displayImage(this.list.get(position).getAvatar(), viewHolder.img);
+
+        if(null == user.getAvatar() || user.getAvatar().isEmpty() || !user.getAvatar().contains("http")){
+            if (user.gender == 2) {
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            viewHolder.img.setImageResource(defaultAvatar);
+        }else{
+            ImageLoader.getInstance().displayImage(user.getAvatar(), viewHolder.img);
+        }
         return view;
     }
 
