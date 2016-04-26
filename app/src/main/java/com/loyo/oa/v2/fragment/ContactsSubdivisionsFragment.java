@@ -21,6 +21,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -42,6 +43,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
     private DepartmentListViewAdapter deptAdapter;
     private UserListViewAdapter userAdapter;
     private StringBuffer deptName;
+    private int defaultAvatar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
                 if (user == null) {
                     return;
                 }
-
+                LogUtil.d("User数据:"+MainApp.gson.toJson(user));
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
@@ -210,11 +212,18 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
 
             deptName = new StringBuffer();
-            Utils.getDeptName(deptName,user.getDepts());
+            Utils.getDeptName(deptName, user.getDepts());
             tv_position.setText(deptName.toString());
             tv_content.setText(user.getRealname());
 
-            if (!TextUtils.isEmpty(user.avatar)) {
+            if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
+                if (user.gender == 2) {
+                    defaultAvatar = R.drawable.icon_contact_avatar;
+                } else {
+                    defaultAvatar = R.drawable.img_default_user;
+                }
+                img.setImageResource(defaultAvatar);
+            }else{
                 ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
