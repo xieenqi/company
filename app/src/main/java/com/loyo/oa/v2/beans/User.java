@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
     public String id;
-    public String company_id;
+    public String companyId;
     public String mobile;
     public String simplePinyin;
     public String avatar;

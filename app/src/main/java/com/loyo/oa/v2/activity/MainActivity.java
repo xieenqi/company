@@ -99,6 +99,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -141,6 +142,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind; //0上班  1下班  2加班
+    private Set<String> companyTag;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -339,9 +341,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
             int defaultAcatar;
-            if(MainApp.user.gender == 2){
+            if (MainApp.user.gender == 2) {
                 defaultAcatar = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAcatar = R.drawable.img_default_user;
             }
             img_user.setImageResource(defaultAcatar);
@@ -462,14 +464,24 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }, 5000);
             return;
         }
+        if (null == companyTag) {
+            companyTag = new HashSet<String>();
+            companyTag.add(MainApp.user.companyId);
+        }
         JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
             @Override
             public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(MainApp.user + " 激光的alias： " + s);
+                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
+            }
+        });
+        JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
