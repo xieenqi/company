@@ -139,6 +139,8 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;
 
     private boolean isOver = false;
     private int statusSize;
@@ -313,13 +315,13 @@ public class TasksInfoActivity extends BaseActivity {
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
-                if(null != mTask.members.depts){
-                    for(NewUser newUser : mTask.members.depts){
-                        Common.getAllUsersByDeptId(newUser.getId(),childTaskUsers2);
+                if (null != mTask.members.depts) {
+                    for (NewUser newUser : mTask.members.depts) {
+                        Common.getAllUsersByDeptId(newUser.getId(), childTaskUsers2);
                     }
                 }
 
-                for(User user : childTaskUsers2){
+                for (User user : childTaskUsers2) {
                     childTastUsers.add(user.toShortUser());
                 }
 
@@ -701,7 +703,7 @@ public class TasksInfoActivity extends BaseActivity {
             return;
         }
 
-        app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
+        app.getRestAdapter().create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
                 LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
@@ -960,7 +962,7 @@ public class TasksInfoActivity extends BaseActivity {
 //                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
 //                        app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
 //                                SelectDetUserActivity2.REQUEST_ALL_SELECT, mBundle);
-                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(),true);
+                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
                                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
@@ -981,7 +983,7 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(),true);
+                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
 //                    Bundle bundle = new Bundle();
 //                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
 //                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT, SelectDetUserActivity2.REQUEST_ALL_SELECT, bundle);

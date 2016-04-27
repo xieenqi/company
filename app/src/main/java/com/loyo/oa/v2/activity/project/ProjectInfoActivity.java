@@ -67,6 +67,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById ImageView img_project_status;
     @Extra("projectId") String projectId;
     HttpProject project;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
@@ -86,7 +88,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     private void getProject() {
         DialogHelp.showLoading(this, "", true);
-        app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
+        app.getRestAdapter().create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
                 DialogHelp.cancelLoading();
