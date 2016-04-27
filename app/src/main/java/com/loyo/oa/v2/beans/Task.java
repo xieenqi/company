@@ -25,6 +25,7 @@ public class Task extends BaseBeans implements Serializable{
     public String customerId;
     public boolean remindflag;
     public boolean reviewFlag;
+    public boolean viewed;
     public int score;
     public int status;
     public int remindtime;
@@ -46,6 +47,13 @@ public class Task extends BaseBeans implements Serializable{
     public String responsiblePersonName;
     public String TaskComment;
 
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
 
     public CornBody getCornBody() {
         return cornBody;
@@ -145,29 +153,6 @@ public class Task extends BaseBeans implements Serializable{
         this.responsiblePersonId = responsiblePersonId;
     }
 
-    public boolean isAck() {
-        if (creator.isCurrentUser()) {
-            return true;
-        }
-
-        for (Reviewer responseUser : responsiblePersons) {
-            if (responseUser.getUser() != null && responseUser.getUser().isCurrentUser()) {
-                return responseUser.isViewed();
-            }
-        }
-
-        return true;
-    }
-
-    public void setAck(boolean ack) {
-        for (int i = 0; i < responsiblePersons.size(); i++) {
-            NewUser u = responsiblePersons.get(i).getUser();
-            if (u != null && u.isCurrentUser()) {
-                responsiblePersons.get(i).setViewed(ack);
-                return;
-            }
-        }
-    }
 
     public Task() {
         reviewComments = new ArrayList<TaskReviewComment>();

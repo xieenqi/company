@@ -353,7 +353,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (null != mWorkReport) {
-            mWorkReport.ack = true;
+            mWorkReport.setViewed(true);
             intent.putExtra("review", mWorkReport);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

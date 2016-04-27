@@ -571,7 +571,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 cancelLoading();
                 if (wfInstance != null) {
                     isSave = false;
-                    wfInstance.ack = true;
+                    wfInstance.setViewed(true);
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
                     app.finishActivity(WfInstanceAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

@@ -158,7 +158,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
                 convertView = mInflater.inflate(R.layout.item_contacts_department_child, null, false);
             }
             Department d = listDepartment.get(position);
-            TextView tv_content = com.loyo.oa.v2.tool.ViewHolder.get(convertView, R.id.tv_content);
+            TextView tv_content = com.loyo.oa.v2.tool.ViewHolder.get(convertView, R.id.tv_mydept_content);
             String departmentName = d.getName();
             int userSize = Common.getUsersByDeptId(d.getId(), new ArrayList<User>()).size();
             String members = "(" + userSize + "人" + ")";
@@ -166,9 +166,9 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             tv_content.setText(departmentName);
 
             if (position == listDepartment.size() - 1) {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.GONE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
             } else {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.VISIBLE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
             }
             return convertView;
         }

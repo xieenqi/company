@@ -130,7 +130,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (null != wfInstance && null != wfInstance.workflowValues && null != wfInstance.workflowValues) {
-            wfInstance.ack = true;
+            wfInstance.setViewed(true);
             wfInstance.workflowValues.clear();
             Intent intent = new Intent();
             intent.putExtra("review", wfInstance);
@@ -416,7 +416,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     if (null != wfInstance_current.workflowValues) {
                         wfInstance_current.workflowValues.clear();
                     }
-                    wfInstance_current.ack = true;
+                    wfInstance_current.setViewed(true);
                     Intent intent = getIntent();
                     intent.putExtra("review", wfInstance_current);
                     app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

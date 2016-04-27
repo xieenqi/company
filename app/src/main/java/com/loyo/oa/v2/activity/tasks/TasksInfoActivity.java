@@ -814,7 +814,7 @@ public class TasksInfoActivity extends BaseActivity {
                         @Override
                         public void success(final Task task, final Response response) {
                             if (task != null) {
-                                task.setAck(true);
+                                task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
                                 app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -829,7 +829,7 @@ public class TasksInfoActivity extends BaseActivity {
                     });
         } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
 
-            mTask.setAck(true);
+            mTask.setViewed(true);
             //跳转到评分
             Bundle bundle2 = new Bundle();
             bundle2.putSerializable("mTask", mTask);
@@ -1044,7 +1044,7 @@ public class TasksInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mTask != null) {
-            mTask.setAck(true);
+            mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
