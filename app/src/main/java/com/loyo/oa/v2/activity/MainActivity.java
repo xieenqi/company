@@ -1148,11 +1148,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
      */
     public void intentJpushInfo() {
-        if (MainApp.jpushData != null) {
+        if (null != MainApp.jpushData) {
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
                 intent.setClass(MainActivity.this, ActivityHait.class);//推送讨论
                 startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            } else if ("delete".equals(MainApp.jpushData.operationType)) {
                 MainApp.jpushData = null;
                 return;
             }

@@ -89,7 +89,7 @@ public class ContactsInMyDeptFragment extends BaseFragment {
         sideBar = (SideBar) view.findViewById(R.id.sidrbar);
         mInflater = LayoutInflater.from(getActivity());
         tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
-        headView = mInflater.inflate(R.layout.item_medleft, null);
+        headView = mInflater.inflate(R.layout.item_contact_personnel, null);
         nameTv = (TextView) headView.findViewById(R.id.tv_name);
         deptInfoTv = (TextView) headView.findViewById(R.id.tv_position);
         catalogTv = (TextView) headView.findViewById(R.id.catalog);

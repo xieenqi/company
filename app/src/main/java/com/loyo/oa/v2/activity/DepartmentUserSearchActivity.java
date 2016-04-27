@@ -28,16 +28,18 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 
 /**
  * 通讯录搜索
- * */
+ */
 
 public class DepartmentUserSearchActivity extends Activity {
 
     private EditText edt_search;
     private PullToRefreshListView listView;
+    private ImageView iv_clean;
     private ArrayList<User> data = new ArrayList<>();
     private ArrayList<User> resultData = new ArrayList<>();
     private ViewGroup img_title_left;
@@ -74,7 +76,13 @@ public class DepartmentUserSearchActivity extends Activity {
                 doSearch();
             }
         });
-
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        iv_clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
         listView = (PullToRefreshListView) findViewById(R.id.listView_customer);
         listView.setAdapter(adapter);
         listView.setPullToRefreshEnabled(false);
@@ -107,13 +115,13 @@ public class DepartmentUserSearchActivity extends Activity {
             }
         });
 
-        /*取消监听*/
-        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onBackPressed();
-            }
-        });
+//        /*取消监听*/
+//        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(final View v) {
+//                onBackPressed();
+//            }
+//        });
     }
 
 
@@ -126,12 +134,14 @@ public class DepartmentUserSearchActivity extends Activity {
 
     /**
      * 搜索操作
-     * */
+     */
 
     void doSearch() {
         key = edt_search.getText().toString().trim();
         if (StringUtil.isEmpty(key)) {
             //Global.Toast("请输入查询姓名!");
+            resultData.clear();
+            adapter.notifyDataSetChanged();
             return;
         }
 
@@ -157,14 +167,14 @@ public class DepartmentUserSearchActivity extends Activity {
 
         if (resultData.size() > 0) {
             adapter.notifyDataSetChanged();
-        }else{
+        } else {
             Global.Toast("未搜索到此联系人!");
         }
     }
 
     /**
      * 适配器
-     * */
+     */
 
     BaseAdapter adapter = new BaseAdapter() {
         @Override
@@ -185,41 +195,43 @@ public class DepartmentUserSearchActivity extends Activity {
         @Override
         public View getView(final int position, View convertView, final ViewGroup parent) {
             if (null == convertView) {
-                convertView = LayoutInflater.from(DepartmentUserSearchActivity.this).inflate(R.layout.item_contacts_child, null, false);
+                convertView = LayoutInflater.from(DepartmentUserSearchActivity.this).inflate(R.layout.item_contact_personnel, null, false);
             }
             User user = resultData.get(position);
             ImageView img = ViewHolder.get(convertView, R.id.img);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
+            TextView catalog = ViewHolder.get(convertView, R.id.catalog);
+
 
             tv_content.setText(user.getRealname());
 
-            String deptName,workName;
+            String deptName, workName;
 
-            try{
+            try {
                 deptName = user.depts.get(0).getShortDept().getName();
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 deptName = "无";
             }
 
-            try{
+            try {
                 workName = user.role.name;
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 workName = "无";
             }
 
-            tv_position.setText(deptName+"  "+workName);
-
+            tv_position.setText(deptName + " | " + workName);
+            catalog.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
             if (position == resultData.size() - 1) {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.GONE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
             } else {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.VISIBLE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
             }
             return convertView;
         }
