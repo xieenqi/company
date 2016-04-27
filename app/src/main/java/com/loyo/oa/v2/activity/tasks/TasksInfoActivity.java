@@ -732,7 +732,7 @@ public class TasksInfoActivity extends BaseActivity {
         switch (v.getId()) {
 
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
 
             case R.id.img_title_right:
