@@ -18,19 +18,17 @@
 
             <TextView
                 android:id="@+id/textView_item_titel"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
-                android:gravity="center_vertical"
+                style="@style/subtitle_style"
                 android:text="人员"
-                android:textStyle="bold"/>
+                />
 
             <ListView
                 android:id="@+id/listView_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/layout_bg1"
-                android:divider="@null"/>
+                android:divider="@null"
+                android:scrollbars="none"/>
 
         </LinearLayout>
 
@@ -43,19 +41,17 @@
 
             <TextView
                 android:id="@+id/tv_dept_titel"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
-                android:gravity="center_vertical"
+                style="@style/subtitle_style"
                 android:text="部门"
-                android:textStyle="bold"/>
+                />
 
             <ListView
                 android:id="@+id/listView_department"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/layout_bg1"
-                android:divider="@null"/>
+                android:divider="@null"
+                android:scrollbars="none"/>
 
         </LinearLayout>
 

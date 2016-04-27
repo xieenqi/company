@@ -3,7 +3,6 @@ package com.loyo.oa.v2.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
@@ -108,7 +108,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
                 if (user == null) {
                     return;
                 }
-                LogUtil.d("User数据:"+MainApp.gson.toJson(user));
+                LogUtil.d("User数据:" + MainApp.gson.toJson(user));
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
                 app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
@@ -127,7 +127,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
 
     /**
      * 展示部门Adapter 奥特曼(5人)
-     * */
+     */
     public class DepartmentListViewAdapter extends BaseAdapter {
         LayoutInflater mInflater;
         public ArrayList<Department> listDepartment;
@@ -177,7 +177,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
 
     /**
      * 展示人员Adapter XXX
-     * */
+     */
     public class UserListViewAdapter extends BaseAdapter {
 
         ArrayList<User> listUser;
@@ -204,33 +204,34 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (null == convertView) {
-                convertView = LayoutInflater.from(app).inflate(R.layout.item_contacts_child, null, false);
+                convertView = LayoutInflater.from(app).inflate(R.layout.item_contact_personnel, null, false);
             }
             User user = listUser.get(position);
             ImageView img = ViewHolder.get(convertView, R.id.img);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
+            TextView catalog = ViewHolder.get(convertView, R.id.catalog);
 
             deptName = new StringBuffer();
             Utils.getDeptName(deptName, user.getDepts());
             tv_position.setText(deptName.toString());
             tv_content.setText(user.getRealname());
-
-            if(null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")){
+            catalog.setVisibility(View.GONE);
+            if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
                 if (user.gender == 2) {
                     defaultAvatar = R.drawable.icon_contact_avatar;
                 } else {
                     defaultAvatar = R.drawable.img_default_user;
                 }
                 img.setImageResource(defaultAvatar);
-            }else{
+            } else {
                 ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
             if (position == listUser.size() - 1) {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.GONE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
             } else {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.VISIBLE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
             }
             return convertView;
         }
