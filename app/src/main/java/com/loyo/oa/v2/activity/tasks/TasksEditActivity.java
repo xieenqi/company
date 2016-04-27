@@ -456,7 +456,7 @@ public class TasksEditActivity extends BaseActivity {
 
                             @Override
                             public void onNext(final Task task) {
-                                task.setAck(true);
+                                task.setViewed(true);
                                 Toast("编辑成功");
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);

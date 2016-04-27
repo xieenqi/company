@@ -19,8 +19,6 @@ public class WorkReport extends BaseBeans {
     public NewUser user = new NewUser();
     public Reviewer reviewer = new Reviewer(user);//点评人
     public BizExtData bizExtData;
-
-
     public String attachmentUUId;//string, optional): ,
     public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     public long beginAt;//&{time Time}, optional): ,
@@ -34,7 +32,15 @@ public class WorkReport extends BaseBeans {
     public String title;//string, optional): ,
     public long updatedAt;//&{time Time}, optional):
     public DiscussCounter discuss;
-    public boolean ack;
+    public boolean viewed;
+
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
 
     @Override
     String getOrderStr() {

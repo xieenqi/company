@@ -149,7 +149,10 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("review", project);
+        if(null != project){
+            project.viewed = true;
+            intent.putExtra("review", project);
+        }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
