@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,7 +58,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     protected String strSearch;
     protected EditText edt_search;
-    protected TextView tv_search;
+    //    protected TextView tv_search;
+    private ImageView iv_clean;
     protected View vs_nodata;
     protected View headerView;
     protected PullToRefreshListView expandableListView_search;
@@ -105,9 +107,16 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 onBackPressed();
             }
         });
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        iv_clean.setOnClickListener(new View.OnClickListener() {
 
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setText("取消");
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
+//        tv_search = (TextView) findViewById(R.id.tv_search);
+//        tv_search.setText("取消");
 
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -133,20 +142,20 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (edt_search.length() == 0) {
-                    tv_search.setText("取消");
-                } else {
-                    tv_search.setText("搜索");
-                }
+//                if (edt_search.length() == 0) {
+//                    tv_search.setText("取消");
+//                } else {
+//                    tv_search.setText("搜索");
+//                }
             }
         });
         edt_search.requestFocus();
-        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doSearch();
-            }
-        });
+//        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                doSearch();
+//            }
+//        });
 
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
