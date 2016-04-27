@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/include_common"
-        layout="@layout/include_header_search_filter"/>
+        layout="@layout/include_header_title_search_filter"/>
 
     <FrameLayout
         android:layout_width="match_parent"

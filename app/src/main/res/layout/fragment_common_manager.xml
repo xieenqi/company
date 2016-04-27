@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include android:id="@+id/include_common" layout="@layout/include_header_search_filter"/>
+        <include android:id="@+id/include_common" layout="@layout/include_header_title_search_filter"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

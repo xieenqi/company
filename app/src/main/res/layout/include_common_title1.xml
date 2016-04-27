@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/img_title_left"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -54,9 +54,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:scaleType="fitCenter"
+            android:gravity="center_vertical"
             android:src="@drawable/right_submit1"/>
 
     </RelativeLayout>
