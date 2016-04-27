@@ -78,10 +78,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             mCustomer = (Customer) intent.getSerializableExtra("data");
             customerId = mCustomer.getId();
             customerName = mCustomer.name;
-
-            LogUtil.dll("name:" + mCustomer.name);
-            LogUtil.dll("id:" + mCustomer.getId());
-
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         initUI();

@@ -55,6 +55,7 @@ import com.loyo.oa.v2.tool.customview.DropListMenu.OnDropItemSelectedListener;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -80,24 +81,27 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private ViewStub emptyView;
     private Intent broacdIntent;
     private ArrayList<Customer> mCustomers = new ArrayList<>();
-    private int customer_type = 1;//"1,我的客户", "2,团队客户", "3,公海客户"
     private CustomerCommonAdapter adapter;
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
-    private boolean isPullUp = false;
-    private boolean isNear = false;//附近客户传的值过来
-    private String position;
-
+    private DecimalFormat df = new DecimalFormat("0.0");
     private NearCount nearCount;
     private Permission permission = (Permission) MainApp.rootMap.get("0404");
     private DropListMenu mDropMenu;
     private ArrayList<DropItem> source = new ArrayList<>();
+
     private String filed = "";
     private String order = "";
     private String tagItemIds = "";
     private String departmentId = "";
     private String userId = "";
+    private String position;
+
     private int page = 1;
     private int countSize;
+    private int customer_type = 1;//"1,我的客户", "2,团队客户", "3,公海客户"
+    private boolean isPullUp = false;
+    private boolean isNear = false;//附近客户传的值过来
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -893,9 +897,26 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 layout3.setVisibility(View.GONE);
 
                 img1.setImageResource(R.drawable.icon_customer_tag);
-
                 tv_content1.setText("标签：" + tagItems);
-                tv_content4.setText("距离：" + customer.distance);
+
+                if(null != customer.distance){
+                    String distance;
+                    if(customer.distance.contains("km")){
+                        tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km","")))+"km");
+                    }else if(customer.distance.contains("m")){
+                        double disa = Float.parseFloat(customer.distance.replace("m",""));
+                        if(disa <= 100){
+                            distance = "<0.1km";
+                        }else{
+                            double disb = Math.round((disa/1000)*10)/10;
+                            distance = disb+"km";
+                        }
+                        tv_content4.setText(distance);
+                    }
+                }else{
+                    tv_content4.setText("无距离数据");
+                }
+
                 if (isNear && customer.winCount != 0) {
                     imgWin.setVisibility(View.VISIBLE);
                 }
@@ -928,8 +949,24 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img2.setImageResource(R.drawable.icon_customer_demands_plan);
 
                 tv_content1.setText("地址：" + customer.loc.addr);
-                //                tv_content2.setText("购买产品：");
-                tv_content4.setText("距离：" + customer.distance);
+                //tv_content2.setText("购买产品：");
+
+                if(null != customer.distance){
+                    String distance;
+                    if(customer.distance.contains("km")){
+                        tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km","")))+"km");
+                    }else if(customer.distance.contains("m")){
+                        double disa = Float.parseFloat(customer.distance.replace("m",""));
+                        if(disa <= 100){
+                            distance = "<0.1km";
+                        }else{
+                            distance = df.format(disa/1000)+"km";
+                        }
+                        tv_content4.setText(distance);
+                    }
+                }else{
+                    tv_content4.setText("无距离数据");
+                }
             }
 
             img_public.setOnTouchListener(Global.GetTouch());

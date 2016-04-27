@@ -34,6 +34,9 @@
                     android:text="title"
                     android:textColor="@color/text33"
                     android:textSize="15sp"
+                    android:maxEms="13"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     />
 
                 <ImageView
