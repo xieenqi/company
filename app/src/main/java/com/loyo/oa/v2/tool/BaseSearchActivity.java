@@ -510,7 +510,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 title.setText(customer.name);
                 content.setText("标签" + Utils.getTagItems(customer));
 
-              /*  if (!TextUtils.isEmpty(customer.distance)) {
+                /*if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);
                 } else {
                     content.setVisibility(View.GONE);

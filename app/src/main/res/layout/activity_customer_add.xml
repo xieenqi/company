@@ -42,7 +42,9 @@
                         android:layout_weight="1"
                         android:hint="请输入客户名称"
                         android:maxLength="50"
-                        android:paddingLeft="@dimen/dimen_1"/>
+                        android:paddingLeft="@dimen/dimen_1"
+                        android:singleLine="true"
+                        />
 
                     <TextView
                         android:id="@+id/tv_search"

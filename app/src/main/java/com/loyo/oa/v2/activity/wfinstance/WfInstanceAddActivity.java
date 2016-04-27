@@ -459,6 +459,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            layout_edit.setVisibility(View.GONE);
 //        }
 
+    /*内容是否必填，加入list*/
     void addIsRequired() {
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
@@ -509,7 +510,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         for (int i = 0; i < postValue.size(); i++) {
-            if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i)) {
+            if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i) == true) {
                 Toast("请填写\"必填项\"");
                 return;
             }
