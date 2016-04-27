@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -47,7 +48,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
     protected String strSearch;
     protected EditText edt_search;
-    protected TextView tv_search;
+    protected ImageView iv_clean;
     protected View vs_nodata;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<Customer> lstData = new ArrayList<>();
@@ -80,8 +81,8 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 onBackPressed();
             }
         });
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setText("取消");
+//        tv_search = (TextView) findViewById(R.id.tv_search);
+//        tv_search.setText("取消");
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -92,7 +93,13 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 return false;
             }
         });
-
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        iv_clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
         edt_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -106,22 +113,22 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
             @Override
             public void afterTextChanged(final Editable editable) {
-                if (edt_search.length() == 0) {
-                    tv_search.setText("取消");
-                } else {
-                    tv_search.setText("搜索");
-                }
+//                if (edt_search.length() == 0) {
+//                    tv_search.setText("取消");
+//                } else {
+//                    tv_search.setText("搜索");
+//                }
             }
         });
         edt_search.requestFocus();
 
         /*搜索操作*/
-        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                doSearch();
-            }
-        });
+//        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(final View v) {
+//                doSearch();
+//            }
+//        });
 
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -333,20 +340,20 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             title.setText(customer.name);
             time.setText(customer.distance != null ? "距离: " + customer.distance : "距离: 无");
 
-            if(null != customer.distance){
+            if (null != customer.distance) {
                 String distance;
-                if(customer.distance.contains("km")){
-                    time.setText("距离:"+df.format(Double.parseDouble(customer.distance.replace("km","")))+"km");
-                }else if(customer.distance.contains("m")){
-                    double disa = Float.parseFloat(customer.distance.replace("m",""));
-                    if(disa <= 100){
+                if (customer.distance.contains("km")) {
+                    time.setText("距离:" + df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
+                } else if (customer.distance.contains("m")) {
+                    double disa = Float.parseFloat(customer.distance.replace("m", ""));
+                    if (disa <= 100) {
                         distance = "<0.1km";
-                    }else{
-                        distance = df.format(disa/1000)+"km";
+                    } else {
+                        distance = df.format(disa / 1000) + "km";
                     }
-                    time.setText("距离:"+distance);
+                    time.setText("距离:" + distance);
                 }
-            }else{
+            } else {
                 time.setText("距离:无");
             }
 
