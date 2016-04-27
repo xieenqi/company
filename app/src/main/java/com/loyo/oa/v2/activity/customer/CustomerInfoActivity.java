@@ -188,8 +188,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示地区选择Dialog
      */
     void loadAreaCodeTable() {
-
-        final SelectCityView selectCityView = new SelectCityView(this);
+        String[] cityValue = tv_district.getText().toString().split(" ");
+        final SelectCityView selectCityView = new SelectCityView(this,cityValue);
         selectCityView.setCanceledOnTouchOutside(true);
         selectCityView.show();
         selectCityView.setOnclickselectCity(new View.OnClickListener() {

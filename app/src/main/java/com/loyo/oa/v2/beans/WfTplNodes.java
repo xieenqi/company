@@ -12,7 +12,7 @@ public class WfTplNodes {
 
     private  String   executionUserId ;//int, optional): ,
 
-    private  long  id ;//int64, optional): ,
+    private  String  id ;//int64, optional): ,
 
     private  int  operatorNode ;//int, optional): ,
 
@@ -54,11 +54,11 @@ public class WfTplNodes {
         this.executionUserId = executionUserId;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

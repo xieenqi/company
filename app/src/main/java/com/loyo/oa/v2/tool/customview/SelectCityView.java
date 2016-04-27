@@ -12,6 +12,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.CityModel;
 import com.loyo.oa.v2.beans.DistrictModel;
 import com.loyo.oa.v2.beans.ProvinceModel;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.XmlParserSelectCity;
 import com.loyo.oa.v2.tool.wheel.OnWheelChangedListener;
 import com.loyo.oa.v2.tool.wheel.WheelView;
@@ -60,14 +61,16 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
      */
     private String mCurrentZipCode = "";
 
+    private String[] cityValue;
     private WheelView mViewProvince;
     private WheelView mViewCity;
     private WheelView mViewDistrict;
     private TextView mBtnConfirm;
 
-    public SelectCityView(Context context) {
+    public SelectCityView(Context context,String[] cityValue) {
         super(context);
         this.mContext = context;
+        this.cityValue = cityValue;
     }
 
     @Override
@@ -144,6 +147,7 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
         mViewDistrict.addChangingListener(this);
     }
 
+    /*绑定数据省市区*/
     private void setUpData() {
         initProvinceDatas();
         mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(mContext, mProvinceDatas));
@@ -173,12 +177,11 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
         int pCurrent = mViewCity.getCurrentItem();
         mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
         String[] areas = mDistrictDatasMap.get(mCurrentCityName);
-
         if (areas == null) {
             areas = new String[]{""};
         }
         mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(mContext, areas));
-        mViewDistrict.setCurrentItem(0);
+        mViewDistrict.setCurrentItem(0);//控制显示第几条数据
 
         mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[0];
         mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
@@ -195,7 +198,7 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
             cities = new String[]{""};
         }
         mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(mContext, cities));
-        mViewCity.setCurrentItem(0);
+        mViewCity.setCurrentItem(0);//控制显示第几条数据
         updateAreas();
     }
 
