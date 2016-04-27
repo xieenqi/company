@@ -138,7 +138,7 @@ public class ProjectAddActivity extends BaseActivity {
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
-        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString());
+        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(),true);
     }
 
     /**

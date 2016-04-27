@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:id="@+id/img_title_left"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -24,8 +24,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_10"
             android:scaleType="fitCenter"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:src="@drawable/back_left1"/>
 
         <TextView
@@ -35,7 +35,8 @@
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -47,8 +48,8 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/margin_side_edge"
             android:scaleType="fitCenter"

@@ -13,10 +13,10 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_5"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
 
@@ -28,7 +28,8 @@
             android:gravity="center_vertical"
             android:text="返回"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_16"/>
+            android:textSize="@dimen/dimen_16"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -50,10 +51,10 @@
 
         <ImageView
             android:id="@+id/imgview_title_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/dimen_8"
+            android:layout_marginRight="@dimen/margin_other_view"
             android:scaleType="fitCenter"
             android:src="@drawable/right_submit1"/>
 

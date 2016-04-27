@@ -7,16 +7,15 @@
 
     <RelativeLayout
         android:id="@+id/img_title_left"
-        android:layout_width="39dp"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical">
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left2"/>
 
@@ -32,16 +31,15 @@
 
     <RelativeLayout
         android:id="@+id/img_title_right"
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="@dimen/dimen_45"
-            android:layout_height="@dimen/dimen_45"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/dimen_8"
-            android:scaleType="fitCenter"
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="@dimen/dimen_20"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_other_view"
             android:src="@drawable/right_submit1"/>
 
     </RelativeLayout>
