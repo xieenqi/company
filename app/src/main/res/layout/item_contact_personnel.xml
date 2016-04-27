@@ -14,7 +14,6 @@
         android:id="@+id/catalog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1.0"
         android:background="#f5f5f5"
         android:gravity="center_vertical"
         android:minHeight="22dp"
