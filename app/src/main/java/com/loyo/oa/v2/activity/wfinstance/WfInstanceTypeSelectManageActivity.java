@@ -77,7 +77,8 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                             @Override
                             public void success(final BizForm bizForm, final Response response) {
                                 HttpErrorCheck.checkResponse("获取审批【类型】详情:", response);
-                                if (bizForm != null) {
+                                if (null != bizForm) {
+                                    bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
                                     if (null == bizForm.getFields() || bizForm.getFields().size() == 0) {//没有审批内容
                                         final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置(未启用)审批内容,\n请选择其它类别！");
                                         dailog.setNoCancelOnclick(new View.OnClickListener() {
@@ -87,7 +88,7 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                                             }
                                         });
                                     } else {
-                                        bizForm.setFields(filedWfinstanceInfo(bizForm.getFields()));
+
                                         getBiaFormDitial(bizForm);
                                     }
                                 }
@@ -115,7 +116,11 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
      * @return
      */
     private ArrayList<BizFormFields> filedWfinstanceInfo(ArrayList<BizFormFields> field) {
+
         ArrayList<BizFormFields> newField = new ArrayList<>();
+        if (null == field) {
+            return newField;
+        }
         for (BizFormFields ele : field) {
             if (ele.isEnable()) {
                 newField.add(ele);
@@ -231,6 +236,9 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
      */
     private ArrayList<WfTemplate> filedPaginationInfo(ArrayList<WfTemplate> field) {
         ArrayList<WfTemplate> newField = new ArrayList<>();
+        if (null == field) {
+            return newField;
+        }
         for (WfTemplate ele : field) {
             if (ele.isEnable()) {
                 newField.add(ele);
