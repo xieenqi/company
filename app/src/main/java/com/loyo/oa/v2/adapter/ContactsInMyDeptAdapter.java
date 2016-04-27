@@ -52,7 +52,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         final User mContent = list.get(position);
         if (view == null) {
             viewHolder = new ViewHolder();
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_medleft, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_personnel, null);
 
             viewHolder.tvLetter = (TextView) view.findViewById(R.id.catalog);
             viewHolder.name = (TextView) view.findViewById(R.id.tv_name);

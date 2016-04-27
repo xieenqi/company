@@ -140,6 +140,8 @@ public class DepartmentUserSearchActivity extends Activity {
         key = edt_search.getText().toString().trim();
         if (StringUtil.isEmpty(key)) {
             //Global.Toast("请输入查询姓名!");
+            resultData.clear();
+            adapter.notifyDataSetChanged();
             return;
         }
 
@@ -193,12 +195,14 @@ public class DepartmentUserSearchActivity extends Activity {
         @Override
         public View getView(final int position, View convertView, final ViewGroup parent) {
             if (null == convertView) {
-                convertView = LayoutInflater.from(DepartmentUserSearchActivity.this).inflate(R.layout.item_contacts_child, null, false);
+                convertView = LayoutInflater.from(DepartmentUserSearchActivity.this).inflate(R.layout.item_contact_personnel, null, false);
             }
             User user = resultData.get(position);
             ImageView img = ViewHolder.get(convertView, R.id.img);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
             TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
+            TextView catalog = ViewHolder.get(convertView, R.id.catalog);
+
 
             tv_content.setText(user.getRealname());
 
@@ -218,16 +222,16 @@ public class DepartmentUserSearchActivity extends Activity {
                 workName = "无";
             }
 
-            tv_position.setText(deptName + "  " + workName);
-
+            tv_position.setText(deptName + " | " + workName);
+            catalog.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(user.avatar)) {
                 ImageLoader.getInstance().displayImage(user.avatar, img);
             }
 
             if (position == resultData.size() - 1) {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.GONE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
             } else {
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.VISIBLE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
             }
             return convertView;
         }
