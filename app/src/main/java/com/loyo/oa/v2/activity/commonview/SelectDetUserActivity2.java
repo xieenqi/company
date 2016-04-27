@@ -183,8 +183,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
      *
      * @param act
      */
-    public static void startThisForMulitSelect(Activity act, String joinUserId, boolean isSelctDept) {
-        isSelctDepat = isSelctDept;
+    public static void startThisForMulitSelect(Activity act, String joinUserId, boolean isSelctAllDept) {
+        isSelctDepat = isSelctAllDept;
         startThisForMulitSelect(act, joinUserId);
     }
 
@@ -205,7 +205,8 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
      *
      * @param act
      */
-    public static void startThisForAllSelect(Activity act, String joinUserId) {
+    public static void startThisForAllSelect(Activity act, String joinUserId, boolean isSelctAllDept) {
+        isSelctDepat = isSelctAllDept;
         Intent intent = new Intent(act, SelectDetUserActivity2.class);
         intent.putExtra(ExtraAndResult.STR_SELECT_TYPE, TYPE_ALL_SELECT);
         intent.putExtra(ExtraAndResult.STR_SUPER_ID, joinUserId);

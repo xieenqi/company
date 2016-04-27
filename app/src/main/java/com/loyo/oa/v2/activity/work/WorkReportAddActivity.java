@@ -510,7 +510,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*抄送人*/
             case R.id.layout_toUser:
-                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString());
+                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
                 break;
             case R.id.layout_del:
                 users.clear();

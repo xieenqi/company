@@ -486,7 +486,7 @@ public class TasksEditActivity extends BaseActivity {
                 bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
                 app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);*/
 
-                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString());
+                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
                 break;
 
 

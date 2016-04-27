@@ -960,7 +960,7 @@ public class TasksInfoActivity extends BaseActivity {
 //                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
 //                        app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
 //                                SelectDetUserActivity2.REQUEST_ALL_SELECT, mBundle);
-                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString());
+                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(),true);
                     }
                                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
@@ -981,7 +981,7 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString());
+                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(),true);
 //                    Bundle bundle = new Bundle();
 //                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
 //                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT, SelectDetUserActivity2.REQUEST_ALL_SELECT, bundle);

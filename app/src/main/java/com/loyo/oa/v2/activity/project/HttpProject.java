@@ -53,8 +53,7 @@ public class HttpProject implements Serializable {
     }
 
     /**
-     * @是否和项目相关
-     * 说  明:比较个人id相和部门id，并且是多部门情况下
+     * @是否和项目相关 说  明:比较个人id相和部门id，并且是多部门情况下
      */
     public boolean isProjectRelevant() {
         String myId = MainApp.user.id;
@@ -70,8 +69,8 @@ public class HttpProject implements Serializable {
                 return true;
             }
 
-            for(UserInfo userInfo : MainApp.user.getDepts()){
-                if(member.dept.id.equals(userInfo.getShortDept().getId())){
+            for (UserInfo userInfo : MainApp.user.getDepts()) {
+                if (null != member.dept && member.dept.id.equals(userInfo.getShortDept().getId())) {
                     return true;
                 }
             }

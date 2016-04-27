@@ -84,7 +84,7 @@ public class BulletinAddActivity extends BaseActivity {
     @Click(R.id.layout_recevier)
     void receiverClick() {
 //        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
-        SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString());
+        SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
     }
 
     @Click(R.id.img_title_left)
