@@ -35,7 +35,19 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
 
     private Context mContext;
 
-    private String[] mProvinceDatas;
+    private String[] provinces;//省集合
+
+    private String[] cities;//市集合
+
+    private String[] areas;//区集合
+
+    private String[] cityValue;
+
+    private int provoiceIndex = 0;
+
+    private int cityIndex = 0;
+
+    private int districtIndex = 0;
 
     private Map<String, String[]> mCitisDatasMap = new HashMap<String, String[]>();
 
@@ -61,7 +73,6 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
      */
     private String mCurrentZipCode = "";
 
-    private String[] cityValue;
     private WheelView mViewProvince;
     private WheelView mViewCity;
     private WheelView mViewDistrict;
@@ -104,9 +115,9 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
                     mCurrentZipCode = districtList.get(0).getZipcode();
                 }
             }
-            mProvinceDatas = new String[provinceList.size()];
+            provinces = new String[provinceList.size()];
             for (int i = 0; i < provinceList.size(); i++) {
-                mProvinceDatas[i] = provinceList.get(i).getName();
+                provinces[i] = provinceList.get(i).getName();
                 List<CityModel> cityList = provinceList.get(i).getCityList();
                 String[] cityNames = new String[cityList.size()];
                 for (int j = 0; j < cityList.size(); j++) {
@@ -147,17 +158,6 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
         mViewDistrict.addChangingListener(this);
     }
 
-    /*绑定数据省市区*/
-    private void setUpData() {
-        initProvinceDatas();
-        mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(mContext, mProvinceDatas));
-        mViewProvince.setVisibleItems(7);
-        mViewCity.setVisibleItems(7);
-        mViewDistrict.setVisibleItems(7);
-        updateCities();
-        updateAreas();
-    }
-
     @Override
     public void onChanged(WheelView wheel, int oldValue, int newValue) {
         if (wheel == mViewProvince) {
@@ -170,13 +170,109 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
         }
     }
 
+
+    /**
+     * 绑定数据省市区
+     * */
+    private void setUpData() {
+        initProvinceDatas();
+        mViewProvince.setVisibleItems(7);
+        mViewCity.setVisibleItems(7);
+        mViewDistrict.setVisibleItems(7);
+
+        LogUtil.d("cityValue size:"+cityValue.length);
+
+        if(null != cityValue && cityValue.length == 3) {
+            setPersetData();
+        }else{
+            //省
+            updateProvince();
+            //市
+            updateCities();
+            //区
+            updateAreas();
+        }
+    }
+
+    /**
+     * 把已选中的城市，反显在wheel上
+     * */
+    private void setPersetData(){
+        //省
+        for(int i = 0;i<provinces.length;i++){
+            if(cityValue[0].equals(provinces[i])){
+                provoiceIndex = i;
+                break;
+            }
+        }
+
+        mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(mContext, provinces));
+        mViewProvince.setCurrentItem(provoiceIndex);
+
+        //市
+        mCurrentProviceName = provinces[provoiceIndex];
+        cities = mCitisDatasMap.get(mCurrentProviceName);
+        if (cities == null) {
+            cities = new String[]{""};
+        }
+        for(int i = 0;i<cities.length;i++){
+            if(cityValue[1].equals(cities[i])){
+                cityIndex = i;
+                break;
+            }
+        }
+
+        mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(mContext, cities));
+        mViewCity.setCurrentItem(cityIndex);//控制显示第几条数据
+
+        //区
+        mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[cityIndex];
+        areas = mDistrictDatasMap.get(mCurrentCityName);
+        if (areas == null) {
+            areas = new String[]{""};
+        }
+
+        for(int i = 0;i<areas.length;i++){
+            if(cityValue[2].equals(areas[i])){
+                districtIndex = i;
+                break;
+            }
+        }
+        mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(mContext, areas));
+        mViewDistrict.setCurrentItem(districtIndex);
+    }
+
+
+    /**
+     * 初始化省数据
+     * */
+    private void updateProvince(){
+        mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(mContext, provinces));
+        mViewProvince.setCurrentItem(0);
+    }
+
+    /**
+     * 滑动省View时，更新城市/区数据
+     */
+    private void updateCities() {
+        int pCurrent = mViewProvince.getCurrentItem();
+        mCurrentProviceName = provinces[pCurrent];
+        cities = mCitisDatasMap.get(mCurrentProviceName);
+        if (cities == null) {
+            cities = new String[]{""};
+        }
+        mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(mContext, cities));
+        mViewCity.setCurrentItem(0);//控制显示第几条数据
+        updateAreas();
+    }
+
     /**
      * 滑动区View时，更新区数据
      */
     private void updateAreas() {
         int pCurrent = mViewCity.getCurrentItem();
         mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
-        String[] areas = mDistrictDatasMap.get(mCurrentCityName);
+        areas = mDistrictDatasMap.get(mCurrentCityName);
         if (areas == null) {
             areas = new String[]{""};
         }
@@ -187,20 +283,7 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
         mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
     }
 
-    /**
-     * 滑动省View时，更新城市/区数据
-     */
-    private void updateCities() {
-        int pCurrent = mViewProvince.getCurrentItem();
-        mCurrentProviceName = mProvinceDatas[pCurrent];
-        String[] cities = mCitisDatasMap.get(mCurrentProviceName);
-        if (cities == null) {
-            cities = new String[]{""};
-        }
-        mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(mContext, cities));
-        mViewCity.setCurrentItem(0);//控制显示第几条数据
-        updateAreas();
-    }
+
 
     /**
      * 确定按钮监听
