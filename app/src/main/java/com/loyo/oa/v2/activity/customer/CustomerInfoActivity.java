@@ -72,8 +72,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ViewGroup img_title_left;
     @ViewById
     ViewGroup img_title_right;
-    @ViewById
-    ImageView imgview_title_right;
+//    @ViewById
+//    ImageView imgview_title_right;
     @ViewById
     ViewGroup layout_customer_district;
     @ViewById

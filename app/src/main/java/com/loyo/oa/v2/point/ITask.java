@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskTpl;
@@ -8,7 +7,6 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.RCallback;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -23,15 +21,15 @@ import rx.Observable;
 
 public interface ITask {
 
-    @GET("/discussions?bizType=2")
-    void getDiscussions(@Query("bizId") String taskId, retrofit.Callback<PaginationX<Discussion>> cb);
-
-    @POST("/discussions")
-    void createDiscussion(@Body HashMap<String, Object> body, retrofit.Callback<Discussion> cb);
+//    @GET("/discussions?bizType=2")
+//    void getDiscussions(@Query("bizId") String taskId, retrofit.Callback<PaginationX<Discussion>> cb);
+//
+//    @POST("/discussions")
+//    void createDiscussion(@Body HashMap<String, Object> body, retrofit.Callback<Discussion> cb);
 
     /*获取任务信息*/
     @GET("/task/{Id}")
-    void getTask(@Path("Id") String Id, retrofit.Callback<Task> cb);
+    void getTask(@Path("Id") String Id, @Query("key") String key, retrofit.Callback<Task> cb);
 
     @DELETE("/task/{Id}")
     void deleteTask(@Path("Id") String Id, retrofit.Callback<Task> cb);
@@ -47,7 +45,7 @@ public interface ITask {
 
     /*获取任务列表数据*/
     @GET("/task/query")
-    void  getTasks(@QueryMap HashMap<String, Object> body,Callback<PaginationX<Task>> callback);
+    void getTasks(@QueryMap HashMap<String, Object> body, Callback<PaginationX<Task>> callback);
 
     /*创建任务*/
     @POST("/task")
@@ -55,23 +53,23 @@ public interface ITask {
 
     /*更新任务*/
     @PUT("/task/{Id}")
-    Observable<Task> update(@Path("Id") String Id,@Body HashMap<String, Object> body);
+    Observable<Task> update(@Path("Id") String Id, @Body HashMap<String, Object> body);
 
     /*修改参与人*/
     @PUT("/task/{Id}")
-    void updateJioner(@Path("Id") String Id,@Body HashMap<String, Object> body,RCallback<Task> callback);
+    void updateJioner(@Path("Id") String Id, @Body HashMap<String, Object> body, RCallback<Task> callback);
 
     /*任务完成*/
     @PUT("/task/{id}/finished")
-    void commitTask(@Path("id") String id ,Callback<Task> callback);
+    void commitTask(@Path("id") String id, Callback<Task> callback);
 
     /*任务审核*/
     @PUT("/task/{id}/review")
-    void verifyTask(@Path("id") String id,@Body HashMap<String ,Object> map,RCallback<Task> callback);
+    void verifyTask(@Path("id") String id, @Body HashMap<String, Object> map, RCallback<Task> callback);
 
     /*更新子任务状态*/
     @PUT("/task/{id}/checkitemstatus/{cid}")
-    void updatesTask(@Path("id") String id,@Path("cid") String cid,@Body HashMap<String, Object> map,RCallback<Task> callback);
+    void updatesTask(@Path("id") String id, @Path("cid") String cid, @Body HashMap<String, Object> map, RCallback<Task> callback);
 
 
 //       @Param bizId query int true "业务 Id"
