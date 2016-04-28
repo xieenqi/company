@@ -366,7 +366,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     private boolean testDynamicword() {
         for (ExtraData extDatas : mCustomer.extDatas) {
-            if (extDatas.getProperties().isRequired()) {
+            if (extDatas.getProperties().isRequired() && extDatas.getProperties().isEnabled()) {
+                LogUtil.d("动态字段必填:"+extDatas.getProperties().isRequired());
                 if (extDatas.getVal().isEmpty() || null == extDatas.getVal()) {
                     return false;
                 }

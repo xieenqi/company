@@ -191,6 +191,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入预估数量"
+                        android:maxLength="10"
                         />
 
                 </LinearLayout>
@@ -230,6 +231,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入单价"
+                        android:maxLength="10"
                         />
 
                 </LinearLayout>
@@ -288,6 +290,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入预估数量"
+                        android:maxLength="10"
                         />
 
                 </LinearLayout>
@@ -328,6 +331,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入单价"
+                        android:maxLength="10"
                         />
 
                 </LinearLayout>
@@ -350,9 +354,10 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:hint="请输入备注..."
-                    android:minHeight="@dimen/dimen_80"/>
-
-
+                    android:minHeight="@dimen/dimen_80"
+                    android:maxLength="500"
+                    android:singleLine="true"
+                    />
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"/>
