@@ -316,12 +316,15 @@ public class ProjectAddActivity extends BaseActivity {
         projectTransObj.title = title;
 
         String content = edt_content.getText().toString().trim();//内容
-        if (TextUtils.isEmpty(content)) {
+        projectTransObj.content = content;
+
+        /*取消项目内容，非空判断 2016-4-28*/
+        /*if (TextUtils.isEmpty(content)) {
             Toast("项目内容不能为空!");
             return;
         } else {
             projectTransObj.content = content;
-        }
+        }*/
 
         projectTransObj.managers = getProjectManager();
 
