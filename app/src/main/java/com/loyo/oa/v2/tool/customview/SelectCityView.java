@@ -180,8 +180,6 @@ public class SelectCityView extends Dialog implements OnWheelChangedListener {
         mViewCity.setVisibleItems(7);
         mViewDistrict.setVisibleItems(7);
 
-        LogUtil.d("cityValue size:"+cityValue.length);
-
         if(null != cityValue && cityValue.length == 3) {
             setPersetData();
         }else{

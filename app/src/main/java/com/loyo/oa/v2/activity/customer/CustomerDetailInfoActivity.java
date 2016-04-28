@@ -268,9 +268,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 判断是否是参与人
      */
     public boolean isMenber(final Customer mCustomer) {
-        for (Member element : mCustomer.members) {
-            if (MainApp.user.id.equals(element.getUser().getId())) {
-                return true;
+        if(null != mCustomer){
+            for (Member element : mCustomer.members) {
+                if (MainApp.user.id.equals(element.getUser().getId())) {
+                    return true;
+                }
             }
         }
         return false;

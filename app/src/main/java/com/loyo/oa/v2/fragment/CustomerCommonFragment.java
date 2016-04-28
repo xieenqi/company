@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -687,8 +688,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             getNearCustomersInfo();
                         }
 
-                        countSize = customerPaginationX.getRecords().size();
-                        LogUtil.dee("broadMessage countsize:" + countSize);
+                        if(null != customerPaginationX){
+                            countSize = customerPaginationX.getRecords().size();
+                        }
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
                     }
