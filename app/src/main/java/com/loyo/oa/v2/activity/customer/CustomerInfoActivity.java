@@ -18,6 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerExtraData;
 import com.loyo.oa.v2.beans.CustomerRegional;
 import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.Industry;
@@ -72,8 +73,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ViewGroup img_title_left;
     @ViewById
     ViewGroup img_title_right;
-//    @ViewById
-//    ImageView imgview_title_right;
     @ViewById
     ViewGroup layout_customer_district;
     @ViewById
@@ -140,6 +139,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
 
+    private ArrayList<CustomerExtraData> mCustomerExtraDatas;
+
     @AfterViews
     void initUI() {
         layout_rushpackger = (LinearLayout) findViewById(R.id.layout_rushpackger);
@@ -158,6 +159,31 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         getCustomer();
     }
 
+    /**
+     * 获取客户动态字段
+     * */
+    void getExtraData(){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType", 100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getDynamic(map, new RCallback<ArrayList<CustomerExtraData>>() {
+                    @Override
+                    public void success(final ArrayList<CustomerExtraData> customerExtraDatas, final Response response) {
+                        HttpErrorCheck.checkResponse("客户动态字段", response);
+                        mCustomerExtraDatas = customerExtraDatas;
+                        initData();
+                        Utils.dialogDismiss();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                        Utils.dialogDismiss();
+                        finish();
+                    }
+                });
+    }
 
     /**
      * 获取用户信息
@@ -170,8 +196,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     public void success(final Customer customer, final Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
                         mCustomer = customer;
-                        initData();
-                        Utils.dialogDismiss();
+                        getExtraData();
                     }
 
                     @Override
@@ -212,14 +237,23 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 初始化动态字段
      */
     private void initExtra(final boolean ismy) {
+        /*动态字段 数据转换*/
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
+            for(ExtraData extraData : mCustomer.extDatas){
+                for(CustomerExtraData customerExtraData : mCustomerExtraDatas){
+                    if(extraData.getProperties().getName().equals(customerExtraData.getName())){
+                        extraData.getProperties().setEnabled(customerExtraData.isEnabled());
+                        extraData.getProperties().setRequired(customerExtraData.isRequired());
+                        extraData.getProperties().setLabel(customerExtraData.getLabel());
+                    }
+                }
+            }
             container.setVisibility(View.VISIBLE);
             container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber,mCustomer.lock));
         }
     }
 
     void initData() {
-
         initExtra(isMyUser);
         /*公海客户*/
         if (!mCustomer.lock) {

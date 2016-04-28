@@ -148,6 +148,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         }
                     }
                 }
+
                 maps.put("extDatas", requestContactParam);
                 LogUtil.d("添加联系人发送map：" + MainApp.gson.toJson(maps));
 
