@@ -412,8 +412,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             case R.id.img_go_where:
                 Utils.goWhere(this, lat, lng);
                 break;
-
+            /*清除参与人*/
             case R.id.img_del_join_users:
+                mManagerIds = null;
                 members.clear();
                 tv_customer_join_users.setText("");
                 img_del_join_users.setVisibility(View.GONE);
