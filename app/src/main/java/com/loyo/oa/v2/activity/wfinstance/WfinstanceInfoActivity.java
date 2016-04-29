@@ -389,12 +389,10 @@ public class WfinstanceInfoActivity extends BaseActivity {
         wfList.add("预估：数量 " + wfData.demand.actualNum + "   单价：" + wfData.demand.actualPrice + " " + wfData.demand.unit);
         for (String text : wfList) {
             View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
-
             TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
             tv_key.setText(text);
             layout_wfinstance_content.addView(view_value);
         }
-
     }
 
     /**

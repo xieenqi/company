@@ -589,6 +589,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             case FinalVariables.REQUEST_PREVIEW_DEMANDS:
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
+                /*如果修改了负责人，不是自己，则finish该页面*/
+                Bundle bundle = data.getExtras();
+                boolean isCreator = bundle.getBoolean("isCreator");
+                if(!isCreator){
+                    finish();
+                }
+                break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
                 getData();

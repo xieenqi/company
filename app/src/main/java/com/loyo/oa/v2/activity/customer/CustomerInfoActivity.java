@@ -524,7 +524,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                         app.isCutomerEdit = true;
                         Intent intent = new Intent();
                         customer.loc = mLocate;
-                        intent.putExtra(Customer.class.getName(), customer);
+                        boolean isCreator;
+                        if(!owner.id.equals(MainApp.user.getId())){
+                            isCreator = false;
+                        }else{
+                            isCreator = true;
+                        }
+                        intent.putExtra("isCreator",isCreator);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
 
@@ -577,14 +583,22 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (members != null) {
                     if (null != cusMembers.depts) {
                         for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
-                            mManagerNames.append(newUser.getName() + ",");
-                            mManagerIds.append(newUser.getId() + ",");
+                            if(!MainApp.user.id.equals(newUser.getId())){
+                                mManagerNames.append(newUser.getName() + ",");
+                                mManagerIds.append(newUser.getId() + ",");
+                            }else{
+                                Toast("你已经是负责人，不能选自己为参与人!");
+                            }
                         }
                     }
                     if (null != cusMembers.users) {
                         for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
-                            mManagerNames.append(newUser.getName() + ",");
-                            mManagerIds.append(newUser.getId() + ",");
+                            if(!MainApp.user.id.equals(newUser.getId())){
+                                mManagerNames.append(newUser.getName() + ",");
+                                mManagerIds.append(newUser.getId() + ",");
+                            }else{
+                                Toast("你已经是负责人，不能选自己为参与人!");
+                            }
                         }
                     }
                     if (!TextUtils.isEmpty(mManagerNames)) {

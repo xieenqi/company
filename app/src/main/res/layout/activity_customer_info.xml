@@ -389,11 +389,9 @@
                         android:paddingLeft="20dp"
                         android:text=""
                         android:textColor="#999999"/>
+
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
