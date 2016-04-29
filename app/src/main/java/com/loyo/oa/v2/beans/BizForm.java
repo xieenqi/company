@@ -8,14 +8,13 @@ import java.util.ArrayList;
  */
 public class BizForm implements Serializable {
 
-    private long createdAt;//&{time Time}, optional): ,
-    private boolean enable;//bool, optional): ,
-    private ArrayList<BizFormFields> fields;//array[BizFormFields], optional): ,
-    private String id;//int64, optional): ,
-    private String name;//string, optional): ,
-    private long updatedAt;//&{time Time}, optional):
+    private long createdAt;
+    private boolean enable;
+    private ArrayList<BizFormFields> fields;
+    private String id;
+    private String name;
+    private long updatedAt;
     public int bizCode;
-
 
     public int getBizCode() {
         return bizCode;

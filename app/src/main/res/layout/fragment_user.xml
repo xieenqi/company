@@ -12,31 +12,27 @@
         android:divider="@color/activity_split"
         android:dividerHeight="0.5dp"
         android:drawSelectorOnTop="false"
-        android:groupIndicator="@null"/>
+        android:groupIndicator="@null"
+        android:scrollbars="none"/>
 
-    <RelativeLayout
-        android:id="@+id/layout_toast"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+    <TextView
+        android:id="@+id/tv_dialog"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
         android:layout_centerInParent="true"
-        android:visibility="gone">
+        android:background="@drawable/text_dialog_bj"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:visibility="invisible"
+        />
 
-        <TextView
-            android:id="@+id/tv_toast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text=""
-            android:textSize="40sp"/>
-
-    </RelativeLayout>
 
     <com.loyo.oa.v2.tool.customview.MyLetterListView
         android:id="@+id/letter_View"
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
-        />
+        android:layout_marginBottom="30dp"/>
 
 </RelativeLayout>

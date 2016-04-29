@@ -117,6 +117,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String workReportId;//推送的id
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;//推送的id
 
     public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
@@ -158,10 +160,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return;
         }
         showLoading("");
-        app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
+        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("报告信息：",response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -351,7 +353,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (null != mWorkReport) {
-            mWorkReport.ack = true;
+            mWorkReport.setViewed(true);
             intent.putExtra("review", mWorkReport);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

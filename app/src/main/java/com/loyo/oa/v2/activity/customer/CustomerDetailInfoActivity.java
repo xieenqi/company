@@ -268,9 +268,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 判断是否是参与人
      */
     public boolean isMenber(final Customer mCustomer) {
-        for (Member element : mCustomer.members) {
-            if (MainApp.user.id.equals(element.getUser().getId())) {
-                return true;
+        if(null != mCustomer){
+            for (Member element : mCustomer.members) {
+                if (MainApp.user.id.equals(element.getUser().getId())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -473,6 +475,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*联系人*/
             case R.id.layout_contact:
+                bundle.putBoolean("isLock",mCustomer.lock);
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean("isRoot",isRoot);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
@@ -582,10 +585,22 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
+                /*如果修改了负责人，不是自己，则finish该页面*/
+                Bundle bundle = data.getExtras();
+                try{
+                    boolean isCreator = bundle.getBoolean("isCreator");
+                    if(!isCreator){
+                        finish();
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+
+                break;
             case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
             case FinalVariables.REQUEST_PREVIEW_DEMANDS:
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
                 getData();

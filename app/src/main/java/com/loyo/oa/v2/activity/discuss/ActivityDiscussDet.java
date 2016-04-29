@@ -265,16 +265,19 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
                 switch (mBizType) {
                     case 1:
                         intent.setClass(ActivityDiscussDet.this, WorkReportsInfoActivity_.class);
+                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, "discuss");
                         intent.putExtra(ExtraAndResult.EXTRA_ID, bizTypeId);
                         startActivity(intent);
                         break;
                     case 2:
                         intent.setClass(ActivityDiscussDet.this, TasksInfoActivity_.class);
+                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, "discuss");
                         intent.putExtra(ExtraAndResult.EXTRA_ID, bizTypeId);
                         startActivity(intent);
                         break;
                     case 5:
                         intent.setClass(ActivityDiscussDet.this, ProjectInfoActivity_.class);
+                        intent.putExtra(ExtraAndResult.EXTRA_TYPE, "discuss");
                         intent.putExtra("projectId", bizTypeId);
                         startActivity(intent);
                         break;

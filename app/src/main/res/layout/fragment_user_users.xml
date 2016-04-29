@@ -14,29 +14,24 @@
         android:drawSelectorOnTop="false"
         android:groupIndicator="@null"/>
 
-    <RelativeLayout
-        android:id="@+id/layout_toast"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_toast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text=""
-            android:textSize="40sp"/>
-
-    </RelativeLayout>
 
     <com.loyo.oa.v2.common.SideBar
         android:id="@+id/sidrbar"
         android:layout_width="30dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="30dp"
         />
 
+    <TextView
+        android:id="@+id/tv_dialog"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/text_dialog_bj"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:visibility="invisible"
+        />
 </RelativeLayout>

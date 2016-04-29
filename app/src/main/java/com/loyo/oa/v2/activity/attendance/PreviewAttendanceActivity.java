@@ -99,6 +99,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String strMessage;
+    private int type;
 
     @AfterViews
     void initViews() {
@@ -179,12 +180,14 @@ public class PreviewAttendanceActivity extends BaseActivity {
         if (attendance.state == 5 && attendance.extraState == AttendanceRecord.OUT_STATE_FIELD_OVERTIME) {
             btn_confirm.setVisibility(View.VISIBLE);
             btn_confirm.setText("确认加班");
+            type = 1;
             strMessage = "是否确定该员工的加班?\n" + "确认后将无法取消！";
         } else {/*确认外勤*/
             if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_confirm);
                 btn_confirm.setVisibility(View.VISIBLE);
                 btn_confirm.setText("确认外勤");
+                type = 2;
                 strMessage = "是否确定该员工的外勤?\n" + "确认后将无法取消！";
             } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
@@ -236,7 +239,6 @@ public class PreviewAttendanceActivity extends BaseActivity {
                 tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
             }
         }
-
     }
 
     /**
@@ -292,7 +294,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
      */
     private void confirmOutAttendance() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
-                confirmOutAttendance(attendanceId, new RCallback<AttendanceRecord>() {
+                confirmOutAttendance(attendanceId,type,new RCallback<AttendanceRecord>() {
                     @Override
                     public void success(final AttendanceRecord record, final Response response) {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);

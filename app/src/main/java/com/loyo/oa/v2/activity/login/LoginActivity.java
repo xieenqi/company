@@ -104,29 +104,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
         }
 
+        /*测试环境*/
         serverTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Config_project.isRelease = false;
                 serverTestTv.setTextColor(getResources().getColor(R.color.black));
                 serverFormalTv.setTextColor(getResources().getColor(R.color.gray));
-
                 serverTestImg.setVisibility(View.VISIBLE);
                 serverFormalImg.setVisibility(View.INVISIBLE);
-                LogUtil.d("test ："+Config_project.isRelease);
+                LogUtil.d("isRelease:"+Config_project.isRelease);
             }
         });
 
+        /*正式环境*/
         serverFormal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Config_project.isRelease = true;
                 serverFormalTv.setTextColor(getResources().getColor(R.color.black));
                 serverTestTv.setTextColor(getResources().getColor(R.color.gray));
-
                 serverTestImg.setVisibility(View.INVISIBLE);
                 serverFormalImg.setVisibility(View.VISIBLE);
-                LogUtil.d("common ：" + Config_project.isRelease);
+                LogUtil.d("isRelease:" + Config_project.isRelease);
             }
         });
     }

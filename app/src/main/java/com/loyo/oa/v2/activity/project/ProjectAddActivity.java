@@ -132,13 +132,13 @@ public class ProjectAddActivity extends BaseActivity {
     //选【负责人】
     @Click(R.id.layout_managers)
     void ManagersClick() {
-        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this, mManagerIds == null ? null : mManagerIds.toString());
+        SelectDetUserActivity2.startThisForMulitSelect(ProjectAddActivity.this, mManagerIds == null ? null : mManagerIds.toString(), false);
     }
 
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
-        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString());
+        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(), true);
     }
 
     /**
@@ -316,18 +316,32 @@ public class ProjectAddActivity extends BaseActivity {
         projectTransObj.title = title;
 
         String content = edt_content.getText().toString().trim();//内容
-        if (TextUtils.isEmpty(content)) {
+        projectTransObj.content = content;
+
+        /*取消项目内容，非空判断 2016-4-28*/
+        /*if (TextUtils.isEmpty(content)) {
             Toast("项目内容不能为空!");
             return;
         } else {
             projectTransObj.content = content;
-        }
+        }*/
 
         projectTransObj.managers = getProjectManager();
 
-        /*获取post参与人数据*/
-        if (!TextUtils.isEmpty(mMemberIds) && mAdapter != null) {
+        /**
+         * 获取post参与人数据
+         * 过滤为空的dept或user
+         * */
+        if (!TextUtils.isEmpty(mMemberIds) && null != mAdapter) {
             projectTransObj.members = mAdapter.GetProjectMembers();
+            for (ManagersMembers managersMembers : projectTransObj.members) {
+                if (null == managersMembers.dept.id) {
+                    managersMembers.dept = null;
+                }
+                if (null == managersMembers.user.id) {
+                    managersMembers.user = null;
+                }
+            }
         }
 
         if (mUpdate) {

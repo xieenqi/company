@@ -4,6 +4,7 @@ import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerExtraData;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Industry;
@@ -107,6 +108,8 @@ public interface ICustomer {
     @GET("/customer/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
+    @GET("/properties/dynamic/")
+    void getDynamic(@QueryMap HashMap<String, Object> map,Callback<ArrayList<CustomerExtraData>> callback);
 
     /**
      * 获取参与人权限

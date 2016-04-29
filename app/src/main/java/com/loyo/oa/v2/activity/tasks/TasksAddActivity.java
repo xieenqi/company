@@ -379,7 +379,7 @@ public class TasksAddActivity extends BaseActivity {
 
             //参与人选项
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString());
+                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
                 break;
 
             case R.id.layout_del:

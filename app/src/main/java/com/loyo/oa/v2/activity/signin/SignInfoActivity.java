@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -46,6 +47,7 @@ public class SignInfoActivity extends BaseActivity {
     private Customer mCustomer;
     private boolean isFormCustom;
     private LegWork legWork;
+    private ImageView layout_customer_icon;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -70,6 +72,11 @@ public class SignInfoActivity extends BaseActivity {
     }
 
     void initUI() {
+        tv_address = (TextView) findViewById(R.id.tv_address);
+        tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
+        tv_memo = (TextView) findViewById(R.id.tv_memo);
+        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        layout_customer_icon = (ImageView) findViewById(R.id.layout_customer_icon);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +88,8 @@ public class SignInfoActivity extends BaseActivity {
         img_title_left.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
 
         layout_customer_info = (ViewGroup) findViewById(R.id.layout_customer_info);
-        // layout_customer_info.setOnTouchListener(Global.GetTouch());
+
+        /*从客户详情中过来，这里不允许点击，否则无限循环*/
         if (!isFormCustom) {
             layout_customer_info.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,13 +99,10 @@ public class SignInfoActivity extends BaseActivity {
                     app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
                 }
             });
-
+        }else{
+            layout_customer_icon.setVisibility(View.GONE);
+            tv_customer_name.setEnabled(false);
         }
-
-        tv_address = (TextView) findViewById(R.id.tv_address);
-        tv_customer_name = (TextView) findViewById(R.id.tv_customer_name);
-        tv_memo = (TextView) findViewById(R.id.tv_memo);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         getLegwork();
     }
 
@@ -144,7 +149,7 @@ public class SignInfoActivity extends BaseActivity {
             if(null != legWork.customerName){
                 tv_customer_name.setText(legWork.customerName);
             }else{
-                tv_customer_name.setTextColor(this.getResources().getColor(R.color.diseditable));
+                tv_customer_name.setTextColor(getResources().getColor(R.color.text33));
                 tv_customer_name.setText("未指定拜访客户");
                 layout_customer_info.setEnabled(false);
             }

@@ -158,7 +158,7 @@ public class TasksEditActivity extends BaseActivity {
         member = new Members();
 
         UpdateUI();
-        getEditAttachments();
+        //getEditAttachments();
         setTouchView(-1);
 
     }
@@ -456,7 +456,7 @@ public class TasksEditActivity extends BaseActivity {
 
                             @Override
                             public void onNext(final Task task) {
-                                task.setAck(true);
+                                task.setViewed(true);
                                 Toast("编辑成功");
                                 Intent intent = new Intent();
                                 intent.putExtra("data", task);
@@ -470,23 +470,12 @@ public class TasksEditActivity extends BaseActivity {
 
             /*编辑负责人*/
             case R.id.layout_responsiblePerson:
-
-                /*Bundle bundle = new Bundle();
-                bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);*/
-
                 SelectDetUserActivity2.startThisForOnly(TasksEditActivity.this, null);
                 break;
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
-
-                /*Bundle bundle1 = new Bundle();
-                bundle1.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_EDT);
-                bundle1.putString(ExtraAndResult.STR_SUPER_ID, joinUserId.toString());
-                app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle1);*/
-
-                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString());
+                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
                 break;
 
 

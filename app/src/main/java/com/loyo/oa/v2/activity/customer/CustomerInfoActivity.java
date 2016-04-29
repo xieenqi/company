@@ -13,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerExtraData;
 import com.loyo.oa.v2.beans.CustomerRegional;
 import com.loyo.oa.v2.beans.ExtraData;
 import com.loyo.oa.v2.beans.Industry;
@@ -37,19 +39,21 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.ContactInfoExtraData;
 import com.loyo.oa.v2.tool.customview.CustomerInfoExtraData;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -69,8 +73,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     ViewGroup img_title_left;
     @ViewById
     ViewGroup img_title_right;
-    @ViewById
-    ImageView imgview_title_right;
     @ViewById
     ViewGroup layout_customer_district;
     @ViewById
@@ -137,6 +139,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private StringBuffer mManagerIds = new StringBuffer();
     private StringBuffer mManagerNames = new StringBuffer();
 
+    private ArrayList<CustomerExtraData> mCustomerExtraDatas;
+
     @AfterViews
     void initUI() {
         layout_rushpackger = (LinearLayout) findViewById(R.id.layout_rushpackger);
@@ -151,16 +155,35 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_district.setOnTouchListener(Global.GetTouch());
         layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
-
-        if (!isMyUser || isMenber) {
-            if(!isRoot){
-                imgview_title_right.setVisibility(View.GONE);
-            }
-        }
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
     }
 
+    /**
+     * 获取客户动态字段
+     * */
+    void getExtraData(){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("bizType", 100);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getDynamic(map, new RCallback<ArrayList<CustomerExtraData>>() {
+                    @Override
+                    public void success(final ArrayList<CustomerExtraData> customerExtraDatas, final Response response) {
+                        HttpErrorCheck.checkResponse("客户动态字段", response);
+                        mCustomerExtraDatas = customerExtraDatas;
+                        initData();
+                        Utils.dialogDismiss();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                        Utils.dialogDismiss();
+                        finish();
+                    }
+                });
+    }
 
     /**
      * 获取用户信息
@@ -173,8 +196,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                     public void success(final Customer customer, final Response response) {
                         HttpErrorCheck.checkResponse("客户信息", response);
                         mCustomer = customer;
-                        initData();
-                        Utils.dialogDismiss();
+                        getExtraData();
                     }
 
                     @Override
@@ -191,8 +213,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 显示地区选择Dialog
      */
     void loadAreaCodeTable() {
-
-        final SelectCityView selectCityView = new SelectCityView(this);
+        String[] cityValue = null;
+        if(!tv_district.getText().toString().isEmpty()){
+             cityValue = tv_district.getText().toString().split(" ");
+        }
+        final SelectCityView selectCityView = new SelectCityView(this,cityValue);
         selectCityView.setCanceledOnTouchOutside(true);
         selectCityView.show();
         selectCityView.setOnclickselectCity(new View.OnClickListener() {
@@ -212,38 +237,32 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 初始化动态字段
      */
     private void initExtra(final boolean ismy) {
+        /*动态字段 数据转换*/
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
+            for(ExtraData extraData : mCustomer.extDatas){
+                for(CustomerExtraData customerExtraData : mCustomerExtraDatas){
+                    if(extraData.getProperties().getName().equals(customerExtraData.getName())){
+                        extraData.getProperties().setEnabled(customerExtraData.isEnabled());
+                        extraData.getProperties().setRequired(customerExtraData.isRequired());
+                        extraData.getProperties().setLabel(customerExtraData.getLabel());
+                    }
+                }
+            }
             container.setVisibility(View.VISIBLE);
-            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0,isRoot,isMenber));
+            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber,mCustomer.lock));
         }
     }
 
     void initData() {
-
         initExtra(isMyUser);
-        /*如果不是自己的客户，不允许操作*/
-        if (!isMyUser || isMenber) {
-            if(!isRoot) {
-                layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
-                img_refresh_address.setVisibility(View.GONE);
-                tv_customer_name.setEnabled(false);
-                tv_address.setEnabled(false);
-                edt_customer_memo.setEnabled(false);
-                layout_customer_industry.setEnabled(false);
-                layout_customer_district.setEnabled(false);
-                layout_customer_label.setEnabled(false);
-                layout_customer_responser.setEnabled(false);
-                layout_customer_join_users.setEnabled(false);
-                img_refresh_address.setEnabled(false);
-
-                container.setClickable(false);
-                container.setEnabled(false);
-                tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
-                tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
-            }else{
+        /*公海客户*/
+        if (!mCustomer.lock) {
+            setEnable();
+            /*如果不是自己的客户，不允许操作*/
+        } else if (!isMyUser || isMenber) {
+            if (!isRoot) {
+                setEnable();
+            } else {
                 layout_customer_responser.setEnabled(false);
                 layout_customer_join_users.setEnabled(false);
                 tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
@@ -304,8 +323,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             if (isMyUser && !isMenber) {
                 img_del_join_users.setVisibility(View.VISIBLE);//删除参与人按钮
             }
-                tv_customer_join_users.setText(Utils.getMembers(members));
-        }else{
+            tv_customer_join_users.setText(Utils.getMembers(members));
+        } else {
             tv_customer_join_users.setText("无参与人");
         }
         if (regional.province != null) {
@@ -327,6 +346,29 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         if (!TextUtils.isEmpty(tag)) {
             tv_labels.setText(tag);
         }
+    }
+
+    void setEnable() {
+        img_title_right.setVisibility(View.GONE);
+        layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
+        img_refresh_address.setVisibility(View.GONE);
+        tv_customer_name.setEnabled(false);
+        tv_address.setEnabled(false);
+        edt_customer_memo.setEnabled(false);
+        layout_customer_industry.setEnabled(false);
+        layout_customer_district.setEnabled(false);
+        layout_customer_label.setEnabled(false);
+        layout_customer_responser.setEnabled(false);
+        layout_customer_join_users.setEnabled(false);
+        img_refresh_address.setEnabled(false);
+
+        container.setClickable(false);
+        container.setEnabled(false);
+        tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
+        tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
     }
 
     /**
@@ -358,7 +400,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     private boolean testDynamicword() {
         for (ExtraData extDatas : mCustomer.extDatas) {
-            if (extDatas.getProperties().isRequired()) {
+            if (extDatas.getProperties().isRequired() && extDatas.getProperties().isEnabled()) {
+                LogUtil.d("动态字段必填:"+extDatas.getProperties().isRequired());
                 if (extDatas.getVal().isEmpty() || null == extDatas.getVal()) {
                     return false;
                 }
@@ -404,8 +447,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             case R.id.img_go_where:
                 Utils.goWhere(this, lat, lng);
                 break;
-
+            /*清除参与人*/
             case R.id.img_del_join_users:
+                mManagerIds = null;
                 members.clear();
                 tv_customer_join_users.setText("");
                 img_del_join_users.setVisibility(View.GONE);
@@ -416,7 +460,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             /*选参与人*/
             case R.id.layout_customer_join_users:
-                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this, mManagerIds == null ? null : mManagerIds.toString());
+                SelectDetUserActivity2.startThisForMulitSelect(CustomerInfoActivity.this, mManagerIds == null ? null : mManagerIds.toString(), false);
                 break;
             /*地区选择*/
             case R.id.layout_customer_district:
@@ -476,11 +520,17 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 updateCustomer(mCustomer.getId(), map, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer customer, final Response response) {
-                        HttpErrorCheck.checkResponse("更新客户信息",response);
+                        HttpErrorCheck.checkResponse("更新客户信息", response);
                         app.isCutomerEdit = true;
                         Intent intent = new Intent();
                         customer.loc = mLocate;
-                        intent.putExtra(Customer.class.getName(), customer);
+                        boolean isCreator;
+                        if(!owner.id.equals(MainApp.user.getId())){
+                            isCreator = false;
+                        }else{
+                            isCreator = true;
+                        }
+                        intent.putExtra("isCreator",isCreator);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
 
@@ -533,14 +583,22 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (members != null) {
                     if (null != cusMembers.depts) {
                         for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
-                            mManagerNames.append(newUser.getName() + ",");
-                            mManagerIds.append(newUser.getId() + ",");
+                            if(!MainApp.user.id.equals(newUser.getId())){
+                                mManagerNames.append(newUser.getName() + ",");
+                                mManagerIds.append(newUser.getId() + ",");
+                            }else{
+                                Toast("你已经是负责人，不能选自己为参与人!");
+                            }
                         }
                     }
                     if (null != cusMembers.users) {
                         for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
-                            mManagerNames.append(newUser.getName() + ",");
-                            mManagerIds.append(newUser.getId() + ",");
+                            if(!MainApp.user.id.equals(newUser.getId())){
+                                mManagerNames.append(newUser.getName() + ",");
+                                mManagerIds.append(newUser.getId() + ",");
+                            }else{
+                                Toast("你已经是负责人，不能选自己为参与人!");
+                            }
                         }
                     }
                     if (!TextUtils.isEmpty(mManagerNames)) {
@@ -552,7 +610,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (members.size() != 0) {
                     img_del_join_users.setVisibility(View.VISIBLE);
                     tv_customer_join_users.setText(mManagerNames);
-                }else{
+                } else {
                     tv_customer_join_users.setText("无参与人");
                 }
 

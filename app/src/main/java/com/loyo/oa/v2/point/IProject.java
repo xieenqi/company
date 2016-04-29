@@ -15,6 +15,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 /**
@@ -29,12 +30,13 @@ public interface IProject {
     void getProjects(@QueryMap HashMap<String, Object> map, Callback<PaginationX<Project>> callback);
 
     @GET("/project/{id}")
-    void getProjectById(@Path("id") String id, Callback<HttpProject> callback);
+    void getProjectById(@Path("id") String id, @Query("key") String key, Callback<HttpProject> callback);
 
     @PUT("/project/{id}")
     void Update(@Path("id") String id, @Body ProjectAddActivity.ProjectTransObj body, Callback<Project> callback);
 
-    @GET("/project/{id}/records/{bizType}")//1:工作报告, 2:任务, 12:快捷审批
+    @GET("/project/{id}/records/{bizType}")
+//1:工作报告, 2:任务, 12:快捷审批
     void getProjectSubs(@Path("id") String id, @Path("bizType") int bizType, @QueryMap HashMap<String, Object> map, Callback<Pagination> callback);
 
     @POST("/project")

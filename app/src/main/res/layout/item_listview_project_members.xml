@@ -28,6 +28,7 @@
         />
 
     <Switch
+        android:visibility="invisible"
         android:id="@+id/switch_member"
         android:layout_width="wrap_content"
         android:layout_height="54dp"

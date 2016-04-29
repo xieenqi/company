@@ -510,7 +510,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*抄送人*/
             case R.id.layout_toUser:
-                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString());
+                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -609,7 +609,7 @@ public class WorkReportAddActivity extends BaseActivity {
      */
     private void dealResult(final WorkReport workReport) {
         if (workReport != null) {
-            workReport.ack = true;
+            workReport.setViewed(true);
             Intent intent = getIntent();
             intent.putExtra("data", workReport);
             app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

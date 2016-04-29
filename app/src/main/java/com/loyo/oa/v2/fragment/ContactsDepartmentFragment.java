@@ -11,22 +11,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsDepartmentActivity_;
+import com.loyo.oa.v2.adapter.ContactsMyDeptOtherAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
@@ -37,33 +40,26 @@ import java.util.ArrayList;
  * 描述 :【公司的部门】   列表页
  * 作者 : ykb
  * 时间 : 15/8/24.
- *
- * 2015-4-22 21:02
- * 备注 : 一个严重Bug,全公司通讯录不能显示出与公司同级的人员(新建时人员时，部门选择位公司)
- * 解决方案: 获取到同级人员，在listView1加footerView，footerView里装入Listview2,ListView2加载同级人员。
- *         参照点击部门后的二级部门页面 ContactsSubdivisionsFragment（人员，部门同在）
- *
  */
 public class ContactsDepartmentFragment extends BaseFragment {
 
     private View view;
     private ExpandableListView expandableListView_user;
     private ContactsDepartmentExpandableListAdapter userGroupExpandableListAdapter;
+    private ContactsMyDeptOtherAdapter otherDeptAdapter;
     private ArrayList<ContactsGroup> lstUserGroupData;
     private MyLetterListView letterView;
+    private ListView listView_otheruser;
     private AlphabetIndexer index;
-    private ViewGroup layout_toast;
-    private TextView tv_toast;
+    private TextView tv_dialog;
     private String mIndex;
     private String myDeptId;
     private String myDeptName;
-
     public View headView;
     public View footView;
     public LayoutInflater mInflater;
     public TextView nameTv;
     public RelativeLayout item_mydept;
-
     public ArrayList<User> commyUsers = new ArrayList<>();//与部门同级的人员
 
     @Override
@@ -98,11 +94,13 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
             /*我的部门View初始化*/
             headView = mInflater.inflate(R.layout.item_mydept_layout, null);
-            nameTv =  (TextView)headView.findViewById(R.id.tv_mydept_content);
-            item_mydept = (RelativeLayout)headView.findViewById(R.id.des_mydept_layout);
+            nameTv = (TextView) headView.findViewById(R.id.tv_mydept_content);
+            item_mydept = (RelativeLayout) headView.findViewById(R.id.des_mydept_layout);
 
-            layout_toast = (ViewGroup) view.findViewById(R.id.layout_toast);
-            tv_toast = (TextView) view.findViewById(R.id.tv_toast);
+            /*其他人员View初始化*/
+            footView = mInflater.inflate(R.layout.fragment_other_user, null);
+            listView_otheruser = (ListView) footView.findViewById(R.id.listView_otheruser);
+            tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
             IndexCursor cursor = new IndexCursor(lstUserGroupData);
             index = new AlphabetIndexer(cursor, 0, mIndex);
 
@@ -116,16 +114,16 @@ public class ContactsDepartmentFragment extends BaseFragment {
 
                     switch (state) {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                            //layout_toast.setVisibility(View.VISIBLE);
-                            tv_toast.setText(sectionLetter);
+//                            tv_dialog.setVisibility(View.VISIBLE);
+                            tv_dialog.setText(sectionLetter);
                             scroll(position - 1);
                             break;
                         case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
-                            tv_toast.setText(sectionLetter);
+                            tv_dialog.setText(sectionLetter);
                             scroll(position - 1);
                             break;
                         case MyLetterListView.FINGER_ACTION_UP:
-                            //layout_toast.setVisibility(View.GONE);// 手指离开
+                            tv_dialog.setVisibility(View.GONE);// 手指离开
                             break;
                         default:
                             break;
@@ -396,11 +394,11 @@ public class ContactsDepartmentFragment extends BaseFragment {
         /**
          * 获取全公司与部门平级的人员
          * */
-/*        ArrayList<Department> allDepet = Common.getLstDepartment();
+        ArrayList<Department> allDepet = Common.getLstDepartment();
         Department commy = allDepet.get(0);
-        for(User users : commy.getUsers()){
+        for (User users : commy.getUsers()) {
             commyUsers.add(users);
-        }*/
+        }
 
         /**
          * 设置我的部门排在首位，整个部门中移除自己部门
@@ -413,20 +411,28 @@ public class ContactsDepartmentFragment extends BaseFragment {
         myDeptName = myDeptName.concat(members);
         nameTv.setText(myDeptName);
 
-        for(ContactsGroup contactsGroup : lstUserGroupData){
-            for(Department department : contactsGroup.getDepartments()){
-                if(myDeptId.equals(department.getId())){
+        for (ContactsGroup contactsGroup : lstUserGroupData) {
+            for (Department department : contactsGroup.getDepartments()) {
+                if (myDeptId.equals(department.getId())) {
                     contactsGroup.getDepartments().remove(department);
                     break;
                 }
             }
         }
 
+        /**
+         * 设置公司级别员工展示
+         * */
+        otherDeptAdapter = new ContactsMyDeptOtherAdapter(commyUsers, getActivity());
+        listView_otheruser.setAdapter(otherDeptAdapter);
+        Global.setListViewHeightBasedOnChildren(listView_otheruser);//解决ScrollView嵌套listView不展开问题。
         expandableListView_user = (ExpandableListView) view.findViewById(R.id.expandableListView_user);
         expandableListView_user.setDivider(null);
         userGroupExpandableListAdapter = new ContactsDepartmentExpandableListAdapter();
         expandableListView_user.addHeaderView(headView);
+        expandableListView_user.addFooterView(footView);
         expandableListView_user.setAdapter(userGroupExpandableListAdapter);
+        //Global.setListViewHeightBasedOnChildren(expandableListView_user);
         expandableListView_user.setGroupIndicator(null);
         expandableListView_user.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -461,9 +467,19 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
             }
         });
+
+        /*其他人员列表监听*/
+        listView_otheruser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Bundle b = new Bundle();
+                b.putSerializable("user", commyUsers.get(position));
+                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+            }
+        });
     }
 
-    //-------------------------------------------------------适配器---------------------------------------------
+    //-------------------------------------------------部门适配器---------------------------------------------
     private class ContactsDepartmentExpandableListAdapter extends BaseExpandableListAdapter {
         LayoutInflater layoutInflater;
 
@@ -520,7 +536,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
             if (convertView == null)
                 convertView = layoutInflater.inflate(R.layout.item_contacts_department_child, null);
             final ContactsGroup group = getGroup(groupPosition);
-            TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
+            TextView tv_content = ViewHolder.get(convertView, R.id.tv_mydept_content);
             if (null != group.getDepartments() && !group.getDepartments().isEmpty()) {
                 Department department = group.getDepartments().get(childPosition);
                 if (null != department) {
@@ -534,9 +550,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 }
             }
             if (childPosition == getChildrenCount(groupPosition) - 1)
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.GONE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
             else
-                ViewHolder.get(convertView, R.id.devider).setVisibility(View.VISIBLE);
+                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
 
             return convertView;
         }

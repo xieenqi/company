@@ -54,6 +54,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
     String customerId;
     @Extra("isMyUser") boolean isMyUser;
     @Extra("isRoot")   boolean isRoot;
+    @Extra("isLock")   boolean isLock;
     @Extra(ExtraAndResult.EXTRA_STATUS) boolean isMenber;
 
     private Customer customerContact;
@@ -61,7 +62,9 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
 
     @AfterViews
     void initViews() {
-        if (!isMyUser || isMenber) {
+        if(!isLock){
+            layout_add.setVisibility(View.GONE);
+        }else if(!isMyUser || isMenber){
             if(!isRoot){
                 layout_add.setVisibility(View.GONE);
             }
@@ -130,7 +133,7 @@ public class CustomerContactManageActivity extends BaseActivity implements Conta
         for (int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
             ContactViewGroup contactViewGroup = new ContactViewGroup(this, customerContact,leftExtrases, contact, this);
-            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber,isRoot);
+            contactViewGroup.bindView(i + 1, layout_container, isMyUser, isMenber,isRoot,isLock);
         }
         cancelLoading();
     }

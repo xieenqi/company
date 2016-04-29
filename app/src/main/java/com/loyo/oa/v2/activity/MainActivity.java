@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
@@ -99,6 +100,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -141,6 +143,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind; //0上班  1下班  2加班
+    private Set<String> companyTag;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -284,7 +287,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
+        swipe_container.setColorSchemeColors(Color.parseColor("#4db1fe"));
         //首页刷新监听R.color.title_bg1, R.color.greenyellow, R.color.aquamarine
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -339,9 +342,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         }
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
             int defaultAcatar;
-            if(MainApp.user.gender == 2){
+            if (MainApp.user.gender == 2) {
                 defaultAcatar = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAcatar = R.drawable.img_default_user;
             }
             img_user.setImageResource(defaultAcatar);
@@ -462,14 +465,24 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }, 5000);
             return;
         }
+        if (null == companyTag) {
+            companyTag = new HashSet<String>();
+            companyTag.add(MainApp.user.companyId);
+        }
         JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
             @Override
             public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(MainApp.user + " 激光的alias： " + s);
+                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
+            }
+        });
+        JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
@@ -938,25 +951,25 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "待点评";
+                    extra = num.bizNum + "个待点评(含抄送)";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "未完成";
+                    extra = num.bizNum + "个未完成";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "待审批";
+                    extra = num.bizNum + "个待审批";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    extra = num.bizNum + "进行中";
+                    extra = num.bizNum + "个进行中";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
-                    extra = num.bizNum + "将掉公海";
+                    extra = num.bizNum + "个将掉公海";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-                    extra = num.bizNum + "需拜访";
+                    extra = num.bizNum + "个需拜访";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                    extra = num.bizNum + "外勤";
+                    extra = num.bizNum + "个外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if (num.bizType == 19) {
                     if (!num.viewed) {
@@ -1135,11 +1148,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
      */
     public void intentJpushInfo() {
-        if (MainApp.jpushData != null) {
+        if (null != MainApp.jpushData) {
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
                 intent.setClass(MainActivity.this, ActivityHait.class);//推送讨论
                 startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            } else if ("delete".equals(MainApp.jpushData.operationType)) {
                 MainApp.jpushData = null;
                 return;
             }

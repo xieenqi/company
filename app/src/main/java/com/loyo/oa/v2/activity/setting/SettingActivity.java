@@ -28,12 +28,14 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
@@ -250,9 +252,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         //清楚sp
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);
-        JPushInterface.setAlias(getApplicationContext(), "", new TagAliasCallback() {
+        Set<String> complanTag = new HashSet<>();
+        JPushInterface.setAliasAndTags(getApplicationContext(), "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
+                    LogUtil.d("激光推送已经成功停止（注销）状态"+i);
                 //设置别名 为空
             }
         });

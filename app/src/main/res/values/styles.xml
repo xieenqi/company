@@ -101,7 +101,7 @@
     <!--text style-->
     <style name="text_title">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_sp20</item>
+        <item name="android:textSize">@dimen/text_sp18</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -222,7 +222,7 @@
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@android:color/white</item>
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@null</item>SubtitleSubtitle
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
@@ -245,5 +245,18 @@
         </item>
         <item name="android:progressDrawable">@drawable/shape_progressbar_mini</item>
     </style>
+    <!--列表副标题样式-->
+    <style name="subtitle_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text99</item>
+        <item name="android:textSize">@dimen/text_sp12</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:background">#f5f5f5</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">@dimen/margin_other_view</item>
+        />
 
+    </style>
 </resources>

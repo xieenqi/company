@@ -8,6 +8,7 @@ import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
