@@ -57,10 +57,10 @@ public class WfInstance extends BaseBeans implements Serializable {
     }
 
     public class Demand {
-        public int actualNum;
-        public int actualPrice;
-        public int estimatedNum;
-        public int estimatedPrice;
+        public float actualNum;
+        public float actualPrice;
+        public float estimatedNum;
+        public float estimatedPrice;
         public String memo;
         public String unit;
         public String productName;
