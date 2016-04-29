@@ -230,7 +230,7 @@ public final class Global {
 
     /**
      * ScroView嵌套listView，手动计算ListView高度
-     * */
+     */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -241,7 +241,7 @@ public final class Global {
 
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            if (listItem != null) {
+            if (null != listItem) {
                 listItem.measure(0, 0);
                 totalHeight += listItem.getMeasuredHeight();
             }
