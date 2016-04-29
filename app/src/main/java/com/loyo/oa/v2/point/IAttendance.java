@@ -87,10 +87,10 @@ public interface IAttendance {
     void getAttendancesDetial(@Path("id") String id, Callback<HttpAttendanceDetial> callback);
 
     /**
-     * 团队考勤列表，获取统计数据
+     * 团队考勤列表，获取统计数据  加 checkindate  20160429
      * */
     @GET("/attendance/team/count")
-    void getTeamCount(Callback<AttendanceList> callback);
+    void getTeamCount(@Query("checkindate") int checkindate,Callback<AttendanceList> callback);
 
 
 }
