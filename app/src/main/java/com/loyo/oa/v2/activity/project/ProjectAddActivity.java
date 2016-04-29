@@ -138,7 +138,7 @@ public class ProjectAddActivity extends BaseActivity {
     //选【参与人】
     @Click(R.id.layout_members)
     void MembersClick() {
-        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(),true);
+        SelectDetUserActivity2.startThisForAllSelect(ProjectAddActivity.this, mMemberIds == null ? null : mMemberIds.toString(), true);
     }
 
     /**
@@ -332,13 +332,13 @@ public class ProjectAddActivity extends BaseActivity {
          * 获取post参与人数据
          * 过滤为空的dept或user
          * */
-       if (!TextUtils.isEmpty(mMemberIds) && mAdapter != null) {
+        if (!TextUtils.isEmpty(mMemberIds) && null != mAdapter) {
             projectTransObj.members = mAdapter.GetProjectMembers();
-            for(ManagersMembers managersMembers : projectTransObj.members){
-                if(null == managersMembers.dept.id){
+            for (ManagersMembers managersMembers : projectTransObj.members) {
+                if (null == managersMembers.dept.id) {
                     managersMembers.dept = null;
                 }
-                if(null == managersMembers.user.id){
+                if (null == managersMembers.user.id) {
                     managersMembers.user = null;
                 }
             }

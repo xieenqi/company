@@ -159,7 +159,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             }
             Department d = listDepartment.get(position);
             TextView tv_content = com.loyo.oa.v2.tool.ViewHolder.get(convertView, R.id.tv_mydept_content);
-            String departmentName = d.getName();
+            String departmentName = null == d.getName() ? "部门没有名字" : d.getName();
             int userSize = Common.getUsersByDeptId(d.getId(), new ArrayList<User>()).size();
             String members = "(" + userSize + "人" + ")";
             departmentName = departmentName.concat(members);
