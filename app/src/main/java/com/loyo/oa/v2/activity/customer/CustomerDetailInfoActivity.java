@@ -33,7 +33,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -587,8 +586,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
                 /*如果修改了负责人，不是自己，则finish该页面*/
-                Bundle bundle = data.getExtras();
                 try{
+                    Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
                     if(!isCreator){
                         finish();
