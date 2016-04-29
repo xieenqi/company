@@ -76,7 +76,7 @@ public interface IAttendance {
      * @param callback
      */
     @PUT("/attendance/{id}")
-    void confirmOutAttendance(@Path("id") String  id,Callback<AttendanceRecord> callback);
+    void confirmOutAttendance(@Path("id") String  id,@Query("type") int type,Callback<AttendanceRecord> callback);
 
 
     /**
