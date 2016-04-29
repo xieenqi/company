@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,6 +209,7 @@ public class DropListMenu extends LinearLayout {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //((DropListAdapter) (menuList.getAdapter())).setSelectItem(position);//设置选择状态
                     mRowSelected = position;
+                    LogUtil.d("选中的行数:"+mRowSelected);
                     if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
                         /**
