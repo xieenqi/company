@@ -286,14 +286,12 @@ public class TasksInfoActivity extends BaseActivity {
         switch (mTask.getStatus()) {
             case Task.STATUS_REVIEWING:
                 if (IsResponsiblePerson()) {
-                    LogUtil.d("负责人 审核中");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
 
             case Task.STATUS_FINISHED:
                 if (IsResponsiblePerson()) {
-                    LogUtil.d("负责人 已完成");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
