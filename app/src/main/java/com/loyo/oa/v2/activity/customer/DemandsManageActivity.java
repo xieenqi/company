@@ -144,7 +144,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                 app.startActivityForResult(this, DemandsAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 break;
             default:
-
                 break;
         }
     }
