@@ -151,11 +151,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         }
 
         @Override
-        public void handleMessage(final Message msg) {
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String time = String.valueOf(msg.what);
             String des = "请在".concat(time).concat("秒内完成打卡");
-            SpannableStringBuilder builder = Utils.modifyTextColor(des, Color.RED, des.length() - TEXT_LEN - time.length(), des.length() - TEXT_LEN);
+            SpannableStringBuilder builder = Utils.modifyTextColor(des, Color.parseColor("#f5625a"), des.length() - TEXT_LEN - time.length(), des.length() - TEXT_LEN);
             TextView tvtime = mActivity.get().tv_count_time;
             if (null != tvtime) {
                 tvtime.setText(builder);
@@ -255,12 +255,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             et_reason.setHint("请输入加班原因");
             String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
                     + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
-            SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
+            SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time.setText(tvTimeName + builder);
             tv_time.setTextColor(Color.GREEN);
         } else {/*正常上下班*/
             String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
-            SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
+            SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time.setText(builder);
             if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
                 if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
@@ -447,11 +447,11 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("extraWorkStartTime", extraWorkStartTime);
         map.put("extraWorkEndTime", serverTime);
 
-        if(isPopup){
-            if(outKind == 1){
-                map.put("extraChooseState",1);
-            }else if(outKind == 2){
-                map.put("extraChooseState",2);
+        if (isPopup) {
+            if (outKind == 1) {
+                map.put("extraChooseState", 1);
+            } else if (outKind == 2) {
+                map.put("extraChooseState", 2);
             }
         }
         if (attachments.size() != 0) {
