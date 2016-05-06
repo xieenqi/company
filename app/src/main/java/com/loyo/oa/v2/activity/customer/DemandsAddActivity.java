@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -58,7 +59,6 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private TextView tv_products;
     private TextView tv_salestages;
     private TextView tv_reason;
-
     private ArrayList<Product> lstData_Product = new ArrayList<Product>();
     private ArrayList<SaleStage> lstData_SaleStage = new ArrayList<SaleStage>();
     private String productIdSelect, productNameSelect, customerName, customerId;
@@ -155,6 +155,14 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 finish();
             }
         });
+    }
+
+    private String setValueFloat(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+        BigDecimal bigDecimal = new BigDecimal(obj + "");
+        return bigDecimal.toPlainString() + "";
     }
 
     private void initDataUI() {

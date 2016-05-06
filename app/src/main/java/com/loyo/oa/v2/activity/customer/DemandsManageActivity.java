@@ -46,7 +46,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     public static final int VIEW_DEMANDS = 200;
     public static final int CREATE_DEMANDS = 300;
 
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +144,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                 app.startActivityForResult(this, DemandsAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 break;
             default:
-
                 break;
         }
     }
