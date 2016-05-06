@@ -51,7 +51,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
             return "没有内容";
         }
             BigDecimal bigDecimal = new BigDecimal(obj + "");
-            return bigDecimal.doubleValue() + "";
+            return bigDecimal.toPlainString() + "";
     }
 
     @Override
