@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,10 +42,9 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
     public static final int REQUEST_MULTI_SELECT = 0x00101;
     public static final int REQUEST_ALL_SELECT = 0x00102;
 
-    private LinearLayout llBack;
-    private Button btnTitleRight;
+    private LinearLayout ll_back;
     private HorizontalScrollListView lvSelectUser;
-    private TextView tv_toSearch;
+    private TextView tv_toSearch, tv_title, tv_add;
     private RecyclerView rvDepartments;
     private RecyclerView rvUsers;
     private int screenHeight;
@@ -249,9 +247,9 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         rvUsers.setLayoutManager(mUserLayoutManager);
 
         if (mSelectType == TYPE_ONLY) {
-            btnTitleRight.setVisibility(View.GONE);
+            tv_add.setVisibility(View.GONE);
         } else {
-            btnTitleRight.setVisibility(View.VISIBLE);
+            tv_add.setVisibility(View.VISIBLE);
         }
 
 //        if (!isDataBinded()) {
@@ -266,9 +264,21 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
 //        }
     }
 
+    private void assignViews() {
+        tv_toSearch = (TextView) findViewById(R.id.tv_toSearch);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_add = (TextView) findViewById(R.id.tv_add);
+        lvSelectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
+        rvDepartments = (RecyclerView) findViewById(R.id.rv_departments);
+        rvUsers = (RecyclerView) findViewById(R.id.rv_users);
+        tv_title.setText("成员选择");
+        tv_add.setText("确定");
+    }
+
     private void initListener() {
-        llBack.setOnClickListener(this);
-        btnTitleRight.setOnClickListener(this);
+        ll_back.setOnClickListener(this);
+        tv_add.setOnClickListener(this);
         tv_toSearch.setOnClickListener(this);
 
         lvSelectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -371,7 +381,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 @Override
                 public void onChange(int count) {
                     mCurrentSelectCount = count;
-                    btnTitleRight.setText("确定" + (count == 0 ? "" : "(" + count + ")"));
+                    tv_add.setText("确定" + (count == 0 ? "" : "(" + count + ")"));
                 }
             });
         }
@@ -439,16 +449,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         mSelectUsersAdapter.updataList(data.getUsers());
         mUserLayoutManager.scrollToPosition(index);
     }
-
-    private void assignViews() {
-        tv_toSearch = (TextView) findViewById(R.id.tv_toSearch);
-        btnTitleRight = (Button) findViewById(R.id.btn_title_right);
-        llBack = (LinearLayout) findViewById(R.id.ll_back);
-        lvSelectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
-        rvDepartments = (RecyclerView) findViewById(R.id.rv_departments);
-        rvUsers = (RecyclerView) findViewById(R.id.rv_users);
-    }
-
 
     @Override
     public void onClick(View v) {
