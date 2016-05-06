@@ -91,6 +91,7 @@
     <dimen name="dimen_50">50dp</dimen>
     <dimen name="dimen_55">55dp</dimen>
     <dimen name="dimen_58">58dp</dimen>
+    <dimen name="dimen_60">60dp</dimen>
     <dimen name="dimen_65">65dp</dimen>
     <dimen name="dimen_66">66dp</dimen>
     <dimen name="dimen_150">150dp</dimen>
@@ -99,5 +100,6 @@
     <dimen name="dimen_7">7dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="home_head">86dp</dimen>
+    <dimen name="table_height">46dp</dimen>
 
 </resources>
