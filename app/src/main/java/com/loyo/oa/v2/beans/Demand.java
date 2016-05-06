@@ -20,8 +20,8 @@ public class Demand extends BaseBeans {
     private String customerId;//&{customer Customer}, optional): ,
     private User editor;//&{organization User}, optional): ,
     private String id;//int64, optional): ,
-    private float estimatedNum;//float32, optional): ,
-    private float estimatedPrice;//float32, optional): ,
+    private double estimatedNum;//float32, optional): ,
+    private double estimatedPrice;//float32, optional): ,
 
     private Product product;//&{product Product}, optional): 产品,
     private SaleStage saleStage;//&{setting SaleStage}, optional): ,
@@ -29,8 +29,8 @@ public class Demand extends BaseBeans {
     private String spec;//string, optional): ,
     private String updatedAt;//&{time Time}, optional):
     private String memo;
-    private float actualPrice;
-    private float actualNum;
+    private double actualPrice;
+    private double actualNum;
 
 
     public int getWfState() {
@@ -73,7 +73,7 @@ public class Demand extends BaseBeans {
         this.memo = memo;
     }
 
-    public float getActualNum() {
+    public double getActualNum() {
         return actualNum;
     }
 
@@ -81,7 +81,7 @@ public class Demand extends BaseBeans {
         this.actualNum = actualNum;
     }
 
-    public float getActualPrice() {
+    public double getActualPrice() {
         return actualPrice;
     }
 
@@ -143,7 +143,7 @@ public class Demand extends BaseBeans {
         this.id = id;
     }
 
-    public float getEstimatedNum() {
+    public double getEstimatedNum() {
         return estimatedNum;
     }
 
@@ -151,7 +151,7 @@ public class Demand extends BaseBeans {
         this.estimatedNum = estimatedNum;
     }
 
-    public float getEstimatedPrice() {
+    public double getEstimatedPrice() {
         return estimatedPrice;
     }
 

@@ -29,5 +29,4 @@ public class TasksManageActivity extends BaseFragmentActivity {
     protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 }

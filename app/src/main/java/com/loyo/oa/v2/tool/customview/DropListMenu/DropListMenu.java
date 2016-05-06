@@ -127,6 +127,7 @@ public class DropListMenu extends LinearLayout {
     }
 
     void initPopopWindows() {
+        LogUtil.d("左侧的Item有:"+mMenuCount);
         mMenuCount = mMenuItems.size();
 
         if (mMenuAdapters.size() == 0) {
@@ -202,19 +203,18 @@ public class DropListMenu extends LinearLayout {
             //menuList.setSelector(mMenuListSelectorRes);
 
             /**
-             * 左侧Listiew
+             * 团队客户 左侧Listiew
              * */
             menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //((DropListAdapter) (menuList.getAdapter())).setSelectItem(position);//设置选择状态
                     mRowSelected = position;
-                    LogUtil.d("选中的行数:"+mRowSelected);
+                    /*有自内容时执行*/
                     if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
+                        LogUtil.d("有子内容");
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
-                        /**
-                         * 展开后的右侧 二级ListView
-                         * */
+
                         final DropListAdapter adapter = new DropListAdapter(mContext, menuItem.getSubDropItem().get(mRowSelected).getSubDropItem(), selectedItem);
                         getSubMenuList().setAdapter(adapter);
                         getSubMenuList().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -238,7 +238,6 @@ public class DropListMenu extends LinearLayout {
                                         adapter.setSelectIndex(position);
                                     } else {
                                         getSelectedItems().remove(mRowSelected);
-
                                         if (!selectedItem.equals(currentItem)) {
                                             getSelectedItems().put(mRowSelected, currentItem);
                                             adapter.setSelectIndex(position);
@@ -252,13 +251,24 @@ public class DropListMenu extends LinearLayout {
                                 }
                             }
                         });
+                        /*当一级列表没有自内容时*/
                     } else {
                         popupWindow.dismiss();//默认选择状态下
                         // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
                         mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                         mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
+                        LogUtil.d("选中第"+mColumnSelected+"列"+" 第"+mRowSelected+"行");
 
                         if (mMenuSelectedListener != null) {
+
+      /*                      for(int i = 0;i<menuItem.getSubDropItem().size();i++){
+                                if(i == mRowSelected){
+                                    menuItem.getSubDropItem().get(position).setIsLock(true);
+                                }else{
+                                    menuItem.getSubDropItem().get(position).setIsLock(false);
+                                }
+                            }*/
+
                             DropItem selectRowItem = menuItem.getSubDropItem().get(mRowSelected);
                             getSelectedItems().clear();
                             getSelectedItems().put(mColumnSelected, selectRowItem);

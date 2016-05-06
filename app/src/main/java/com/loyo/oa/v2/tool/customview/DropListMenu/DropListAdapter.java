@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -73,10 +74,18 @@ public class DropListAdapter extends BaseAdapter {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         textView.setText(null == item ? "" : item.getName());
 
+        LogUtil.d("mSelectIndex:"+mSelectIndex+",position:"+position);
+
         if (mSelectIndex == position) {
             ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             imageView.setVisibility(View.VISIBLE);
         }
+
+/*        if(item.isLock){
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
+            imageView.setVisibility(View.VISIBLE);
+        }*/
+
 /*        if (selectItem == position) {
             convertView.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
         } else {
