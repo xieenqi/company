@@ -191,7 +191,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入预估数量"
-                        android:maxLength="10"
+                        android:maxLength="7"
                         />
 
                 </LinearLayout>
@@ -231,7 +231,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入单价"
-                        android:maxLength="10"
+                        android:maxLength="7"
                         />
 
                 </LinearLayout>
@@ -290,7 +290,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入预估数量"
-                        android:maxLength="10"
+                        android:maxLength="7"
                         />
 
                 </LinearLayout>
@@ -331,7 +331,7 @@
                         android:inputType="numberDecimal"
                         android:paddingRight="@dimen/margin_side_edge"
                         android:hint="请输入单价"
-                        android:maxLength="10"
+                        android:maxLength="7"
                         />
 
                 </LinearLayout>
