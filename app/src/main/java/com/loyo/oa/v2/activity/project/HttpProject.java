@@ -54,6 +54,32 @@ public class HttpProject implements Serializable {
 
     /**
      * @是否和项目相关 说  明:比较个人id相和部门id，并且是多部门情况下
+     * public boolean isProjectRelevant() {
+     * String myId = MainApp.user.id;
+     * <p/>
+     * for (ProjectManaer manager : managers) {
+     * if (myId.equals(manager.user.id)) {
+     * return true;
+     * }
+     * }
+     * <p/>
+     * for (ProjectMember member : members) {
+     * if (null != member.user && myId.equals(member.user.id)) {
+     * return true;
+     * }
+     * <p/>
+     * for (UserInfo userInfo : MainApp.user.getDepts()) {
+     * if (null != member.dept && member.dept.id.equals(userInfo.getShortDept().getId())) {
+     * return true;
+     * }
+     * }
+     * }
+     * <p/>
+     * if (myId.equals(creator.id)) {
+     * return true;
+     * }
+     * return false;
+     * }
      */
     public boolean isProjectRelevant() {
         String myId = MainApp.user.id;
@@ -70,7 +96,7 @@ public class HttpProject implements Serializable {
             }
 
             for (UserInfo userInfo : MainApp.user.getDepts()) {
-                if (null != member.dept && member.dept.id.equals(userInfo.getShortDept().getId())) {
+                if (null != member.dept && userInfo.getShortDept().getXpath().contains(member.dept.xpath)) {
                     return true;
                 }
             }
