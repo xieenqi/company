@@ -494,7 +494,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             TextView iv_extra = ViewHolder.get(view, R.id.iv_extra);
             ImageView iv_recordIn_type = ViewHolder.get(view, R.id.iv_record_in_type);
             ImageView iv_recordOut_type = ViewHolder.get(view, R.id.iv_record_out_type);
-            ImageView divider = ViewHolder.get(view, R.id.devider);
+//            ImageView divider = ViewHolder.get(view, R.id.devider);
 
             String overTimes = "--";
             int color = getActivity().getResources().getColor(R.color.gray);
@@ -513,7 +513,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     }
 
                     if (recordOut.getExtraState() == 1) {
-                        color = getActivity().getResources().getColor(R.color.gray);
+                        color = getActivity().getResources().getColor(R.color.text99);
                     } else if (recordOut.getExtraState() == 2) {
                         color = getActivity().getResources().getColor(R.color.red);
                     }
@@ -539,7 +539,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 inTagstate = recordIn.getTagstate();
                 if (recordIn.getState() == AttendanceRecord.STATE_BE_LATE) {
 
-                    tv_state.setTextColor(getResources().getColor(R.color.red));
+                    tv_state.setTextColor(getResources().getColor(R.color.red1));
                     tv_state.setText("迟到");
                     tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
                     iv_recordIn_type.setVisibility(View.VISIBLE);
@@ -547,7 +547,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
                 } else if (recordIn.getState() == AttendanceRecord.STATE_NORMAL) {
 
-                    tv_state.setTextColor(getResources().getColor(R.color.black));
+                    tv_state.setTextColor(getResources().getColor(R.color.text99));
                     tv_state.setText("已打卡");
                     tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
                     iv_recordIn_type.setVisibility(View.VISIBLE);
@@ -594,11 +594,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else if (outTagstate == 2 || inTagstate == 2) {
                 background = R.drawable.attendance_shape_leave;
                 status = "请假";
-                textColor = getResources().getColor(R.color.redE8);
+                textColor = getResources().getColor(R.color.red1);
             } else if (totState == 6) {
                 background = R.drawable.attendance_shape_test;
                 status = "休息";
-                textColor = getResources().getColor(R.color.default_menu_text);
+                textColor = getResources().getColor(R.color.green51);
             }
 
             iv_extra.setText(status);
@@ -609,7 +609,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             if (null != recordOut && recordOut.getState() != 5) {
                 if (recordOut.getState() == AttendanceRecord.STATE_NORMAL) {
 
-                    tv_result.setTextColor(getResources().getColor(R.color.black));
+                    tv_result.setTextColor(getResources().getColor(R.color.text99));
                     tv_result.setText("已打卡");
                     tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
                     iv_recordOut_type.setVisibility(View.VISIBLE);
@@ -618,7 +618,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
                 } else if (recordOut.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
 
-                    tv_result.setTextColor(getResources().getColor(R.color.red));
+                    tv_result.setTextColor(getResources().getColor(R.color.red1));
                     tv_result.setText("早退");
                     tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
                     iv_recordOut_type.setVisibility(View.VISIBLE);
@@ -650,11 +650,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 tv_time1.setText("--");
             }
 
-            if (i == getCount() - 1) {
-                divider.setVisibility(View.INVISIBLE);
-            } else {
-                divider.setVisibility(View.VISIBLE);
-            }
+//            if (i == getCount() - 1) {
+//                divider.setVisibility(View.INVISIBLE);
+//            } else {
+//                divider.setVisibility(View.VISIBLE);
+//            }
 
             /**
              * 按键监听

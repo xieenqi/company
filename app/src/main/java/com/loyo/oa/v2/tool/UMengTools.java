@@ -37,7 +37,9 @@ public class UMengTools {
             erroInfo.append("定位结果:" + location.getErrorInfo() + "--" + location.getLocationDetail() + "<->");
             erroInfo.append("网络类型:" + Utils.getNetworkType(context) + "<->");
             erroInfo.append("发生的时间:" + time + "<->");
-            erroInfo.append("用户信息:" + MainApp.user.name + "-" + MainApp.user.mobile + "-" + MainApp.gson.toJson(MainApp.user.depts));
+            if (null != MainApp.user) {
+                erroInfo.append("用户信息:" + MainApp.user.name + "-" + MainApp.user.mobile + "-" + MainApp.gson.toJson(MainApp.user.depts));
+            }
             LogUtil.d("高德定位设备友盟统计信息：" + erroInfo.toString());
         }
     }
