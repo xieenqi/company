@@ -231,6 +231,65 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         mJoinUserId = getIntent().getStringExtra(ExtraAndResult.STR_SUPER_ID);
     }
 
+    private void initView() {
+        assignViews();
+
+        // 设置部门与用户的layout的宽度比为1：2
+        ViewGroup.LayoutParams lp_department = rvDepartments.getLayoutParams();
+        lp_department.width = screenWidth / 3;
+        rvDepartments.setLayoutParams(lp_department);
+
+        mDepartmentLayoutManager = new LinearLayoutManager(this);
+        mDepartmentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mUserLayoutManager = new LinearLayoutManager(this);
+        mUserLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        rvDepartments.setLayoutManager(mDepartmentLayoutManager);
+        rvUsers.setLayoutManager(mUserLayoutManager);
+
+        if (mSelectType == TYPE_ONLY) {
+            btnTitleRight.setVisibility(View.GONE);
+        } else {
+            btnTitleRight.setVisibility(View.VISIBLE);
+        }
+
+//        if (!isDataBinded()) {
+        showLoading("数据正在加载...");
+        mDeptSource = Common.getLstDepartment();
+        deptSort(); //重新排序
+        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
+        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
+        thread.start();
+//        } else {
+//            updata();
+//        }
+    }
+
+    private void initListener() {
+        llBack.setOnClickListener(this);
+        btnTitleRight.setOnClickListener(this);
+        tv_toSearch.setOnClickListener(this);
+
+        lvSelectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
+                if (data.getClass() == SelectDepData.class) {
+                    ((SelectDepData) data).setAllSelect(false);
+                    LogUtil.dee("1");
+                } else if (data.getClass() == SelectUserData.class) {
+                    ((SelectUserData) data).setCallbackSelect(false);
+                    mSelectUsersAdapter.notifyDataSetChanged();
+                    LogUtil.dee("2");
+                } else {
+                    LogUtil.dee("3");
+                    data.setCallbackSelect(false);
+                }
+            }
+        });
+    }
+
     /**
      * 判断数据是否生成
      *
@@ -278,40 +337,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         newDeptSource.add(0, companySource);
     }
 
-    private void initView() {
-        assignViews();
-
-        // 设置部门与用户的layout的宽度比为1：2
-        ViewGroup.LayoutParams lp_department = rvDepartments.getLayoutParams();
-        lp_department.width = screenWidth / 3;
-        rvDepartments.setLayoutParams(lp_department);
-
-        mDepartmentLayoutManager = new LinearLayoutManager(this);
-        mDepartmentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        mUserLayoutManager = new LinearLayoutManager(this);
-        mUserLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        rvDepartments.setLayoutManager(mDepartmentLayoutManager);
-        rvUsers.setLayoutManager(mUserLayoutManager);
-
-        if (mSelectType == TYPE_ONLY) {
-            btnTitleRight.setVisibility(View.GONE);
-        } else {
-            btnTitleRight.setVisibility(View.VISIBLE);
-        }
-
-//        if (!isDataBinded()) {
-        showLoading("数据正在加载...");
-        mDeptSource = Common.getLstDepartment();
-        deptSort(); //重新排序
-        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
-        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
-        thread.start();
-//        } else {
-//            updata();
-//        }
-    }
 
     /**
      * 刷新界面数据
@@ -424,29 +449,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         rvUsers = (RecyclerView) findViewById(R.id.rv_users);
     }
 
-    private void initListener() {
-        llBack.setOnClickListener(this);
-        btnTitleRight.setOnClickListener(this);
-        tv_toSearch.setOnClickListener(this);
-
-        lvSelectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
-                if (data.getClass() == SelectDepData.class) {
-                    ((SelectDepData) data).setAllSelect(false);
-                    LogUtil.dee("1");
-                } else if (data.getClass() == SelectUserData.class) {
-                    ((SelectUserData) data).setCallbackSelect(false);
-                    mSelectUsersAdapter.notifyDataSetChanged();
-                    LogUtil.dee("2");
-                } else {
-                    LogUtil.dee("3");
-                    data.setCallbackSelect(false);
-                }
-            }
-        });
-    }
 
     @Override
     public void onClick(View v) {

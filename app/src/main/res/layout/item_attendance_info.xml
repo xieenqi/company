@@ -26,6 +26,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center|left"
                 android:maxEms="4"
@@ -40,10 +41,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dimen_3"
+                android:layout_marginRight="@dimen/dimen_8"
                 android:gravity="center"
                 android:minHeight="15dp"
                 android:minWidth="27dp"
+                android:singleLine="true"
                 android:text=""
                 android:textSize="10sp"
                 />
@@ -143,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="--"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/text99"
                         android:textSize="15sp"
                         />
                 </LinearLayout>
@@ -178,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:singleLine="true"
                 android:text="--"
                 android:textColor="@color/text99"
                 android:textSize="15sp"

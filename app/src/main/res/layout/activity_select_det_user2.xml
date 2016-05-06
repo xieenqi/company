@@ -60,7 +60,7 @@
             android:textColor="@color/white"
             android:textSize="15sp"/>
     </RelativeLayout>
-
+<include layout="@layout/include_common_title_2"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"

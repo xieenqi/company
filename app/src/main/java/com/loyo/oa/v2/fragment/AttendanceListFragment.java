@@ -513,7 +513,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     }
 
                     if (recordOut.getExtraState() == 1) {
-                        color = getActivity().getResources().getColor(R.color.gray);
+                        color = getActivity().getResources().getColor(R.color.text99);
                     } else if (recordOut.getExtraState() == 2) {
                         color = getActivity().getResources().getColor(R.color.red);
                     }
@@ -594,11 +594,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else if (outTagstate == 2 || inTagstate == 2) {
                 background = R.drawable.attendance_shape_leave;
                 status = "请假";
-                textColor = getResources().getColor(R.color.redE8);
+                textColor = getResources().getColor(R.color.red1);
             } else if (totState == 6) {
                 background = R.drawable.attendance_shape_test;
                 status = "休息";
-                textColor = getResources().getColor(R.color.default_menu_text);
+                textColor = getResources().getColor(R.color.green51);
             }
 
             iv_extra.setText(status);
