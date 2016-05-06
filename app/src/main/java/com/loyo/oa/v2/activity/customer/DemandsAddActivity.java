@@ -294,7 +294,6 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                     break;
                 }
                 if (dialog_Product == null) {
-
                     LayoutInflater inflater = getLayoutInflater();
                     View layout = inflater.inflate(R.layout.dialog_products_select, null, false);
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(layout);
@@ -308,7 +307,6 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-
                         productsRadioListViewAdapter.notifyDataSetChanged();
                         productsRadioListViewAdapter.isSelected = id;
 

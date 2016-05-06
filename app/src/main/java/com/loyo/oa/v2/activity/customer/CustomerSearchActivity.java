@@ -37,8 +37,6 @@ public class CustomerSearchActivity extends BaseSearchActivity<Customer> {
 
     @Override
     public void getData() {
-
-        Utils.dialogShow(this, "请稍候");
         String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
         HashMap<String, Object> params = new HashMap<>();
 

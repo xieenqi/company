@@ -51,7 +51,7 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
             return "没有内容";
         }
             BigDecimal bigDecimal = new BigDecimal(obj + "");
-            return bigDecimal.floatValue() + "";
+            return bigDecimal.doubleValue() + "";
     }
 
     @Override
@@ -93,6 +93,12 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
                 + (null == demand.getProduct() ? "" : demand.getProduct().unit));
         tv_content_act.setText("成交：\t数量\t\t" + setValueFloat(demand.getActualNum()) + "\t\t\t\t单价\t\t" + setValueFloat(demand.getActualPrice()) + " "
                 + (null == demand.getProduct() ? "" : demand.getProduct().unit));
+
+/*        tv_phase.setText("阶段：" + demand.getSaleStage().getName() + wfStatusText(demand.getWfState()));
+        tv_content_plan.setText("预估：\t数量\t\t" + demand.getEstimatedNum() + "\t\t\t\t单价\t\t" + demand.getEstimatedPrice() + " "
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));
+        tv_content_act.setText("成交：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice() + " "
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));*/
 
         if (demand.getSaleStage().getProb() == 0) {
             tv_lose_reason.setVisibility(View.VISIBLE);

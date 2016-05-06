@@ -439,7 +439,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("通讯录权限，code错误:0213");
             }
         }
 

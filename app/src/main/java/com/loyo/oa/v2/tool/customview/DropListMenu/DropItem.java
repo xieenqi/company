@@ -14,6 +14,7 @@ public class DropItem {
     String Name;
     int Value;
     String mData;
+    boolean isLock;
 
     //显示类型
     int SelectType = 0;
@@ -36,6 +37,14 @@ public class DropItem {
         Name = name;
         Value = value;
         SubDropItem = subDropItem;
+    }
+
+    public boolean isLock() {
+        return isLock;
+    }
+
+    public void setIsLock(boolean isLock) {
+        this.isLock = isLock;
     }
 
     public String getmData() {
