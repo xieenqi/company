@@ -61,11 +61,9 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     PagerSlidingTabStrip tabs;
     @ViewById
     ViewPager pager;
-    @Extra
+
     String position;
-    @Extra
     NearCount nearCount;
-    @Extra
     int type;//客户类型
 
     private int countSize;
@@ -94,8 +92,11 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtil.dee("收到广播:" + countSize);
+            LogUtil.dee("收到广播,我的客户数量" + countSize);
             countSize = Integer.parseInt(intent.getStringExtra("count"));
+            if(countSize != 0){
+                countSize -= 1;
+            }
             handler.sendEmptyMessage(0x01);
         }
     };
@@ -104,6 +105,15 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
     void initViews() {
         setTouchView(-1);
         mContext = this;
+
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle = intent.getExtras();
+
+        position = bundle.getString("position");
+        nearCount = (NearCount) bundle.get("nearCount");
+        type = bundle.getInt("type");
+
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("附近客户");
         iv_submit.setVisibility(View.VISIBLE);
@@ -112,8 +122,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
         layout_back.setOnTouchListener(Global.GetTouch());
         if (null != nearCount) {
             if (type == 1) {
-                LogUtil.dee("nearCount.count:" + nearCount.count);
-                countSize = nearCount.count;
+                countSize = (nearCount.total-nearCount.winCount);
                 TITLES[0] = type == Customer.CUSTOMER_TYPE_MINE ? "我的客戶(" : "团队客戶(";
                 TITLES[0] += countSize + ")";
                 TITLES[1] = "公司已赢单客戶(" + nearCount.winCount + ")";

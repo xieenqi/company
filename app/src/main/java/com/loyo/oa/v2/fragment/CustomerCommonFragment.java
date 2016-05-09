@@ -180,9 +180,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onResume() {
         super.onResume();
         //客户信息有跟新 刷新列表
-        if (MainApp.getMainApp().isCutomerEdit) {
             getData();
-        }
     }
 
     @Override
@@ -194,7 +192,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 bundle.putString("position", position);
                 bundle.putSerializable("nearCount", nearCount);
                 bundle.putInt("type", customer_type);//团队与个人
-                app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
+                app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_ZOOM_IN, false, bundle);
                 break;
 
             case R.id.btn_add:
@@ -689,7 +687,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         }
 
                         if(null != customerPaginationX){
-                            countSize = customerPaginationX.getRecords().size();
+                            if(customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+                                countSize = customerPaginationX.getRecords().size();
+                            }
                         }
                         listView.onRefreshComplete();
                         MainApp.getMainApp().isCutomerEdit = false;
@@ -754,12 +754,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 方法会不断执行，那不断发送广播，导致崩溃
      */
     public void broadMessage() {
-        if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {
             broacdIntent = new Intent();
             broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
             broacdIntent.putExtra("count", countSize + "");
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broacdIntent);
-        }
     }
 
     @Override
@@ -769,7 +767,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-            //broadMessage();
+            if(customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+                broadMessage();
+            }
         }
 
         if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
@@ -781,9 +781,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             return;
         }
         switch (requestCode) {
+
             case BaseMainListFragment.REQUEST_CREATE:
                 mCustomers.add(0, customer);
-                getData();
+                //getData();
                 break;
             case BaseMainListFragment.REQUEST_REVIEW:
                 for (int i = 0; i < mCustomers.size(); i++) {
@@ -792,7 +793,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         break;
                     }
                 }
-                getData();
+                //getData();
                 break;
         }
 
