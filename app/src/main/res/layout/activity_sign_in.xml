@@ -29,10 +29,12 @@
                 <TextView
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:gravity="top"
+                    android:paddingTop="@dimen/dimen_8"
                     android:text="地址"
-                    android:textColor="#999999"/>
+                    android:textColor="@color/text99"/>
 
                 <TextView
                     android:id="@+id/tv_address"
@@ -40,16 +42,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:text="13"
                     android:gravity="left|center"
                     android:singleLine="false"
-                    android:textColor="#383838"
-                    android:textSize="@dimen/textsize_content2"/>
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/textsize_content3"/>
 
                 <ImageView
                     android:id="@+id/img_refresh_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_marginRight="@dimen/margin_other_view"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_refresh"/>
 
@@ -134,7 +137,7 @@
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:layout_margin="@dimen/margin_other_view"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"
