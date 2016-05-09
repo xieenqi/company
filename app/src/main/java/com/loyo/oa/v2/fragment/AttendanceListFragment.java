@@ -497,7 +497,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 //            ImageView divider = ViewHolder.get(view, R.id.devider);
 
             String overTimes = "--";
-            int color = getActivity().getResources().getColor(R.color.gray);
+            int color = getActivity().getResources().getColor(R.color.text99);
 
             //加班时间
             if (recordOut != null) {

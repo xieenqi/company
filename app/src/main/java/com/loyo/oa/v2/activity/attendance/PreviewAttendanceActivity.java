@@ -182,7 +182,8 @@ public class PreviewAttendanceActivity extends BaseActivity {
             btn_confirm.setText("确认加班");
             type = 1;
             strMessage = "是否确定该员工的加班?\n" + "确认后将无法取消！";
-        } else {/*确认外勤*/
+            /*确认外勤*/
+        } else if(attendance.state != 5){
             if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_confirm);
                 btn_confirm.setVisibility(View.VISIBLE);
