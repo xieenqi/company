@@ -456,7 +456,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
             case R.id.ll_back:
                 finish();
                 break;
-            case R.id.btn_title_right:
+            case R.id.tv_add:
 //                if (mCurrentSelectCount == 0) {
 //                    finish();
 //                    return;
