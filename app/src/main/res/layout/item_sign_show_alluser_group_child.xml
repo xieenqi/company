@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/margin_side_edge">
 
         <TextView
             android:id="@+id/tv_customer_name"
@@ -28,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:gravity="center"
+            android:gravity="center|right"
             android:text="时间"
             android:textColor="@color/text99"
             android:textSize="12sp"/>
@@ -39,7 +40,7 @@
         android:id="@+id/layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_2"
+        android:layout_marginTop="@dimen/dimen_3"
         android:orientation="horizontal">
 
         <ImageView
