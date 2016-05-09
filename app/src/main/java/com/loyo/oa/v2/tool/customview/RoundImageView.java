@@ -22,7 +22,9 @@ import com.loyo.oa.v2.tool.LogUtil;
 
 /**
  * 圆形ImageView，可设置最多两个宽度不同且颜色不同的圆形边框。
- *
+ * imagecontrol:border_inside_color="#a8d4e9"
+ imagecontrol:border_outside_color="#a8d4e9"
+ imagecontrol:border_thickness="0dp"
  * @author Alan
  */
 public class RoundImageView extends ImageView {
