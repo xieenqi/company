@@ -10,7 +10,7 @@
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_marginTop="@dimen/dimen_10"
         android:orientation="horizontal">
 
         <TextView
@@ -39,7 +39,7 @@
         android:id="@+id/layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_6"
+        android:layout_marginTop="@dimen/dimen_2"
         android:orientation="horizontal">
 
         <ImageView
@@ -64,15 +64,16 @@
         android:id="@+id/layout_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_12"
-        android:layout_marginTop="@dimen/dimen_6"
-        android:orientation="horizontal">
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginLeft="@dimen/margin_side_edge"
+        android:layout_marginTop="@dimen/dimen_3"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/margin_side_edge">
 
         <ImageView
             android:id="@+id/img_sign_list_creator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_side_edge"
             android:src="@drawable/img_sign_list_position"/>
 
         <TextView

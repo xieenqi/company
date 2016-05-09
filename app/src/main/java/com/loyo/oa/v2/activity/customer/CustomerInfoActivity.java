@@ -161,9 +161,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     /**
      * 获取客户动态字段
-     * */
-    void getExtraData(){
-        HashMap<String,Object> map = new HashMap<>();
+     */
+    void getExtraData() {
+        HashMap<String, Object> map = new HashMap<>();
         map.put("bizType", 100);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getDynamic(map, new RCallback<ArrayList<CustomerExtraData>>() {
@@ -214,10 +214,10 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      */
     void loadAreaCodeTable() {
         String[] cityValue = null;
-        if(!tv_district.getText().toString().isEmpty()){
-             cityValue = tv_district.getText().toString().split(" ");
+        if (!tv_district.getText().toString().isEmpty()) {
+            cityValue = tv_district.getText().toString().split(" ");
         }
-        final SelectCityView selectCityView = new SelectCityView(this,cityValue);
+        final SelectCityView selectCityView = new SelectCityView(this, cityValue);
         selectCityView.setCanceledOnTouchOutside(true);
         selectCityView.show();
         selectCityView.setOnclickselectCity(new View.OnClickListener() {
@@ -239,9 +239,9 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private void initExtra(final boolean ismy) {
         /*动态字段 数据转换*/
         if (null != mCustomer.extDatas && !mCustomer.extDatas.isEmpty()) {
-            for(ExtraData extraData : mCustomer.extDatas){
-                for(CustomerExtraData customerExtraData : mCustomerExtraDatas){
-                    if(extraData.getProperties().getName().equals(customerExtraData.getName())){
+            for (ExtraData extraData : mCustomer.extDatas) {
+                for (CustomerExtraData customerExtraData : mCustomerExtraDatas) {
+                    if (extraData.getProperties().getName().equals(customerExtraData.getName())) {
                         extraData.getProperties().setEnabled(customerExtraData.isEnabled());
                         extraData.getProperties().setRequired(customerExtraData.isRequired());
                         extraData.getProperties().setLabel(customerExtraData.getLabel());
@@ -249,7 +249,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 }
             }
             container.setVisibility(View.VISIBLE);
-            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber,mCustomer.lock));
+            container.addView(new CustomerInfoExtraData(mContext, mCustomer.extDatas, ismy, R.color.title_bg1, 0, isRoot, isMenber, mCustomer.lock));
         }
     }
 
@@ -401,7 +401,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     private boolean testDynamicword() {
         for (ExtraData extDatas : mCustomer.extDatas) {
             if (extDatas.getProperties().isRequired() && extDatas.getProperties().isEnabled()) {
-                LogUtil.d("动态字段必填:"+extDatas.getProperties().isRequired());
+                LogUtil.d("动态字段必填:" + extDatas.getProperties().isRequired());
                 if (extDatas.getVal().isEmpty() || null == extDatas.getVal()) {
                     return false;
                 }
@@ -525,12 +525,12 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                         Intent intent = new Intent();
                         customer.loc = mLocate;
                         boolean isCreator;
-                        if(!owner.id.equals(MainApp.user.getId())){
+                        if (!owner.id.equals(MainApp.user.getId())) {
                             isCreator = false;
-                        }else{
+                        } else {
                             isCreator = true;
                         }
-                        intent.putExtra("isCreator",isCreator);
+                        intent.putExtra("isCreator", isCreator);
                         app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     }
 
@@ -547,6 +547,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra(Customer.class.getName(), mCustomer);
+        intent.putExtra("isCreator", true);//默认为true
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
@@ -583,20 +584,20 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (members != null) {
                     if (null != cusMembers.depts) {
                         for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.depts) {
-                            if(!MainApp.user.id.equals(newUser.getId())){
+                            if (!MainApp.user.id.equals(newUser.getId())) {
                                 mManagerNames.append(newUser.getName() + ",");
                                 mManagerIds.append(newUser.getId() + ",");
-                            }else{
+                            } else {
                                 Toast("你已经是负责人，不能选自己为参与人!");
                             }
                         }
                     }
                     if (null != cusMembers.users) {
                         for (com.loyo.oa.v2.beans.NewUser newUser : cusMembers.users) {
-                            if(!MainApp.user.id.equals(newUser.getId())){
+                            if (!MainApp.user.id.equals(newUser.getId())) {
                                 mManagerNames.append(newUser.getName() + ",");
                                 mManagerIds.append(newUser.getId() + ",");
-                            }else{
+                            } else {
                                 Toast("你已经是负责人，不能选自己为参与人!");
                             }
                         }
