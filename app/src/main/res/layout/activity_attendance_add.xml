@@ -18,46 +18,66 @@
             android:orientation="vertical">
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_other_view"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginBottom="@dimen/margin_other_view"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/dimen_20"
-                    android:layout_height="@dimen/dimen_20"
-                    android:layout_marginBottom="@dimen/margin_other_view"
-                    android:layout_marginRight="@dimen/dimen_5"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginTop="@dimen/margin_other_view"
-                    android:src="@drawable/icon_attendance_time"
-                    />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_20"
+                        android:layout_height="@dimen/dimen_20"
+                        android:layout_marginRight="@dimen/dimen_5"
+                        android:src="@drawable/icon_attendance_time"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="14:20"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_count_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:gravity="center"
+                        android:text="36000000000-00000"
+                        android:textColor="@color/text33"
+                        android:textSize="16sp"
+                        />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="14:20"
-                    android:textColor="@color/text33"
-                    android:textSize="16sp"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_count_time"
+                    android:id="@+id/tv_count_time2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_other_view"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:gravity="center"
                     android:text="36000000000-00000"
                     android:textColor="@color/text33"
                     android:textSize="16sp"
+                    android:visibility="gone"
                     />
-
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left"/>
+            <include
+                layout="@layout/include_solid_line_left"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
