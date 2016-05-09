@@ -550,7 +550,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 validateInfo = _validateInfo;
                 try {
-                    LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.d("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -611,13 +611,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
+        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 cancelLoading();
                 attendanceRecords = attendanceRecord;
-                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
+                try {
+                    LogUtil.d("check:" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 attendanceRecord.setAddress(address);
 
                 if (attendanceRecord.getState() == 3) {

@@ -447,6 +447,15 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("extraWorkStartTime", extraWorkStartTime);
         map.put("extraWorkEndTime", serverTime);
 
+        map.put("confirmExtraTime",mAttendanceRecord.getConfirmExtraTime());
+        map.put("confirmtime",mAttendanceRecord.getConfirmtime());
+        map.put("extraState",mAttendanceRecord.getExtraState());
+        map.put("extraTime",mAttendanceRecord.getExtraTime());
+        map.put("leaveDays",mAttendanceRecord.getLeaveDays());
+        map.put("remainTime",mAttendanceRecord.getRemainTime());
+        map.put("tagstate",mAttendanceRecord.getTagstate());
+
+
         if (isPopup) {
             if (outKind == 1) {
                 map.put("extraChooseState", 1);
@@ -457,7 +466,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         if (attachments.size() != 0) {
             map.put("attachementuuid", uuid);
         }
-        LogUtil.dll("提交考勤:" + MainApp.gson.toJson(map));
+        LogUtil.d("提交考勤:" + MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
