@@ -170,7 +170,6 @@ public class AttachmentActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        LogUtil.d("回调回来");
         if (resultCode != RESULT_OK) {
             return;
         }
