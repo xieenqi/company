@@ -445,13 +445,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.members.users != null || mWorkReport.members.depts != null) {
             if (mWorkReport.members.users != null) {
                 for (int i = 0; i < mWorkReport.members.users.size(); i++) {
-                    result.append(mWorkReport.members.users.get(i).getName() + ",");
+                    result.append(mWorkReport.members.users.get(i).getName() + " ");
                 }
             }
 
             if (mWorkReport.members.depts != null) {
                 for (int i = 0; i < mWorkReport.members.depts.size(); i++) {
-                    result.append(mWorkReport.members.depts.get(i).getName() + ",");
+                    result.append(mWorkReport.members.depts.get(i).getName() + " ");
                 }
             }
             return result.toString();
