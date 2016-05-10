@@ -76,7 +76,7 @@ public class Utils {
 
     /**
      * ScroView嵌套listView，手动计算ListView高度
-     * */
+     */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -357,16 +357,16 @@ public class Utils {
      * @param toLat
      * @param toLng
      */
-    public static void goWhere(final Context context, final double toLat, final double toLng) {
+    public static void goWhere(final Context context, final double toLat, final double toLng, final String addres) {
 
         new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 Uri uri;
                 if (hasMapApp(context)) {
-                    uri = Uri.parse("geo: " + latitude + "," + longitude);
+                    uri = Uri.parse("geo: " + toLat + "," + toLng + "?q=" + addres);
                 } else {
-                    uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(from)&to=" + toLat + "," + toLng + "(to)");
+                    uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(" + address + ")&to=" + toLat + "," + toLng + "(" + addres + ")");
                 }
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

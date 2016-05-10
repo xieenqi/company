@@ -210,7 +210,7 @@ public class NearByCustomersMapActivity extends BaseActivity implements Location
         navigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {//开始导航
-                Utils.goWhere(NearByCustomersMapActivity.this, point.customer.loc.loc[1], point.customer.loc.loc[0]);
+                Utils.goWhere(NearByCustomersMapActivity.this, point.customer.loc.loc[1], point.customer.loc.loc[0],point.customer.loc.addr);
             }
         });
         String title = marker.getTitle();

@@ -128,6 +128,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     boolean isRoot;
 
     private double lat, lng;
+    private String addres;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
     private Locate mLocate = new Locate();
     private User owner = new User();
@@ -298,6 +299,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
                 lat = mCustomer.loc.loc[1];
                 lng = mCustomer.loc.loc[0];
+                addres=mCustomer.loc.addr;
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -445,7 +447,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             /*路径规划*/
             case R.id.img_go_where:
-                Utils.goWhere(this, lat, lng);
+                Utils.goWhere(this, lat, lng,addres);
                 break;
             /*清除参与人*/
             case R.id.img_del_join_users:

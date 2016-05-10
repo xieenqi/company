@@ -180,7 +180,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     public void onResume() {
         super.onResume();
         //客户信息有跟新 刷新列表
-            getData();
+        getData();
     }
 
     @Override
@@ -292,7 +292,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         StringBuffer stringBuffer;
         String[] deptIds;
 
-        switch(dataRange){
+        switch (dataRange) {
 
             //全公司
             case 1:
@@ -321,12 +321,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 dropItemTag = new DropItem("本部门");
                 stringBuffer = new StringBuffer();
                 //得到我的部门id
-                for(UserInfo userInfo : MainApp.user.getDepts()){
-                    stringBuffer.append(userInfo.getShortDept().getId()+",");
+                for (UserInfo userInfo : MainApp.user.getDepts()) {
+                    stringBuffer.append(userInfo.getShortDept().getId() + ",");
                 }
                 deptIds = stringBuffer.toString().split(",");
 
-                for(int i = 0;i<deptIds.length;i++){
+                for (int i = 0; i < deptIds.length; i++) {
                     ArrayList<User> users = Common.getUsersByDeptId(deptIds[i], new ArrayList<User>());
                     //把每个部门 队列放进菜单
                     ArrayList<DropItem> dropItems = new ArrayList<>();
@@ -349,12 +349,12 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 dropItemTag = new DropItem("本人");
                 stringBuffer = new StringBuffer();
                 //得到我的部门id
-                for(UserInfo userInfo : MainApp.user.getDepts()){
-                    stringBuffer.append(userInfo.getShortDept().getId()+",");
+                for (UserInfo userInfo : MainApp.user.getDepts()) {
+                    stringBuffer.append(userInfo.getShortDept().getId() + ",");
                 }
                 deptIds = stringBuffer.toString().split(",");
 
-                for(int i = 0;i<deptIds.length;i++){
+                for (int i = 0; i < deptIds.length; i++) {
                     ArrayList<User> users = Common.getUsersByDeptId(deptIds[i], new ArrayList<User>());
                     //把每个部门 队列放进菜单
                     ArrayList<DropItem> dropItems = new ArrayList<>();
@@ -362,7 +362,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     //每个人员 队列放进菜单
                     if (!users.isEmpty()) {
                         for (int j = 0; j < users.size(); j++) {
-                            if(users.get(j).getId().equals(MainApp.user.getId())){
+                            if (users.get(j).getId().equals(MainApp.user.getId())) {
                                 DropItem dropItem = new DropItem(users.get(j).getRealname(), j, users.get(j).id);
                                 dropItems.add(dropItem);
                             }
@@ -381,7 +381,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
     /**
      * 【标签筛选 取消监听】
-     * */
+     */
     @Override
     public void onCancelAll(int ColumnIndex) {
         page = 1;
@@ -662,7 +662,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
-                        HttpErrorCheck.checkResponse("客户列表",response);
+                        HttpErrorCheck.checkResponse("客户列表", response);
                         if (null == customerPaginationX || PaginationX.isEmpty(customerPaginationX)) {
                             if (!isPullUp) {
                                 mPagination.setPageIndex(1);
@@ -686,8 +686,8 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                             getNearCustomersInfo();
                         }
 
-                        if(null != customerPaginationX){
-                            if(customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+                        if (null != customerPaginationX) {
+                            if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {
                                 countSize = customerPaginationX.getRecords().size();
                             }
                         }
@@ -754,10 +754,10 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 方法会不断执行，那不断发送广播，导致崩溃
      */
     public void broadMessage() {
-            broacdIntent = new Intent();
-            broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
-            broacdIntent.putExtra("count", countSize + "");
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broacdIntent);
+        broacdIntent = new Intent();
+        broacdIntent.setAction(FinalVariables.ACTION_DATA_CUSTOMER);
+        broacdIntent.putExtra("count", countSize + "");
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broacdIntent);
     }
 
     @Override
@@ -767,7 +767,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         /*详情中有"投入公海"和"公海挑入","删除"操作，返回该页面时，则刷新当前客户列表，没有则不刷新*/
         if (requestCode == BaseMainListFragment.REQUEST_REVIEW && resultCode == Activity.RESULT_OK) {
             getData();
-            if(customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE){
+            if (customer_type == Customer.CUSTOMER_TYPE_NEAR_MINE) {
                 broadMessage();
             }
         }
@@ -902,21 +902,21 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 img1.setImageResource(R.drawable.icon_customer_tag);
                 tv_content1.setText("标签：" + tagItems);
 
-                if(null != customer.distance){
+                if (null != customer.distance) {
                     String distance;
-                    if(customer.distance.contains("km")){
-                        tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km","")))+"km");
-                    }else if(customer.distance.contains("m")){
-                        double disa = Float.parseFloat(customer.distance.replace("m",""));
-                        if(disa <= 100){
+                    if (customer.distance.contains("km")) {
+                        tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
+                    } else if (customer.distance.contains("m")) {
+                        double disa = Float.parseFloat(customer.distance.replace("m", ""));
+                        if (disa <= 100) {
                             distance = "<0.1km";
-                        }else{
-                            double disb = Math.round((disa/1000)*10)/10;
-                            distance = disb+"km";
+                        } else {
+                            double disb = Math.round((disa / 1000) * 10) / 10;
+                            distance = disb + "km";
                         }
                         tv_content4.setText(distance);
                     }
-                }else{
+                } else {
                     tv_content4.setText("无距离数据");
                 }
 
@@ -954,20 +954,20 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                 tv_content1.setText("地址：" + customer.loc.addr);
                 //tv_content2.setText("购买产品：");
 
-                if(null != customer.distance){
+                if (null != customer.distance) {
                     String distance;
-                    if(customer.distance.contains("km")){
-                        tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km","")))+"km");
-                    }else if(customer.distance.contains("m")){
-                        double disa = Float.parseFloat(customer.distance.replace("m",""));
-                        if(disa <= 100){
+                    if (customer.distance.contains("km")) {
+                        tv_content4.setText(df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
+                    } else if (customer.distance.contains("m")) {
+                        double disa = Float.parseFloat(customer.distance.replace("m", ""));
+                        if (disa <= 100) {
                             distance = "<0.1km";
-                        }else{
-                            distance = df.format(disa/1000)+"km";
+                        } else {
+                            distance = df.format(disa / 1000) + "km";
                         }
                         tv_content4.setText(distance);
                     }
-                }else{
+                } else {
                     tv_content4.setText("无距离数据");
                 }
             }
@@ -998,7 +998,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             img_go_where.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.goWhere(mActivity, customer.loc.loc[1], customer.loc.loc[0]);
+                    Utils.goWhere(mActivity, customer.loc.loc[1], customer.loc.loc[0], customer.loc.addr);
                 }
             });
 
