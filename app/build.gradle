@@ -26,7 +26,7 @@ android {
         }
         SignConfig {
             storeFile file('D:\\android\\key\\loyo_share.keystore')
-            keyPassword 'Loyo2012'
+//            keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
 //            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
@@ -72,7 +72,7 @@ android {
     }
 
     //jenkins 构建文件输出
-   android.applicationVariants.all { variant ->
+    android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def today = new Date().format('yyyyMMdd-HH');
             def file = output.outputFile
@@ -82,10 +82,10 @@ android {
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.android.support:appcompat-v7:22.1.1'
-        compile 'com.android.support:recyclerview-v7:22.1.1'
-//        compile 'com.android.support:appcompat-v7:23.1.1'
-//        compile 'com.android.support:recyclerview-v7:23.1.1'
+//        compile 'com.android.support:appcompat-v7:22.1.1'
+//        compile 'com.android.support:recyclerview-v7:22.1.1'
+        compile 'com.android.support:appcompat-v7:23.1.1'
+        compile 'com.android.support:recyclerview-v7:23.1.1'
         compile 'com.google.code.gson:gson:2.3'
         compile 'com.squareup.retrofit:retrofit:1.9.0'
         compile files('libs/android-async-http-1.4.6.jar')

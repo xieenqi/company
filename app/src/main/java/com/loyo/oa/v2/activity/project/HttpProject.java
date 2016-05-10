@@ -70,7 +70,8 @@ public class HttpProject implements Serializable {
             }
 
             for (UserInfo userInfo : MainApp.user.getDepts()) {
-                if (null != member.dept && userInfo.getShortDept().getXpath().contains(member.dept.xpath)) {
+                if (null != member.dept && null != userInfo.getShortDept() && null != member.dept.xpath && null != userInfo.getShortDept().getXpath() &&
+                        userInfo.getShortDept().getXpath().contains(member.dept.xpath)) {
                     //部门id改成部门XPath
                     return true;
                 }

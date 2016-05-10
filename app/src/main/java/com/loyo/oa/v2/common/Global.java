@@ -254,7 +254,7 @@ public final class Global {
     public static Uri getOutputMediaFileUri() {
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "KuiQi");
+                "KuaiQi");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 LogUtil.d("WENJAIN文件路劲创建失败！");
