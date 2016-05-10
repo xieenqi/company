@@ -9,6 +9,13 @@ import java.io.Serializable;
  * 时间 : 15/10/8.
  */
 public class CommonTag implements Serializable {
+
+    private String id;
+    private String companyId;
+    private String name;
+    private boolean isDefault;
+    private int order;
+
     public String getId() {
         return id;
     }
@@ -48,12 +55,6 @@ public class CommonTag implements Serializable {
     public void setOrder(int order) {
         this.order = order;
     }
-
-    private String id;
-    private String companyId;
-    private String name;
-    private boolean isDefault;
-    private int order;
 
     public boolean isChecked() {
         return isChecked;

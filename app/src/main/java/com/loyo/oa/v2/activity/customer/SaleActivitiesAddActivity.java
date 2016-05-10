@@ -106,9 +106,9 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onCancel() {
-
+                tv_remain_time.setText("不提醒");
             }
-        },false);
+        },false,"不提醒");
     }
 
     @Override
@@ -141,15 +141,19 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                     return;
                 }
 
+
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("customerId", mCustomer.getId());
                 map.put("content", content);
                 map.put("typeId", tagItemIds);
-                map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
+                if(!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")){
+                    map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
+                }
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
                     @Override
                     public void success(final SaleActivity saleActivity, final Response response) {
-                        onBackOk(saleActivity);
+                        HttpErrorCheck.checkResponse("新建跟进动态",response);
+                        app.finishActivity(SaleActivitiesAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
 
                     @Override
@@ -160,25 +164,11 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 });
 
                 break;
-            default:
 
+            default:
                 break;
         }
-
     }
-
-    /**
-     * 返回创建的数据
-     *
-     * @param activity
-     */
-    public void onBackOk(final SaleActivity activity) {
-        isSave = false;
-        Intent intent = new Intent();
-        intent.putExtra("data", activity);
-        app.finishActivity(SaleActivitiesAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-    }
-
 
     boolean isSave = true;
     SaleActivity mSaleActivity;

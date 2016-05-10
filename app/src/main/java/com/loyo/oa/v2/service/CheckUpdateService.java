@@ -6,12 +6,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import com.loyo.oa.v2.Manifest;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -78,17 +82,21 @@ public class CheckUpdateService extends Service {
     }
 
     void downloadApp() {
+
         if (enqueue == 0) {
             Global.Toast("正在更新最新版..");
-            LogUtil.dll("版本更新地址:"+mUpdateInfo.apkUrl);
+            LogUtil.d("版本更新地址:" + mUpdateInfo.apkUrl);
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
                     .setDescription("下载" + mUpdateInfo.versionName)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mUpdateInfo.apkName())
                     .setVisibleInDownloadsUi(true);
+
+            enqueue = downloadManager.enqueue(request);
+
             try {
-                enqueue = downloadManager.enqueue(request);
             } catch (Exception ex) {
+                LogUtil.d("下载异常抛出");
                 Global.ProcException(ex);
             }
         }
@@ -99,7 +107,6 @@ public class CheckUpdateService extends Service {
         if (completeReceiver != null) {
             unregisterReceiver(completeReceiver);
         }
-
         super.onDestroy();
     }
 

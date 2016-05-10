@@ -3,14 +3,12 @@ package com.loyo.oa.v2.tool;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.API_error;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
-
 import org.apache.http.Header;
 
 /**
