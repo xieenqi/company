@@ -6,16 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
-
-import com.loyo.oa.v2.Manifest;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -25,10 +20,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
-
 import java.io.File;
 import java.io.Serializable;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -42,10 +35,8 @@ public class CheckUpdateService extends Service {
 
     boolean isChecking = false, isToast = false;
     CompleteReceiver completeReceiver;
-
     DownloadManager downloadManager;
     long enqueue = 0;
-
     UpdateInfo mUpdateInfo;
 
     @Override

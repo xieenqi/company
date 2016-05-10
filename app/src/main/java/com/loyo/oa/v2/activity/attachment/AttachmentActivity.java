@@ -170,6 +170,7 @@ public class AttachmentActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        LogUtil.d("回调回来");
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -208,8 +209,8 @@ public class AttachmentActivity extends BaseActivity {
                     Global.ProcException(ex);
                 }
                 break;
+
             default:
-                LogUtil.d("其他");
                 break;
 
         }
@@ -223,16 +224,14 @@ public class AttachmentActivity extends BaseActivity {
                 .subscribe(new CommonSubscriber(this) {
                     @Override
                     public void onNext(Serializable attachment) {
-
-                        LogUtil.dee("上传附件成功:" + attachment.toString());
+                        LogUtil.d("上传附件成功:" + attachment.toString());
                         getAttachments();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
-                        LogUtil.dee("上传附件失败:" + e.getMessage());
-                        LogUtil.dee("上传附件失败:" + e.toString());
+                        LogUtil.d("上传附件失败:" + e.getMessage());
+                        LogUtil.d("上传附件失败:" + e.toString());
                         e.getMessage();
                         super.onError(e);
                     }
