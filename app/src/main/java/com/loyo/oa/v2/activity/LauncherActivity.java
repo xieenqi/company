@@ -119,7 +119,6 @@ public class LauncherActivity extends BaseActivity {
     public void intentActivity() {
         isWelcom = SharedUtil.getBoolean(LauncherActivity.this, ExtraAndResult.WELCOM_KEY);
         Intent intent = new Intent();
-        Toast("welcom---->" + isWelcom);
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
         } else {

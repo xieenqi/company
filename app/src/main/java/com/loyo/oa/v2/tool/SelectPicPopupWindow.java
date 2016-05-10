@@ -194,4 +194,23 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 break;
         }
     }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        switch ( requestCode ) {
+//            case REQUEST_CODE_SOME_FEATURES_PERMISSIONS: {
+//                for( int i = 0; i < permissions.length; i++ ) {
+//                    if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
+//                        LogUtil.d( "Permissions", "Permission Granted: " + permissions[i] );
+//                    } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
+//                        LogUtil.d( "Permissions", "Permission Denied: " + permissions[i] );
+//                    }
+//                }
+//            }
+//            break;
+//            default: {
+//                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//            }
+//        }
+//    }
+
 }
