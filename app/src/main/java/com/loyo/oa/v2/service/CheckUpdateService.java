@@ -92,9 +92,8 @@ public class CheckUpdateService extends Service {
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mUpdateInfo.apkName())
                     .setVisibleInDownloadsUi(true);
 
-            enqueue = downloadManager.enqueue(request);
-
             try {
+                enqueue = downloadManager.enqueue(request);
             } catch (Exception ex) {
                 LogUtil.d("下载异常抛出");
                 Global.ProcException(ex);
