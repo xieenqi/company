@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
-//def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 22
     buildToolsVersion '23.0.1'
     packagingOptions {
         exclude 'assets/lineDashTexture.png'
