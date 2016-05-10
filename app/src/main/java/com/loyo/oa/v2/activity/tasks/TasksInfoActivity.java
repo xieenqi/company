@@ -876,7 +876,7 @@ public class TasksInfoActivity extends BaseActivity {
     }*/
 
     void showAttachment() {
-        if (ListUtil.IsEmpty(mTask.getAttachments())) {
+        if (null == mTask.getAttachments() || mTask.getAttachments().size() == 0) {
             return;
         }
         tv_attachment_count.setText("(" + (mTask.getAttachments() == null ? 0 : mTask.getAttachments().size()) + ")");

@@ -106,7 +106,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(final PaginationX<Bulletin> pagination, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse(response);HttpErrorCheck.checkResponse(response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
                     mPagination = pagination;
