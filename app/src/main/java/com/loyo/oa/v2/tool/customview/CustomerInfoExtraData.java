@@ -274,7 +274,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                     public void onCancel() {
 
                     }
-                },true);
+                },true,"取消");
             }
         }
     }

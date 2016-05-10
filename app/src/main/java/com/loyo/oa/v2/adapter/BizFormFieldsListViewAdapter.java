@@ -245,7 +245,7 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
                     public void onCancel() {
 
                     }
-                },false);
+                },false,"取消");
 
 //                DatePickerDialog datePickerDialog = new DatePickerDialog(
 //                        textView.getContext(), dateListener,

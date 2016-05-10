@@ -7,12 +7,14 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loyo.oa.v2.Manifest;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
@@ -81,6 +83,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     void initUI() {
+
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_profile = (ViewGroup) findViewById(R.id.layout_profile);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);

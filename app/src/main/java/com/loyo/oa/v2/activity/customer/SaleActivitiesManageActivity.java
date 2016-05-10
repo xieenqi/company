@@ -18,6 +18,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
@@ -134,19 +135,12 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             return;
         }
         switch (requestCode) {
+            /*新建跟进动态回调*/
             case ACTIVITIES_ADD:
-                isChanged = true;
-                SaleActivity activity = (SaleActivity) data.getSerializableExtra("data");
-                if (activity != null) {
-                    mSaleActivity = activity;
-                    if (lstData_saleActivity_current != null) {
-                        lstData_saleActivity_current.add(0, activity);
-                    }
-                    bindData();
-                }
+                getData();
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -228,10 +222,8 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
             tv_content.setText(saleActivity.getContent());
             tv_creator_name.setText(saleActivity.getCreator().getName());
+            tv_previous.setText(saleActivity.getType().getName());
 
-            if (saleActivity.getType() != null) {
-                tv_previous.setText(saleActivity.getType().getName());
-            }
             tv_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
@@ -239,7 +231,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 convertView.setBackgroundColor(getResources().getColor(R.color.white));
             }
             return convertView;
-
         }
     }
 }

@@ -463,7 +463,7 @@ public class TasksAddActivity extends BaseActivity {
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
 
-        }, false);
+        }, false,"不截止");
     }
 
     /**

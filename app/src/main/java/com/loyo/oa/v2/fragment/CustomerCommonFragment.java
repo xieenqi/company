@@ -703,7 +703,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 }
         );
-        tagItemIds = "";
+        //tagItemIds = "";
     }
 
 
