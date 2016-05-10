@@ -222,7 +222,12 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 
             tv_content.setText(saleActivity.getContent());
             tv_creator_name.setText(saleActivity.getCreator().getName());
-            tv_previous.setText(saleActivity.getType().getName());
+            try{
+                tv_previous.setText(saleActivity.getType().getName());
+            }catch (NullPointerException e){
+                tv_previous.setText("无");
+                e.printStackTrace();
+            }
 
             tv_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
             if (i == lstData_saleActivity_current.size() - 1) {

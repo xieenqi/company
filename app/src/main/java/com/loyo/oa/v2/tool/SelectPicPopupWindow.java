@@ -115,6 +115,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode != RESULT_OK) {
+            LogUtil.d("finish()");
             finish();
             return;
         }
