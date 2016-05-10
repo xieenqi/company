@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,7 +131,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 i.putExtra("data", pickArray);
                 setResult(RESULT_OK, i);
             }
-        } else if(requestCode == 2){
+        } else if (requestCode == 2) {
             //选择文件
             if (data.getData() != null) {
                 pickArray.add(new ImageInfo(data.getData().toString()));
@@ -144,9 +143,10 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         //选择完或者拍完照后会在这里处理，然后我们继续使用setResult返回Intent以便可以传递数据和调用
     }
 
-    private void takePhotoIntent(){
+    private void takePhotoIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = Global.getOutputMediaFileUri();
+        LogUtil.d("相机路径：" + fileUri);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         startActivityForResult(intent, 1);
     }

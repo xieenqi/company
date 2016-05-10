@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -255,10 +254,10 @@ public final class Global {
     public static Uri getOutputMediaFileUri() {
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "LeShare");
+                "KuiQi");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("LeShare", "failed to create directory");
+                LogUtil.d("WENJAIN文件路劲创建失败！");
                 return null;
             }
         }
@@ -282,7 +281,7 @@ public final class Global {
         final long fileMaxSize = 100 * 1024;
 
         if (fileSize >= fileMaxSize) {
-            LogUtil.dll("文件大小超限");
+            LogUtil.d("文件大小超限");
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(path, options);
@@ -313,7 +312,7 @@ public final class Global {
             }
 
         } else {
-            LogUtil.dll("文件大小未超限");
+            LogUtil.d("文件大小未超限");
             File tempFile = outputFile;
             outputFile = getTempFile(context);
             copyFileUsingFileChannels(tempFile, outputFile);
