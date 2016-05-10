@@ -378,7 +378,7 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
             android:name=".tool.SelectPicPopupWindow"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:theme="@style/dialog_get_img_StyleBottom"/>
         <activity
             android:name=".activity.SelectEditDeleteActivity"
