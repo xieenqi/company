@@ -65,9 +65,14 @@ public class DialogHelp {
     }
 
     public static void cancelLoading() {
-        if (null != loadingDialog && loadingDialog.isShowing()) {
-            loadingDialog.cancel();
-            loadingDialog = null;
+        try {
+            if (null != loadingDialog && loadingDialog.isShowing()) {
+                loadingDialog.cancel();
+                loadingDialog = null;
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            LogUtil.d("加载loding 参数异常！！！");
         }
     }
 
