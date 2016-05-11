@@ -798,9 +798,9 @@ public class WorkReportAddActivity extends BaseActivity {
     /**
      * wheelDialog弹出选择框
      * */
-    public void showSingleRowAlert(String[] arrlist){
+    public void showSingleRowAlert(String[] arrlist,String title){
         new AlertDialog.Builder(this)
-                .setTitle("日报补签")
+                .setTitle(title)
                 .setView(singleRowSelect(arrlist))
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
@@ -825,17 +825,17 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*日报补签*/
             case WorkReport.DAY:
-                showSingleRowAlert(pastSevenDay);
+                showSingleRowAlert(pastSevenDay,"日报补签");
                 break;
 
             /*周报补签*/
             case WorkReport.WEEK:
-                weeksDialog.showChoiceDialog("选择周报").show();
+                weeksDialog.showChoiceDialog("周报补签").show();
                 break;
 
             /*月报补签*/
             case WorkReport.MONTH:
-                showSingleRowAlert(pastThreeMonth);
+                showSingleRowAlert(pastThreeMonth,"月报补签");
                 break;
 
             default:
