@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -409,12 +410,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         new Handler().post(new Runnable() {
                             @Override
                             public void run() {
                                 testJurl();
                             }
                         });
+                        Looper.loop();
                     }
                 }, 5000);
                 return;
@@ -474,14 +477,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
+//                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
             }
         });
         JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
+//                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
@@ -1234,4 +1237,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
         });
     }
+
+    
 }

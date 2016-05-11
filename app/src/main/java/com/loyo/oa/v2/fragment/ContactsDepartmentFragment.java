@@ -403,8 +403,10 @@ public class ContactsDepartmentFragment extends BaseFragment {
         /**
          * 设置我的部门排在首位，整个部门中移除自己部门
          * */
-        myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
-        myDeptName = MainApp.user.depts.get(0).getShortDept().getName();
+        if (MainApp.user.depts.size() > 0) {
+            myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
+            myDeptName = MainApp.user.depts.get(0).getShortDept().getName();
+        }
 
         int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
         String members = "(" + userSize + "人)";
