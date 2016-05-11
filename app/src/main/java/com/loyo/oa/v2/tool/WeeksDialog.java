@@ -10,27 +10,27 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.application.MainApp;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class WeeksDialog {
+
     /**
      * 显示操作结果的result
      */
-    TextView resultTview;
+    private TextView resultTview;
+    private int singleIndex = 0;
 
-    int singleIndex = 0;
-
-    SparseArray<HashMap<String, Long>> sourseList = new SparseArray();
-
-    HashMap<String, Long> returnHashMap = new HashMap<String, Long>();
-
-    Context mContext;
-    String sourseArray[];
-
-    Date curDate = new Date();
+    private SparseArray<HashMap<String, Long>> sourseList = new SparseArray();
+    private HashMap<String, Long> returnHashMap = new HashMap<String, Long>();
+    private Context mContext;
+    private String sourseArray[];
+    private Date curDate = new Date();
 
     public TextView getResultTview() {
         return resultTview;
@@ -55,7 +55,7 @@ public class WeeksDialog {
 
         long monday, sunday;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             monday = cal.getTime().getTime();
             cal.add(Calendar.DATE, 6);
@@ -84,8 +84,9 @@ public class WeeksDialog {
                 long begin = item.get("begin");
                 long end = item.get("end");
 
-                if (i == 0) {
-                    exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
+                /*周报补签，取消本周显示*/
+                if (i != 0) {
+                    //exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
                 } else {
                     exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)));
                 }
