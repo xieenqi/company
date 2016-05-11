@@ -19,10 +19,6 @@ import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
@@ -131,13 +127,13 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 }
             });
 
-            if(!MainApp.user.isSuperUser()){
-                try{
-                    permission = (Permission)MainApp.rootMap.get("0401");
-                    if(!permission.isEnable() && MainApp.permissionPage == 1){
+            if (null != MainApp.user && !MainApp.user.isSuperUser()) {
+                try {
+                    permission = (Permission) MainApp.rootMap.get("0401");
+                    if (!permission.isEnable() && MainApp.permissionPage == 1) {
                         btn_add.setVisibility(View.INVISIBLE);
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                     Toast("创建项目权限,code错误");
                 }

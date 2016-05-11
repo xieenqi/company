@@ -406,16 +406,21 @@ public class ContactsDepartmentFragment extends BaseFragment {
         if (MainApp.user.depts.size() > 0) {
             myDeptId = MainApp.user.depts.get(0).getShortDept().getId();
             myDeptName = MainApp.user.depts.get(0).getShortDept().getName();
+        } else {
+            myDeptName = MainApp.user.role.name;
+            myDeptId = MainApp.user.role.id;
         }
 
         int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
         String members = "(" + userSize + "人)";
-        myDeptName = myDeptName.concat(members);
-        nameTv.setText(myDeptName);
+        if (null != myDeptName) {
+            myDeptName = myDeptName.concat(members);
+            nameTv.setText(myDeptName);
+        }
 
         for (ContactsGroup contactsGroup : lstUserGroupData) {
             for (Department department : contactsGroup.getDepartments()) {
-                if (myDeptId.equals(department.getId())) {
+                if (null != myDeptId && myDeptId.equals(department.getId())) {
                     contactsGroup.getDepartments().remove(department);
                     break;
                 }
