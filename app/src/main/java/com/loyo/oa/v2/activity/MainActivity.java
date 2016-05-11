@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -1061,6 +1062,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             initData();
             mInitData = true;
         }
+        permissionLocation();
     }
 
 
@@ -1219,23 +1221,34 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 获取首页红点数据
      */
     void requestNumber() {
-        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
-            @Override
-            public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                HttpErrorCheck.checkResponse("首页红点", response);
-                mItemNumbers = homeNumbers;
-                adapter.notifyDataSetChanged();
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
+                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
+                    @Override
+                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
+                        HttpErrorCheck.checkResponse("首页红点", response);
+                        mItemNumbers = homeNumbers;
+                        adapter.notifyDataSetChanged();
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
+                });
     }
 
-    
+    /**
+     * 检查定位权限是否打开
+     */
+    private void permissionLocation() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+//            Toast(" 用户授权 ");
+        } else {
+//            Toast(" 用户my 授权 ");
+        }
+    }
 }
