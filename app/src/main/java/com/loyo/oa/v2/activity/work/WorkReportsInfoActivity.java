@@ -250,7 +250,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
-                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df4.format(new Date(mWorkReport.endAt * 1000));
+                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";

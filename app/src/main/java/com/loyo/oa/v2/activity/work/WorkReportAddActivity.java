@@ -1,13 +1,16 @@
 package com.loyo.oa.v2.activity.work;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -53,6 +56,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
+import com.loyo.oa.v2.tool.customview.SingleRowWheelView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -64,6 +68,7 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -128,6 +133,8 @@ public class WorkReportAddActivity extends BaseActivity {
     private RadioButton rb3;
     private long beginAt, endAt;
     private int mSelectType = WorkReport.DAY;
+    private String currentValue;
+
     private WeeksDialog weeksDialog = null;
     private SignInGridViewAdapter signInGridViewAdapter;
     private workReportAddgridViewAdapter workGridViewAdapter;
@@ -142,6 +149,8 @@ public class WorkReportAddActivity extends BaseActivity {
     private StringBuffer joinName;
     private PostBizExtData bizExtData;
     private StringBuffer joinUser;
+    private String[] pastSevenDay = new String[7];
+    private String[] pastThreeMonth = new String[3];
 
     private Handler mHandler = new Handler() {
         public void handleMessage(final Message msg) {
@@ -158,8 +167,6 @@ public class WorkReportAddActivity extends BaseActivity {
             }
         }
     };
-//    private SelectResultData resultData;
-//    private SelectUserResult userData;
 
     @SuppressLint("WrongViewCast")
     @AfterViews
@@ -256,7 +263,7 @@ public class WorkReportAddActivity extends BaseActivity {
         } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
         }
-
+        initRetroDate();
         getDefaultComment();
     }
 
@@ -388,6 +395,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        currentValue = pastSevenDay[0];
         openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
         tv_crm.setText("本日工作动态统计");
         beginAt = DateTool.getBeginAt_ofDay();
@@ -421,6 +429,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        currentValue = pastThreeMonth[0];
         openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
         beginAt = DateTool.getEndAt_ofMonth();//DateTool.getBeginAt_ofMonth()
@@ -498,8 +507,8 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-            case R.id.tv_resignin:
             /*选择日期*/
+            case R.id.tv_resignin:
                 selectDate();
                 break;
 
@@ -635,42 +644,6 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
                 break;
 
-//            /*点评人 抄送人回调*/
-//            case ExtraAndResult.REQUEST_CODE:
-//                /*点评人*/
-//                User user = (User) data.getSerializableExtra(User.class.getName());
-//                if (user != null) {
-////                    mReviewer = new Reviewer(user.toShortUser());
-////                    mReviewer.setUser(user.toShortUser());
-////                    tv_reviewer.setText(user.getRealname());
-//                } else {  /*抄送人*/
-////                    members = (Members) data.getSerializableExtra(ExtraAndResult.CC_USER_ID);
-////                    if (null == members) {
-////                        tv_toUser.setText("无参与人");
-////                    } else {
-////                        joinName = new StringBuffer();
-////                        joinUserId = new StringBuffer();
-////                        if (null != members.depts) {
-////                            for (NewUser newUser : members.depts) {
-////                                joinName.append(newUser.getName() + ",");
-////                                joinUserId.append(newUser.getId() + ",");
-////                            }
-////                        }
-////                        if (null != members.users) {
-////                            for (NewUser newUser : members.users) {
-////                                joinName.append(newUser.getName() + ",");
-////                                joinUserId.append(newUser.getId() + ",");
-////                            }
-////                        }
-////                        if (!TextUtils.isEmpty(joinName)) {
-////                            joinName.deleteCharAt(joinName.length() - 1);
-////                        }
-////                        tv_toUser.setText(joinName.toString());
-////                    }
-//                }
-//
-//                break;
-
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
@@ -760,53 +733,109 @@ public class WorkReportAddActivity extends BaseActivity {
         }
     }
 
+   /**
+    * 补签显示数据初始化
+    * */
+    public void initRetroDate(){
 
+        /*过去7天*/
+        for(int i = 0;i<7;i++){
+            Calendar cl = Calendar.getInstance();
+            cl.add(Calendar.DAY_OF_MONTH, -(i + 1));
+            String time = app.df4.format(cl.getTime());
+            pastSevenDay[i] = time;
+        }
+
+        currentValue = pastSevenDay[0];
+
+        /*过去3月*/
+        Calendar cl;
+        String month;
+        for(int i = 0;i<3;i++){
+            switch (i){
+                case 0:
+                    cl = Calendar.getInstance();
+                    cl.add(Calendar.DAY_OF_MONTH, - 30);
+                    month = app.df15.format(cl.getTime());
+                    pastThreeMonth[i] = month;
+                    break;
+
+                case 1:
+                    cl = Calendar.getInstance();
+                    cl.add(Calendar.DAY_OF_MONTH, - 60);
+                    month = app.df15.format(cl.getTime());
+                    pastThreeMonth[i] = month;
+                    break;
+
+                case 2:
+                    cl = Calendar.getInstance();
+                    cl.add(Calendar.DAY_OF_MONTH, - 90);
+                    month = app.df15.format(cl.getTime());
+                    pastThreeMonth[i] = month;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * wheel单列组件初始化
+     * */
+    public View singleRowSelect(String[] arrlst){
+        View outerView = LayoutInflater.from(this).inflate(R.layout.wheel_view, null);
+        SingleRowWheelView wv = (SingleRowWheelView) outerView.findViewById(R.id.wheel_view_wv);
+        wv.setOffset(2);
+        wv.setItems(Arrays.asList(arrlst));
+        //wv.setSeletion(3);
+        wv.setOnWheelViewListener(new SingleRowWheelView.OnWheelViewListener() {
+            @Override
+            public void onSelected(int selectedIndex, String item) {
+                currentValue = item;
+            }
+        });
+        return outerView;
+    }
+
+    /**
+     * wheelDialog弹出选择框
+     * */
+    public void showSingleRowAlert(String[] arrlist,String title){
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setView(singleRowSelect(arrlist))
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tv_time.setText(currentValue+"(补签)");
+                    }
+                })
+                .setNegativeButton("不补签", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tv_time.setText("不补签(补签)");
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 补签日期选择
+     * */
     void selectDate() {
-        DateTool.calendar = Calendar.getInstance();
-
         switch (mSelectType) {
+
+            /*日报补签*/
             case WorkReport.DAY:
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                        String str = year + "." + String.format("%02d", (monthOfYear + 1)) + "." + String.format("%02d", dayOfMonth);
-                        beginAt = DateTool.getDateToTimestamp(str, app.df4);
-                        endAt = DateTool.getDateToTimestamp(str, app.df4) + DateTool.DAY_MILLIS - 100;
-                        if (beginAt < DateTool.getBeginAt_ofDay()) {
-                            str += "(补签)";
-                        }
-                        tv_time.setText(str);
-                    }
-                }, DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
+                showSingleRowAlert(pastSevenDay,"日报补签");
                 break;
-            case WorkReport.MONTH:
-                DatePickerDialog datePickerDialogMonth = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                        String str = year + "." + String.format("%02d", (monthOfYear + 1));
-                        beginAt = DateTool.getDateToTimestamp(str.concat(".01 00:00"), app.df3);
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear + 2, 1);
-                        calendar.set(Calendar.DAY_OF_MONTH, -1);
-                        endAt = DateTool.getDateToTimestamp(str.concat(".").concat(String.valueOf(calendar.get(Calendar.DATE))).concat(" 23:59"), app.df3);
 
-                        if (beginAt < DateTool.getBeginAt_ofMonthMills()) {
-                            str += "(补签)";
-                        }
-
-                        tv_time.setText(str);
-                    }
-                },
-                        DateTool.calendar.get(Calendar.YEAR), DateTool.calendar.get(Calendar.MONTH), DateTool.calendar.get(Calendar.DAY_OF_MONTH));
-
-                ((LinearLayout) ((ViewGroup) datePickerDialogMonth.getDatePicker().getChildAt(0)).getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
-
-                datePickerDialogMonth.setTitle("选择月份");
-                datePickerDialogMonth.show();
-                break;
+            /*周报补签*/
             case WorkReport.WEEK:
-                weeksDialog.showChoiceDialog("选择周报").show();
+                weeksDialog.showChoiceDialog("周报补签").show();
+                break;
+
+            /*月报补签*/
+            case WorkReport.MONTH:
+                showSingleRowAlert(pastThreeMonth,"月报补签");
                 break;
 
             default:

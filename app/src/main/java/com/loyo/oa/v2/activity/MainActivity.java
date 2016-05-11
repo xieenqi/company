@@ -881,6 +881,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Click(R.id.img_fast_add)
     void onClickAdd() {
+
         popupMenu.showAt(findViewById(R.id.img_fast_add));
         img_fast_add.setImageResource(R.drawable.icon_home_menu_close);
     }
