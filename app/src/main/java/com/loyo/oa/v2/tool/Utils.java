@@ -1084,6 +1084,10 @@ public class Utils {
         return (bitmap);
     }
 
+    /**
+     * 到APP的设置页面去配置权限
+     * @param context
+     */
     public static void doSeting(Context context) {
         Uri packageURI = Uri.parse("package:" + "com.loyo.oa.v2");
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);

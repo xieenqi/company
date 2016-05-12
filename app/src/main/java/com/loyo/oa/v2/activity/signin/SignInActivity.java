@@ -230,7 +230,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else {
                     Toast("提交失败" + response.getStatus());
-                    legWork.creator = MainApp.user.toShortUser();
+//                    legWork.creator = MainApp.user.toShortUser();
                 }
             }
 
