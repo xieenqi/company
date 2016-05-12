@@ -70,6 +70,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -132,7 +133,9 @@ public class WorkReportAddActivity extends BaseActivity {
     private RadioButton rb2;
     private RadioButton rb3;
     private long beginAt, endAt;
+    private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
+    private int retroIndex;
     private String currentValue;
 
     private WeeksDialog weeksDialog = null;
@@ -395,6 +398,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        isDelayed = false;
         currentValue = pastSevenDay[0];
         openDynamic(DateTool.getCurrentMoringMillis() / 1000 + "", DateTool.getNextMoringMillis() / 1000 + "");
         tv_crm.setText("本日工作动态统计");
@@ -412,13 +416,15 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        isDelayed = false;
         openDynamic(DateTool.getBeginAt_ofWeek() / 1000 + "", DateTool.getEndAt_ofWeek() / 1000 + "");
         tv_crm.setText("本周工作动态统计");
-        beginAt = DateTool.getBeginAt_ofWeek();
-        endAt = DateTool.getEndAt_ofWeek();
+/*      beginAt = DateTool.getBeginAt_ofWeek();
+        endAt = DateTool.getEndAt_ofWeek();*/
+        beginAt = weeksDialog.getNowBeginandEndAt()[0];
+        endAt = weeksDialog.getNowBeginandEndAt()[1];
         tv_time.setText(weeksDialog.GetDefautlText());
         mSelectType = WorkReport.WEEK;
-
     }
 
     /**
@@ -429,6 +435,7 @@ public class WorkReportAddActivity extends BaseActivity {
         if (!b) {
             return;
         }
+        isDelayed = false;
         currentValue = pastThreeMonth[0];
         openDynamic(DateTool.getBeginAt_ofMonthMills() / 1000 + "", DateTool.getEndAt_ofMonth() / 1000 + "");
         tv_crm.setText("本月工作动态统计");
@@ -479,6 +486,11 @@ public class WorkReportAddActivity extends BaseActivity {
 
                 bizExtData = new PostBizExtData();
                 bizExtData.setAttachmentCount(lstData_Attachment.size());
+                isDelayed = tv_time.getText().toString().contains("补签") ? true : false;
+                if(mSelectType == 2 && isDelayed){
+                    beginAt = weeksDialog.GetBeginandEndAt()[0];
+                    endAt = weeksDialog.GetBeginandEndAt()[1];
+                }
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("content", content);
                 map.put("type", mSelectType);
@@ -496,9 +508,10 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 if (type != TYPE_EDIT) {
-                    map.put("isDelayed", tv_time.getText().toString().contains("补签") ? true : false);
+                    map.put("isDelayed",isDelayed);
                 }
                 LogUtil.d(" 报告参数   " + app.gson.toJson(map));
+
                 /*报告新建／编辑*/
                 if (type == TYPE_EDIT) {
                     updateReport(map);
@@ -783,13 +796,14 @@ public class WorkReportAddActivity extends BaseActivity {
     public View singleRowSelect(String[] arrlst){
         View outerView = LayoutInflater.from(this).inflate(R.layout.wheel_view, null);
         SingleRowWheelView wv = (SingleRowWheelView) outerView.findViewById(R.id.wheel_view_wv);
-        wv.setOffset(2);
+        wv.setOffset(2);//为了界面好看，故意将index多加2条，因此取item下标时，要-2
         wv.setItems(Arrays.asList(arrlst));
         //wv.setSeletion(3);
         wv.setOnWheelViewListener(new SingleRowWheelView.OnWheelViewListener() {
             @Override
             public void onSelected(int selectedIndex, String item) {
                 currentValue = item;
+                retroIndex = selectedIndex - 2;
             }
         });
         return outerView;
@@ -805,13 +819,27 @@ public class WorkReportAddActivity extends BaseActivity {
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        tv_time.setText(currentValue+"(补签)");
+                        switch (mSelectType){
+                            case 1:
+                                currentValue = pastSevenDay[retroIndex];
+                                beginAt = DateTool.getSomeDayBeginAt(retroIndex);
+                                endAt = DateTool.getSomeDayEndAt(retroIndex);
+                                break;
+
+                            case 3:
+                                currentValue = pastThreeMonth[retroIndex];
+                                beginAt = DateTool.getSomeMonthBeginAt(retroIndex);
+                                endAt = DateTool.getSomeMonthEndAt(retroIndex);
+                                break;
+                        }
+                        tv_time.setText(currentValue + "(补签)");
+                        retroIndex = 0;
                     }
                 })
-                .setNegativeButton("不补签", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        tv_time.setText("不补签(补签)");
+
                     }
                 })
                 .show();
@@ -825,7 +853,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*日报补签*/
             case WorkReport.DAY:
-                showSingleRowAlert(pastSevenDay,"日报补签");
+                showSingleRowAlert(pastSevenDay, "日报补签");
                 break;
 
             /*周报补签*/

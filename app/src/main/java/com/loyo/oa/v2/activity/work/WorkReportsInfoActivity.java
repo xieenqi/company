@@ -367,8 +367,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (("1").equals(mWorkReport.reviewer.getStatus())) {
             isOver = true;
         }
-        LogUtil.dll("status:" + mWorkReport.reviewer.getStatus());
-        LogUtil.dll("isOver:" + isOver);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.attachments);
         bundle.putSerializable("uuid", mWorkReport.attachmentUUId);
