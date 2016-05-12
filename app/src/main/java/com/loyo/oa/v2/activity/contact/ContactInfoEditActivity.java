@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -64,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -158,7 +161,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 tvtime.setText(des);
             }
 
-            if(msg.what == 0x01){
+            if (msg.what == 0x01) {
                 Utils.setContent(tv_birthday, birthStr);
                 Utils.setContent(tv_age, age + "");
             }
@@ -193,19 +196,45 @@ public class ContactInfoEditActivity extends BaseActivity {
             /*设置头像*/
             case R.id.layout_set_avartar:
                 LogUtil.dee("点击设置头像");
-                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                // 是否显示拍摄图片
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                // 最大可选择图片数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
-                // 选择模式
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, true);
-                // 默认选择
-                //                if (mSelectPath != null && mSelectPath.size() > 0) {
-                //                    intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
-                //                }
-                startActivityForResult(intent, REQUEST_IMAGE);
+                if (PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
+                        && PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
+                    Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                    // 是否显示拍摄图片
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                    // 最大可选择图片数量
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
+                    // 选择模式
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
+                    intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, true);
+                    // 默认选择
+                    //                if (mSelectPath != null && mSelectPath.size() > 0) {
+                    //                    intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
+                    //                }
+                    startActivityForResult(intent, REQUEST_IMAGE);
+                } else {
+                    showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+//                            ActivityCompat.requestPermissions(ContactInfoEditActivity.this,
+//                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                    RESULT_OK);
+//                            ActivityCompat.requestPermissions(ContactInfoEditActivity.this,
+//                                    new String[]{Manifest.permission.CAMERA},
+//                                    RESULT_OK);
+                            Utils.doSeting(ContactInfoEditActivity.this);
+                        }
+                    });
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                        }
+                    });
+                }
                 break;
             case R.id.layout_birthday:
                 pickDate();
@@ -321,14 +350,14 @@ public class ContactInfoEditActivity extends BaseActivity {
 
         int defaultAvatao;
 
-        if(null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")){
-            if(MainApp.user.gender == 2){
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            if (MainApp.user.gender == 2) {
                 defaultAvatao = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAvatao = R.drawable.img_default_user;
             }
             img_title_user.setImageResource(defaultAvatao);
-        }else{
+        } else {
             ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         }
 
@@ -381,8 +410,8 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void updateProfile() {
 
-        if(!et_weixin.getText().toString().isEmpty()){
-            if(!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)){
+        if (!et_weixin.getText().toString().isEmpty()) {
+            if (!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)) {
                 Toast("微信号码不正确");
                 return;
             }
@@ -511,14 +540,14 @@ public class ContactInfoEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse("验证手机号",response);
+                HttpErrorCheck.checkResponse("验证手机号", response);
                 tv_get_code.setEnabled(false);
                 countDown();
                 //请求验证码
                 RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
                     @Override
                     public void success(final Object o, final Response response) {
-                        HttpErrorCheck.checkResponse("请求手机验证码",response);
+                        HttpErrorCheck.checkResponse("请求手机验证码", response);
                         Toast("发送验证码成功");
                     }
 
@@ -585,7 +614,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     /**
      * 功 能: 生日选择器
      * 说 明: 控件自带按钮错显为英文，找不到原因，只能手动设置按钮监听。
-     * */
+     */
 
     public void pickDate() {
         Calendar cal = Calendar.getInstance();

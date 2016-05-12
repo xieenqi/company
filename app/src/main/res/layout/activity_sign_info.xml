@@ -43,7 +43,7 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="name"
+                        android:hint=""
                         android:singleLine="true"
                         android:textColor="@color/text33"
                         android:textSize="16sp"/>
@@ -55,7 +55,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/dimen_4"
                         android:singleLine="false"
-                        android:text="adds"
+                        android:text=""
                         android:textColor="@color/text99"
                         android:textSize="12sp"/>
                 </LinearLayout>

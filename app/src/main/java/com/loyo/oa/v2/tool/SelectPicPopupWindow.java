@@ -1,8 +1,8 @@
 package com.loyo.oa.v2.tool;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * 新建客户选择照片的popwindow
  */
-public class SelectPicPopupWindow extends Activity implements OnClickListener {
+public class SelectPicPopupWindow extends BaseActivity implements OnClickListener {
 
     public static final int GET_IMG = 10;
     private String tag = "SelectPicPopupWindow";
@@ -156,36 +156,77 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
             /*拍照*/
             case R.id.btn_take_photo:
-                try {
-                    //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
-                    //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
-                    takePhotoIntent();
-                } catch (Exception e) {
-                    Global.ProcException(e);
+                if (PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
+                        && PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
+                    try {
+                        //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
+                        //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
+                        takePhotoIntent();
+                    } catch (Exception e) {
+                        Global.ProcException(e);
+                    }
+                } else {
+                    showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
+//                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                                    RESULT_OK);
+//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
+//                                    new String[]{Manifest.permission.CAMERA},
+//                                    RESULT_OK);
+                            Utils.doSeting(SelectPicPopupWindow.this);
+                        }
+                    });
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                        }
+                    });
                 }
+
                 break;
 
             /*从相册选*/
             case R.id.btn_pick_photo:
-                try {
-                    //选择照片的时候也一样，我们用Action为Intent.ACTION_GET_CONTENT，
-                    //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_PICK);
-                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+                    try {
+                        //选择照片的时候也一样，我们用Action为Intent.ACTION_GET_CONTENT，
+                        //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_PICK);
+                        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, 2);
+                    } catch (ActivityNotFoundException e) {
+                        Global.ProcException(e);
+                    }
+                } else {
+                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
+//                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                    RESULT_OK);
+                            Utils.doSeting(SelectPicPopupWindow.this);
 
-//                    intent.setType("image/*");
-//                    //android 4.4
-//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-//                        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-//                    } else {
-//                        intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    }
-
-                    startActivityForResult(intent, 2);
-                } catch (ActivityNotFoundException e) {
-                    Global.ProcException(e);
+                        }
+                    });
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                        }
+                    });
                 }
+
                 break;
             case R.id.btn_cancel:
                 finish();
@@ -194,23 +235,5 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 break;
         }
     }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        switch ( requestCode ) {
-//            case REQUEST_CODE_SOME_FEATURES_PERMISSIONS: {
-//                for( int i = 0; i < permissions.length; i++ ) {
-//                    if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
-//                        LogUtil.d( "Permissions", "Permission Granted: " + permissions[i] );
-//                    } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
-//                        LogUtil.d( "Permissions", "Permission Denied: " + permissions[i] );
-//                    }
-//                }
-//            }
-//            break;
-//            default: {
-//                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//            }
-//        }
-//    }
 
 }

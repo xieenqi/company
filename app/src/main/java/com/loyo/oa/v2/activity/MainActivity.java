@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -16,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -1246,10 +1248,32 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     private void permissionLocation() {
         if (PackageManager.PERMISSION_GRANTED ==
-                getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
 //            Toast(" 用户授权 ");
         } else {
-//            Toast(" 用户my 授权 ");
+//            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+//            generalPopView.show();
+//            generalPopView.setMessage("需要使用定位权限\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setCanceledOnTouchOutside(true);
+//            showGeneralDialog(true, true, "需要使用定位权限\\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setSureOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(MainActivity.this,
+//                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                            1);
+//                }
+//            });
+//            generalPopView.setCancelOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                }
+//            });
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
         }
     }
 }
