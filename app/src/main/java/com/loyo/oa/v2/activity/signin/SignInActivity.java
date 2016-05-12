@@ -219,7 +219,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void success(final LegWork legWork, final Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
-                cancelLoading();
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
@@ -231,14 +230,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else {
                     Toast("提交失败" + response.getStatus());
-                    legWork.creator = MainApp.user.toShortUser();
+//                    legWork.creator = MainApp.user.toShortUser();
                 }
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });

@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -43,6 +44,7 @@ import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -299,16 +301,40 @@ public class Utils {
      * @param context
      * @param tel
      */
-    public static void sendSms(Context context, String tel) {
+    public static void sendSms(final Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
             Global.Toast("电话号码为空");
             return;
         }
-        Uri uri = Uri.parse("smsto:" + tel);
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        sendIntent.putExtra("sms_body", "");
-        context.startActivity(sendIntent);
+        if (PackageManager.PERMISSION_GRANTED ==
+                context.getPackageManager().checkPermission("android.permission.SEND_SMS", "com.loyo.oa.v2")) {
+            Uri uri = Uri.parse("smsto:" + tel);
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+            sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            sendIntent.putExtra("sms_body", "");
+            context.startActivity(sendIntent);
+        } else {
+            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用短信权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
+//                            new String[]{Manifest.permission.SEND_SMS},
+//                            RESULT_OK);
+                    doSeting(context);
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                }
+            });
+        }
     }
 
     /**
@@ -317,14 +343,39 @@ public class Utils {
      * @param context
      * @param tel
      */
-    public static void call(Context context, String tel) {
+    public static void call(final Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
             Global.Toast("号码为空");
             return;
         }
-        Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(sendIntent);
+
+        if (PackageManager.PERMISSION_GRANTED ==
+                context.getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+            Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
+            sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(sendIntent);
+        } else {
+            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
+//                            new String[]{Manifest.permission.CALL_PHONE},
+//                            RESULT_OK);
+                    doSeting(context);
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                }
+            });
+        }
     }
 
     /**
@@ -1031,5 +1082,15 @@ public class Utils {
         }
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
         return (bitmap);
+    }
+
+    /**
+     * 到APP的设置页面去配置权限
+     * @param context
+     */
+    public static void doSeting(Context context) {
+        Uri packageURI = Uri.parse("package:" + "com.loyo.oa.v2");
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+        context.startActivity(intent);
     }
 }

@@ -1,12 +1,12 @@
 package com.loyo.oa.v2.activity.contact;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -21,11 +21,13 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -211,10 +213,12 @@ public class ContactInfoActivity extends BaseActivity {
             Toast("联系人电话号码为空");
             return;
         }
-        Uri uri = Uri.parse("smsto:" + user.mobile);
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
-        sendIntent.putExtra("sms_body", "");
-        startActivity(sendIntent);
+        Utils.sendSms(ContactInfoActivity.this, user.mobile);
+
+//        Uri uri = Uri.parse("smsto:" + user.mobile);
+//        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+//        sendIntent.putExtra("sms_body", "");
+//        startActivity(sendIntent);
     }
 
     /**
@@ -225,7 +229,8 @@ public class ContactInfoActivity extends BaseActivity {
             Toast("联系人电话号码为空");
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.mobile));
-        startActivity(intent);
+        Utils.call(ContactInfoActivity.this, user.mobile);
+//        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.mobile));
+//        startActivity(intent);
     }
 }

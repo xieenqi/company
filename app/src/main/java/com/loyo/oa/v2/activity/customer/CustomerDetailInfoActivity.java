@@ -140,8 +140,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     /**
      * 获取参与人权限
-     * */
-    void getMembersRoot(){
+     */
+    void getMembersRoot() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getMembersRoot(new RCallback<MembersRoot>() {
                     @Override
@@ -214,9 +214,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             }
         }
 
-        if(memRoot.getValue().equals("0")){
+        if (memRoot.getValue().equals("0")) {
             isRoot = false;
-        }else{
+        } else {
             isRoot = true;
         }
 
@@ -267,7 +267,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 判断是否是参与人
      */
     public boolean isMenber(final Customer mCustomer) {
-        if(null != mCustomer){
+        if (null != mCustomer) {
             for (Member element : mCustomer.members) {
                 if (MainApp.user.id.equals(element.getUser().getId())) {
                     return true;
@@ -446,7 +446,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 showEditPopu();
                 break;
             case R.id.layout_customer_info:
-                bundle.putBoolean("isRoot",isRoot);
+                bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 3);
@@ -474,9 +474,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*联系人*/
             case R.id.layout_contact:
-                bundle.putBoolean("isLock",mCustomer.lock);
+                bundle.putBoolean("isLock", mCustomer.lock);
                 bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean("isRoot",isRoot);
+                bundle.putBoolean("isRoot", isRoot);
                 bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
                 bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
                 _class = CustomerContactManageActivity_.class;
@@ -586,13 +586,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
                 /*如果修改了负责人，不是自己，则finish该页面*/
-                try{
+                try {
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
-                    if(!isCreator){
+                    if (!isCreator) {
                         finish();
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
 

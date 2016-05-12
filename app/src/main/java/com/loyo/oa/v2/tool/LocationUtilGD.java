@@ -1,12 +1,14 @@
 package com.loyo.oa.v2.tool;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.DialogHelp;
 
 import java.util.Date;
 
@@ -31,25 +33,33 @@ public class LocationUtilGD {
     /**
      * 开启定位
      */
-    private void startLocate(Context context) {
-        maMapLocationListener = new MAMapLocationListener();
-        locationClient = new AMapLocationClient(app);
-        locationOption = new AMapLocationClientOption();
-        locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
-        //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
-        locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
-        locationOption.setOnceLocation(false);//false持续定位 true单次定位
-        locationOption.setHttpTimeOut(10000);//设置联网超时时间
-        locationOption.setNeedAddress(true);
-        // 设置定位模式为高精度模式
-        locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-        // 设置定位监听
-        locationClient.setLocationListener(maMapLocationListener);
-        // 设置定位参数
-        locationClient.setLocationOption(locationOption);
-        // 启动定位
-        locationClient.startLocation();
-        locationClient.startAssistantLocation();
+    private void startLocate(final Context context) {
+        if (PackageManager.PERMISSION_GRANTED ==
+                app.getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+            maMapLocationListener = new MAMapLocationListener();
+            locationClient = new AMapLocationClient(app);
+            locationOption = new AMapLocationClientOption();
+            locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
+            //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
+            locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+            locationOption.setOnceLocation(false);//false持续定位 true单次定位
+            locationOption.setHttpTimeOut(10000);//设置联网超时时间
+            locationOption.setNeedAddress(true);
+            // 设置定位模式为高精度模式
+            locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+            // 设置定位监听
+            locationClient.setLocationListener(maMapLocationListener);
+            // 设置定位参数
+            locationClient.setLocationOption(locationOption);
+            // 启动定位
+            locationClient.startLocation();
+            locationClient.startAssistantLocation();
+            LogUtil.d(" qx权限通过 ");
+        } else {
+//            Global.Toast("你没有配置定位权限");
+            DialogHelp.cancelLoading();
+        }
+
     }
 
 
