@@ -428,7 +428,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
 
         if (type == 2) {
             map.put("wfId", demand.getWfId());
-            map.put("wfState", demand.getWfState());
+//            map.put("wfState", demand.getWfState());
         } else if (type == 1) {
             map.put("customerId", customerId);
         }
