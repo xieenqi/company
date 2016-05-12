@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -196,45 +195,19 @@ public class ContactInfoEditActivity extends BaseActivity {
             /*设置头像*/
             case R.id.layout_set_avartar:
                 LogUtil.dee("点击设置头像");
-                if (PackageManager.PERMISSION_GRANTED ==
-                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
-                        && PackageManager.PERMISSION_GRANTED ==
-                        getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
-                    Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-                    // 是否显示拍摄图片
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                    // 最大可选择图片数量
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
-                    // 选择模式
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
-                    intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, true);
-                    // 默认选择
-                    //                if (mSelectPath != null && mSelectPath.size() > 0) {
-                    //                    intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
-                    //                }
-                    startActivityForResult(intent, REQUEST_IMAGE);
-                } else {
-                    showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
-                    generalPopView.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-//                            ActivityCompat.requestPermissions(ContactInfoEditActivity.this,
-//                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                                    RESULT_OK);
-//                            ActivityCompat.requestPermissions(ContactInfoEditActivity.this,
-//                                    new String[]{Manifest.permission.CAMERA},
-//                                    RESULT_OK);
-                            Utils.doSeting(ContactInfoEditActivity.this);
-                        }
-                    });
-                    generalPopView.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                        }
-                    });
-                }
+                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                // 是否显示拍摄图片
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                // 最大可选择图片数量
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
+                // 选择模式
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, true);
+                // 默认选择
+                //                if (mSelectPath != null && mSelectPath.size() > 0) {
+                //                    intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
+                //                }
+                startActivityForResult(intent, REQUEST_IMAGE);
                 break;
             case R.id.layout_birthday:
                 pickDate();

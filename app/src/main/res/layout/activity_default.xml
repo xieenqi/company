@@ -4,14 +4,15 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        layout="@layout/cmp_customer_actionbar" />
+    <!--<include-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?android:attr/actionBarSize"-->
+        <!--layout="@layout/cmp_customer_actionbar" />-->
+    <include layout="@layout/include_title"/>
 
     <FrameLayout
         android:id="@+id/image_grid"
-        android:background="#181819"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
