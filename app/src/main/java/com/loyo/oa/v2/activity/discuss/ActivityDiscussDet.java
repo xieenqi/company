@@ -520,15 +520,15 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
         return selectName + SCANNER_HAIT_TRIM;
     }
 
-    /**
-     * 隐藏输入法
-     *
-     * @param view
-     */
-    public void hitKeyBoard(final EditText view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+//    /**
+//     * 隐藏输入法
+//     *
+//     * @param view
+//     */
+//    public void hitKeyBoard(final EditText view) {
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//    }
 
     /**
      * 弹出输入法
@@ -763,20 +763,22 @@ public class ActivityDiscussDet extends BaseActivity implements View.OnLayoutCha
      */
     private void refreshRedDot() {
         setResult(Activity.RESULT_OK);
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("summaryId", summaryId);
-        LogUtil.d("刷新红点:" + app.gson.toJson(body));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
-                .updateReadDot(body, new RCallback<Object>() {
-                    @Override
-                    public void success(final Object d, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                    }
+        if (!TextUtils.isEmpty(summaryId)) {
+            HashMap<String, Object> body = new HashMap<>();
+            body.put("summaryId", summaryId);
+            LogUtil.d("@刷新红点:" + app.gson.toJson(body));
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_EXTRA()).create(MyDiscuss.class)
+                    .updateReadDot(body, new RCallback<Object>() {
+                        @Override
+                        public void success(final Object d, final Response response) {
+                            HttpErrorCheck.checkResponse(response);
+                        }
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
+                        @Override
+                        public void failure(final RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                        }
+                    });
+        }
     }
 }
