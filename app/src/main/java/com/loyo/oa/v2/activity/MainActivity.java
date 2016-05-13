@@ -623,11 +623,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 cancelLoading();
                 attendanceRecords = attendanceRecord;
-                try {
-                    LogUtil.d("check:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    LogUtil.d("check:" + Utils.convertStreamToString(response.getBody().in()));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+                HttpErrorCheck.checkResponse("考勤信息：",response);
                 attendanceRecord.setAddress(address);
 
                 if (attendanceRecord.getState() == 3) {

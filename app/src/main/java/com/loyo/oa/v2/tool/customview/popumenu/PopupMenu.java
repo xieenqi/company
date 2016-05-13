@@ -74,7 +74,7 @@ public class PopupMenu {
             lvPopupMenu.setAdapter(adapter);
 
 
-            popupWindow = new PopupWindow(container, MainApp.getMainApp().getResources().getDisplayMetrics().widthPixels / 2, -2, true);
+            popupWindow = new PopupWindow(container, MainApp.getMainApp().getResources().getDisplayMetrics().widthPixels* 2/5, -2, true);
             popupWindow.setAnimationStyle(R.style.PopupAnimation);
             popupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources()));// 响应键盘三个主键的必须步骤
             popupWindow.showAsDropDown(view);
