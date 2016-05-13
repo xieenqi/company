@@ -1273,9 +1273,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 //                }
 //            });
 
-//            ActivityCompat.requestPermissions(MainActivity.this,
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    1);
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
         }
     }
 }
