@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_20"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:text="xxx"
             android:textColor="@color/text33"
             android:textSize="15sp"

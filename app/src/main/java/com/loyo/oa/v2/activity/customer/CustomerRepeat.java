@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -54,7 +57,10 @@ public class CustomerRepeat extends BaseActivity {
         @Override
         public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
-                tv_customer_onlyname.setText("不存在该用户,点击“" + edt_search.getText().toString() + "”,创建该客户");
+                SpannableString searchInfo = new SpannableString(edt_search.getText().toString());
+                searchInfo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg1)),
+                        0, edt_search.getText().toString().length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                tv_customer_onlyname.setText("不存在该客户,点击 “" + searchInfo + "” ,创建该客户");
             }
         }
     };
@@ -146,7 +152,7 @@ public class CustomerRepeat extends BaseActivity {
                 HttpErrorCheck.checkResponse("查重客户：", response);
                 LogUtil.dll("success result:" + MainApp.gson.toJson(customerRepeatList));
                 setViewdata(customerRepeatList);
-                mHandler.sendEmptyMessage(0x01);
+//                mHandler.sendEmptyMessage(0x01);
             }
 
             @Override
@@ -184,7 +190,11 @@ public class CustomerRepeat extends BaseActivity {
 
         if (!isOk) {
             ll_showonly.setVisibility(View.VISIBLE);
-            tv_customer_onlyname.setText("该客户名不重复,点击“" + edt_search.getText().toString() + "”,创建该客户");
+            String info = "该客户名不重复,点击  “" + edt_search.getText().toString().toString() + "”  创建该客户";
+            SpannableString searchInfo = new SpannableString(info);
+            searchInfo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg1)),
+                    13, 13 + edt_search.getText().toString().length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            tv_customer_onlyname.setText(searchInfo);
         } else {
             ll_showonly.setVisibility(View.GONE);
         }

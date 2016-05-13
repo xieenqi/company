@@ -55,31 +55,31 @@
     <include layout="@layout/include_search_title"/>
 
     <!--<LinearLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/activity_bg"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:padding="8dp">-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/activity_bg"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="8dp">-->
 
-        <!--<EditText-->
-            <!--android:id="@+id/edt_serach"-->
-            <!--android:layout_width="0dip"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_weight="0.9"-->
-            <!--android:background="@drawable/edt_customer_frame"-->
-            <!--android:paddingLeft="5dp"-->
-            <!--/>-->
+    <!--<EditText-->
+    <!--android:id="@+id/edt_serach"-->
+    <!--android:layout_width="0dip"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:layout_weight="0.9"-->
+    <!--android:background="@drawable/edt_customer_frame"-->
+    <!--android:paddingLeft="5dp"-->
+    <!--/>-->
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_serach"-->
-            <!--android:layout_width="0dip"-->
-            <!--android:layout_height="35dp"-->
-            <!--android:layout_weight="0.15"-->
-            <!--android:background="@drawable/tv_frame_repeat"-->
-            <!--android:gravity="center"-->
-            <!--android:text="搜索"/>-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_serach"-->
+    <!--android:layout_width="0dip"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:layout_weight="0.15"-->
+    <!--android:background="@drawable/tv_frame_repeat"-->
+    <!--android:gravity="center"-->
+    <!--android:text="搜索"/>-->
 
     <!--</LinearLayout>-->
 
@@ -87,15 +87,21 @@
         android:id="@+id/ll_showonly"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/dimen_45"
         android:orientation="vertical"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_customer_onlyname"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="不存在该用户，点击xx,创建该客户"/>
+            android:text="不存在该用户，点击xx,创建该客户"
+            android:textColor="@color/text99"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_sp15"/>
 
         <View
             android:layout_width="fill_parent"
@@ -107,7 +113,7 @@
         android:id="@+id/lv_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scrollbars="none"
         android:divider="@null"
+        android:scrollbars="none"
         />
 </LinearLayout>
