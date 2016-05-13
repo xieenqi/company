@@ -200,6 +200,11 @@ public class ContactsDepartmentFragment extends BaseFragment {
         }
 
         @Override
+        public void setExtras(Bundle extras) {
+
+        }
+
+        @Override
         public Bundle getExtras() {
             return null;
         }
