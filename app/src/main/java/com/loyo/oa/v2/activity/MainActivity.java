@@ -75,7 +75,6 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -604,7 +603,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     void startAttanceLocation() {
-        showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
@@ -620,16 +618,17 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         map.put("originalgps", longitude + "," + latitude);
         LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
+        showLoading("");
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                cancelLoading();
                 attendanceRecords = attendanceRecord;
-                try {
-                    LogUtil.d("check:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    LogUtil.d("check:" + Utils.convertStreamToString(response.getBody().in()));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+                HttpErrorCheck.checkResponse("考勤信息：", response);
                 attendanceRecord.setAddress(address);
 
                 if (attendanceRecord.getState() == 3) {
@@ -696,7 +695,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
-            if (validateInfo.isPopup()) {
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
                 popOutToast();
                 /*不加班*/
             } else {

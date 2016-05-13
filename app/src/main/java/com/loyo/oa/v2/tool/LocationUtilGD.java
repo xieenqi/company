@@ -129,5 +129,16 @@ public class LocationUtilGD {
             locationOption = null;
         }
     }
+
+    /**
+     * 用户是否配置定位权限     * @return
+     */
+    public static boolean permissionLocation() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                MainApp.getMainApp().getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+            return true;
+        }
+        return false;
+    }
 }
 
