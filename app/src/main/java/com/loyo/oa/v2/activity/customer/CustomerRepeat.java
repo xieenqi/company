@@ -5,32 +5,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CustomerRepeatAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.City;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 
-import org.androidannotations.annotations.Click;
-
-import java.io.IOException;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -42,10 +42,12 @@ import retrofit.client.Response;
  */
 public class CustomerRepeat extends BaseActivity {
 
-    private LinearLayout ll_showonly, img_title_left;
+    private LinearLayout ll_showonly;
+    private RelativeLayout img_title_left;
+    private ImageView iv_clean;
     private ListView lv_list;
-    private TextView tv_customer_onlyname, tv_serach;
-    private EditText edt_serach;
+    private TextView tv_customer_onlyname;
+    private EditText edt_search;
     private Intent mIntent;
     private CustomerRepeatAdapter adapter;
     private boolean isOk;
@@ -55,7 +57,10 @@ public class CustomerRepeat extends BaseActivity {
         @Override
         public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
-                tv_customer_onlyname.setText("不存在该用户,点击“" + edt_serach.getText().toString() + "”,创建该客户");
+                SpannableString searchInfo = new SpannableString(edt_search.getText().toString());
+                searchInfo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg1)),
+                        0, edt_search.getText().toString().length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                tv_customer_onlyname.setText("不存在该客户,点击 “" + searchInfo + "” ,创建该客户");
             }
         }
     };
@@ -67,62 +72,75 @@ public class CustomerRepeat extends BaseActivity {
         initUi();
     }
 
+    /**
+     * 数据初始化
+     */
+    void initUi() {
+        mIntent = getIntent();
+        String customerName = mIntent.getStringExtra("name");
+        ll_showonly = (LinearLayout) findViewById(R.id.ll_showonly);
+        lv_list = (ListView) findViewById(R.id.lv_list);
+        tv_customer_onlyname = (TextView) findViewById(R.id.tv_customer_onlyname);
+        edt_search = (EditText) findViewById(R.id.edt_search);
+//        tv_serach = (TextView) findViewById(R.id.tv_serach);
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
+        edt_search.setText(customerName);
+        serachRepate(customerName);
+        edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    serachRepate(edt_search.getText().toString().trim());
+                }
+                return false;
+            }
+        });
+        iv_clean.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
+        ll_showonly.setOnClickListener(onClickListener);
+//        tv_serach.setOnClickListener(onClickListener);
+        img_title_left.setOnClickListener(onClickListener);
+    }
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
-
             switch (view.getId()) {
-
                 case R.id.img_title_left:
                     finish();
                     break;
-
                 case R.id.ll_showonly:
                     Intent intent = new Intent();
-                    intent.putExtra("name", edt_serach.getText().toString());
+                    intent.putExtra("name", edt_search.getText().toString());
                     app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
                     break;
-
-                case R.id.tv_serach:
-                    if (edt_serach.getText().toString().isEmpty()) {
-                        Toast("搜索框不能为空");
-                    }
-                    serachRepate(edt_serach.getText().toString());
-                    break;
+//                case R.id.tv_serach:
+//                    if (edt_search.getText().toString().isEmpty()) {
+//                        Toast("搜索内容不能为空");
+//                    }
+//                    serachRepate(edt_search.getText().toString());
+//                    break;
                 default:
-
                     break;
             }
         }
     };
 
-    /**
-     * 数据初始化
-     */
-    void initUi() {
-
-        mIntent = getIntent();
-        ll_showonly = (LinearLayout) findViewById(R.id.ll_showonly);
-        lv_list = (ListView) findViewById(R.id.lv_list);
-        tv_customer_onlyname = (TextView) findViewById(R.id.tv_customer_onlyname);
-        edt_serach = (EditText) findViewById(R.id.edt_serach);
-        tv_serach = (TextView) findViewById(R.id.tv_serach);
-        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
-
-        edt_serach.setText(mIntent.getStringExtra("name"));
-        serachRepate(mIntent.getStringExtra("name"));
-
-        ll_showonly.setOnClickListener(onClickListener);
-        tv_serach.setOnClickListener(onClickListener);
-        img_title_left.setOnClickListener(onClickListener);
-
-    }
 
     /**
      * 查重请求
      */
     void serachRepate(final String name) {
-
+        if (name.isEmpty()) {
+            Toast("搜索内容不能为空");
+            return;
+        }
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("pageIndex", 1);
         map.put("pageSize", 20);
@@ -131,20 +149,21 @@ public class CustomerRepeat extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSerachRepeat(map, new RCallback<PaginationX<CustomerRepeatList>>() {
             @Override
             public void success(final PaginationX<CustomerRepeatList> customerRepeatList, final Response response) {
+                HttpErrorCheck.checkResponse("查重客户：", response);
                 LogUtil.dll("success result:" + MainApp.gson.toJson(customerRepeatList));
                 setViewdata(customerRepeatList);
-                mHandler.sendEmptyMessage(0x01);
+//                mHandler.sendEmptyMessage(0x01);
             }
 
             @Override
             public void failure(final RetrofitError error) {
-
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-
-                } else if (error.getResponse().getStatus() == 500) {
-                    Toast("网络异常500,请稍候再试");
-                }
+                HttpErrorCheck.checkError(error);
+//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                    Toast("请检查您的网络连接");
+//
+//                } else if (error.getResponse().getStatus() == 500) {
+//                    Toast("网络异常500,请稍候再试");
+//                }
 
                 finish();
             }
@@ -158,7 +177,7 @@ public class CustomerRepeat extends BaseActivity {
 
         if (customerRepeatList.getRecords().size() != 0) {
             for (int i = 0; i < customerRepeatList.getRecords().size(); i++) {
-                if (customerRepeatList.getRecords().get(i).getName().equals(edt_serach.getText().toString())) {
+                if (customerRepeatList.getRecords().get(i).getName().equals(edt_search.getText().toString())) {
                     isOk = true;
                     break;
                 } else {
@@ -171,7 +190,11 @@ public class CustomerRepeat extends BaseActivity {
 
         if (!isOk) {
             ll_showonly.setVisibility(View.VISIBLE);
-            tv_customer_onlyname.setText("不存在该用户,点击“" + edt_serach.getText().toString() + "”,创建该客户");
+            String info = "该客户名不重复,点击  “" + edt_search.getText().toString().toString() + "”  创建该客户";
+            SpannableString searchInfo = new SpannableString(info);
+            searchInfo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_bg1)),
+                    13, 13 + edt_search.getText().toString().length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            tv_customer_onlyname.setText(searchInfo);
         } else {
             ll_showonly.setVisibility(View.GONE);
         }
