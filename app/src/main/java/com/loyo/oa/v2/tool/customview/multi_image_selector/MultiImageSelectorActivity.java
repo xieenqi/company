@@ -82,7 +82,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         tv_title.setText("图片选择");
         if (PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
-                || PackageManager.PERMISSION_GRANTED ==
+                && PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
         } else {
 //            showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");

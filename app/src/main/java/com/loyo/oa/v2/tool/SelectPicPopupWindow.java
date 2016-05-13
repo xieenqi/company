@@ -58,7 +58,7 @@ public class SelectPicPopupWindow extends BaseActivity implements OnClickListene
         btn_take_photo.setOnClickListener(this);
 
         /**判断是直接调用相机，还是弹出选相框*/
-        if (getIntent() != null && getIntent().getExtras() != null) {
+        if (null != getIntent() && null != getIntent().getExtras()) {
             boolean localpic = getIntent().getBooleanExtra("localpic", false);
             if (!localpic) {
                 takePhotoIntent();
@@ -144,11 +144,39 @@ public class SelectPicPopupWindow extends BaseActivity implements OnClickListene
     }
 
     private void takePhotoIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = Global.getOutputMediaFileUri();
-        LogUtil.d("相机路径：" + fileUri);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        startActivityForResult(intent, 1);
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
+                && PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            fileUri = Global.getOutputMediaFileUri();
+            LogUtil.d("相机路径：" + fileUri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            startActivityForResult(intent, 1);
+        } else {
+            showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
+//                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                                    RESULT_OK);
+//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
+//                                    new String[]{Manifest.permission.CAMERA},
+//                                    RESULT_OK);
+                    Utils.doSeting(SelectPicPopupWindow.this);
+                    finish();
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                    finish();
+                }
+            });
+        }
     }
 
     public void onClick(View v) {
@@ -156,42 +184,14 @@ public class SelectPicPopupWindow extends BaseActivity implements OnClickListene
 
             /*拍照*/
             case R.id.btn_take_photo:
-                if (PackageManager.PERMISSION_GRANTED ==
-                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
-                        && PackageManager.PERMISSION_GRANTED ==
-                        getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
-                    try {
-                        //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
-                        //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
-                        takePhotoIntent();
-                    } catch (Exception e) {
-                        Global.ProcException(e);
-                    }
-                } else {
-                    showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
-                    generalPopView.setSureOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
-//                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                                    RESULT_OK);
-//                            ActivityCompat.requestPermissions(SelectPicPopupWindow.this,
-//                                    new String[]{Manifest.permission.CAMERA},
-//                                    RESULT_OK);
-                            Utils.doSeting(SelectPicPopupWindow.this);
-                        }
-                    });
-                    generalPopView.setCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            generalPopView.dismiss();
-                        }
-                    });
+                try {
+                    //拍照我们用Action为MediaStore.ACTION_IMAGE_CAPTURE，
+                    //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
+                    takePhotoIntent();
+                } catch (Exception e) {
+                    Global.ProcException(e);
                 }
-
                 break;
-
             /*从相册选*/
             case R.id.btn_pick_photo:
                 if (PackageManager.PERMISSION_GRANTED ==
