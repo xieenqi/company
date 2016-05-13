@@ -103,7 +103,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     private boolean isPullUp = false;
     private boolean isNear = false;//附近客户传的值过来
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

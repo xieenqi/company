@@ -75,6 +75,7 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -304,6 +305,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         handlerEvent();
         checkUpdateService();
         updateUser();
+
 
         lv_main.setDropListener(onDrag);
         lv_main.setMaxScrollSpeed(100f);
@@ -884,7 +886,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Click(R.id.img_fast_add)
     void onClickAdd() {
-
         popupMenu.showAt(findViewById(R.id.img_fast_add));
         img_fast_add.setImageResource(R.drawable.icon_home_menu_close);
     }
@@ -1272,6 +1273,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 //                    generalPopView.dismiss();
 //                }
 //            });
+
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);

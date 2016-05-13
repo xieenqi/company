@@ -127,6 +127,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @Extra("isRoot")
     boolean isRoot;
 
+    private boolean isMem = false;
     private double lat, lng;
     private String addres;
     private ArrayList<NewTag> mTagItems = new ArrayList<>();
@@ -351,7 +352,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     }
 
     void setEnable() {
-        img_title_right.setVisibility(View.GONE);
+        isMem = true;
         layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
         img_refresh_address.setVisibility(View.GONE);
         tv_customer_name.setEnabled(false);
@@ -359,7 +360,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         edt_customer_memo.setEnabled(false);
         layout_customer_industry.setEnabled(false);
         layout_customer_district.setEnabled(false);
-        layout_customer_label.setEnabled(false);
         layout_customer_responser.setEnabled(false);
         layout_customer_join_users.setEnabled(false);
         img_refresh_address.setEnabled(false);
@@ -368,7 +368,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         container.setEnabled(false);
         tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
-        tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_customer_join_users.setTextColor(getResources().getColor(R.color.md_grey_500));
     }
@@ -423,13 +422,16 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             case R.id.img_title_right:
 
-                if (tv_district.getText().toString().isEmpty()) {
-                    Toast("地区不能为空");
-                } else if (!testDynamicword()) {
-                    Toast("请填写必填选项");
-                } else {
+                if(isMem){
                     updateCustomer();
+                }else{
+                    if (!testDynamicword()) {
+                        Toast("请填写必填选项");
+                    } else {
+                        updateCustomer();
+                    }
                 }
+
                 break;
 
             case R.id.layout_customer_label:

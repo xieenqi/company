@@ -224,7 +224,7 @@ public class MainApp extends Application {
         df5 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());//设置日期格式
         df6 = new SimpleDateFormat("HH:mm", Locale.getDefault());//设置日期格式
         df7 = new SimpleDateFormat("MM.dd", Locale.getDefault());//设置日期格式
-        df8 = new SimpleDateFormat("yyyy-MM", Locale.getDefault());//设置日期格式
+        df8 = new SimpleDateFormat("yyyy.MM", Locale.getDefault());//设置日期格式
         df9 = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());//设置日期格式
         df10 = new SimpleDateFormat("yyyy年M月dd日 HH:mm", Locale.getDefault());//设置日期格式
         df11 = new SimpleDateFormat("dd日", Locale.getDefault());//设置日期格式

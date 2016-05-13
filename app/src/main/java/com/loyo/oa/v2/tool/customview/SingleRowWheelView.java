@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -366,8 +368,8 @@ public class SingleRowWheelView extends ScrollView {
     private void onSeletedCallBack() {
         if (null != onWheelViewListener) {
             onWheelViewListener.onSelected(selectedIndex, items.get(selectedIndex));
+            LogUtil.d("当前wheel下标:" + selectedIndex);
         }
-
     }
 
     public void setSeletion(int position) {
