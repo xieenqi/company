@@ -585,6 +585,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
+                getData();
                 /*如果修改了负责人，不是自己，则finish该页面*/
                 try {
                     Bundle bundle = data.getExtras();
