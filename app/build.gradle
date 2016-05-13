@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'checkstyle'
 def AAVersion = '3.3.2'
-//def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
+def outputPath = 'D:\\jenkins\\workspace\\loyo-android-dev\\app\\build\\apk'
 
 android {
 
@@ -21,19 +21,19 @@ android {
     }
     signingConfigs {
         debug {
-//          storeFile file('D:\\android\\key\\loyo_share.keystore')
+          storeFile file('D:\\android\\key\\loyo_share.keystore')
 //        storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
-            keyPassword 'android'
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
+//            keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
         SignConfig {
-//          storeFile file('D:\\android\\key\\loyo_share.keystore')
-//          keyPassword 'Loyo2012'
-            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
+          storeFile file('D:\\android\\key\\loyo_share.keystore')
+          keyPassword 'Loyo2012'
+//            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
 //          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
-          keyPassword 'android'
+//          keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
@@ -76,13 +76,13 @@ android {
     }
 
     //jenkins 构建文件输出
-/*    android.applicationVariants.all { variant ->
+    android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def today = new Date().format('yyyyMMdd-HH');
             def file = output.outputFile
             output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
         }
-    }*/
+    }
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
