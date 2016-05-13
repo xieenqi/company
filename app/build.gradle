@@ -30,10 +30,10 @@ android {
         }
         SignConfig {
           storeFile file('D:\\android\\key\\loyo_share.keystore')
-          keyPassword 'Loyo2012'
+//          keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
 //          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
-//          keyPassword 'android'
+          keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
         }
