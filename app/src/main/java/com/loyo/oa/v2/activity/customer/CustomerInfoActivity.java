@@ -355,6 +355,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         isMem = true;
         layout_rushpackger.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.1f));
         img_refresh_address.setVisibility(View.GONE);
+        img_title_right.setVisibility(View.GONE);
         tv_customer_name.setEnabled(false);
         tv_address.setEnabled(false);
         edt_customer_memo.setEnabled(false);
@@ -363,9 +364,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_responser.setEnabled(false);
         layout_customer_join_users.setEnabled(false);
         img_refresh_address.setEnabled(false);
+        //layout_customer_label.setEnabled(false);
 
         container.setClickable(false);
         container.setEnabled(false);
+        //tv_labels.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_address.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_district.setTextColor(getResources().getColor(R.color.md_grey_500));
         tv_customer_responser.setTextColor(getResources().getColor(R.color.md_grey_500));
@@ -422,15 +425,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             case R.id.img_title_right:
 
-                if(isMem){
-                    updateCustomer();
-                }else{
                     if (!testDynamicword()) {
                         Toast("请填写必填选项");
                     } else {
                         updateCustomer();
                     }
-                }
 
                 break;
 
@@ -439,6 +438,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (mTagItems != null) {
                     bundle2.putSerializable("tagitems", Utils.convertTagItems(mTagItems));
                     bundle2.putString("customerId", mCustomer.getId());
+                    bundle2.putBoolean("isMem",isMem);
                 }
                 app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
                 break;
