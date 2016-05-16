@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private TextView tv_customer_name;
     private TextView tv_address;
+    private TextView wordcount;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right;
     private GridView gridView_photo;
@@ -99,6 +101,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         img_refresh_address.setOnClickListener(this);
 
         edt_memo = (EditText) findViewById(R.id.edt_memo);
+        wordcount = (TextView) findViewById(R.id.wordcount);
+        edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
 
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         if (null == mCustomer) {

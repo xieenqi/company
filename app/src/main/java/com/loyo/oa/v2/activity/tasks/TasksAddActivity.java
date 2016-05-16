@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 import com.loyo.oa.v2.tool.customview.RepeatTaskView;
 import com.loyo.oa.v2.tool.customview.SelectCityView;
@@ -104,6 +107,8 @@ public class TasksAddActivity extends BaseActivity {
     View view_task_approve;
     @ViewById
     ImageView img_title_right_toUsers;
+    @ViewById
+    TextView wordcount;
     @ViewById
     TextView tv_retask;
     @ViewById
@@ -176,7 +181,7 @@ public class TasksAddActivity extends BaseActivity {
         cornBody = new CornBody();
         strBuf = new StringBuffer();
         switch_approve.setState(true);
-
+        edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
         setTouchView(-1);
         getTempTask();
@@ -453,6 +458,7 @@ public class TasksAddActivity extends BaseActivity {
                 layout_remind.setEnabled(true);
                 tv_remind.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
             }
+
             @Override
             public void onCancel() {
                 isKind = true;
@@ -463,7 +469,7 @@ public class TasksAddActivity extends BaseActivity {
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
 
-        }, false,"不截止");
+        }, false, "不截止");
     }
 
     /**

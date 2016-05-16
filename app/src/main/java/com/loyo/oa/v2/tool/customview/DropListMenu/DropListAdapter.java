@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
-
 import java.util.ArrayList;
 
 public class DropListAdapter extends BaseAdapter {

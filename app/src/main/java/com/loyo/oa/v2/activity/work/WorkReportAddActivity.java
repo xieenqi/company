@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +58,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.SingleRowWheelView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -64,6 +67,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
@@ -100,6 +104,8 @@ public class WorkReportAddActivity extends BaseActivity {
     RadioGroup rg;//工作 动态
     @ViewById
     ViewGroup layout_crm, layout_reviewer, layout_mproject, layout_type;
+    @ViewById
+    TextView wordcount;
     @ViewById
     TextView tv_crm;
     @ViewById
@@ -183,6 +189,7 @@ public class WorkReportAddActivity extends BaseActivity {
         layout_reviewer.setOnTouchListener(touch);
         tv_resignin.setOnTouchListener(touch);
         layout_mproject.setOnTouchListener(touch);
+        edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
 
         rb1 = (RadioButton) findViewById(R.id.rb1);
         rb2 = (RadioButton) findViewById(R.id.rb2);
