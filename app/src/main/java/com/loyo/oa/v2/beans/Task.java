@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Task extends BaseBeans implements Serializable{
+public class Task extends BaseBeans implements Serializable {
 
     public static final int STATUS_PROCESSING = 1;  //未完成
     public static final int STATUS_REVIEWING = 2;   //审核中
@@ -174,7 +174,7 @@ public class Task extends BaseBeans implements Serializable{
     }
 
     public ArrayList<Attachment> getAttachments() {
-        if (attachments == null) {
+        if (null == attachments) {
             return new ArrayList<>();
         }
 
