@@ -78,13 +78,14 @@
                         android:layout_width="@dimen/dimen_20"
                         android:layout_height="@dimen/dimen_20"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/dimen_10"
+                        android:visibility="gone"
                         />
 
                     <TextView
                         android:id="@+id/tv_address_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_10"
                         android:gravity="left|center"
                         android:text=""
                         android:textColor="@color/gray"
@@ -131,10 +132,11 @@
                 android:id="@+id/tv_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10"
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
-                android:gravity="left|center"
-                android:minHeight="@dimen/dimen_55"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:gravity="left|top"
                 android:text=""
                 android:textColor="@color/text99"
                 android:textSize="12sp"/>
@@ -146,10 +148,9 @@
                 android:layout_marginLeft="@dimen/margin_other_view"
                 android:layout_marginRight="@dimen/margin_other_view"
                 android:gravity="center"
-                android:horizontalSpacing="@dimen/activity_horizontal_margin"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="3"
-                android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+                />
 
             <LinearLayout
                 android:id="@+id/ll_confirm"
