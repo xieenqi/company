@@ -629,7 +629,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 //                    e.printStackTrace();
 //                }
                 HttpErrorCheck.checkResponse("考勤信息：", response);
-                attendanceRecord.setAddress(address);
+                attendanceRecord.setAddress(null==address?"没有获取到有效地址":address);
 
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();

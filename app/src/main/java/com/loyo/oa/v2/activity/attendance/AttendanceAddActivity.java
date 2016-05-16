@@ -453,20 +453,21 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("createtime", mAttendanceRecord.getCreatetime());
         map.put("originalgps", mAttendanceRecord.getOriginalgps());
         map.put("gpsinfo", mAttendanceRecord.getGpsinfo());
-        map.put("address", mAttendanceRecord.getAddress());
+//        map.put("address", mAttendanceRecord.getAddress());
+        map.put("address", tv_address.getText().toString());
         map.put("reason", reason);
         map.put("state", state);
         map.put("outstate", mAttendanceRecord.getOutstate());
         map.put("extraWorkStartTime", extraWorkStartTime);
         map.put("extraWorkEndTime", serverTime);
 
-        map.put("confirmExtraTime",mAttendanceRecord.getConfirmExtraTime());
-        map.put("confirmtime",mAttendanceRecord.getConfirmtime());
-        map.put("extraState",mAttendanceRecord.getExtraState());
-        map.put("extraTime",mAttendanceRecord.getExtraTime());
-        map.put("leaveDays",mAttendanceRecord.getLeaveDays());
-        map.put("remainTime",mAttendanceRecord.getRemainTime());
-        map.put("tagstate",mAttendanceRecord.getTagstate());
+        map.put("confirmExtraTime", mAttendanceRecord.getConfirmExtraTime());
+        map.put("confirmtime", mAttendanceRecord.getConfirmtime());
+        map.put("extraState", mAttendanceRecord.getExtraState());
+        map.put("extraTime", mAttendanceRecord.getExtraTime());
+        map.put("leaveDays", mAttendanceRecord.getLeaveDays());
+        map.put("remainTime", mAttendanceRecord.getRemainTime());
+        map.put("tagstate", mAttendanceRecord.getTagstate());
 
 
         if (isPopup) {
