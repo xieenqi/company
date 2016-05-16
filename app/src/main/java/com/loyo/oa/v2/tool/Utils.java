@@ -386,14 +386,14 @@ public class Utils {
      */
     public static String getTagItems(Customer customer) {
         if (null == customer || null == customer.tags || customer.tags.isEmpty()) {
-            return "";
+            return "无";
         }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < customer.tags.size(); i++) {
             String tag = !TextUtils.isEmpty(customer.tags.get(i).getItemName()) ? customer.tags.get(i).getItemName() : "";
             if (!TextUtils.isEmpty(tag)) {
                 if (i != customer.tags.size() - 1) {
-                    tag = tag.concat(",");
+                    tag = tag.concat("、");
                 }
                 builder.append(tag);
             }
