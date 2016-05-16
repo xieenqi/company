@@ -11,7 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:textSize="15sp"/>
+        android:textSize="14sp"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
 
     <ImageView
         android:id="@+id/iv_menu_select"
@@ -19,9 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/img_check1"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <View
         android:layout_width="match_parent"
