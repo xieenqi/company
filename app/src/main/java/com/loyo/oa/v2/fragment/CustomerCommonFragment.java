@@ -122,7 +122,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         }
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -444,6 +443,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     //客户标签
                     else if (ColumnIndex == 1) {
+                        tagItemIds = "";
                         for (int i = 0; i < items.size(); i++) {
                             tagItemIds += items.get(items.keyAt(i)).getmData();
                             if (i != items.size() - 1) {
@@ -479,6 +479,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     //客户标签
                     else if (ColumnIndex == 1) {
+                        tagItemIds = "";
                         for (int i = 0; i < items.size(); i++) {
                             tagItemIds += items.get(items.keyAt(i)).getmData();
                             if (i != items.size() - 1) {
@@ -521,6 +522,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     //客户标签
                     else {
+                        tagItemIds = "";
                         for (int i = 0; i < items.size(); i++) {
                             tagItemIds += items.get(items.keyAt(i)).getmData();
                             if (i != items.size() - 1) {
@@ -702,7 +704,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                 }
         );
-        //tagItemIds = "";
     }
 
 

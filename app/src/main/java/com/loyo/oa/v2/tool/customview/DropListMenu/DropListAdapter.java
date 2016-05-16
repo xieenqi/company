@@ -74,23 +74,16 @@ public class DropListAdapter extends BaseAdapter {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         textView.setText(null == item ? "" : item.getName());
 
-        LogUtil.d("mSelectIndex:"+mSelectIndex+",position:"+position);
+        LogUtil.d("mSelectIndex:" + mSelectIndex + ",position:" + position);
 
         if (mSelectIndex == position) {
+            item.setIsLock(true);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             imageView.setVisibility(View.VISIBLE);
+        }else{
+            item.setIsLock(false);
         }
 
-/*        if(item.isLock){
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
-            imageView.setVisibility(View.VISIBLE);
-        }*/
-
-/*        if (selectItem == position) {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
-        } else {
-            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        }*/
         return convertView;
     }
 
