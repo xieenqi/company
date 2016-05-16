@@ -34,7 +34,9 @@ import java.util.ArrayList;
 
 import retrofit.client.Response;
 
-
+/**
+ * 客户标签选择【标签】
+ */
 @EActivity(R.layout.activity_customer_label)
 public class CustomerLabelActivity extends BaseActivity {
 
@@ -48,11 +50,11 @@ public class CustomerLabelActivity extends BaseActivity {
 
     @AfterViews
     void init() {
-        if (mTagItems == null) {
+        if (null == mTagItems) {
             mTagItems = new ArrayList<>();
         }
 
-        if(isMem){
+        if (isMem) {
             img_title_right.setVisibility(View.GONE);
         }
 
@@ -66,7 +68,7 @@ public class CustomerLabelActivity extends BaseActivity {
             }
         });
 
-        if(!isMem){
+        if (!isMem) {
             expand_listview_label.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
@@ -157,6 +159,7 @@ public class CustomerLabelActivity extends BaseActivity {
 
     /**
      * 构建新标签
+     *
      * @return
      */
     private ArrayList<NewTag> convertNewTags() {
@@ -256,7 +259,7 @@ public class CustomerLabelActivity extends BaseActivity {
             TagItem item = (TagItem) getChild(groupPosition, childPosition);
             item_info_Child.tv_title.setText(item.getName());
             item_info_Child.cb.setChecked(item.isChecked());
-            if(isMem){
+            if (isMem) {
                 convertView.setEnabled(false);
             }
             return convertView;
