@@ -228,7 +228,6 @@ public class DropListMenu extends LinearLayout {
                                     if (mMenuSelectedListener != null) {
                                         mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                                     }
-
                                 } else if (menuItem.getSelectType() == DropItem.GROUP_SINGLE) {
                                     DropItem selectedItem = getSelectedItems().get(mRowSelected);
                                     DropItem currentItem = menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position);
@@ -251,12 +250,12 @@ public class DropListMenu extends LinearLayout {
                             }
                         });
                         //一级列表没有内容时执行:
+                        //单选列表 时间也用到 setSelectIndex()方法用于显示勾选img
                     } else {
                         LogUtil.dee("一级Item:" + selectRowItem.getName());
-
                         popupWindow.dismiss();
                         mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
-                        //mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
+                        mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
                         if (mMenuSelectedListener != null) {
                             DropItem selectRowItem1 = menuItem.getSubDropItem().get(mRowSelected);
                             getSelectedItems().clear();

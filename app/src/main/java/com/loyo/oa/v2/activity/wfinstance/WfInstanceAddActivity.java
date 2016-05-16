@@ -49,6 +49,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -89,6 +90,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_wfinstance_data;
     @ViewById ViewGroup ll_dept;
+    @ViewById TextView wordcount;
     @ViewById TextView tv_dept;
     @ViewById ViewGroup ll_project;
     @ViewById TextView tv_project;
@@ -134,6 +136,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_add.setOnTouchListener(Global.GetTouch());
         ll_project.setOnClickListener(click);
+        edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
