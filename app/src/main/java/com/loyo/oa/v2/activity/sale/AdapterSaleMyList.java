@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 
@@ -16,20 +17,30 @@ import java.util.ArrayList;
  * 作者 : xeq
  * 时间 : 16/5/17
  */
-public class AdapterSaleList extends BaseAdapter {
+public class AdapterSaleMyList extends BaseAdapter {
 
     public static final int TYPE_LIST_OF_CUSTOMER = 1;
     public static final int TYPE_LIST_OF_USER = TYPE_LIST_OF_CUSTOMER + 1;
 
-    private ArrayList<String> legWorks = new ArrayList<>();
+    private ArrayList<String> data = new ArrayList<>();
     private Context mContext;
     private int mType;
 
-    public AdapterSaleList() {
+    public AdapterSaleMyList(Context context) {
+        mContext = context;
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
+        data.add("机会1");
     }
 
-    public AdapterSaleList(final Context context, final int type, final ArrayList<String> legWorks_) {
-        legWorks = legWorks_;
+    public AdapterSaleMyList(final Context context, final int type, final ArrayList<String> legWorks_) {
+        data = legWorks_;
         mContext = context;
         mType = type;
     }
@@ -40,12 +51,12 @@ public class AdapterSaleList extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return legWorks.size();
+        return data.size();
     }
 
     @Override
     public Object getItem(final int i) {
-        return legWorks.isEmpty() ? null : legWorks.get(i);
+        return data.isEmpty() ? null : data.get(i);
     }
 
     @Override
@@ -54,15 +65,19 @@ public class AdapterSaleList extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int i, View view, final ViewGroup viewGroup) {
+    public View getView(final int position, View view, final ViewGroup viewGroup) {
         HolderView holder;
         if (null == view) {
             view = LayoutInflater.from(mContext).inflate(R.layout.item_my_sale, viewGroup, false);
             holder = new HolderView();
+            holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
+            holder.tv_number = (TextView) view.findViewById(R.id.tv_number);
+            holder.tv_price = (TextView) view.findViewById(R.id.tv_price);
             view.setTag(holder);
         } else {
             holder = (HolderView) view.getTag();
         }
+        holder.setContent(position);
 //        final LegWork legWork = legWorks.get(i);
 //        TextView tv_customer_name = ViewHolder.get(view, R.id.tv_customer_name);
 //        TextView tv_user_name = ViewHolder.get(view, R.id.tv_user_name);
@@ -90,6 +105,10 @@ public class AdapterSaleList extends BaseAdapter {
     }
 
     class HolderView {
+        TextView tv_name, tv_number, tv_price;
 
+        public void setContent(int position) {
+            tv_name.setText(data.get(position));
+        }
     }
 }

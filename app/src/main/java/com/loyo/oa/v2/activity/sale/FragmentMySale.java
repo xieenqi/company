@@ -31,6 +31,6 @@ public class FragmentMySale extends BaseFragment {
 
     private void initUi(View myView) {
         lv_list = (PullToRefreshListView) myView.findViewById(R.id.lv_list);
-        lv_list.setAdapter(new AdapterSaleList());
+        lv_list.setAdapter(new AdapterSaleMyList(getActivity()));
     }
 }
