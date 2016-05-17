@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/sale_teamlist_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="成都东软收购机会"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginLeft="@dimen/dimen_14"
+            />
+
+        <TextView
+            android:id="@+id/sale_teamlist_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="初步接洽(10%)"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginRight="@dimen/dimen_14"
+            />
+
+        </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/sale_teamlist_guess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="预估销售金额:"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginLeft="@dimen/dimen_14"
+            />
+
+        <TextView
+            android:id="@+id/sale_teamlist_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2000"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginLeft="@dimen/dimen_14"
+            />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="负责人:"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginLeft="@dimen/dimen_14"
+            />
+
+        <TextView
+            android:id="@+id/sale_teamlist_creator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="罗超"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_15"
+            android:layout_marginLeft="@dimen/dimen_14"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
