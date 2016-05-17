@@ -34,6 +34,7 @@ public class ActivityAddMySale extends BaseActivity {
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnTouchListener(Global.GetTouch());
         ll_back.setOnClickListener(click);
+        iv_submit.setOnClickListener(click);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -42,6 +43,9 @@ public class ActivityAddMySale extends BaseActivity {
             switch (v.getId()) {
                 case R.id.ll_back:
                     finish();
+                    break;
+                case R.id.iv_submit:
+                    Toast("创建机会");
                     break;
             }
         }
