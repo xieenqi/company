@@ -36,8 +36,7 @@ import retrofit.client.Response;
  */
 public class WfInstanceTypeSelectManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    ViewGroup img_title_left;
-
+    public ViewGroup img_title_left;
     public PullToRefreshListView listView_bizform;
     public WfInstanceTypeSelectListViewAdapter wfInstanceTypeSelectListViewAdapter;
 

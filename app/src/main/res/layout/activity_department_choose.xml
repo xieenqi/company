@@ -5,7 +5,8 @@
               android:orientation="vertical">
 
 
-    <include layout="@layout/include_item_title"/>
+    <!--<include layout="@layout/include_item_title"/>-->
+    <include layout="@layout/include_common_title" />
 
     <ListView
         android:id="@+id/lv_deptList"

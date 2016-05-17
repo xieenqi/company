@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.wfinstance;
+package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,7 +20,7 @@ public class DepartmentChooseAdapter extends BaseAdapter {
     private Context context;
     private List<UserInfo> data;
 
-    DepartmentChooseAdapter(final Context context,final List<UserInfo> data) {
+    public DepartmentChooseAdapter(final Context context, final List<UserInfo> data) {
         this.context = context;
         this.data = data;
     }
