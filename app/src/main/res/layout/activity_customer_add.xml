@@ -52,7 +52,7 @@
                         android:background="@drawable/tv_frame_customer"
                         android:gravity="center"
                         android:text="查重"
-                        android:textColor="@color/dodgerblue"
+                        android:textColor="@color/title_bg1"
                         />
                 </LinearLayout>
 

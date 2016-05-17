@@ -19,11 +19,13 @@
             android:gravity="center_vertical"
             android:minWidth="80dp"
             android:text="ddddd"
-            android:textSize="16sp"/>
+            android:textColor="@color/text33"
+            android:textSize="15sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             >
 
             <EditText
@@ -44,16 +46,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dimen_4"
                 android:gravity="center_vertical"
                 android:src="@drawable/right_arrow"/>
         </RelativeLayout>
 
     </LinearLayout>
 
-    <View
-        style="@style/view_split"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_marginRight="@dimen/margin_side_edge"/>
+    <include layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>

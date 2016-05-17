@@ -2,25 +2,20 @@ package com.loyo.oa.v2.activity.work;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -67,14 +62,12 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -247,7 +240,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     break;
             }
             NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer
-                    .getUser() ? mWorkReport.reviewer.getUser() : null;
+                    .user ? mWorkReport.reviewer.user : null;
             tv_reviewer.setText(null == reviewer ? "" : reviewer.getName());
 
             tv_toUser.setText(getMenberText());
@@ -288,7 +281,7 @@ public class WorkReportAddActivity extends BaseActivity {
                         HttpErrorCheck.checkResponse(response);
                         mReviewer = new Reviewer();
                         if (reviewer.reviewer != null) {
-                            mReviewer.setUser(reviewer.reviewer.user);
+                            mReviewer.user = reviewer.reviewer.user;
                             tv_reviewer.setText(reviewer.reviewer.user.getName());
                         }
                     }
@@ -485,7 +478,7 @@ public class WorkReportAddActivity extends BaseActivity {
                     Toast(getString(R.string.review_user) + getString(R.string.app_no_null));
                     break;
                 } else {
-                    if (mReviewer.getUser() != null && MainApp.user.id.equals(mReviewer.getUser().getId())) {
+                    if (mReviewer.user != null && MainApp.user.id.equals(mReviewer.user.getId())) {
                         Toast("点评人不能是自己");
                         break;
                     }
@@ -494,7 +487,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 bizExtData = new PostBizExtData();
                 bizExtData.setAttachmentCount(lstData_Attachment.size());
                 isDelayed = tv_time.getText().toString().contains("补签") ? true : false;
-                if(mSelectType == 2 && isDelayed){
+                if (mSelectType == 2 && isDelayed) {
                     beginAt = weeksDialog.GetBeginandEndAt()[0];
                     endAt = weeksDialog.GetBeginandEndAt()[1];
                 }
@@ -515,7 +508,7 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 if (type != TYPE_EDIT) {
-                    map.put("isDelayed",isDelayed);
+                    map.put("isDelayed", isDelayed);
                 }
                 LogUtil.d(" 报告参数   " + app.gson.toJson(map));
 
@@ -539,7 +532,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*抄送人*/
             case R.id.layout_toUser:
-                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
+                SelectDetUserActivity2.startThisForAllSelect(WorkReportAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
                 break;
             case R.id.layout_del:
                 users.clear();
@@ -719,7 +712,7 @@ public class WorkReportAddActivity extends BaseActivity {
             case SelectDetUserActivity2.REQUEST_ONLY://用户单选, 点评人
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 mReviewer = new Reviewer(u);
-                mReviewer.setUser(u);
+                mReviewer.user = u;
                 tv_reviewer.setText(u.getRealname());
                 break;
             case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
@@ -753,13 +746,13 @@ public class WorkReportAddActivity extends BaseActivity {
         }
     }
 
-   /**
-    * 补签显示数据初始化
-    * */
-    public void initRetroDate(){
+    /**
+     * 补签显示数据初始化
+     */
+    public void initRetroDate() {
 
         /*过去7天*/
-        for(int i = 0;i<7;i++){
+        for (int i = 0; i < 7; i++) {
             Calendar cl = Calendar.getInstance();
             cl.add(Calendar.DAY_OF_MONTH, -(i + 1));
             String time = app.df4.format(cl.getTime());
@@ -771,25 +764,25 @@ public class WorkReportAddActivity extends BaseActivity {
         /*过去3月*/
         Calendar cl;
         String month;
-        for(int i = 0;i<3;i++){
-            switch (i){
+        for (int i = 0; i < 3; i++) {
+            switch (i) {
                 case 0:
                     cl = Calendar.getInstance();
-                    cl.add(Calendar.DAY_OF_MONTH, - 30);
+                    cl.add(Calendar.DAY_OF_MONTH, -30);
                     month = app.df15.format(cl.getTime());
                     pastThreeMonth[i] = month;
                     break;
 
                 case 1:
                     cl = Calendar.getInstance();
-                    cl.add(Calendar.DAY_OF_MONTH, - 60);
+                    cl.add(Calendar.DAY_OF_MONTH, -60);
                     month = app.df15.format(cl.getTime());
                     pastThreeMonth[i] = month;
                     break;
 
                 case 2:
                     cl = Calendar.getInstance();
-                    cl.add(Calendar.DAY_OF_MONTH, - 90);
+                    cl.add(Calendar.DAY_OF_MONTH, -90);
                     month = app.df15.format(cl.getTime());
                     pastThreeMonth[i] = month;
                     break;
@@ -799,8 +792,8 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * wheel单列组件初始化
-     * */
-    public View singleRowSelect(String[] arrlst){
+     */
+    public View singleRowSelect(String[] arrlst) {
         View outerView = LayoutInflater.from(this).inflate(R.layout.wheel_view, null);
         SingleRowWheelView wv = (SingleRowWheelView) outerView.findViewById(R.id.wheel_view_wv);
         wv.setOffset(2);//为了界面好看，故意将index多加2条，因此取item下标时，要-2
@@ -818,15 +811,15 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * wheelDialog弹出选择框
-     * */
-    public void showSingleRowAlert(String[] arrlist,String title){
+     */
+    public void showSingleRowAlert(String[] arrlist, String title) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setView(singleRowSelect(arrlist))
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (mSelectType){
+                        switch (mSelectType) {
                             case 1:
                                 currentValue = pastSevenDay[retroIndex];
                                 beginAt = DateTool.getSomeDayBeginAt(retroIndex);
@@ -854,7 +847,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 补签日期选择
-     * */
+     */
     void selectDate() {
         switch (mSelectType) {
 
@@ -870,7 +863,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*月报补签*/
             case WorkReport.MONTH:
-                showSingleRowAlert(pastThreeMonth,"月报补签");
+                showSingleRowAlert(pastThreeMonth, "月报补签");
                 break;
 
             default:

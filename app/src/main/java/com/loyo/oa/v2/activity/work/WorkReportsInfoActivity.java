@@ -282,9 +282,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
         } else {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
-        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
+        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
         tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
-        tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
+        tv_reviewer.setText(mWorkReport.reviewer.user.getName());
         tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: " + getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
@@ -299,13 +299,13 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.isReviewed()) {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
-            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.getUser().getName());
-            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.getReviewedAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
+            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             btn_workreport_review.setVisibility(View.GONE);
-            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.getScore())).intValue() / 20);
+            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
 
-            if (!StringUtil.isEmpty(mWorkReport.reviewer.getComment())) {
-                edt_content.setText(mWorkReport.reviewer.getComment());
+            if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
+                edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);
             } else {
                 layout_content.setVisibility(View.GONE);
@@ -364,7 +364,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-        if (("1").equals(mWorkReport.reviewer.getStatus())) {
+        if (("1").equals(mWorkReport.reviewer.status)) {
             isOver = true;
         }
         Bundle bundle = new Bundle();
@@ -383,10 +383,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.attachmentUUId);
-        bundle.putInt("status", Integer.parseInt(mWorkReport.reviewer.getStatus()));
+        bundle.putInt("status", Integer.parseInt(mWorkReport.reviewer.status));
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
-        int status = Integer.parseInt(mWorkReport.reviewer.getStatus());
+        int status = Integer.parseInt(mWorkReport.reviewer.status);
         ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
     }
 

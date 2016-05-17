@@ -36,7 +36,7 @@
 
 
     <!--新版标注-->
-    <dimen name="view_first_margin_top">20dp</dimen>
+    <dimen name="view_first_margin_top">15dp</dimen>
     <dimen name="margin_side_edge">14dp</dimen>
     <dimen name="margin_other_view">14dp</dimen>
     <dimen name="layout_row_margin_top">17dp</dimen>

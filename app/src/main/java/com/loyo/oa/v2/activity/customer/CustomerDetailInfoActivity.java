@@ -248,9 +248,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_sale_activity_date.setText(app.df3.format(new Date(mCustomer.lastActAt * 1000)));
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
-            tv_address.setText(mCustomer.loc.addr);
+            tv_address.setText("地址：" + mCustomer.loc.addr);
         }
-        tv_tags.setText(Utils.getTagItems(mCustomer));
+        tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         Contact contact = Utils.findDeault(mCustomer);
         if (null != contact) {
             tv_contact_name.setText(contact.getName());

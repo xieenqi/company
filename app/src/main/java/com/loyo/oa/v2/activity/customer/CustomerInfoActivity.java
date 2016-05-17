@@ -76,8 +76,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
     @ViewById
     ViewGroup layout_customer_district;
     @ViewById
-    ViewGroup layout_customer_industry;
-    @ViewById
     ViewGroup layout_customer_label;
     @ViewById
     ViewGroup layout_customer_responser;
@@ -102,8 +100,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @ViewById
     TextView tv_labels;
-    @ViewById
-    TextView tv_industry;
     @ViewById
     TextView tv_district;
     LinearLayout layout_rushpackger;
@@ -155,7 +151,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         layout_customer_join_users.setOnTouchListener(Global.GetTouch());
         img_del_join_users.setOnTouchListener(Global.GetTouch());
         layout_customer_district.setOnTouchListener(Global.GetTouch());
-        layout_customer_industry.setOnTouchListener(Global.GetTouch());
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         ((TextView) findViewById(R.id.tv_title_1)).setText("客户信息");
         getCustomer();
@@ -300,7 +295,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             if (null != mCustomer.loc && mCustomer.loc.loc.length > 1) {
                 lat = mCustomer.loc.loc[1];
                 lng = mCustomer.loc.loc[0];
-                addres=mCustomer.loc.addr;
+                addres = mCustomer.loc.addr;
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -333,7 +328,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         if (regional.province != null) {
             tv_district.setText(regional.province + " " + regional.city + " " + regional.county + " ");
         }
-        tv_industry.setText(industry.getName());
         edt_customer_memo.setText(mCustomer.summary);
         tv_customer_create_at.setText(app.df3.format(new Date(mCustomer.createdAt * 1000)));
 
@@ -359,7 +353,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
         tv_customer_name.setEnabled(false);
         tv_address.setEnabled(false);
         edt_customer_memo.setEnabled(false);
-        layout_customer_industry.setEnabled(false);
         layout_customer_district.setEnabled(false);
         layout_customer_responser.setEnabled(false);
         layout_customer_join_users.setEnabled(false);
@@ -417,7 +410,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_label,
             R.id.img_refresh_address, R.id.img_go_where, R.id.img_del_join_users,
-            R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district, R.id.layout_customer_industry})
+            R.id.layout_customer_responser, R.id.layout_customer_join_users, R.id.layout_customer_district})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -425,11 +418,11 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             case R.id.img_title_right:
 
-                    if (!testDynamicword()) {
-                        Toast("请填写必填选项");
-                    } else {
-                        updateCustomer();
-                    }
+                if (!testDynamicword()) {
+                    Toast("请填写必填选项");
+                } else {
+                    updateCustomer();
+                }
 
                 break;
 
@@ -438,7 +431,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 if (mTagItems != null) {
                     bundle2.putSerializable("tagitems", Utils.convertTagItems(mTagItems));
                     bundle2.putString("customerId", mCustomer.getId());
-                    bundle2.putBoolean("isMem",isMem);
+                    bundle2.putBoolean("isMem", isMem);
                 }
                 app.startActivityForResult(this, CustomerLabelActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_LABEL, bundle2);
                 break;
@@ -449,7 +442,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                 break;
             /*路径规划*/
             case R.id.img_go_where:
-                Utils.goWhere(this, lat, lng,addres);
+                Utils.goWhere(this, lat, lng, addres);
                 break;
             /*清除参与人*/
             case R.id.img_del_join_users:
@@ -470,20 +463,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             case R.id.layout_customer_district:
                 loadAreaCodeTable();
                 break;
-
-            /**
-             * 行业取消不做
-             * */
-/*            case R.id.layout_customer_industry:
-                new DialogFragmentIndustryCast().show(getSupportFragmentManager(), "行业选择", new OnMenuSelectCallback() {
-                    @Override
-                    public void onMenuSelected(Object o) {
-                        industry = (Industry) o;
-                        tv_industry.setText(industry.getName());
-                    }
-                });
-                break;*/
-
             default:
                 break;
         }

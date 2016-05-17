@@ -448,8 +448,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //报告
             else if (o instanceof WorkReport) {
                 final WorkReport workReport = (WorkReport) o;
-                if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
-                    content.setText("点评: " + workReport.reviewer.getUser().getName());
+                if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
+                    content.setText("点评: " + workReport.reviewer.user.getName());
                 }
                 StringBuilder reportTitle = new StringBuilder(workReport.creator.name + "提交 ");
                 String reportDate = "";

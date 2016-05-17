@@ -343,7 +343,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         sbTId.append(String.valueOf(tag.gettId()));
 
                     } else {
-                        sb.append("/");
+                        sb.append("、");
                         sb.append(String.valueOf(tag.getItemName()));
 
                         sbItemId.append(",");
