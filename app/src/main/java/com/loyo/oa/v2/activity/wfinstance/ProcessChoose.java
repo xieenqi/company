@@ -6,20 +6,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.DepartmentChooseAdapter;
+import com.loyo.oa.v2.adapter.ProcessChooseAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.WfTemplate;
 import com.loyo.oa.v2.tool.BaseActivity;
+import java.util.ArrayList;
 
 /**
- * 【部门选择】  页面
- * Created15/12/3.xnq
+ * 【流程选择】  页面
+ * Created16/5/18 yyy
  */
-public class DepartmentChoose extends BaseActivity {
+public class ProcessChoose extends BaseActivity {
 
-    ListView lv_deptList;
-    LinearLayout img_title_left;
+    private ListView lv_deptList;
+    private LinearLayout img_title_left;
+    private Intent intent;
+    private ArrayList<WfTemplate> wfTemplateArrayList;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -29,18 +32,21 @@ public class DepartmentChoose extends BaseActivity {
     }
 
     private void initUI() {
-        super.setTitle("部门选择");
+        super.setTitle("选择流程");
+        intent = getIntent();
+        wfTemplateArrayList = (ArrayList<WfTemplate>) intent.getExtras().getSerializable("data");
+
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(click);
         lv_deptList = (ListView) findViewById(R.id.lv_deptList);
-        final DepartmentChooseAdapter adapter=new DepartmentChooseAdapter(DepartmentChoose.this, MainApp.user.depts);
+        final ProcessChooseAdapter adapter=new ProcessChooseAdapter(ProcessChoose.this,wfTemplateArrayList);
         lv_deptList.setAdapter(adapter);
         lv_deptList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
-                Intent intent=new Intent();
-                intent.putExtra(DepartmentChoose.class.getName(), adapter.getData().get(position));
-                app.finishActivity(DepartmentChoose.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                Intent intent = new Intent();
+                intent.putExtra("position",position);
+                app.finishActivity(ProcessChoose.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
             }
         });
     }
@@ -50,7 +56,7 @@ public class DepartmentChoose extends BaseActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.img_title_left:
-                    app.finishActivity(DepartmentChoose.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    app.finishActivity(ProcessChoose.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                     break;
 
                 default:

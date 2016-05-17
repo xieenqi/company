@@ -1,11 +1,12 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2014/12/31.
  */
-public class WfTemplate {
+public class WfTemplate implements Serializable{
     private  String  bizformId ;//int64, optional): ,
 
     private  String  companyId ;//int, optional): ,

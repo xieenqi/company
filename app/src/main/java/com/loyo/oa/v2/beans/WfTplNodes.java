@@ -1,9 +1,11 @@
 package com.loyo.oa.v2.beans;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2014/12/31.
  */
-public class WfTplNodes {
+public class WfTplNodes implements Serializable{
     private  int  createdAt ;//&{time Time}, optional): ,
 
     private  User  creator ;//&{organization User}, optional): ,
