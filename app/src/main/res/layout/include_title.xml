@@ -56,11 +56,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/dimen_8"
+        android:layout_marginRight="@dimen/margin_other_view"
         android:gravity="center_vertical"
         android:scaleType="fitCenter"
-        android:src="@drawable/right_submit1"
-        android:visibility="gone"/>
+        />
 
 
 </RelativeLayout>
