@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/activity_bg"
-             >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/activity_bg"
+    >
 
 
-    <include android:id="@+id/layout_include" layout="@layout/include_common_title"/>
+    <include
+        android:id="@+id/layout_include"
+        layout="@layout/include_common_title"/>
 
     <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
-        android:layout_below="@+id/layout_include"
-        android:layout_above="@+id/layout_add"
         android:id="@+id/lv_saleActivity"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/layout_add"
+        android:layout_below="@+id/layout_include"
         android:cacheColorHint="#00000000"
-        android:divider="@color/activity_split"
-        android:dividerHeight="0.5dp"/>
+        android:divider="@null"
+        />
 
     <RelativeLayout
-        android:layout_alignParentBottom="true"
         android:id="@+id/layout_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/whitesmoke"
         >
 
         <LinearLayout
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:orientation="horizontal"
             >
+
             <ImageView
-                android:layout_gravity="center"
-                android:layout_marginRight="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/icon_common_add"
                 />
 
@@ -47,8 +50,9 @@
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center"
                 android:text="新增跟进动态"
-                android:textColor="@color/title_bg1"/>
-            </LinearLayout>
+                android:textColor="@color/title_bg1"
+                android:textSize="@dimen/text_sp15"/>
+        </LinearLayout>
 
     </RelativeLayout>
 </RelativeLayout>
