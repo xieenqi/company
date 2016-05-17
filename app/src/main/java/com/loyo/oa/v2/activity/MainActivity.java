@@ -44,6 +44,7 @@ import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
+import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
@@ -340,7 +341,9 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class, "0203"),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class, "0204"),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class, "0211"),
-                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")));
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0"),
+                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0")
+        ));
 
         if (MainApp.user == null) {
             return;
@@ -629,7 +632,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 //                    e.printStackTrace();
 //                }
                 HttpErrorCheck.checkResponse("考勤信息：", response);
-                attendanceRecord.setAddress(null==address?"没有获取到有效地址":address);
+                attendanceRecord.setAddress(null == address ? "没有获取到有效地址" : address);
 
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();

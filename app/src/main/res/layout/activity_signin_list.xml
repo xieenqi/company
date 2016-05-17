@@ -4,11 +4,13 @@
               android:layout_height="match_parent"
               android:background="@color/white"
               android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/title_bg1"
         android:orientation="vertical">
+
         <include layout="@layout/include_common_title_2"/>
     </LinearLayout>
 
@@ -17,11 +19,11 @@
         android:layout_height="match_parent">
 
         <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
-            android:layout_above="@+id/layout_add"
             android:id="@+id/listView_legworks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:layout_above="@+id/layout_add"
+            android:background="@color/whitesmoke"
             android:cacheColorHint="#00000000"
             android:drawSelectorOnTop="true"
             android:fadingEdge="none"
@@ -31,37 +33,37 @@
             android:smoothScrollbar="true"/>
 
         <RelativeLayout
-            android:layout_alignParentBottom="true"
             android:id="@+id/layout_add"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_45"
+            android:layout_height="@dimen/dimen_48"
+            android:layout_alignParentBottom="true"
             android:background="@color/whitesmoke">
 
 
             <LinearLayout
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:orientation="horizontal"
                 >
 
                 <ImageView
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_common_add"
+                    android:layout_gravity="center"
                     android:layout_marginRight="5dp"
+                    android:background="@drawable/icon_common_add"
                     />
 
                 <TextView
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="新增拜访签到"
-                    android:textSize="15sp"
-                    android:textColor="@color/title_bg1"/>
-                </LinearLayout>
+                    android:textColor="@color/title_bg1"
+                    android:textSize="15sp"/>
+            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

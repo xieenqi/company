@@ -660,6 +660,12 @@
             android:name=".activity.discuss.ActivityDiscussDet"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+        <!--销售机会 -->
+        <activity
+            android:name=".activity.sale.ActivitySaleOpportunitiesManager"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"
