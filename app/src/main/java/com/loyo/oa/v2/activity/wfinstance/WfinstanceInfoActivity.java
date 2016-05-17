@@ -180,7 +180,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     tv_value.setEnabled(false);
                     tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
                     TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-                    tv_key.setText(field.getName());
+                    tv_key.setText(field.getName()+": ");
                     layout_wfinstance_content.addView(view_value);
                 }
             }
@@ -217,7 +217,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (wfInstance == null) {
             return;
         }
-        tv_time_creator.setText(wfInstance.creator.name + " " + app.df3.format(new Date(wfInstance.createdAt * 1000)) + " 提交");
+        try {
+            tv_time_creator.setText(wfInstance.creator.name + " " + app.df3.format(new Date(wfInstance.createdAt * 1000)) + " 提交");
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         if (wfInstance.creator != null) {
             tv_title_creator.setText(wfInstance.title);
 
@@ -345,7 +349,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
-
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current, final Response response) {
