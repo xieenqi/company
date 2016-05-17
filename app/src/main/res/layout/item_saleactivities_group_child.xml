@@ -124,7 +124,7 @@
             android:layout_marginBottom="@dimen/dimen_10"
             android:layout_marginLeft="@dimen/margin_other_view"
             android:layout_marginRight="@dimen/margin_other_view"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <ImageView

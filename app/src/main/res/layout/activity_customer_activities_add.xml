@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/dimen_16"
+                android:paddingLeft="@dimen/margin_other_view"
                 >
 
                 <EditText
@@ -32,8 +32,11 @@
                     android:layout_weight="1"
                     android:gravity="left|top"
                     android:hint="请填写跟进内容"
-                    android:minHeight="100dp"
-                    android:padding="5dp"/>
+                    android:minHeight="200dp"
+                    android:paddingBottom="@dimen/dimen_10"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="@dimen/dimen_10"
+                    />
 
                 <View
                     style="@style/view_split"
@@ -48,15 +51,18 @@
                 android:layout_height="@dimen/dimen_48"
                 android:background="@color/white"
                 android:orientation="horizontal"
+                android:paddingRight="@dimen/dimen_4"
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginLeft="@dimen/margin_other_view"
                     android:gravity="center_vertical"
-                    android:minWidth="@dimen/dimen_110"
-                    android:text="跟进方式"/>
+                    android:minWidth="@dimen/dimen_100"
+                    android:text="跟   进  方   式"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -86,11 +92,7 @@
 
             </LinearLayout>
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"
-                />
+            <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
                 android:id="@+id/layout_remain_time"
@@ -103,10 +105,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_16"
+                    android:layout_marginLeft="@dimen/margin_other_view"
                     android:gravity="center_vertical"
-                    android:minWidth="@dimen/dimen_110"
-                    android:text="下次跟进提醒"/>
+                    android:minWidth="@dimen/dimen_100"
+                    android:paddingRight="@dimen/dimen_4"
+                    android:text="下次跟进提醒"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
