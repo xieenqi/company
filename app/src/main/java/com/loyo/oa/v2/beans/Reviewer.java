@@ -10,13 +10,13 @@ import java.io.Serializable;
  */
 public class Reviewer implements Serializable {
 
-    private NewUser user = new NewUser();
-    private boolean viewed;//k看过吗
-    private boolean reviewed;//点评过吗
-    private long reviewedAt;//点评时间
-    private int score;//点评分数
-    private String comment;//点评内容
-    private String status;
+    public NewUser user = new NewUser();
+    public boolean viewed;//k看过吗
+    public boolean reviewed;//点评过吗
+    public long reviewedAt;//点评时间
+    public int score;//点评分数
+    public String comment;//点评内容
+    public String status;
 
     public String id;
     public String name;
@@ -29,52 +29,52 @@ public class Reviewer implements Serializable {
     public Reviewer(NewUser user) {
         this.user = user;
     }
-
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-
-    public String getComment() {
-        return comment;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public long getReviewedAt() {
-        return reviewedAt;
-    }
-
-    public void setReviewedAt(long reviewedAt) {
-        this.reviewedAt = reviewedAt;
-    }
-
-
-    public boolean isReviewed() {
-        return reviewed;
-    }
-
-
-    public boolean isViewed() {
-        return viewed;
-    }
-
-    public void setViewed(boolean viewed) {
-        this.viewed = viewed;
-    }
-
-    public NewUser getUser() {
-        return user;
-    }
-
-    public void setUser(NewUser user) {
-        this.user = user;
-    }
+//
+//
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
+//
+//
+//    public String getComment() {
+//        return comment;
+//    }
+//
+//    public int getScore() {
+//        return score;
+//    }
+//
+//    public long getReviewedAt() {
+//        return reviewedAt;
+//    }
+//
+//    public void setReviewedAt(long reviewedAt) {
+//        this.reviewedAt = reviewedAt;
+//    }
+//
+//
+//    public boolean isReviewed() {
+//        return reviewed;
+//    }
+//
+//
+//    public boolean isViewed() {
+//        return viewed;
+//    }
+//
+//    public void setViewed(boolean viewed) {
+//        this.viewed = viewed;
+//    }
+//
+//    public NewUser getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(NewUser user) {
+//        this.user = user;
+//    }
 }

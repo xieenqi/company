@@ -205,8 +205,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 }
             });
 
-            if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
-                content.setText("点评: " + workReport.reviewer.getUser().getName());
+            if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
+                content.setText("点评: " + workReport.reviewer.user.getName());
             }
             StringBuilder reportTitle = new StringBuilder(workReport.reviewer.name + "提交 ");
             String reportDate = "";

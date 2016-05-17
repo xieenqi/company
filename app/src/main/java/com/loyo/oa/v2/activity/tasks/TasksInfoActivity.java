@@ -467,28 +467,28 @@ public class TasksInfoActivity extends BaseActivity {
             ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
             item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
 
-            if (!TextUtils.isEmpty(reviewer.getUser().getName())) {
-                tv_reviewer.setText(reviewer.getUser().getName());
+            if (!TextUtils.isEmpty(reviewer.user.getName())) {
+                tv_reviewer.setText(reviewer.user.getName());
             }
 
-            if (!TextUtils.isEmpty(reviewer.getReviewedAt() + "")) {
-                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.getReviewedAt() * 1000L)));
+            if (!TextUtils.isEmpty(reviewer.reviewedAt + "")) {
+                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.reviewedAt * 1000L)));
             }
 
-            if (!TextUtils.isEmpty(reviewer.getComment())) {
-                tv_task_content.setText(reviewer.getComment());
+            if (!TextUtils.isEmpty(reviewer.comment)) {
+                tv_task_content.setText(reviewer.comment);
             }
 
-            if ("0".equals(reviewer.getStatus())) {
+            if ("0".equals(reviewer.status)) {
                 item_tasks_sorece.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(reviewer.getScore() + "")) {
-                int rat = (reviewer.getScore() / 20);
+            if (!TextUtils.isEmpty(reviewer.score + "")) {
+                int rat = (reviewer.score / 20);
                 ratingBar_Task.setRating((float) (rat / 1.0));
             }
 
-            if ("1".equals(reviewer.getStatus())) {
+            if ("1".equals(reviewer.status)) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
                 tv_task_status.setVisibility(View.GONE);
@@ -644,7 +644,7 @@ public class TasksInfoActivity extends BaseActivity {
                         reponserData.addAll(mTask.responsiblePersons);
                         ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
                         for (Reviewer element : reponserData) {
-                            reponserDataUser.add(element.getUser());
+                            reponserDataUser.add(element.user);
                         }
 
                         Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
