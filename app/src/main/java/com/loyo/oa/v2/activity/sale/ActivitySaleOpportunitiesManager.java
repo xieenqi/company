@@ -17,9 +17,9 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +64,8 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
         img_title_left.setOnClickListener(this);
         ll_category.setOnClickListener(this);
         layout_title_action.setOnClickListener(this);
+        layout_title_action.setOnTouchListener(Global.GetTouch());
+        img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_arrow.setVisibility(View.VISIBLE);
     }
 
@@ -145,6 +147,5 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
         img_title_arrow.startAnimation(rotateAnimation);
         mRotation = (mRotation == 0f ? 180f : 0f);
         ll_category.setVisibility(ll_category.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-        LogUtil.d("  状态：" + ll_category.getVisibility());
     }
 }
