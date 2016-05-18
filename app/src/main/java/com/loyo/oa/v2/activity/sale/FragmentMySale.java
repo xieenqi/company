@@ -39,7 +39,7 @@ public class FragmentMySale extends BaseFragment {
         btn_add = (Button) myView.findViewById(R.id.btn_add);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(click);
-        lv_list.setAdapter(new AdapterSaleMyList(getActivity()));
+        lv_list.setAdapter(new AdapterMySaleList(getActivity()));
     }
 
     private View.OnClickListener click = new View.OnClickListener() {

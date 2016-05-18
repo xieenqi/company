@@ -48,6 +48,13 @@ public class ExtraAndResult {
     public static final int MSG_WHAT_DIALOG = 140;
     public static final int MSG_WHAT_HIDEDIALOG = 150;
 
+    public static final int REQUEST_CODE_CUSTOMER = 101;
+    public static final int REQUEST_CODE_STAGE = 102;
+    public static final int REQUEST_CODE_PRODUCT = 103;
+    public static final int REQUEST_CODE_TYPE = 104;
+    public static final int REQUEST_CODE_SOURCE = 105;
+
+
     /**
      * 传递部门数据的请求码
      */

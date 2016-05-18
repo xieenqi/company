@@ -47,9 +47,6 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private TextView saleteam_screen1_commy;
     private ImageView tagImage1;
 
-    private String selectId;
-    private String selectName;
-
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
     private List<SaleTeamUser> data = new ArrayList<>();

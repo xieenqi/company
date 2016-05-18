@@ -32,10 +32,7 @@
                 android:paddingTop="@dimen/dimen_5"
                 android:textSize="15sp"/>
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="16dp"/>
+            <include layout="@layout/include_solid_line_left"/>
 
             <EditText
                 android:id="@+id/edt_content"
@@ -46,29 +43,30 @@
                 android:gravity="left|top"
                 android:hint="任务内容"
                 android:inputType="textMultiLine"
+                android:maxLength="500"
                 android:minHeight="120dp"
                 android:paddingLeft="@dimen/margin_side_edge"
                 android:paddingTop="15dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
                 android:textSize="15sp"
-                android:maxLength="500"
                 />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 >
+
                 <TextView
                     android:id="@+id/wordcount"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="20dp"
                     android:text="0/500"
-                    android:textSize="12sp"
                     android:textColor="@color/text99"
+                    android:textSize="12sp"
                     />
             </RelativeLayout>
 

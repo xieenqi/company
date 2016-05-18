@@ -32,7 +32,7 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
     private ImageView img_title_arrow;
     private ListView lv_sale;
     private TextView tv_title_1;
-    private RelativeLayout layout_title_action;
+    private RelativeLayout layout_title_action, img_title_search_right;
 
     private Animation rotateAnimation;//标题动画
     private String[] SaleItemStatus = new String[]{"我的机会", "团队机会"};
@@ -53,18 +53,20 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
     private void init() {
         setTitle("我的机会");
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
+        img_title_left.setOnTouchListener(Global.GetTouch());
+        img_title_left.setOnClickListener(this);
         img_title_arrow = (ImageView) findViewById(R.id.img_title_arrow);
+        img_title_arrow.setVisibility(View.VISIBLE);
         lv_sale = (ListView) findViewById(R.id.lv_sale);
         ll_category = (LinearLayout) findViewById(R.id.ll_category);
+        ll_category.setOnClickListener(this);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
         layout_title_action = (RelativeLayout) findViewById(R.id.layout_title_action);
-
-        img_title_left.setOnClickListener(this);
-        ll_category.setOnClickListener(this);
         layout_title_action.setOnClickListener(this);
         layout_title_action.setOnTouchListener(Global.GetTouch());
-        img_title_left.setOnTouchListener(Global.GetTouch());
-        img_title_arrow.setVisibility(View.VISIBLE);
+        img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
+        img_title_search_right.setOnClickListener(this);
+        img_title_search_right.setOnTouchListener(Global.GetTouch());
     }
 
     void initTitleItem() {
@@ -133,6 +135,9 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
                 break;
             case R.id.layout_title_action:
                 changeTitleImg();
+                break;
+            case R.id.img_title_search_right:
+                Toast("收索机会");
                 break;
         }
     }

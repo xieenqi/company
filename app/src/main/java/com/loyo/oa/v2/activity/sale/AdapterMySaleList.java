@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * 作者 : xeq
  * 时间 : 16/5/17
  */
-public class AdapterSaleMyList extends BaseAdapter {
+public class AdapterMySaleList extends BaseAdapter {
 
     public static final int TYPE_LIST_OF_CUSTOMER = 1;
     public static final int TYPE_LIST_OF_USER = TYPE_LIST_OF_CUSTOMER + 1;
@@ -26,7 +26,7 @@ public class AdapterSaleMyList extends BaseAdapter {
     private Context mContext;
     private int mType;
 
-    public AdapterSaleMyList(Context context) {
+    public AdapterMySaleList(Context context) {
         mContext = context;
         data.add("机会1");
         data.add("机会1");
@@ -39,7 +39,7 @@ public class AdapterSaleMyList extends BaseAdapter {
         data.add("机会1");
     }
 
-    public AdapterSaleMyList(final Context context, final int type, final ArrayList<String> legWorks_) {
+    public AdapterMySaleList(final Context context, final int type, final ArrayList<String> legWorks_) {
         data = legWorks_;
         mContext = context;
         mType = type;

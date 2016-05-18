@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -238,43 +237,47 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
      * 获取客户标签 筛选menu
      */
     private void initTagsMenu() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).GetTags(new RCallback<ArrayList<Tag>>() {
-            @Override
-            public void success(ArrayList<Tag> tags, Response response) {
-                HttpErrorCheck.checkResponse(response);
-                if (null == tags) {
-                    return;
-                }
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                GetTags(new RCallback<ArrayList<Tag>>() {
+                    @Override
+                    public void success(ArrayList<Tag> tags, Response response) {
+                        HttpErrorCheck.checkResponse("客户标签：", response);
+                        if (null == tags) {
+                            return;
+                        }
 
-                DropItem dropItemTag = new DropItem("标签");
-                dropItemTag.setSelectType(DropItem.GROUP_SINGLE);
-                int index = 0;
-                for (Tag tag : tags) {
-                    ArrayList<DropItem> dropItems = new ArrayList<>();
-                    DropItem parentItem = new DropItem(tag.getName(), index++);
-                    ArrayList<TagItem> items = tag.getItems();
-                    int cIndex = 0;
-                    for (TagItem item : items) {
-                        DropItem dropItem = new DropItem(item.getName(), cIndex++, item.getId());
-                        dropItems.add(dropItem);
+                        DropItem dropItemTag = new DropItem("标签");
+                        dropItemTag.setSelectType(DropItem.GROUP_SINGLE);
+                        int index = 0;
+                        for (Tag tag : tags) {
+                            ArrayList<DropItem> dropItems = new ArrayList<>();
+                            DropItem parentItem = new DropItem(tag.getName(), index++);
+                            ArrayList<TagItem> items = tag.getItems();
+                            int cIndex = 0;
+                            if (!(items.size() > 0)) {//没有字标签项的情况
+                                continue;
+                            }
+                            for (TagItem item : items) {
+                                DropItem dropItem = new DropItem(item.getName(), cIndex++, item.getId());
+                                dropItems.add(dropItem);
+                            }
+                            parentItem.setSubDropItem(dropItems);
+                            dropItemTag.addSubDropItem(parentItem);
+                        }
+                        source.add(dropItemTag);
+                        if (isAdded())
+                            mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
+                        mDropMenu.setmMenuTitleTextSize(14);//Menu的文字大小
+                        mDropMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
+                        mDropMenu.setmMenuItems(source);
+                        mDropMenu.setMenuSelectedListener(CustomerCommonFragment.this);
                     }
-                    parentItem.setSubDropItem(dropItems);
-                    dropItemTag.addSubDropItem(parentItem);
-                }
-                source.add(dropItemTag);
-                if (isAdded())
-                    mDropMenu.setmMenuTitleTextColor(getResources().getColor(R.color.default_menu_press_text));//Menu的文字颜色
-                mDropMenu.setmMenuTitleTextSize(14);//Menu的文字大小
-                mDropMenu.setmMenuBackColor(Color.WHITE);//Menu的背景颜色
-                mDropMenu.setmMenuItems(source);
-                mDropMenu.setMenuSelectedListener(CustomerCommonFragment.this);
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
 
     /**
@@ -416,6 +419,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
     @Override
     public void onSelected(View listview, int ColumnIndex, SparseArray<DropItem> items) {
         page = 1;
+        tagItemIds = "";
         if (items != null && items.size() > 0) {
             switch (customer_type) {
                 /**我的客户*/
@@ -443,7 +447,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     //客户标签
                     else if (ColumnIndex == 1) {
-                        tagItemIds = "";
+
                         for (int i = 0; i < items.size(); i++) {
                             tagItemIds += items.get(items.keyAt(i)).getmData();
                             if (i != items.size() - 1) {
@@ -479,7 +483,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     //客户标签
                     else if (ColumnIndex == 1) {
-                        tagItemIds = "";
                         for (int i = 0; i < items.size(); i++) {
                             tagItemIds += items.get(items.keyAt(i)).getmData();
                             if (i != items.size() - 1) {
@@ -522,7 +525,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                     }
                     //客户标签
                     else {
-                        tagItemIds = "";
                         for (int i = 0; i < items.size(); i++) {
                             tagItemIds += items.get(items.keyAt(i)).getmData();
                             if (i != items.size() - 1) {

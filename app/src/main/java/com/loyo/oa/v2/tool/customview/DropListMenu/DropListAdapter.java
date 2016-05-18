@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.ArrayList;
 
 public class DropListAdapter extends BaseAdapter {
@@ -26,6 +28,10 @@ public class DropListAdapter extends BaseAdapter {
         }
 
         mContext = context;
+
+        for (DropItem ele:mItems) {
+
+        }
     }
 
     public DropListAdapter(Context context, ArrayList<DropItem> items, int selectIndex) {
@@ -43,6 +49,19 @@ public class DropListAdapter extends BaseAdapter {
                 }
             }
         }
+    }
+
+    public void setData(DropItem selectItem) {
+//        this.mItems = newData;
+
+        if (selectItem != null && mItems != null) {
+            for (int i = 0; i < mItems.size(); i++) {
+                if (selectItem.equals(mItems.get(i))) {
+                    mSelectIndex = i;
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -78,7 +97,7 @@ public class DropListAdapter extends BaseAdapter {
             item.setIsLock(true);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             imageView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             item.setIsLock(false);
         }
 
