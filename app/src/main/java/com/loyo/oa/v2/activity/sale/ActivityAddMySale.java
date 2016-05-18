@@ -17,7 +17,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 public class ActivityAddMySale extends BaseActivity {
     private TextView tv_title;
     private ImageView iv_submit;
-    private LinearLayout ll_back;
+    private LinearLayout ll_back, ll_customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,11 @@ public class ActivityAddMySale extends BaseActivity {
         iv_submit = (ImageView) findViewById(R.id.iv_submit);
         iv_submit.setImageResource(R.drawable.right_submit1);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        ll_customer = (LinearLayout) findViewById(R.id.ll_customer);
         ll_back.setOnTouchListener(Global.GetTouch());
         ll_back.setOnClickListener(click);
+        ll_customer.setOnTouchListener(Global.GetTouch());
+        ll_customer.setOnClickListener(click);
         iv_submit.setOnClickListener(click);
     }
 
@@ -46,6 +49,9 @@ public class ActivityAddMySale extends BaseActivity {
                     break;
                 case R.id.iv_submit:
                     Toast("创建机会");
+                    break;
+                case R.id.ll_customer://选择客户
+
                     break;
             }
         }
