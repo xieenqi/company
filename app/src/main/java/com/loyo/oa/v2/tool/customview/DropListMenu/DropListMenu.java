@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
 
@@ -93,6 +92,7 @@ public class DropListMenu extends LinearLayout {
 
     private String[] mDefaultMenuTitle;
 
+    DropListAdapter adapterChild;
 
     public DropListMenu(Context mContext) {
         super(mContext);
@@ -175,7 +175,7 @@ public class DropListMenu extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     popupWindow.dismiss();
-                    if (mMenuSelectedListener != null) {
+                    if (null != mMenuSelectedListener) {
                         mMenuSelectedListener.onSelected(v, mColumnSelected, getSelectedItems());
                     }
                 }
@@ -192,7 +192,7 @@ public class DropListMenu extends LinearLayout {
                     if (mMenuSelectedListener != null) {
                         mMenuSelectedListener.onCancelAll(mColumnSelected);
                     }
-
+                    mMenuAdapters.get(mColumnSelected).setSelectIndex(-1);
                 }
             });
 
@@ -210,29 +210,29 @@ public class DropListMenu extends LinearLayout {
                     DropItem selectRowItem = menuItem.getSubDropItem().get(mRowSelected);
 
                     //一级列表有内容时执行:
-                    if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
+                    if (null != mMenuSelectedListener && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
                         final DropListAdapter adapter = new DropListAdapter(mContext, menuItem.getSubDropItem().get(mRowSelected).getSubDropItem(), selectedItem);
-                        LogUtil.dee("一级Item(有二级内容):"+selectRowItem.getName());
-
+                        LogUtil.dee("一级Item(有二级内容):" + selectRowItem.getName());
+                        adapterChild = adapter;
                         //二级列表
                         getSubMenuList().setAdapter(adapter);
                         getSubMenuList().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                LogUtil.dee("二级Item:"+menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position).getName());
+                                LogUtil.dee("二级Item:" + menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position).getName());
 
+                                mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
+                                mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
-                                    mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
-                                    mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
-                                    if (mMenuSelectedListener != null) {
+                                    if (null != mMenuSelectedListener) {
                                         mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                                     }
                                 } else if (menuItem.getSelectType() == DropItem.GROUP_SINGLE) {
                                     DropItem selectedItem = getSelectedItems().get(mRowSelected);
                                     DropItem currentItem = menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position);
 
-                                    if (selectedItem == null) {
+                                    if (null == selectedItem) {
                                         getSelectedItems().put(mRowSelected, currentItem);
                                         adapter.setSelectIndex(position);
                                     } else {

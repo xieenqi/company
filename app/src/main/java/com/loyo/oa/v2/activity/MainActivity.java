@@ -335,13 +335,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     void updateUser() {
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class, "0205"),
+                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
                 new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class, "0206"),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class, "0201"),
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class, "0202"),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class, "0203"),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class, "0204"),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class, "0211"),
-                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
                 new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")
         ));
 
