@@ -63,7 +63,6 @@ public class CustomerRepeatAdapter extends BaseAdapter {
 
         LogUtil.dll("data:" + listCommon.getRecords().get(position).getName());
 
-
         holder.item_cuslist_tv.setText(listCommon.getRecords().get(position).getName());
         return convertView;
     }

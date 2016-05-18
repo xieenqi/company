@@ -171,7 +171,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
         if (customer_type != Customer.CUSTOMER_TYPE_MINE) {
             btn_add.setVisibility(View.GONE);
         }
-        getData();
+        //getData();
     }
 
     @Override
@@ -660,6 +660,9 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
             LogUtil.d("没有url return");
             return;
         }
+
+        showLoading("");
+        LogUtil.dee("showLoading...");
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new RCallback<PaginationX<Customer>>() {
                     @Override
                     public void success(PaginationX<Customer> customerPaginationX, Response response) {
@@ -701,7 +704,6 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
                         HttpErrorCheck.checkError(error);
                         listView.onRefreshComplete();
                     }
-
                 }
         );
     }
