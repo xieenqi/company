@@ -222,9 +222,13 @@ public class DropListMenu extends LinearLayout {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 LogUtil.dee("二级Item:" + menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position).getName());
 
-                                mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
+                                if (null != getSelectedItems().get(mColumnSelected)) {
+                                    getSelectedItems().remove(mColumnSelected);
+                                }
+
                                 mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
+                                    mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                                     if (null != mMenuSelectedListener) {
                                         mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                                     }
@@ -288,6 +292,9 @@ public class DropListMenu extends LinearLayout {
     void syncConfirmButton() {
         int size = getSelectedItems().size();
         getConfirmButton().setText("确定" + (size > 0 ? "(" + size + ")" : ""));
+        if (0 == size) {
+            mMenuAdapters.get(mColumnSelected).setSelectIndex(-1);
+        }
     }
 
     // 设置 Menu的item
