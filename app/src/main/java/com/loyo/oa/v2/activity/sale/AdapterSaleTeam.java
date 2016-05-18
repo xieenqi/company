@@ -6,25 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import java.util.ArrayList;
 
 /**
  * 我的团队 销售机会 adapter
  * Created by yyy on 16/5/17.
  */
-public class SaleTeamListAdapter extends BaseAdapter {
+public class AdapterSaleTeam extends BaseAdapter {
 
     public Context mContext;
+    public ArrayList arrayList;
+
+    public AdapterSaleTeam(Context context){
+        mContext = context;
+        arrayList = new ArrayList();
+        for(int i = 0;i<20;i++){
+            arrayList.add(i);
+        }
+    }
 
     @Override
     public int getCount() {
-        return 0;
+        return arrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return arrayList.get(position);
     }
 
     @Override
@@ -49,7 +58,9 @@ public class SaleTeamListAdapter extends BaseAdapter {
         holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
         holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
 
-        return null;
+        holder.title.setText("成都东软收购机会"+arrayList.get(position));
+
+        return convertView;
     }
 
     class viewHolder{

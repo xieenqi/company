@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropListMenu extends LinearLayout {
+
     // Menu 展开的ListView 的 adapter
     private List<DropListAdapter> mMenuAdapters = new ArrayList<>();
     // Menu 数据源

@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="成都东软收购机会"
-            android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginTop="@dimen/dimen_15"
             />
 
         <TextView
@@ -25,8 +25,8 @@
             android:layout_height="wrap_content"
             android:text="初步接洽(10%)"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginRight="@dimen/dimen_14"
+            android:layout_marginTop="@dimen/dimen_15"
             />
 
         </RelativeLayout>
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:text="预估销售金额:"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginTop="@dimen/dimen_15"
             />
 
         <TextView
@@ -63,14 +63,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/dimen_15"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="负责人:"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginTop="@dimen/dimen_15"
             />
 
         <TextView
@@ -84,5 +85,7 @@
             />
 
     </LinearLayout>
+
+    <include layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>
