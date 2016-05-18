@@ -9,7 +9,6 @@ import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
 /**
@@ -18,30 +17,31 @@ import retrofit.http.QueryMap;
  * 作者 : ykb
  * 时间 : 15/8/28.
  */
-public interface INotice
-{
+public interface INotice {
     /**
      * 分页获取通知列表
+     *
      * @param map
      * @param callback
      */
     @GET("/bulletin/query")
-    void getNoticeList(@QueryMap HashMap<String,Object> map, Callback<PaginationX<Bulletin>> callback);
+    void getNoticeList(@QueryMap HashMap<String, Object> map, Callback<PaginationX<Bulletin>> callback);
 
     /**
      * 发布通知
+     *
      * @param body
      * @param callback
      */
     @POST("/bulletin")
-    void publishNotice(@Body HashMap<String, Object> body,Callback<Bulletin> callback);
+    void publishNotice(@Body HashMap<String, Object> body, Callback<Bulletin> callback);
 
-    /**
-     * 根据id查看通知详情
-     * @param id
-     * @param callback
-     */
-    @GET("/bulletin/{id}")
-    void examineNoticeById(@Path("id") int id,Callback<Bulletin> callback);
+//    /**
+//     * 根据id查看通知详情
+//     * @param id
+//     * @param callback
+//     */
+//    @GET("/bulletin/{id}")
+//    void examineNoticeById(@Path("id") int id,Callback<Bulletin> callback);
 
 }

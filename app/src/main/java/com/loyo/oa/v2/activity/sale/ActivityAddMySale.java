@@ -10,12 +10,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.salebens.SaleFild;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+
+import java.util.ArrayList;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【创建销售机会】
@@ -33,6 +42,7 @@ public class ActivityAddMySale extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_my_sale);
         init();
+        getDynamicInfo();
     }
 
     private void init() {
@@ -101,6 +111,23 @@ public class ActivityAddMySale extends BaseActivity {
             }
         }
     };
+
+    /**
+     * 获取动态字段
+     */
+    private void getDynamicInfo() {
+        HttpSaleBuild.buildSale().create(ISale.class).getSaleFild(new Callback<ArrayList<SaleFild>>() {
+            @Override
+            public void success(ArrayList<SaleFild> bulletinPaginationX, Response response) {
+                HttpErrorCheck.checkResponse("销售机会动态字段：", response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
