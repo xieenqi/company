@@ -31,6 +31,6 @@ public interface ISale {
      * 获取 销售 产品【product】 机会类型【change_type】 机会来源【changeSource】
      */
     @GET("/chance/filed/name")
-    void getSaleStage111(@QueryMap HashMap<String, String> map, Callback<ArrayList<SaleFild>> callback);
+    void getSaleSystem(@QueryMap HashMap<String, String> map, Callback<SaleFild> callback);
 
 }

@@ -89,6 +89,8 @@ public class DropListMenu extends LinearLayout {
     //向下的箭头图片资源
     private int mDownArrow;
 
+    private int oldIndex = -1;
+
     private boolean mDrawable = false;
 
     private String[] mDefaultMenuTitle;
@@ -223,9 +225,9 @@ public class DropListMenu extends LinearLayout {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 LogUtil.dee("二级Item:" + menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position).getName());
 
-//                                if (null != getSelectedItems().get(mColumnSelected)) {
-//                                    getSelectedItems().remove(mColumnSelected);
-//                                }
+                                if (null != getSelectedItems().get(mColumnSelected)) {
+                                    getSelectedItems().remove(mColumnSelected);
+                                }
 
                                 mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
@@ -237,11 +239,15 @@ public class DropListMenu extends LinearLayout {
                                     DropItem selectedItem = getSelectedItems().get(position);
                                     DropItem currentItem = menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position);
 
+                                    if (oldIndex != -1) {//移除前一次选择的数据
+                                        getSelectedItems().remove(oldIndex);
+                                    }
                                     if (null == selectedItem) {
+                                        oldIndex = position;
                                         getSelectedItems().put(position, currentItem);
                                         adapter.setSelectIndex(position);
 
-                                    } else {
+                                    } else if (null != selectedItem) {
                                         getSelectedItems().remove(position);
                                         if (!selectedItem.equals(currentItem)) {
 
@@ -295,12 +301,14 @@ public class DropListMenu extends LinearLayout {
     void syncConfirmButton() {
         int size = getSelectedItems().size();
         getConfirmButton().setText("确定" + (size > 0 ? "(" + size + ")" : ""));
+
         if (0 == size) {
             mMenuAdapters.get(mColumnSelected).setSelectIndex(-1);
         }
     }
 
     // 设置 Menu的item
+
     public void setmMenuItems(ArrayList<DropItem> menuItems) {
         mMenuItems = menuItems;
         mDrawable = true;

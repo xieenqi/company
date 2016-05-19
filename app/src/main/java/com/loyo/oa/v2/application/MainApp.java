@@ -100,7 +100,7 @@ public class MainApp extends Application {
     public String address;
     public static boolean isQQLogin = false;
     public boolean hasNewVersion = false;
-    public static HashMap<String,Object> rootMap;
+    public static HashMap<String, Object> rootMap;
 
 
     //-------这些数据需要保存在本地-------------

@@ -8,8 +8,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
+import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
@@ -18,7 +20,11 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -28,7 +34,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/17.
  */
 public class ActivityAddMySale extends BaseActivity {
-    private TextView tv_title, tv_customer;
+    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source;
     private ImageView iv_submit;
     private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source;
     private EditText et_name, et_money, et_remake;
@@ -73,6 +79,9 @@ public class ActivityAddMySale extends BaseActivity {
         ll_source.setOnClickListener(click);
         iv_submit.setOnClickListener(click);
         tv_customer = (TextView) findViewById(R.id.tv_customer);
+        tv_stage = (TextView) findViewById(R.id.tv_stage);
+        tv_type = (TextView) findViewById(R.id.tv_type);
+        tv_source = (TextView) findViewById(R.id.tv_source);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -91,8 +100,11 @@ public class ActivityAddMySale extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
                 case R.id.ll_stage://选择销售阶段
+                    Bundle stage = new Bundle();
+                    stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
+                    stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, null);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                     break;
                 case R.id.ll_estimate://选择预估成交时间
 
@@ -101,10 +113,18 @@ public class ActivityAddMySale extends BaseActivity {
 
                     break;
                 case R.id.ll_type://选择机会类型
-
+                    Bundle type = new Bundle();
+                    type.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_TYPE);
+                    type.putString(ExtraAndResult.EXTRA_NAME, "机会类型");
+                    app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_TYPE, type);
                     break;
                 case R.id.ll_source://选择机会来源
-
+                    Bundle source = new Bundle();
+                    source.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_SOURCE);
+                    source.putString(ExtraAndResult.EXTRA_NAME, "机会来源");
+                    app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, source);
                     break;
             }
         }
@@ -114,7 +134,8 @@ public class ActivityAddMySale extends BaseActivity {
      * 获取动态字段
      */
     private void getDynamicInfo() {
-        HttpSaleBuild.buildSale().create(ISale.class).getSaleFild(new Callback<ArrayList<SaleFild>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(ISale.class).getSaleFild(new Callback<ArrayList<SaleFild>>() {
             @Override
             public void success(ArrayList<SaleFild> bulletinPaginationX, Response response) {
                 HttpErrorCheck.checkResponse("销售机会动态字段：", response);
@@ -138,6 +159,18 @@ public class ActivityAddMySale extends BaseActivity {
                         customerName = customer.name;
                     }
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_STAGE:
+                    SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                    tv_stage.setText(stage.name);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_TYPE:
+                    String saletype = data.getStringExtra(ExtraAndResult.EXTRA_DATA);
+                    tv_type.setText(saletype);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_SOURCE:
+                    String salesource = data.getStringExtra(ExtraAndResult.EXTRA_DATA);
+                    tv_source.setText(salesource);
                     break;
             }
         }
