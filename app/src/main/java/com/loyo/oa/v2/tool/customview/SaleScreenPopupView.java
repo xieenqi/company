@@ -2,7 +2,6 @@ package com.loyo.oa.v2.tool.customview;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +13,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.AdapterSaleTeamScreen;
+import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeamScreen;
 import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
 import com.loyo.oa.v2.beans.User;

@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
+import com.loyo.oa.v2.activity.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -84,6 +84,13 @@ public class FragmentMySale extends BaseFragment {
 
         adapter = new AdapterMySaleList(getActivity());
         lv_list.setAdapter(adapter);
+
+        lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                app.startActivity(getActivity(),ActivitySaleDetails.class,MainApp.ENTER_TYPE_RIGHT,false,null);
+            }
+        });
     }
 
     /**

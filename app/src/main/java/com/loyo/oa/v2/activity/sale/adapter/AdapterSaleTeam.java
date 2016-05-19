@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.sale;
+package com.loyo.oa.v2.activity.sale.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

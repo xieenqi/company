@@ -10,21 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.AdapterSaleTeamScreen;
-import com.loyo.oa.v2.activity.sale.AdapterSaleTeamScreenComm;
+import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeamScreenComm;
 import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.tool.LogUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 销售机会 销售阶段,排序 公用筛选View

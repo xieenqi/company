@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeam;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
@@ -138,6 +140,12 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         lv_list.setAdapter(adapterSaleTeam);
         saleScreenPopupView = new SaleScreenPopupView(getActivity(),data,mHandler);
 
+        lv_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                app.startActivity(getActivity(),ActivitySaleDetails.class,MainApp.ENTER_TYPE_RIGHT,false,null);
+            }
+        });
     }
 
     /**

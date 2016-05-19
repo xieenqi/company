@@ -126,7 +126,21 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) {{
+        switch (v.getId()) {
+            case R.id.img_title_left:
+                finish();
+                break;
+            case R.id.ll_category:
+                break;
+            case R.id.layout_title_action:
+                changeTitleImg();
+                break;
+            case R.id.img_title_search_right:
+                Toast("收索机会");
+                break;
+        }
+    }
         switch (v.getId()) {
             case R.id.img_title_left:
                 finish();
