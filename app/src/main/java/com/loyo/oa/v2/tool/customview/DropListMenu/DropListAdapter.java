@@ -93,11 +93,12 @@ public class DropListAdapter extends BaseAdapter {
 
         LogUtil.d("mSelectIndex:" + mSelectIndex + ",position:" + position);
 
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
         if (mSelectIndex == position) {
             item.setIsLock(true);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             imageView.setVisibility(View.VISIBLE);
         } else {
+            imageView.setVisibility(View.INVISIBLE);
             item.setIsLock(false);
         }
 

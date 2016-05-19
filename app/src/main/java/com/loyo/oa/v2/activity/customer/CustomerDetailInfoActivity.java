@@ -474,13 +474,17 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*联系人*/
             case R.id.layout_contact:
-                bundle.putBoolean("isLock", mCustomer.lock);
-                bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean("isRoot", isRoot);
-                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
-                bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
-                _class = CustomerContactManageActivity_.class;
-                requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
+                try {
+                    bundle.putBoolean("isLock", mCustomer.lock);
+                    bundle.putBoolean("isMyUser", isMyUser);
+                    bundle.putBoolean("isRoot", isRoot);
+                    bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
+                    bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
+                    _class = CustomerContactManageActivity_.class;
+                    requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
+                }catch (NullPointerException e){
+                    Toast("参数不全");
+                }
                 break;
             case R.id.layout_send_sms:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {

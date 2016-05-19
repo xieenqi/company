@@ -91,7 +91,8 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
             @Override
             public void success(final PaginationX<Demand> demandPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse(" 购买意向详情：", response);

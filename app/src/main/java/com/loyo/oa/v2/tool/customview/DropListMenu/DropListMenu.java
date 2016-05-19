@@ -223,9 +223,9 @@ public class DropListMenu extends LinearLayout {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 LogUtil.dee("二级Item:" + menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position).getName());
 
-                                if (null != getSelectedItems().get(mColumnSelected)) {
-                                    getSelectedItems().remove(mColumnSelected);
-                                }
+//                                if (null != getSelectedItems().get(mColumnSelected)) {
+//                                    getSelectedItems().remove(mColumnSelected);
+//                                }
 
                                 mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
                                 if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
@@ -234,23 +234,25 @@ public class DropListMenu extends LinearLayout {
                                         mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                                     }
                                 } else if (menuItem.getSelectType() == DropItem.GROUP_SINGLE) {
-                                    DropItem selectedItem = getSelectedItems().get(mRowSelected);
+                                    DropItem selectedItem = getSelectedItems().get(position);
                                     DropItem currentItem = menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position);
 
                                     if (null == selectedItem) {
-                                        getSelectedItems().put(mRowSelected, currentItem);
+                                        getSelectedItems().put(position, currentItem);
                                         adapter.setSelectIndex(position);
+
                                     } else {
-                                        getSelectedItems().remove(mRowSelected);
+                                        getSelectedItems().remove(position);
                                         if (!selectedItem.equals(currentItem)) {
-                                            getSelectedItems().put(mRowSelected, currentItem);
+
+                                            getSelectedItems().put(position, currentItem);
                                             adapter.setSelectIndex(position);
                                         } else {
                                             adapter.setSelectIndex(-1);
                                         }
                                     }
-                                    adapter.notifyDataSetChanged();
                                     syncConfirmButton();
+                                    adapter.notifyDataSetChanged();
                                 }
                             }
                         });

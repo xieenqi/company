@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -20,8 +21,10 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.UpdateTipActivity;
+
 import java.io.File;
 import java.io.Serializable;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -124,31 +127,34 @@ public class CheckUpdateService extends Service {
             public void success(UpdateInfo updateInfo, Response response) {
 //                HttpErrorCheck.checkResponse(response);
                 mUpdateInfo = updateInfo;
-                LogUtil.dll("版本更新信息:"+MainApp.gson.toJson(updateInfo));
+                LogUtil.dll("版本更新信息:" + MainApp.gson.toJson(updateInfo));
+                try {
+                    if (updateInfo.versionCode > Global.getVersion()) {
+                        //有新版本
+                        MainApp.getMainApp().hasNewVersion = true;
+                        if (updateInfo.autoUpdate) {//后台自动更新
+                            deleteFile();
+                            downloadApp();
+                        } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
+                            deleteFile();
+                            Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
+                            intentUpdateTipActivity.putExtra("data", updateInfo);
+                            intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intentUpdateTipActivity);
+                        } else {
+                            stopSelf();
+                        }
 
-                if (updateInfo.versionCode > Global.getVersion()) {
-                    //有新版本
-                    MainApp.getMainApp().hasNewVersion = true;
-                    if (updateInfo.autoUpdate) {//后台自动更新
-                        deleteFile();
-                        downloadApp();
-                    } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
-                        deleteFile();
-                        Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
-                        intentUpdateTipActivity.putExtra("data", updateInfo);
-                        intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intentUpdateTipActivity);
                     } else {
+                        if (isToast) {
+                            Global.Toast("你的软件已经是最新版本");
+                        }
                         stopSelf();
                     }
-                    
-                } else {
-                    if (isToast) {
-                        Global.Toast("你的软件已经是最新版本");
-                    }
-                    stopSelf();
+                    isChecking = false;
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-                isChecking = false;
             }
 
             @Override
@@ -163,7 +169,7 @@ public class CheckUpdateService extends Service {
 
     /**
      * 删除APK
-     * */
+     */
     private void deleteFile() {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path, mUpdateInfo.apkName());
