@@ -94,7 +94,8 @@ public class ActivityAddMySale extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
                     break;
                 case R.id.ll_stage://选择销售阶段
-
+                    app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, null);
                     break;
                 case R.id.ll_estimate://选择预估成交时间
 
