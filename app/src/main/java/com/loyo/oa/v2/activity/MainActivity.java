@@ -44,7 +44,6 @@ import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
-import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
@@ -335,7 +334,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     void updateUser() {
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class, "0205"),
-                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
+//                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
                 new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class, "0206"),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class, "0201"),
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class, "0202"),
