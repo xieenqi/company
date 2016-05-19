@@ -47,16 +47,17 @@ public class AdapterSaleTeam extends BaseAdapter {
         if(convertView == null){
             holder = new viewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_saleteamlist,null);
+            holder.creator = (TextView) convertView.findViewById(R.id.sale_teamlist_creator);
+            holder.state = (TextView) convertView.findViewById(R.id.sale_teamlist_state);
+            holder.guess = (TextView) convertView.findViewById(R.id.sale_teamlist_guess);
+            holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
+            holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
             convertView.setTag(holder);
         }else{
             holder = (viewHolder)convertView.getTag();
         }
 
-        holder.creator = (TextView) convertView.findViewById(R.id.sale_teamlist_creator);
-        holder.state = (TextView) convertView.findViewById(R.id.sale_teamlist_state);
-        holder.guess = (TextView) convertView.findViewById(R.id.sale_teamlist_guess);
-        holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
-        holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
+
 
         holder.title.setText("成都东软收购机会"+arrayList.get(position));
 

@@ -96,6 +96,8 @@
 
     </LinearLayout>
 
+    <include layout="@layout/include_solid_line"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -131,6 +133,8 @@
 
         </RelativeLayout>
 
+
+
         <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/saleteam_list"
             android:layout_width="match_parent"
@@ -143,7 +147,9 @@
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:smoothScrollbar="true" />
+            android:smoothScrollbar="true"
+            android:scrollbars="none"
+            />
 
         <Button
             android:id="@+id/btn_add"

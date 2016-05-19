@@ -3,7 +3,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="40dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+    >
 
     <TextView
         android:id="@+id/tv_menu_item"
@@ -33,7 +34,6 @@
         android:layout_height="@dimen/dimen_1"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/dimen_16"
-        android:layout_marginRight="@dimen/dimen_16"
-        android:background="@color/graye9"
+        android:background="@color/lineCC"
         />
 </RelativeLayout>

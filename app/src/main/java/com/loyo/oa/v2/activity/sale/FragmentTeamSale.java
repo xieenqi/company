@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -19,7 +20,10 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
 import com.loyo.oa.v2.tool.customview.SaleScreenPopupView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import java.util.ArrayList;
@@ -31,21 +35,38 @@ import java.util.List;
  */
 public class FragmentTeamSale extends BaseFragment implements View.OnClickListener{
 
-    private Context mContext;
+    /**
+     * 部门筛选回调
+     * */
+    public final static int SALETEAM_SCREEN_TAG1 = 0X01;
+
+    /**
+     * 销售阶段回调
+     * */
+    public final static int SALETEAM_SCREEN_TAG2 = 0X02;
+
+    /**
+     * 排序回调
+     * */
+    public final static int SALETEAM_SCREEN_TAG3 = 0X03;
+
     private View mView;
-    private AdapterSaleTeam adapterSaleTeam;
-
-    private SaleScreenPopupView saleScreenPopupView;
-    private WindowManager.LayoutParams params;
+    private Button btn_add;
+    private Context mContext;
     private SaleTeamUser saleTeamUser;
-
-    private PullToRefreshListView lv_list;
     private LinearLayout screen1;
     private LinearLayout screen2;
     private LinearLayout screen3;
     private LinearLayout saleteam_topview;
     private TextView saleteam_screen1_commy;
     private ImageView tagImage1;
+    private ImageView tagImage2;
+    private ImageView tagImage3;
+    private AdapterSaleTeam adapterSaleTeam;
+    private PullToRefreshListView lv_list;
+    private SaleCommPopupView saleCommPopupView;
+    private WindowManager.LayoutParams params;
+    private SaleScreenPopupView saleScreenPopupView;
 
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
@@ -54,10 +75,24 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg){
-            if(msg.what == 0x01){
-                saleTeamUser = (SaleTeamUser) msg.getData().getSerializable("data");
-                saleteam_screen1_commy.setText(saleTeamUser.getName());
+
+            switch (msg.what){
+
+                case SALETEAM_SCREEN_TAG1:
+                    saleTeamUser = (SaleTeamUser) msg.getData().getSerializable("data");
+                    saleteam_screen1_commy.setText(saleTeamUser.getName());
+                    break;
+
+                case SALETEAM_SCREEN_TAG2:
+                    Toast(msg.getData().getString("data"));
+                    break;
+
+                case SALETEAM_SCREEN_TAG3:
+                    Toast(msg.getData().getString("data"));
+                    break;
+
             }
+
         }
     };
 
@@ -67,7 +102,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_team_sale, null);
         }
-        init(mView);
+        initView(mView);
         return mView;
     }
 
@@ -76,7 +111,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void init(View view){
+    public void initView(View view){
 
         mContext = getActivity();
         params = getActivity().getWindow().getAttributes();
@@ -87,7 +122,12 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         saleteam_topview = (LinearLayout)view.findViewById(R.id.saleteam_topview);
         saleteam_screen1_commy = (TextView)view.findViewById(R.id.saleteam_screen1_commy);
         tagImage1 = (ImageView)view.findViewById(R.id.saleteam_screen1_iv1);
+        tagImage2 = (ImageView)view.findViewById(R.id.saleteam_screen1_iv2);
+        tagImage3 = (ImageView)view.findViewById(R.id.saleteam_screen1_iv3);
+        btn_add = (Button)view.findViewById(R.id.btn_add);
 
+        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setOnClickListener(this);
         screen1.setOnClickListener(this);
         screen2.setOnClickListener(this);
         screen3.setOnClickListener(this);
@@ -96,18 +136,29 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         deptSort();
         adapterSaleTeam = new AdapterSaleTeam(mContext);
         lv_list.setAdapter(adapterSaleTeam);
+        saleScreenPopupView = new SaleScreenPopupView(getActivity(),data,mHandler);
 
     }
 
     /**
      * PopupWindow关闭 恢复背景正常颜色
      * */
-    private void closePopupWindow()
+    private void closePopupWindow(ImageView view)
     {
         params = getActivity().getWindow().getAttributes();
         params.alpha = 1f;
         getActivity().getWindow().setAttributes(params);
-        tagImage1.setBackgroundResource(R.drawable.arrow_down);
+        view.setBackgroundResource(R.drawable.arrow_down);
+    }
+
+    /**
+     * PopupWindow打开，背景变暗
+     * */
+    private void openPopWindow(ImageView view){
+        params = getActivity().getWindow().getAttributes();
+        params.alpha=0.95f;
+        getActivity().getWindow().setAttributes(params);
+        view.setBackgroundResource(R.drawable.arrow_up);
     }
 
     /**
@@ -143,32 +194,55 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+
+            //新建机会
+            case R.id.btn_add:
+                MainApp.getMainApp().startActivityForResult(mActivity, ActivityAddMySale.class,
+                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, null);
+                break;
+
+
+            //全公司筛选
             case R.id.saleteam_screen1:
 
-                    saleScreenPopupView = new SaleScreenPopupView(getActivity(),data,mHandler);
                     saleScreenPopupView.showAsDropDown(screen1);
-
-                    /*弹出Popup 背景变暗*/
-                    params = getActivity().getWindow().getAttributes();
-                    params.alpha=0.9f;
-                    getActivity().getWindow().setAttributes(params);
-                    tagImage1.setBackgroundResource(R.drawable.arrow_up);
-
+                    openPopWindow(tagImage1);
                     saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
                         @Override
                         public void onDismiss() {
-                            closePopupWindow();
+                            closePopupWindow(tagImage1);
                         }
                     });
 
                 break;
-
+            //销售阶段
             case R.id.saleteam_screen2:
+                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,1);
+                saleCommPopupView.showAsDropDown(screen2);
+                openPopWindow(tagImage2);
+                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(tagImage2);
+                    }
+                });
+
+                break;
+            //排序
+            case R.id.saleteam_screen3:
+                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,2);
+                saleCommPopupView.showAsDropDown(screen3);
+                openPopWindow(tagImage3);
+                saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(tagImage3);
+                    }
+                });
 
                 break;
 
-            case R.id.saleteam_screen3:
-
+            default:
                 break;
         }
     }
