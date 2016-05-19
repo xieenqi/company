@@ -15,7 +15,7 @@ public class Config_project {
 
     //public static String IP = "http://192.168.31.131";     //内部测试环
 
-//    public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
+    //public static String IP = "http://staging.ukuaiqi.com";  //产品预上线环境
 
     //public static String IP = "http://112.74.66.99";        //产品预上线环境
 

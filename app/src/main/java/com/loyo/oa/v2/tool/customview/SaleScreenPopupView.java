@@ -2,6 +2,7 @@ package com.loyo.oa.v2.tool.customview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.AdapterSaleTeamScreen;
+import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
@@ -29,7 +31,7 @@ import java.util.List;
  * 团队销售机会列表 筛选View
  * Created by yyy on 16/5/18.
  */
-public class SaleScreenPopupView extends PopupWindow implements View.OnClickListener{
+public class SaleScreenPopupView extends PopupWindow implements View.OnClickListener {
 
     private View contentView;
     private ListView listView1;
@@ -46,9 +48,9 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
     private List<SaleTeamUser> userData = new ArrayList<>();
     private ArrayList<User> deptAllUser = new ArrayList<>();
 
-    public SaleScreenPopupView(final Activity context, List<SaleTeamUser> data,Handler handler){
+    public SaleScreenPopupView(final Activity context, List<SaleTeamUser> data, Handler handler) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        contentView = inflater.inflate(R.layout.saleteam_screentag1,null);
+        contentView = inflater.inflate(R.layout.saleteam_screentag1, null);
         this.depementData = data;
         this.mContext = context;
         this.mHandler = handler;
@@ -63,13 +65,13 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
         this.update();
         getFirstDept(0);
 
-        adapter1 = new AdapterSaleTeamScreen(context,depementData,1);
+        adapter1 = new AdapterSaleTeamScreen(context, depementData, 1);
         listView1.setAdapter(adapter1);
-        adapter2 = new AdapterSaleTeamScreen(context,userData,2);
+        adapter2 = new AdapterSaleTeamScreen(context, userData, 2);
         listView2.setAdapter(adapter2);
     }
 
-    public void initView(){
+    public void initView() {
         listView1 = (ListView) contentView.findViewById(R.id.saleteam_screentag1_lv1);
         listView2 = (ListView) contentView.findViewById(R.id.saleteam_screentag1_lv2);
         confirm = (Button) contentView.findViewById(R.id.saleteam_screentag1_confirm);
@@ -82,6 +84,9 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 getFirstDept(position);
+                adapter1.selectPosition(position);
+
+                adapter1.notifyDataSetChanged();
                 adapter2.notifyDataSetChanged();
             }
         });
@@ -92,11 +97,11 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Message msg = new Message();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("data",userData.get(position));
+                bundle.putSerializable("data", userData.get(position));
                 msg.setData(bundle);
-                msg.what = 0x01;
+                msg.what = FragmentTeamSale.SALETEAM_SCREEN_TAG1;
                 mHandler.sendMessage(msg);
-                Toast.makeText(mContext,userData.get(position).getName(),Toast.LENGTH_SHORT).show();
+                LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId());
                 dismiss();
             }
         });
@@ -104,22 +109,28 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
 
     /**
      * 组装获取某部门全体人员
-     * */
-    public void getFirstDept(int position){
+     */
+    public void getFirstDept(int position) {
         userData.clear();
         deptAllUser.clear();
-        Common.getAllUsersByDeptId(depementData.get(position).getId(),deptAllUser);
-        for(User user : deptAllUser){
+        Common.getAllUsersByDeptId(depementData.get(position).getId(), deptAllUser);
+        for (int i = 0; i < deptAllUser.size(); i++) {
             saleTeamUser = new SaleTeamUser();
-            saleTeamUser.setName(user.getRealname());
-            saleTeamUser.setId(user.getId());
+            if (i == 0) {
+                saleTeamUser.setName("全部人员");
+                saleTeamUser.setId(depementData.get(position).getId());
+            } else {
+                saleTeamUser.setName(deptAllUser.get(i).getRealname());
+                saleTeamUser.setId(deptAllUser.get(i).getId());
+            }
             userData.add(saleTeamUser);
         }
     }
 
+    /*暂时弃用*/
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             //全公司 确定
             case R.id.saleteam_screentag1_confirm:
                 break;

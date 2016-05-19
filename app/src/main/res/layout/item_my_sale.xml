@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_10"
-        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_15"
+        android:layout_marginTop="@dimen/dimen_15"
         android:orientation="vertical"
         android:paddingLeft="@dimen/margin_other_view"
         android:paddingRight="@dimen/margin_other_view">
@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="初步洽谈（10%）"
-                android:textColor="@color/red1"
+                android:textColor="@color/iswrite"
                 android:textSize="@dimen/text_sp15"
                 />
         </LinearLayout>
@@ -43,10 +43,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/dimen_2"
+            android:layout_marginTop="@dimen/dimen_10"
             android:text="预估销售金额：265626"
             android:textColor="@color/text99"
-            android:textSize="@dimen/text_sp15"
+            android:textSize="@dimen/text_sp12"
             />
     </LinearLayout>
 

@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
+import com.loyo.oa.v2.tool.LogUtil;
+
 import java.util.List;
 
 /**
@@ -19,10 +21,13 @@ public class AdapterSaleTeamScreen extends BaseAdapter {
 
     private Context mContext;
     private List<SaleTeamUser> data;
+    private int selectPosition;
+    private int page;
 
-    public AdapterSaleTeamScreen(Context context,List<SaleTeamUser> data,int page){
+    public AdapterSaleTeamScreen(Context context,final List<SaleTeamUser> data,final int page){
         this.mContext = context;
         this.data = data;
+        this.page = page;
     }
 
     @Override
@@ -40,19 +45,33 @@ public class AdapterSaleTeamScreen extends BaseAdapter {
         return 0;
     }
 
+    public void selectPosition(final int position){
+        selectPosition = position;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_list_item,null);
+            holder.name = (TextView) convertView.findViewById(R.id.tv_menu_item);
+            holder.index = (ImageView) convertView.findViewById(R.id.iv_menu_select);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.name = (TextView) convertView.findViewById(R.id.tv_menu_item);
-        holder.index = (ImageView) convertView.findViewById(R.id.iv_menu_select);
+
         holder.name.setText(data.get(position).getName());
+
+        if(page == 1){
+            if(selectPosition == position){
+                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.ececec));
+            }else{
+                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            }
+        }
+
         return convertView;
     }
 
