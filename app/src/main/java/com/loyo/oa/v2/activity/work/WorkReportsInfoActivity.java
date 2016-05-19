@@ -163,7 +163,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
-                HttpErrorCheck.checkResponse("报告信息：",response);
+                HttpErrorCheck.checkResponse("报告信息：", response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -443,7 +443,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.members.users != null || mWorkReport.members.depts != null) {
             if (mWorkReport.members.users != null) {
                 for (int i = 0; i < mWorkReport.members.users.size(); i++) {
-                    result.append(mWorkReport.members.users.get(i).getName() + " ");
+                    if (null != mWorkReport && null != mWorkReport.members && null != mWorkReport.members.users) {
+                        result.append(mWorkReport.members.users.get(i).getName() + " ");
+                    }
                 }
             }
 
@@ -504,14 +506,18 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_ATTACHMENT:
-                LogUtil.dll("MSG_ATTACHMENT");
-                if (null == data || null == data.getExtras()) {
-                    LogUtil.dll("MSG_ATTACHMENT return");
-                    return;
+                try {
+                    LogUtil.dll("MSG_ATTACHMENT");
+                    if (null == data || null == data.getExtras()) {
+                        LogUtil.dll("MSG_ATTACHMENT return");
+                        return;
+                    }
+                    ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
+                    mWorkReport.bizExtData.setAttachmentCount(attachments.size());
+                    showAttachment();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWorkReport.bizExtData.setAttachmentCount(attachments.size());
-                showAttachment();
                 break;
 
             case MSG_DISCUSSION:

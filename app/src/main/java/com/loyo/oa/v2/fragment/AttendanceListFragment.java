@@ -401,12 +401,12 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
-                if (error.getMessage().contains("JsonSyntaxException")) {
-                    Toast("没有更多数据了");
-                } else {
-                    HttpErrorCheck.checkError(error);
-                }
+//                cancelLoading();
+//                if (error.getMessage().contains("JsonSyntaxException")) {
+//                    Toast("没有更多数据了");
+//                } else {
+//                }
+                HttpErrorCheck.checkError(error);
             }
         });
     }

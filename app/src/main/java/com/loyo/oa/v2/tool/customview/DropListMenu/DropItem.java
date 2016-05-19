@@ -8,13 +8,13 @@ public class DropItem {
     public static final int NORMAL = 0;
     //组内单选
     public static final int GROUP_SINGLE = 1;
-    //组内单选
+    //组内单选消失
     public static final int GROUP_SINGLE_DISMISS = 2;
 
     String Name;
     int Value;
     String mData;
-    boolean isLock;
+    boolean isLock=false;
 
     //显示类型
     int SelectType = 0;

@@ -855,25 +855,6 @@ public class TasksInfoActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 获取讨论内容，服务端已弃用，暂注释
-     */
-/*    @Background
-    void getDiscussion() {
-        ITask t = app.getRestAdapter().create(ITask.class);
-        t.getDiscussions(String.valueOf(getId()), new RCallback<PaginationX<Discussion>>() {
-            @Override
-            public void success(PaginationX<Discussion> discussionPaginationX, Response response) {
-
-                if (PaginationX.isEmpty(discussionPaginationX)) {
-                    return;
-                }
-
-                mPageDiscussion = discussionPaginationX;
-                tv_discussion_count.setText(String.valueOf(discussionPaginationX.getTotalRecords()));
-            }
-        });
-    }*/
 
     void showAttachment() {
         if (null == mTask.getAttachments() || mTask.getAttachments().size() == 0) {
@@ -892,14 +873,6 @@ public class TasksInfoActivity extends BaseActivity {
 
             /*选择完参与人后，回调*/
             case SelectDetUserActivity2.REQUEST_ALL_SELECT:
-//                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-//                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-//                if (cc_user_id != null && cc_user_name != null) {
-//                    setJoinUsers(cc_user_id, cc_user_name);
-//                } else {
-//                    Toast("未选择相关人员");
-//                }
-
                 member = (Members) data.getSerializableExtra("data");
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
@@ -923,7 +896,6 @@ public class TasksInfoActivity extends BaseActivity {
                         joinName.deleteCharAt(joinName.length() - 1);
                     }
                     editJoiner();
-//                    setJoinUsers(joinUserId.toString(), joinName.toString());
                 }
                 break;
 
@@ -938,10 +910,6 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
 
             case REQUEST_EDIT:
-                //TODO:奇怪这里取不到数据
-                //                mTask = (Task) data.getSerializableExtra("task_return");
-                //                joinedUserName = data.getStringExtra("joinedUserName");
-                //                updateUI();
                 getTask();
                 break;
 
@@ -955,11 +923,6 @@ public class TasksInfoActivity extends BaseActivity {
                         bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
-//                        Bundle mBundle = new Bundle();
-//                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-//                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-//                        app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT,
-//                                SelectDetUserActivity2.REQUEST_ALL_SELECT, mBundle);
                         SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
                                 /*删除回调*/
@@ -982,9 +945,6 @@ public class TasksInfoActivity extends BaseActivity {
                                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
                     SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-//                    app.startActivityForResult(this, SelectDetUserActivity2.class, MainApp.ENTER_TYPE_RIGHT, SelectDetUserActivity2.REQUEST_ALL_SELECT, bundle);
 
                 }
                 break;
@@ -1047,27 +1007,6 @@ public class TasksInfoActivity extends BaseActivity {
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
-
-    /**
-     * 参与人组装
-     */
-//    void setJoinUsers(final String joinedUserIds, final String joinedUserName) {
-////        userss.clear();
-////        depts.clear();
-//
-////        String[] userIds = joinedUserIds.split(",");
-////        String[] userNames = joinedUserName.split(",");
-////
-////        for (int i = 0; i < userIds.length; i++) {
-////            NewUser newUser = new NewUser();
-////            newUser.setName(userNames[i]);
-////            newUser.setId(userIds[i]);
-////            userss.add(newUser);
-////        }
-////
-////        member.users = userss;
-//        editJoiner();
-//    }
 
     /**
      * 修改参与人

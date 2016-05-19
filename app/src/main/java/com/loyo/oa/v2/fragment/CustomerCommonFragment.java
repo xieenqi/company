@@ -275,7 +275,7 @@ public class CustomerCommonFragment extends BaseFragment implements View.OnClick
 
                     @Override
                     public void failure(RetrofitError error) {
-                        HttpErrorCheck.checkError(error);
+//                        HttpErrorCheck.checkError(error);
                     }
                 });
     }

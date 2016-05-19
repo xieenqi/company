@@ -239,7 +239,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
-            mActivity.get().swipe_container.setRefreshing(false);
+            try {
+                mActivity.get().swipe_container.setRefreshing(false);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -418,7 +422,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     @Override
                     public void run() {
                         Looper.prepare();
-                        new Handler().post(new Runnable() {
+//                        new Handler().post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                testJurl();
+//                            }
+//                        });
+                        runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 testJurl();

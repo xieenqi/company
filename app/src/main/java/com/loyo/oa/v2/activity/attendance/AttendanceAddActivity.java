@@ -49,7 +49,6 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -484,15 +483,16 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         app.getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                Toast("打卡成功!");
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                onBackPressed();
                 try {
-                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
+                    Toast("打卡成功!");
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    onBackPressed();
+//                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
 
             @Override
