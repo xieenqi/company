@@ -488,7 +488,6 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                     onBackPressed();
-//                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

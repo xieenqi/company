@@ -110,7 +110,9 @@ public class ActivityAddMySale extends BaseActivity {
 
                     break;
                 case R.id.ll_poduct://选择意向产品
-
+                    Bundle product = new Bundle();
+                    app.startActivityForResult(ActivityAddMySale.this, ActivityIntentionProduct.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
                 case R.id.ll_type://选择机会类型
                     Bundle type = new Bundle();
