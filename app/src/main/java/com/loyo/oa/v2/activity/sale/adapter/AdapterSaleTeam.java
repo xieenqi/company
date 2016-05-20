@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.beans.Position;
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 public class AdapterSaleTeam extends BaseAdapter {
 
     public Context mContext;
-    public ArrayList<SaleMyList.Record> mData;
+    public ArrayList<SaleTeamList.Record> mData;
 
-    public AdapterSaleTeam(Context context,ArrayList<SaleMyList.Record> mData){
+    public AdapterSaleTeam(Context context,ArrayList<SaleTeamList.Record> mData){
         this.mContext = context;
         this.mData = mData;
     }
@@ -43,7 +44,7 @@ public class AdapterSaleTeam extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         viewHolder holder = null;
-        SaleMyList.Record record = mData.get(position);
+        SaleTeamList.Record record = mData.get(position);
         if(convertView == null){
             holder = new viewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_saleteamlist,null);
@@ -57,8 +58,14 @@ public class AdapterSaleTeam extends BaseAdapter {
             holder = (viewHolder)convertView.getTag();
         }
 
-
-        holder.title.setText("成都东软收购机会"+record.getName());
+        holder.title.setText(record.getName());
+        holder.money.setText(record.getEstimatedAmount());
+        holder.creator.setText(record.getCreateName());
+        String stageName = "初步接洽";
+        if(!record.getStageNmae().isEmpty()){
+            stageName = record.getStageNmae();
+        }
+        holder.state.setText(stageName+"("+record.getProb()+"%)");
 
         return convertView;
     }

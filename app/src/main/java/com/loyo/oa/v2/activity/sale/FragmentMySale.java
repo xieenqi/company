@@ -44,6 +44,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     private View mView;
     private Button btn_add;
+    private Bundle mBundle;
     private LinearLayout screen1;
     private LinearLayout screen2;
     private ViewStub emptyView;
@@ -54,7 +55,9 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
     private SaleMyList mSaleMyList;
+
     private int requestPage = 1;
+    private boolean isPull = false;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -75,12 +78,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +89,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     }
 
     private void initView(View view) {
+        getData();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
@@ -112,7 +110,9 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                app.startActivity(getActivity(), ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                mBundle = new Bundle();
+                mBundle.putString("id",mSaleMyList.records.get(position - 1).getId());
+                app.startActivity(getActivity(), ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
             }
         });
     }
@@ -147,7 +147,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     public void getData(){
         HashMap<String,Object> params = new HashMap<>();
         params.put("pageIndex",requestPage);
-        params.put("pageSize",1);
+        params.put("pageSize",10);
         params.put("stageId","");
         params.put("type","");
 
