@@ -6,6 +6,8 @@ import java.io.Serializable;
  * Created by xeq on 16/5/18.
  */
 public class SaleStage implements Serializable {
-    String id;
-    String name;
+    public String id;
+    public String name;
+
+    public boolean isSelect = false;//本地标记选择状态
 }
