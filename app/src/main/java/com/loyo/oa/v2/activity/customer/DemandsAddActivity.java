@@ -68,10 +68,10 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
     private final int UI_UPDATE = 0x01;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
 
-        public void handleMessage(final Message msg){
-            if(msg.what == UI_UPDATE){
+        public void handleMessage(final Message msg) {
+            if (msg.what == UI_UPDATE) {
 
             }
         }
@@ -297,11 +297,11 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.layout_products:
-                if (lstData_Product == null) {
+                if (null == lstData_Product) {
                     Toast(R.string.app_init_await);
                     break;
                 }
-                if (dialog_Product == null) {
+                if (null == dialog_Product) {
                     LayoutInflater inflater = getLayoutInflater();
                     View layout = inflater.inflate(R.layout.dialog_products_select, null, false);
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(layout);
@@ -322,8 +322,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         productNameSelect = lstData_Product.get((int) id).name;
                         tv_products.setText(lstData_Product.get((int) id).name);
 
-                        edt_price.setHint("请输入单价("+lstData_Product.get(position).unit+")");
-                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).unit+")");
+                        edt_price.setHint("请输入单价(" + lstData_Product.get(position).unit + ")");
+                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).unit + ")");
 
                         dialog_Product.dismiss();
                     }

@@ -197,7 +197,7 @@ public class ActivitySaleStage extends BaseActivity {
                     Intent intent = new Intent();
                     intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));
                     setResult(RESULT_OK, intent);
-//                    finish();
+                    finish();
                 }
             });
             return convertView;
@@ -206,7 +206,6 @@ public class ActivitySaleStage extends BaseActivity {
 
     class SourceTypeAdapter extends BaseAdapter {
         private ArrayList<String> data = new ArrayList<>();
-        private int selectIndext = -1;
 
         public void setData(ArrayList<String> newData) {
             this.data = newData;
