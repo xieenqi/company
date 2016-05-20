@@ -21,6 +21,7 @@ import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【销售阶段】
+ * 【销售阶段】【机会来源】【机会类型】
  * Created by xeq on 16/5/18.
  */
 public class ActivitySaleStage extends BaseActivity {
@@ -160,7 +161,7 @@ public class ActivitySaleStage extends BaseActivity {
             if (null == convertView) {
                 convertView = LayoutInflater.from(ActivitySaleStage.this).inflate(R.layout.item_sale_stage, null);
             }
-            TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            final TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             ImageView iv_img = (ImageView) convertView.findViewById(R.id.iv_img);
             if (data.get(position).isSelect) {
                 iv_img.setVisibility(View.VISIBLE);
@@ -172,6 +173,26 @@ public class ActivitySaleStage extends BaseActivity {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (tv_name.getText().toString().contains("赢单")) {
+                        final GeneralPopView dialog = showGeneralDialog(false, true, "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称\n产品总金额");
+
+                        dialog.setSureOnclick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent();
+                                intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));
+                                setResult(RESULT_OK, intent);
+                                dialog.dismisDialog();
+                                finish();
+                            }
+                        }).setCancelOnclick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismisDialog();
+                            }
+                        });
+                        return;
+                    }
                     setSelect(position);
                     Intent intent = new Intent();
                     intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));

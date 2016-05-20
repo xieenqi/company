@@ -79,7 +79,7 @@ public class WorkReport extends BaseBeans {
                 return true;
             }
         }
-        if (myId.equals(creator.id)) {
+        if (null != creator && myId.equals(creator.id)) {
             return true;
         }
         return false;

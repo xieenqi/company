@@ -443,7 +443,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.members.users != null || mWorkReport.members.depts != null) {
             if (mWorkReport.members.users != null) {
                 for (int i = 0; i < mWorkReport.members.users.size(); i++) {
-                    if (null != mWorkReport && null != mWorkReport.members && null != mWorkReport.members.users) {
+                    if (null != mWorkReport && null != mWorkReport.members && null != mWorkReport.members.users&& null != mWorkReport.members.users.get(i)) {
                         result.append(mWorkReport.members.users.get(i).getName() + " ");
                     }
                 }
