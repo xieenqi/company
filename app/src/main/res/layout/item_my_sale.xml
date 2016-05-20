@@ -32,7 +32,7 @@
                 android:id="@+id/tv_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="初步洽谈（10%）"
+                android:text=""
                 android:textColor="@color/iswrite"
                 android:textSize="@dimen/text_sp15"
                 />
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="@dimen/dimen_10"
-            android:text="预估销售金额：265626"
+            android:text=""
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp12"
             />

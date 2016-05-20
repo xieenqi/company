@@ -98,6 +98,13 @@
 
     <include layout="@layout/include_solid_line"/>
 
+    <ViewStub
+        android:id="@+id/vs_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/layout_nodata"
+        android:layout="@layout/item_layout_nodata"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
