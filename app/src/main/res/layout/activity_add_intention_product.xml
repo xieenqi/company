@@ -8,7 +8,7 @@
     <include layout="@layout/include_title"/>
 
     <LinearLayout
-        android:id="@+id/ll_stage"
+        android:id="@+id/ll_poduct"
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_h_title"
         android:gravity="center_vertical">
@@ -23,7 +23,7 @@
             android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/tv_stage"
+            android:id="@+id/tv_product"
             style="@style/text_item1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -61,6 +61,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/tv_price"
             style="@style/text_item1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -90,12 +91,14 @@
             android:textSize="15sp"/>
 
         <EditText
+            android:id="@+id/et_price"
             style="@style/edtText_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center_vertical|right"
             android:hint="必填,请输入"
+            android:inputType="number"
             android:maxLength="10"
             android:minHeight="@dimen/view_h_title"
             android:paddingRight="0dp"
@@ -121,12 +124,14 @@
             android:textSize="15sp"/>
 
         <EditText
+            android:id="@+id/et_number"
             style="@style/edtText_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center_vertical|right"
             android:hint="必填,请输入"
+            android:inputType="number"
             android:maxLength="10"
             android:minHeight="@dimen/view_h_title"
             android:paddingRight="0dp"
@@ -152,6 +157,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/tv_discount"
             style="@style/text_item1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -181,6 +187,7 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/tv_total"
             style="@style/text_item1"
             android:layout_width="0dp"
             android:layout_height="match_parent"

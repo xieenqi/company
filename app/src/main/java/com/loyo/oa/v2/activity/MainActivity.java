@@ -636,14 +636,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
                 attendanceRecords = attendanceRecord;
-//                try {
-//                    LogUtil.d("check:" + Utils.convertStreamToString(response.getBody().in()));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 HttpErrorCheck.checkResponse("考勤信息：", response);
-                attendanceRecord.setAddress(null == address ? "没有获取到有效地址" : address);
-
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
                 } else {
