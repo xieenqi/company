@@ -13,15 +13,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeamScreen;
 import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.LogUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,17 +34,21 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
     private ListView listView2;
     private Button confirm;
     private Button cancel;
-    private SaleTeamUser saleTeamUser;
+    private SaleTeamScreen saleTeamScreen;
     private Context mContext;
     private Handler mHandler;
+    private Message msg;
+    private Bundle bundle;
 
     private AdapterSaleTeamScreen adapter1;
     private AdapterSaleTeamScreen adapter2;
-    private List<SaleTeamUser> depementData;
-    private List<SaleTeamUser> userData = new ArrayList<>();
+    private List<SaleTeamScreen> depementData;
+    private List<SaleTeamScreen> userData = new ArrayList<>();
     private ArrayList<User> deptAllUser = new ArrayList<>();
 
-    public SaleScreenPopupView(final Activity context, List<SaleTeamUser> data, Handler handler) {
+    private int deptPosition = 0;
+
+    public SaleScreenPopupView(final Activity context, List<SaleTeamScreen> data, Handler handler) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.saleteam_screentag1, null);
         this.depementData = data;
@@ -81,9 +83,9 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                deptPosition = position;
                 getFirstDept(position);
                 adapter1.selectPosition(position);
-
                 adapter1.notifyDataSetChanged();
                 adapter2.notifyDataSetChanged();
             }
@@ -93,16 +95,26 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
         listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("data", userData.get(position));
-                msg.setData(bundle);
-                msg.what = FragmentTeamSale.SALETEAM_SCREEN_TAG1;
-                mHandler.sendMessage(msg);
-                LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId());
-                dismiss();
+                resultData(position);
             }
         });
+    }
+
+    /**
+     * 设置回调数据
+     * */
+    public void resultData(int position){
+        msg = new Message();
+        bundle = new Bundle();
+        if(position == 0){
+            userData.get(position).setName(depementData.get(deptPosition).getName());
+        }
+        bundle.putSerializable("data", userData.get(position));
+        msg.setData(bundle);
+        msg.what = FragmentTeamSale.SALETEAM_SCREEN_TAG1;
+        mHandler.sendMessage(msg);
+        LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId());
+        dismiss();
     }
 
     /**
@@ -113,15 +125,15 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
         deptAllUser.clear();
         Common.getAllUsersByDeptId(depementData.get(position).getId(), deptAllUser);
         for (int i = 0; i < deptAllUser.size(); i++) {
-            saleTeamUser = new SaleTeamUser();
+            saleTeamScreen = new SaleTeamScreen();
             if (i == 0) {
-                saleTeamUser.setName("全部人员");
-                saleTeamUser.setId(depementData.get(position).getId());
+                saleTeamScreen.setName("全部人员");
+                saleTeamScreen.setId(depementData.get(position).getId());
             } else {
-                saleTeamUser.setName(deptAllUser.get(i).getRealname());
-                saleTeamUser.setId(deptAllUser.get(i).getId());
+                saleTeamScreen.setName(deptAllUser.get(i).getRealname());
+                saleTeamScreen.setId(deptAllUser.get(i).getId());
             }
-            userData.add(saleTeamUser);
+            userData.add(saleTeamScreen);
         }
     }
 

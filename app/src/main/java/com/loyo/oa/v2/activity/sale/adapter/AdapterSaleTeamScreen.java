@@ -8,8 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamUser;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 
 import java.util.List;
 
@@ -20,11 +19,11 @@ import java.util.List;
 public class AdapterSaleTeamScreen extends BaseAdapter {
 
     private Context mContext;
-    private List<SaleTeamUser> data;
+    private List<SaleTeamScreen> data;
     private int selectPosition;
     private int page;
 
-    public AdapterSaleTeamScreen(Context context,final List<SaleTeamUser> data,final int page){
+    public AdapterSaleTeamScreen(Context context,final List<SaleTeamScreen> data,final int page){
         this.mContext = context;
         this.data = data;
         this.page = page;

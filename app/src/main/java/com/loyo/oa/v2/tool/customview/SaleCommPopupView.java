@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeamScreenComm;
 import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
+import java.util.ArrayList;
 
 /**
  * 销售机会 销售阶段,排序 公用筛选View
@@ -30,7 +31,9 @@ public class SaleCommPopupView extends PopupWindow {
     private AdapterSaleTeamScreenComm adapter;
     private Message msg;
     private Bundle bundle;
+    private SaleTeamScreen saleTeamScreen;
 
+    private ArrayList<SaleTeamScreen> data = new ArrayList<>();
     private int page;
     private int resultTag;
 
@@ -53,17 +56,37 @@ public class SaleCommPopupView extends PopupWindow {
     }
 
     public void initView() {
+        for(int i = 0;i<10;i++){
+            saleTeamScreen = new SaleTeamScreen();
+            saleTeamScreen.setName("测试Item"+i);
+            saleTeamScreen.setIndex(false);
+            data.add(saleTeamScreen);
+        }
+
         listView = (ListView) contentView.findViewById(R.id.saleteam_screencommon_lv);
-        adapter = new AdapterSaleTeamScreenComm(mContext);
+        adapter = new AdapterSaleTeamScreenComm(mContext,data);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                reuseFirm();
-                dismiss();
+                dataReque(position);
             }
         });
+    }
+
+    /**
+     * 重置勾选标签数据
+     * */
+    public void dataReque(int position){
+        for(int i = 0;i<data.size();i++){
+            if(position == i){
+                saleTeamScreen.setIndex(true);
+            }else{
+                saleTeamScreen.setIndex(false);
+            }
+        }
+        reuseFirm();
     }
 
     /**
@@ -82,5 +105,6 @@ public class SaleCommPopupView extends PopupWindow {
         msg.setData(bundle);
         msg.what = resultTag;
         mHandler.sendMessage(msg);
+        dismiss();
     }
 }

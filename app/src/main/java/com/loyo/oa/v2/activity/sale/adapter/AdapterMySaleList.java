@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 
 import java.util.ArrayList;
 
@@ -19,30 +20,22 @@ import java.util.ArrayList;
  */
 public class AdapterMySaleList extends BaseAdapter {
 
-    private ArrayList<String> data = new ArrayList<>();
+    private ArrayList<SaleMyList.Record> mData;
     private Context mContext;
 
-    public AdapterMySaleList(Context context) {
+    public AdapterMySaleList(Context context,ArrayList<SaleMyList.Record> data) {
         mContext = context;
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
-        data.add("机会1");
+        mData = data;
     }
 
     @Override
     public int getCount() {
-        return data.size();
+        return mData.size();
     }
 
     @Override
     public Object getItem(final int i) {
-        return data.isEmpty() ? null : data.get(i);
+        return mData.isEmpty() ? null : mData.get(i);
     }
 
     @Override
@@ -53,6 +46,7 @@ public class AdapterMySaleList extends BaseAdapter {
     @Override
     public View getView(final int position, View view, final ViewGroup viewGroup) {
         HolderView holder;
+        SaleMyList.Record record = mData.get(position);
         if (null == view) {
             view = LayoutInflater.from(mContext).inflate(R.layout.item_my_sale, viewGroup, false);
             holder = new HolderView();
@@ -63,7 +57,9 @@ public class AdapterMySaleList extends BaseAdapter {
         } else {
             holder = (HolderView) view.getTag();
         }
-        holder.tv_name.setText(data.get(position));
+        holder.tv_name.setText(record.getName());
+        holder.tv_number.setText(record.getStageNmae()+"("+record.getProb()+"%)");
+        holder.tv_price.setText("预估销售金额:"+record.getEstimatedAmount());
 
         return view;
     }

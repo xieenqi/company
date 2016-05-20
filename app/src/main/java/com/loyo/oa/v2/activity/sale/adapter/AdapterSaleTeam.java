@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
+import com.loyo.oa.v2.beans.Position;
 import java.util.ArrayList;
 
 /**
@@ -16,24 +18,21 @@ import java.util.ArrayList;
 public class AdapterSaleTeam extends BaseAdapter {
 
     public Context mContext;
-    public ArrayList arrayList;
+    public ArrayList<SaleMyList.Record> mData;
 
-    public AdapterSaleTeam(Context context){
-        mContext = context;
-        arrayList = new ArrayList();
-        for(int i = 0;i<20;i++){
-            arrayList.add(i);
-        }
+    public AdapterSaleTeam(Context context,ArrayList<SaleMyList.Record> mData){
+        this.mContext = context;
+        this.mData = mData;
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return mData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arrayList.get(position);
+        return mData.get(position);
     }
 
     @Override
@@ -44,6 +43,7 @@ public class AdapterSaleTeam extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         viewHolder holder = null;
+        SaleMyList.Record record = mData.get(position);
         if(convertView == null){
             holder = new viewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_saleteamlist,null);
@@ -58,8 +58,7 @@ public class AdapterSaleTeam extends BaseAdapter {
         }
 
 
-
-        holder.title.setText("成都东软收购机会"+arrayList.get(position));
+        holder.title.setText("成都东软收购机会"+record.getName());
 
         return convertView;
     }

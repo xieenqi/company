@@ -705,7 +705,5 @@
             android:value="ukuaiqi"/>
 
         <activity android:name=".activity.commonview.SelectDetUserActivity2"></activity>
-
     </application>
-
 </manifest>

@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
+
 import java.util.ArrayList;
 
 /**
@@ -16,23 +19,22 @@ import java.util.ArrayList;
 public class AdapterSaleTeamScreenComm extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList arrayList = new ArrayList();
+    private ArrayList<SaleTeamScreen> data;
+    private SaleTeamScreen saleTeamScreen;
 
-    public AdapterSaleTeamScreenComm(final Context context){
+    public AdapterSaleTeamScreenComm(final Context context,ArrayList<SaleTeamScreen> arrayList){
         this.mContext = context;
-        for(int i = 0;i<10;i++){
-            arrayList.add("测试Item"+i);
-        }
+        this.data = arrayList;
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arrayList.get(position);
+        return data.get(position);
     }
 
     @Override
@@ -43,20 +45,24 @@ public class AdapterSaleTeamScreenComm extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
+        saleTeamScreen = data.get(position);
         if(null == convertView){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_saleteam_common,null);
             holder.name = (TextView)convertView.findViewById(R.id.item_saleteam_common_name);
+            holder.img = (ImageView)convertView.findViewById(R.id.item_saleteam_common_img);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(arrayList.get(position).toString());
+        holder.img.setVisibility(saleTeamScreen.isIndex() ? View.VISIBLE:View.GONE);
+        holder.name.setText(saleTeamScreen.getName());
         return convertView;
     }
 
     class ViewHolder{
         TextView name;
+        ImageView img;
     }
 }

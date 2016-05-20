@@ -150,7 +150,6 @@ apt {
         exclude '**/gen/**'
         ignoreFailures false
         classpath = files()
-
         def configProps = ['proj.module.dir': projectDir.absolutePath]
         configProperties configProps
     }
