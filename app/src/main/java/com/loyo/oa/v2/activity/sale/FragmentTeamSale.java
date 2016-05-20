@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeam;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
@@ -66,6 +67,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     private View mView;
     private Button btn_add;
+    private Bundle mBundle;
     private Context mContext;
     private SaleTeamScreen saleTeamScreen;
     private ViewStub emptyView;
@@ -82,7 +84,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private SaleCommPopupView saleCommPopupView;
     private WindowManager.LayoutParams params;
     private SaleScreenPopupView saleScreenPopupView;
-    private SaleMyList mSaleMyList;
+    private SaleTeamList mSaleTeamLists;
 
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
@@ -114,19 +116,14 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (null == mView) {
             mView = inflater.inflate(R.layout.fragment_team_sale, null);
+            initView(mView);
         }
-        initView(mView);
         return mView;
     }
 
@@ -136,7 +133,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     }
 
     public void initView(View view) {
-
+        getData();
         mContext = getActivity();
         params = getActivity().getWindow().getAttributes();
         listView = (PullToRefreshListView) view.findViewById(R.id.saleteam_list);
@@ -170,7 +167,9 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                app.startActivity(getActivity(), ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                mBundle = new Bundle();
+                mBundle.putString("id",mSaleTeamLists.records.get(position - 1).getId());
+                app.startActivity(getActivity(), ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
             }
         });
 
@@ -195,20 +194,20 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     public void getData() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", requestPage);
-        params.put("pageSize", 1);
+        params.put("pageSize", 10);
         params.put("stageId", "");
         params.put("type", "");
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(params, new RCallback<SaleMyList>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleTeamList(params, new RCallback<SaleTeamList>() {
             @Override
-            public void success(SaleMyList saleMyLists, Response response) {
+            public void success(SaleTeamList saleTeamLists, Response response) {
                 HttpErrorCheck.checkResponse("客户列表", response);
-                if (null == saleMyLists.records || saleMyLists.records.size() == 0) {
+                if (null == saleTeamLists.records || saleTeamLists.records.size() == 0) {
                     Toast("没有更多数据了!");
                     listView.onRefreshComplete();
                     return;
                 } else {
-                    mSaleMyList = saleMyLists;
+                    mSaleTeamLists = saleTeamLists;
                 }
                 bindData();
                 listView.onRefreshComplete();
@@ -224,7 +223,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     public void bindData(){
         if(null == adapterSaleTeam){
-            adapterSaleTeam = new AdapterSaleTeam(getActivity(),mSaleMyList.records);
+            adapterSaleTeam = new AdapterSaleTeam(getActivity(),mSaleTeamLists.records);
             listView.setAdapter(adapterSaleTeam);
         }else{
             adapterSaleTeam.notifyDataSetChanged();

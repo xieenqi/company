@@ -1,14 +1,12 @@
 package com.loyo.oa.v2.point;
 
-import android.telecom.Call;
-
+import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
-
+import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -42,5 +40,17 @@ public interface ISale {
      * */
     @GET("/chance/self")
     void getSaleMyList(@QueryMap HashMap<String,Object> map,Callback<SaleMyList> callback);
+
+    /**
+     * 获取 我的销售机会列表
+     * */
+    @GET("/chance/team")
+    void getSaleTeamList(@QueryMap HashMap<String,Object> map,Callback<SaleTeamList> callback);
+
+    /**
+     * 获取 销售机会详情
+     * */
+    @GET("/chance/{id}")
+    void getSaleDetails(@Path("id")String id,Callback<SaleDetails> callback);
 
 }

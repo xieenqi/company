@@ -23,7 +23,11 @@
                 android:id="@+id/saleteam_screen1_commy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="全公司" />
+                android:text="全公司"
+                android:maxEms="6"
+                android:singleLine="true"
+                android:ellipsize="end"
+                />
 
             <ImageView
                 android:id="@+id/saleteam_screen1_iv1"
