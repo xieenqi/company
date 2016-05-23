@@ -297,8 +297,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.layout_products:
-                if (null == lstData_Product) {
-                    Toast(R.string.app_init_await);
+                if (null == lstData_Product && !(lstData_Product.size() > 0)) {
+                    Toast("没有可以选择的产品");
                     break;
                 }
                 if (null == dialog_Product) {

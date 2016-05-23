@@ -1,9 +1,12 @@
 package com.loyo.oa.v2.activity.sale;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
+import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
@@ -24,6 +28,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -34,11 +39,12 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/17.
  */
 public class ActivityAddMySale extends BaseActivity {
-    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source;
+    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate;
     private ImageView iv_submit;
     private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source;
     private EditText et_name, et_money, et_remake;
     private String customerName, customerId;
+    private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,8 @@ public class ActivityAddMySale extends BaseActivity {
         tv_stage = (TextView) findViewById(R.id.tv_stage);
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_source = (TextView) findViewById(R.id.tv_source);
+        tv_product = (TextView) findViewById(R.id.tv_product);
+        tv_estimate = (TextView) findViewById(R.id.tv_estimate);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -107,10 +115,11 @@ public class ActivityAddMySale extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                     break;
                 case R.id.ll_estimate://选择预估成交时间
-
+                    estimateTime();
                     break;
                 case R.id.ll_poduct://选择意向产品
                     Bundle product = new Bundle();
+                    product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
                     app.startActivityForResult(ActivityAddMySale.this, ActivityIntentionProduct.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
@@ -150,6 +159,41 @@ public class ActivityAddMySale extends BaseActivity {
         });
     }
 
+    public void estimateTime() {
+        Calendar cal = Calendar.getInstance();
+        final DatePickerDialog mDialog = new DatePickerDialog(this, null,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
+        //手动设置按钮
+        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DatePicker datePicker = mDialog.getDatePicker();
+                int year = datePicker.getYear();
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+
+//                age = Utils.getAge(year + "");
+//                if (age > 0) {
+//                    birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
+//                    mHandler.sendEmptyMessage(0x01);
+//                } else {
+//                    Toast("出生日期不能是未来时间，请重新设置");
+//                }
+                tv_estimate.setText(year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day));
+            }
+        });
+
+        //取消按钮，如果不需要直接不设置即可
+        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        mDialog.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
@@ -173,6 +217,17 @@ public class ActivityAddMySale extends BaseActivity {
                 case ExtraAndResult.REQUEST_CODE_SOURCE:
                     String salesource = data.getStringExtra(ExtraAndResult.EXTRA_DATA);
                     tv_source.setText(salesource);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                    ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                    if (null != resultData) {
+                        intentionProductData = resultData;
+                        String productName = "";
+                        for (SaleIntentionalProduct ele : intentionProductData) {
+                            productName += ele.name + "、";
+                        }
+                        tv_product.setText(productName);
+                    }
                     break;
             }
         }

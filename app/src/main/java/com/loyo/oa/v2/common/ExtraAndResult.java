@@ -53,6 +53,7 @@ public class ExtraAndResult {
     public static final int REQUEST_CODE_PRODUCT = 103;
     public static final int REQUEST_CODE_TYPE = 104;
     public static final int REQUEST_CODE_SOURCE = 105;
+    public static final int REQUEST_EDIT = 106;
 
 
     /**
