@@ -126,8 +126,10 @@ public class ActivitySaleStage extends BaseActivity {
         private int selectIndext = -1;
 
         public void setData(ArrayList<SaleStage> newData) {
-            this.data = newData;
-            notifyDataSetChanged();
+            if (null != newData) {
+                this.data = newData;
+                notifyDataSetChanged();
+            }
         }
 
         public void setSelect(int indext) {
@@ -208,8 +210,10 @@ public class ActivitySaleStage extends BaseActivity {
         private ArrayList<String> data = new ArrayList<>();
 
         public void setData(ArrayList<String> newData) {
-            this.data = newData;
-            notifyDataSetChanged();
+            if (null != newData) {
+                this.data = newData;
+                notifyDataSetChanged();
+            }
         }
 
 //        public void setSelect(int indext) {
