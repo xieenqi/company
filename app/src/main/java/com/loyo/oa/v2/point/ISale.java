@@ -6,6 +6,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public interface ISale {
      * 获取 销售机会的动态字段
      */
     @GET("/chance/filed")
-    void getSaleFild(Callback<ArrayList<SaleFild>> callback);
+    void getSaleFild(Callback<ArrayList<ContactLeftExtras>> callback);
 
     /**
      * 获取 销售阶段

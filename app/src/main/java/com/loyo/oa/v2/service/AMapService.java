@@ -135,7 +135,7 @@ public class AMapService extends Service {
         locationOption = new AMapLocationClientOption();
         locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
         //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
-        locationOption.setInterval(1000 * 60*2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+        locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
         locationOption.setOnceLocation(false);//false持续定位 true单次定位
         locationOption.setHttpTimeOut(10000);//设置联网超时时间
         locationOption.setNeedAddress(true);
@@ -194,12 +194,12 @@ public class AMapService extends Service {
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置
-        /*if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
+        if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 ||
                 accuracy > MIN_SCAN_SPAN_DISTANCE || isCache) {
             LogUtil.d("当前位置偏移量很大，直接return");
             return;
-        }*/
+        }
         if (isEmptyStr(address)) {
             StringBuilder addressBuilder = new StringBuilder();
             combineAddress(aMapLocation.getProvince(), addressBuilder);
@@ -214,7 +214,7 @@ public class AMapService extends Service {
 
         if (Global.isConnected()) {
             if (isEmptyStr(address)) {
-                    aMapLocation.setAddress("未知地址");
+                aMapLocation.setAddress("未知地址");
             }
         } else {
             aMapLocation.setAddress("未知地址(离线)");
@@ -233,7 +233,7 @@ public class AMapService extends Service {
         mRestAdapter.create(IMain.class).getServerTime(new RCallback<ServerTime>() {
             @Override
             public void success(ServerTime serverTime, Response response) {
-                HttpErrorCheck.checkResponse("轨迹定位－获取当前时间",response);
+                HttpErrorCheck.checkResponse("轨迹定位－获取当前时间", response);
                 long time = 0;
                 if (null != serverTime) {
                     time = serverTime.getNow();
@@ -349,7 +349,7 @@ public class AMapService extends Service {
             LogUtil.d("获取到的distance : " + distance);
             LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE - 50));
 
-            if (distance != 0.0 && distance< MIN_SCAN_SPAN_DISTANCE - 50) {
+            if (distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE - 50) {
                 LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }

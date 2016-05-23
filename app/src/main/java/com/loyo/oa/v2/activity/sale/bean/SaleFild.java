@@ -13,6 +13,7 @@ public class SaleFild implements Serializable {
     public boolean required;
     public boolean enabled;
     public boolean sortable;
+    public boolean isList;
     public ArrayList<String> defVal;
 
 //    {

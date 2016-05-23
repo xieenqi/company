@@ -680,7 +680,7 @@
             android:name=".activity.sale.ActivityAddMySale"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".activity.sale.ActivitySaleStage"
             android:launchMode="singleTop"

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * 客户联系人 左侧Lable数据
+ * 客户联系人 左侧Lable数据  销售机会动态字段公用Ben
  *
  * Created by loyo_dev1 on 16/3/24.
  */

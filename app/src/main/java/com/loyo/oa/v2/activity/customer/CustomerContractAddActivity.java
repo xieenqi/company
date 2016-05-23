@@ -209,7 +209,6 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             public void failure(RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Toast("请求失败");
             }
         });
     }

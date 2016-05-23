@@ -13,12 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -29,6 +29,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +46,7 @@ import retrofit.client.Response;
 public class ActivityAddMySale extends BaseActivity {
     private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate;
     private ImageView iv_submit;
-    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source;
+    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom;
     private EditText et_name, et_money, et_remake;
     private String customerName, customerId, stageId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
@@ -95,6 +96,7 @@ public class ActivityAddMySale extends BaseActivity {
         tv_source = (TextView) findViewById(R.id.tv_source);
         tv_product = (TextView) findViewById(R.id.tv_product);
         tv_estimate = (TextView) findViewById(R.id.tv_estimate);
+        tv_custom = (LinearLayout) findViewById(R.id.tv_custom);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -151,10 +153,17 @@ public class ActivityAddMySale extends BaseActivity {
      */
     private void getDynamicInfo() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(ISale.class).getSaleFild(new Callback<ArrayList<SaleFild>>() {
+                create(ISale.class).getSaleFild(new Callback<ArrayList<ContactLeftExtras>>() {
             @Override
-            public void success(ArrayList<SaleFild> bulletinPaginationX, Response response) {
+            public void success(ArrayList<ContactLeftExtras> bulletinPaginationX, Response response) {
                 HttpErrorCheck.checkResponse("销售机会动态字段：", response);
+                ArrayList<ContactLeftExtras> newData = new ArrayList<ContactLeftExtras>();
+                for (ContactLeftExtras ele : bulletinPaginationX) {
+                    if (!ele.isSystem) {
+                        newData.add(ele);
+                    }
+                }
+                tv_custom.addView(new ContactAddforExtraData(mContext, null, newData, true, R.color.title_bg1, 0));
             }
 
             @Override
