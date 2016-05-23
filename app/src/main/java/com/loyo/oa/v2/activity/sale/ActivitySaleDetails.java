@@ -118,6 +118,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         updateTime.setText(mSaleDetails.getUpdatedAt()+"");
         winTime.setText(mSaleDetails.getWinTime()+"");
 
+        /*当为输单阶段时，显示输单原因*/
         if(mSaleDetails.getProb() == 0){
             layout_losereson.setVisibility(View.VISIBLE);
             losereason.setText(mSaleDetails.getLostReason());
