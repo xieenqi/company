@@ -13,11 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -25,10 +26,14 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -41,10 +46,11 @@ import retrofit.client.Response;
 public class ActivityAddMySale extends BaseActivity {
     private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate;
     private ImageView iv_submit;
-    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source;
+    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom;
     private EditText et_name, et_money, et_remake;
-    private String customerName, customerId;
+    private String customerName, customerId, stageId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
+    private int estimatedTime = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +96,7 @@ public class ActivityAddMySale extends BaseActivity {
         tv_source = (TextView) findViewById(R.id.tv_source);
         tv_product = (TextView) findViewById(R.id.tv_product);
         tv_estimate = (TextView) findViewById(R.id.tv_estimate);
+        tv_custom = (LinearLayout) findViewById(R.id.tv_custom);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -100,7 +107,7 @@ public class ActivityAddMySale extends BaseActivity {
                     finish();
                     break;
                 case R.id.iv_submit:
-                    Toast("创建机会");
+                    addSaleOpportunitty();
                     break;
                 case R.id.ll_customer://选择客户
                     Bundle b = new Bundle();
@@ -146,10 +153,17 @@ public class ActivityAddMySale extends BaseActivity {
      */
     private void getDynamicInfo() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(ISale.class).getSaleFild(new Callback<ArrayList<SaleFild>>() {
+                create(ISale.class).getSaleFild(new Callback<ArrayList<ContactLeftExtras>>() {
             @Override
-            public void success(ArrayList<SaleFild> bulletinPaginationX, Response response) {
+            public void success(ArrayList<ContactLeftExtras> bulletinPaginationX, Response response) {
                 HttpErrorCheck.checkResponse("销售机会动态字段：", response);
+                ArrayList<ContactLeftExtras> newData = new ArrayList<ContactLeftExtras>();
+                for (ContactLeftExtras ele : bulletinPaginationX) {
+                    if (!ele.isSystem) {
+                        newData.add(ele);
+                    }
+                }
+                tv_custom.addView(new ContactAddforExtraData(mContext, null, newData, true, R.color.title_bg1, 0));
             }
 
             @Override
@@ -180,7 +194,8 @@ public class ActivityAddMySale extends BaseActivity {
 //                } else {
 //                    Toast("出生日期不能是未来时间，请重新设置");
 //                }
-                tv_estimate.setText(year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day));
+                tv_estimate.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
+                estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_estimate.getText().toString(), "yyyy.MM.dd"));
             }
         });
 
@@ -192,6 +207,56 @@ public class ActivityAddMySale extends BaseActivity {
         });
 
         mDialog.show();
+    }
+
+    /**
+     * 创建销售机会 到服务器
+     */
+    private void addSaleOpportunitty() {
+        if (TextUtils.isEmpty(et_name.getText().toString())) {
+            Toast("请填写机会名称");
+            return;
+        } else if (TextUtils.isEmpty(customerId)) {
+            Toast("请选择客户");
+            return;
+        } else if (TextUtils.isEmpty(stageId)) {
+            Toast("请选择销售阶段");
+            return;
+        } else if (-1 == estimatedTime) {
+            Toast("请选择预估成交时间");
+            return;
+        } else if (!(intentionProductData.size() > 0)) {
+            Toast("请添加意向产品");
+            return;
+        }
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("customerName", customerName);
+        map.put("customerId", customerId);
+        map.put("name", et_name.getText().toString());
+        map.put("stageId", stageId);
+        map.put("estimatedAmount", Float.valueOf(et_money.getText().toString()));
+        map.put("estimatedTime", estimatedTime);
+        map.put("proInfos", intentionProductData);
+        map.put("changeSource", tv_source.getText().toString());
+        map.put("changeType", tv_type.getText().toString());
+        map.put("memo", et_remake.getText().toString());
+        map.put("extensionDatas", new ArrayList<>());
+        LogUtil.d("创建销售机会传递--》", app.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                create(ISale.class).addSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
+            @Override
+            public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
+                HttpErrorCheck.checkResponse("创建销售机会", response);
+                Toast("创建成功");
+                finish();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 
     @Override
@@ -208,7 +273,10 @@ public class ActivityAddMySale extends BaseActivity {
                     break;
                 case ExtraAndResult.REQUEST_CODE_STAGE:
                     SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-                    tv_stage.setText(stage.name);
+                    if (null != stage) {
+                        stageId = stage.id;
+                        tv_stage.setText(stage.name);
+                    }
                     break;
                 case ExtraAndResult.REQUEST_CODE_TYPE:
                     String saletype = data.getStringExtra(ExtraAndResult.EXTRA_DATA);

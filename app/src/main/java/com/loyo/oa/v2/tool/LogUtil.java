@@ -39,7 +39,7 @@ public class LogUtil {
 
     public static void d(String TAG, String text) {
         if (LogoStatus) {
-            Log.d(TAG, text);
+            Log.d("LogoServerV2", TAG + text);
         }
     }
 

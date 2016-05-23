@@ -3,12 +3,18 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -21,7 +27,7 @@ public interface ISale {
      * 获取 销售机会的动态字段
      */
     @GET("/chance/filed")
-    void getSaleFild(Callback<ArrayList<SaleFild>> callback);
+    void getSaleFild(Callback<ArrayList<ContactLeftExtras>> callback);
 
     /**
      * 获取 销售阶段
@@ -37,20 +43,26 @@ public interface ISale {
 
     /**
      * 获取 我的销售机会列表
-     * */
+     */
     @GET("/chance/self")
-    void getSaleMyList(@QueryMap HashMap<String,Object> map,Callback<SaleMyList> callback);
+    void getSaleMyList(@QueryMap HashMap<String, Object> map, Callback<SaleMyList> callback);
 
     /**
      * 获取 我的销售机会列表
-     * */
+     */
     @GET("/chance/team")
-    void getSaleTeamList(@QueryMap HashMap<String,Object> map,Callback<SaleTeamList> callback);
+    void getSaleTeamList(@QueryMap HashMap<String, Object> map, Callback<SaleTeamList> callback);
 
     /**
      * 获取 销售机会详情
-     * */
+     */
     @GET("/chance/{id}")
-    void getSaleDetails(@Path("id")String id,Callback<SaleDetails> callback);
+    void getSaleDetails(@Path("id") String id, Callback<SaleDetails> callback);
+
+    /**
+     * 创建销售机会
+     */
+    @POST("/chance")
+    void addSaleOpportunity(@Body HashMap<String, Object> body, Callback<SaleOpportunityAdd> callback);
 
 }
