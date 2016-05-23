@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.sale;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,8 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.adapter.ProductsRadioListViewAdapter;
 import com.loyo.oa.v2.beans.Product;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
@@ -41,6 +44,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
     private EditText et_price, et_number, et_remake;
     private ArrayList<Product> lstData_Product = new ArrayList<>();
     private AlertDialog dialog_Product;
+    private String productId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         setContentView(R.layout.activity_add_intention_product);
         init();
         getData();
+        getIntentData();
     }
 
     private void init() {
@@ -74,6 +79,23 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         et_remake = (EditText) findViewById(R.id.et_remake);
     }
 
+    /**
+     * 修改意向产品 传递 过来的数据
+     */
+    private void getIntentData() {
+        SaleIntentionalProduct intentProduct = (SaleIntentionalProduct) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        if (null != intentProduct) {
+            tv_title.setText("编辑意向产品");
+            productId = intentProduct.id;
+            tv_product.setText(intentProduct.name);
+            tv_price.setText(intentProduct.costPrice + "");
+            et_price.setText(intentProduct.salePrice + "");
+            et_number.setText(intentProduct.quantity + "");
+            tv_discount.setText(intentProduct.discount + "%");
+            tv_total.setText(intentProduct.totalMoney + "");
+            et_remake.setText(intentProduct.memo);
+        }
+    }
 
     public void getData() {
         showLoading("");
@@ -102,7 +124,13 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.iv_submit:
-
+                    SaleIntentionalProduct data = assembleData();
+                    if (null != data) {
+                        Intent intent = new Intent();
+                        intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                     break;
                 case R.id.ll_poduct:
                     SelectProduct();
@@ -190,6 +218,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 productsRadioListViewAdapter.isSelected = id;
                 Product item = lstData_Product.get((int) id);
                 tv_product.setText(item.name);
+                productId = item.id;
                 tv_price.setText(item.unitPrice);
 
                 et_price.setText("");
@@ -203,6 +232,32 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         });
     }
 
+    /**
+     * 组装数据
+     */
+    private SaleIntentionalProduct assembleData() {
+        if (TextUtils.isEmpty(productId) && TextUtils.isEmpty(tv_product.getText().toString())) {
+            Toast("请选择产品");
+            return null;
+        } else if (TextUtils.isEmpty(et_price.getText().toString())) {
+            Toast("请输入销售价格");
+            return null;
+        } else if (TextUtils.isEmpty(et_number.getText().toString())) {
+            Toast("请输数量");
+            return null;
+        }
+        SaleIntentionalProduct product = new SaleIntentionalProduct();
+        product.id = productId;
+        product.name = tv_product.getText().toString();
+        product.costPrice = transformationNumber(tv_price.getText().toString());
+        product.salePrice = transformationNumber(et_price.getText().toString());
+        product.quantity = transformationNumber(et_number.getText().toString());
+        product.discount = transformationNumber(tv_discount.getText().toString().
+                substring(0, tv_discount.getText().toString().length() - 1));
+        product.totalMoney = transformationNumber(tv_total.getText().toString());
+        product.memo = et_remake.getText().toString();
+        return product;
+    }
 //    {
 //        "id": "573c2b1935d86037a65b7612",
 //            "name": "棉花糖",
@@ -214,12 +269,5 @@ public class ActivityAddIntentionProduct extends BaseActivity {
 //            "memo": "",
 //            "costTotalMoney": 90
 
-//Id         bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"` //产品id
-//    Name       string        `bson:"name" json:"name"`                  //产品名称
-//    CostPrice  float64       `bson:"cost_price" json:"costPrice"`       //原价
-//    SalePrice  float64       `bson:"sale_price" json:"salePrice"`       //销售价格
-//    Quantity   float64       `bson:"quantity" json:"quantity"`          //数量
-//    Discount   float64       `bson:"discount" json:"discount"`          //折扣
-//    TotalMoney float64       `bson:"total_money" json:"totalMoney"`     //总金额
-//    Memo       string        `bson:"memo" json:"memo"`
+
 }

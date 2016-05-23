@@ -1,16 +1,24 @@
 package com.loyo.oa.v2.activity.sale;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 【意向产品】
@@ -21,6 +29,8 @@ public class ActivityIntentionProduct extends BaseActivity {
     private TextView tv_title;
     private LinearLayout ll_back, ll_add;
     private ListView lv_list;
+    List<SaleIntentionalProduct> listData = new ArrayList<>();
+    SaleProductAdapter saleProductAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +48,9 @@ public class ActivityIntentionProduct extends BaseActivity {
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
         ll_add.setOnTouchListener(Global.GetTouch());
         ll_add.setOnClickListener(click);
+        saleProductAdapter = new SaleProductAdapter();
         lv_list = (ListView) findViewById(R.id.lv_list);
+        lv_list.setAdapter(saleProductAdapter);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -57,4 +69,99 @@ public class ActivityIntentionProduct extends BaseActivity {
 
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                    SaleIntentionalProduct product = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                    saleProductAdapter.setData(product);
+                    break;
+            }
+
+        }
+    }
+
+    class SaleProductAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return listData.size();
+        }
+
+        public void setData(SaleIntentionalProduct product) {
+            listData.add(product);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            HolderView holderView;
+            if (null == convertView) {
+                convertView = LayoutInflater.from(ActivityIntentionProduct.this).inflate(R.layout.item_intention_product, null);
+                holderView = new HolderView();
+                holderView.tv_index = (TextView) convertView.findViewById(R.id.tv_index);
+                holderView.tv_product = (TextView) convertView.findViewById(R.id.tv_product);
+                holderView.tv_toal_price = (TextView) convertView.findViewById(R.id.tv_toal_price);
+                holderView.tv_sale_price = (TextView) convertView.findViewById(R.id.tv_sale_price);
+                holderView.tv_number = (TextView) convertView.findViewById(R.id.tv_number);
+                holderView.tv_discount = (TextView) convertView.findViewById(R.id.tv_discount);
+                holderView.tv_total_money = (TextView) convertView.findViewById(R.id.tv_total_money);
+                holderView.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
+                holderView.ll_delete = (LinearLayout) convertView.findViewById(R.id.ll_delete);
+                holderView.ll_edit = (LinearLayout) convertView.findViewById(R.id.ll_edit);
+                convertView.setTag(holderView);
+            } else {
+                holderView = (HolderView) convertView.getTag();
+            }
+            holderView.setContentView(position);
+            return convertView;
+        }
+    }
+
+    class HolderView {
+        public TextView tv_index, tv_product, tv_toal_price, tv_sale_price, tv_number, tv_discount, tv_total_money, tv_memo;
+        public LinearLayout ll_delete, ll_edit;
+
+        public void setContentView(final int position) {
+            tv_index.setText("意向产品" + (position + 1));
+            final SaleIntentionalProduct item = listData.get(position);
+            tv_product.setText(item.name);
+            tv_toal_price.setText(item.costPrice + "");
+            tv_sale_price.setText(item.salePrice + "");
+            tv_number.setText(item.quantity + "");
+            tv_discount.setText(item.discount + "%");
+            tv_total_money.setText(item.totalMoney + "");
+            tv_memo.setText(item.memo);
+            ll_delete.setOnTouchListener(Global.GetTouch());
+            ll_edit.setOnTouchListener(Global.GetTouch());
+            ll_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listData.remove(position);
+                    saleProductAdapter.notifyDataSetChanged();
+                }
+            });
+            ll_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle product = new Bundle();
+                    product.putSerializable(ExtraAndResult.EXTRA_DATA,item);
+                    app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
+                }
+            });
+        }
+    }
 }
