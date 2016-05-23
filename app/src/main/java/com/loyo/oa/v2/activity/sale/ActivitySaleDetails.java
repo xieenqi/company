@@ -9,13 +9,18 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
+import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -32,6 +37,11 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private SaleDetails mSaleDetails;
     private Intent mIntent;
     private String selectId;
+    private StringBuffer productBuffer = new StringBuffer();
+
+    private LinearLayout ll_product;
+    private LinearLayout ll_stage;
+    private LinearLayout ll_extra;
 
     private TextView title;
     private TextView customer;
@@ -45,6 +55,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView creatorTime;
     private TextView updateTime;
     private TextView winTime;
+    private TextView stageName;
+    private TextView product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +68,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
 
     public void initView() {
         mContext = this;
+
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         layout_losereson = (LinearLayout) findViewById(R.id.layout_losereson);
         img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
@@ -71,9 +84,20 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime = (TextView) findViewById(R.id.creatortime);
         updateTime = (TextView) findViewById(R.id.updatetime);
         winTime = (TextView) findViewById(R.id.wintime);
+        stageName = (TextView) findViewById(R.id.text_stagename);
+        product = (TextView) findViewById(R.id.text_product);
+        ll_product = (LinearLayout) findViewById(R.id.ll_product);
+        ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
+        ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
 
         img_title_left.setOnClickListener(this);
         img_title_right.setOnClickListener(this);
+        ll_product.setOnClickListener(this);
+        ll_stage.setOnClickListener(this);
+        ll_stage.setOnTouchListener(Global.GetTouch());
+        ll_product.setOnTouchListener(Global.GetTouch());
+        img_title_right.setOnTouchListener(Global.GetTouch());
+        img_title_left.setOnTouchListener(Global.GetTouch());
 
         mIntent = getIntent();
         selectId = mIntent.getStringExtra("id");
@@ -117,6 +141,17 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime.setText(mSaleDetails.getCreatedAt()+"");
         updateTime.setText(mSaleDetails.getUpdatedAt()+"");
         winTime.setText(mSaleDetails.getWinTime()+"");
+        stageName.setText(mSaleDetails.getStageName());
+        if(null != mSaleDetails.getProInfos()){
+            for(SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()){
+                productBuffer.append(sitpeoduct.name+" ");
+            }
+        }
+        product.setText(productBuffer.toString());
+        ll_extra.setVisibility(View.VISIBLE);
+        for(SaleDetails.SaleDetailsExtraList saleDetailsExtraList : mSaleDetails.getExtensionDatas()){
+            ll_extra.addView(new ViewSaleDetailsExtra(mContext,saleDetailsExtraList));
+        }
 
         /*当为输单阶段时，显示输单原因*/
         if(mSaleDetails.getProb() == 0){
@@ -132,10 +167,25 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             case R.id.img_title_left:
                 finish();
                 break;
-
+            //弹出菜单
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, ActivitySaleEditView.class);
                 startActivityForResult(intent,EDIT_POP_WINDOW);
+                break;
+            //意向产品
+            case R.id.ll_product:
+                Bundle product = new Bundle();
+                product.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails.getProInfos());
+                app.startActivityForResult(ActivitySaleDetails.this, ActivityIntentionProduct.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
+                break;
+            //销售阶段
+            case R.id.ll_stage:
+                Bundle stage = new Bundle();
+                stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
+                stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                app.startActivityForResult(ActivitySaleDetails.this, ActivitySaleStage.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                 break;
 
             default:

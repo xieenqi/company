@@ -111,6 +111,7 @@
                 android:background="@color/item_" />
 
             <LinearLayout
+                android:id="@+id/ll_stage"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -125,6 +126,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/text_stagename"
                     style="@style/text_item1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -147,6 +149,7 @@
             <include layout="@layout/include_solid_line_left" />
 
             <LinearLayout
+                android:id="@+id/ll_product"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -161,6 +164,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/text_product"
                     style="@style/text_item1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -265,25 +269,12 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_extra"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="自定义字段: "
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="户口巾凡"
-                        android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
-
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
                 </LinearLayout>
 
                 <LinearLayout
@@ -357,7 +348,7 @@
                         android:layout_height="wrap_content"
                         android:text="创建时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/creatortime"
@@ -365,7 +356,7 @@
                         android:layout_height="wrap_content"
                         android:text="2014.4.12 14:30"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
@@ -380,7 +371,7 @@
                         android:layout_height="wrap_content"
                         android:text="更新时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/updatetime"
@@ -388,7 +379,7 @@
                         android:layout_height="wrap_content"
                         android:text="2014.4.10 12:30"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
 
@@ -404,7 +395,7 @@
                         android:layout_height="wrap_content"
                         android:text="赢单时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp14" />
 
                     <TextView
                         android:id="@+id/wintime"
@@ -412,7 +403,7 @@
                         android:layout_height="wrap_content"
                         android:text="2017.2.22 23:30"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp14" />
 
                 </LinearLayout>
             </LinearLayout>
