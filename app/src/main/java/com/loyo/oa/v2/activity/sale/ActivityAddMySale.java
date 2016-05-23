@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
+import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
@@ -39,6 +40,7 @@ public class ActivityAddMySale extends BaseActivity {
     private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source;
     private EditText et_name, et_money, et_remake;
     private String customerName, customerId;
+    private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +113,7 @@ public class ActivityAddMySale extends BaseActivity {
                     break;
                 case R.id.ll_poduct://选择意向产品
                     Bundle product = new Bundle();
+                    product.putSerializable(ExtraAndResult.EXTRA_DATA, intentionProductData);
                     app.startActivityForResult(ActivityAddMySale.this, ActivityIntentionProduct.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
@@ -173,6 +176,12 @@ public class ActivityAddMySale extends BaseActivity {
                 case ExtraAndResult.REQUEST_CODE_SOURCE:
                     String salesource = data.getStringExtra(ExtraAndResult.EXTRA_DATA);
                     tv_source.setText(salesource);
+                    break;
+                case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                    ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                    if (null != resultData) {
+                        intentionProductData = resultData;
+                    }
                     break;
             }
         }

@@ -18,7 +18,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 【意向产品】
@@ -29,14 +28,16 @@ public class ActivityIntentionProduct extends BaseActivity {
     private TextView tv_title;
     private LinearLayout ll_back, ll_add;
     private ListView lv_list;
-    List<SaleIntentionalProduct> listData = new ArrayList<>();
+    ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
     SaleProductAdapter saleProductAdapter;
+    private int editItemIndex;//改变item的位置记录
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intention_product);
         init();
+        getIntentData();
     }
 
     private void init() {
@@ -70,6 +71,25 @@ public class ActivityIntentionProduct extends BaseActivity {
         }
     };
 
+    /**
+     * 获得传递过来的数据
+     */
+    private void getIntentData() {
+        ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        if (null != intentData && intentData.size() > 0) {
+            listData = intentData;
+            saleProductAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(ExtraAndResult.RESULT_DATA, listData);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -77,6 +97,12 @@ public class ActivityIntentionProduct extends BaseActivity {
                 case ExtraAndResult.REQUEST_CODE_PRODUCT:
                     SaleIntentionalProduct product = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     saleProductAdapter.setData(product);
+                    break;
+                case ExtraAndResult.REQUEST_EDIT:
+                    SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                    listData.remove(editItemIndex);
+                    listData.add(editItemIndex, productEdit);
+                    saleProductAdapter.notifyDataSetChanged();
                     break;
             }
 
@@ -156,10 +182,11 @@ public class ActivityIntentionProduct extends BaseActivity {
             ll_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    editItemIndex = position;
                     Bundle product = new Bundle();
-                    product.putSerializable(ExtraAndResult.EXTRA_DATA,item);
+                    product.putSerializable(ExtraAndResult.EXTRA_DATA, item);
                     app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);
                 }
             });
         }
