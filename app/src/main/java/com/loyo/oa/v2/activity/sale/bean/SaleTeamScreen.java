@@ -9,7 +9,16 @@ public class SaleTeamScreen implements Serializable{
 
     public String name;
     public String id;
+    public String xPath;
     public boolean index;
+
+    public String getxPath() {
+        return xPath;
+    }
+
+    public void setxPath(String xPath) {
+        this.xPath = xPath;
+    }
 
     public boolean isIndex() {
         return index;

@@ -16,18 +16,39 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【销售机会列表页面】
  * Created by xeq on 16/5/17.
  */
 public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity implements View.OnClickListener {
+
+    /**
+     * 销售阶段筛选Tag
+     * */
+    public final static int SCREEN_STAGE = 101;
+
+    /**
+     * 排序筛选Tag
+     * */
+    public final static int SCREEN_SORT  = 102;
+
     private LinearLayout img_title_left, ll_category;
     private ImageView img_title_arrow;
     private ListView lv_sale;
@@ -37,6 +58,7 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
     private Animation rotateAnimation;//标题动画
     private String[] SaleItemStatus = new String[]{"我的机会", "团队机会"};
     private List<BaseFragment> fragments = new ArrayList<>();
+    private ArrayList<SaleStage> mSaleStages;
     private float mRotation = 0;
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private int mIndex = -1;
@@ -46,8 +68,26 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_opportunities);
         init();
-        initTitleItem();
-        initChildren();
+    }
+
+    public void getStageData(){
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
+            @Override
+            public void success(final ArrayList<SaleStage> saleStages, final Response response) {
+                HttpErrorCheck.checkResponse("销售机会 销售阶段:", response);
+                mSaleStages = saleStages;
+                initTitleItem();
+                initChildren();
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                finish();
+            }
+        });
     }
 
     private void init() {
@@ -67,6 +107,7 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
+        getStageData();
     }
 
     void initTitleItem() {
@@ -91,11 +132,11 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
             BaseFragment fragment = null;
             if (i == 0) {
                 Bundle b = new Bundle();
-                b.putSerializable("user", MainApp.user);
+                b.putSerializable("stage", mSaleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, FragmentMySale.class.getName(), b);
             } else {
                 Bundle b = new Bundle();
-                b.putInt("type", i);
+                b.putSerializable("stage", mSaleStages);
                 fragment = (BaseFragment) Fragment.instantiate(this, FragmentTeamSale.class.getName(), b);
             }
             fragments.add(fragment);
@@ -104,7 +145,7 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
     }
 
     /**
-     * 改变子片段
+     * 改变子片段动画
      *
      * @param index
      */
@@ -117,9 +158,9 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
 
     Animation initArrowAnimation() {
         RotateAnimation rotateAnimation = new RotateAnimation(0f, 180f, Animation.RELATIVE_TO_SELF, 0.5f,// X轴
-                Animation.RELATIVE_TO_SELF, 0.5f);// y轴
+                Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(200);
-        rotateAnimation.setFillAfter(true);       //保留在终止位置
+        rotateAnimation.setFillAfter(true);
         rotateAnimation.setFillEnabled(true);
         rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         return rotateAnimation;

@@ -39,6 +39,7 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
     private Handler mHandler;
     private Message msg;
     private Bundle bundle;
+    private boolean isKind;
 
     private AdapterSaleTeamScreen adapter1;
     private AdapterSaleTeamScreen adapter2;
@@ -106,14 +107,19 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
     public void resultData(int position){
         msg = new Message();
         bundle = new Bundle();
+        //设置全体人员 名字
         if(position == 0){
+            isKind = true;
             userData.get(position).setName(depementData.get(deptPosition).getName());
+        }else{
+            isKind = false;
         }
         bundle.putSerializable("data", userData.get(position));
+        bundle.putBoolean("kind",isKind);
         msg.setData(bundle);
         msg.what = FragmentTeamSale.SALETEAM_SCREEN_TAG1;
         mHandler.sendMessage(msg);
-        LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId());
+        LogUtil.dee("name:" + userData.get(position).getName() + ",id:" + userData.get(position).getId() + "xPath:"+userData.get(position).getxPath());
         dismiss();
     }
 
@@ -126,9 +132,11 @@ public class SaleScreenPopupView extends PopupWindow implements View.OnClickList
         Common.getAllUsersByDeptId(depementData.get(position).getId(), deptAllUser);
         for (int i = 0; i < deptAllUser.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
+            //第一条数据为全体人员
             if (i == 0) {
                 saleTeamScreen.setName("全部人员");
                 saleTeamScreen.setId(depementData.get(position).getId());
+                saleTeamScreen.setxPath(depementData.get(position).getxPath());
             } else {
                 saleTeamScreen.setName(deptAllUser.get(i).getRealname());
                 saleTeamScreen.setId(deptAllUser.get(i).getId());

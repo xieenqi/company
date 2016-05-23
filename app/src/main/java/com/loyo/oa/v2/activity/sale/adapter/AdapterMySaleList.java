@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
+import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 
 import java.util.ArrayList;
 
@@ -20,10 +21,10 @@ import java.util.ArrayList;
  */
 public class AdapterMySaleList extends BaseAdapter {
 
-    private ArrayList<SaleMyList.Record> mData;
+    private ArrayList<SaleRecord> mData;
     private Context mContext;
 
-    public AdapterMySaleList(Context context,ArrayList<SaleMyList.Record> data) {
+    public AdapterMySaleList(Context context,ArrayList<SaleRecord> data) {
         mContext = context;
         mData = data;
     }
@@ -46,7 +47,7 @@ public class AdapterMySaleList extends BaseAdapter {
     @Override
     public View getView(final int position, View view, final ViewGroup viewGroup) {
         HolderView holder;
-        SaleMyList.Record record = mData.get(position);
+        SaleRecord record = mData.get(position);
         if (null == view) {
             view = LayoutInflater.from(mContext).inflate(R.layout.item_my_sale, viewGroup, false);
             holder = new HolderView();

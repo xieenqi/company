@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
+import com.loyo.oa.v2.activity.sale.FragmentMySale;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeamScreenComm;
 import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
@@ -31,18 +33,18 @@ public class SaleCommPopupView extends PopupWindow {
     private AdapterSaleTeamScreenComm adapter;
     private Message msg;
     private Bundle bundle;
-    private SaleTeamScreen saleTeamScreen;
 
-    private ArrayList<SaleTeamScreen> data = new ArrayList<>();
+    private ArrayList<SaleTeamScreen> data;
     private int page;
     private int resultTag;
 
-    public SaleCommPopupView(final Activity context, Handler handler,int page) {
+    public SaleCommPopupView(final Activity context, Handler handler,ArrayList<SaleTeamScreen> data,int page) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.saleteam_screen_common, null);
         this.mContext = context;
         this.mHandler = handler;
         this.page = page;
+        this.data = data;
         initView();
 
         this.setContentView(contentView);
@@ -56,12 +58,6 @@ public class SaleCommPopupView extends PopupWindow {
     }
 
     public void initView() {
-        for(int i = 0;i<10;i++){
-            saleTeamScreen = new SaleTeamScreen();
-            saleTeamScreen.setName("测试Item"+i);
-            saleTeamScreen.setIndex(false);
-            data.add(saleTeamScreen);
-        }
 
         listView = (ListView) contentView.findViewById(R.id.saleteam_screencommon_lv);
         adapter = new AdapterSaleTeamScreenComm(mContext,data);
@@ -81,25 +77,25 @@ public class SaleCommPopupView extends PopupWindow {
     public void dataReque(int position){
         for(int i = 0;i<data.size();i++){
             if(position == i){
-                saleTeamScreen.setIndex(true);
+                data.get(i).setIndex(true);
             }else{
-                saleTeamScreen.setIndex(false);
+                data.get(i).setIndex(false);
             }
         }
-        reuseFirm();
+        reuseFirm(position);
     }
 
     /**
      * 业务区分
      * */
-    public void reuseFirm(){
+    public void reuseFirm(int position){
         msg = new Message();
         bundle = new Bundle();
-        if(page == 1){
-            bundle.putString("data","销售阶段回调");
+        if(page == ActivitySaleOpportunitiesManager.SCREEN_STAGE){
+            bundle.putString("data",data.get(position).getId());
             resultTag = FragmentTeamSale.SALETEAM_SCREEN_TAG2;
-        }else if(page == 2){
-            bundle.putString("data","排序回调");
+        }else if(page == ActivitySaleOpportunitiesManager.SCREEN_SORT){
+            bundle.putString("data",position+1+"");
             resultTag = FragmentTeamSale.SALETEAM_SCREEN_TAG3;
         }
         msg.setData(bundle);
