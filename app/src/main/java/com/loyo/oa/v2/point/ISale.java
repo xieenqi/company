@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
@@ -77,6 +79,14 @@ public interface ISale {
      * 删除 销售机会
      * */
     @DELETE("/chance/{id}")
-    void deleteSaleOpportunity(@Path("id") String id,Callback<SaleOpportunityAdd> callback);
+    void deleteSaleOpportunity(@Path("id") String id,Callback<SaleDetails> callback);
+
+    /**
+     * 删除详情下的意向产品
+     * */
+    @DELETE("chance/pro")
+    void deleteSaleProduct(@QueryMap HashMap<String,Object> map,Callback<SaleDetails> callback);
+
+
 
 }

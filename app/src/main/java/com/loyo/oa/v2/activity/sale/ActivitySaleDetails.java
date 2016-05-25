@@ -129,12 +129,11 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
-                .getSaleDetails(selectId, new RCallback<SaleDetails>() {
+                .deleteSaleOpportunity(selectId, new RCallback<SaleDetails>() {
                     @Override
                     public void success(SaleDetails saleDetails, Response response) {
-                        HttpErrorCheck.checkResponse("机会详情", response);
-                        mSaleDetails = saleDetails;
-                        bindData();
+                        HttpErrorCheck.checkResponse("删除", response);
+                        app.finishActivity(ActivitySaleDetails.this,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_SOURCE,new Intent());
                     }
 
                     @Override
@@ -223,11 +222,11 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if(requestCode == EDIT_POP_WINDOW){
             //编辑回调
             if(data.getBooleanExtra("edit",false)){
-                Toast("编辑回调");
+
             }
             //删除回调
             else if(data.getBooleanExtra("delete",false)){
-                Toast("删除回调");
+                deleteSale();
             }
         }
     }

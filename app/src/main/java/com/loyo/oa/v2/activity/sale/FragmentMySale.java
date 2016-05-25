@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.sale;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.SaleStage;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -33,10 +35,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -48,6 +48,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     private View mView;
     private Button btn_add;
+    private Intent mIntent;
     private Bundle mBundle;
     private LinearLayout screen1;
     private LinearLayout screen2;
@@ -138,9 +139,10 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mBundle = new Bundle();
-                mBundle.putString("id",mSaleMyList.records.get(position - 1).getId());
-                app.startActivity(getActivity(), ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                mIntent = new Intent();
+                mIntent.putExtra("id",mSaleMyList.records.get(position - 1).getId());
+                mIntent.setClass(getActivity(),ActivitySaleDetails.class);
+                startActivityForResult(mIntent,getActivity().RESULT_FIRST_USER);
             }
         });
     }
@@ -238,6 +240,23 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode){
+            //删除后 刷新列表
+            case ExtraAndResult.REQUEST_CODE_SOURCE:
+                getData();
+                break;
+
+            default:
+                break;
+
+        }
+
+    }
 
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
