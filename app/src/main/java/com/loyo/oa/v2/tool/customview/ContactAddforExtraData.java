@@ -161,7 +161,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-
+                tv_content.setText(customerExtra.val);
             } else if ("birth".equals(customerExtra.fieldName)) {
                 LogUtil.dll("生日");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
@@ -180,6 +180,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
+                tv_content.setText(customerExtra.val);
             } else if ("long".equals(customerExtra.type)) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
@@ -198,6 +199,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
+                tv_content.setText(customerExtra.val);
             } else if ("string".equals(customerExtra.type)) {
                 LogUtil.dll("string");
                 LogUtil.dll("string enable:" + customerExtra.enabled);
@@ -211,6 +213,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
+                tv_content.setText(customerExtra.val);
             } else if ("int".equals(customerExtra.type)) {
                 LogUtil.dll("int");
                 LogUtil.dll("int enable:" + customerExtra.enabled);
@@ -224,6 +227,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
+                tv_content.setText(customerExtra.val);
             } else if ("double".equals(customerExtra.type)) {
                 LogUtil.dll("double");
                 LogUtil.dll("double enable:" + customerExtra.enabled);
@@ -237,6 +241,7 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
+                tv_content.setText(customerExtra.val);
             }
         }
     }

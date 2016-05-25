@@ -10,7 +10,8 @@ import java.util.ArrayList;
  * Created by yyy on 16/5/20.
  */
 public class SaleDetails implements Serializable {
-
+    public String id;
+    public String creatorId;
     public String name;          //标题
     public String cusName;       //对应客户
     public String customerId;

@@ -121,6 +121,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
+//                        finish();
                     }
                 });
     }
@@ -221,22 +222,23 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (resultCode != RESULT_OK) {
             return;
         }
-
-        if (requestCode == EDIT_POP_WINDOW) {
-            //编辑回调
-
-            if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
-                Bundle editSale = new Bundle();
-                editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
-//                editSale.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
-                app.startActivityForResult(ActivitySaleDetails.this, ActivityAddMySale.class,
-                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, editSale);
-            }
-            //删除回调
-            else if (data.getBooleanExtra("delete", false)) {
-                deleteSale();
-
-            }
+        switch (requestCode) {
+            case EDIT_POP_WINDOW:
+                //编辑回调
+                if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
+                    Bundle editSale = new Bundle();
+                    editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
+                    app.startActivityForResult(ActivitySaleDetails.this, ActivityAddMySale.class,
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, editSale);
+                }
+                //删除回调
+                else if (data.getBooleanExtra("delete", false)) {
+                    deleteSale();
+                }
+                break;
+            case ExtraAndResult.REQUEST_EDIT:
+                finish();
+                break;
         }
     }
 }
