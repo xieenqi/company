@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.sale;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -70,6 +72,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     private View mView;
     private Button btn_add;
+    private Intent mIntent;
     private Bundle mBundle;
     private Context mContext;
     private SaleTeamScreen saleTeamScreen;
@@ -205,9 +208,10 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mBundle = new Bundle();
-                mBundle.putString("id", mSaleTeamList.getRecords().get(position - 1).getId());
-                app.startActivity(getActivity(), ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                mIntent = new Intent();
+                mIntent.putExtra("id",mSaleTeamList.getRecords().get(position - 1).getId());
+                mIntent.setClass(getActivity(), ActivitySaleDetails.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
             }
         });
 
@@ -337,6 +341,21 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         setUser();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode){
+            //删除后 刷新列表
+            case ExtraAndResult.REQUEST_CODE_SOURCE:
+                getData();
+                break;
+
+            default:
+                break;
+        }
+
+    }
 
     @Override
     public void onClick(View v) {
