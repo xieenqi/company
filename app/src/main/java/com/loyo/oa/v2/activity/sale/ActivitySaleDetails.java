@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.application.MainApp;
@@ -18,6 +19,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
@@ -37,8 +39,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private RelativeLayout img_title_right;
     private SaleDetails mSaleDetails;
     private Intent mIntent;
-    private String selectId;
-    private StringBuffer productBuffer = new StringBuffer();
+    private String selectId = "";
+    private StringBuffer productBuffer;
     private LinearLayout ll_product;
     private LinearLayout ll_stage;
     private LinearLayout ll_extra;
@@ -163,9 +165,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         updateTime.setText(mSaleDetails.getUpdatedAt() + "");
         winTime.setText(mSaleDetails.getWinTime() + "");
         stageName.setText(mSaleDetails.getStageName());
+        productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
             for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
-                productBuffer.append(sitpeoduct.name + " ");
+                productBuffer.append(sitpeoduct.name + "、");
             }
         }
         product.setText(productBuffer.toString());
@@ -196,6 +199,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             //意向产品
             case R.id.ll_product:
                 Bundle product = new Bundle();
+                product.putInt("data", ActionCode.SALE_FROM_DETAILS);
+                product.putString("saleId", selectId);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails.getProInfos());
                 app.startActivityForResult(ActivitySaleDetails.this, ActivityIntentionProduct.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
@@ -222,23 +227,46 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (resultCode != RESULT_OK) {
             return;
         }
+
+
         switch (requestCode) {
+            /**菜单选项*/
             case EDIT_POP_WINDOW:
                 //编辑回调
                 if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
                     Bundle editSale = new Bundle();
                     editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
+                    //editSale.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
                     app.startActivityForResult(ActivitySaleDetails.this, ActivityAddMySale.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, editSale);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, editSale);
                 }
                 //删除回调
                 else if (data.getBooleanExtra("delete", false)) {
                     deleteSale();
                 }
                 break;
+            /**意向产品*/
+            case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                int resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
+                if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
+                    getData();
+                }
+                break;
+            /**销售阶段*/
+            case ExtraAndResult.REQUEST_CODE_STAGE:
+//                SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+//                if (null != stage) {
+//                    tv_stageName.setText(stage.name);
+//                    stageId = stage.id;
+//                    stageName = stage.name;
+//                    editStage();
+//                }
+                break;
             case ExtraAndResult.REQUEST_EDIT:
                 finish();
                 break;
+
         }
+
     }
 }

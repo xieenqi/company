@@ -6,6 +6,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
+import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
@@ -84,9 +85,19 @@ public interface ISale {
     /**
      * 删除详情下的意向产品
      * */
-    @DELETE("chance/pro")
-    void deleteSaleProduct(@QueryMap HashMap<String,Object> map,Callback<SaleDetails> callback);
+    @DELETE("/chance/pro")
+    void deleteSaleProduct(@QueryMap HashMap<String,Object> map,Callback<SaleProductEdit> callback);
 
+    /**
+     * 新增详情下的意向产品
+     * */
+    @POST("/chance/addPro")
+    void addSaleProduct(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
 
+    /**
+     * 编辑详情下的意向产品
+     * */
+    @POST("/chance/updatePro")
+    void editSaleProduct(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
 
 }
