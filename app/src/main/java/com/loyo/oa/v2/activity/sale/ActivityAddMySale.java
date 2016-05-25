@@ -237,6 +237,10 @@ public class ActivityAddMySale extends BaseActivity {
                 extension.setVal(ele.val);
                 extension.properties = ele;
                 extensionDatas.add(extension);
+                if (ele.required && TextUtils.isEmpty(ele.val)) {
+                    Toast("必填项没有完成");
+                    return;
+                }
             }
         }
         showLoading("");
