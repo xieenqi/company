@@ -46,9 +46,9 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/17.
  */
 public class ActivityAddMySale extends BaseActivity {
-    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate;
+    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate, tv_transport;
     private ImageView iv_submit;
-    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom;
+    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom, ll_transport;
     private EditText et_name, et_money, et_remake;
     private String customerName, customerId, stageId, chanceId, creatorId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
@@ -103,6 +103,10 @@ public class ActivityAddMySale extends BaseActivity {
         tv_product = (TextView) findViewById(R.id.tv_product);
         tv_estimate = (TextView) findViewById(R.id.tv_estimate);
         tv_custom = (LinearLayout) findViewById(R.id.tv_custom);
+        ll_transport = (LinearLayout) findViewById(R.id.ll_transport);
+        ll_transport.setOnTouchListener(Global.GetTouch());
+        ll_transport.setOnClickListener(click);
+        tv_transport = (TextView) findViewById(R.id.tv_transport);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -150,6 +154,9 @@ public class ActivityAddMySale extends BaseActivity {
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, source);
                     break;
+                case R.id.ll_transport:
+                    Toast("输单原因");
+                    break;
             }
         }
     };
@@ -171,7 +178,7 @@ public class ActivityAddMySale extends BaseActivity {
             tv_stage.setText(mSaleDetails.stageName);
             stageId = mSaleDetails.stageId;
             et_money.setText(mSaleDetails.salesAmount + "");
-            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime+"")*1000)));
+            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
             tv_product.setText(getIntentionProductName());
@@ -339,6 +346,11 @@ public class ActivityAddMySale extends BaseActivity {
                     if (null != stage) {
                         stageId = stage.id;
                         tv_stage.setText(stage.name);
+                        if ("输单".equals(stage.name)) {
+                            ll_transport.setVisibility(View.VISIBLE);
+                        } else {
+                            ll_transport.setVisibility(View.GONE);
+                        }
                     }
                     break;
                 case ExtraAndResult.REQUEST_CODE_TYPE:
