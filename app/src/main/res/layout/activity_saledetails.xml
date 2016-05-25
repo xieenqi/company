@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
     >
 
-    <include layout="@layout/include_common_title_edit" />
+    <include layout="@layout/include_common_title_edit"/>
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -30,9 +30,8 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="标题123456"
                     android:textColor="@color/text33"
-                    android:textSize="@dimen/text_sp16" />
+                    android:textSize="@dimen/text_sp16"/>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -45,15 +44,14 @@
                         android:layout_height="wrap_content"
                         android:text="对应客户: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                     <TextView
                         android:id="@+id/customer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                 </LinearLayout>
 
@@ -68,15 +66,14 @@
                         android:layout_height="wrap_content"
                         android:text="预估销售金额: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                     <TextView
                         android:id="@+id/salesAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                 </LinearLayout>
 
@@ -92,15 +89,14 @@
                         android:layout_height="wrap_content"
                         android:text="预估成交金额: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                     <TextView
                         android:id="@+id/estimatedAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp12" />
+                        android:textSize="@dimen/text_sp12"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -108,7 +104,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dimen_15"
-                android:background="@color/item_" />
+                android:background="@color/item_"/>
 
             <LinearLayout
                 android:id="@+id/ll_stage"
@@ -123,7 +119,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="销售阶段"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/text_stagename"
@@ -135,18 +131,18 @@
                     android:hint="请选择销售阶段"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="#c9c9c9"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/right_arrow"/>
 
             </LinearLayout>
 
-            <include layout="@layout/include_solid_line_left" />
+            <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
                 android:id="@+id/ll_product"
@@ -161,7 +157,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:text="意向产品"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/text_product"
@@ -173,21 +169,21 @@
                     android:hint="请选择意向产品"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="#c9c9c9"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
                     android:scaleType="center"
-                    android:src="@drawable/right_arrow" />
+                    android:src="@drawable/right_arrow"/>
 
             </LinearLayout>
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dimen_15"
-                android:background="@color/item_" />
+                android:background="@color/item_"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -203,15 +199,15 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_12"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="输单原因: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/losereason"
@@ -219,7 +215,7 @@
                         android:layout_height="wrap_content"
                         android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
 
@@ -233,15 +229,14 @@
                         android:layout_height="wrap_content"
                         android:text="机会类型: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/chancetype"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
 
@@ -256,15 +251,14 @@
                         android:layout_height="wrap_content"
                         android:text="机会来源: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/chancesource"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
 
@@ -288,15 +282,14 @@
                         android:layout_height="wrap_content"
                         android:text="备注: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/memo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="大幅减少的卡拉斯京的旅客撒金德拉克撒金德拉克撒娇看到家里看撒看大手大脚撒离开短斤少两卡迪拉克撒"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -304,7 +297,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dimen_15"
-                android:background="@color/item_" />
+                android:background="@color/item_"/>
 
 
             <LinearLayout
@@ -325,15 +318,14 @@
                         android:layout_height="wrap_content"
                         android:text="创建人: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/creator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="户口巾凡"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
 
@@ -348,15 +340,14 @@
                         android:layout_height="wrap_content"
                         android:text="创建时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/creatortime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2014.4.12 14:30"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
 
@@ -371,15 +362,14 @@
                         android:layout_height="wrap_content"
                         android:text="更新时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/updatetime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2014.4.10 12:30"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
 
@@ -395,15 +385,14 @@
                         android:layout_height="wrap_content"
                         android:text="赢单时间: "
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                     <TextView
                         android:id="@+id/wintime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2017.2.22 23:30"
                         android:textColor="@color/text99"
-                        android:textSize="@dimen/text_sp14" />
+                        android:textSize="@dimen/text_sp14"/>
 
                 </LinearLayout>
             </LinearLayout>

@@ -13,13 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
-import com.loyo.oa.v2.beans.ContactRequestParam;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -41,7 +41,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【创建销售机会】
+ * 【创建销售机会】【编辑销售机会】
  * Created by xeq on 16/5/17.
  */
 public class ActivityAddMySale extends BaseActivity {
@@ -53,7 +53,7 @@ public class ActivityAddMySale extends BaseActivity {
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
     private int estimatedTime = -1;
     private ArrayList<ContactLeftExtras> filedData;
-    private ArrayList<ContactRequestParam> extensionDatas = new ArrayList<>();
+    private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +152,30 @@ public class ActivityAddMySale extends BaseActivity {
     };
 
     /**
+     * 获取传递值【编辑机会】
+     */
+    private void getIntentData() {
+        SaleDetails mSaleDetails = (SaleDetails) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        if (null != mSaleDetails) {
+            tv_title.setText("编辑销售机会");
+            et_name.setText(mSaleDetails.name);
+            tv_customer.setText(mSaleDetails.cusName);
+            customerName = mSaleDetails.cusName;
+            customerId = mSaleDetails.customerId;
+            tv_stage.setText(mSaleDetails.stageName);
+            stageId = mSaleDetails.stageId;
+            et_money.setText(mSaleDetails.salesAmount + "");
+            tv_estimate.setText(app.df4.format(mSaleDetails.estimatedTime));
+            estimatedTime = mSaleDetails.estimatedTime;
+            intentionProductData = mSaleDetails.proInfos;
+            tv_product.setText(getIntentionProductName());
+            tv_type.setText(mSaleDetails.chanceType);
+            tv_source.setText(mSaleDetails.chanceSource);
+            tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
+        }
+    }
+
+    /**
      * 获取动态字段
      */
     private void getDynamicInfo() {
@@ -167,6 +191,7 @@ public class ActivityAddMySale extends BaseActivity {
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
+                getIntentData();
             }
 
             @Override
@@ -189,14 +214,6 @@ public class ActivityAddMySale extends BaseActivity {
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
-
-//                age = Utils.getAge(year + "");
-//                if (age > 0) {
-//                    birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
-//                    mHandler.sendEmptyMessage(0x01);
-//                } else {
-//                    Toast("出生日期不能是未来时间，请重新设置");
-//                }
                 tv_estimate.setText(year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day));
                 estimatedTime = Integer.parseInt(DateTool.getDataOne(tv_estimate.getText().toString(), "yyyy.MM.dd"));
             }
@@ -233,10 +250,10 @@ public class ActivityAddMySale extends BaseActivity {
             return;
         } else if (null != filedData) {
             for (ContactLeftExtras ele : filedData) {
-                ContactRequestParam extension = new ContactRequestParam();
-                extension.setVal(ele.val);
-                extension.properties = ele;
-                extensionDatas.add(extension);
+//                ContactRequestParam extension = new ContactRequestParam();
+//                extension.setVal(ele.val);
+//                extension.properties = ele;
+                extensionDatas.add(ele);
                 if (ele.required && TextUtils.isEmpty(ele.val)) {
                     Toast("必填项没有完成");
                     return;
@@ -304,14 +321,23 @@ public class ActivityAddMySale extends BaseActivity {
                     ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
                     if (null != resultData) {
                         intentionProductData = resultData;
-                        String productName = "";
-                        for (SaleIntentionalProduct ele : intentionProductData) {
-                            productName += ele.name + "、";
-                        }
-                        tv_product.setText(productName);
+                        tv_product.setText(getIntentionProductName());
                     }
                     break;
             }
         }
+    }
+
+    /**
+     * 获取 意向产品的名字
+     *
+     * @return
+     */
+    private String getIntentionProductName() {
+        String productName = "";
+        for (SaleIntentionalProduct ele : intentionProductData) {
+            productName += ele.name + "、";
+        }
+        return productName;
     }
 }

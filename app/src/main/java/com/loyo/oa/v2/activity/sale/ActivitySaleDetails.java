@@ -6,10 +6,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -19,6 +21,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -26,7 +29,7 @@ import retrofit.client.Response;
  * 机会详情
  * Created by yyy on 16/5/19.
  */
-public class ActivitySaleDetails extends BaseActivity implements View.OnClickListener{
+public class ActivitySaleDetails extends BaseActivity implements View.OnClickListener {
 
     private final int EDIT_POP_WINDOW = 500;
     private LinearLayout img_title_left;
@@ -102,8 +105,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
 
     /**
      * 获取销售机会详情
-     * */
-    public void getData(){
+     */
+    public void getData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
@@ -124,8 +127,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
 
     /**
      * 删除销售机会
-     * */
-    public void deleteSale(){
+     */
+    public void deleteSale() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
@@ -146,33 +149,33 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
 
     /**
      * 数据绑定
-     * */
-    public void bindData(){
+     */
+    public void bindData() {
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
-        salesAmount.setText(mSaleDetails.getSalesAmount()+"");
-        estimatedAmount.setText(mSaleDetails.getEstimatedAmount()+"");
+        salesAmount.setText(mSaleDetails.getSalesAmount() + "");
+        estimatedAmount.setText(mSaleDetails.getEstimatedAmount() + "");
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
         creator.setText(mSaleDetails.getCreatorName());
-        creatorTime.setText(mSaleDetails.getCreatedAt()+"");
-        updateTime.setText(mSaleDetails.getUpdatedAt()+"");
-        winTime.setText(mSaleDetails.getWinTime()+"");
+        creatorTime.setText(mSaleDetails.getCreatedAt() + "");
+        updateTime.setText(mSaleDetails.getUpdatedAt() + "");
+        winTime.setText(mSaleDetails.getWinTime() + "");
         stageName.setText(mSaleDetails.getStageName());
-        if(null != mSaleDetails.getProInfos()){
-            for(SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()){
-                productBuffer.append(sitpeoduct.name+" ");
+        if (null != mSaleDetails.getProInfos()) {
+            for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
+                productBuffer.append(sitpeoduct.name + " ");
             }
         }
         product.setText(productBuffer.toString());
         ll_extra.setVisibility(View.VISIBLE);
-        for(SaleDetails.SaleDetailsExtraList saleDetailsExtraList : mSaleDetails.getExtensionDatas()){
-            ll_extra.addView(new ViewSaleDetailsExtra(mContext,saleDetailsExtraList));
+        for (ContactLeftExtras saleDetailsExtraList : mSaleDetails.extensionDatas) {
+            ll_extra.addView(new ViewSaleDetailsExtra(mContext, saleDetailsExtraList));
         }
 
         /*当为输单阶段时，显示输单原因*/
-        if(mSaleDetails.getProb() == 0){
+        if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
             losereason.setText(mSaleDetails.getLostReason());
         }
@@ -188,7 +191,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             //弹出菜单
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, ActivitySaleEditView.class);
-                startActivityForResult(intent,EDIT_POP_WINDOW);
+                startActivityForResult(intent, EDIT_POP_WINDOW);
                 break;
             //意向产品
             case R.id.ll_product:
@@ -216,17 +219,21 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
 
-        if(requestCode == EDIT_POP_WINDOW){
+        if (requestCode == EDIT_POP_WINDOW) {
             //编辑回调
-            if(data.getBooleanExtra("edit",false)){
-                Toast("编辑回调");
+            if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
+                Bundle editSale = new Bundle();
+                editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
+//                editSale.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                app.startActivityForResult(ActivitySaleDetails.this, ActivityAddMySale.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, editSale);
             }
             //删除回调
-            else if(data.getBooleanExtra("delete",false)){
+            else if (data.getBooleanExtra("delete", false)) {
                 Toast("删除回调");
             }
         }
