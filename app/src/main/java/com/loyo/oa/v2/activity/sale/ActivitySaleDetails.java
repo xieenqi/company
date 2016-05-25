@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
@@ -20,7 +19,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -38,11 +36,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private Intent mIntent;
     private String selectId;
     private StringBuffer productBuffer = new StringBuffer();
-
     private LinearLayout ll_product;
     private LinearLayout ll_stage;
     private LinearLayout ll_extra;
-
     private TextView title;
     private TextView customer;
     private TextView salesAmount;
@@ -131,7 +127,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      * */
     public void bindData(){
         title.setText(mSaleDetails.getName());
-        customer.setText(mSaleDetails.getCustomerName());
+        customer.setText(mSaleDetails.getCusName());
         salesAmount.setText(mSaleDetails.getSalesAmount()+"");
         estimatedAmount.setText(mSaleDetails.getEstimatedAmount()+"");
         chanceType.setText(mSaleDetails.getChanceType());
@@ -203,9 +199,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         }
 
         if(requestCode == EDIT_POP_WINDOW){
+            //编辑回调
             if(data.getBooleanExtra("edit",false)){
                 Toast("编辑回调");
-            }else if(data.getBooleanExtra("delete",false)){
+            }
+            //删除回调
+            else if(data.getBooleanExtra("delete",false)){
                 Toast("删除回调");
             }
         }
