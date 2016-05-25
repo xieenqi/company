@@ -97,7 +97,13 @@ public interface ISale {
     /**
      * 编辑详情下的意向产品
      * */
-    @POST("/chance/updatePro")
+    @PUT("/chance/updatePro")
     void editSaleProduct(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
+
+    /**
+     * 编辑详情下的销售阶段
+     * */
+    @PUT("/chance/udateStage")
+    void editSaleStage(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
 
 }

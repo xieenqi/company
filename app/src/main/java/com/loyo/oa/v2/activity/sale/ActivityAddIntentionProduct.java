@@ -54,6 +54,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
     private AlertDialog dialog_Product;
     private String productId = "";
     private String saleId = "";
+    private String oldId = "";
     private int fromPage = 0;
 
     @Override
@@ -106,6 +107,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
             tv_discount.setText(intentProduct.discount + "%");
             tv_total.setText(intentProduct.totalMoney + "");
             et_remake.setText(intentProduct.memo);
+            oldId = intentProduct.id;
         }
     }
 
@@ -114,7 +116,6 @@ public class ActivityAddIntentionProduct extends BaseActivity {
      * */
     public void getData() {
         showLoading("");
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getProducts(new RCallback<ArrayList<Product>>() {
             @Override
             public void success(final ArrayList<Product> products, final Response response) {
@@ -141,6 +142,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         map.put("Cid",saleId);
         map.put("ProInfo", data);
         map.put("OldId", data.id);
+        LogUtil.d("编辑产品:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map, new RCallback<SaleProductEdit>() {
             @Override
             public void success(SaleProductEdit saleProductEdit, final Response response) {

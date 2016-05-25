@@ -86,7 +86,6 @@ public class ActivityIntentionProduct extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
             }
-
         }
     };
 
