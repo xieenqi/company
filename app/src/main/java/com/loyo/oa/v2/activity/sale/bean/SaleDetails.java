@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class SaleDetails implements Serializable {
 
     public String name;          //标题
-    public String customerName;  //对应客户
+    public String cusName;       //对应客户
     public int salesAmount;      //预估销售金额
     public int estimatedAmount;  //预计成交时间
     public String stageName;     //阶段名
@@ -124,12 +124,12 @@ public class SaleDetails implements Serializable {
         this.name = name;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getCusName() {
+        return cusName;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCusName(String customerName) {
+        this.cusName = customerName;
     }
 
     public int getSalesAmount() {

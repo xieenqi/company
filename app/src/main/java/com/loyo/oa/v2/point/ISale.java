@@ -13,8 +13,10 @@ import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -60,9 +62,21 @@ public interface ISale {
     void getSaleDetails(@Path("id") String id, Callback<SaleDetails> callback);
 
     /**
-     * 创建销售机会
+     * 创建 销售机会
      */
     @POST("/chance")
     void addSaleOpportunity(@Body HashMap<String, Object> body, Callback<SaleOpportunityAdd> callback);
+
+    /**
+     * 编辑 销售机会
+     * */
+    @PUT("/chance")
+    void updateSaleOpportunity(@Body HashMap<String,Object> map,Callback<SaleOpportunityAdd> callback);
+
+    /**
+     * 删除 销售机会
+     * */
+    @DELETE("/chance/{id}")
+    void deleteSaleOpportunity(@Path("id") String id,Callback<SaleOpportunityAdd> callback);
 
 }
