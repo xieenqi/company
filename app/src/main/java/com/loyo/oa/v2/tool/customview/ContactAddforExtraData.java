@@ -137,8 +137,8 @@ public class ContactAddforExtraData extends LinearLayout {
                 }
             }
 
-            if (customerExtra.isList) {
-                tv_content.setEnabled(false);
+            if (customerExtra.isList) {//改过
+                tv_content.setEnabled(true);
             }
 
             addView(extra);

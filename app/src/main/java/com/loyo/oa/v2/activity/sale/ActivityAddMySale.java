@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.beans.ContactRequestParam;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -51,6 +52,8 @@ public class ActivityAddMySale extends BaseActivity {
     private String customerName, customerId, stageId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
     private int estimatedTime = -1;
+    private ArrayList<ContactLeftExtras> filedData;
+    private ArrayList<ContactRequestParam> extensionDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,13 +160,13 @@ public class ActivityAddMySale extends BaseActivity {
             @Override
             public void success(ArrayList<ContactLeftExtras> bulletinPaginationX, Response response) {
                 HttpErrorCheck.checkResponse("销售机会动态字段：", response);
-                ArrayList<ContactLeftExtras> newData = new ArrayList<ContactLeftExtras>();
+                filedData = new ArrayList<ContactLeftExtras>();
                 for (ContactLeftExtras ele : bulletinPaginationX) {
                     if (!ele.isSystem) {
-                        newData.add(ele);
+                        filedData.add(ele);
                     }
                 }
-                tv_custom.addView(new ContactAddforExtraData(mContext, null, newData, true, R.color.title_bg1, 0));
+                tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
             }
 
             @Override
@@ -228,6 +231,13 @@ public class ActivityAddMySale extends BaseActivity {
         } else if (!(intentionProductData.size() > 0)) {
             Toast("请添加意向产品");
             return;
+        } else if (null != filedData) {
+            for (ContactLeftExtras ele : filedData) {
+                ContactRequestParam extension = new ContactRequestParam();
+                extension.setVal(ele.val);
+                extension.properties = ele;
+                extensionDatas.add(extension);
+            }
         }
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
@@ -241,7 +251,7 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("changeSource", tv_source.getText().toString());
         map.put("changeType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
-        map.put("extensionDatas", new ArrayList<>());
+        map.put("extensionDatas", extensionDatas);
         LogUtil.d("创建销售机会传递--》", app.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(ISale.class).addSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
