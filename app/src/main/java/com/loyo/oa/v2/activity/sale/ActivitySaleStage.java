@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -249,11 +250,11 @@ public class ActivitySaleStage extends BaseActivity {
             }
             TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             ImageView iv_img = (ImageView) convertView.findViewById(R.id.iv_img);
-//            if (data.get(position).isSelect) {
-//                iv_img.setVisibility(View.VISIBLE);
-//            } else {
-//                iv_img.setVisibility(View.INVISIBLE);
-//            }
+/*            if (data.get(position).isSelect) {
+                iv_img.setVisibility(View.VISIBLE);
+            } else {
+                iv_img.setVisibility(View.INVISIBLE);
+            }*/
             tv_name.setText(data.get(position));
             convertView.setOnTouchListener(Global.GetTouch());
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -263,7 +264,6 @@ public class ActivitySaleStage extends BaseActivity {
                     intent.putExtra(ExtraAndResult.EXTRA_DATA, data.get(position));
                     setResult(RESULT_OK, intent);
                     finish();
-//                    Toast(data.get(position));
                 }
             });
             return convertView;

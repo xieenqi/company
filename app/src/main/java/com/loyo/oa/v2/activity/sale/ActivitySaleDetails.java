@@ -11,6 +11,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
+import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -23,6 +25,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
+
+import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,6 +45,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private Intent mIntent;
     private String selectId = "";
     private StringBuffer productBuffer;
+    private String stageId;
+    private String stageName;
+
     private LinearLayout ll_product;
     private LinearLayout ll_stage;
     private LinearLayout ll_extra;
@@ -56,7 +63,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView creatorTime;
     private TextView updateTime;
     private TextView winTime;
-    private TextView stageName;
+    private TextView tv_stageName;
     private TextView product;
 
     @Override
@@ -85,7 +92,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime = (TextView) findViewById(R.id.creatortime);
         updateTime = (TextView) findViewById(R.id.updatetime);
         winTime = (TextView) findViewById(R.id.wintime);
-        stageName = (TextView) findViewById(R.id.text_stagename);
+        tv_stageName = (TextView) findViewById(R.id.text_stagename);
         product = (TextView) findViewById(R.id.text_product);
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
@@ -150,6 +157,34 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     }
 
     /**
+     * 编辑销售阶段
+     */
+    public void editStage() {
+        showLoading("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("StageId", stageId);
+        map.put("Cid", selectId);
+        map.put("LostReason", "无");
+        map.put("Content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
+        LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
+                .create(ISale.class)
+                .editSaleStage(map, new RCallback<SaleProductEdit>() {
+                    @Override
+                    public void success(SaleProductEdit saleProductEdit, Response response) {
+                        HttpErrorCheck.checkResponse("编辑销售阶段", response);
+                        getData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+
+    /**
      * 数据绑定
      */
     public void bindData() {
@@ -164,7 +199,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime.setText(mSaleDetails.getCreatedAt() + "");
         updateTime.setText(mSaleDetails.getUpdatedAt() + "");
         winTime.setText(mSaleDetails.getWinTime() + "");
-        stageName.setText(mSaleDetails.getStageName());
+        tv_stageName.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
             for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
@@ -254,13 +289,13 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 break;
             /**销售阶段*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
-//                SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
-//                if (null != stage) {
-//                    tv_stageName.setText(stage.name);
-//                    stageId = stage.id;
-//                    stageName = stage.name;
-//                    editStage();
-//                }
+                SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                if (null != stage) {
+                    tv_stageName.setText(stage.name);
+                    stageId = stage.id;
+                    stageName = stage.name;
+                    editStage();
+                }
                 break;
             case ExtraAndResult.REQUEST_EDIT:
                 finish();
@@ -269,4 +304,5 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         }
 
     }
+
 }
