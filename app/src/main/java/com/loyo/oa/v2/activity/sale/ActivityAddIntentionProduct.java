@@ -141,19 +141,17 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         HashMap<String,Object> map = new HashMap<>();
         map.put("Cid",saleId);
         map.put("ProInfo", data);
-        map.put("OldId", data.id);
+        map.put("OldId", oldId);
         LogUtil.d("编辑产品:"+MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map, new RCallback<SaleProductEdit>() {
             @Override
             public void success(SaleProductEdit saleProductEdit, final Response response) {
                 HttpErrorCheck.checkResponse("编辑意向产品", response);
-
                 if (null != data) {
                     Intent intent = new Intent();
                     intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
                     intent.putExtra(ExtraAndResult.STR_SHOW_TYPE, ActionCode.SALE_DETAILS_RUSH);
                     app.finishActivity(ActivityAddIntentionProduct.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-
                 }
             }
 
