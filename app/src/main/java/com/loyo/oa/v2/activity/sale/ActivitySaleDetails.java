@@ -123,6 +123,28 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     }
 
     /**
+     * 删除销售机会
+     * */
+    public void deleteSale(){
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
+                .create(ISale.class)
+                .getSaleDetails(selectId, new RCallback<SaleDetails>() {
+                    @Override
+                    public void success(SaleDetails saleDetails, Response response) {
+                        HttpErrorCheck.checkResponse("机会详情", response);
+                        mSaleDetails = saleDetails;
+                        bindData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    /**
      * 数据绑定
      * */
     public void bindData(){
