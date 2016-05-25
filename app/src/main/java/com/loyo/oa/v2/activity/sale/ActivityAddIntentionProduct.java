@@ -16,19 +16,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.adapter.ProductsRadioListViewAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,6 +42,7 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/20.
  */
 public class ActivityAddIntentionProduct extends BaseActivity {
+
     private TextView tv_title, tv_product, tv_price, tv_discount, tv_total;
     private LinearLayout ll_back, ll_poduct;
     private ImageView iv_submit;
@@ -45,6 +50,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
     private ArrayList<Product> lstData_Product = new ArrayList<>();
     private AlertDialog dialog_Product;
     private String productId = "";
+    private int fromPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
      * 修改意向产品 传递 过来的数据
      */
     private void getIntentData() {
+        fromPage = getIntent().getIntExtra("data",0);
         SaleIntentionalProduct intentProduct = (SaleIntentionalProduct) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentProduct) {
             tv_title.setText("编辑意向产品");
@@ -116,6 +123,37 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         });
     }
 
+    /**
+     * 新增意向产品
+     * */
+    public void updateProduct(){
+        HashMap<String,Object> map = new HashMap<>();
+        showLoading("");
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).addSaleProduct(map,new RCallback<SaleDetails>() {
+            @Override
+            public void success(SaleDetails saleDetails, final Response response) {
+                HttpErrorCheck.checkResponse("新增意向产品", response);
+                SaleIntentionalProduct data = assembleData();
+                if (null != data) {
+                    Intent intent = new Intent();
+                    intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
+                    intent.putExtra(ExtraAndResult.STR_SHOW_TYPE,001);
+                    //setResult(RESULT_OK, intent);
+                    //finish();
+                    app.finishActivity(ActivityAddIntentionProduct.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -124,13 +162,20 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.iv_submit:
-                    SaleIntentionalProduct data = assembleData();
-                    if (null != data) {
-                        Intent intent = new Intent();
-                        intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
-                        setResult(RESULT_OK, intent);
-                        finish();
+
+                    if(fromPage == 100){
+                        updateProduct();
+                    }else{
+                        SaleIntentionalProduct data = assembleData();
+                        if (null != data) {
+                            Intent intent = new Intent();
+                            intent.putExtra(ExtraAndResult.EXTRA_DATA, data);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
                     }
+
+
                     break;
                 case R.id.ll_poduct:
                     SelectProduct();

@@ -84,9 +84,13 @@ public interface ISale {
     /**
      * 删除详情下的意向产品
      * */
-    @DELETE("chance/pro")
+    @DELETE("/chance/pro")
     void deleteSaleProduct(@QueryMap HashMap<String,Object> map,Callback<SaleDetails> callback);
 
-
+    /**
+     * 新增详情下的意向产品
+     * */
+    @POST("/chance/addPro")
+    void addSaleProduct(@QueryMap HashMap<String,Object> map,Callback<SaleDetails> callback);
 
 }

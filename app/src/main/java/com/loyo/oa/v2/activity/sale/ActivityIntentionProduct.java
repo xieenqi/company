@@ -16,6 +16,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ import java.util.ArrayList;
  */
 public class ActivityIntentionProduct extends BaseActivity {
 
+    private int resultAction = 0;
+    private int fromPage = 0;
     private TextView tv_title;
     private LinearLayout ll_back, ll_add;
     private ListView lv_list;
@@ -63,6 +66,7 @@ public class ActivityIntentionProduct extends BaseActivity {
                     break;
                 case R.id.ll_add:
                     Bundle product = new Bundle();
+                    product.putInt("data",fromPage);
                     app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
@@ -75,6 +79,7 @@ public class ActivityIntentionProduct extends BaseActivity {
      * 获得传递过来的数据
      */
     private void getIntentData() {
+        fromPage = getIntent().getIntExtra("data",0);
         ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
             listData = intentData;
@@ -85,6 +90,7 @@ public class ActivityIntentionProduct extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
+        intent.putExtra(ExtraAndResult.STR_SELECT_TYPE,resultAction);
         intent.putExtra(ExtraAndResult.RESULT_DATA, listData);
         setResult(RESULT_OK, intent);
         super.onBackPressed();
@@ -94,10 +100,13 @@ public class ActivityIntentionProduct extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                //新增产品
                 case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE,0);
                     SaleIntentionalProduct product = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     saleProductAdapter.setData(product);
                     break;
+                //编辑产品
                 case ExtraAndResult.REQUEST_EDIT:
                     SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     listData.remove(editItemIndex);

@@ -16,6 +16,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
@@ -192,6 +193,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             //意向产品
             case R.id.ll_product:
                 Bundle product = new Bundle();
+                product.putInt("data",100);
                 product.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails.getProInfos());
                 app.startActivityForResult(ActivitySaleDetails.this, ActivityIntentionProduct.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
@@ -219,15 +221,26 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             return;
         }
 
-        if(requestCode == EDIT_POP_WINDOW){
-            //编辑回调
-            if(data.getBooleanExtra("edit",false)){
+        switch (requestCode){
+            //菜单选项
+            case EDIT_POP_WINDOW:
+                //编辑回调
+                if(data.getBooleanExtra("edit",false)){
 
-            }
-            //删除回调
-            else if(data.getBooleanExtra("delete",false)){
-                deleteSale();
-            }
+                }
+                //删除回调
+                else if(data.getBooleanExtra("delete",false)){
+                    deleteSale();
+                }
+                break;
+            //意向产品
+            case ExtraAndResult.REQUEST_CODE_PRODUCT:
+                LogUtil.d("修改意向产品:"+data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE,0));
+                break;
+
+            default:
+                break;
+
         }
     }
 }
