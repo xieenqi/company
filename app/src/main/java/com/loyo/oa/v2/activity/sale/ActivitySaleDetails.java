@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
@@ -24,7 +25,9 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
+
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -127,6 +130,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
+//                        finish();
                     }
                 });
     }
@@ -157,12 +161,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      */
     public void editStage() {
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("StageId",stageId);
-        map.put("Cid",selectId);
-        map.put("LostReason","无");
-        map.put("Content","从"+mSaleDetails.getStageName()+"修改为"+stageName);
-        LogUtil.d("编辑销售阶段:"+MainApp.gson.toJson(map));
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("StageId", stageId);
+        map.put("Cid", selectId);
+        map.put("LostReason", "无");
+        map.put("Content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
+        LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
                 .editSaleStage(map, new RCallback<SaleProductEdit>() {
@@ -259,6 +263,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             return;
         }
 
+
         switch (requestCode) {
             /**菜单选项*/
             case EDIT_POP_WINDOW:
@@ -278,7 +283,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             /**意向产品*/
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
                 int resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
-                if(resultAction == ActionCode.SALE_DETAILS_RUSH){
+                if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
                     getData();
                 }
                 break;
@@ -292,9 +297,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     editStage();
                 }
                 break;
-            default:
+            case ExtraAndResult.REQUEST_EDIT:
+                finish();
                 break;
 
         }
+
     }
+
 }

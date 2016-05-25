@@ -86,7 +86,7 @@ public class ActivitySaleStage extends BaseActivity {
     public void getData2() {
         showLoading("");
         HashMap<String, String> map = new HashMap<>();
-        map.put("name", SALE_TYPE == type ? "change_type" : "change_source");
+        map.put("name", SALE_TYPE == type ? "chance_type" : "chance_source");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                 create(ISale.class).getSaleSystem(map, new Callback<SaleFild>() {
             @Override

@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -49,18 +50,20 @@ public class ActivityAddMySale extends BaseActivity {
     private ImageView iv_submit;
     private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom;
     private EditText et_name, et_money, et_remake;
-    private String customerName, customerId, stageId;
+    private String customerName, customerId, stageId, chanceId, creatorId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
     private int estimatedTime = -1;
     private ArrayList<ContactLeftExtras> filedData;
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
+    private boolean isEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_my_sale);
         init();
-        getDynamicInfo();
+        getIntentData();
+
     }
 
     private void init() {
@@ -157,6 +160,9 @@ public class ActivityAddMySale extends BaseActivity {
     private void getIntentData() {
         SaleDetails mSaleDetails = (SaleDetails) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != mSaleDetails) {
+            isEdit = true;
+            chanceId = mSaleDetails.id;
+            creatorId = mSaleDetails.creatorId;
             tv_title.setText("编辑销售机会");
             et_name.setText(mSaleDetails.name);
             tv_customer.setText(mSaleDetails.cusName);
@@ -165,13 +171,17 @@ public class ActivityAddMySale extends BaseActivity {
             tv_stage.setText(mSaleDetails.stageName);
             stageId = mSaleDetails.stageId;
             et_money.setText(mSaleDetails.salesAmount + "");
-            tv_estimate.setText(app.df4.format(mSaleDetails.estimatedTime));
+            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime+"")*1000)));
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
             tv_product.setText(getIntentionProductName());
             tv_type.setText(mSaleDetails.chanceType);
             tv_source.setText(mSaleDetails.chanceSource);
             tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
+            filedData = mSaleDetails.extensionDatas;
+            et_remake.setText(mSaleDetails.memo);
+        } else {
+            getDynamicInfo();
         }
     }
 
@@ -191,7 +201,7 @@ public class ActivityAddMySale extends BaseActivity {
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
-                getIntentData();
+
             }
 
             @Override
@@ -262,6 +272,10 @@ public class ActivityAddMySale extends BaseActivity {
         }
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
+        if (isEdit) {
+            map.put("id", chanceId);
+            map.put("creatorId", creatorId);
+        }
         map.put("customerName", customerName);
         map.put("customerId", customerId);
         map.put("name", et_name.getText().toString());
@@ -269,25 +283,43 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("estimatedAmount", Float.valueOf(et_money.getText().toString()));
         map.put("estimatedTime", estimatedTime);
         map.put("proInfos", intentionProductData);
-        map.put("changeSource", tv_source.getText().toString());
-        map.put("changeType", tv_type.getText().toString());
+        map.put("chanceSource", tv_source.getText().toString());
+        map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
-        LogUtil.d("创建销售机会传递--》", app.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                create(ISale.class).addSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
-            @Override
-            public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
-                HttpErrorCheck.checkResponse("创建销售机会", response);
-                Toast("创建成功");
-                finish();
-            }
+        LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
+        if (!isEdit) {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                    create(ISale.class).addSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
+                @Override
+                public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
+                    HttpErrorCheck.checkResponse("创建销售机会", response);
+                    Toast("创建成功");
+                    finish();
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    HttpErrorCheck.checkError(error);
+                }
+            });
+        } else {
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
+                    create(ISale.class).updateSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
+                @Override
+                public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
+                    HttpErrorCheck.checkResponse("修改销售机会", response);
+                    Toast("修改成功");
+                    setResult(RESULT_OK, new Intent());
+                    finish();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    HttpErrorCheck.checkError(error);
+                }
+            });
+        }
     }
 
     @Override
