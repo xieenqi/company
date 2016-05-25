@@ -279,14 +279,14 @@
 
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line_left"/>
+
             <LinearLayout
                 android:id="@+id/tv_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
-
-            <include layout="@layout/include_solid_line_left"/>
 
             <EditText
                 android:id="@+id/et_remake"
