@@ -11,14 +11,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 【意向产品】
@@ -26,6 +39,7 @@ import java.util.ArrayList;
  */
 public class ActivityIntentionProduct extends BaseActivity {
 
+    private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
     private TextView tv_title;
@@ -66,6 +80,7 @@ public class ActivityIntentionProduct extends BaseActivity {
                     break;
                 case R.id.ll_add:
                     Bundle product = new Bundle();
+                    product.putString("saleId",saleId);
                     product.putInt("data",fromPage);
                     app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
@@ -79,7 +94,8 @@ public class ActivityIntentionProduct extends BaseActivity {
      * 获得传递过来的数据
      */
     private void getIntentData() {
-        fromPage = getIntent().getIntExtra("data",0);
+        saleId   = getIntent().getStringExtra("saleId");
+        fromPage = getIntent().getIntExtra("data", 0);
         ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
             listData = intentData;
@@ -96,6 +112,32 @@ public class ActivityIntentionProduct extends BaseActivity {
         super.onBackPressed();
     }
 
+    /**
+     * 删除意向产品
+     * */
+    public void deleteProduct(String pid) {
+        showLoading("");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("cid",saleId);
+        map.put("pid",pid);
+        LogUtil.d("删除意向产品:"+MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).deleteSaleProduct(map, new RCallback<SaleProductEdit>() {
+            @Override
+            public void success(final SaleProductEdit saleProductEdit, final Response response) {
+                HttpErrorCheck.checkResponse("删除意向产品", response);
+                resultAction = ActionCode.SALE_DETAILS_RUSH;
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+                finish();
+            }
+        });
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -108,6 +150,7 @@ public class ActivityIntentionProduct extends BaseActivity {
                     break;
                 //编辑产品
                 case ExtraAndResult.REQUEST_EDIT:
+                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE,0);
                     SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     listData.remove(editItemIndex);
                     listData.add(editItemIndex, productEdit);
@@ -181,18 +224,30 @@ public class ActivityIntentionProduct extends BaseActivity {
             tv_memo.setText(item.memo);
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
+            /*意向产品 删除*/
             ll_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listData.remove(position);
-                    saleProductAdapter.notifyDataSetChanged();
+
+                    if (fromPage == ActionCode.SALE_FROM_DETAILS) {
+                        deleteProduct(item.id);
+                        listData.remove(position);
+                        saleProductAdapter.notifyDataSetChanged();
+                    } else {
+                        listData.remove(position);
+                        saleProductAdapter.notifyDataSetChanged();
+                    }
+
                 }
             });
+            /*意向产品 编辑*/
             ll_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     editItemIndex = position;
                     Bundle product = new Bundle();
+                    product.putString("saleId",saleId);
+                    product.putInt("data", ActionCode.SALE_PRO_EDIT);
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, item);
                     app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_EDIT, product);

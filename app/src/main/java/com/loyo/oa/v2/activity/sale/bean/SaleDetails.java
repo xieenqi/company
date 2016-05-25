@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.activity.sale.bean;
 
+import com.loyo.oa.v2.beans.ContactLeftExtras;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -11,10 +13,14 @@ public class SaleDetails implements Serializable {
 
     public String name;          //标题
     public String cusName;       //对应客户
+    public String customerId;
     public int salesAmount;      //预估销售金额
     public int estimatedAmount;  //预计成交时间
     public String stageName;     //阶段名
+    public String stageId;
+    public int estimatedTime;
     public int prob;             //阶段百分比
+    public ArrayList<SaleIntentionalProduct> proInfos = new ArrayList<>();
     public String lostReason;    //输单原因
     public String chanceType;    //机会类型
     public String chanceSource;  //机会来源
@@ -23,18 +29,8 @@ public class SaleDetails implements Serializable {
     public int createdAt;        //创建时间
     public int updatedAt;        //更新时间
     public int winTime;          //赢单时间
+    public ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();    //动态字段
 
-    public ArrayList<SaleDetailsExtraList> extensionDatas = new ArrayList<>();    //动态字段
-
-    public ArrayList<SaleDetailsExtraList> getExtensionDatas() {
-        return extensionDatas;
-    }
-
-    public void setExtensionDatas(ArrayList<SaleDetailsExtraList> extensionDatas) {
-        this.extensionDatas = extensionDatas;
-    }
-
-    public ArrayList<SaleIntentionalProduct> proInfos = new ArrayList<>();
 
     public ArrayList<SaleIntentionalProduct> getProInfos() {
         return proInfos;
@@ -157,7 +153,7 @@ public class SaleDetails implements Serializable {
     }
 
 
-   public class SaleDetailsExtraList {
+    public class SaleDetailsExtraList {
         private String val;
         private SaleDetailsExtra properties;
 

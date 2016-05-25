@@ -36,7 +36,7 @@ import java.util.Calendar;
 
 /**
  * com.loyo.oa.v2.tool.customview
- * 描述 : 新增客户联系人 动态字段
+ * 描述 : 新增客户联系人 动态字段 【销售机会的动态字段也在用】
  * 作者 : ykb
  * 时间 : 15/10/7.
  */
