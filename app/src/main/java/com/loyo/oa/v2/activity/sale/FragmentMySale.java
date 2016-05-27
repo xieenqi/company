@@ -52,11 +52,13 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private Bundle mBundle;
     private LinearLayout screen1;
     private LinearLayout screen2;
+    private LinearLayout topview;
     private ViewStub emptyView;
     private ImageView tagImage1;
     private ImageView tagImage2;
     private SaleCommPopupView saleCommPopupView;
-    private WindowManager.LayoutParams params;
+    private WindowManager.LayoutParams windowParams;
+    private LinearLayout.LayoutParams  layoutParams;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
     private SaleMyList mSaleMyList;
@@ -68,9 +70,10 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private ArrayList<SaleRecord> recordData = new ArrayList<>();
 
     private String[] sort = {"按最近创建时间","按照最近更新","按照最高金额"};
-    private int requestPage = 1;
     private String stageId = "";
     private String sortType = "";
+    private int requestPage = 1;
+    private boolean isPull = false;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -79,12 +82,12 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             switch (msg.what){
 
                 case FragmentTeamSale.SALETEAM_SCREEN_TAG2:
-                    Toast(msg.getData().getString("data"));
+                    isPull = false;
                     stageId = msg.getData().get("data").toString();
                     break;
 
                 case FragmentTeamSale.SALETEAM_SCREEN_TAG3:
-                    Toast(msg.getData().getString("data"));
+                    isPull = false;
                     sortType = msg.getData().get("data").toString();
                     break;
 
@@ -123,6 +126,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         btn_add = (Button) view.findViewById(R.id.btn_add);
         screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
+        topview = (LinearLayout) view.findViewById(R.id.saleteam_topview);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         tagImage1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
         tagImage2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
@@ -134,7 +138,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         listView.setEmptyView(emptyView);
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -169,6 +172,8 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        LogUtil.d("修改了isPull true");
+        isPull = true;
         requestPage++;
         getData();
     }
@@ -184,6 +189,11 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             saleTeamScreen.setIndex(false);
             stageData.add(saleTeamScreen);
         }
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部阶段");
+        saleTeamScreen.setId("");
+        saleTeamScreen.setIndex(false);
+        stageData.add(saleTeamScreen);
     }
 
     /**
@@ -201,9 +211,12 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             public void success(SaleMyList saleMyLists, Response response) {
                 HttpErrorCheck.checkResponse("销售机会 客户列表:", response);
                 if(null == saleMyLists.records || saleMyLists.records.size() == 0){
-                    Toast("没有更多数据了!");
+                    if(isPull){
+                        Toast("没有更多数据了!");
+                    }else{
+                        mSaleMyList = new SaleMyList();
+                    }
                     listView.onRefreshComplete();
-                    return;
                 }else{
                     mSaleMyList = saleMyLists;
                 }
@@ -224,9 +237,9 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
      * */
     private void closePopupWindow(ImageView view)
     {
-        params = getActivity().getWindow().getAttributes();
-        params.alpha = 1f;
-        getActivity().getWindow().setAttributes(params);
+        windowParams = getActivity().getWindow().getAttributes();
+        windowParams.alpha = 1f;
+        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_down);
     }
 
@@ -234,9 +247,9 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
      * PopupWindow打开，背景变暗
      * */
     private void openPopWindow(ImageView view){
-        params = getActivity().getWindow().getAttributes();
-        params.alpha=0.9f;
-        getActivity().getWindow().setAttributes(params);
+        windowParams = getActivity().getWindow().getAttributes();
+        windowParams.alpha=0.9f;
+        getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
@@ -269,10 +282,9 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
                             MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, null);
                     break;
 
-
                 //销售阶段
                 case R.id.salemy_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,stageData,ActivitySaleOpportunitiesManager.SCREEN_STAGE);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,stageData,ActivitySaleOpportunitiesManager.SCREEN_STAGE,true);
                     saleCommPopupView.showAsDropDown(screen1);
                     openPopWindow(tagImage1);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -285,7 +297,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
                 //排序
                 case R.id.salemy_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,sortData,ActivitySaleOpportunitiesManager.SCREEN_SORT);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,sortData,ActivitySaleOpportunitiesManager.SCREEN_SORT,false);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

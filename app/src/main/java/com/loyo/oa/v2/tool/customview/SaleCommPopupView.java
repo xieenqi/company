@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.tool.customview;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
@@ -31,20 +33,23 @@ public class SaleCommPopupView extends PopupWindow {
     private Context mContext;
     private Handler mHandler;
     private AdapterSaleTeamScreenComm adapter;
+    private ViewGroup.LayoutParams params;
     private Message msg;
     private Bundle bundle;
 
     private ArrayList<SaleTeamScreen> data;
     private int page;
     private int resultTag;
+    private boolean dynamIc = false;
 
-    public SaleCommPopupView(final Activity context, Handler handler,ArrayList<SaleTeamScreen> data,int page) {
+    public SaleCommPopupView(final Activity context, Handler handler,ArrayList<SaleTeamScreen> data,int page,boolean dynamIc) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.saleteam_screen_common, null);
         this.mContext = context;
         this.mHandler = handler;
         this.page = page;
         this.data = data;
+        this.dynamIc = dynamIc;
         initView();
 
         this.setContentView(contentView);
@@ -58,8 +63,13 @@ public class SaleCommPopupView extends PopupWindow {
     }
 
     public void initView() {
-
         listView = (ListView) contentView.findViewById(R.id.saleteam_screencommon_lv);
+        //如果为销售阶段pop,则动态设置高度
+        if(dynamIc){
+            params = listView.getLayoutParams();
+            params.height = mContext.getResources().getDimensionPixelSize(R.dimen.sale_pop_height);
+            listView.setLayoutParams(params);
+        }
         adapter = new AdapterSaleTeamScreenComm(mContext,data);
         listView.setAdapter(adapter);
 

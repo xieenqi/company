@@ -73,8 +73,8 @@ public interface ISale {
     /**
      * 编辑 销售机会
      * */
-    @PUT("/chance")
-    void updateSaleOpportunity(@Body HashMap<String,Object> map,Callback<SaleOpportunityAdd> callback);
+    @PUT("/chance/{id}")
+    void updateSaleOpportunity(@Body HashMap<String,Object> map,@Path("id") String id, Callback<SaleOpportunityAdd> callback);
 
     /**
      * 删除 销售机会
@@ -97,13 +97,13 @@ public interface ISale {
     /**
      * 编辑详情下的意向产品
      * */
-    @PUT("/chance/updatePro")
-    void editSaleProduct(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
+    @PUT("/chance/updatePro/{id}")
+    void editSaleProduct(@Body HashMap<String,Object> map,@Path("id") String id,Callback<SaleProductEdit> callback);
 
     /**
      * 编辑详情下的销售阶段
      * */
-    @PUT("/chance/udateStage")
-    void editSaleStage(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
+    @PUT("/chance/udateStage/{id}")
+    void editSaleStage(@Body HashMap<String,Object> map,@Path("id") String id,Callback<SaleProductEdit> callback);
 
 }
