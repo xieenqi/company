@@ -13,12 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
+import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -56,6 +59,7 @@ public class ActivityAddMySale extends BaseActivity {
     private ArrayList<ContactLeftExtras> filedData;
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
     private boolean isEdit;
+    private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,7 @@ public class ActivityAddMySale extends BaseActivity {
                     Bundle stage = new Bundle();
                     stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
                     stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                    stage.putString(ExtraAndResult.EXTRA_DATA, tv_stage.getText().toString());
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                     break;
@@ -144,6 +149,7 @@ public class ActivityAddMySale extends BaseActivity {
                     Bundle type = new Bundle();
                     type.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_TYPE);
                     type.putString(ExtraAndResult.EXTRA_NAME, "机会类型");
+                    type.putString(ExtraAndResult.EXTRA_DATA, tv_type.getText().toString());
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_TYPE, type);
                     break;
@@ -151,11 +157,18 @@ public class ActivityAddMySale extends BaseActivity {
                     Bundle source = new Bundle();
                     source.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_SOURCE);
                     source.putString(ExtraAndResult.EXTRA_NAME, "机会来源");
+                    source.putString(ExtraAndResult.EXTRA_DATA, tv_source.getText().toString());
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, source);
                     break;
                 case R.id.ll_transport:
-                    Toast("输单原因");
+                    Bundle loseBundle = new Bundle();
+                    loseBundle.putSerializable("data", loseResons);
+                    loseBundle.putString("title", "输单原因");
+                    loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_MULTIPLE);
+                    loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_LOSE_REASON);
+                    app.startActivityForResult(ActivityAddMySale.this, CommonTagSelectActivity_.class,
+                            0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                     break;
             }
         }
@@ -187,6 +200,8 @@ public class ActivityAddMySale extends BaseActivity {
             tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
             filedData = mSaleDetails.extensionDatas;
             et_remake.setText(mSaleDetails.memo);
+            ll_transport.setVisibility(TextUtils.isEmpty(mSaleDetails.lostReason) ? View.GONE : View.VISIBLE);
+            tv_transport.setText(" " + mSaleDetails.lostReason);
         } else {
             getDynamicInfo();
         }
@@ -267,9 +282,6 @@ public class ActivityAddMySale extends BaseActivity {
             return;
         } else if (null != filedData) {
             for (ContactLeftExtras ele : filedData) {
-//                ContactRequestParam extension = new ContactRequestParam();
-//                extension.setVal(ele.val);
-//                extension.properties = ele;
                 extensionDatas.add(ele);
                 if (ele.required && TextUtils.isEmpty(ele.val)) {
                     Toast("必填项没有完成");
@@ -294,6 +306,7 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
+        map.put("lostReason", tv_transport.getText().toString());
         LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
         if (!isEdit) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -368,6 +381,10 @@ public class ActivityAddMySale extends BaseActivity {
                         tv_product.setText(getIntentionProductName());
                     }
                     break;
+                case CommonTagSelectActivity.REQUEST_TAGS:
+                    loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
+                    tv_transport.setText(getLoseReason());
+                    break;
             }
         }
     }
@@ -383,5 +400,26 @@ public class ActivityAddMySale extends BaseActivity {
             productName += ele.name + "、";
         }
         return productName;
+    }
+
+    /**
+     * 获取输单原因 字符串
+     *
+     * @return
+     */
+    private String getLoseReason() {
+        if (null == loseResons || loseResons.isEmpty()) {
+            return "";
+        }
+        StringBuilder reasons = new StringBuilder();
+        int index = 0;
+        for (CommonTag reson : loseResons) {
+            reasons.append(reson.getName());
+            if (index < loseResons.size() - 1) {
+                reasons.append(",");
+            }
+            index++;
+        }
+        return reasons.toString();
     }
 }

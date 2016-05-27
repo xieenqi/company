@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -47,16 +46,14 @@ public class ActivitySaleStage extends BaseActivity {
     public static final int SALE_SOURCE = 3;//机会来源
 
     private int type;
-    private String title;
+    private String title, dataName="";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale_stage);
-        Intent intent = getIntent();
-        type = intent.getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
-        title = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        getIntentData();
         init();
     }
 
@@ -81,6 +78,13 @@ public class ActivitySaleStage extends BaseActivity {
             lv_list.setAdapter(adapterSourceType);
             getData2();
         }
+    }
+
+    private void getIntentData() {
+        Intent intent = getIntent();
+        type = intent.getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
+        title = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        dataName = intent.getStringExtra(ExtraAndResult.EXTRA_DATA);
     }
 
     public void getData2() {
@@ -172,6 +176,9 @@ public class ActivitySaleStage extends BaseActivity {
                 iv_img.setVisibility(View.INVISIBLE);
             }
             tv_name.setText(data.get(position).name);
+            if (dataName.equals(data.get(position).name)) {
+                setSelect(position);
+            }
             convertView.setOnTouchListener(Global.GetTouch());
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -256,6 +263,11 @@ public class ActivitySaleStage extends BaseActivity {
                 iv_img.setVisibility(View.INVISIBLE);
             }*/
             tv_name.setText(data.get(position));
+            if (dataName.equals(data.get(position))) {
+                iv_img.setVisibility(View.VISIBLE);
+            } else {
+                iv_img.setVisibility(View.INVISIBLE);
+            }
             convertView.setOnTouchListener(Global.GetTouch());
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
