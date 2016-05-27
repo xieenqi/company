@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.sale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ public class ActivitySaleStage extends BaseActivity {
     public static final int SALE_SOURCE = 3;//机会来源
 
     private int type;
-    private String title, dataName="";
+    private String title, dataName = "";
 
 
     @Override
@@ -176,7 +177,7 @@ public class ActivitySaleStage extends BaseActivity {
                 iv_img.setVisibility(View.INVISIBLE);
             }
             tv_name.setText(data.get(position).name);
-            if (dataName.equals(data.get(position).name)) {
+            if (!TextUtils.isEmpty(dataName) && dataName.equals(data.get(position).name)) {
                 setSelect(position);
             }
             convertView.setOnTouchListener(Global.GetTouch());
