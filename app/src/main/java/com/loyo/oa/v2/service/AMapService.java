@@ -223,37 +223,6 @@ public class AMapService extends Service {
     }
 
     /**
-     * 获取当前时间
-     *
-     * @return
-     */
-//
-//    private void getCurrentTime(final AMapLocation aMapLocation) {
-//        mRestAdapter.create(IMain.class).getServerTime(new RCallback<ServerTime>() {
-//            @Override
-//            public void success(ServerTime serverTime, Response response) {
-//                HttpErrorCheck.checkResponse("轨迹定位－获取当前时间", response);
-//                long time = 0;
-//                if (null != serverTime) {
-//                    time = serverTime.getNow();
-//                }
-//
-//                if (time <= 0) {
-//                    time = System.currentTimeMillis();
-//                }
-//                dealLocation(aMapLocation, time);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                super.failure(error);
-//                HttpErrorCheck.checkError(error);
-//                dealLocation(aMapLocation, System.currentTimeMillis());
-//            }
-//        });
-//    }
-
-    /**
      * 检测轨迹规则 后台是否产生轨迹
      *
      * @return
@@ -565,6 +534,36 @@ public class AMapService extends Service {
 //        }
 //
 //        return result;
+//    }
+    /**
+     * 获取当前时间
+     *
+     * @return
+     */
+//
+//    private void getCurrentTime(final AMapLocation aMapLocation) {
+//        mRestAdapter.create(IMain.class).getServerTime(new RCallback<ServerTime>() {
+//            @Override
+//            public void success(ServerTime serverTime, Response response) {
+//                HttpErrorCheck.checkResponse("轨迹定位－获取当前时间", response);
+//                long time = 0;
+//                if (null != serverTime) {
+//                    time = serverTime.getNow();
+//                }
+//
+//                if (time <= 0) {
+//                    time = System.currentTimeMillis();
+//                }
+//                dealLocation(aMapLocation, time);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                dealLocation(aMapLocation, System.currentTimeMillis());
+//            }
+//        });
 //    }
 
 }

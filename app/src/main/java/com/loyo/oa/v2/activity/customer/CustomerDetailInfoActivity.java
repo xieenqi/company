@@ -555,7 +555,6 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*销售机会*/
             case R.id.ll_sale:
-                Toast("销售机会");
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
                 bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
