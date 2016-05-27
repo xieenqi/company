@@ -49,6 +49,7 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -81,6 +82,10 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 部门选择 请求码
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
+    /**
+     * 流程选择 请求码
+     */
+    public static final int RESULT_PROCESS_CHOOSE = 7;
 
     private String startTimeId;
     private String endTimeId;
@@ -89,6 +94,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_wfinstance_data;
     @ViewById ViewGroup ll_dept;
+    @ViewById TextView wordcount;
     @ViewById TextView tv_dept;
     @ViewById ViewGroup ll_project;
     @ViewById TextView tv_project;
@@ -134,6 +140,7 @@ public class WfInstanceAddActivity extends BaseActivity {
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_add.setOnTouchListener(Global.GetTouch());
         ll_project.setOnClickListener(click);
+        edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
@@ -196,27 +203,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
     };
 
-//    /**
-//     * 获取审批模板
-//     */
-//    void getTempWfintance() {
-//
-//        WfInstance wfInstance = DBManager.Instance().getWfInstance();
-//        if (wfInstance == null) {
-//            return;
-//        }
-//
-//        if (!TextUtils.isEmpty(wfInstance.wftemplateId)) {
-//            mTemplateId = wfInstance.wftemplateId;
-//        }
-//
-//        if (wfInstance.bizForm != null) {
-//            mBizForm = wfInstance.bizForm;
-//            intBizForm();
-//        }
-//        edt_memo.setText(wfInstance.memo);
-//
-//    }
 
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
@@ -343,6 +329,13 @@ public class WfInstanceAddActivity extends BaseActivity {
                 });
                 break;
 
+            /*选择流程回调*/
+            case RESULT_PROCESS_CHOOSE:
+                int position =  data.getExtras().getInt("position");
+                mTemplateId = wfTemplateArrayList.get(position).getId();
+                tv_WfTemplate.setText(wfTemplateArrayList.get(position).getTitle());
+                break;
+
             /*选择部门回调*/
             case RESULT_DEPT_CHOOSE:
                 UserInfo userInfo = (UserInfo) data.getSerializableExtra(DepartmentChoose.class.getName());
@@ -410,17 +403,30 @@ public class WfInstanceAddActivity extends BaseActivity {
             case R.id.btn_add:
                 addTypeData();
                 break;
+            //选择流程
             case R.id.layout_WfTemplate:
-                if (mBizForm == null) {
-                    Toast("请选择类型");
+/*                if (mBizForm == null) {
+                    Toast("请选择类别");
                     break;
                 } else if (dialog_follow != null && !dialog_follow.isShowing()) {
                     dialog_follow.show();
+                }*/
+
+                if (mBizForm == null) {
+                    Toast("请选择类别");
+                    break;
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", wfTemplateArrayList);
+                app.startActivityForResult(this,ProcessChoose.class,MainApp.ENTER_TYPE_RIGHT,RESULT_PROCESS_CHOOSE,bundle);
+
                 break;
+            //选择类别
             case R.id.layout_wfinstance://到选择类型页面
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
+            //所属部门选择
             case R.id.ll_dept:
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;

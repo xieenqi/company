@@ -5,18 +5,21 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
         >
 
         <LinearLayout
             android:id="@+id/img_time_left"
-            android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/dimen_55"
-            android:layout_marginLeft="@dimen/dimen_80"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_width="0dp"
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/dimen_10">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -30,20 +33,19 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="2015年8月"
-            android:textColor="#383838"
-            android:textSize="16sp"
+            android:textColor="@color/text33"
+            android:textSize="14sp"
             />
 
         <LinearLayout
             android:id="@+id/img_time_right"
-            android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/dimen_55"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/dimen_80"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_width="0dp"
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimen_10">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -54,36 +56,46 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/icon_attendance_rusult"
-        android:minHeight="@dimen/dimen_45"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/dimen_40"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dimen_10"
-        android:paddingRight="@dimen/dimen_10">
+        android:paddingLeft="@dimen/margin_side_edge"
+        android:paddingRight="@dimen/margin_side_edge">
+
 
         <TextView
             android:id="@+id/tv_count_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/dimen_5"
             android:gravity="left|center"
+            android:singleLine="true"
             android:text="总计:"
-            android:textColor="#999999"
+            android:textColor="@color/text99"
             android:textSize="@dimen/text_sp14"
             />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center"
                 android:text="迟到:"
-                android:textColor="#999999"
+                android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
 
@@ -93,18 +105,27 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center"
-                android:textColor="@color/red"
+                android:singleLine="true"
+                android:textColor="@color/red1"
                 />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
                 android:gravity="left|center"
                 android:text="早退:"
-                android:textColor="#999999"
+                android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
 
@@ -114,18 +135,26 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center"
-                android:textColor="@color/red"
+                android:singleLine="true"
+                android:textColor="@color/red1"
                 />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
                 android:gravity="left|center"
                 android:text="未打卡:"
-                android:textColor="#999999"
+                android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
 
@@ -135,18 +164,26 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center"
-                android:textColor="@color/red"
+                android:singleLine="true"
+                android:textColor="@color/red1"
                 />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
                 android:gravity="left|center"
                 android:text="外勤:"
-                android:textColor="#999999"
+                android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
 
@@ -156,18 +193,26 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center"
-                android:textColor="@color/green"
+                android:singleLine="true"
+                android:textColor="@color/green51"
                 />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
                 android:gravity="left|center"
                 android:text="加班:"
-                android:textColor="#999999"
+                android:textColor="@color/text99"
                 android:textSize="@dimen/text_sp14"
                 />
 
@@ -177,9 +222,10 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center"
-                android:textColor="@color/green"
+                android:singleLine="true"
+                android:textColor="@color/green51"
                 />
-
+        </LinearLayout>
     </LinearLayout>
 
     <ListView

@@ -49,15 +49,19 @@ public class InitDataService extends IntentService {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-                HttpErrorCheck.checkResponse("获取user", response);
-                String json = MainApp.gson.toJson(user);
-                MainApp.user = user;
-                setRootMap(user);
-                sendDataChangeBroad(user);
-                DBManager.Instance().putUser(json);//保存用户信息
-                HashMap<String, String> map = new HashMap<>();
-                map.put("name", user.name);
-                map.put("id", user.id);
+                try {
+                    HttpErrorCheck.checkResponse("获取user", response);
+                    String json = MainApp.gson.toJson(user);
+                    MainApp.user = user;
+                    setRootMap(user);
+                    sendDataChangeBroad(user);
+                    DBManager.Instance().putUser(json);//保存用户信息
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("name", user.name);
+                    map.put("id", user.id);
+                } catch (Exception E) {
+                    E.printStackTrace();
+                }
             }
 
             @Override

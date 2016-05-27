@@ -31,7 +31,6 @@ public class ProjectExpandableListAdapter<T extends BaseBeans> extends BasePagin
         }
 
         Project project = (Project) getChild(groupPosition, childPosition);
-
         TextView title = ViewHolder.get(convertView, R.id.tv_title);
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
         TextView time = ViewHolder.get(convertView, R.id.tv_time);

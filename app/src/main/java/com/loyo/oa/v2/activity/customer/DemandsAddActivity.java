@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -58,7 +59,6 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private TextView tv_products;
     private TextView tv_salestages;
     private TextView tv_reason;
-
     private ArrayList<Product> lstData_Product = new ArrayList<Product>();
     private ArrayList<SaleStage> lstData_SaleStage = new ArrayList<SaleStage>();
     private String productIdSelect, productNameSelect, customerName, customerId;
@@ -68,10 +68,10 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
     private final int UI_UPDATE = 0x01;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
 
-        public void handleMessage(final Message msg){
-            if(msg.what == UI_UPDATE){
+        public void handleMessage(final Message msg) {
+            if (msg.what == UI_UPDATE) {
 
             }
         }
@@ -155,6 +155,14 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 finish();
             }
         });
+    }
+
+    private String setValueFloat(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+        BigDecimal bigDecimal = new BigDecimal(obj + "");
+        return bigDecimal.toPlainString() + "";
     }
 
     private void initDataUI() {
@@ -289,12 +297,11 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.layout_products:
-                if (lstData_Product == null) {
-                    Toast(R.string.app_init_await);
+                if (null == lstData_Product && !(lstData_Product.size() > 0)) {
+                    Toast("没有可以选择的产品");
                     break;
                 }
-                if (dialog_Product == null) {
-
+                if (null == dialog_Product) {
                     LayoutInflater inflater = getLayoutInflater();
                     View layout = inflater.inflate(R.layout.dialog_products_select, null, false);
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(layout);
@@ -308,7 +315,6 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                 listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-
                         productsRadioListViewAdapter.notifyDataSetChanged();
                         productsRadioListViewAdapter.isSelected = id;
 
@@ -316,8 +322,8 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
                         productNameSelect = lstData_Product.get((int) id).name;
                         tv_products.setText(lstData_Product.get((int) id).name);
 
-                        edt_price.setHint("请输入单价("+lstData_Product.get(position).unit+")");
-                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).unit+")");
+                        edt_price.setHint("请输入单价(" + lstData_Product.get(position).unit + ")");
+                        edt_actualPrice.setHint("请输入单价(" + lstData_Product.get(position).unit + ")");
 
                         dialog_Product.dismiss();
                     }
@@ -422,7 +428,7 @@ public class DemandsAddActivity extends BaseActivity implements View.OnClickList
 
         if (type == 2) {
             map.put("wfId", demand.getWfId());
-            map.put("wfState", demand.getWfState());
+//            map.put("wfState", demand.getWfState());
         } else if (type == 1) {
             map.put("customerId", customerId);
         }

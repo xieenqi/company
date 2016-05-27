@@ -46,7 +46,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     public static final int VIEW_DEMANDS = 200;
     public static final int CREATE_DEMANDS = 300;
 
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +91,8 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", paginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
             @Override
             public void success(final PaginationX<Demand> demandPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse(" 购买意向详情：", response);
@@ -145,7 +145,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
                 app.startActivityForResult(this, DemandsAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 break;
             default:
-
                 break;
         }
     }

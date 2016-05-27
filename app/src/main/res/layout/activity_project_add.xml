@@ -58,7 +58,26 @@
                     android:gravity="left|top"
                     android:hint="请输入项目简介"
                     android:minHeight="180dp"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:maxLength="500"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:id="@+id/wordcount"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/500"
+                        android:textSize="12sp"
+                        android:textColor="@color/text99"
+                        />
+                    </RelativeLayout>
 
                 <View
                     style="@style/view_split"
@@ -144,12 +163,8 @@
                 android:id="@+id/lv_project_members"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:cacheColorHint="#00000000"
-                android:divider="@color/activity_split"
-                android:dividerHeight="@dimen/dimen_0.5"
-                android:padding="@dimen/dimen_0.5">
-            </ListView>
+                android:divider="@null"
+                />
 
         </LinearLayout>
     </ScrollView>

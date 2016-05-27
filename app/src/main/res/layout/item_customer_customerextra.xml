@@ -5,55 +5,54 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:id="@+id/layout_extra"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_48"
+        android:orientation="horizontal"
         >
 
         <TextView
-            android:textSize="16sp"
-            android:minWidth="80dp"
             android:id="@+id/tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:gravity="center_vertical"
-            android:text="ddddd"/>
+            android:minWidth="80dp"
+            android:text="ddddd"
+            android:textColor="@color/text33"
+            android:textSize="15sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             >
 
             <EditText
-                android:singleLine="false"
-                android:layout_toLeftOf="@+id/img_right_arrow"
-                style="@style/text_item1"
-                android:paddingLeft="14dp"
-                android:background="@null"
                 android:id="@+id/et_content"
+                style="@style/text_item1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/img_right_arrow"
+                android:background="@null"
                 android:gravity="center_vertical|right"
+                android:paddingLeft="14dp"
+                android:singleLine="false"
                 android:textColor="@color/title_bg1"
                 />
 
             <ImageView
-                android:layout_alignParentRight="true"
                 android:id="@+id/img_right_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dimen_4"
                 android:gravity="center_vertical"
                 android:src="@drawable/right_arrow"/>
         </RelativeLayout>
 
     </LinearLayout>
 
-    <View
-        style="@style/view_split"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_marginRight="@dimen/margin_side_edge"/>
+    <include layout="@layout/include_solid_line_left"/>
 
 </LinearLayout>

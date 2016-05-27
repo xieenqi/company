@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -7,13 +8,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -40,6 +44,7 @@ import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
+import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
@@ -234,7 +239,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
-            mActivity.get().swipe_container.setRefreshing(false);
+            try {
+                mActivity.get().swipe_container.setRefreshing(false);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -301,6 +310,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         checkUpdateService();
         updateUser();
 
+
         lv_main.setDropListener(onDrag);
         lv_main.setMaxScrollSpeed(100f);
         adapter = new ClickItemAdapter();
@@ -329,13 +339,15 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     void updateUser() {
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class, "0205"),
+                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
                 new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class, "0206"),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class, "0201"),
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class, "0202"),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class, "0203"),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class, "0204"),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class, "0211"),
-                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")));
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")
+        ));
 
         if (MainApp.user == null) {
             return;
@@ -409,12 +421,20 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        new Handler().post(new Runnable() {
+                        Looper.prepare();
+//                        new Handler().post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                testJurl();
+//                            }
+//                        });
+                        runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 testJurl();
                             }
                         });
+                        Looper.loop();
                     }
                 }, 5000);
                 return;
@@ -439,7 +459,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("通讯录权限，code错误:0213");
             }
         }
 
@@ -475,14 +494,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
+//                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
             }
         });
         JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
+//                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
@@ -551,7 +570,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 validateInfo = _validateInfo;
                 try {
-                    LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.d("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -597,7 +616,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     void startAttanceLocation() {
-        showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
@@ -612,15 +630,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
+        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
+        showLoading("");
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                cancelLoading();
                 attendanceRecords = attendanceRecord;
-                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
-                attendanceRecord.setAddress(address);
-
+                HttpErrorCheck.checkResponse("考勤信息：", response);
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
                 } else {
@@ -685,7 +702,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
-            if (validateInfo.isPopup()) {
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
                 popOutToast();
                 /*不加班*/
             } else {
@@ -1055,6 +1072,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             initData();
             mInitData = true;
         }
+        permissionLocation();
     }
 
 
@@ -1213,21 +1231,57 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 获取首页红点数据
      */
     void requestNumber() {
-        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
-            @Override
-            public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                HttpErrorCheck.checkResponse("首页红点", response);
-                mItemNumbers = homeNumbers;
-                adapter.notifyDataSetChanged();
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
+                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
+                    @Override
+                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
+                        HttpErrorCheck.checkResponse("首页红点", response);
+                        mItemNumbers = homeNumbers;
+                        adapter.notifyDataSetChanged();
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
+                });
+    }
+
+    /**
+     * 检查定位权限是否打开
+     */
+    private void permissionLocation() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+//            Toast(" 用户授权 ");
+        } else {
+//            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+//            generalPopView.show();
+//            generalPopView.setMessage("需要使用定位权限\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setCanceledOnTouchOutside(true);
+//            showGeneralDialog(true, true, "需要使用定位权限\\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setSureOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(MainActivity.this,
+//                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                            1);
+//                }
+//            });
+//            generalPopView.setCancelOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                }
+//            });
+
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        }
     }
 }

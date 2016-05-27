@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,10 +42,9 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
     public static final int REQUEST_MULTI_SELECT = 0x00101;
     public static final int REQUEST_ALL_SELECT = 0x00102;
 
-    private LinearLayout llBack;
-    private Button btnTitleRight;
+    private LinearLayout ll_back;
     private HorizontalScrollListView lvSelectUser;
-    private TextView tv_toSearch;
+    private TextView tv_toSearch, tv_title, tv_add;
     private RecyclerView rvDepartments;
     private RecyclerView rvUsers;
     private int screenHeight;
@@ -231,6 +229,77 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         mJoinUserId = getIntent().getStringExtra(ExtraAndResult.STR_SUPER_ID);
     }
 
+    private void initView() {
+        assignViews();
+
+        // 设置部门与用户的layout的宽度比为1：2
+        ViewGroup.LayoutParams lp_department = rvDepartments.getLayoutParams();
+        lp_department.width = screenWidth / 3;
+        rvDepartments.setLayoutParams(lp_department);
+
+        mDepartmentLayoutManager = new LinearLayoutManager(this);
+        mDepartmentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mUserLayoutManager = new LinearLayoutManager(this);
+        mUserLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        rvDepartments.setLayoutManager(mDepartmentLayoutManager);
+        rvUsers.setLayoutManager(mUserLayoutManager);
+
+        if (mSelectType == TYPE_ONLY) {
+            tv_add.setVisibility(View.GONE);
+        } else {
+            tv_add.setVisibility(View.VISIBLE);
+        }
+
+//        if (!isDataBinded()) {
+        showLoading("数据正在加载...");
+        mDeptSource = Common.getLstDepartment();
+        deptSort(); //重新排序
+        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
+        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
+        thread.start();
+//        } else {
+//            updata();
+//        }
+    }
+
+    private void assignViews() {
+        tv_toSearch = (TextView) findViewById(R.id.tv_toSearch);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_add = (TextView) findViewById(R.id.tv_add);
+        lvSelectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
+        rvDepartments = (RecyclerView) findViewById(R.id.rv_departments);
+        rvUsers = (RecyclerView) findViewById(R.id.rv_users);
+        tv_title.setText("成员选择");
+        tv_add.setText("确定");
+    }
+
+    private void initListener() {
+        ll_back.setOnClickListener(this);
+        tv_add.setOnClickListener(this);
+        tv_toSearch.setOnClickListener(this);
+
+        lvSelectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
+                if (data.getClass() == SelectDepData.class) {
+                    ((SelectDepData) data).setAllSelect(false);
+                    LogUtil.dee("1");
+                } else if (data.getClass() == SelectUserData.class) {
+                    ((SelectUserData) data).setCallbackSelect(false);
+                    mSelectUsersAdapter.notifyDataSetChanged();
+                    LogUtil.dee("2");
+                } else {
+                    LogUtil.dee("3");
+                    data.setCallbackSelect(false);
+                }
+            }
+        });
+    }
+
     /**
      * 判断数据是否生成
      *
@@ -278,40 +347,6 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         newDeptSource.add(0, companySource);
     }
 
-    private void initView() {
-        assignViews();
-
-        // 设置部门与用户的layout的宽度比为1：2
-        ViewGroup.LayoutParams lp_department = rvDepartments.getLayoutParams();
-        lp_department.width = screenWidth / 3;
-        rvDepartments.setLayoutParams(lp_department);
-
-        mDepartmentLayoutManager = new LinearLayoutManager(this);
-        mDepartmentLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        mUserLayoutManager = new LinearLayoutManager(this);
-        mUserLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        rvDepartments.setLayoutManager(mDepartmentLayoutManager);
-        rvUsers.setLayoutManager(mUserLayoutManager);
-
-        if (mSelectType == TYPE_ONLY) {
-            btnTitleRight.setVisibility(View.GONE);
-        } else {
-            btnTitleRight.setVisibility(View.VISIBLE);
-        }
-
-//        if (!isDataBinded()) {
-        showLoading("数据正在加载...");
-        mDeptSource = Common.getLstDepartment();
-        deptSort(); //重新排序
-        SelectUserHelper.mCurrentSelectDatas.clear(); // 清空选中列表
-        SelectUserHelper.SelectThread thread = new SelectUserHelper.SelectThread(newDeptSource, mHandler);
-        thread.start();
-//        } else {
-//            updata();
-//        }
-    }
 
     /**
      * 刷新界面数据
@@ -346,7 +381,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 @Override
                 public void onChange(int count) {
                     mCurrentSelectCount = count;
-                    btnTitleRight.setText("确定" + (count == 0 ? "" : "(" + count + ")"));
+                    tv_add.setText("确定" + (count == 0 ? "" : "(" + count + ")"));
                 }
             });
         }
@@ -415,46 +450,13 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         mUserLayoutManager.scrollToPosition(index);
     }
 
-    private void assignViews() {
-        tv_toSearch = (TextView) findViewById(R.id.tv_toSearch);
-        btnTitleRight = (Button) findViewById(R.id.btn_title_right);
-        llBack = (LinearLayout) findViewById(R.id.ll_back);
-        lvSelectUser = (HorizontalScrollListView) findViewById(R.id.lv_selectUser);
-        rvDepartments = (RecyclerView) findViewById(R.id.rv_departments);
-        rvUsers = (RecyclerView) findViewById(R.id.rv_users);
-    }
-
-    private void initListener() {
-        llBack.setOnClickListener(this);
-        btnTitleRight.setOnClickListener(this);
-        tv_toSearch.setOnClickListener(this);
-
-        lvSelectUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SelectUserData data = SelectUserHelper.mCurrentSelectDatas.get(position);
-                if (data.getClass() == SelectDepData.class) {
-                    ((SelectDepData) data).setAllSelect(false);
-                    LogUtil.dee("1");
-                } else if (data.getClass() == SelectUserData.class) {
-                    ((SelectUserData) data).setCallbackSelect(false);
-                    mSelectUsersAdapter.notifyDataSetChanged();
-                    LogUtil.dee("2");
-                } else {
-                    LogUtil.dee("3");
-                    data.setCallbackSelect(false);
-                }
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_back:
                 finish();
                 break;
-            case R.id.btn_title_right:
+            case R.id.tv_add:
 //                if (mCurrentSelectCount == 0) {
 //                    finish();
 //                    return;

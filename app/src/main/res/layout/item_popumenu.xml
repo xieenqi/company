@@ -2,7 +2,7 @@
 <LinearLayout
     android:id="@+id/layout_popu_menu_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -10,19 +10,21 @@
         android:id="@+id/layout_menu_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_other_view"
+        android:layout_marginRight="@dimen/margin_other_view"
         android:gravity="center_vertical"
+        android:minHeight="@dimen/dimen_45"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimen_16">
+            >
 
             <ImageView
                 android:id="@+id/iv_popu_menu_icon"
-                android:layout_width="@dimen/dimen_25"
-                android:layout_height="@dimen/dimen_25"
-
+                android:layout_width="@dimen/dimen_20"
+                android:layout_height="@dimen/dimen_20"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_menu_customer"/>
 
@@ -34,7 +36,7 @@
                 android:gravity="center"
                 android:text="21"
                 android:textColor="#afafaf"
-                android:textSize="@dimen/text_sp10"
+                android:textSize="8sp"
                 android:visibility="invisible"/>
         </RelativeLayout>
 
@@ -42,9 +44,11 @@
             android:id="@+id/tv_popu_menu_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/dimen_10"
+            android:layout_marginLeft="@dimen/dimen_20"
             android:gravity="center"
-            android:text="添加客戶"/>
+            android:text="添加客戶"
+            android:textColor="@color/text33"
+            android:textSize="@dimen/text_sp14"/>
 
     </LinearLayout>
 
@@ -52,6 +56,8 @@
         android:id="@+id/iv_popu_menu_divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_0.5"
+        android:paddingLeft="@dimen/dimen_10"
+        android:paddingRight="@dimen/dimen_10"
         android:src="@color/activity_bg"/>
 
 </LinearLayout>

@@ -32,7 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 跟进动态
+ * 【跟进动态】  客户的
  */
 public class SaleActivitiesManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
@@ -134,19 +134,12 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             return;
         }
         switch (requestCode) {
+            /*新建跟进动态回调*/
             case ACTIVITIES_ADD:
-                isChanged = true;
-                SaleActivity activity = (SaleActivity) data.getSerializableExtra("data");
-                if (activity != null) {
-                    mSaleActivity = activity;
-                    if (lstData_saleActivity_current != null) {
-                        lstData_saleActivity_current.add(0, activity);
-                    }
-                    bindData();
-                }
+                getData();
                 break;
-            default:
 
+            default:
                 break;
         }
     }
@@ -227,11 +220,14 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             }
 
             tv_content.setText(saleActivity.getContent());
-            tv_creator_name.setText(saleActivity.getCreator().getName());
-
-            if (saleActivity.getType() != null) {
+            try{
+                tv_creator_name.setText(saleActivity.getCreator().getName());
                 tv_previous.setText(saleActivity.getType().getName());
+            }catch (NullPointerException e){
+                tv_previous.setText("无");
+                e.printStackTrace();
             }
+
             tv_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
@@ -239,7 +235,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 convertView.setBackgroundColor(getResources().getColor(R.color.white));
             }
             return convertView;
-
         }
     }
 }

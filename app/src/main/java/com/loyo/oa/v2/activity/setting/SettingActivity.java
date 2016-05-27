@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -81,6 +81,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     void initUI() {
+
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_profile = (ViewGroup) findViewById(R.id.layout_profile);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
@@ -162,9 +163,30 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 app.startActivity(this, FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.layout_check_update:
-                mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
-                mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
-                startService(mIntentCheckUpdate);
+                if (PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+                    mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
+                    mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
+                    startService(mIntentCheckUpdate);
+                } else {
+                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+//                            ActivityCompat.requestPermissions(SettingActivity.this,
+//                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                    RESULT_OK);
+                            Utils.doSeting(SettingActivity.this);
+                        }
+                    });
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                        }
+                    });
+                }
                 break;
             /*编辑个人资料*/
             case R.id.layout_profile:
@@ -256,7 +278,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         JPushInterface.setAliasAndTags(getApplicationContext(), "", complanTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                    LogUtil.d("激光推送已经成功停止（注销）状态"+i);
+                LogUtil.d("激光推送已经成功停止（注销）状态" + i);
                 //设置别名 为空
             }
         });

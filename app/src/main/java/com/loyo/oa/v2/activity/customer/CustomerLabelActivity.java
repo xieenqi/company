@@ -34,20 +34,28 @@ import java.util.ArrayList;
 
 import retrofit.client.Response;
 
-
+/**
+ * 客户标签选择【标签】
+ */
 @EActivity(R.layout.activity_customer_label)
 public class CustomerLabelActivity extends BaseActivity {
 
+    @ViewById ViewGroup img_title_right;
     @ViewById ExpandableListView expand_listview_label;
     @ViewById ViewGroup img_title_left;
     @Extra("tagitems") ArrayList<TagItem> mTagItems;
     @Extra("customerId") String mCustomerId;
+    @Extra("isMem") boolean isMem;
     ArrayList<Tag> tags = new ArrayList<>();
 
     @AfterViews
     void init() {
-        if (mTagItems == null) {
+        if (null == mTagItems) {
             mTagItems = new ArrayList<>();
+        }
+
+        if (isMem) {
+            img_title_right.setVisibility(View.GONE);
         }
 
         setTitle("标签");
@@ -60,43 +68,45 @@ public class CustomerLabelActivity extends BaseActivity {
             }
         });
 
-        expand_listview_label.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
-                TagItem tagItem = (TagItem) adapter.getChild(groupPosition, childPosition);
-                if (tagItem.isChecked()) {
-                    tagItem.setIsChecked(false);
-                    for (int i = 0; i < mTagItems.size(); i++) {
-                        TagItem cacheItem = mTagItems.get(i);
-                        if (TextUtils.equals(cacheItem.getId(), tagItem.getId())) {
-                            mTagItems.remove(cacheItem);
-                            i--;
+        if (!isMem) {
+            expand_listview_label.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
+                    TagItem tagItem = (TagItem) adapter.getChild(groupPosition, childPosition);
+                    if (tagItem.isChecked()) {
+                        tagItem.setIsChecked(false);
+                        for (int i = 0; i < mTagItems.size(); i++) {
+                            TagItem cacheItem = mTagItems.get(i);
+                            if (TextUtils.equals(cacheItem.getId(), tagItem.getId())) {
+                                mTagItems.remove(cacheItem);
+                                i--;
+                            }
                         }
-                    }
-                } else {
-                    Tag tag = (Tag) adapter.getGroup(groupPosition);
-                    tagItem.setIsChecked(true);
-                    tagItem.setTagId(tag.getId());
-                    mTagItems.add(tagItem);
-                    for (TagItem item : tag.getItems()) {
-                        if (!TextUtils.equals(item.getId(), tagItem.getId())) {
-                            item.setIsChecked(false);
-                            //修复标签多选bug
-                            for (int i = 0; i < mTagItems.size(); i++) {
-                                TagItem cacheItem = mTagItems.get(i);
-                                if (TextUtils.equals(cacheItem.getId(), item.getId())) {
-                                    mTagItems.remove(cacheItem);
-                                    i--;
+                    } else {
+                        Tag tag = (Tag) adapter.getGroup(groupPosition);
+                        tagItem.setIsChecked(true);
+                        tagItem.setTagId(tag.getId());
+                        mTagItems.add(tagItem);
+                        for (TagItem item : tag.getItems()) {
+                            if (!TextUtils.equals(item.getId(), tagItem.getId())) {
+                                item.setIsChecked(false);
+                                //修复标签多选bug
+                                for (int i = 0; i < mTagItems.size(); i++) {
+                                    TagItem cacheItem = mTagItems.get(i);
+                                    if (TextUtils.equals(cacheItem.getId(), item.getId())) {
+                                        mTagItems.remove(cacheItem);
+                                        i--;
+                                    }
                                 }
                             }
                         }
                     }
+                    adapter.notifyDataSetChanged();
+                    expand();
+                    return false;
                 }
-                adapter.notifyDataSetChanged();
-                expand();
-                return false;
-            }
-        });
+            });
+        }
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).GetTags(new RCallback<ArrayList<Tag>>() {
             @Override
@@ -149,6 +159,7 @@ public class CustomerLabelActivity extends BaseActivity {
 
     /**
      * 构建新标签
+     *
      * @return
      */
     private ArrayList<NewTag> convertNewTags() {
@@ -248,7 +259,9 @@ public class CustomerLabelActivity extends BaseActivity {
             TagItem item = (TagItem) getChild(groupPosition, childPosition);
             item_info_Child.tv_title.setText(item.getName());
             item_info_Child.cb.setChecked(item.isChecked());
-
+            if (isMem) {
+                convertView.setEnabled(false);
+            }
             return convertView;
         }
 

@@ -181,16 +181,19 @@ public class WfinstanceViewGroup extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.toString().length() > 0) {
-
-                map_Values.put(lstData.get(position).getId(),
-                        !"double".equals(vv.getTag().toString()) ? s.toString() : Double.parseDouble(s.toString()));
-                LogUtil.d(vv.getTag() + "审批输入的内容" + s.toString());
-            } else {
-                if (map_Values.containsKey(lstData.get(position).getId())
-                        && map_Values.get(lstData.get(position).getId()).toString().length() == 1) {
-                    map_Values.put(lstData.get(position).getId(), "");
+            try {
+                if (s.toString().length() > 0) {
+                    map_Values.put(lstData.get(position).getId(),
+                            !"double".equals(vv.getTag().toString()) ? s.toString() : Double.parseDouble(s.toString()));
+                    LogUtil.d(vv.getTag() + "审批输入的内容" + s.toString());
+                } else {
+                    if (map_Values.containsKey(lstData.get(position).getId())
+                            && map_Values.get(lstData.get(position).getId()).toString().length() == 1) {
+                        map_Values.put(lstData.get(position).getId(), "");
+                    }
                 }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
@@ -271,7 +274,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     public void onCancel() {
 
                     }
-                }, true);
+                }, true, "取消");
             }
         }
     }

@@ -186,6 +186,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         ((TextView) findViewById(R.id.tv_title_1)).setText(title);
     }
 
+    protected void setTitle(int id, String title) {
+        ((TextView) findViewById(id)).setText(title);
+    }
+
     @Override
     protected void onDestroy() {
         unRegisterBaseReceiver();

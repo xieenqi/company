@@ -1,7 +1,9 @@
 package com.loyo.oa.v2.activity.project;
 
 import android.content.Intent;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -49,6 +52,8 @@ public class ProjectAddActivity extends BaseActivity {
     static final int REQUEST_MEMBERS = 200;
 
     @ViewById
+    TextView wordcount;
+    @ViewById
     TextView tv_managers;
     @ViewById
     TextView tv_members;
@@ -71,6 +76,7 @@ public class ProjectAddActivity extends BaseActivity {
 
     ProjectMemberListViewAdapter mAdapter;
     ArrayList<HttpProject.ProjectMember> mProjectMember = new ArrayList<>();
+
     private boolean isEditMember = false;
     private StringBuffer mMemberIds = new StringBuffer();
     private StringBuffer mMemberNames = new StringBuffer();
@@ -101,6 +107,7 @@ public class ProjectAddActivity extends BaseActivity {
             membersNowData.addAll(getMenbersEdit());
             setProjectExtra();
         }
+        edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
     }
 
     void setProjectExtra() {
@@ -451,7 +458,6 @@ public class ProjectAddActivity extends BaseActivity {
         }
         return newData;
     }
-
 
     /**
      * 新建 组装【参与人】的请求参数

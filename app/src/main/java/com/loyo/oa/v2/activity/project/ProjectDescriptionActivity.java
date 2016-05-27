@@ -69,7 +69,7 @@ public class ProjectDescriptionActivity extends BaseActivity {
                 }
                 managers.append(responsers.get(i).user.getRealname());
                 if (i != responsers.size() - 1) {
-                    managers.append(",");
+                    managers.append(" ");
                 }
             }
             tv_managers.setText(managers.toString());
@@ -83,11 +83,11 @@ public class ProjectDescriptionActivity extends BaseActivity {
 
             for (int i = 0; i < members.size(); i++) {
                 if (null != members.get(i).user && null != members.get(i).user.name) {
-                    subMembers.append(members.get(i).user.name + ",");
+                    subMembers.append(members.get(i).user.name + " ");
                 }
 
                 if (null != members.get(i).dept && null != members.get(i).dept.name) {
-                    subMembers.append(members.get(i).dept.name + ",");
+                    subMembers.append(members.get(i).dept.name + " ");
                 }
             }
             tv_members.setText(subMembers.toString());

@@ -24,6 +24,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.ViewHolder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -43,6 +44,14 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         this.isMyUser = isMyUser;
         this.customerId = customerId;
         this.customerName = customerName;
+    }
+
+    private String setValueFloat(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+            BigDecimal bigDecimal = new BigDecimal(obj + "");
+            return bigDecimal.toPlainString() + "";
     }
 
     @Override
@@ -80,10 +89,17 @@ public class DemandsRadioListViewAdapter extends BaseAdapter {
         }
 
         tv_phase.setText("阶段：" + demand.getSaleStage().getName() + wfStatusText(demand.getWfState()));
+        tv_content_plan.setText("预估：\t数量\t\t" + setValueFloat(demand.getEstimatedNum()) + "\t\t\t\t单价\t\t" + setValueFloat(demand.getEstimatedPrice()) + " "
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));
+        tv_content_act.setText("成交：\t数量\t\t" + setValueFloat(demand.getActualNum()) + "\t\t\t\t单价\t\t" + setValueFloat(demand.getActualPrice()) + " "
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));
+
+/*        tv_phase.setText("阶段：" + demand.getSaleStage().getName() + wfStatusText(demand.getWfState()));
         tv_content_plan.setText("预估：\t数量\t\t" + demand.getEstimatedNum() + "\t\t\t\t单价\t\t" + demand.getEstimatedPrice() + " "
                 + (null == demand.getProduct() ? "" : demand.getProduct().unit));
         tv_content_act.setText("成交：\t数量\t\t" + demand.getActualNum() + "\t\t\t\t单价\t\t" + demand.getActualPrice() + " "
-                + (null == demand.getProduct() ? "" : demand.getProduct().unit));
+                + (null == demand.getProduct() ? "" : demand.getProduct().unit));*/
+
         if (demand.getSaleStage().getProb() == 0) {
             tv_lose_reason.setVisibility(View.VISIBLE);
             StringBuilder reason = new StringBuilder("输单原因：");

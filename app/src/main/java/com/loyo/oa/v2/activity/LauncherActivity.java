@@ -119,7 +119,6 @@ public class LauncherActivity extends BaseActivity {
         Intent intent = new Intent();
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
-            SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         } else {
             intent.setClass(LauncherActivity.this,
                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);

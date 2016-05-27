@@ -545,7 +545,7 @@ public class TasksEditActivity extends BaseActivity {
                 layout_retask.setVisibility(View.VISIBLE);
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
-        },false);
+        },false,"不截止");
     }
 
     /**

@@ -36,7 +36,7 @@
 
 
     <!--新版标注-->
-    <dimen name="view_first_margin_top">20dp</dimen>
+    <dimen name="view_first_margin_top">15dp</dimen>
     <dimen name="margin_side_edge">14dp</dimen>
     <dimen name="margin_other_view">14dp</dimen>
     <dimen name="layout_row_margin_top">17dp</dimen>
@@ -73,10 +73,12 @@
     <dimen name="dimen_8">8dp</dimen>
     <dimen name="dimen_9">9dp</dimen>
     <dimen name="dimen_10">10dp</dimen>
+    <dimen name="dimen_13">13dp</dimen>
     <dimen name="dimen_12">12dp</dimen>
     <dimen name="dimen_15">15dp</dimen>
     <dimen name="dimen_14">14dp</dimen>
     <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_17">17dp</dimen>
     <dimen name="dimen_18">18dp</dimen>
     <dimen name="dimen_19">19dp</dimen>
     <dimen name="dimen_20">20dp</dimen>
@@ -91,6 +93,7 @@
     <dimen name="dimen_50">50dp</dimen>
     <dimen name="dimen_55">55dp</dimen>
     <dimen name="dimen_58">58dp</dimen>
+    <dimen name="dimen_60">60dp</dimen>
     <dimen name="dimen_65">65dp</dimen>
     <dimen name="dimen_66">66dp</dimen>
     <dimen name="dimen_150">150dp</dimen>
@@ -99,5 +102,7 @@
     <dimen name="dimen_7">7dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="home_head">86dp</dimen>
+    <dimen name="table_height">46dp</dimen>
+    <dimen name="sale_pop_height">180dp</dimen>
 
 </resources>

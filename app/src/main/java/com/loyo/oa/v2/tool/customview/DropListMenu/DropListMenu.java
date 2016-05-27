@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropListMenu extends LinearLayout {
+
     // Menu 展开的ListView 的 adapter
     private List<DropListAdapter> mMenuAdapters = new ArrayList<>();
-
     // Menu 数据源
     private List<DropItem> mMenuItems = new ArrayList<>();
 
@@ -39,7 +39,6 @@ public class DropListMenu extends LinearLayout {
     private List<ImageView> mIvMenuArrow = new ArrayList<>();
 
     private Context mContext;
-
     private List<PopupWindow> mPopupWindows = new ArrayList<>();
     private List<ListView> mMenuLists = new ArrayList<>();
     private List<ListView> mSubMenuLists = new ArrayList<>();
@@ -90,10 +89,13 @@ public class DropListMenu extends LinearLayout {
     //向下的箭头图片资源
     private int mDownArrow;
 
+    private int oldIndex = -1;
+
     private boolean mDrawable = false;
 
     private String[] mDefaultMenuTitle;
 
+    DropListAdapter adapterChild;
 
     public DropListMenu(Context mContext) {
         super(mContext);
@@ -127,8 +129,8 @@ public class DropListMenu extends LinearLayout {
     }
 
     void initPopopWindows() {
+        LogUtil.d("左侧的Item有:" + mMenuCount);
         mMenuCount = mMenuItems.size();
-
         if (mMenuAdapters.size() == 0) {
             for (int i = 0; i < mMenuCount; i++) {
                 DropListAdapter adapter = new DropListAdapter(mContext, mMenuItems.get(i).getSubDropItem());
@@ -161,13 +163,13 @@ public class DropListMenu extends LinearLayout {
             }
 
             /**
-             * 弹窗列表，确认 取消监听 右边列表第一个列表
+             * 客户管理，客户标签筛选Menu
              */
-            final ListView menuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
+            final ListView LeftmenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu);
             final ListView subMenuList = (ListView) viewPopWindow.findViewById(R.id.lv_menu_sub);
             subMenuList.setBackgroundColor(getResources().getColor(R.color.white));
             if (!mShowDivider) {
-                menuList.setDivider(null);
+                LeftmenuList.setDivider(null);
             }
 
             /**确定*/
@@ -176,7 +178,7 @@ public class DropListMenu extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     popupWindow.dismiss();
-                    if (mMenuSelectedListener != null) {
+                    if (null != mMenuSelectedListener) {
                         mMenuSelectedListener.onSelected(v, mColumnSelected, getSelectedItems());
                     }
                 }
@@ -193,75 +195,84 @@ public class DropListMenu extends LinearLayout {
                     if (mMenuSelectedListener != null) {
                         mMenuSelectedListener.onCancelAll(mColumnSelected);
                     }
-
+                    mMenuAdapters.get(mColumnSelected).setSelectIndex(-1);
                 }
             });
 
             Global.SetTouchView(buttonConfirm, buttonCancel);
-            menuList.setBackgroundColor(mMenuListBackColor);
-            //menuList.setSelector(mMenuListSelectorRes);
+            LeftmenuList.setBackgroundColor(mMenuListBackColor);
 
             /**
-             * 左侧Listiew
+             * 客户标签筛选，列表监听
+             * 一级列表
              * */
-            menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            LeftmenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //((DropListAdapter) (menuList.getAdapter())).setSelectItem(position);//设置选择状态
                     mRowSelected = position;
-                    LogUtil.d("选中的行数:"+mRowSelected);
-                    if (mMenuSelectedListener != null && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
+                    DropItem selectRowItem = menuItem.getSubDropItem().get(mRowSelected);
+
+                    //一级列表有内容时执行:
+                    if (null != mMenuSelectedListener && menuItem.getSubDropItem().get(mRowSelected).hasSub()) {
                         DropItem selectedItem = getSelectedItems().get(mRowSelected);
-                        /**
-                         * 展开后的右侧 二级ListView
-                         * */
                         final DropListAdapter adapter = new DropListAdapter(mContext, menuItem.getSubDropItem().get(mRowSelected).getSubDropItem(), selectedItem);
+                        LogUtil.dee("一级Item(有二级内容):" + selectRowItem.getName());
+                        adapterChild = adapter;
+                        //二级列表
                         getSubMenuList().setAdapter(adapter);
                         getSubMenuList().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
-                                    // popupWindow.dismiss();
-                                    // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
-                                    mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
-                                    mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
+                                LogUtil.dee("二级Item:" + menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position).getName());
 
-                                    if (mMenuSelectedListener != null) {
+                                if (null != getSelectedItems().get(mColumnSelected)) {
+                                    getSelectedItems().remove(mColumnSelected);
+                                }
+
+                                mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
+                                if (menuItem.getSelectType() == DropItem.NORMAL || menuItem.getSelectType() == DropItem.GROUP_SINGLE_DISMISS) {
+                                    mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
+                                    if (null != mMenuSelectedListener) {
                                         mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                                     }
                                 } else if (menuItem.getSelectType() == DropItem.GROUP_SINGLE) {
-                                    DropItem selectedItem = getSelectedItems().get(mRowSelected);
+                                    DropItem selectedItem = getSelectedItems().get(position);
                                     DropItem currentItem = menuItem.getSubDropItem().get(mRowSelected).getSubDropItem().get(position);
 
-                                    if (selectedItem == null) {
-                                        getSelectedItems().put(mRowSelected, currentItem);
+                                    if (oldIndex != -1) {//移除前一次选择的数据
+                                        getSelectedItems().remove(oldIndex);
+                                    }
+                                    if (null == selectedItem) {
+                                        oldIndex = position;
+                                        getSelectedItems().put(position, currentItem);
                                         adapter.setSelectIndex(position);
-                                    } else {
-                                        getSelectedItems().remove(mRowSelected);
 
+                                    } else if (null != selectedItem) {
+                                        getSelectedItems().remove(position);
                                         if (!selectedItem.equals(currentItem)) {
-                                            getSelectedItems().put(mRowSelected, currentItem);
+
+                                            getSelectedItems().put(position, currentItem);
                                             adapter.setSelectIndex(position);
                                         } else {
                                             adapter.setSelectIndex(-1);
                                         }
                                     }
-
-                                    adapter.notifyDataSetChanged();
                                     syncConfirmButton();
+                                    adapter.notifyDataSetChanged();
                                 }
                             }
                         });
+                        //一级列表没有内容时执行:
+                        //单选列表 时间也用到 setSelectIndex()方法用于显示勾选img
                     } else {
-                        popupWindow.dismiss();//默认选择状态下
-                        // mTvMenuTitles.get(mColumnSelected).setText(mMenuItems.get(mColumnSelected).getSubDropItem().get(mRowSelected).getName());
+                        LogUtil.dee("一级Item:" + selectRowItem.getName());
+                        popupWindow.dismiss();
                         mIvMenuArrow.get(mColumnSelected).setImageResource(mDownArrow);
                         mMenuAdapters.get(mColumnSelected).setSelectIndex(mRowSelected);
-
                         if (mMenuSelectedListener != null) {
-                            DropItem selectRowItem = menuItem.getSubDropItem().get(mRowSelected);
+                            DropItem selectRowItem1 = menuItem.getSubDropItem().get(mRowSelected);
                             getSelectedItems().clear();
-                            getSelectedItems().put(mColumnSelected, selectRowItem);
+                            getSelectedItems().put(mColumnSelected, selectRowItem1);
                             if (mMenuSelectedListener != null) {
                                 mMenuSelectedListener.onSelected(view, mColumnSelected, getSelectedItems());
                             }
@@ -278,7 +289,7 @@ public class DropListMenu extends LinearLayout {
                 }
             });
 
-            mMenuLists.add(menuList);
+            mMenuLists.add(LeftmenuList);
             mSubMenuLists.add(subMenuList);
             mPopupWindows.add(popupWindow);
             mButtonConfirm.add(buttonConfirm);
@@ -286,12 +297,18 @@ public class DropListMenu extends LinearLayout {
         }
     }
 
+    /*已选item数量显示*/
     void syncConfirmButton() {
         int size = getSelectedItems().size();
         getConfirmButton().setText("确定" + (size > 0 ? "(" + size + ")" : ""));
+
+        if (0 == size) {
+            mMenuAdapters.get(mColumnSelected).setSelectIndex(-1);
+        }
     }
 
     // 设置 Menu的item
+
     public void setmMenuItems(ArrayList<DropItem> menuItems) {
         mMenuItems = menuItems;
         mDrawable = true;
@@ -425,9 +442,7 @@ public class DropListMenu extends LinearLayout {
                     @Override
                     public void onClick(View view) {
                         mColumnSelected = index;
-
                         DropListAdapter adapter = mMenuAdapters.get(mColumnSelected);
-
                         getMenuList().setAdapter(adapter);
                         View childView = adapter.getView(0, null, getMenuList());
                         childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -436,12 +451,10 @@ public class DropListMenu extends LinearLayout {
                             //如果有二级菜单,高度必须定死.
                             LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(0, childView.getMeasuredHeight() * mShowCount, 1);
                             getMenuList().setLayoutParams(parms);
-
                             DropItem subItem = mMenuItems.get(mColumnSelected).getSubDropItem().get(0);
                             if (subItem.hasSubExtend()) {
                                 //回显
                                 DropItem selectedItem = getSelectedItems().get(0);
-
                                 DropListAdapter subAdapter = new DropListAdapter(mContext, subItem.getSubDropItem(), selectedItem);
                                 getSubMenuList().setAdapter(subAdapter);
                             } else {

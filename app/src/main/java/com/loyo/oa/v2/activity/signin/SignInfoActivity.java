@@ -39,7 +39,7 @@ public class SignInfoActivity extends BaseActivity {
     private TextView tv_address;
     private TextView tv_customer_name;
     private TextView tv_memo;
-    private ViewGroup img_title_left;
+    private ViewGroup ll_back;
     private GridView gridView_photo;
     private ViewGroup layout_customer_info;
     private SignInGridViewAdapter signInGridViewAdapter;
@@ -67,7 +67,7 @@ public class SignInfoActivity extends BaseActivity {
             }
         }
 
-        super.setTitle("签到详情");
+        super.setTitle(R.id.tv_title, "签到详情");
         initUI();
     }
 
@@ -77,15 +77,15 @@ public class SignInfoActivity extends BaseActivity {
         tv_memo = (TextView) findViewById(R.id.tv_memo);
         gridView_photo = (GridView) findViewById(R.id.gridView_photo);
         layout_customer_icon = (ImageView) findViewById(R.id.layout_customer_icon);
-        img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
-        img_title_left.setOnClickListener(new View.OnClickListener() {
+        ll_back = (ViewGroup) findViewById(R.id.ll_back);
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 app.finishActivity((Activity) v.getContext(), MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
             }
         });
 
-        img_title_left.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
+        ll_back.setOnTouchListener(ViewUtil.OnTouchListener_view_transparency.Instance());
 
         layout_customer_info = (ViewGroup) findViewById(R.id.layout_customer_info);
 
@@ -99,7 +99,7 @@ public class SignInfoActivity extends BaseActivity {
                     app.startActivityForResult(SignInfoActivity.this, CustomerDetailInfoActivity_.class, 0, REQUEST_PREVIEW_CUSTOMER_INFO, b);
                 }
             });
-        }else{
+        } else {
             layout_customer_icon.setVisibility(View.GONE);
             tv_customer_name.setEnabled(false);
         }
@@ -146,9 +146,9 @@ public class SignInfoActivity extends BaseActivity {
             tv_address.setText(legWork.address);
             tv_memo.setText(legWork.memo);
 
-            if(null != legWork.customerName){
+            if (null != legWork.customerName) {
                 tv_customer_name.setText(legWork.customerName);
-            }else{
+            } else {
                 tv_customer_name.setTextColor(getResources().getColor(R.color.text33));
                 tv_customer_name.setText("未指定拜访客户");
                 layout_customer_info.setEnabled(false);
@@ -169,7 +169,7 @@ public class SignInfoActivity extends BaseActivity {
         if (null == lstData_Attachment) {
             return;
         }
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, false, false,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, false, false, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 

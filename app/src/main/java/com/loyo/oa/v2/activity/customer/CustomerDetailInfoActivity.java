@@ -33,7 +33,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -141,8 +140,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     /**
      * 获取参与人权限
-     * */
-    void getMembersRoot(){
+     */
+    void getMembersRoot() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getMembersRoot(new RCallback<MembersRoot>() {
                     @Override
@@ -215,9 +214,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             }
         }
 
-        if(memRoot.getValue().equals("0")){
+        if (memRoot.getValue().equals("0")) {
             isRoot = false;
-        }else{
+        } else {
             isRoot = true;
         }
 
@@ -249,9 +248,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_sale_activity_date.setText(app.df3.format(new Date(mCustomer.lastActAt * 1000)));
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
-            tv_address.setText(mCustomer.loc.addr);
+            tv_address.setText("地址：" + mCustomer.loc.addr);
         }
-        tv_tags.setText(Utils.getTagItems(mCustomer));
+        tv_tags.setText("标签：" + Utils.getTagItems(mCustomer));
         Contact contact = Utils.findDeault(mCustomer);
         if (null != contact) {
             tv_contact_name.setText(contact.getName());
@@ -268,7 +267,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
      * 判断是否是参与人
      */
     public boolean isMenber(final Customer mCustomer) {
-        if(null != mCustomer){
+        if (null != mCustomer) {
             for (Member element : mCustomer.members) {
                 if (MainApp.user.id.equals(element.getUser().getId())) {
                     return true;
@@ -447,7 +446,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 showEditPopu();
                 break;
             case R.id.layout_customer_info:
-                bundle.putBoolean("isRoot",isRoot);
+                bundle.putBoolean("isRoot", isRoot);
                 bundle.putSerializable("Customer", mCustomer);
                 bundle.putBoolean("isMyUser", isMyUser);
                 bundle.putBoolean(ExtraAndResult.EXTRA_TYPE, customerType == 3);
@@ -475,13 +474,17 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             /*联系人*/
             case R.id.layout_contact:
-                bundle.putBoolean("isLock",mCustomer.lock);
-                bundle.putBoolean("isMyUser", isMyUser);
-                bundle.putBoolean("isRoot",isRoot);
-                bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
-                bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
-                _class = CustomerContactManageActivity_.class;
-                requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
+                try {
+                    bundle.putBoolean("isLock", mCustomer.lock);
+                    bundle.putBoolean("isMyUser", isMyUser);
+                    bundle.putBoolean("isRoot", isRoot);
+                    bundle.putBoolean(ExtraAndResult.EXTRA_STATUS, isMenber(mCustomer));
+                    bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
+                    _class = CustomerContactManageActivity_.class;
+                    requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
+                }catch (NullPointerException e){
+                    Toast("参数不全");
+                }
                 break;
             case R.id.layout_send_sms:
                 if (null != mCustomer.contacts && mCustomer.contacts.size() > 0) {
@@ -586,14 +589,15 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
+                getData();
                 /*如果修改了负责人，不是自己，则finish该页面*/
-                Bundle bundle = data.getExtras();
-                try{
+                try {
+                    Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
-                    if(!isCreator){
+                    if (!isCreator) {
                         finish();
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
 

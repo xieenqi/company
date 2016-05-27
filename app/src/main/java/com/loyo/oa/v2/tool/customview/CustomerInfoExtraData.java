@@ -48,7 +48,8 @@ public class CustomerInfoExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize, boolean isRoot,boolean isMenber,boolean isLock) {
+    public CustomerInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor,
+                                 int valueSize, boolean isRoot, boolean isMenber, boolean isLock) {
         this(context, null, 0);
         this.extras = extras;
         this.isRoot = isRoot;
@@ -82,13 +83,13 @@ public class CustomerInfoExtraData extends LinearLayout {
                 continue;
             }
 
-            View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_customerextra, null, false);
+            final View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_customerextra, null, false);
 
             /*是否为公海客户*/
-            if(!isLock){
+            if (!isLock) {
                 extra.setEnabled(false);
                 /*是否有权限*/
-            }else if(!edit || isMenber){
+            } else if (!edit || isMenber) {
                 if (!isRoot) {
                     extra.setEnabled(false);
                 }
@@ -109,17 +110,17 @@ public class CustomerInfoExtraData extends LinearLayout {
              * 说   明: 创建时发送时间戳，获取也是时间戳，但是之前服务器数据存在2015-2-3这种时间格式数据，所以这里判断一下。
              * 解析格式: yyyy-MM-dd HH:mm
              * */
-            if("long".equals(properties.getType())){
-                if(properties.isEnabled()){
+            if ("long".equals(properties.getType())) {
+                if (properties.isEnabled()) {
 
                 }
-                try{
-                    tv_content.setText(DateTool.timet(customerExtra.getVal(),DateTool.DATE_FORMATE_SPLITE_BY_POINT));
-                }catch (NumberFormatException e){
+                try {
+                    tv_content.setText(DateTool.timet(customerExtra.getVal(), DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+                } catch (NumberFormatException e) {
                     e.printStackTrace();
                     tv_content.setText(customerExtra.getVal());
                 }
-            }else{
+            } else {
                 tv_content.setText(customerExtra.getVal());
             }
 
@@ -136,7 +137,13 @@ public class CustomerInfoExtraData extends LinearLayout {
                 extra.setOnClickListener(new ValueOnClickListener_list(dialog_follow, i));
                 tv_content.setFocusable(false);
                 tv_content.setFocusableInTouchMode(false);
-                tv_content.setOnFocusChangeListener(null);
+//                tv_content.setOnFocusChangeListener(null);
+                tv_content.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        extra.performClick();
+                    }
+                });
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
@@ -148,7 +155,13 @@ public class CustomerInfoExtraData extends LinearLayout {
                 extra.setOnClickListener(new ValueOnClickListener_dateTime(tv_content, customerExtra));
                 tv_content.setFocusable(false);
                 tv_content.setFocusableInTouchMode(false);
-                tv_content.setOnFocusChangeListener(null);
+//                tv_content.setOnFocusChangeListener(null);
+                tv_content.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        extra.performClick();
+                    }
+                });
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
                 if (properties.isRequired()) {
                     tv_content.setHint("必填");
@@ -159,7 +172,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
-                tv_content.setOnClickListener(null);
+//                tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -172,7 +185,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
-                tv_content.setOnClickListener(null);
+//                tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -185,7 +198,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                 extra.findViewById(R.id.img_right_arrow).setVisibility(View.INVISIBLE);
                 tv_content.setFocusableInTouchMode(true);
                 tv_content.setFocusable(true);
-                tv_content.setOnClickListener(null);
+//                tv_content.setOnClickListener(null);
                 tv_content.addTextChangedListener(new BizFiedTextWatcher(customerExtra));
                 tv_content.requestFocus();
                 tv_content.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -274,7 +287,7 @@ public class CustomerInfoExtraData extends LinearLayout {
                     public void onCancel() {
 
                     }
-                },true);
+                }, true, "取消");
             }
         }
     }

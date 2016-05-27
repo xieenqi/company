@@ -201,9 +201,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
             /*查重*/
             case R.id.tv_search:
-
                 if (!edt_name.getText().toString().isEmpty()) {
-
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("name", edt_name.getText().toString());
                     app.startActivityForResult((Activity) mContext, CustomerRepeat.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_SERACH, bundle1);
@@ -211,7 +209,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else {
                     Toast("客户名称不能为空");
                 }
-
                 break;
 
             case R.id.img_title_left:
@@ -346,7 +343,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                         sbTId.append(String.valueOf(tag.gettId()));
 
                     } else {
-                        sb.append("/");
+                        sb.append("、");
                         sb.append(String.valueOf(tag.getItemName()));
 
                         sbItemId.append(",");

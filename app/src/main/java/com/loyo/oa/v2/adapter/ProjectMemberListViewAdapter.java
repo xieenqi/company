@@ -44,7 +44,7 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectAddActivi
             holder.setText(R.id.tv_member, projectMember.dept.name);
         }
 
-        ImageView view = holder.getView(R.id.img_project_member_delete);
+        final ImageView view = holder.getView(R.id.img_project_member_delete);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -55,6 +55,12 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectAddActivi
             }
         });
 
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.performClick();
+            }
+        });
         /*默认设置参与人可看全部*/
         ProjectAddActivity.ManagersMembers p = mProjectMembers.get(holder.getPosition());
         p.canReadAll = true;

@@ -205,8 +205,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 }
             });
 
-            if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
-                content.setText("点评: " + workReport.reviewer.getUser().getName());
+            if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
+                content.setText("点评: " + workReport.reviewer.user.getName());
             }
             StringBuilder reportTitle = new StringBuilder(workReport.reviewer.name + "提交 ");
             String reportDate = "";
@@ -222,7 +222,6 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     reportType = " 月报";
                     break;
                 default:
-
                     break;
             }
             reportTitle.append(reportType);
@@ -230,7 +229,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 reportTitle.append(" (补签)");
             }
 
-            title.setText(workReport.title);
+            String isDelayedTitle = workReport.isDelayed ? "(补签)":" ";
+            title.setText(workReport.title+" "+isDelayedTitle);
 
             String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
             time.setText(end);

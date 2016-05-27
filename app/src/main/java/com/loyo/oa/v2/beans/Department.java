@@ -179,7 +179,7 @@ public class Department implements Serializable, SelectUserHelper.SelectUserBase
     }
 
     public String getName() {
-        return name;
+        return null == name ? " " : name;
     }
 
     public void setName(String name) {

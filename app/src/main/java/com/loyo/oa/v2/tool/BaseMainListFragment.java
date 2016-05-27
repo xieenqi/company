@@ -27,6 +27,7 @@ public abstract class BaseMainListFragment extends BaseFragment implements PullT
 
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
+    public static final int REQUEST_BACK = 6;
 
     protected Pagination pagination = new Pagination(20);
 

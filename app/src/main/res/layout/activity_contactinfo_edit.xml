@@ -42,13 +42,11 @@
 
                     <com.loyo.oa.v2.tool.customview.RoundImageView
                         android:id="@+id/img_title_user"
-                        android:layout_width="@dimen/dimen_55"
-                        android:layout_height="@dimen/dimen_55"
+                        android:layout_width="@dimen/dimen_40"
+                        android:layout_height="@dimen/dimen_40"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:src="@drawable/icon_contact_avatar"
-                        imagecontrol:border_inside_color="#a8d4e9"
-                        imagecontrol:border_outside_color="#a8d4e9"
-                        imagecontrol:border_thickness="1dp"/>
+                        />
                 </RelativeLayout>
 
                 <TextView
@@ -57,8 +55,8 @@
                     android:layout_toLeftOf="@+id/iv_set_avartar"
                     android:gravity="center_vertical"
                     android:text="设置头像"
-                    android:textColor="#4db1fe"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/text33"
+                    android:textSize="15sp"/>
 
                 <ImageView
                     android:id="@+id/iv_set_avartar"
@@ -66,7 +64,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/dimen_4"
                     android:scaleType="fitCenter"
                     android:src="@drawable/right_arrow"
                     />
@@ -77,7 +75,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/dimen_15"
                 android:background="@color/white"
                 android:orientation="vertical"
                 >
@@ -85,7 +83,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:layout_marginLeft="@dimen/margin_other_view"
                     android:background="@color/white"
                     android:orientation="vertical"
                     >
@@ -94,7 +92,7 @@
                         android:id="@+id/layout_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_30">
+                        >
 
 
                         <RelativeLayout
@@ -114,7 +112,7 @@
                                 style="@style/text_item1"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_phone_title"
                                 android:background="@null"
                                 />
@@ -189,7 +187,7 @@
                                 style="@style/text_item1"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_weixin_title"
                                 android:background="@null"
                                 android:hint="请输入微信号"
@@ -225,7 +223,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_sex_title"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
@@ -281,7 +279,7 @@
                                 style="@style/text_item1"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_birthday_title"
                                 android:textColor="#383838"
                                 />
@@ -327,7 +325,7 @@
                                 style="@style/text_item1"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_age_title"
                                 android:textColor="#999999"
                                 />
@@ -362,7 +360,7 @@
                                 style="@style/text_item1"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_departments_title"
                                 android:textColor="#999999"
                                 />
@@ -397,7 +395,7 @@
                                 style="@style/text_item1"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_marginLeft="@dimen/dimen_30"
+                                android:layout_marginLeft="@dimen/dimen_50"
                                 android:layout_toRightOf="@+id/tv_positions_title"
                                 android:textColor="#999999"
                                 />

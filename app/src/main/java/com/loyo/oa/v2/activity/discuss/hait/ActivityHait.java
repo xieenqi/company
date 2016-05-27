@@ -225,7 +225,7 @@ public class ActivityHait extends BaseActivity {
                     Intent intent = new Intent(ActivityHait.this, ActivityDiscussDet.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
-                    intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.id);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, "");//@我界面不刷新红点
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     startActivity(intent);
                 }

@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.adapter.DepartmentChooseAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.BaseActivity;
 
@@ -18,8 +19,7 @@ import com.loyo.oa.v2.tool.BaseActivity;
 public class DepartmentChoose extends BaseActivity {
 
     ListView lv_deptList;
-    RelativeLayout img_title_left;
-    RelativeLayout img_title_right;
+    LinearLayout img_title_left;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -30,10 +30,8 @@ public class DepartmentChoose extends BaseActivity {
 
     private void initUI() {
         super.setTitle("部门选择");
-        img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
+        img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(click);
-        img_title_right = (RelativeLayout) findViewById(R.id.img_title_right);
-        img_title_right.setVisibility(View.GONE);
         lv_deptList = (ListView) findViewById(R.id.lv_deptList);
         final DepartmentChooseAdapter adapter=new DepartmentChooseAdapter(DepartmentChoose.this, MainApp.user.depts);
         lv_deptList.setAdapter(adapter);
@@ -60,5 +58,4 @@ public class DepartmentChoose extends BaseActivity {
             }
         }
     };
-
 }

@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -22,16 +23,14 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"/>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dimen_10">
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
+                    >
 
 
                     <EditText
@@ -48,72 +47,73 @@
 
                     <TextView
                         android:id="@+id/tv_search"
-                        android:layout_width="50dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="@dimen/dimen_10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/tv_frame_customer"
                         android:gravity="center"
                         android:text="查重"
-                        android:textColor="@color/dodgerblue"
+                        android:textColor="@color/title_bg1"
                         />
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:id="@+id/layout_address"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_h_title"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:minHeight="@dimen/view_h_title"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dimen_10">
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
+                    >
 
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="地址"
+                        android:paddingTop="@dimen/dimen_10"
+                        android:text="地址:"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
+                        android:textSize="@dimen/text_sp15"/>
 
                     <EditText
                         android:id="@+id/et_address"
                         style="@style/edtText_normal"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_5"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
+                        android:gravity="top"
+                        android:lineSpacingExtra="6dp"
+                        android:textSize="14sp"
                         android:hint="地址获取中..."
-                        android:paddingLeft="@dimen/dimen_5"/>
+                        android:paddingBottom="@dimen/dimen_10"
+                        android:paddingLeft="@dimen/dimen_5"
+                        android:paddingTop="@dimen/dimen_3"/>
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dimen_5"
+                        android:layout_height="match_parent"
                         android:scaleType="fitCenter"
                         android:src="@drawable/icon_refresh"/>
 
                 </LinearLayout>
 
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dimen_10">
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
+                    >
 
 
                     <TextView
@@ -122,7 +122,7 @@
                         android:gravity="center_vertical"
                         android:text="联系人"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
+                        android:textSize="@dimen/text_sp15"/>
 
                     <EditText
                         android:id="@+id/edt_contract"
@@ -133,22 +133,22 @@
                         android:gravity="right|center_vertical"
                         android:hint="请输入联系人姓名"
                         android:inputType="textPersonName"
-                        android:maxLength="20"/>
+                        android:textColor="@color/title_bg1"
+                        android:maxLength="20"
+                        android:paddingRight="0dp"/>
 
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dimen_10">
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
+                    >
 
 
                     <TextView
@@ -157,7 +157,7 @@
                         android:gravity="center_vertical"
                         android:text="手机"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
+                        android:textSize="@dimen/text_sp15"/>
 
                     <EditText
                         android:id="@+id/edt_contract_tel"
@@ -167,23 +167,23 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint="请输入联系人手机号"
+                        android:textColor="@color/title_bg1"
                         android:inputType="phone"
-                        android:maxLength="20"/>
+                        android:maxLength="20"
+                        android:paddingRight="0dp"/>
 
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dimen_10">
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
+                    >
 
 
                     <TextView
@@ -192,7 +192,7 @@
                         android:gravity="center_vertical"
                         android:text="座机"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
+                        android:textSize="@dimen/text_sp15"/>
 
                     <EditText
                         android:id="@+id/edt_contract_telnum"
@@ -200,18 +200,16 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:textColor="@color/title_bg1"
                         android:gravity="right|center_vertical"
                         android:hint="请输入联系人座机"
                         android:inputType="phone"
-                        android:maxLength="20"/>
+                        android:maxLength="20"
+                        android:paddingRight="0dp"/>
 
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
             </LinearLayout>
 
@@ -261,10 +259,11 @@
                     android:id="@+id/layout_customer_label"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
-                    android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dimen_10">
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/dimen_4"
+                    >
 
 
                     <TextView
@@ -273,7 +272,7 @@
                         android:layout_height="fill_parent"
                         android:text="标签"
                         android:textColor="@color/text33"
-                        android:textSize="@dimen/text_sp16"/>
+                        android:textSize="@dimen/text_sp15"/>
 
                     <TextView
                         android:id="@+id/tv_labels"
@@ -282,6 +281,7 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
+                        android:textColor="@color/title_bg1"
                         android:hint=""/>
 
                     <ImageView
@@ -320,26 +320,18 @@
                              android:text="添加照片"/>
                      </LinearLayout>-->
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
-                        android:layout_marginRight="@dimen/margin_side_edge"/>
+                    <include layout="@layout/include_solid_line_left"/>
 
                     <GridView
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:layout_margin="@dimen/margin_other_view"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/activity_horizontal_margin"/>
-
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"/>
                 </LinearLayout>
 
             </LinearLayout>

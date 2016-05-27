@@ -21,7 +21,7 @@
         android:gravity="center"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="已进入加班时间段，请选择:"
+        android:text="已进入加班时间段,请选择"
         android:textSize="16sp"
         android:background="@color/dialog_blue"
         android:textColor="@color/white"

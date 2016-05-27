@@ -142,21 +142,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
             @Override
             public void afterTextChanged(Editable editable) {
-//                if (edt_search.length() == 0) {
-//                    tv_search.setText("取消");
-//                } else {
-//                    tv_search.setText("搜索");
-//                }
+                doSearch();
             }
         });
         edt_search.requestFocus();
-//        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                doSearch();
-//            }
-//        });
-
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         expandableListView_search.setOnRefreshListener(this);
@@ -250,12 +239,14 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
      */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
-        if (strSearch.length() > 0) {
+        isTopAdd = true;
+        getData();
+/*        if (strSearch.length() > 0) {
             isTopAdd = true;
             getData();
         } else {
             onBackPressed();
-        }
+        }*/
     }
 
     /**
@@ -345,7 +336,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         HttpErrorCheck.checkResponse(response);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        //imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         if (null == o) {
             if (isTopAdd) {
@@ -457,8 +448,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //报告
             else if (o instanceof WorkReport) {
                 final WorkReport workReport = (WorkReport) o;
-                if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
-                    content.setText("点评: " + workReport.reviewer.getUser().getName());
+                if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
+                    content.setText("点评: " + workReport.reviewer.user.getName());
                 }
                 StringBuilder reportTitle = new StringBuilder(workReport.creator.name + "提交 ");
                 String reportDate = "";
@@ -524,7 +515,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.dll("销毁");
         hideInputKeyboard(edt_search);
     }
 }

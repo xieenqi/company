@@ -230,7 +230,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:textColor">@color/text99</item>
-        <item name="android:textSize">@dimen/text_sp18</item>
+        <item name="android:textSize">@dimen/text_sp15</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>

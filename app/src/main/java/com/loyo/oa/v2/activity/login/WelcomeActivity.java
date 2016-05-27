@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 /**
  * Created xnq 16/1/18.
@@ -25,6 +27,7 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
+        SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         viewPager.setAdapter(new PagerAdapter() {
 
             private static final int COUNT = 4;

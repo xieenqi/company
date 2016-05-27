@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.DialogPreference;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -49,7 +47,6 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
@@ -57,18 +54,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -163,7 +156,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 tvtime.setText(des);
             }
 
-            if(msg.what == 0x01){
+            if (msg.what == 0x01) {
                 Utils.setContent(tv_birthday, birthStr);
                 Utils.setContent(tv_age, age + "");
             }
@@ -326,14 +319,14 @@ public class ContactInfoEditActivity extends BaseActivity {
 
         int defaultAvatao;
 
-        if(null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")){
-            if(MainApp.user.gender == 2){
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            if (MainApp.user.gender == 2) {
                 defaultAvatao = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAvatao = R.drawable.img_default_user;
             }
             img_title_user.setImageResource(defaultAvatao);
-        }else{
+        } else {
             ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         }
 
@@ -386,8 +379,8 @@ public class ContactInfoEditActivity extends BaseActivity {
      */
     private void updateProfile() {
 
-        if(!et_weixin.getText().toString().isEmpty()){
-            if(!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)){
+        if (!et_weixin.getText().toString().isEmpty()) {
+            if (!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)) {
                 Toast("微信号码不正确");
                 return;
             }
@@ -516,14 +509,14 @@ public class ContactInfoEditActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
-                HttpErrorCheck.checkResponse("验证手机号",response);
+                HttpErrorCheck.checkResponse("验证手机号", response);
                 tv_get_code.setEnabled(false);
                 countDown();
                 //请求验证码
                 RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
                     @Override
                     public void success(final Object o, final Response response) {
-                        HttpErrorCheck.checkResponse("请求手机验证码",response);
+                        HttpErrorCheck.checkResponse("请求手机验证码", response);
                         Toast("发送验证码成功");
                     }
 
@@ -590,7 +583,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     /**
      * 功 能: 生日选择器
      * 说 明: 控件自带按钮错显为英文，找不到原因，只能手动设置按钮监听。
-     * */
+     */
 
     public void pickDate() {
         Calendar cal = Calendar.getInstance();

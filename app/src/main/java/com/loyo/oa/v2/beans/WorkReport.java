@@ -53,7 +53,7 @@ public class WorkReport extends BaseBeans {
 
     @Override
     public String getOrderStr2() {
-        return null != reviewer && reviewer.isReviewed() ? "1" : "0";
+        return null != reviewer && reviewer.reviewed ? "1" : "0";
     }
 
     /**
@@ -62,7 +62,7 @@ public class WorkReport extends BaseBeans {
      * @return
      */
     public boolean isReviewed() {
-        return null != reviewer && reviewer.isReviewed() ? true : false;
+        return null != reviewer && reviewer.reviewed ? true : false;
     }
 
     /**
@@ -71,7 +71,7 @@ public class WorkReport extends BaseBeans {
     public boolean isRelevant() {
         String myId = MainApp.user.id;
 
-        if (null != reviewer.getUser() && myId.equals(reviewer.getUser().getId())) {
+        if (null != reviewer.user && myId.equals(reviewer.user.getId())) {
             return true;
         }
         for (NewUser menber : members.users) {
@@ -79,7 +79,7 @@ public class WorkReport extends BaseBeans {
                 return true;
             }
         }
-        if (myId.equals(creator.id)) {
+        if (null != creator && myId.equals(creator.id)) {
             return true;
         }
         return false;

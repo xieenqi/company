@@ -7,13 +7,15 @@
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingBottom="5dip"
-        android:paddingLeft="30dip"
-        android:paddingTop="5dip"
+        android:paddingBottom="@dimen/dimen_17"
+        android:paddingLeft="@dimen/dimen_14"
+        android:paddingTop="@dimen/dimen_17"
         android:singleLine="true"
-        android:textSize="12sp"
-        android:textColor="#000000" />
+        android:textSize="@dimen/text_sp15"
+        android:textColor="@color/text33"
+        android:text=""
+        />
 
 </LinearLayout>

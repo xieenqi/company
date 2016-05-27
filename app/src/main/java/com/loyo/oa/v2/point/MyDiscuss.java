@@ -48,7 +48,7 @@ public interface MyDiscuss {
 //    查看以后修改view状态的接口
 
     /**
-     * 更新红点
+     * 更新@红点
      * @param map
      * @param cb
      */

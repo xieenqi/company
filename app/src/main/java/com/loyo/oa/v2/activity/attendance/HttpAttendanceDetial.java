@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Created by pj on 16/1/8.
  */
 public class HttpAttendanceDetial implements Serializable {
+
     public String id;
     public User user;
 
@@ -27,9 +28,7 @@ public class HttpAttendanceDetial implements Serializable {
     public int tagstate;
     public int extraState;
 
-
     public long confirmtime;
     public User confirmuser;
-
 
 }
