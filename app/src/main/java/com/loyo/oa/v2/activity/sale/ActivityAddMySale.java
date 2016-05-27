@@ -34,6 +34,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -121,7 +122,7 @@ public class ActivityAddMySale extends BaseActivity {
                     finish();
                     break;
                 case R.id.iv_submit:
-                    addSaleOpportunitty();
+                    inspectData();
                     break;
                 case R.id.ll_customer://选择客户
                     Bundle b = new Bundle();
@@ -262,9 +263,9 @@ public class ActivityAddMySale extends BaseActivity {
     }
 
     /**
-     * 创建销售机会 到服务器
+     * 检查必填项
      */
-    private void addSaleOpportunitty() {
+    private void inspectData() {
         if (TextUtils.isEmpty(et_name.getText().toString())) {
             Toast("请填写机会名称");
             return;
@@ -273,6 +274,9 @@ public class ActivityAddMySale extends BaseActivity {
             return;
         } else if (TextUtils.isEmpty(stageId)) {
             Toast("请选择销售阶段");
+            return;
+        } else if (ll_transport.getVisibility() == View.VISIBLE && loseResons.size() == 0) {
+            Toast("请选择输单原因");
             return;
         } else if (-1 == estimatedTime) {
             Toast("请选择预估成交时间");
@@ -289,6 +293,43 @@ public class ActivityAddMySale extends BaseActivity {
                 }
             }
         }
+        if ("赢单".equals(tv_stage.getText().toString())) {
+            if (!(intentionProductData.size() > 0)) {
+                final GeneralPopView dailog = showGeneralDialog(false, false, "赢单提交时请添加意向产品！");
+                dailog.setNoCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dailog.dismisDialog();
+                    }
+                });
+                return;
+            } else {
+                final GeneralPopView dailog2 = showGeneralDialog(true, true,
+                        "赢单提交后不能修改，请确认赢单产品的金额和数量是否正确！\n" +
+                                "对应客户：" + et_name.getText().toString() + "     销售总金额：¥" + et_money.getText().toString());
+                dailog2.setSureOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dailog2.dismisDialog();
+                        addSaleOpportunitty();
+                    }
+                });
+                dailog2.setCancelOnclick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dailog2.dismisDialog();
+                    }
+                });
+                return;
+            }
+        }
+        addSaleOpportunitty();
+    }
+
+    /**
+     * 创建销售机会 到服务器
+     */
+    private void addSaleOpportunitty() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         if (isEdit) {
@@ -299,7 +340,9 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("customerId", customerId);
         map.put("name", et_name.getText().toString());
         map.put("stageId", stageId);
-        map.put("estimatedAmount", Float.valueOf(et_money.getText().toString()));
+        if (!TextUtils.isEmpty(et_money.getText().toString())) {
+            map.put("estimatedAmount", Float.valueOf(et_money.getText().toString()));
+        }
         map.put("estimatedTime", estimatedTime);
         map.put("proInfos", intentionProductData);
         map.put("chanceSource", tv_source.getText().toString());
