@@ -130,7 +130,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     @Override
                     public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
-//                        finish();
+                        finish();
                     }
                 });
     }

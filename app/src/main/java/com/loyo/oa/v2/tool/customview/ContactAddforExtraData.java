@@ -288,6 +288,7 @@ public class ContactAddforExtraData extends LinearLayout {
 
     private class BizFiedTextWatcher implements TextWatcher {
         private ContactLeftExtras extra;
+        boolean isOne = true;
 
         private BizFiedTextWatcher(ContactLeftExtras extra) {
             this.extra = extra;
@@ -295,7 +296,10 @@ public class ContactAddforExtraData extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            extra.val = s.toString();
+            if (!isOne) {
+                extra.val = s.toString();
+            }
+            isOne = false;
         }
 
         @Override

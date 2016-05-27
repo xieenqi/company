@@ -13,12 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
+import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -46,9 +49,9 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/17.
  */
 public class ActivityAddMySale extends BaseActivity {
-    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate;
+    private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate, tv_transport;
     private ImageView iv_submit;
-    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom;
+    private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom, ll_transport;
     private EditText et_name, et_money, et_remake;
     private String customerName, customerId, stageId, chanceId, creatorId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
@@ -56,6 +59,7 @@ public class ActivityAddMySale extends BaseActivity {
     private ArrayList<ContactLeftExtras> filedData;
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
     private boolean isEdit;
+    private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,10 @@ public class ActivityAddMySale extends BaseActivity {
         tv_product = (TextView) findViewById(R.id.tv_product);
         tv_estimate = (TextView) findViewById(R.id.tv_estimate);
         tv_custom = (LinearLayout) findViewById(R.id.tv_custom);
+        ll_transport = (LinearLayout) findViewById(R.id.ll_transport);
+        ll_transport.setOnTouchListener(Global.GetTouch());
+        ll_transport.setOnClickListener(click);
+        tv_transport = (TextView) findViewById(R.id.tv_transport);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -124,6 +132,7 @@ public class ActivityAddMySale extends BaseActivity {
                     Bundle stage = new Bundle();
                     stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
                     stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                    stage.putString(ExtraAndResult.EXTRA_DATA, tv_stage.getText().toString());
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                     break;
@@ -140,6 +149,7 @@ public class ActivityAddMySale extends BaseActivity {
                     Bundle type = new Bundle();
                     type.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_TYPE);
                     type.putString(ExtraAndResult.EXTRA_NAME, "机会类型");
+                    type.putString(ExtraAndResult.EXTRA_DATA, tv_type.getText().toString());
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_TYPE, type);
                     break;
@@ -147,8 +157,18 @@ public class ActivityAddMySale extends BaseActivity {
                     Bundle source = new Bundle();
                     source.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_SOURCE);
                     source.putString(ExtraAndResult.EXTRA_NAME, "机会来源");
+                    source.putString(ExtraAndResult.EXTRA_DATA, tv_source.getText().toString());
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, source);
+                    break;
+                case R.id.ll_transport:
+                    Bundle loseBundle = new Bundle();
+                    loseBundle.putSerializable("data", loseResons);
+                    loseBundle.putString("title", "输单原因");
+                    loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_MULTIPLE);
+                    loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_LOSE_REASON);
+                    app.startActivityForResult(ActivityAddMySale.this, CommonTagSelectActivity_.class,
+                            0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
                     break;
             }
         }
@@ -171,7 +191,7 @@ public class ActivityAddMySale extends BaseActivity {
             tv_stage.setText(mSaleDetails.stageName);
             stageId = mSaleDetails.stageId;
             et_money.setText(mSaleDetails.salesAmount + "");
-            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime+"")*1000)));
+            tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
             tv_product.setText(getIntentionProductName());
@@ -180,6 +200,8 @@ public class ActivityAddMySale extends BaseActivity {
             tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
             filedData = mSaleDetails.extensionDatas;
             et_remake.setText(mSaleDetails.memo);
+            ll_transport.setVisibility(TextUtils.isEmpty(mSaleDetails.lostReason) ? View.GONE : View.VISIBLE);
+            tv_transport.setText(" " + mSaleDetails.lostReason);
         } else {
             getDynamicInfo();
         }
@@ -260,9 +282,6 @@ public class ActivityAddMySale extends BaseActivity {
             return;
         } else if (null != filedData) {
             for (ContactLeftExtras ele : filedData) {
-//                ContactRequestParam extension = new ContactRequestParam();
-//                extension.setVal(ele.val);
-//                extension.properties = ele;
                 extensionDatas.add(ele);
                 if (ele.required && TextUtils.isEmpty(ele.val)) {
                     Toast("必填项没有完成");
@@ -287,6 +306,7 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
+        map.put("lostReason", tv_transport.getText().toString());
         LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
         if (!isEdit) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -339,6 +359,11 @@ public class ActivityAddMySale extends BaseActivity {
                     if (null != stage) {
                         stageId = stage.id;
                         tv_stage.setText(stage.name);
+                        if ("输单".equals(stage.name)) {
+                            ll_transport.setVisibility(View.VISIBLE);
+                        } else {
+                            ll_transport.setVisibility(View.GONE);
+                        }
                     }
                     break;
                 case ExtraAndResult.REQUEST_CODE_TYPE:
@@ -356,6 +381,10 @@ public class ActivityAddMySale extends BaseActivity {
                         tv_product.setText(getIntentionProductName());
                     }
                     break;
+                case CommonTagSelectActivity.REQUEST_TAGS:
+                    loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
+                    tv_transport.setText(getLoseReason());
+                    break;
             }
         }
     }
@@ -371,5 +400,26 @@ public class ActivityAddMySale extends BaseActivity {
             productName += ele.name + "、";
         }
         return productName;
+    }
+
+    /**
+     * 获取输单原因 字符串
+     *
+     * @return
+     */
+    private String getLoseReason() {
+        if (null == loseResons || loseResons.isEmpty()) {
+            return "";
+        }
+        StringBuilder reasons = new StringBuilder();
+        int index = 0;
+        for (CommonTag reson : loseResons) {
+            reasons.append(reson.getName());
+            if (index < loseResons.size() - 1) {
+                reasons.append(",");
+            }
+            index++;
+        }
+        return reasons.toString();
     }
 }
