@@ -519,6 +519,11 @@
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"
             />
+        <activity
+            android:name=".activity.home.NewMainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
 
         <service
             android:name=".service.InitDataService_"

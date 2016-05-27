@@ -35,12 +35,12 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
@@ -310,7 +310,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         checkUpdateService();
         updateUser();
 
-
         lv_main.setDropListener(onDrag);
         lv_main.setMaxScrollSpeed(100f);
         adapter = new ClickItemAdapter();
@@ -422,12 +421,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     @Override
                     public void run() {
                         Looper.prepare();
-//                        new Handler().post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                testJurl();
-//                            }
-//                        });
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -871,11 +864,16 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Click(R.id.img_contact)
     void onClickContact() {
-        if (null != MainApp.lstDepartment) {
+
+        Intent intent = new Intent();
+        intent.setClass(this,NewMainActivity.class);
+        startActivity(intent);
+
+/*        if (null != MainApp.lstDepartment) {
             app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
         } else {
             Toast("请重新拉去组织架构");
-        }
+        }*/
     }
 
     /**
