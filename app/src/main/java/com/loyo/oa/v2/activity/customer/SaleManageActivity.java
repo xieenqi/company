@@ -33,7 +33,7 @@ import retrofit.client.Response;
  * 【购买意向】
  */
 
-public class DemandsManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
+public class SaleManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     ViewGroup img_title_left, layout_add;
     private PullToRefreshListView listView_demands;

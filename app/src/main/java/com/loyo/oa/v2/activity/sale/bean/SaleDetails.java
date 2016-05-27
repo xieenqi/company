@@ -16,7 +16,7 @@ public class SaleDetails implements Serializable {
     public String cusName;       //对应客户
     public String customerId;
     public int salesAmount;      //预估销售金额
-    public int estimatedAmount;  //预计成交时间
+    public float estimatedAmount;  //预计成交时间
     public String stageName;     //阶段名
     public String stageId;
     public int estimatedTime;
@@ -137,13 +137,10 @@ public class SaleDetails implements Serializable {
         this.salesAmount = salesAmount;
     }
 
-    public int getEstimatedAmount() {
+    public float getEstimatedAmount() {
         return estimatedAmount;
     }
 
-    public void setEstimatedAmount(int estimatedAmount) {
-        this.estimatedAmount = estimatedAmount;
-    }
 
     public String getChanceType() {
         return chanceType;
