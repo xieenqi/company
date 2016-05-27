@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_title_action"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true">
 

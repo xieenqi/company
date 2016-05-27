@@ -101,6 +101,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
     private String[] sort = {"按最近创建时间","按照最近更新","按照最高金额"};
 
+    private boolean isPull = false;
     private boolean isKind;
     private int requestPage = 1;
     private String xPath = "";
@@ -115,6 +116,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             switch (msg.what) {
 
                 case SALETEAM_SCREEN_TAG1:
+                    isPull = false;
                     saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
                     saleteam_screen1_commy.setText(saleTeamScreen.getName());
                     isKind = msg.getData().getBoolean("kind");
@@ -129,12 +131,12 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                     break;
 
                 case SALETEAM_SCREEN_TAG2:
-                    Toast(msg.getData().getString("data"));
+                    isPull  = false;
                     stageId = msg.getData().getString("data");
                     break;
 
                 case SALETEAM_SCREEN_TAG3:
-                    Toast(msg.getData().getString("data"));
+                    isPull = false;
                     sortType = msg.getData().getString("data");
                     break;
 
@@ -226,6 +228,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        isPull = true;
         requestPage++;
         getData();
     }
@@ -241,6 +244,11 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             saleTeamScreen.setIndex(false);
             stageData.add(saleTeamScreen);
         }
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部阶段");
+        saleTeamScreen.setId("");
+        saleTeamScreen.setIndex(false);
+        stageData.add(saleTeamScreen);
     }
 
     /**
@@ -260,9 +268,12 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             public void success(SaleTeamList saleTeamList, Response response) {
                 HttpErrorCheck.checkResponse("客户列表", response);
                 if (null == saleTeamList.records || saleTeamList.records.size() == 0) {
-                    Toast("没有更多数据了!");
+                    if(isPull){
+                        Toast("没有更多数据了!");
+                    }else{
+                        mSaleTeamList = new SaleTeamList();
+                    }
                     listView.onRefreshComplete();
-                    return;
                 } else {
                     mSaleTeamList = saleTeamList;
                 }
@@ -383,7 +394,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                 break;
             //销售阶段
             case R.id.saleteam_screen2:
-                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,stageData,ActivitySaleOpportunitiesManager.SCREEN_STAGE);
+                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,stageData,ActivitySaleOpportunitiesManager.SCREEN_STAGE,true);
                 saleCommPopupView.showAsDropDown(screen2);
                 openPopWindow(tagImage2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -396,7 +407,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                 break;
             //排序
             case R.id.saleteam_screen3:
-                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,sortData,ActivitySaleOpportunitiesManager.SCREEN_SORT);
+                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,sortData,ActivitySaleOpportunitiesManager.SCREEN_SORT,false);
                 saleCommPopupView.showAsDropDown(screen3);
                 openPopWindow(tagImage3);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

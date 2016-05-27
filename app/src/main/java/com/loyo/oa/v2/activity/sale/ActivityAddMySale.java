@@ -305,7 +305,7 @@ public class ActivityAddMySale extends BaseActivity {
             });
         } else {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).updateSaleOpportunity(map, new Callback<SaleOpportunityAdd>() {
+                    create(ISale.class).updateSaleOpportunity(map,stageId,new Callback<SaleOpportunityAdd>() {
                 @Override
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("修改销售机会", response);

@@ -169,7 +169,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
-                .editSaleStage(map, new RCallback<SaleProductEdit>() {
+                .editSaleStage(map,stageId,new RCallback<SaleProductEdit>() {
                     @Override
                     public void success(SaleProductEdit saleProductEdit, Response response) {
                         HttpErrorCheck.checkResponse("编辑销售阶段", response);

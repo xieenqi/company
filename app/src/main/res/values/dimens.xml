@@ -103,5 +103,6 @@
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="home_head">86dp</dimen>
     <dimen name="table_height">46dp</dimen>
+    <dimen name="sale_pop_height">180dp</dimen>
 
 </resources>

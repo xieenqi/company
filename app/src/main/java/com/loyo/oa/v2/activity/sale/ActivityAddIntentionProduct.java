@@ -143,7 +143,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         map.put("ProInfo", data);
         map.put("OldId", oldId);
         LogUtil.d("编辑产品:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map, new RCallback<SaleProductEdit>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map,saleId,new RCallback<SaleProductEdit>() {
             @Override
             public void success(SaleProductEdit saleProductEdit, final Response response) {
                 HttpErrorCheck.checkResponse("编辑意向产品", response);
