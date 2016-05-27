@@ -65,6 +65,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView winTime;
     private TextView tv_stageName;
     private TextView product;
+    private TextView text_stagename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         winTime = (TextView) findViewById(R.id.wintime);
         tv_stageName = (TextView) findViewById(R.id.text_stagename);
         product = (TextView) findViewById(R.id.text_product);
+        text_stagename = (TextView) findViewById(R.id.text_stagename);
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
         ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
@@ -240,11 +242,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 app.startActivityForResult(ActivitySaleDetails.this, ActivityIntentionProduct.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                 break;
-            //销售阶段
+            //销售阶段`     
             case R.id.ll_stage:
                 Bundle stage = new Bundle();
                 stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
                 stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                stage.putString(ExtraAndResult.EXTRA_DATA, text_stagename.getText().toString());
                 app.startActivityForResult(ActivitySaleDetails.this, ActivitySaleStage.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                 break;

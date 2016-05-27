@@ -49,7 +49,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private View mView;
     private Button btn_add;
     private Intent mIntent;
-    private Bundle mBundle;
     private LinearLayout screen1;
     private LinearLayout screen2;
     private LinearLayout topview;
@@ -58,7 +57,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private ImageView tagImage2;
     private SaleCommPopupView saleCommPopupView;
     private WindowManager.LayoutParams windowParams;
-    private LinearLayout.LayoutParams  layoutParams;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
     private SaleMyList mSaleMyList;
@@ -172,7 +170,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        LogUtil.d("修改了isPull true");
         isPull = true;
         requestPage++;
         getData();
