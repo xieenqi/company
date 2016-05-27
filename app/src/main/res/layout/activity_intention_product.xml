@@ -8,6 +8,21 @@
 
     <include layout="@layout/include_title"/>
 
+    <TextView
+        android:id="@+id/tv_productTalo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/view_h_title"
+        android:singleLine="true"
+        android:textColor="@color/text99"
+        android:textSize="@dimen/text_sp15"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/white"
+        >
+
+
+    </TextView>
 
     <ListView
         android:id="@+id/lv_list"
