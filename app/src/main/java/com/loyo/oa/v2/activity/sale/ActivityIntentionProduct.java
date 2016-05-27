@@ -15,11 +15,9 @@ import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -42,7 +40,7 @@ public class ActivityIntentionProduct extends BaseActivity {
     private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
-    private TextView tv_title;
+    private TextView tv_title, tv_productTalo;
     private LinearLayout ll_back, ll_add;
     private ListView lv_list;
     ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
@@ -69,6 +67,7 @@ public class ActivityIntentionProduct extends BaseActivity {
         saleProductAdapter = new SaleProductAdapter();
         lv_list = (ListView) findViewById(R.id.lv_list);
         lv_list.setAdapter(saleProductAdapter);
+        tv_productTalo = (TextView) findViewById(R.id.tv_productTalo);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -80,8 +79,8 @@ public class ActivityIntentionProduct extends BaseActivity {
                     break;
                 case R.id.ll_add:
                     Bundle product = new Bundle();
-                    product.putString("saleId",saleId);
-                    product.putInt("data",fromPage);
+                    product.putString("saleId", saleId);
+                    product.putInt("data", fromPage);
                     app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_PRODUCT, product);
                     break;
@@ -93,7 +92,7 @@ public class ActivityIntentionProduct extends BaseActivity {
      * 获得传递过来的数据
      */
     private void getIntentData() {
-        saleId   = getIntent().getStringExtra("saleId");
+        saleId = getIntent().getStringExtra("saleId");
         fromPage = getIntent().getIntExtra("data", 0);
         ArrayList<SaleIntentionalProduct> intentData = (ArrayList<SaleIntentionalProduct>) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentData && intentData.size() > 0) {
@@ -103,9 +102,24 @@ public class ActivityIntentionProduct extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (listData.size() > 0) {
+            tv_productTalo.setVisibility(View.VISIBLE);
+            float productTalo = 0;
+            float productSale = 0;
+            for (SaleIntentionalProduct ele : listData) {
+                productTalo += ele.costPrice;
+                productSale += ele.salePrice;
+            }
+            tv_productTalo.setText("总金额：¥" + productTalo + ";  总折扣：" + (productSale / productTalo) * 100 + "%");
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.STR_SELECT_TYPE,resultAction);
+        intent.putExtra(ExtraAndResult.STR_SELECT_TYPE, resultAction);
         intent.putExtra(ExtraAndResult.RESULT_DATA, listData);
         setResult(RESULT_OK, intent);
         super.onBackPressed();
@@ -113,13 +127,13 @@ public class ActivityIntentionProduct extends BaseActivity {
 
     /**
      * 删除意向产品
-     * */
+     */
     public void deleteProduct(String pid) {
         showLoading("");
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("cid",saleId);
-        map.put("pid",pid);
-        LogUtil.d("删除意向产品:"+MainApp.gson.toJson(map));
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("cid", saleId);
+        map.put("pid", pid);
+        LogUtil.d("删除意向产品:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).deleteSaleProduct(map, new RCallback<SaleProductEdit>() {
             @Override
             public void success(final SaleProductEdit saleProductEdit, final Response response) {
@@ -143,13 +157,13 @@ public class ActivityIntentionProduct extends BaseActivity {
             switch (requestCode) {
                 //新增产品
                 case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE,0);
+                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
                     SaleIntentionalProduct product = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     saleProductAdapter.setData(product);
                     break;
                 //编辑产品
                 case ExtraAndResult.REQUEST_EDIT:
-                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE,0);
+                    resultAction = data.getIntExtra(ExtraAndResult.STR_SHOW_TYPE, 0);
                     SaleIntentionalProduct productEdit = (SaleIntentionalProduct) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     listData.remove(editItemIndex);
                     listData.add(editItemIndex, productEdit);
@@ -245,7 +259,7 @@ public class ActivityIntentionProduct extends BaseActivity {
                 public void onClick(View v) {
                     editItemIndex = position;
                     Bundle product = new Bundle();
-                    product.putString("saleId",saleId);
+                    product.putString("saleId", saleId);
                     product.putInt("data", ActionCode.SALE_PRO_EDIT);
                     product.putSerializable(ExtraAndResult.EXTRA_DATA, item);
                     app.startActivityForResult(ActivityIntentionProduct.this, ActivityAddIntentionProduct.class,
