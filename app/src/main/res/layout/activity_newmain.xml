@@ -4,63 +4,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/title_bg1">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dimen_60"
+            android:background="@color/title_bg1">
 
-        <com.loyo.oa.v2.tool.customview.HafeRoundImageView
-            android:id="@+id/newhome_heading_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="@dimen/dimen_12"
-            android:layout_marginLeft="@dimen/dimen_12"
-            android:layout_marginTop="@dimen/dimen_12"
-            android:src="@drawable/img_default_user"/>
+            <com.loyo.oa.v2.tool.customview.HafeRoundImageView
+                android:id="@+id/newhome_heading_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/dimen_12"
+                android:layout_centerVertical="true"
+                android:src="@drawable/img_default_user"/>
 
-        <TextView
-            android:id="@+id/newhome_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_10"
-            android:layout_toRightOf="@+id/newhome_heading_img"
-            android:text="应雨洋"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
+            <TextView
+                android:id="@+id/newhome_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_toRightOf="@+id/newhome_heading_img"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="17sp" />
 
-        <ImageView
-            android:layout_width="@dimen/dimen_20"
-            android:layout_height="@dimen/dimen_20"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dimen_14"
-            android:background="@drawable/img_new_serach" />
-    </RelativeLayout>
+            <ImageView
+                android:layout_width="@dimen/dimen_20"
+                android:layout_height="@dimen/dimen_20"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimen_14"
+                android:background="@drawable/img_new_serach" />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
 
-    <ListView
-        android:id="@+id/newhome_listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="none"
-        android:divider="@null"
-        />
+            <ListView
+                android:id="@+id/newhome_listview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scrollbars="none"
+                android:divider="@null"
+                android:background="@color/white"
+                />
 
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginBottom="3dp"
-        android:background="@drawable/bg_btn_circle"
-        android:textColor="@color/white"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_btn_circle"
+                android:textColor="@color/white"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                />
 
-    </RelativeLayout>
+        </RelativeLayout>
+
 </LinearLayout>

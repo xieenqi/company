@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
+ * 2.1新版首页Adapter
  * Created by yyy on 16/5/27.
  */
 public class AdapterHomeItem extends BaseAdapter{
@@ -52,11 +53,6 @@ public class AdapterHomeItem extends BaseAdapter{
 
     public void remove(final int arg0) {
         items.remove(arg0);
-        notifyDataSetChanged();
-    }
-
-    public void insert(final HomeItem item, final int arg0) {
-        items.add(arg0, item);
         notifyDataSetChanged();
     }
 
@@ -103,11 +99,11 @@ public class AdapterHomeItem extends BaseAdapter{
             } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
                 extra = num.bizNum + "个外勤";
                 holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if (num.bizType == 19) {
+            }else if (num.bizType == 19) { //通知公告红点
                 if (!num.viewed) {
-                    //handler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_VISIBLE);
+                    holder.view_number.setVisibility(View.VISIBLE);
                 } else {
-                    //handler.sendEmptyMessage(ExtraAndResult.MSG_WHAT_GONG);
+                    holder.view_number.setVisibility(View.GONE);
                 }
             }
             if (!TextUtils.isEmpty(extra)) {
@@ -142,5 +138,4 @@ public class AdapterHomeItem extends BaseAdapter{
         ImageView view_number;
         TextView tv_title;
     }
-
 }

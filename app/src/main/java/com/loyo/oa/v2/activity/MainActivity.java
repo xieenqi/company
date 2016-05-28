@@ -351,6 +351,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (MainApp.user == null) {
             return;
         }
+
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
             int defaultAcatar;
             if (MainApp.user.gender == 2) {
@@ -669,7 +670,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
-
     /**
      * (翻转前)点击头像，获取能否打卡信息
      */
@@ -710,6 +710,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 0;
             startAttanceLocation();
         }
+
     }
 
     /**

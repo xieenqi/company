@@ -12,7 +12,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,29 +21,38 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.Toast;
-
+import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
+import com.loyo.oa.v2.common.Global;
+
 
 public class MoreWindow extends PopupWindow implements OnClickListener{
 
     private String TAG = MoreWindow.class.getSimpleName();
-    Activity mContext;
+    private Activity mContext;
     private int mWidth;
     private int mHeight;
     private int statusBarHeight ;
     private Bitmap mBitmap= null;
     private Bitmap overlay = null;
+    private Handler mHandler;
 
-    private Handler mHandler = new Handler();
+    private LinearLayout view;
+    private Button  closeBtn;
+    private TextView btn1;
+    private TextView btn2;
+    private TextView btn3;
+    private TextView btn4;
+    private TextView btn5;
+    private TextView btn6;
 
-    public MoreWindow(Activity context) {
+    public MoreWindow(Activity context,Handler handler) {
         mContext = context;
+        mHandler = handler;
     }
 
     public void init() {
@@ -72,8 +80,8 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         view.buildDrawingCache(true);
         mBitmap = view.getDrawingCache();
 
-        float scaleFactor = 8;//Í¼Æ¬Ëõ·Å±ÈÀý£»
-        float radius = 10;//Ä£ºý³Ì¶È
+        float scaleFactor = 8;
+        float radius = 10;
         int width = mBitmap.getWidth();
         int height =  mBitmap.getHeight();
 
@@ -85,7 +93,6 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         canvas.drawBitmap(mBitmap, 0, 0, paint);
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
-        Log.i(TAG, "blur time is:"+(System.currentTimeMillis() - startMs));
         return overlay;
     }
 
@@ -119,32 +126,37 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         return set;
     }
 
+    public void initBtnUi(View v){
+        btn1 = (TextView) v.findViewById(R.id.more_window_local);
+        btn2 = (TextView) v.findViewById(R.id.more_window_online);
+        btn3 = (TextView) v.findViewById(R.id.more_window_delete);
+        btn4 = (TextView) v.findViewById(R.id.more_window_collect);
+        btn5 = (TextView) v.findViewById(R.id.more_window_auto);
+        btn6 = (TextView) v.findViewById(R.id.more_window_external);
+        closeBtn = (Button)v.findViewById(R.id.center_music_window_close);
 
-    public void showMoreWindow(View anchor,int bottomMargin) {
-        final RelativeLayout layout = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.center_music_more_window, null);
-        setContentView(layout);
+        btn1.setOnClickListener(this);
+        btn2.setOnClickListener(this);
+        btn3.setOnClickListener(this);
+        btn4.setOnClickListener(this);
+        btn5.setOnClickListener(this);
+        btn6.setOnClickListener(this);
+        closeBtn.setOnClickListener(this);
 
-        ImageView close= (ImageView)layout.findViewById(R.id.center_music_window_close);
-        android.widget.RelativeLayout.LayoutParams params =new android.widget.RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-        params.bottomMargin = bottomMargin;
-        params.addRule(RelativeLayout.BELOW, R.id.more_window_auto);
-        params.addRule(RelativeLayout.RIGHT_OF, R.id.more_window_collect);
-        params.topMargin = 200;
-        params.leftMargin = 18;
-        close.setLayoutParams(params);
+        btn1.setOnTouchListener(Global.GetTouch());
+        btn2.setOnTouchListener(Global.GetTouch());
+        btn3.setOnTouchListener(Global.GetTouch());
+        btn4.setOnTouchListener(Global.GetTouch());
+        btn5.setOnTouchListener(Global.GetTouch());
+        btn6.setOnTouchListener(Global.GetTouch());
+        closeBtn.setOnTouchListener(Global.GetTouch());
+    }
 
-        close.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (isShowing()) {
-                    closeAnimation(layout);
-                }
-            }
-
-        });
-
-        showAnimation(layout);
+    public void showMoreWindow(View anchor) {
+        view = (LinearLayout)LayoutInflater.from(mContext).inflate(R.layout.center_music_more_window, null);
+        setContentView(view);
+        initBtnUi(view);
+        showAnimation(view);
         setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), blur()));
         setOutsideTouchable(true);
         setFocusable(true);
@@ -160,7 +172,6 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
             child.setOnClickListener(this);
             child.setVisibility(View.INVISIBLE);
             mHandler.postDelayed(new Runnable() {
-
                 @Override
                 public void run() {
                     child.setVisibility(View.VISIBLE);
@@ -173,7 +184,6 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
                 }
             }, i * 50);
         }
-
     }
 
     private void closeAnimation(ViewGroup layout){
@@ -184,7 +194,6 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
             }
             child.setOnClickListener(this);
             mHandler.postDelayed(new Runnable() {
-
                 @Override
                 public void run() {
                     child.setVisibility(View.VISIBLE);
@@ -224,7 +233,6 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
 
             if(child.getId() == R.id.more_window_local){
                 mHandler.postDelayed(new Runnable() {
-
                     @Override
                     public void run() {
                         dismiss();
@@ -238,23 +246,43 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            //关闭
+            case R.id.center_music_window_close:
+                if (isShowing()) {
+                    dismiss();
+                    //closeAnimation(view);
+                }
+                break;
+            //新建任务
             case R.id.more_window_local:
-                Toast.makeText(mContext,"1",Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessage(NewMainActivity.TASKS_ADD);
+                dismiss();
                 break;
+            //申请审批
             case R.id.more_window_online:
-                Toast.makeText(mContext,"2",Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessage(NewMainActivity.WFIN_ADD);
+                dismiss();
                 break;
+            //提交报告
             case R.id.more_window_delete:
-                Toast.makeText(mContext,"3",Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessage(NewMainActivity.WORK_ADD);
+                dismiss();
                 break;
+            //新建客户
             case R.id.more_window_collect:
-                Toast.makeText(mContext,"4",Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessage(NewMainActivity.TASKS_ADD_CUSTOMER);
+                dismiss();
                 break;
+            //考勤打卡
             case R.id.more_window_auto:
-                Toast.makeText(mContext,"5",Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessage(NewMainActivity.ATTENT_ADD);
+                dismiss();
                 break;
+            //拜访签到
             case R.id.more_window_external:
-                Toast.makeText(mContext,"6",Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessage(NewMainActivity.SIGNIN_ADD);
+                dismiss();
                 break;
 
             default:

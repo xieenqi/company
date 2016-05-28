@@ -1,90 +1,106 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerHorizontal="true"
     android:background="#90FFFFFF"
-    android:gravity="bottom|center_horizontal" >
+    android:gravity="bottom|center_horizontal"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/more_window_local"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dip"
-        android:clickable="true"
-        android:drawableTop="@drawable/tabbar_compose_idea"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dimen_12"
-        android:text="文字" />
+        android:layout_marginBottom="@dimen/dimen_20"
+        >
 
-    <TextView
-        android:id="@+id/more_window_online"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="30dip"
-        android:layout_toRightOf="@+id/more_window_local"
-        android:clickable="true"
-        android:drawableTop="@drawable/tabbar_compose_photo"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dimen_12"
-        android:text="相册"/>
+        <TextView
+            android:id="@+id/more_window_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dip"
+            android:clickable="true"
+            android:drawableTop="@drawable/newmain_post_task"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_12"
+            android:text="@string/newmain_post_task" />
 
-    <TextView
-        android:id="@+id/more_window_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/more_window_online"
-        android:clickable="true"
-        android:drawableTop="@drawable/tabbar_compose_camera"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dimen_12"
-        android:text="拍摄"/>
+        <TextView
+            android:id="@+id/more_window_online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dip"
+            android:layout_toRightOf="@+id/more_window_local"
+            android:clickable="true"
+            android:drawableTop="@drawable/newmain_post_wif"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_12"
+            android:text="@string/newmain_post_wif" />
 
-    <TextView
-        android:id="@+id/more_window_collect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/more_window_local"
-        android:layout_marginRight="30dip"
-        android:clickable="true"
-        android:drawableTop="@drawable/tabbar_compose_lbs"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dimen_12"
-        android:text="签到"/>
+        <TextView
+            android:id="@+id/more_window_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/more_window_online"
+            android:clickable="true"
+            android:drawableTop="@drawable/newmain_post_report"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_12"
+            android:text="@string/newmain_post_report" />
 
-    <TextView
-        android:id="@+id/more_window_auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/more_window_online"
-        android:layout_marginRight="30dip"
-        android:layout_toRightOf="@+id/more_window_collect"
-        android:clickable="true"
-        android:drawableTop="@drawable/tabbar_compose_review"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dimen_12"
-        android:text="点评"/>
+        <TextView
+            android:id="@+id/more_window_collect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/more_window_local"
+            android:layout_marginRight="30dip"
+            android:clickable="true"
+            android:drawableTop="@drawable/newmain_post_customer"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_12"
+            android:text="@string/newmain_post_cus" />
 
-    <TextView
-        android:id="@+id/more_window_external"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/more_window_delete"
-        android:layout_toRightOf="@+id/more_window_auto"
-        android:clickable="true"
-        android:drawableTop="@drawable/tabbar_compose_more"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dimen_12"
-        android:text="更多"/>
+        <TextView
+            android:id="@+id/more_window_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/more_window_online"
+            android:layout_marginRight="30dip"
+            android:layout_toRightOf="@+id/more_window_collect"
+            android:clickable="true"
+            android:drawableTop="@drawable/newmain_post_att"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_12"
+            android:text="@string/newmain_post_att" />
 
-    <ImageView
-        android:id="@+id/center_music_window_close"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/more_window_external"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/more_window_delete"
+            android:layout_toRightOf="@+id/more_window_auto"
+            android:clickable="true"
+            android:drawableTop="@drawable/newmain_post_sign"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/dimen_12"
+            android:text="@string/newmain_post_sign" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/more_window_auto"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="78dip"
-        android:layout_toRightOf="@+id/more_window_collect"
-        android:src="@drawable/tabbar_compose_background_icon_close" />
+        android:layout_marginBottom="@dimen/dimen_30"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/center_music_window_close"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
+            android:background="@drawable/newmain_cancel_btn"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>
