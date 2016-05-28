@@ -179,7 +179,12 @@ public class ActivityAddMySale extends BaseActivity {
      * 获取传递值【编辑机会】
      */
     private void getIntentData() {
-        SaleDetails mSaleDetails = (SaleDetails) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        Intent intente = getIntent();
+        //编辑销售机会
+        SaleDetails mSaleDetails = (SaleDetails) intente.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+        //客户里的销售机会创建
+        customerName = intente.getStringExtra(ExtraAndResult.EXTRA_NAME);
+        customerId = intente.getStringExtra(ExtraAndResult.EXTRA_ID);
         if (null != mSaleDetails) {
             isEdit = true;
             chanceId = mSaleDetails.id;
@@ -205,6 +210,11 @@ public class ActivityAddMySale extends BaseActivity {
             tv_transport.setText(" " + mSaleDetails.lostReason);
         } else {
             getDynamicInfo();
+            if (!TextUtils.isEmpty(customerName)) {
+                tv_customer.setText(customerName);
+                ll_customer.setEnabled(false);
+            }
+
         }
     }
 
@@ -349,7 +359,7 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
-        map.put("lostReason", tv_transport.getText().toString());
+        map.put("lostReason", loseResons);
         LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
         if (!isEdit) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -368,7 +378,7 @@ public class ActivityAddMySale extends BaseActivity {
             });
         } else {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).updateSaleOpportunity(map,stageId,new Callback<SaleOpportunityAdd>() {
+                    create(ISale.class).updateSaleOpportunity(map, stageId, new Callback<SaleOpportunityAdd>() {
                 @Override
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("修改销售机会", response);

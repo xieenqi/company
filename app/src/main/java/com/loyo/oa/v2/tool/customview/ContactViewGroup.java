@@ -153,7 +153,8 @@ public class ContactViewGroup extends LinearLayout {
                     Bundle b = new Bundle();
                     b.putSerializable("customer", mCustomer);
                     b.putSerializable("contract", mContact);
-                    app.startActivityForResult((CustomerContactManageActivity) context, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT, b);
+                    app.startActivityForResult((CustomerContactManageActivity) context, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT,
+                            CustomerInfoActivity.REQUEST_CUSTOMER_UPDATE_CONTRACT, b);
                 }
             });
 

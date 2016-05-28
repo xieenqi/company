@@ -1,15 +1,15 @@
 package com.loyo.oa.v2.point;
 
-import android.telecom.Call;
-
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
+import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,38 +72,46 @@ public interface ISale {
 
     /**
      * 编辑 销售机会
-     * */
+     */
     @PUT("/chance/{id}")
-    void updateSaleOpportunity(@Body HashMap<String,Object> map,@Path("id") String id, Callback<SaleOpportunityAdd> callback);
+    void updateSaleOpportunity(@Body HashMap<String, Object> map, @Path("id") String id, Callback<SaleOpportunityAdd> callback);
 
     /**
      * 删除 销售机会
-     * */
+     */
     @DELETE("/chance/{id}")
-    void deleteSaleOpportunity(@Path("id") String id,Callback<SaleDetails> callback);
+    void deleteSaleOpportunity(@Path("id") String id, Callback<SaleDetails> callback);
 
     /**
      * 删除详情下的意向产品
-     * */
+     */
     @DELETE("/chance/pro")
-    void deleteSaleProduct(@QueryMap HashMap<String,Object> map,Callback<SaleProductEdit> callback);
+    void deleteSaleProduct(@QueryMap HashMap<String, Object> map, Callback<SaleProductEdit> callback);
 
     /**
      * 新增详情下的意向产品
-     * */
+     */
     @POST("/chance/addPro")
-    void addSaleProduct(@Body HashMap<String,Object> map,Callback<SaleProductEdit> callback);
+    void addSaleProduct(@Body HashMap<String, Object> map, Callback<SaleProductEdit> callback);
 
     /**
      * 编辑详情下的意向产品
-     * */
+     */
     @PUT("/chance/updatePro/{id}")
-    void editSaleProduct(@Body HashMap<String,Object> map,@Path("id") String id,Callback<SaleProductEdit> callback);
+    void editSaleProduct(@Body HashMap<String, Object> map, @Path("id") String id, Callback<SaleProductEdit> callback);
 
     /**
      * 编辑详情下的销售阶段
-     * */
+     */
     @PUT("/chance/udateStage/{id}")
-    void editSaleStage(@Body HashMap<String,Object> map,@Path("id") String id,Callback<SaleProductEdit> callback);
+    void editSaleStage(@Body HashMap<String, Object> map, @Path("id") String id, Callback<SaleProductEdit> callback);
 
+    /**
+     * 获取 客户 下的销售机会
+     */
+    @GET("/chance/allSale")
+    void getCustomerSale(@QueryMap HashMap<String, Object> map, Callback<PaginationX<SaleRecord>> callback);
+
+
+//    http://192.168.31.155:8070/api/v2/chance/allSale?customerId=57456c20526f15667c541556&pageIndex=1&pageSize=10
 }

@@ -234,7 +234,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             layout_memo.setVisibility(View.VISIBLE);
             tv_memo.setText(wfInstance.memo);
         } else {
-            if (300 == wfInstance.bizForm.bizCode && !TextUtils.isEmpty(wfInstance.demand.memo)) {
+            if (null != wfInstance.demand && 300 == wfInstance.bizForm.bizCode && !TextUtils.isEmpty(wfInstance.demand.memo)) {
                 layout_memo.setVisibility(View.VISIBLE);
                 tv_memo.setText(wfInstance.demand.memo);
             } else {
@@ -314,7 +314,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         WfNodes node = null;
         for (int i = 0; i < nodes.size(); i++) {
-            if (nodes.get(i).getExecutorUser().getId().equals(userId)) {
+            if (null != nodes.get(i).getExecutorUser() && nodes.get(i).getExecutorUser().getId().equals(userId)) {
                 node = nodes.get(i);
                 break;
             }
@@ -385,6 +385,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
      * @param wfData
      */
     private void wfData(final WfInstance wfData) {
+        if (null == wfData.demand) {
+            return;
+        }
         List<String> wfList = new ArrayList<>();
         String custerName = wfData.demand.customerName;
         wfList.add("客户名称：" + (TextUtils.isEmpty(custerName) ? "" : custerName));

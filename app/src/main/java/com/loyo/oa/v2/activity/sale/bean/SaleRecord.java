@@ -11,7 +11,7 @@ public class SaleRecord implements Serializable {
     private String name;
     private String stageNmae;
     private String createName;
-    private int estimatedAmount;
+    private float estimatedAmount;
     private int prob;
 
 
@@ -31,11 +31,11 @@ public class SaleRecord implements Serializable {
         this.prob = prob;
     }
 
-    public int getEstimatedAmount() {
+    public float getEstimatedAmount() {
         return estimatedAmount;
     }
 
-    public void setEstimatedAmount(int estimatedAmount) {
+    public void setEstimatedAmount(float estimatedAmount) {
         this.estimatedAmount = estimatedAmount;
     }
 

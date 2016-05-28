@@ -111,6 +111,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     TextView tv_task_count;
     @ViewById
     TextView tv_attachment_count;
+    @ViewById
+    ViewGroup ll_sale;
 
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
@@ -261,6 +263,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
+
+        if (Config_project.is_developer_mode) {
+            ll_sale.setVisibility(View.VISIBLE);
+            ll_sale.setOnTouchListener(Global.GetTouch());
+        }
     }
 
     /**
@@ -427,7 +434,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_customer_info, R.id.img_public,
             R.id.layout_contact, R.id.layout_send_sms, R.id.layout_call, R.id.layout_sale_activity,
-            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call})
+            R.id.layout_visit, R.id.layout_purchase, R.id.layout_task, R.id.layout_attachment, R.id.layout_wiretel_call, R.id.ll_sale})
     void onClick(final View view) {
         Bundle bundle = new Bundle();
         Class<?> _class = null;
@@ -482,7 +489,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     bundle.putSerializable(ExtraAndResult.EXTRA_ID, mCustomer.id);
                     _class = CustomerContactManageActivity_.class;
                     requestCode = FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS;
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     Toast("参数不全");
                 }
                 break;
@@ -546,8 +553,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 _class = AttachmentActivity_.class;
                 requestCode = FinalVariables.REQUEST_DEAL_ATTACHMENT;
                 break;
-            default:
-
+            /*销售机会*/
+            case R.id.ll_sale:
+                bundle.putBoolean("isMyUser", isMyUser);
+                bundle.putString(ExtraAndResult.EXTRA_ID, mCustomer.getId());
+                bundle.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
+                _class = SaleManageActivity.class;
+                requestCode = ExtraAndResult.REQUEST_CODE;
                 break;
         }
         if (null != _class && requestCode != -1) {
@@ -604,6 +616,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
             case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
             case FinalVariables.REQUEST_PREVIEW_DEMANDS:
+            case ExtraAndResult.REQUEST_CODE:
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
