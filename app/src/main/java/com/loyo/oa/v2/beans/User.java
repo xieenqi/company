@@ -34,7 +34,7 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     public ArrayList<Permission> newpermission = new ArrayList<>();
     public boolean isBQQ;
     public boolean index;
-    public boolean isSuperUser=false;
+    public boolean isSuperUser = false;
     public int gender;
     public long updatedAt;
     public long createdAt;
@@ -92,7 +92,7 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     }
 
     public String getId() {
-        return id;
+        return TextUtils.isEmpty(id) ? "id" : id;
     }
 
     @Override

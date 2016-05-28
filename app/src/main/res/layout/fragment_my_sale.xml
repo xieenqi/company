@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/saleteam_topview"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="46dp"
         android:orientation="horizontal"
         >
 
@@ -23,23 +23,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="销售阶段" />
+                android:text="销售阶段"/>
 
             <ImageView
                 android:id="@+id/salemy_screen1_iv1"
-                android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:background="@drawable/arrow_down" />
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
 
         </LinearLayout>
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="0.5dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:background="@color/lineCC"
-            android:layout_marginBottom="1dp"
-            android:layout_marginTop="1dp"
             />
 
         <LinearLayout
@@ -53,14 +53,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="排序" />
+                android:text="排序"/>
 
             <ImageView
                 android:id="@+id/salemy_screen1_iv2"
-                android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:background="@drawable/arrow_down" />
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:background="@drawable/arrow_down"/>
 
         </LinearLayout>
 
@@ -73,7 +73,7 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/layout_nodata"
+            android:id="@+id/re_nodata"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
@@ -122,8 +122,8 @@
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
-            android:smoothScrollbar="true"
             android:scrollbars="none"
+            android:smoothScrollbar="true"
             />
 
         <Button

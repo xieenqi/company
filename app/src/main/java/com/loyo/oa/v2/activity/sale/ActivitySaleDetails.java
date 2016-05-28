@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -171,7 +172,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
-                .editSaleStage(map,stageId,new RCallback<SaleProductEdit>() {
+                .editSaleStage(map, stageId, new RCallback<SaleProductEdit>() {
                     @Override
                     public void success(SaleProductEdit saleProductEdit, Response response) {
                         HttpErrorCheck.checkResponse("编辑销售阶段", response);
@@ -198,8 +199,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
         creator.setText(mSaleDetails.getCreatorName());
-        creatorTime.setText(mSaleDetails.getCreatedAt() + "");
-        updateTime.setText(mSaleDetails.getUpdatedAt() + "");
+        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt()+"" )* 1000)));
+        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt()+"" )* 1000)));
         winTime.setText(mSaleDetails.getWinTime() + "");
         tv_stageName.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();

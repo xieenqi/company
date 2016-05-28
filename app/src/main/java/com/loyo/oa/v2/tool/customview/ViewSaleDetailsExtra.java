@@ -1,13 +1,17 @@
 package com.loyo.oa.v2.tool.customview;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
+
+import java.util.Date;
 
 /**
  * 机会详情 自定义字段View
@@ -30,8 +34,12 @@ public class ViewSaleDetailsExtra extends LinearLayout {
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_saledetils_extra, null);
         name = (TextView) convertView.findViewById(R.id.saledetils_name);
         value = (TextView) convertView.findViewById(R.id.saledetils_value);
-        name.setText(mData.label + ":");
-        value.setText(mData.val);
+        name.setText(mData.label + "：");
+        if (!TextUtils.isEmpty(mData.val)&&"long".equals(mData.type)) {
+            value.setText(MainApp.getMainApp().df3.format(new Date(Long.valueOf(mData.val) * 1000)));
+        } else {
+            value.setText(mData.val);
+        }
         addView(convertView);
     }
 }

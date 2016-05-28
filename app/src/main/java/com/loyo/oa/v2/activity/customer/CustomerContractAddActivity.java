@@ -52,7 +52,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         if (getIntent() != null && getIntent().getExtras() != null) {
             mCustomer = (Customer) getIntent().getExtras().getSerializable("customer");
             mContact = (Contact) getIntent().getExtras().getSerializable("contract");
-            super.setTitle("编辑联系人");
+            if (null != mContact)
+                super.setTitle("编辑联系人");
         }
         initUI();
     }

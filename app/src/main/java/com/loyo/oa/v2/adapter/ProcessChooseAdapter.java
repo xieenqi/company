@@ -8,11 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.beans.WfTemplate;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 流程选择 页面的适配器
@@ -29,7 +27,7 @@ public class ProcessChooseAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return null == data ? 0 : data.size();
     }
 
     @Override
@@ -37,8 +35,8 @@ public class ProcessChooseAdapter extends BaseAdapter {
         return position;
     }
 
-    public ArrayList<WfTemplate> getData( ) {
-        return  data;
+    public ArrayList<WfTemplate> getData() {
+        return data;
     }
 
     @Override
@@ -47,14 +45,14 @@ public class ProcessChooseAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView,final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         HoloderView holoder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.list_two_stair_menu_item,null);
-            holoder=new HoloderView(convertView);
+            convertView = LayoutInflater.from(context).inflate(R.layout.list_two_stair_menu_item, null);
+            holoder = new HoloderView(convertView);
             convertView.setTag(holoder);
         } else {
-            holoder=(HoloderView)convertView.getTag();
+            holoder = (HoloderView) convertView.getTag();
         }
         holoder.setContent(position);
 
@@ -64,10 +62,12 @@ public class ProcessChooseAdapter extends BaseAdapter {
     class HoloderView {
 
         TextView text;
-        HoloderView(final View view){
-            text= (TextView)view.findViewById(R.id.text);
+
+        HoloderView(final View view) {
+            text = (TextView) view.findViewById(R.id.text);
         }
-        public void setContent(final int position){
+
+        public void setContent(final int position) {
             text.setText(data.get(position).getTitle());
         }
     }

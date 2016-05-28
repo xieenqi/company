@@ -1,19 +1,24 @@
 package com.loyo.oa.v2.activity.customer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.DemandsRadioListViewAdapter;
+import com.loyo.oa.v2.activity.sale.ActivityAddMySale;
+import com.loyo.oa.v2.activity.sale.ActivitySaleDetails;
+import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
@@ -35,24 +40,24 @@ import retrofit.client.Response;
 
 public class SaleManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
-    ViewGroup img_title_left, layout_add;
+    private ViewGroup img_title_left, layout_add;
+    private TextView tv_add;
     private PullToRefreshListView listView_demands;
-    private DemandsRadioListViewAdapter demandsRadioListViewAdapter;
-    private ArrayList<Demand> lstData_Demand = new ArrayList<Demand>();
+    private AdapterCustomerSale listAdapter;
+    private ArrayList<SaleRecord> listData = new ArrayList<>();
     private String customerId, customerName;
     private boolean isMyUser;
     private boolean isChanged;
     private boolean isTopAdd = true;
-    private PaginationX<Demand> paginationX = new PaginationX<>(20);
     public static final int VIEW_DEMANDS = 200;
     public static final int CREATE_DEMANDS = 300;
+    private int page = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTouchView(NO_SCROLL);
         setContentView(R.layout.activity_demands_manage);
-
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -61,55 +66,59 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 customerName = bundle.getString(ExtraAndResult.EXTRA_NAME);
             }
         }
-
-        super.setTitle("购买意向");
+        super.setTitle("销售机会");
         initUI();
-        getData();
+
     }
 
     void initUI() {
-
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_add = (ViewGroup) findViewById(R.id.layout_add);
-
+        tv_add = (TextView) findViewById(R.id.tv_add);
+        tv_add.setText("新增销售机会");
         if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
-
         img_title_left.setOnClickListener(this);
         img_title_left.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
-
         listView_demands = (PullToRefreshListView) findViewById(R.id.listView_demands);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        page = 1;
+        getData();
+    }
+
     /**
-     * 获取购买意向
+     * 获取销售机会
      */
     private void getData() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("pageIndex", paginationX.getPageIndex());
-        map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
+        map.put("pageIndex", page);
+        map.put("pageSize", 20);
+        map.put("customerId", customerId);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).
+                getCustomerSale(map, new RCallback<PaginationX<SaleRecord>>() {
                     @Override
-                    public void success(final PaginationX<Demand> demandPaginationX, final Response response) {
-                        HttpErrorCheck.checkResponse(" 购买意向详情：", response);
+                    public void success(PaginationX<SaleRecord> resultData, Response response) {
+                        HttpErrorCheck.checkResponse(" 客户销售机会列表：", response);
                         listView_demands.onRefreshComplete();
-                        if (!PaginationX.isEmpty(demandPaginationX)) {
-                            paginationX = demandPaginationX;
+                        if (null != resultData && resultData.getRecords().size() > 0) {
                             if (isTopAdd) {
-                                lstData_Demand.clear();
+                                listData.clear();
                             }
-                            lstData_Demand.addAll(paginationX.getRecords());
+                            listData.addAll(resultData.getRecords());
                             bindData();
                         }
                     }
 
                     @Override
-                    public void failure(final RetrofitError error) {
+                    public void failure(RetrofitError error) {
                         HttpErrorCheck.checkError(error);
                         listView_demands.onRefreshComplete();
                         super.failure(error);
@@ -121,9 +130,9 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
      * 绑定数据
      */
     private void bindData() {
-        if (lstData_Demand != null) {
-            demandsRadioListViewAdapter = new DemandsRadioListViewAdapter(this, lstData_Demand, isMyUser, customerId, customerName);
-            listView_demands.setAdapter(demandsRadioListViewAdapter);
+        if (listData != null) {
+            listAdapter = new AdapterCustomerSale(this, listData);
+            listView_demands.setAdapter(listAdapter);
             listView_demands.setMode(PullToRefreshBase.Mode.BOTH);
             listView_demands.setOnRefreshListener(this);
         }
@@ -143,7 +152,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 bundle = new Bundle();
                 bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
                 bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
-                app.startActivityForResult(this, DemandsAddActivity.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
+                app.startActivityForResult(this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 break;
             default:
                 break;
@@ -178,15 +187,77 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = true;
-        paginationX.setPageIndex(1);
+        page = 1;
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
         isTopAdd = false;
-        paginationX.setPageIndex(paginationX.getPageIndex() + 1);
+        page++;
         getData();
+    }
+
+
+    public class AdapterCustomerSale extends BaseAdapter {
+
+        private ArrayList<SaleRecord> mData;
+        private Context mContext;
+
+        public AdapterCustomerSale(Context context, ArrayList<SaleRecord> data) {
+            mContext = context;
+            mData = data;
+        }
+
+        @Override
+        public int getCount() {
+            return mData.size();
+        }
+
+        @Override
+        public Object getItem(final int i) {
+            return mData.isEmpty() ? null : mData.get(i);
+        }
+
+        @Override
+        public long getItemId(final int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(final int position, View view, final ViewGroup viewGroup) {
+            HolderView holder;
+            final SaleRecord record = mData.get(position);
+            if (null == view) {
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_my_sale, viewGroup, false);
+                holder = new HolderView();
+                holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
+                holder.tv_number = (TextView) view.findViewById(R.id.tv_number);
+                holder.tv_price = (TextView) view.findViewById(R.id.tv_price);
+                view.setTag(holder);
+            } else {
+                holder = (HolderView) view.getTag();
+            }
+            holder.tv_name.setText(record.getName());
+            holder.tv_number.setText(record.getStageNmae() + "(" + record.getProb() + "%)");
+            holder.tv_price.setText("预估销售金额:" + record.getEstimatedAmount());
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mIntent = new Intent();
+                    mIntent.putExtra("id", record.getId());
+                    mIntent.setClass(SaleManageActivity.this, ActivitySaleDetails.class);
+                    startActivityForResult(mIntent, ExtraAndResult.REQUEST_CODE);
+                }
+            });
+            return view;
+        }
+
+        class HolderView {
+            TextView tv_name;
+            TextView tv_number;
+            TextView tv_price;
+        }
     }
 
 }

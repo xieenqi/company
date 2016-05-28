@@ -6,11 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
-import com.loyo.oa.v2.beans.Position;
+
 import java.util.ArrayList;
 
 /**
@@ -22,9 +21,17 @@ public class AdapterSaleTeam extends BaseAdapter {
     public Context mContext;
     private ArrayList<SaleRecord> mData;
 
-    public AdapterSaleTeam(Context context,ArrayList<SaleRecord> data){
+    public AdapterSaleTeam(Context context) {
         mContext = context;
-        mData = data;
+    }
+
+    public ArrayList<SaleRecord> getData() {
+        return mData;
+    }
+
+    public void setData(ArrayList<SaleRecord> newData) {
+        this.mData = newData;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -46,32 +53,32 @@ public class AdapterSaleTeam extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         viewHolder holder = null;
         SaleRecord record = mData.get(position);
-        if(convertView == null){
+        if (convertView == null) {
             holder = new viewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_saleteamlist,null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_saleteamlist, null);
             holder.creator = (TextView) convertView.findViewById(R.id.sale_teamlist_creator);
             holder.state = (TextView) convertView.findViewById(R.id.sale_teamlist_state);
             holder.guess = (TextView) convertView.findViewById(R.id.sale_teamlist_guess);
             holder.money = (TextView) convertView.findViewById(R.id.sale_teamlist_money);
             holder.title = (TextView) convertView.findViewById(R.id.sale_teamlist_title);
             convertView.setTag(holder);
-        }else{
-            holder = (viewHolder)convertView.getTag();
+        } else {
+            holder = (viewHolder) convertView.getTag();
         }
 
         holder.title.setText(record.getName());
-        holder.money.setText(record.getEstimatedAmount()+"");
+        holder.money.setText(record.getEstimatedAmount() + "");
         holder.creator.setText(record.getCreateName());
         String stageName = "初步接洽";
-        if(!record.getStageNmae().isEmpty()){
+        if (!record.getStageNmae().isEmpty()) {
             stageName = record.getStageNmae();
         }
-        holder.state.setText(stageName+"("+record.getProb()+"%)");
+        holder.state.setText(stageName + "(" + record.getProb() + "%)");
 
         return convertView;
     }
 
-    class viewHolder{
+    class viewHolder {
         TextView title;
         TextView state;
         TextView guess;

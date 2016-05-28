@@ -380,7 +380,7 @@ public class ContactAddforExtraData extends LinearLayout {
                             String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                             textView.setText(str);
                             String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
-                            extra.val = str;
+                            extra.val = times;
                         }
 
                         @Override

@@ -57,7 +57,7 @@ public class AMapService extends Service {
     /**
      * 请求定位的最小距离间隔【定位精度】
      */
-    private static final float MIN_SCAN_SPAN_DISTANCE = 150f;
+    private static final float MIN_SCAN_SPAN_DISTANCE = 300f;
 
     private PowerManager.WakeLock wakeLock;
     private PowerManager manager;
@@ -315,9 +315,9 @@ public class AMapService extends Service {
             LatLng newLatLng = new LatLng(latitude, longitude);
             double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);//根据用户的起点和终点经纬度计算两点间距离，此距离为相对较短的距离，单位米。
             LogUtil.d("获取到的distance : " + distance);
-            LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE - 50));
+            LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
 
-            if (distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE - 50) {
+            if (distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE) {
                 LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
