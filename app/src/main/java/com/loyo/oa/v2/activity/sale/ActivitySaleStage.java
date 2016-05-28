@@ -47,7 +47,7 @@ public class ActivitySaleStage extends BaseActivity {
     public static final int SALE_SOURCE = 3;//机会来源
 
     private int type;
-    private String title, dataName = "";
+    private String title, dataName = "", saleName, salePrice;
 
 
     @Override
@@ -86,6 +86,8 @@ public class ActivitySaleStage extends BaseActivity {
         type = intent.getIntExtra(ExtraAndResult.EXTRA_TYPE, -1);
         title = intent.getStringExtra(ExtraAndResult.EXTRA_NAME);
         dataName = intent.getStringExtra(ExtraAndResult.EXTRA_DATA);
+        saleName = intent.getStringExtra(ExtraAndResult.CC_USER_NAME);
+        salePrice = intent.getStringExtra(ExtraAndResult.EXTRA_BOOLEAN);
     }
 
     public void getData2() {
@@ -184,8 +186,9 @@ public class ActivitySaleStage extends BaseActivity {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (tv_name.getText().toString().contains("赢单")) {
-                        final GeneralPopView dialog = showGeneralDialog(false, true, "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称\n产品总金额");
+                    if (tv_name.getText().toString().contains("赢单") && !TextUtils.isEmpty(saleName)) {
+                        final GeneralPopView dialog = showGeneralDialog(false, true,
+                                "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称：" + saleName + "\n产品总金额：" + salePrice);
 
                         dialog.setSureOnclick(new View.OnClickListener() {
                             @Override

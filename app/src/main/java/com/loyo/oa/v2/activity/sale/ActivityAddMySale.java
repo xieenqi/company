@@ -315,8 +315,8 @@ public class ActivityAddMySale extends BaseActivity {
                 return;
             } else {
                 final GeneralPopView dailog2 = showGeneralDialog(true, true,
-                        "赢单提交后不能修改，请确认赢单产品的金额和数量是否正确！\n" +
-                                "对应客户：" + et_name.getText().toString() + "     销售总金额：¥" + et_money.getText().toString());
+                        "请确认赢单产品的金额和数量是否正确！\n" +
+                                "对应客户：" + et_name.getText().toString() + "\n销售总金额：¥" + et_money.getText().toString());
                 dailog2.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

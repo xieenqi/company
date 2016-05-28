@@ -115,11 +115,18 @@
 
                 <TextView
                     style="@style/text_item1"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/dimen_8"
                     android:text="销售阶段"
                     android:textSize="15sp"/>
+
+                <ImageView
+                    android:id="@+id/iv_wfstatus"
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    />
 
                 <TextView
                     android:id="@+id/text_stagename"
@@ -130,7 +137,7 @@
                     android:gravity="right|center_vertical"
                     android:hint="请选择销售阶段"
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="#c9c9c9"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -168,7 +175,7 @@
                     android:gravity="right|center_vertical"
                     android:hint="请选择意向产品"
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="#c9c9c9"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
