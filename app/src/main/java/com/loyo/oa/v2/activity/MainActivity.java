@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
+import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
@@ -865,16 +866,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     @Click(R.id.img_contact)
     void onClickContact() {
-
-        Intent intent = new Intent();
-        intent.setClass(this,NewMainActivity.class);
-        startActivity(intent);
-
-/*        if (null != MainApp.lstDepartment) {
+        if (null != MainApp.lstDepartment) {
             app.startActivity(this, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
         } else {
             Toast("请重新拉去组织架构");
-        }*/
+        }
     }
 
     /**
