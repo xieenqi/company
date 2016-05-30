@@ -29,7 +29,6 @@ import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.RegularCheck;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
@@ -231,19 +230,19 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                     break;
                 }
 
-                if(!customerContractTel.isEmpty()){
-                    if(!RegularCheck.isMobilePhone(customerContractTel)){
-                        Toast("手机号码格式不正确");
-                        return;
-                    }
-                }
-
-                if(!customerWrietele.isEmpty()){
-                    if(!RegularCheck.isPhone(customerWrietele)){
-                        Toast("座机号码格式不正确");
-                        return;
-                    }
-                }
+//                if(!customerContractTel.isEmpty()){
+//                    if(!RegularCheck.isMobilePhone(customerContractTel)){
+//                        Toast("手机号码格式不正确");
+//                        return;
+//                    }
+//                }
+//
+//                if(!customerWrietele.isEmpty()){
+//                    if(!RegularCheck.isPhone(customerWrietele)){
+//                        Toast("座机号码格式不正确");
+//                        return;
+//                    }
+//                }
 
                 if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
                     Contact defaultContact;
