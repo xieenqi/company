@@ -200,6 +200,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmain);
+        heading = (HafeRoundImageView) findViewById(R.id.newhome_heading_img);
+        heading.setOnClickListener(this);
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
@@ -285,7 +287,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 初始化
      */
     public void initView() {
-        heading = (HafeRoundImageView) findViewById(R.id.newhome_heading_img);
         listView = (ListView) findViewById(R.id.newhome_listview);
         btn_add = (Button) findViewById(R.id.btn_add);
         newhome_name = (TextView) findViewById(R.id.newhome_name);
@@ -296,7 +297,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         listView.setAdapter(adapter);
 
         btn_add.setOnClickListener(this);
-        heading.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
 
         //跳转对应功能
@@ -774,7 +774,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //通讯录
+            //设置
             case R.id.newhome_heading_img:
                 app.startActivity(this, SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
