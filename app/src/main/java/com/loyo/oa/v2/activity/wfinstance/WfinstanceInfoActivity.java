@@ -141,8 +141,14 @@ public class WfinstanceInfoActivity extends BaseActivity {
     }
 
     void initUI() {
+        try {
+            userId = DBManager.Instance().getUser().id;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast("人员信息不全");
+            finish();
+        }
 
-        userId = DBManager.Instance().getUser().id;
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -314,7 +320,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
         WfNodes node = null;
         for (int i = 0; i < nodes.size(); i++) {
-            if (null != nodes.get(i).getExecutorUser() && nodes.get(i).getExecutorUser().getId().equals(userId)) {
+            if (null != nodes.get(i).getExecutorUser() && userId.equals(nodes.get(i).getExecutorUser().getId())) {
                 node = nodes.get(i);
                 break;
             }

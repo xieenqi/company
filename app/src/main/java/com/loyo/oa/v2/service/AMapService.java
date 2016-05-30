@@ -57,7 +57,7 @@ public class AMapService extends Service {
     /**
      * 请求定位的最小距离间隔【定位精度】
      */
-    private static final float MIN_SCAN_SPAN_DISTANCE = 300f;
+    private static final float MIN_SCAN_SPAN_DISTANCE = 260f;
 
     private PowerManager.WakeLock wakeLock;
     private PowerManager manager;
