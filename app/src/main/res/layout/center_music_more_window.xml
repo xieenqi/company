@@ -1,97 +1,182 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#90FFFFFF"
-    android:gravity="bottom|center_horizontal"
-    android:orientation="vertical">
+    >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_20"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
         >
 
-        <TextView
-            android:id="@+id/more_window_local"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="30dip"
-            android:clickable="true"
-            android:drawableTop="@drawable/newmain_post_task"
+            android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/dimen_12"
-            android:text="@string/newmain_post_task" />
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/dimen_45"
+                >
+                <ImageView
+                    android:id="@+id/more_window_local"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_task"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="@string/newmain_post_task"
+                    android:textColor="@color/suodesilei"
+                    android:clickable="true"
+                    />
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/more_window_online"
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/dimen_45"
+                >
+                <ImageView
+                    android:id="@+id/more_window_online"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_wif"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="@string/newmain_post_wif"
+                    android:textColor="@color/suodesilei"
+                    android:clickable="true"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <ImageView
+                    android:id="@+id/more_window_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_report"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="@string/newmain_post_report"
+                    android:textColor="@color/suodesilei"
+                    android:clickable="true"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="30dip"
-            android:layout_toRightOf="@+id/more_window_local"
-            android:clickable="true"
-            android:drawableTop="@drawable/newmain_post_wif"
+            android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/dimen_12"
-            android:text="@string/newmain_post_wif" />
+            android:layout_marginTop="@dimen/dimen_35"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/dimen_45"
+                >
+                <ImageView
+                    android:id="@+id/more_window_collect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_customer"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="@string/newmain_post_cus"
+                    android:textColor="@color/suodesilei"
+                    android:clickable="true"
+                    />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/more_window_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/more_window_online"
-            android:clickable="true"
-            android:drawableTop="@drawable/newmain_post_report"
-            android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/dimen_12"
-            android:text="@string/newmain_post_report" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/dimen_45"
+                >
+                <ImageView
+                    android:id="@+id/more_window_auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_att"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="@string/newmain_post_att"
+                    android:textColor="@color/suodesilei"
+                    android:clickable="true"
+                    />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/more_window_collect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/more_window_local"
-            android:layout_marginRight="30dip"
-            android:clickable="true"
-            android:drawableTop="@drawable/newmain_post_customer"
-            android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/dimen_12"
-            android:text="@string/newmain_post_cus" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <ImageView
+                    android:id="@+id/more_window_external"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_sign"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:text="@string/newmain_post_sign"
+                    android:textColor="@color/suodesilei"
+                    android:clickable="true"
+                    />
+            </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/more_window_auto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/more_window_online"
-            android:layout_marginRight="30dip"
-            android:layout_toRightOf="@+id/more_window_collect"
-            android:clickable="true"
-            android:drawableTop="@drawable/newmain_post_att"
-            android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/dimen_12"
-            android:text="@string/newmain_post_att" />
-
-        <TextView
-            android:id="@+id/more_window_external"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/more_window_delete"
-            android:layout_toRightOf="@+id/more_window_auto"
-            android:clickable="true"
-            android:drawableTop="@drawable/newmain_post_sign"
-            android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/dimen_12"
-            android:text="@string/newmain_post_sign" />
-
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/more_window_auto"
         android:layout_marginBottom="@dimen/dimen_30"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        >
 
         <Button
             android:id="@+id/center_music_window_close"
@@ -103,4 +188,4 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

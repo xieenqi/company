@@ -22,8 +22,10 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.NewMainActivity;
@@ -41,14 +43,22 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
     private Bitmap overlay = null;
     private Handler mHandler;
 
-    private LinearLayout view;
+    private RelativeLayout view;
     private Button  closeBtn;
-    private TextView btn1;
+/*    private TextView btn1;
     private TextView btn2;
     private TextView btn3;
     private TextView btn4;
     private TextView btn5;
-    private TextView btn6;
+    private TextView btn6;*/
+
+    private ImageView btn1;
+    private ImageView btn2;
+    private ImageView btn3;
+    private ImageView btn4;
+    private ImageView btn5;
+    private ImageView btn6;
+
 
     public MoreWindow(Activity context,Handler handler) {
         mContext = context;
@@ -127,12 +137,19 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
     }
 
     public void initBtnUi(View v){
-        btn1 = (TextView) v.findViewById(R.id.more_window_local);
+/*        btn1 = (TextView) v.findViewById(R.id.more_window_local);
         btn2 = (TextView) v.findViewById(R.id.more_window_online);
         btn3 = (TextView) v.findViewById(R.id.more_window_delete);
         btn4 = (TextView) v.findViewById(R.id.more_window_collect);
         btn5 = (TextView) v.findViewById(R.id.more_window_auto);
-        btn6 = (TextView) v.findViewById(R.id.more_window_external);
+        btn6 = (TextView) v.findViewById(R.id.more_window_external);*/
+
+        btn1 = (ImageView) v.findViewById(R.id.more_window_local);
+        btn2 = (ImageView) v.findViewById(R.id.more_window_online);
+        btn3 = (ImageView) v.findViewById(R.id.more_window_delete);
+        btn4 = (ImageView) v.findViewById(R.id.more_window_collect);
+        btn5 = (ImageView) v.findViewById(R.id.more_window_auto);
+        btn6 = (ImageView) v.findViewById(R.id.more_window_external);
         closeBtn = (Button)v.findViewById(R.id.center_music_window_close);
 
         btn1.setOnClickListener(this);
@@ -153,7 +170,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
     }
 
     public void showMoreWindow(View anchor) {
-        view = (LinearLayout)LayoutInflater.from(mContext).inflate(R.layout.center_music_more_window, null);
+        view = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.center_music_more_window, null);
         setContentView(view);
         initBtnUi(view);
         showAnimation(view);

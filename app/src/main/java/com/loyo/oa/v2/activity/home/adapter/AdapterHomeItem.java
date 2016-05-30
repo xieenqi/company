@@ -114,11 +114,11 @@ public class AdapterHomeItem extends BaseAdapter{
         //列表分组
         if(item.tag == 1){
             holder.item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);
-            holder.tv_title.setText("crm");
+            holder.tv_title.setText("CRM");
             crmTi = true;
         }else if(item.tag == 2){
             holder.item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
-            holder.tv_title.setText("oa");
+            holder.tv_title.setText("OA");
             oaTi = true;
         }else{
             holder.item_newmain_topview.setVisibility(View.GONE);
