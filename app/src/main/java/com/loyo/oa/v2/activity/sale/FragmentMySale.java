@@ -25,7 +25,6 @@ import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
@@ -172,6 +171,11 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
      * 组装销售阶段筛选数据
      */
     public void setStageData() {
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部阶段");
+        saleTeamScreen.setId("");
+        saleTeamScreen.setIndex(false);
+        stageData.add(saleTeamScreen);
         for (int i = 0; i < mSaleStages.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(mSaleStages.get(i).getName());
@@ -179,11 +183,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             saleTeamScreen.setIndex(false);
             stageData.add(saleTeamScreen);
         }
-        saleTeamScreen = new SaleTeamScreen();
-        saleTeamScreen.setName("全部阶段");
-        saleTeamScreen.setId("");
-        saleTeamScreen.setIndex(false);
-        stageData.add(saleTeamScreen);
+
     }
 
     /**

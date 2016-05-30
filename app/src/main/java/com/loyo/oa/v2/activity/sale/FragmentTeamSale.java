@@ -30,7 +30,6 @@ import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
@@ -240,6 +239,11 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
      * 组装销售阶段筛选数据
      */
     public void setStageData() {
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部阶段");
+        saleTeamScreen.setId("");
+        saleTeamScreen.setIndex(false);
+        stageData.add(saleTeamScreen);
         for (int i = 0; i < mSaleStages.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(mSaleStages.get(i).getName());
@@ -247,11 +251,6 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             saleTeamScreen.setIndex(false);
             stageData.add(saleTeamScreen);
         }
-        saleTeamScreen = new SaleTeamScreen();
-        saleTeamScreen.setName("全部阶段");
-        saleTeamScreen.setId("");
-        saleTeamScreen.setIndex(false);
-        stageData.add(saleTeamScreen);
     }
 
     /**
@@ -388,7 +387,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             case R.id.btn_add:
 
                 mIntent = new Intent();
-                mIntent.setClass(getActivity(),ActivityAddMySale.class);
+                mIntent.setClass(getActivity(), ActivityAddMySale.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
 
                 break;

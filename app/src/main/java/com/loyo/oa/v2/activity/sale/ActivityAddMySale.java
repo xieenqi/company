@@ -35,6 +35,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
@@ -203,7 +204,7 @@ public class ActivityAddMySale extends BaseActivity {
             customerId = mSaleDetails.customerId;
             tv_stage.setText(mSaleDetails.stageName);
             stageId = mSaleDetails.stageId;
-            et_money.setText(mSaleDetails.salesAmount + "");
+            et_money.setText(Utils.setValueFloat(mSaleDetails.salesAmount) + "");
             tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;
