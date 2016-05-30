@@ -350,7 +350,7 @@ int page;
      */
     void requestNumber() {
         page++;
-        showLoading(""+page);
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
