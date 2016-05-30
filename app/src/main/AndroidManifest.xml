@@ -65,10 +65,8 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="${applicationId}"/>
             </intent-filter>
@@ -518,6 +516,11 @@
             android:name=".activity.sale.ActivitySaleEditView"
             android:launchMode="singleTop"
             android:theme="@style/dialog_edit_delete_StyleBottom"
+            />
+        <activity
+            android:name=".activity.home.NewMainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
             />
 
         <service

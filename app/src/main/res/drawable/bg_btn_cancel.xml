@@ -11,7 +11,7 @@
 
     <item>
         <selector xmlns:android="http://schemas.android.com/apk/res/android">
-            <item android:drawable="@drawable/img_btn_add">
+            <item android:drawable="@drawable/newmain_cancel_btn">
                 <shape android:shape="oval">
                     <size
                         android:width="45dp"
