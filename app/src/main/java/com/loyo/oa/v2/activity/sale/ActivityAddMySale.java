@@ -25,7 +25,6 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -68,7 +67,7 @@ public class ActivityAddMySale extends BaseActivity {
     private int estimatedTime = -1;
     private boolean isEdit;
     private StringBuffer loseReasonBuff;
-
+    private boolean isProduct = false, isType = false, isSource = false;
 
 
     @Override
@@ -216,10 +215,10 @@ public class ActivityAddMySale extends BaseActivity {
             et_remake.setText(mSaleDetails.memo);
             ll_transport.setVisibility((null == mSaleDetails.getLoseReason()) ? View.GONE : View.VISIBLE);
 
-            if(null != mSaleDetails.loseReason){
+            if (null != mSaleDetails.loseReason) {
                 loseReasonBuff = new StringBuffer();
-                for(CommonTag commonTag : mSaleDetails.loseReason){
-                    loseReasonBuff.append(commonTag.getName()+"、");
+                for (CommonTag commonTag : mSaleDetails.loseReason) {
+                    loseReasonBuff.append(commonTag.getName() + "、");
                 }
                 tv_transport.setText(" " + loseReasonBuff.toString());
             }
@@ -248,6 +247,18 @@ public class ActivityAddMySale extends BaseActivity {
                 for (ContactLeftExtras ele : bulletinPaginationX) {
                     if (!ele.isSystem) {
                         filedData.add(ele);
+                    }
+                    if ("product".equals(ele.fieldName) && ele.required) {
+                        isProduct = true;
+                        tv_product.setHint("必填,请选择");
+                    }
+                    if ("chance_type".equals(ele.fieldName) && ele.required) {
+                        isType = true;
+                        tv_type.setHint("必填,请选择");
+                    }
+                    if ("chance_source".equals(ele.fieldName) && ele.required) {
+                        isSource = true;
+                        tv_source.setHint("必填,请选择");
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
@@ -308,8 +319,14 @@ public class ActivityAddMySale extends BaseActivity {
         } else if (-1 == estimatedTime) {
             Toast("请选择预估成交时间");
             return;
-        } else if (!(intentionProductData.size() > 0)) {
+        } else if (!(intentionProductData.size() > 0) && isProduct) {
             Toast("请添加意向产品");
+            return;
+        } else if (TextUtils.isEmpty(tv_type.getText().toString()) && isType) {
+            Toast("请选择机会类型");
+            return;
+        } else if (TextUtils.isEmpty(tv_source.getText().toString()) && isSource) {
+            Toast("请选择机会来源");
             return;
         } else if (null != filedData) {
             for (ContactLeftExtras ele : filedData) {
@@ -394,7 +411,7 @@ public class ActivityAddMySale extends BaseActivity {
                 }
             });
         } else {
-            LogUtil.dee("编辑发送数据:"+MainApp.gson.toJson(map));
+            LogUtil.dee("编辑发送数据:" + MainApp.gson.toJson(map));
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
                 @Override

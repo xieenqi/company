@@ -266,7 +266,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:hint="必填,请选择"
+                    android:hint="请选择"
                     android:textColor="@color/title_bg1"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
