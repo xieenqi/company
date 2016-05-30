@@ -228,6 +228,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
             losereason.setText(mSaleDetails.getLostReason());
+        }else{
+            layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
 
