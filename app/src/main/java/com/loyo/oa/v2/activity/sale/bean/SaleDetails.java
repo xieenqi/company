@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.sale.bean;
 
+import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 
 import java.io.Serializable;
@@ -10,31 +11,40 @@ import java.util.ArrayList;
  * Created by yyy on 16/5/20.
  */
 public class SaleDetails implements Serializable {
+
     public String id;
     public String creatorId;
-    public String name;          //标题
-    public String cusName;       //对应客户
+    public String name;            //标题
+    public String cusName;         //对应客户
     public String customerId;
     public float salesAmount;      //预估销售金额
     public float estimatedAmount;  //预计成交时间
-    public String stageName;     //阶段名
+    public String stageName;       //阶段名
     public String stageId;
     public int estimatedTime;
-    public int prob;             //阶段百分比
-    public ArrayList<SaleIntentionalProduct> proInfos = new ArrayList<>();
-    public String lostReason;    //输单原因
-    public String chanceType;    //机会类型
-    public String chanceSource;  //机会来源
-    public String memo;          //备注
-    public String creatorName;   //创建人
-    public int createdAt;        //创建时间
-    public int updatedAt;        //更新时间
-    public int winTime;          //赢单时间
+    public int prob;               //阶段百分比
+    public ArrayList<SaleIntentionalProduct> proInfos; //意向产品
+    public ArrayList<CommonTag> loseReason;       //输单原因
+    public String chanceType;      //机会类型
+    public String chanceSource;    //机会来源
+    public String memo;            //备注
+    public String creatorName;     //创建人
+    public int createdAt;          //创建时间
+    public int updatedAt;          //更新时间
+    public int winTime;            //赢单时间
     public int wfState = 0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
     public String wfId;
 
     public ArrayList<ContactLeftExtras> extensionDatas;    //动态字段
 
+
+    public ArrayList<CommonTag> getLoseReason() {
+        return loseReason;
+    }
+
+    public void setLoseReason(ArrayList<CommonTag> loseReason) {
+        this.loseReason = loseReason;
+    }
 
     public ArrayList<SaleIntentionalProduct> getProInfos() {
         return proInfos;
@@ -42,14 +52,6 @@ public class SaleDetails implements Serializable {
 
     public void setProInfos(ArrayList<SaleIntentionalProduct> proInfos) {
         this.proInfos = proInfos;
-    }
-
-    public String getLostReason() {
-        return lostReason;
-    }
-
-    public void setLostReason(String lostReason) {
-        this.lostReason = lostReason;
     }
 
     public String getStageName() {
