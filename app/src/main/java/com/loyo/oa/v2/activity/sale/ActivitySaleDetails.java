@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity.sale;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -67,6 +69,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView tv_stageName;
     private TextView product;
     private TextView text_stagename;
+    private ImageView iv_wfstatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
         ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
+        iv_wfstatus = (ImageView) findViewById(R.id.iv_wfstatus);
 
         img_title_left.setOnClickListener(this);
         img_title_right.setOnClickListener(this);
@@ -113,6 +117,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         mIntent = getIntent();
         selectId = mIntent.getStringExtra("id");
         getData();
+        iv_wfstatus.setOnTouchListener(Global.GetTouch());
+        iv_wfstatus.setOnClickListener(this);
     }
 
     /**
@@ -199,8 +205,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
         creator.setText(mSaleDetails.getCreatorName());
-        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt()+"" )* 1000)));
-        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt()+"" )* 1000)));
+        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
+        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
         winTime.setText(mSaleDetails.getWinTime() + "");
         tv_stageName.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
@@ -219,6 +225,27 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
             losereason.setText(mSaleDetails.getLostReason());
+        }
+        if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
+
+            switch (mSaleDetails.wfState) {
+                case 1:
+                    iv_wfstatus.setImageResource(R.drawable.img_task_wite);
+                    break;
+                case 2:
+                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status2);
+                    break;
+                case 3:
+                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
+                    break;
+                case 4:
+                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
+                    break;
+                case 5:
+                    iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
+                    break;
+            }
+
         }
     }
 
@@ -248,12 +275,18 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 Bundle stage = new Bundle();
                 stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
                 stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                stage.putString(ExtraAndResult.CC_USER_NAME, mSaleDetails.name);
+                stage.putString(ExtraAndResult.EXTRA_BOOLEAN, mSaleDetails.salesAmount + "");
                 stage.putString(ExtraAndResult.EXTRA_DATA, text_stagename.getText().toString());
                 app.startActivityForResult(ActivitySaleDetails.this, ActivitySaleStage.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                 break;
 
-            default:
+            case R.id.iv_wfstatus:
+                Intent wfinstance = new Intent();
+                wfinstance.putExtra(ExtraAndResult.EXTRA_ID, mSaleDetails.wfId);
+                wfinstance.setClass(ActivitySaleDetails.this, WfinstanceInfoActivity_.class);
+                startActivityForResult(wfinstance, ExtraAndResult.REQUEST_CODE);
                 break;
 
         }

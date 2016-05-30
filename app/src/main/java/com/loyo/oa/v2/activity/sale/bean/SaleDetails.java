@@ -30,6 +30,10 @@ public class SaleDetails implements Serializable {
     public int createdAt;        //创建时间
     public int updatedAt;        //更新时间
     public int winTime;          //赢单时间
+    public int wfState=0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
+    public String wfId;
+
+
     public ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();    //动态字段
 
 
