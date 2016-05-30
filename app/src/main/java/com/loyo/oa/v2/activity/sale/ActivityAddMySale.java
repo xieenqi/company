@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
 import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
@@ -61,6 +62,7 @@ public class ActivityAddMySale extends BaseActivity {
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
     private boolean isEdit;
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -378,13 +380,14 @@ public class ActivityAddMySale extends BaseActivity {
             });
         } else {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
-                    create(ISale.class).updateSaleOpportunity(map, stageId, new Callback<SaleOpportunityAdd>() {
+                    create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
                 @Override
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("修改销售机会", response);
                     Toast("修改成功");
-                    setResult(RESULT_OK, new Intent());
-                    finish();
+                    mIntent = new Intent();
+                    mIntent.putExtra(ExtraAndResult.RESULT_ID, ActionCode.SALE_DETAILS_EDIT);
+                    app.finishActivity(ActivityAddMySale.this, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, mIntent);
                 }
 
                 @Override

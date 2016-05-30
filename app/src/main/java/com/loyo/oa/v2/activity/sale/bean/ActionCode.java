@@ -20,5 +20,9 @@ public class ActionCode {
      * */
     public static final int SALE_DETAILS_RUSH = 1002;
 
+    /**
+     * 编辑成功
+     * */
+    public static final int SALE_DETAILS_EDIT = 1003;
 
 }
