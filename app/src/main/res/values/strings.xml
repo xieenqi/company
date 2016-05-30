@@ -40,4 +40,12 @@
     <string name="msg_no_camera">没有系统相机</string>
     <string name="msg_amount_limit">已经达到最高选择数量</string>
 
+
+    <string name="newmain_post_task">新建任务</string>
+    <string name="newmain_post_wif">申请审批</string>
+    <string name="newmain_post_report">提交报告</string>
+    <string name="newmain_post_cus">新建客户</string>
+    <string name="newmain_post_att">考勤打卡</string>
+    <string name="newmain_post_sign">拜访签到</string>
+
 </resources>

@@ -16,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -28,7 +27,6 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 
 /**

@@ -41,6 +41,7 @@ import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
@@ -310,7 +311,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         checkUpdateService();
         updateUser();
 
-
         lv_main.setDropListener(onDrag);
         lv_main.setMaxScrollSpeed(100f);
         adapter = new ClickItemAdapter();
@@ -352,6 +352,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         if (MainApp.user == null) {
             return;
         }
+
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
             int defaultAcatar;
             if (MainApp.user.gender == 2) {
@@ -422,12 +423,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                     @Override
                     public void run() {
                         Looper.prepare();
-//                        new Handler().post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                testJurl();
-//                            }
-//                        });
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -676,7 +671,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
-
     /**
      * (翻转前)点击头像，获取能否打卡信息
      */
@@ -717,6 +711,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 0;
             startAttanceLocation();
         }
+
     }
 
     /**

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.login.WelcomeActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -120,8 +121,12 @@ public class LauncherActivity extends BaseActivity {
         if (!isWelcom) {
             intent.setClass(LauncherActivity.this, WelcomeActivity.class);
         } else {
+            //老版主页
+            /*intent.setClass(LauncherActivity.this,
+                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);*/
+            //新版主页
             intent.setClass(LauncherActivity.this,
-                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
+                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : NewMainActivity.class);
         }
         startActivity(intent);
         finish();
