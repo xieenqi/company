@@ -25,4 +25,9 @@ public class ActionCode {
      * */
     public static final int SALE_DETAILS_EDIT = 1003;
 
+    /**
+     * 机会详情，单独编辑销售阶段
+     * */
+    public static final int SALE_DETAILS_STATE_EDIT = 1004;
+
 }

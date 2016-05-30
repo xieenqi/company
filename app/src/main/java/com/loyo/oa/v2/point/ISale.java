@@ -103,7 +103,7 @@ public interface ISale {
     /**
      * 编辑详情下的销售阶段
      */
-    @PUT("/chance/udateStage/{id}")
+    @PUT("/chance/updateStage/{id}")
     void editSaleStage(@Body HashMap<String, Object> map, @Path("id") String id, Callback<SaleProductEdit> callback);
 
     /**

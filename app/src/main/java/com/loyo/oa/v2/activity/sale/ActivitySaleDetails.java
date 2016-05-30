@@ -12,10 +12,12 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
+import com.loyo.oa.v2.activity.sale.bean.SaleLoseReason;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -28,6 +30,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -48,8 +51,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private Intent mIntent;
     private String selectId = "";
     private StringBuffer productBuffer;
+    private StringBuffer loseReasonBuffer;
     private String stageId;
     private String stageName;
+    private ArrayList<CommonTag> loseResons;
 
     private LinearLayout ll_product;
     private LinearLayout ll_stage;
@@ -173,7 +178,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("stageId", stageId);
         map.put("cId", selectId);
-//        map.put("LostReason", "无");
+        if(null != loseResons){
+            map.put("loseReason",loseResons);
+        }
         map.put("content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
@@ -227,7 +234,11 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         /*当为输单阶段时，显示输单原因*/
         if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
-            losereason.setText(mSaleDetails.getLostReason());
+            loseReasonBuffer = new StringBuffer();
+            for(CommonTag commonTag :mSaleDetails.getLoseReason()){
+                loseReasonBuffer.append(commonTag.getName()+" ");
+            }
+            losereason.setText(loseReasonBuffer.toString());
         }else{
             layout_losereson.setVisibility(View.GONE);
         }
@@ -341,6 +352,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             /**销售阶段*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
                 SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                loseResons = (ArrayList<CommonTag>) data.getSerializableExtra(ExtraAndResult.RESULT_NAME);
                 if (null != stage) {
                     tv_stageName.setText(stage.name);
                     stageId = stage.id;

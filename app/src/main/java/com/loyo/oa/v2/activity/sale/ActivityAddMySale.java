@@ -25,6 +25,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -51,18 +52,23 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/17.
  */
 public class ActivityAddMySale extends BaseActivity {
+
+    private Intent mIntent;
     private TextView tv_title, tv_customer, tv_stage, tv_type, tv_source, tv_product, tv_estimate, tv_transport;
     private ImageView iv_submit;
     private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom, ll_transport;
     private EditText et_name, et_money, et_remake;
     private String customerName, customerId, stageId, chanceId, creatorId;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
-    private int estimatedTime = -1;
     private ArrayList<ContactLeftExtras> filedData;
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
-    private boolean isEdit;
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
-    private Intent mIntent;
+
+    private int estimatedTime = -1;
+    private boolean isEdit;
+    private StringBuffer loseReasonBuff;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +76,6 @@ public class ActivityAddMySale extends BaseActivity {
         setContentView(R.layout.activity_add_my_sale);
         init();
         getIntentData();
-
     }
 
     private void init() {
@@ -164,7 +169,7 @@ public class ActivityAddMySale extends BaseActivity {
                     app.startActivityForResult(ActivityAddMySale.this, ActivitySaleStage.class,
                             MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_SOURCE, source);
                     break;
-                case R.id.ll_transport:
+                case R.id.ll_transport://输单原因
                     Bundle loseBundle = new Bundle();
                     loseBundle.putSerializable("data", loseResons);
                     loseBundle.putString("title", "输单原因");
@@ -208,8 +213,17 @@ public class ActivityAddMySale extends BaseActivity {
             tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
             filedData = mSaleDetails.extensionDatas;
             et_remake.setText(mSaleDetails.memo);
-            ll_transport.setVisibility(TextUtils.isEmpty(mSaleDetails.lostReason) ? View.GONE : View.VISIBLE);
-            tv_transport.setText(" " + mSaleDetails.lostReason);
+            ll_transport.setVisibility((null == mSaleDetails.getLoseReason()) ? View.GONE : View.VISIBLE);
+
+            if(null != mSaleDetails.loseReason){
+                loseReasonBuff = new StringBuffer();
+                for(CommonTag commonTag : mSaleDetails.loseReason){
+                    loseReasonBuff.append(commonTag.getName()+"、");
+                }
+                tv_transport.setText(" " + loseReasonBuff.toString());
+            }
+
+
         } else {
             getDynamicInfo();
             if (!TextUtils.isEmpty(customerName)) {
@@ -361,7 +375,7 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
-        map.put("lostReason", loseResons);
+        map.put("loseReason", loseResons);
         LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
         if (!isEdit) {
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -379,6 +393,7 @@ public class ActivityAddMySale extends BaseActivity {
                 }
             });
         } else {
+            LogUtil.dee("编辑发送数据:"+MainApp.gson.toJson(map));
             RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
                     create(ISale.class).updateSaleOpportunity(map, chanceId, new Callback<SaleOpportunityAdd>() {
                 @Override

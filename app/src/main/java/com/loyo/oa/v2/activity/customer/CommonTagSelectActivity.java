@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.sale.bean.ActionCode;
+import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.ICustomer;
@@ -46,13 +48,14 @@ public class CommonTagSelectActivity extends BaseActivity {
     public static final int SELECT_MODE_SINGLE = 1;
     public static final int SELECT_MODE_MULTIPLE = SELECT_MODE_SINGLE + 1;
 
+    @Extra("mono")
+    SaleStage data;
     @Extra("data")
     ArrayList<CommonTag> results;
     @Extra
     String title;
     @Extra
-    int mode, type;
-
+    int mode, type, kind;
 
     @ViewById
     RecyclerView rv_reason;
@@ -63,8 +66,8 @@ public class CommonTagSelectActivity extends BaseActivity {
     TextView tv_title_1;
 
     private ArrayList<CommonTag> commonTags = new ArrayList<>();
-    ;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Intent mIntent;
 
     @AfterViews
     void initViews() {
@@ -104,12 +107,17 @@ public class CommonTagSelectActivity extends BaseActivity {
 
     @Click(R.id.img_title_right)
     void backWidthSelect() {
+        mIntent = new Intent();
         if (results.size() == 0 || null == results) {
             Toast("请选择跟进方式!");
+        } else if(kind == ActionCode.SALE_DETAILS_STATE_EDIT){
+            mIntent.putExtra("data", results);
+            mIntent.putExtra("mono",data);
+            setResult(ActionCode.SALE_DETAILS_STATE_EDIT, mIntent);
+            back();
         } else {
-            Intent intent = new Intent();
-            intent.putExtra("data", results);
-            setResult(RESULT_OK, intent);
+            mIntent.putExtra("data", results);
+            setResult(RESULT_OK, mIntent);
             back();
         }
     }

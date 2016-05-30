@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.sale;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,8 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
+import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
+import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -36,9 +41,12 @@ import retrofit.client.Response;
  * Created by xeq on 16/5/18.
  */
 public class ActivitySaleStage extends BaseActivity {
+
+
     private TextView tv_title;
     private LinearLayout ll_back;
     private ListView lv_list;
+    private SaleStage saleStage;
     private SaleStageAdapter adapterStage;
     private SourceTypeAdapter adapterSourceType;
 
@@ -48,7 +56,7 @@ public class ActivitySaleStage extends BaseActivity {
 
     private int type;
     private String title, dataName = "", saleName, salePrice;
-
+    private ArrayList<CommonTag> loseResons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +117,9 @@ public class ActivitySaleStage extends BaseActivity {
         });
     }
 
+    /**
+     * 获取销售阶段 数据
+     * */
     public void getData() {
         showLoading("");//HttpSaleBuild.buildSale().
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -206,6 +217,20 @@ public class ActivitySaleStage extends BaseActivity {
                             }
                         });
                         return;
+                    } else if (tv_name.getText().toString().contains("输单") && !TextUtils.isEmpty(saleName)) {
+
+                        setSelect(position);
+                        Bundle loseBundle = new Bundle();
+                        loseBundle.putSerializable("data", loseResons);
+                        loseBundle.putSerializable("mono",data.get(position));
+                        loseBundle.putString("title", "输单原因");
+                        loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_MULTIPLE);
+                        loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_LOSE_REASON);
+                        loseBundle.putInt("kind", ActionCode.SALE_DETAILS_STATE_EDIT);
+                        app.startActivityForResult(ActivitySaleStage.this, CommonTagSelectActivity_.class,
+                                0, CommonTagSelectActivity.REQUEST_TAGS, loseBundle);
+
+                        return;
                     }
                     setSelect(position);
                     Intent intent = new Intent();
@@ -227,17 +252,6 @@ public class ActivitySaleStage extends BaseActivity {
                 notifyDataSetChanged();
             }
         }
-
-//        public void setSelect(int indext) {
-//            for (int i = 0; i < data.size(); i++) {
-//                if (indext == i) {
-//                    data.get(i).isSelect = true;
-//                } else {
-//                    data.get(i).isSelect = false;
-//                }
-//            }
-//            notifyDataSetChanged();
-//        }
 
         @Override
         public int getCount() {
@@ -261,11 +275,7 @@ public class ActivitySaleStage extends BaseActivity {
             }
             TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             ImageView iv_img = (ImageView) convertView.findViewById(R.id.iv_img);
-/*            if (data.get(position).isSelect) {
-                iv_img.setVisibility(View.VISIBLE);
-            } else {
-                iv_img.setVisibility(View.INVISIBLE);
-            }*/
+
             tv_name.setText(data.get(position));
             if (dataName.equals(data.get(position))) {
                 iv_img.setVisibility(View.VISIBLE);
@@ -283,6 +293,22 @@ public class ActivitySaleStage extends BaseActivity {
                 }
             });
             return convertView;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == ActionCode.SALE_DETAILS_STATE_EDIT){
+            loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
+            saleStage  = (SaleStage) data.getSerializableExtra("mono");
+
+            Intent intent = new Intent();
+            intent.putExtra(ExtraAndResult.EXTRA_DATA, saleStage);
+            intent.putExtra(ExtraAndResult.RESULT_NAME, loseResons);
+            setResult(RESULT_OK, intent);
+            finish();
+
         }
     }
 }
