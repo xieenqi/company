@@ -15,7 +15,7 @@
             android:id="@+id/saledetils_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="自定义字段: "
+            android:text=""
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp14" />
 
@@ -23,7 +23,7 @@
             android:id="@+id/saledetils_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="户口巾凡"
+            android:text=""
             android:textColor="@color/text99"
             android:textSize="@dimen/text_sp14" />
         </LinearLayout>

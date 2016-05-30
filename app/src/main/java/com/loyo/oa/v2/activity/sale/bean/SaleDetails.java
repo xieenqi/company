@@ -33,8 +33,7 @@ public class SaleDetails implements Serializable {
     public int wfState = 0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
     public String wfId;
 
-
-    public ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();    //动态字段
+    public ArrayList<ContactLeftExtras> extensionDatas;    //动态字段
 
 
     public ArrayList<SaleIntentionalProduct> getProInfos() {

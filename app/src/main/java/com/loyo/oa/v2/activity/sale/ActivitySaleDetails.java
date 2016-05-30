@@ -217,7 +217,6 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         }
         product.setText(productBuffer.toString());
         ll_extra.setVisibility(View.VISIBLE);
-        LogUtil.d(" 个数 " + ll_extra.getChildCount());
         if (ll_extra.getChildCount() != 0) {
             ll_extra.removeAllViews();
         }
@@ -299,22 +298,31 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        int resultAction;
 
-        if (resultCode != RESULT_OK) {
+        if(resultCode != RESULT_OK){
             return;
         }
 
-
         switch (requestCode) {
+
+            /**编辑成功后 回调*/
+            case ExtraAndResult.MSG_WHAT_DIALOG:
+                resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
+                if(resultAction == ActionCode.SALE_DETAILS_EDIT){
+                    LogUtil.dee("编辑成功回调");
+                    getData();
+                }
+                break;
+
             /**菜单选项*/
             case EDIT_POP_WINDOW:
                 //编辑回调
                 if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
                     Bundle editSale = new Bundle();
                     editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
-                    //editSale.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
                     app.startActivityForResult(ActivitySaleDetails.this, ActivityAddMySale.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, editSale);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_DIALOG, editSale);
                 }
                 //删除回调
                 else if (data.getBooleanExtra("delete", false)) {
@@ -323,7 +331,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 break;
             /**意向产品*/
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                int resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
+                resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
                 if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
                     getData();
                 }

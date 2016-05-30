@@ -91,7 +91,6 @@ public class ActivitySaleEditView extends BaseActivity implements OnClickListene
                 generalPopView.setCancelOnclick(new OnClickListener() {
                     @Override
                     public void onClick(final View view) {
-                        Toast("取消");
                         finish();
                     }
                 });
