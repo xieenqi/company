@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
-import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.adapter.ProductsRadioListViewAdapter;
@@ -264,6 +263,9 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 tv_discount.setText((transformationNumber(s.toString()) / transformationNumber(tv_price.getText().toString()) * 100) + "%");
             } else {
                 tv_discount.setText("");
+            }
+            if (!TextUtils.isEmpty(et_number.getText().toString())) {
+                tv_total.setText((transformationNumber(s.toString()) * transformationNumber(et_number.getText().toString())) + "");
             }
         }
     };

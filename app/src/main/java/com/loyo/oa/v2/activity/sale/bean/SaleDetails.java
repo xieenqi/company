@@ -15,7 +15,7 @@ public class SaleDetails implements Serializable {
     public String name;          //标题
     public String cusName;       //对应客户
     public String customerId;
-    public int salesAmount;      //预估销售金额
+    public float salesAmount;      //预估销售金额
     public float estimatedAmount;  //预计成交时间
     public String stageName;     //阶段名
     public String stageId;
@@ -30,7 +30,7 @@ public class SaleDetails implements Serializable {
     public int createdAt;        //创建时间
     public int updatedAt;        //更新时间
     public int winTime;          //赢单时间
-    public int wfState=0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
+    public int wfState = 0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
     public String wfId;
 
 
@@ -133,11 +133,11 @@ public class SaleDetails implements Serializable {
         this.cusName = customerName;
     }
 
-    public int getSalesAmount() {
+    public float getSalesAmount() {
         return salesAmount;
     }
 
-    public void setSalesAmount(int salesAmount) {
+    public void setSalesAmount(float salesAmount) {
         this.salesAmount = salesAmount;
     }
 
