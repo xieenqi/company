@@ -171,14 +171,14 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     public void editStage() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("StageId", stageId);
-        map.put("Cid", selectId);
-        map.put("LostReason", "无");
-        map.put("Content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
+        map.put("stageId", stageId);
+        map.put("cId", selectId);
+//        map.put("LostReason", "无");
+        map.put("content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
-                .editSaleStage(map, stageId, new RCallback<SaleProductEdit>() {
+                .editSaleStage(map, selectId, new RCallback<SaleProductEdit>() {
                     @Override
                     public void success(SaleProductEdit saleProductEdit, Response response) {
                         HttpErrorCheck.checkResponse("编辑销售阶段", response);
@@ -217,6 +217,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         }
         product.setText(productBuffer.toString());
         ll_extra.setVisibility(View.VISIBLE);
+        LogUtil.d(" 个数 " + ll_extra.getChildCount());
+        if (ll_extra.getChildCount() != 0) {
+            ll_extra.removeAllViews();
+        }
         for (ContactLeftExtras saleDetailsExtraList : mSaleDetails.extensionDatas) {
             ll_extra.addView(new ViewSaleDetailsExtra(mContext, saleDetailsExtraList));
         }
