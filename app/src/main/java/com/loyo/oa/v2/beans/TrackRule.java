@@ -104,8 +104,7 @@ public class TrackRule implements Serializable {
             app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
                 @Override
                 public void success(TrackRule trackRule, Response response) {
-                    LogUtil.d("后台轨迹规则加载成功！");
-                    HttpErrorCheck.checkResponse(response);
+                    HttpErrorCheck.checkResponse("后台轨迹规则加载成功！", response);
                     if (null != trackRule && trackRule.enable) {
                         DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
                         SendTrackRuleBroadcast(app, trackRule);

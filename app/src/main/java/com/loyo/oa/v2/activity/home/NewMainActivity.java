@@ -99,7 +99,7 @@ import retrofit.client.Response;
  * 2.1新版首页
  * Created by yyy on 16/5/27.
  */
-public class NewMainActivity extends BaseActivity implements View.OnClickListener,LocationUtilGD.AfterLocation{
+public class NewMainActivity extends BaseActivity implements View.OnClickListener, LocationUtilGD.AfterLocation {
 
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
@@ -133,10 +133,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
     };
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
-            switch (msg.what){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
                 //新建任务
                 case BaseActivity.TASKS_ADD:
                     app.startActivityForResult(NewMainActivity.this, TasksAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
@@ -190,7 +190,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         intentJpushInfo();
-        if(null != MainApp.user){
+        if (null != MainApp.user) {
             requestNumber();
         }
         MobclickAgent.onResume(this);
@@ -303,13 +303,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(items.get(position).title.equals("通讯录")){
+                if (items.get(position).title.equals("通讯录")) {
                     if (null != MainApp.lstDepartment) {
                         app.startActivity((Activity) mContext, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                     } else {
                         Toast("请重新拉去组织架构");
                     }
-                }else{
+                } else {
                     app.startActivityForResult((Activity) mContext, items.get(position).cls, MainApp.ENTER_TYPE_RIGHT, 1, null);
                 }
             }
@@ -335,26 +335,27 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 显示弹出菜单
-     * */
-    void showMoreWindow(View view){
-        if(null == mMoreWindow){
-                mMoreWindow = new MoreWindow(this,mHandler);
-                mMoreWindow.init();
+     */
+    void showMoreWindow(View view) {
+        if (null == mMoreWindow) {
+            mMoreWindow = new MoreWindow(this, mHandler);
+            mMoreWindow.init();
         }
         mMoreWindow.showMoreWindow(view);
     }
 
-
+int page;
     /**
      * 获取首页红点数据
      */
     void requestNumber() {
+        page++;
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                        HttpErrorCheck.checkResponse("首页红点", response);
+                        HttpErrorCheck.checkResponse("a首页红点"+page, response);
                         mItemNumbers = homeNumbers;
                         testJurl();
                     }
@@ -414,7 +415,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 定位失败
-     * */
+     */
     @Override
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
@@ -524,7 +525,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void setAttendance(){
+    private void setAttendance() {
         if (null == validateInfo) {
             return;
         }
@@ -784,7 +785,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
-
 
 
     /**
