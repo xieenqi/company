@@ -101,26 +101,27 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             maps.put("name", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("wiretel")) {
-
-                            if (!contactLeftExtras.val.isEmpty()) {
-                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {
-                                    Toast("座机号码格式不正确");
-                                    return;
-                                }
-                            }
+//
+//                            if (!contactLeftExtras.val.isEmpty()) {
+//                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {
+//                                    Toast("座机号码格式不正确");
+//                                    return;
+//                                }
+//                            }
                             maps.put("wiretel", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("tel")) {
 
-                            if (contactLeftExtras.val.isEmpty()) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
                                 Toast("手机号不能为空");
                                 return;
-                            } else {
-                                if (!RegularCheck.isMobilePhone(contactLeftExtras.val)) {
-                                    Toast("手机号码格式不正确");
-                                    return;
-                                }
                             }
+// else {
+//                                if (!RegularCheck.isMobilePhone(contactLeftExtras.val)) {
+//                                    Toast("手机号码格式不正确");
+//                                    return;
+//                                }
+//                            }
                             maps.put("tel", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("birth")) {
