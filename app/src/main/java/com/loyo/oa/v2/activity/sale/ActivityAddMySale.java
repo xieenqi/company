@@ -318,7 +318,7 @@ public class ActivityAddMySale extends BaseActivity {
             } else {
                 final GeneralPopView dailog2 = showGeneralDialog(true, true,
                         "请确认赢单产品的金额和数量是否正确！\n" +
-                                "对应客户：" + et_name.getText().toString() + "\n销售总金额：¥" + et_money.getText().toString());
+                                "对应客户：" + tv_customer.getText().toString() + "\n销售总金额：¥" + et_money.getText().toString());
                 dailog2.setSureOnclick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -370,7 +370,7 @@ public class ActivityAddMySale extends BaseActivity {
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("创建销售机会", response);
                     Toast("创建成功");
-                    app.finishActivity(ActivityAddMySale.this,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_STAGE,new Intent());
+                    app.finishActivity(ActivityAddMySale.this, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, new Intent());
                 }
 
                 @Override
