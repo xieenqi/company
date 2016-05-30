@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.sale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -212,6 +213,8 @@ public class ActivityIntentionProduct extends BaseActivity {
                 holderView.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
                 holderView.ll_delete = (LinearLayout) convertView.findViewById(R.id.ll_delete);
                 holderView.ll_edit = (LinearLayout) convertView.findViewById(R.id.ll_edit);
+                holderView.tv_oldePrice = (TextView) convertView.findViewById(R.id.tv_oldePrice);
+                holderView.tv_salePrice = (TextView) convertView.findViewById(R.id.tv_salePrice);
                 convertView.setTag(holderView);
             } else {
                 holderView = (HolderView) convertView.getTag();
@@ -222,7 +225,7 @@ public class ActivityIntentionProduct extends BaseActivity {
     }
 
     class HolderView {
-        public TextView tv_index, tv_product, tv_toal_price, tv_sale_price, tv_number, tv_discount, tv_total_money, tv_memo;
+        public TextView tv_index, tv_product, tv_toal_price, tv_sale_price, tv_number, tv_discount, tv_total_money, tv_memo, tv_oldePrice, tv_salePrice;
         public LinearLayout ll_delete, ll_edit;
 
         public void setContentView(final int position) {
@@ -235,6 +238,10 @@ public class ActivityIntentionProduct extends BaseActivity {
             tv_discount.setText(item.discount + "%");
             tv_total_money.setText(item.totalMoney + "");
             tv_memo.setText(item.memo);
+            if (!TextUtils.isEmpty(item.unit)) {
+                tv_oldePrice.setText("产品原价(" + item.unit + ")");
+                tv_salePrice.setText("销售价格(" + item.unit + ")");
+            }
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
             /*意向产品 删除*/

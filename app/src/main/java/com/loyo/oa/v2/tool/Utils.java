@@ -52,6 +52,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1086,11 +1087,20 @@ public class Utils {
 
     /**
      * 到APP的设置页面去配置权限
+     *
      * @param context
      */
     public static void doSeting(Context context) {
         Uri packageURI = Uri.parse("package:" + "com.loyo.oa.v2");
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
         context.startActivity(intent);
+    }
+
+    public static String setValueFloat(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+        BigDecimal bigDecimal = new BigDecimal(obj + "");
+        return bigDecimal.toPlainString() + "";
     }
 }

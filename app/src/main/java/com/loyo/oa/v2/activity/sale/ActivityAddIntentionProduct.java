@@ -32,6 +32,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,13 +46,13 @@ import retrofit.client.Response;
  */
 public class ActivityAddIntentionProduct extends BaseActivity {
 
-    private TextView tv_title, tv_product, tv_price, tv_discount, tv_total;
+    private TextView tv_title, tv_product, tv_price, tv_discount, tv_total, tv_oldePrice, tv_salePrice;
     private LinearLayout ll_back, ll_poduct;
     private ImageView iv_submit;
     private EditText et_price, et_number, et_remake;
     private ArrayList<Product> lstData_Product = new ArrayList<>();
     private AlertDialog dialog_Product;
-    private String productId = "";
+    private String productId = "", productUnit;
     private String saleId = "";
     private String oldId = "";
     private int fromPage = 0;
@@ -87,6 +88,8 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         tv_discount = (TextView) findViewById(R.id.tv_discount);
         tv_total = (TextView) findViewById(R.id.tv_total);
         et_remake = (EditText) findViewById(R.id.et_remake);
+        tv_oldePrice = (TextView) findViewById(R.id.tv_oldePrice);
+        tv_salePrice = (TextView) findViewById(R.id.tv_salePrice);
     }
 
     /**
@@ -94,7 +97,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
      */
     private void getIntentData() {
         saleId = getIntent().getStringExtra("saleId");
-        fromPage = getIntent().getIntExtra("data",0);
+        fromPage = getIntent().getIntExtra("data", 0);
         SaleIntentionalProduct intentProduct = (SaleIntentionalProduct) getIntent().getSerializableExtra(ExtraAndResult.EXTRA_DATA);
         if (null != intentProduct) {
             tv_title.setText("编辑意向产品");
@@ -106,13 +109,17 @@ public class ActivityAddIntentionProduct extends BaseActivity {
             tv_discount.setText(intentProduct.discount + "%");
             tv_total.setText(intentProduct.totalMoney + "");
             et_remake.setText(intentProduct.memo);
+            if (!TextUtils.isEmpty(intentProduct.unit)) {
+                tv_oldePrice.setText("产品原价(" + intentProduct.unit + ")");
+                tv_salePrice.setText("销售价格(" + intentProduct.unit + ")");
+            }
             oldId = intentProduct.id;
         }
     }
 
     /**
      * 获取意向产品
-     * */
+     */
     public void getData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getProducts(new RCallback<ArrayList<Product>>() {
@@ -133,16 +140,16 @@ public class ActivityAddIntentionProduct extends BaseActivity {
 
     /**
      * 编辑意向产品
-     * */
-    public void editProduct(){
+     */
+    public void editProduct() {
         showLoading("");
         final SaleIntentionalProduct data = assembleData();
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("Cid",saleId);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("Cid", saleId);
         map.put("ProInfo", data);
         map.put("OldId", oldId);
-        LogUtil.d("编辑产品:"+MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map,saleId,new RCallback<SaleProductEdit>() {
+        LogUtil.d("编辑产品:" + MainApp.gson.toJson(map));
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map, saleId, new RCallback<SaleProductEdit>() {
             @Override
             public void success(SaleProductEdit saleProductEdit, final Response response) {
                 HttpErrorCheck.checkResponse("编辑意向产品", response);
@@ -165,15 +172,15 @@ public class ActivityAddIntentionProduct extends BaseActivity {
 
     /**
      * 新增意向产品
-     * */
-    public void addProduct(){
+     */
+    public void addProduct() {
         showLoading("");
         final SaleIntentionalProduct data = assembleData();
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("Cid",saleId);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("Cid", saleId);
         map.put("ProInfo", data);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).addSaleProduct(map,new RCallback<SaleProductEdit>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).addSaleProduct(map, new RCallback<SaleProductEdit>() {
             @Override
             public void success(SaleProductEdit saleProductEdit, final Response response) {
                 HttpErrorCheck.checkResponse("新增意向产品", response);
@@ -204,11 +211,11 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.iv_submit:
-                    if(fromPage == ActionCode.SALE_FROM_DETAILS){
+                    if (fromPage == ActionCode.SALE_FROM_DETAILS) {
                         addProduct();
-                    }else if(fromPage == ActionCode.SALE_PRO_EDIT){
+                    } else if (fromPage == ActionCode.SALE_PRO_EDIT) {
                         editProduct();
-                    }else{
+                    } else {
                         SaleIntentionalProduct data = assembleData();
                         if (null != data) {
                             Intent intent = new Intent();
@@ -240,7 +247,8 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (!TextUtils.isEmpty(et_price.getText().toString())) {
-                tv_total.setText((transformationNumber(s.toString()) * transformationNumber(et_price.getText().toString())) + "");
+                tv_total.setText(Utils.setValueFloat((transformationNumber(s.toString())
+                        * transformationNumber(et_price.getText().toString()))) + "");
             } else {
                 tv_total.setText("");
             }
@@ -260,12 +268,14 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (!TextUtils.isEmpty(tv_price.getText().toString())) {
-                tv_discount.setText((transformationNumber(s.toString()) / transformationNumber(tv_price.getText().toString()) * 100) + "%");
+                tv_discount.setText(Utils.setValueFloat((transformationNumber(s.toString())
+                        / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
             } else {
                 tv_discount.setText("");
             }
             if (!TextUtils.isEmpty(et_number.getText().toString())) {
-                tv_total.setText((transformationNumber(s.toString()) * transformationNumber(et_number.getText().toString())) + "");
+                tv_total.setText((Utils.setValueFloat(transformationNumber(s.toString())
+                        * transformationNumber(et_number.getText().toString()))) + "");
             }
         }
     };
@@ -309,6 +319,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 Product item = lstData_Product.get((int) id);
                 tv_product.setText(item.name);
                 productId = item.id;
+                productUnit = item.unit;
                 tv_price.setText(item.unitPrice);
 
                 et_price.setText("");
@@ -316,7 +327,8 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 tv_discount.setText("");
                 tv_total.setText("");
                 et_remake.setText("");
-
+                tv_oldePrice.setText("产品原价(" + item.unit + ")");
+                tv_salePrice.setText("销售价格(" + item.unit + ")");
                 dialog_Product.dismiss();
             }
         });
@@ -346,6 +358,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 substring(0, tv_discount.getText().toString().length() - 1));
         product.totalMoney = transformationNumber(tv_total.getText().toString());
         product.memo = et_remake.getText().toString();
+        product.unit = productUnit;
         return product;
     }
 //    {
