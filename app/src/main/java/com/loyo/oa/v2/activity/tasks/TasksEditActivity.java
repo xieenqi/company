@@ -183,7 +183,7 @@ public class TasksEditActivity extends BaseActivity {
 
         savePostData();
         tv_toUsers.setText(joinName.toString());
-        if(mTask.getPlanEndAt() != 0){
+        if (mTask.getPlanEndAt() != 0) {
             tv_deadline.setText(MainApp.getMainApp().df10.format(new Date(mTask.getPlanEndAt() * 1000)));
         }
         tv_remind.setText(Task.GetRemindText(mTask.getRemindTime()));
@@ -195,13 +195,13 @@ public class TasksEditActivity extends BaseActivity {
             tv_Project.setText(mTask.getProject().title);
         }
 
-        if(mTask.getCornBody().getType() != 0){
+        if (null != mTask && null != mTask.getCornBody() && 0 != mTask.getCornBody().getType()) {
             isKind = true;
             task_ll_deadline.setVisibility(View.GONE);
             linear_task_approve.setVisibility(View.GONE);
             view_task_approve.setVisibility(View.GONE);
 
-        }else{
+        } else {
             isKind = false;
             layout_retask.setVisibility(View.GONE);
             layout_retask_view.setVisibility(View.GONE);
@@ -211,7 +211,7 @@ public class TasksEditActivity extends BaseActivity {
 
     /**
      * 获取附件(编辑)
-     * */
+     */
     void getEditAttachments() {
         showLoading("");
         Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
@@ -233,7 +233,7 @@ public class TasksEditActivity extends BaseActivity {
 
     /**
      * 重复任务数据拆解
-     * */
+     */
     public void setCornBodyinfo() {
 
         if (null != mTask.getCornBody() && mTask.getCornBody().getType() != 0) {
@@ -320,11 +320,11 @@ public class TasksEditActivity extends BaseActivity {
 
     /**
      * 获取附件
-     * */
+     */
     void getAttachments() {
         Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> _attachments,final Response response) {
+            public void success(final ArrayList<Attachment> _attachments, final Response response) {
                 mTask.setAttachments(_attachments);
                 init_gridView_photo();
             }
@@ -359,11 +359,11 @@ public class TasksEditActivity extends BaseActivity {
 
 
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true, isCreator,0);
+        signInGridViewAdapter = new SignInGridViewAdapter(this, mTask.getAttachments(), true, true, isCreator, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer,R.id.layout_retask})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson, R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer, R.id.layout_retask})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -383,27 +383,26 @@ public class TasksEditActivity extends BaseActivity {
                     break;
                 }
 
-                if (mTask.getPlanEndAt() <= 0 && tv_retask.getText().toString().trim().isEmpty()){
+                if (mTask.getPlanEndAt() <= 0 && tv_retask.getText().toString().trim().isEmpty()) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")){
+                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
 
-                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()){
+                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if(tv_retask.getText().toString().equals("不重复") && mTask.getPlanEndAt() <= 0){
+                if (tv_retask.getText().toString().equals("不重复") && mTask.getPlanEndAt() <= 0) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
-
 
 
                 if (mTask.getResponsiblePerson() == null || TextUtils.isEmpty(mTask.getResponsiblePerson().getId())) {
@@ -420,9 +419,9 @@ public class TasksEditActivity extends BaseActivity {
                 map.put("customerId", mTask.getCustomerId());
                 map.put("customerName", mTask.getCustomerName());
 
-                if(switch_approve.getState() == 4){
+                if (switch_approve.getState() == 4) {
                     isState = true;
-                }else if(switch_approve.getState() == 1){
+                } else if (switch_approve.getState() == 1) {
                     isState = false;
                 }
 
@@ -430,13 +429,13 @@ public class TasksEditActivity extends BaseActivity {
                     map.put("projectId", mTask.getProjectId());
                 }
 
-                if(isKind){
-                    map.put("cornBody",mTask.getCornBody());
-                }else if(!isKind){
+                if (isKind) {
+                    map.put("cornBody", mTask.getCornBody());
+                } else if (!isKind) {
                     map.put("planendAt", mTask.getPlanEndAt());
                     map.put("remindflag", mTask.getRemindTime() > 0);
                     map.put("remindtime", mTask.getRemindTime());
-                    map.put("reviewFlag",isState);
+                    map.put("reviewFlag", isState);
                 }
 
                 LogUtil.d("任务编辑 发送的数据:" + MainApp.gson.toJson(map));
@@ -475,7 +474,7 @@ public class TasksEditActivity extends BaseActivity {
 
             /*编辑参与人*/
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
+                SelectDetUserActivity2.startThisForAllSelect(TasksEditActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
                 break;
 
 
@@ -519,15 +518,15 @@ public class TasksEditActivity extends BaseActivity {
     }
 
 
-    void setDeadLine(){
+    void setDeadLine() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
-            public void onDateTimeChanged(final int year,final int month,final int day,final int hour,final int min) {
+            public void onDateTimeChanged(final int year, final int month, final int day, final int hour, final int min) {
                 String str = year + "-" + String.format("%02d", (month + 1)) + "-" +
                         String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                 tv_deadline.setText(str);
-                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str,"yyyy-MM-dd HH:mm")));
+                mTask.setPlanEndAt(Long.parseLong(DateTool.getDataOne(str, "yyyy-MM-dd HH:mm")));
                 isKind = false;
                 layout_retask.setVisibility(View.GONE);
                 layout_retask_view.setVisibility(View.GONE);
@@ -545,36 +544,36 @@ public class TasksEditActivity extends BaseActivity {
                 layout_retask.setVisibility(View.VISIBLE);
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
-        },false,"不截止");
+        }, false, "不截止");
     }
 
     /**
      * 重复任务数据初始化
-     * */
-    void setRepeatParam(String[] str){
+     */
+    void setRepeatParam(String[] str) {
 
-        if(str[0].equals("每天")){
+        if (str[0].equals("每天")) {
             mTask.getCornBody().setType(1);
-        }else if(str[0].equals("每周")){
+        } else if (str[0].equals("每周")) {
             mTask.getCornBody().setType(2);
 
-            if(str[1].equals("周一")){
+            if (str[1].equals("周一")) {
                 mTask.getCornBody().setWeekDay(2);
-            }else if(str[1].equals("周二")){
+            } else if (str[1].equals("周二")) {
                 mTask.getCornBody().setWeekDay(3);
-            }else if(str[1].equals("周三")){
+            } else if (str[1].equals("周三")) {
                 mTask.getCornBody().setWeekDay(4);
-            }else if(str[1].equals("周四")){
+            } else if (str[1].equals("周四")) {
                 mTask.getCornBody().setWeekDay(5);
-            }else if(str[1].equals("周五")){
+            } else if (str[1].equals("周五")) {
                 mTask.getCornBody().setWeekDay(6);
-            }else if(str[1].equals("周六")){
+            } else if (str[1].equals("周六")) {
                 mTask.getCornBody().setWeekDay(7);
-            }else if(str[1].equals("周日")){
+            } else if (str[1].equals("周日")) {
                 mTask.getCornBody().setWeekDay(1);
             }
 
-        }else if(str[0].equals("每月")){
+        } else if (str[0].equals("每月")) {
             mTask.getCornBody().setType(3);
             mTask.getCornBody().setDay(Integer.parseInt(str[1].replaceAll("号", "")));
         }
@@ -586,8 +585,8 @@ public class TasksEditActivity extends BaseActivity {
 
     /**
      * 重复任务功能
-     * */
-    void setRepeatTask(){
+     */
+    void setRepeatTask() {
         final RepeatTaskView repeatTaskView = new RepeatTaskView(this);
         repeatTaskView.setCanceledOnTouchOutside(true);
         repeatTaskView.show();
@@ -599,17 +598,17 @@ public class TasksEditActivity extends BaseActivity {
                 setRepeatParam(cityArr);
                 String hour = cityArr[2];
                 String mins = cityArr[3];
-                if(hour.equals("0时")){
-                    hour = "0"+hour;
+                if (hour.equals("0时")) {
+                    hour = "0" + hour;
                 }
 
-                if(mins.equals("0分")) {
-                    mins = "0"+mins;
+                if (mins.equals("0分")) {
+                    mins = "0" + mins;
                 }
 
-                if(cityArr[1].equals("无")){
+                if (cityArr[1].equals("无")) {
                     tv_retask.setText(cityArr[0] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
-                }else{
+                } else {
                     tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
                 }
                 task_ll_deadline.setVisibility(View.GONE);
@@ -651,7 +650,7 @@ public class TasksEditActivity extends BaseActivity {
         listView_products.setAdapter(productsRadioListViewAdapter);
         listView_products.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> parent,final View view,final int position,final long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 
                 mTask.setRemindTime(Task.RemindListSource.get(position));
                 tv_remind.setText(Task.RemindList.get(position));
@@ -666,7 +665,7 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -741,7 +740,7 @@ public class TasksEditActivity extends BaseActivity {
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(mTask.getAttachmentUUId(),2,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(mTask.getAttachmentUUId(), 2, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
@@ -759,12 +758,12 @@ public class TasksEditActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String,Object> map = new HashMap<String, Object>();
-                map.put("bizType",2);
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("bizType", 2);
                 map.put("uuid", uuid);
-                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
+                app.getRestAdapter().create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                     @Override
-                    public void success(final Attachment attachment,final Response response) {
+                    public void success(final Attachment attachment, final Response response) {
                         Utils.dialogDismiss();
                         Toast("删除附件成功!");
                         mTask.getAttachments().remove(delAttachment);
@@ -786,12 +785,12 @@ public class TasksEditActivity extends BaseActivity {
     }
 
     public class RemindAdapter extends CommonAdapter<String> {
-        public RemindAdapter(final Context context,final List<String> datas,final int layoutId) {
+        public RemindAdapter(final Context context, final List<String> datas, final int layoutId) {
             super(context, datas, layoutId);
         }
 
         @Override
-        public void convert(final ViewHolder holder,final String s) {
+        public void convert(final ViewHolder holder, final String s) {
             holder.setText(R.id.tv, s);
         }
     }
