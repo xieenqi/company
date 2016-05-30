@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,7 @@ public class AdapterSaleTeam extends BaseAdapter {
         }
 
         holder.title.setText(record.getName());
-        holder.money.setText(record.getEstimatedAmount() + "");
+        holder.money.setText(Utils.setValueFloat(record.getEstimatedAmount()) + "");
         holder.creator.setText(record.getCreateName());
         String stageName = "初步接洽";
         if (!record.getStageNmae().isEmpty()) {

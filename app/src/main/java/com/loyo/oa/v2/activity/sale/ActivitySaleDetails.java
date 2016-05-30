@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
 
 import java.util.Date;
@@ -199,7 +200,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     public void bindData() {
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
-        salesAmount.setText(mSaleDetails.getSalesAmount() + "");
+        salesAmount.setText(Utils.setValueFloat(mSaleDetails.getSalesAmount()) + "");
         estimatedAmount.setText(mSaleDetails.getEstimatedAmount() + "");
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
@@ -228,7 +229,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
             losereason.setText(mSaleDetails.getLostReason());
-        }else{
+        } else {
             layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
@@ -302,7 +303,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         int resultAction;
 
-        if(resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
 
@@ -311,7 +312,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             /**编辑成功后 回调*/
             case ExtraAndResult.MSG_WHAT_DIALOG:
                 resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
-                if(resultAction == ActionCode.SALE_DETAILS_EDIT){
+                if (resultAction == ActionCode.SALE_DETAILS_EDIT) {
                     LogUtil.dee("编辑成功回调");
                     getData();
                 }
