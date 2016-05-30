@@ -158,6 +158,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             mView = inflater.inflate(R.layout.fragment_team_sale, null);
             initView(mView);
         }
+        getData();
         return mView;
     }
 
@@ -177,7 +178,6 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             sortData.add(saleTeamScreen);
         }
 
-        getData();
         setStageData();
         mContext = getActivity();
         params = getActivity().getWindow().getAttributes();
@@ -369,6 +369,11 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                 getData();
                 break;
 
+            //新增后 刷新列表
+            case ExtraAndResult.REQUEST_CODE_STAGE:
+                getData();
+                break;
+
             default:
                 break;
         }
@@ -381,8 +386,11 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
             //新建机会
             case R.id.btn_add:
-                MainApp.getMainApp().startActivityForResult(mActivity, ActivityAddMySale.class,
-                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, null);
+
+                mIntent = new Intent();
+                mIntent.setClass(getActivity(),ActivityAddMySale.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+
                 break;
 
 

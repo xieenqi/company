@@ -64,7 +64,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private WindowManager.LayoutParams windowParams;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
-    //    private SaleMyList mSaleMyList;
     private SaleTeamScreen saleTeamScreen;
 
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -109,6 +108,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             mView = inflater.inflate(R.layout.fragment_my_sale, null);
             initView(mView);
         }
+        getData();
         return mView;
     }
 
@@ -123,7 +123,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         }
 
         mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        getData();
         setStageData();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
@@ -272,12 +271,14 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             case ExtraAndResult.REQUEST_CODE_SOURCE:
                 getData();
                 break;
+            //新增后 刷新列表
+            case ExtraAndResult.REQUEST_CODE_STAGE:
+                getData();
+                break;
 
             default:
                 break;
-
         }
-
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -287,8 +288,11 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
                 //新建机会
                 case R.id.btn_add:
-                    MainApp.getMainApp().startActivityForResult(mActivity, ActivityAddMySale.class,
-                            MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, null);
+
+                    mIntent = new Intent();
+                    mIntent.setClass(getActivity(),ActivityAddMySale.class);
+                    startActivityForResult(mIntent,getActivity().RESULT_FIRST_USER);
+
                     break;
 
                 //销售阶段

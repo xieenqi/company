@@ -368,7 +368,7 @@ public class ActivityAddMySale extends BaseActivity {
                 public void success(SaleOpportunityAdd saleOpportunityAdd, Response response) {
                     HttpErrorCheck.checkResponse("创建销售机会", response);
                     Toast("创建成功");
-                    finish();
+                    app.finishActivity(ActivityAddMySale.this,MainApp.ENTER_TYPE_RIGHT,ExtraAndResult.REQUEST_CODE_STAGE,new Intent());
                 }
 
                 @Override
