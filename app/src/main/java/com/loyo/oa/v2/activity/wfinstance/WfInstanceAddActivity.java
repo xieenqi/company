@@ -51,11 +51,13 @@ import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -150,6 +152,10 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 设置默认的部门 信息
      */
     public void setDefaultDept() {
+        if (null == MainApp.user.depts || MainApp.user.depts.size() <= 0) {
+            tv_dept.setText("没有归属部门");
+            return;
+        }
         Department myDepartment = MainApp.user.depts.get(0).getShortDept();
         tv_dept.setText(myDepartment.getName());
         deptId = myDepartment.getId();
@@ -272,11 +278,11 @@ public class WfInstanceAddActivity extends BaseActivity {
                 /*审批开始时间不能小于结束时间，
                 从审批内容里获取到 开始时间 结束时间 的id
                 再根据这个id去获取 开始结束 时间的值    */
-                for(int i = 0;i<mBizForm.getFields().size();i++){
-                    if(mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()){
+                for (int i = 0; i < mBizForm.getFields().size(); i++) {
+                    if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
                         startTimeId = mBizForm.getFields().get(i).getId();
                     }
-                    if(mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()){
+                    if (mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()) {
                         endTimeId = mBizForm.getFields().get(i).getId();
                     }
                 }
@@ -331,7 +337,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
             /*选择流程回调*/
             case RESULT_PROCESS_CHOOSE:
-                int position =  data.getExtras().getInt("position");
+                int position = data.getExtras().getInt("position");
                 mTemplateId = wfTemplateArrayList.get(position).getId();
                 tv_WfTemplate.setText(wfTemplateArrayList.get(position).getTitle());
                 break;
@@ -419,7 +425,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("data", wfTemplateArrayList);
-                app.startActivityForResult(this,ProcessChoose.class,MainApp.ENTER_TYPE_RIGHT,RESULT_PROCESS_CHOOSE,bundle);
+                app.startActivityForResult(this, ProcessChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_PROCESS_CHOOSE, bundle);
 
                 break;
             //选择类别
@@ -531,17 +537,17 @@ public class WfInstanceAddActivity extends BaseActivity {
         long startTimelong;
         long endTimelong;
 
-        if(null != startTimeId){
-            for(HashMap<String, Object> map : workflowValues){
+        if (null != startTimeId) {
+            for (HashMap<String, Object> map : workflowValues) {
                 Set set = map.entrySet();
-                Iterator it=set.iterator();
-                while(it.hasNext()){
-                    Map.Entry me=(Map.Entry)it.next();
-                    if(startTimeId.equals(me.getKey())){
+                Iterator it = set.iterator();
+                while (it.hasNext()) {
+                    Map.Entry me = (Map.Entry) it.next();
+                    if (startTimeId.equals(me.getKey())) {
                         startTimeDate = (String) map.get(startTimeId);
                     }
 
-                    if(endTimeId.equals(me.getKey())){
+                    if (endTimeId.equals(me.getKey())) {
                         endTimeDate = (String) map.get(endTimeId);
                     }
                 }
