@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activity.sale.ActivitySaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.adapter.WorkflowNodesListViewAdapter;
@@ -582,6 +583,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             case R.id.ll_sale:
                 Toast("销售机会");
+                Bundle sale = new Bundle();
+                app.startActivityForResult(this, ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, 3, sale);
                 break;
         }
     }
