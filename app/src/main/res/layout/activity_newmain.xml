@@ -56,17 +56,8 @@
             android:headerDividersEnabled="true"
             android:scrollbars="none"
             android:smoothScrollbar="true"
+            android:listSelector="@android:color/transparent"
             />
-
-
-<!--        <ListView
-            android:id="@+id/newhome_listview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:divider="@null"
-            android:scrollbars="none"
-            />-->
 
         <Button
             android:id="@+id/btn_add"
