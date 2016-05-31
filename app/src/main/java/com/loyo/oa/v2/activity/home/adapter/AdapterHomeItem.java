@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.home.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
-import com.loyo.oa.v2.tool.customview.RippleView;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +30,7 @@ public class AdapterHomeItem extends BaseAdapter{
     private ArrayList<HttpMainRedDot> mItemNumbers;
     private boolean crmTi = false;
     private boolean oaTi  = false;
+    private Intent mIntent = new Intent();
 
     public AdapterHomeItem(Context context,ArrayList<HomeItem> items,ArrayList<HttpMainRedDot> mItemNumbers) {
         this.mContext = context;
@@ -58,7 +61,7 @@ public class AdapterHomeItem extends BaseAdapter{
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflter.inflate(R.layout.item_newmain, null, false);
@@ -68,6 +71,7 @@ public class AdapterHomeItem extends BaseAdapter{
             holder.view_number = (ImageView) convertView.findViewById(R.id.item_newmain_number);
             holder.tv_title = (TextView) convertView.findViewById(R.id.item_newmain_title);
             holder.item_newmain_topview = (LinearLayout) convertView.findViewById(R.id.item_newmain_topview);
+            holder.item_newmain_layout = (LinearLayout) convertView.findViewById(R.id.item_newmain_layout);
             convertView.setTag(holder);
 
         } else {
@@ -123,14 +127,32 @@ public class AdapterHomeItem extends BaseAdapter{
         }else{
             holder.item_newmain_topview.setVisibility(View.GONE);
         }
-
         holder.img_item.setImageDrawable(mContext.getResources().getDrawable(item.imageViewRes));
         holder.tv_item.setText(item.title);
+
+        //跳转对应业务
+        holder.item_newmain_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (items.get(position).title.equals("通讯录")) {
+                    if (null != MainApp.lstDepartment) {
+                        mIntent.setClass(mContext, ContactsActivity.class);
+                        mContext.startActivity(mIntent);
+                    } else {
+                        Toast.makeText(mContext,"请重新拉去组织架构",Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    mIntent.setClass(mContext,items.get(position).cls);
+                    mContext.startActivity(mIntent);
+                }
+            }
+        });
 
         return convertView;
     }
 
     class ViewHolder {
+        LinearLayout item_newmain_layout;
         LinearLayout item_newmain_topview;
         ImageView img_item;
         TextView tv_item;

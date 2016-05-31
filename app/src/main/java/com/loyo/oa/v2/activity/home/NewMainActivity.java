@@ -307,9 +307,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
 
-
         //跳转对应功能
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+/*        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (items.get(position - 1).title.equals("通讯录")) {
@@ -322,7 +321,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     app.startActivityForResult((Activity) mContext, items.get(position-1).cls, MainApp.ENTER_TYPE_RIGHT, 1, null);
                 }
             }
-        });
+        });*/
     }
 
     /**
