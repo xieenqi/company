@@ -395,6 +395,9 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
+        if(ll_transport.getVisibility() == View.GONE){
+            loseResons.clear();
+        }
         map.put("loseReason", loseResons);
         LogUtil.d("改变销售机会传递--》", app.gson.toJson(map));
         if (!isEdit) {
@@ -454,9 +457,6 @@ public class ActivityAddMySale extends BaseActivity {
                             ll_transport.setVisibility(View.VISIBLE);
                         } else {
                             ll_transport.setVisibility(View.GONE);
-                        }
-                        if (isEdit) {
-                            loseResons.clear();
                         }
                     }
                     break;
