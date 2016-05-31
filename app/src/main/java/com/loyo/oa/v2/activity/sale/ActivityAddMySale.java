@@ -455,6 +455,9 @@ public class ActivityAddMySale extends BaseActivity {
                         } else {
                             ll_transport.setVisibility(View.GONE);
                         }
+                        if (isEdit) {
+                            loseResons.clear();
+                        }
                     }
                     break;
                 case ExtraAndResult.REQUEST_CODE_TYPE:
