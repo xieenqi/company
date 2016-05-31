@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  */
 public class AdapterMySaleList extends BaseAdapter {
 
-    private ArrayList<SaleRecord> mData=new ArrayList<>();
+    private ArrayList<SaleRecord> mData = new ArrayList<>();
     private Context mContext;
 
     public AdapterMySaleList(Context context) {
@@ -67,7 +68,7 @@ public class AdapterMySaleList extends BaseAdapter {
         }
         holder.tv_name.setText(record.getName());
         holder.tv_number.setText(record.getStageNmae() + "(" + record.getProb() + "%)");
-        holder.tv_price.setText("预估销售金额:" + record.getEstimatedAmount());
+        holder.tv_price.setText("预估销售金额:" + Utils.setValueFloat(record.getEstimatedAmount()));
 
         return view;
     }

@@ -12,7 +12,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.activity.sale.bean.SaleLoseReason;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
@@ -28,6 +27,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
 
 import java.util.ArrayList;
@@ -71,7 +71,6 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView creatorTime;
     private TextView updateTime;
     private TextView winTime;
-    private TextView tv_stageName;
     private TextView product;
     private TextView text_stagename;
     private ImageView iv_wfstatus;
@@ -102,7 +101,6 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime = (TextView) findViewById(R.id.creatortime);
         updateTime = (TextView) findViewById(R.id.updatetime);
         winTime = (TextView) findViewById(R.id.wintime);
-        tv_stageName = (TextView) findViewById(R.id.text_stagename);
         product = (TextView) findViewById(R.id.text_product);
         text_stagename = (TextView) findViewById(R.id.text_stagename);
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
@@ -178,8 +176,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         HashMap<String, Object> map = new HashMap<>();
         map.put("stageId", stageId);
         map.put("cId", selectId);
-        if(null != loseResons){
-            map.put("loseReason",loseResons);
+        if (null != loseResons) {
+            map.put("loseReason", loseResons);
         }
         map.put("content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
@@ -206,7 +204,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     public void bindData() {
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
-        salesAmount.setText(mSaleDetails.getSalesAmount() + "");
+        salesAmount.setText(Utils.setValueFloat(mSaleDetails.getSalesAmount()) + "");
         estimatedAmount.setText(mSaleDetails.getEstimatedAmount() + "");
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
@@ -215,7 +213,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
         updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
         winTime.setText(mSaleDetails.getWinTime() + "");
-        tv_stageName.setText(mSaleDetails.getStageName());
+        text_stagename.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
             for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
@@ -227,19 +225,20 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (ll_extra.getChildCount() != 0) {
             ll_extra.removeAllViews();
         }
-        for (ContactLeftExtras saleDetailsExtraList : mSaleDetails.extensionDatas) {
-            ll_extra.addView(new ViewSaleDetailsExtra(mContext, saleDetailsExtraList));
+        if (null != mSaleDetails.extensionDatas) {
+            for (ContactLeftExtras saleDetailsExtraList : mSaleDetails.extensionDatas) {
+                ll_extra.addView(new ViewSaleDetailsExtra(mContext, saleDetailsExtraList));
+            }
         }
-
         /*当为输单阶段时，显示输单原因*/
         if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
             loseReasonBuffer = new StringBuffer();
-            for(CommonTag commonTag :mSaleDetails.getLoseReason()){
-                loseReasonBuffer.append(commonTag.getName()+" ");
+            for (CommonTag commonTag : mSaleDetails.getLoseReason()) {
+                loseReasonBuffer.append(commonTag.getName() + " ");
             }
             losereason.setText(loseReasonBuffer.toString());
-        }else{
+        } else {
             layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
@@ -313,7 +312,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         int resultAction;
 
-        if(resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
 
@@ -322,7 +321,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             /**编辑成功后 回调*/
             case ExtraAndResult.MSG_WHAT_DIALOG:
                 resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
-                if(resultAction == ActionCode.SALE_DETAILS_EDIT){
+                if (resultAction == ActionCode.SALE_DETAILS_EDIT) {
                     LogUtil.dee("编辑成功回调");
                     getData();
                 }
@@ -354,7 +353,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                 loseResons = (ArrayList<CommonTag>) data.getSerializableExtra(ExtraAndResult.RESULT_NAME);
                 if (null != stage) {
-                    tv_stageName.setText(stage.name);
+                    text_stagename.setText(stage.name);
                     stageId = stage.id;
                     stageName = stage.name;
                     editStage();
