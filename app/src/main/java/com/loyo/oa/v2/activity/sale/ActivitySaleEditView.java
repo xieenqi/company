@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
@@ -15,19 +16,21 @@ import com.loyo.oa.v2.tool.ExitActivity;
 /**
  * 机会详情 菜单弹出框
  * 功   能:编辑 删除
- * */
+ */
 
 public class ActivitySaleEditView extends BaseActivity implements OnClickListener {
 
     private Button btn_delete, btn_edit, btn_cancel, btn_extra;
     private LinearLayout layout;
     private Intent mIntent;
+    private boolean isDelete = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ExitActivity.getInstance().addActivity(this);
         setContentView(R.layout.activity_saleedit_view);
+        isDelete = getIntent().getBooleanExtra("isDelete", false);
         getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         btn_delete = (Button) this.findViewById(R.id.btn_delete);
@@ -48,6 +51,11 @@ public class ActivitySaleEditView extends BaseActivity implements OnClickListene
         btn_cancel.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
+        if (isDelete) {
+            btn_delete.setVisibility(View.VISIBLE);
+        } else {
+            btn_delete.setVisibility(View.GONE);
+        }
 
     }
 
@@ -82,8 +90,8 @@ public class ActivitySaleEditView extends BaseActivity implements OnClickListene
                     @Override
                     public void onClick(final View view) {
                         mIntent = new Intent();
-                        mIntent.putExtra("delete",true);
-                        setResult(RESULT_OK,mIntent);
+                        mIntent.putExtra("delete", true);
+                        setResult(RESULT_OK, mIntent);
                         finish();
                     }
                 });

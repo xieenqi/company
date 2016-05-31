@@ -108,7 +108,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     public final int MSG_ATTACHMENT = 200;
 
     public boolean isOver = false;
-    public String userId;
+    public String userId, saleId;
     public WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
     public ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
     public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
@@ -211,6 +211,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
             return;
         }
         SaleDetails chanceData = wfData.chance;
+        saleId = chanceData.id;
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
         tv_sale.setText(chanceData.name);
@@ -582,8 +583,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
             case R.id.ll_sale:
-                Toast("销售机会");
                 Bundle sale = new Bundle();
+                sale.putString("id", saleId);
+                sale.putString("formPath", "审批");
                 app.startActivityForResult(this, ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, 3, sale);
                 break;
         }

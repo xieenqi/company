@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.sale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -74,6 +75,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView product;
     private TextView text_stagename;
     private ImageView iv_wfstatus;
+    private boolean isDelete = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,12 +118,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         ll_product.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
-
-        mIntent = getIntent();
-        selectId = mIntent.getStringExtra("id");
-        getData();
         iv_wfstatus.setOnTouchListener(Global.GetTouch());
         iv_wfstatus.setOnClickListener(this);
+        getIntenData();
+        getData();
     }
 
     /**
@@ -145,6 +145,19 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                         finish();
                     }
                 });
+    }
+
+    private void getIntenData() {
+        mIntent = getIntent();
+        selectId = mIntent.getStringExtra("id");
+        String fromPath = mIntent.getStringExtra("formPath");
+        if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
+            //审批过来不准编辑
+            iv_wfstatus.setEnabled(false);
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
+        }
     }
 
     /**
@@ -242,7 +255,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
-
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
             switch (mSaleDetails.wfState) {
                 case 1:
                     iv_wfstatus.setImageResource(R.drawable.img_task_wite);
@@ -252,6 +267,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     break;
                 case 3:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
+                    img_title_right.setVisibility(View.VISIBLE);
+                    ll_product.setEnabled(true);
+                    ll_stage.setEnabled(true);
+                    isDelete = false;
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
@@ -274,6 +293,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             //弹出菜单
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, ActivitySaleEditView.class);
+                intent.putExtra("isDelete", isDelete);
                 startActivityForResult(intent, EDIT_POP_WINDOW);
                 break;
             //意向产品
