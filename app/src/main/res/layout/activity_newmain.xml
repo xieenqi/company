@@ -42,14 +42,31 @@
         android:layout_height="match_parent"
         >
 
-        <ListView
+        <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+            android:id="@+id/newhome_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/whitesmoke"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:drawSelectorOnTop="true"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:scrollbars="none"
+            android:smoothScrollbar="true"
+            />
+
+
+<!--        <ListView
             android:id="@+id/newhome_listview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@color/white"
             android:divider="@null"
             android:scrollbars="none"
-            />
+            />-->
 
         <Button
             android:id="@+id/btn_add"
