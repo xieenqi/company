@@ -145,9 +145,9 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         showLoading("");
         final SaleIntentionalProduct data = assembleData();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("Cid", saleId);
-        map.put("ProInfo", data);
-        map.put("OldId", oldId);
+        map.put("cId", saleId);
+        map.put("proInfo", data);
+        map.put("oldId", oldId);
         LogUtil.d("编辑产品:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).editSaleProduct(map, saleId, new RCallback<SaleProductEdit>() {
             @Override

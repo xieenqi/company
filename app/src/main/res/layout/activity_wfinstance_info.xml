@@ -105,6 +105,50 @@
                     <include layout="@layout/include_solid_line_left"/>
 
                     <LinearLayout
+                        android:id="@+id/ll_sale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/text_item1"
+                                android:layout_width="80dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/margin_side_edge"
+                                android:text="销售机会"
+                                android:textSize="15sp"/>
+
+                            <TextView
+                                android:id="@+id/tv_sale"
+                                style="@style/text_item1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="right|center_vertical"
+                                android:textColor="@color/title_bg1"
+                                android:textColorHint="@color/text99"
+                                android:textSize="15sp"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="5dp"
+                                android:scaleType="center"
+                                android:src="@drawable/right_arrow"/>
+
+                        </LinearLayout>
+
+                        <include layout="@layout/include_solid_line_left"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/layout_wfinstance_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
