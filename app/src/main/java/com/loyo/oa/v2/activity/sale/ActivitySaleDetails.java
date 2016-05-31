@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.sale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -116,12 +117,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         ll_product.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
-
-        mIntent = getIntent();
-        selectId = mIntent.getStringExtra("id");
-        getData();
         iv_wfstatus.setOnTouchListener(Global.GetTouch());
         iv_wfstatus.setOnClickListener(this);
+        getIntenData();
+        getData();
     }
 
     /**
@@ -145,6 +144,18 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                         finish();
                     }
                 });
+    }
+
+    private void getIntenData() {
+        mIntent = getIntent();
+        selectId = mIntent.getStringExtra("id");
+        String fromPath = mIntent.getStringExtra("fromPath");
+        if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
+            iv_wfstatus.setEnabled(false);
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
+        }
     }
 
     /**
