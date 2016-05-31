@@ -312,14 +312,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (items.get(position).title.equals("通讯录")) {
+                if (items.get(position - 1).title.equals("通讯录")) {
                     if (null != MainApp.lstDepartment) {
                         app.startActivity((Activity) mContext, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                     } else {
                         Toast("请重新拉去组织架构");
                     }
                 } else {
-                    app.startActivityForResult((Activity) mContext, items.get(position).cls, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    app.startActivityForResult((Activity) mContext, items.get(position-1).cls, MainApp.ENTER_TYPE_RIGHT, 1, null);
                 }
             }
         });
