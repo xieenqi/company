@@ -213,9 +213,11 @@ public class ActivityAddMySale extends BaseActivity {
             tv_custom.addView(new ContactAddforExtraData(mContext, null, mSaleDetails.extensionDatas, true, R.color.title_bg1, 0));
             filedData = mSaleDetails.extensionDatas;
             et_remake.setText(mSaleDetails.memo);
-            ll_transport.setVisibility((null == mSaleDetails.getLoseReason()) ? View.GONE : View.VISIBLE);
+            ll_transport.setVisibility((null == mSaleDetails.getLoseReason() || mSaleDetails.getLoseReason().size() <= 0)
+                    ? View.GONE : View.VISIBLE);
 
             if (null != mSaleDetails.loseReason) {
+                loseResons = mSaleDetails.loseReason;
                 loseReasonBuff = new StringBuffer();
                 for (CommonTag commonTag : mSaleDetails.loseReason) {
                     loseReasonBuff.append(commonTag.getName() + "、");
@@ -319,7 +321,7 @@ public class ActivityAddMySale extends BaseActivity {
         } else if (-1 == estimatedTime) {
             Toast("请选择预估成交时间");
             return;
-        } else if (!(intentionProductData.size() > 0) && isProduct) {
+        } else if (isProduct && null != intentionProductData && !(intentionProductData.size() > 0)) {
             Toast("请添加意向产品");
             return;
         } else if (TextUtils.isEmpty(tv_type.getText().toString()) && isType) {
@@ -485,9 +487,12 @@ public class ActivityAddMySale extends BaseActivity {
      */
     private String getIntentionProductName() {
         String productName = "";
-        for (SaleIntentionalProduct ele : intentionProductData) {
-            productName += ele.name + "、";
+        if (null != intentionProductData) {
+            for (SaleIntentionalProduct ele : intentionProductData) {
+                productName += ele.name + "、";
+            }
         }
+
         return productName;
     }
 
