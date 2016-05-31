@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -283,7 +284,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
         NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
-        tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
+        tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : (mWorkReport.content.toString().contains("<") ? Html.fromHtml(mWorkReport.content) : mWorkReport.content));
         tv_reviewer.setText(mWorkReport.reviewer.user.getName());
         tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: " + getJoinUserNames());
 
@@ -443,7 +444,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.members.users != null || mWorkReport.members.depts != null) {
             if (mWorkReport.members.users != null) {
                 for (int i = 0; i < mWorkReport.members.users.size(); i++) {
-                    if (null != mWorkReport && null != mWorkReport.members && null != mWorkReport.members.users&& null != mWorkReport.members.users.get(i)) {
+                    if (null != mWorkReport && null != mWorkReport.members && null != mWorkReport.members.users && null != mWorkReport.members.users.get(i)) {
                         result.append(mWorkReport.members.users.get(i).getName() + " ");
                     }
                 }

@@ -75,6 +75,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView product;
     private TextView text_stagename;
     private ImageView iv_wfstatus;
+    private boolean isDelete = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,8 +150,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private void getIntenData() {
         mIntent = getIntent();
         selectId = mIntent.getStringExtra("id");
-        String fromPath = mIntent.getStringExtra("fromPath");
+        String fromPath = mIntent.getStringExtra("formPath");
         if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
+            //审批过来不准编辑
             iv_wfstatus.setEnabled(false);
             img_title_right.setVisibility(View.INVISIBLE);
             ll_product.setEnabled(false);
@@ -253,7 +255,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             layout_losereson.setVisibility(View.GONE);
         }
         if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
-
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
             switch (mSaleDetails.wfState) {
                 case 1:
                     iv_wfstatus.setImageResource(R.drawable.img_task_wite);
@@ -263,6 +267,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     break;
                 case 3:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
+                    img_title_right.setVisibility(View.VISIBLE);
+                    ll_product.setEnabled(true);
+                    ll_stage.setEnabled(true);
+                    isDelete = false;
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
@@ -285,6 +293,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             //弹出菜单
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, ActivitySaleEditView.class);
+                intent.putExtra("isDelete", isDelete);
                 startActivityForResult(intent, EDIT_POP_WINDOW);
                 break;
             //意向产品
