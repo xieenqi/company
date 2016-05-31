@@ -177,8 +177,8 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         showLoading("");
         final SaleIntentionalProduct data = assembleData();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("Cid", saleId);
-        map.put("ProInfo", data);
+        map.put("cId", saleId);
+        map.put("proInfo", data);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).addSaleProduct(map, new RCallback<SaleProductEdit>() {
             @Override
@@ -211,9 +211,9 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                     onBackPressed();
                     break;
                 case R.id.iv_submit:
-                    if (fromPage == ActionCode.SALE_FROM_DETAILS) {
+                    if (fromPage == ActionCode.SALE_FROM_DETAILS && !TextUtils.isEmpty(saleId)) {
                         addProduct();
-                    } else if (fromPage == ActionCode.SALE_PRO_EDIT) {
+                    } else if (fromPage == ActionCode.SALE_PRO_EDIT && !TextUtils.isEmpty(saleId)) {
                         editProduct();
                     } else {
                         SaleIntentionalProduct data = assembleData();
