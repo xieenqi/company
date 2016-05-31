@@ -78,6 +78,8 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.HafeRoundImageView;
+import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
@@ -99,7 +101,7 @@ import retrofit.client.Response;
  * 2.1新版首页
  * Created by yyy on 16/5/27.
  */
-public class NewMainActivity extends BaseActivity implements View.OnClickListener, LocationUtilGD.AfterLocation {
+public class NewMainActivity extends BaseActivity implements View.OnClickListener, LocationUtilGD.AfterLocation,PullToRefreshBase.OnRefreshListener2 {
 
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
@@ -114,7 +116,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private int outKind; //0上班  1下班  2加班
 
     private TextView newhome_name;
-    private ListView listView;
+    private PullToRefreshListView listView;
     private Button btn_add;
     private HafeRoundImageView heading;
     private MoreWindow mMoreWindow;
@@ -129,6 +131,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
+                if(null != listView){
+                    listView.onRefreshComplete();
+                }
                 launch();
             }
         }
@@ -191,9 +196,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         intentJpushInfo();
-        if (null != MainApp.user) {
+/*        if (null != MainApp.user) {
             requestNumber();
-        }
+        }*/
         MobclickAgent.onResume(this);
     }
 
@@ -288,17 +293,20 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 初始化
      */
     public void initView() {
-        listView = (ListView) findViewById(R.id.newhome_listview);
+        listView = (PullToRefreshListView) findViewById(R.id.newhome_listview);
         btn_add = (Button) findViewById(R.id.btn_add);
         newhome_name = (TextView) findViewById(R.id.newhome_name);
 
         newhome_name.setText(MainApp.user.getRealname());
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         adapter = new AdapterHomeItem(this, items, mItemNumbers);
-        listView.setAdapter(adapter);
-
         btn_add.setOnClickListener(this);
         btn_add.setOnTouchListener(Global.GetTouch());
+        listView.setAdapter(adapter);
+
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        listView.setOnRefreshListener(this);
+
 
         //跳转对应功能
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -345,19 +353,17 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         mMoreWindow.showMoreWindow(view);
     }
 
-    int page;
-
     /**
      * 获取首页红点数据
      */
     void requestNumber() {
-        page++;
+        LogUtil.dee("获取requestNumber");
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                        HttpErrorCheck.checkResponse("a首页红点" + page, response);
+                        HttpErrorCheck.checkResponse("a首页红点", response);
                         mItemNumbers = homeNumbers;
                         testJurl();
                     }
@@ -807,5 +813,15 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         //为侧滑菜单设置布局
         menu.setMenu(R.layout.slidingmenu_left);
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        initData();
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+
     }
 }

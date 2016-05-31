@@ -22,7 +22,6 @@ import com.loyo.oa.v2.activity.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -30,7 +29,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
@@ -195,7 +193,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         map.put("pageSize", 15);
         map.put("stageId", stageId);
         map.put("sortType", sortType);
-        LogUtil.d("销售机会 发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleMyList>() {
             @Override
             public void success(SaleMyList saleMyLists, Response response) {
