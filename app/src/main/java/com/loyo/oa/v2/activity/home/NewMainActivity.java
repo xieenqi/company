@@ -109,6 +109,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private AdapterHomeItem adapter;
     private Boolean inEnable;
     private Boolean outEnable;
+    private boolean isJPus = false;//别名是否设置成功
     private boolean mInitData;
     private int outKind; //0上班  1下班  2加班
 
@@ -344,7 +345,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         mMoreWindow.showMoreWindow(view);
     }
 
-int page;
+    int page;
+
     /**
      * 获取首页红点数据
      */
@@ -355,7 +357,7 @@ int page;
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                        HttpErrorCheck.checkResponse("a首页红点"+page, response);
+                        HttpErrorCheck.checkResponse("a首页红点" + page, response);
                         mItemNumbers = homeNumbers;
                         testJurl();
                     }
@@ -664,7 +666,7 @@ int page;
      * 给激光推送 设置别名
      */
     public void setJpushAlias() {
-        if (null == MainApp.user) {
+        if (null == MainApp.user || isJPus) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -683,16 +685,15 @@ int page;
             @Override
             public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
+                    isJPus = true;
                     setJpushAlias();
                 }
-                //LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
             }
         });
         JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                //LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
