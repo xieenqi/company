@@ -195,7 +195,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
         map.put("pageSize", 15);
         map.put("stageId", stageId);
         map.put("sortType", sortType);
-        LogUtil.d("销售机会 发送数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleMyList>() {
             @Override
             public void success(SaleMyList saleMyLists, Response response) {

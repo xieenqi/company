@@ -229,20 +229,20 @@
                     android:id="@+id/edt_content"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="120dp"
                     android:background="@color/white"
                     android:gravity="left|top"
                     android:hint="请输入报告内容"
-                    android:maxLength="500"
-                    android:minHeight="120dp"
                     android:paddingLeft="0dp"
                     android:paddingRight="@dimen/dimen_14"
                     android:paddingTop="@dimen/dimen_10"
+                    android:layout_marginBottom="@dimen/dimen_16"
                     />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     >
                     <TextView
                         android:id="@+id/wordcount"
