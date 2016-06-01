@@ -395,7 +395,7 @@ public class ActivityAddMySale extends BaseActivity {
         map.put("chanceType", tv_type.getText().toString());
         map.put("memo", et_remake.getText().toString());
         map.put("extensionDatas", extensionDatas);
-        if(ll_transport.getVisibility() == View.GONE){
+        if (ll_transport.getVisibility() == View.GONE) {
             loseResons.clear();
         }
         map.put("loseReason", loseResons);
@@ -440,7 +440,7 @@ public class ActivityAddMySale extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
-                case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                case ExtraAndResult.REQUEST_CODE_CUSTOMER://选择客户
                     Customer customer = (Customer) data.getSerializableExtra("data");
                     if (null != customer) {
                         customerId = customer.getId();
@@ -448,7 +448,7 @@ public class ActivityAddMySale extends BaseActivity {
                     }
                     tv_customer.setText(TextUtils.isEmpty(customerName) ? "无" : customerName);
                     break;
-                case ExtraAndResult.REQUEST_CODE_STAGE:
+                case ExtraAndResult.REQUEST_CODE_STAGE://选择销售阶段
                     SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
                     if (null != stage) {
                         stageId = stage.id;
@@ -460,22 +460,23 @@ public class ActivityAddMySale extends BaseActivity {
                         }
                     }
                     break;
-                case ExtraAndResult.REQUEST_CODE_TYPE:
+                case ExtraAndResult.REQUEST_CODE_TYPE://选择机会类型
                     String saletype = data.getStringExtra(ExtraAndResult.EXTRA_DATA);
                     tv_type.setText(saletype);
                     break;
-                case ExtraAndResult.REQUEST_CODE_SOURCE:
+                case ExtraAndResult.REQUEST_CODE_SOURCE://选择机会来源
                     String salesource = data.getStringExtra(ExtraAndResult.EXTRA_DATA);
                     tv_source.setText(salesource);
                     break;
-                case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                    ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>) data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
+                case ExtraAndResult.REQUEST_CODE_PRODUCT://选择意向产品
+                    ArrayList<SaleIntentionalProduct> resultData = (ArrayList<SaleIntentionalProduct>)
+                            data.getSerializableExtra(ExtraAndResult.RESULT_DATA);
                     if (null != resultData) {
                         intentionProductData = resultData;
                         tv_product.setText(getIntentionProductName());
                     }
                     break;
-                case CommonTagSelectActivity.REQUEST_TAGS:
+                case CommonTagSelectActivity.REQUEST_TAGS://选择输单原因
                     loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
                     tv_transport.setText(getLoseReason());
                     break;

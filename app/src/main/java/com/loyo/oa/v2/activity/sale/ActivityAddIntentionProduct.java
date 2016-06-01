@@ -296,7 +296,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
      * 选择 产品
      */
     private void SelectProduct() {
-        if (null == lstData_Product && !(lstData_Product.size() > 0)) {
+        if (null == lstData_Product || !(lstData_Product.size() > 0)) {
             Toast("没有可以选择的产品");
             return;
         }
