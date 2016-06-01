@@ -387,9 +387,9 @@
         <LinearLayout
             android:id="@+id/layout_memo"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/view_h_title"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            android:gravity="center_vertical"
+            android:minHeight="@dimen/view_h_title"
             android:orientation="horizontal">
 
             <TextView
@@ -410,6 +410,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
+                android:paddingBottom="@dimen/dimen_5"
+                android:paddingTop="@dimen/dimen_5"
                 android:textColor="#999999"
                 />
 

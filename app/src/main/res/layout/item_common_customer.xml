@@ -30,6 +30,7 @@
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="left|center"
                     android:maxEms="13"
@@ -64,7 +65,6 @@
                     android:id="@+id/img_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_tag"
                     />
@@ -95,7 +95,6 @@
                     android:id="@+id/img_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_tag"
                     />
