@@ -8,21 +8,80 @@
 
     <include layout="@layout/include_title"/>
 
-    <TextView
-        android:id="@+id/tv_productTalo"
+    <LinearLayout
+        android:id="@+id/ll_statistics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/view_h_title"
-        android:singleLine="true"
-        android:textColor="@color/text99"
-        android:textSize="@dimen/text_sp15"
-        android:gravity="center"
+        android:background="@color/title_bg1"
+        android:gravity="center_vertical"
+        android:minHeight="70dp"
+        android:orientation="horizontal"
         android:visibility="gone"
-        android:background="@color/white"
         >
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="34dp">
 
-    </TextView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="销售总金额"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sp12"
+                />
+
+            <TextView
+                android:id="@+id/tv_saleToal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_3"
+                android:singleLine="true"
+                android:text="￥100000"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sp18"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="@dimen/dimen_0.5"
+            android:layout_height="38dp"
+            android:background="@color/white"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="44dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="总折扣"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sp12"
+                />
+
+            <TextView
+                android:id="@+id/tv_discount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_3"
+                android:singleLine="true"
+                android:text="80%"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sp18"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/lv_list"
@@ -57,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:text="新增购买意向"
+            android:text="新增意向产品"
             android:textColor="@color/title_bg1"
             android:textSize="15sp"/>
     </LinearLayout>
