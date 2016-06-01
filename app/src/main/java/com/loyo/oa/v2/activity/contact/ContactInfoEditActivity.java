@@ -383,7 +383,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
 
 
-        showLoading("");
+        showLoading("正在提交");
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();

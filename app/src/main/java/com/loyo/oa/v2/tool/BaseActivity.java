@@ -86,7 +86,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         getBaseContext().getResources().updateConfiguration(config, null);
 
         ExitActivity.getInstance().addActivity(this);
-        if (customProgressDialog == null) {
+        if (         customProgressDialog == null) {
             customProgressDialog = new CustomProgressDialog(this);
             customProgressDialog.setCancelable(false);
         }

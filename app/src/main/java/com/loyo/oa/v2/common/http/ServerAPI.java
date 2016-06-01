@@ -30,13 +30,9 @@ import java.util.ArrayList;
 
 
 public class ServerAPI {
+
     private static String tag = "ServerAPI";
     public static final String CONTENT_TYPE_JSON = "application/json";
-
-//    public static String GetUrl_Prefix() {
-//        return Config_project.API_URL();
-//    }
-
     public static AsyncHttpClient asyncHttpClient;
 
     public static final int GET = 1;
