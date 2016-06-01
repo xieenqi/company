@@ -34,6 +34,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dimen_14"
+            android:visibility="invisible"
             android:background="@drawable/img_new_serach"/>
     </RelativeLayout>
 
