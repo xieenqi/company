@@ -14,7 +14,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_12"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:src="@drawable/img_default_user"/>
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_toRightOf="@+id/newhome_heading_img"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="17sp"/>
+            android:textSize="19sp"/>
 
         <ImageView
             android:layout_width="@dimen/dimen_20"
@@ -46,8 +46,8 @@
             android:id="@+id/newhome_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/whitesmoke"
-            android:cacheColorHint="#00000000"
+            android:background="@color/white"
+            android:cacheColorHint="#f4f4f4"
             android:divider="@null"
             android:drawSelectorOnTop="true"
             android:fadingEdge="none"

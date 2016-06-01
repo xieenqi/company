@@ -32,7 +32,7 @@
             android:layout_marginBottom="@dimen/dimen_17"
             android:gravity="center|right"
             android:hint="必填项"
-            android:textColor="@color/iswrite"
+            android:textColor="@color/title_bg1"
             android:textSize="15sp"
             />
 

@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -94,7 +95,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                     } else {
                         if (contactLeftExtras.fieldName.equals("name")) {
 
-                            if (contactLeftExtras.val.isEmpty()) {
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
                                 Toast("姓名不能为空");
                                 return;
                             }
@@ -125,7 +126,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             maps.put("tel", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("birth")) {
-                            if (contactLeftExtras.val.isEmpty()) {
+                            if (!TextUtils.isEmpty(contactLeftExtras.val)) {
                                 try {
                                     maps.put("birth", mContact.getBirthStr());
                                 } catch (NullPointerException e) {
@@ -139,7 +140,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                         } else if (contactLeftExtras.fieldName.equals("qq")) {
                             maps.put("qq", contactLeftExtras.val);
                         } else if (contactLeftExtras.fieldName.equals("email")) {
-                            if (!contactLeftExtras.val.isEmpty()) {
+                            if (!TextUtils.isEmpty(contactLeftExtras.val)) {
                                 if (!RegularCheck.checkEmail(contactLeftExtras.val)) {
                                     Toast("Email格式不正确");
                                     return;

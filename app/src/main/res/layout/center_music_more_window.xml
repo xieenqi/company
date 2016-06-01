@@ -1,89 +1,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#90FFFFFF"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#90FFFFFF"
     >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center_vertical"
+        android:orientation="vertical"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_horizontal"
+            android:orientation="horizontal"
             >
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_marginRight="@dimen/dimen_45"
+                android:gravity="center"
+                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:id="@+id/more_window_local"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/newmain_post_task"
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:clickable="true"
                     android:text="@string/newmain_post_task"
                     android:textColor="@color/suodesilei"
-                    android:clickable="true"
-                    />
-                </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginRight="@dimen/dimen_45"
-                >
-                <ImageView
-                    android:id="@+id/more_window_online"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/newmain_post_wif"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:text="@string/newmain_post_wif"
-                    android:textColor="@color/suodesilei"
-                    android:clickable="true"
+                    android:textSize="@dimen/text_sp16"
                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginRight="@dimen/dimen_45"
                 android:gravity="center"
+                android:orientation="vertical"
                 >
+
+                <ImageView
+                    android:id="@+id/more_window_online"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newmain_post_wif"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:clickable="true"
+                    android:text="@string/newmain_post_wif"
+                    android:textColor="@color/suodesilei"
+                    android:textSize="@dimen/text_sp16"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
                 <ImageView
                     android:id="@+id/more_window_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/newmain_post_report"
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:clickable="true"
                     android:text="@string/newmain_post_report"
                     android:textColor="@color/suodesilei"
-                    android:clickable="true"
+                    android:textSize="@dimen/text_sp16"
                     />
             </LinearLayout>
 
@@ -94,88 +104,98 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_35"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
             >
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_marginRight="@dimen/dimen_45"
+                android:gravity="center"
+                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:id="@+id/more_window_collect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/newmain_post_customer"
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:clickable="true"
                     android:text="@string/newmain_post_cus"
                     android:textColor="@color/suodesilei"
-                    android:clickable="true"
+                    android:textSize="@dimen/text_sp16"
                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:layout_marginRight="@dimen/dimen_45"
+                android:gravity="center"
+                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:id="@+id/more_window_auto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/newmain_post_att"
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:clickable="true"
                     android:text="@string/newmain_post_att"
                     android:textColor="@color/suodesilei"
-                    android:clickable="true"
+                    android:textSize="@dimen/text_sp16"
                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 >
+
                 <ImageView
                     android:id="@+id/more_window_external"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/newmain_post_sign"
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10"
+                    android:clickable="true"
                     android:text="@string/newmain_post_sign"
                     android:textColor="@color/suodesilei"
-                    android:clickable="true"
+                    android:textSize="@dimen/text_sp16"
                     />
             </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dimen_30"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
         >
 
         <Button
@@ -183,9 +203,9 @@
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="3dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/newmain_cancel_btn"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
     </LinearLayout>
 
 </RelativeLayout>

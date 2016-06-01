@@ -111,22 +111,31 @@ public class ContactAddforExtraData extends LinearLayout {
             if (null != mContact) {
                 if (customerExtra.fieldName.equals("name")) {
                     tv_content.setText(mContact.getName());
+                    customerExtra.val = mContact.getName();
                 } else if (customerExtra.fieldName.equals("wiretel")) {
                     tv_content.setText(mContact.getWiretel());
+                    customerExtra.val = mContact.getWiretel();
                 } else if (customerExtra.fieldName.equals("tel")) {
                     tv_content.setText(mContact.getTel());
+                    customerExtra.val = mContact.getTel();
                 } else if (customerExtra.fieldName.equals("birth")) {
                     tv_content.setText(mContact.getBirthStr());
+                    customerExtra.val = mContact.getBirthStr();
                 } else if (customerExtra.fieldName.equals("wx")) {
                     tv_content.setText(mContact.getWx());
+                    customerExtra.val = mContact.getWx();
                 } else if (customerExtra.fieldName.equals("qq")) {
                     tv_content.setText(mContact.getQq());
+                    customerExtra.val = mContact.getQq();
                 } else if (customerExtra.fieldName.equals("email")) {
                     tv_content.setText(mContact.getEmail());
+                    customerExtra.val = mContact.getEmail();
                 } else if (customerExtra.fieldName.equals("memo")) {
                     tv_content.setText(mContact.getMemo());
+                    customerExtra.val = mContact.getMemo();
                 } else if (customerExtra.fieldName.equals("dept_name")) {
                     tv_content.setText(mContact.getDeptName());
+                    customerExtra.val = mContact.getDeptName();
                 } else if (!customerExtra.isSystem) {
                     for (ExtraData extraData : mContact.getExtDatas()) {
                         if (customerExtra.label.equals(extraData.getProperties().getLabel())) {

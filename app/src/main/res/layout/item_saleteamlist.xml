@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="初步接洽(10%)"
-            android:textColor="@color/iswrite"
+            android:textColor="@color/title_bg1"
             android:textSize="@dimen/text_sp15"
             />
 
