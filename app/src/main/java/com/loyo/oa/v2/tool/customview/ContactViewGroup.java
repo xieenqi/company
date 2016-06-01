@@ -71,7 +71,7 @@ public class ContactViewGroup extends LinearLayout {
         if (getId() > 1) {
             View view = new View(context);
             view.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
-            view.setLayoutParams(new ViewGroup.LayoutParams(-1, app.spTopx(10)));
+            view.setLayoutParams(new ViewGroup.LayoutParams(-1, app.spTopx(15)));
             addView(view);
         }
 
@@ -184,7 +184,7 @@ public class ContactViewGroup extends LinearLayout {
         LogUtil.dee("客户详情，动态字段getExtDatas():" + MainApp.gson.toJson(mContact.getExtDatas()));
 
         //添加动态字段
-        addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.diseditable, 14));
+        addView(new ContactListExtra(context, mContact.getExtDatas(),leftExtrases, false, R.color.text99, 14));
 
         //加载子条目
         parent.addView(this);

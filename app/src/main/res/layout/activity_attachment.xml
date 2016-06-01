@@ -12,32 +12,36 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         >
+
         <com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView
             android:id="@+id/listView_attachment"
-            android:layout_alignParentTop="true"
             xmlns:swipe="http://schemas.android.com/apk/res-auto"
-            android:layout_above="@+id/tv_upload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_upload"
+            android:layout_alignParentTop="true"
+            android:divider="@null"
             android:listSelector="#00000000"
             swipe:swipeActionLeft="reveal"
             swipe:swipeActionRight="reveal"
-            swipe:swipeAnimationTime="200"
+            swipe:swipeAnimationTime="150"
             swipe:swipeBackView="@+id/back"
             swipe:swipeCloseAllItemsWhenMoveList="true"
             swipe:swipeFrontView="@+id/front"
             swipe:swipeMode="left"
-            swipe:swipeOffsetLeft="240dp"
+            swipe:swipeOffsetLeft="300dp"
             swipe:swipeOffsetRight="0dp"
             swipe:swipeOpenOnLongPress="false"/>
 
         <TextView
             android:id="@+id/tv_upload"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_h_title"
+            android:layout_alignParentBottom="true"
             android:background="@color/activity_bg"
+            android:drawablePadding="@dimen/dimen_5"
             android:gravity="center"
-            android:text="附件上传"/>
-        </RelativeLayout>
+            android:text="附件上传"
+            android:textColor="@color/title_bg1"/>
+    </RelativeLayout>
 </LinearLayout>
