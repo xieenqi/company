@@ -313,10 +313,6 @@ public class ContactInfoEditActivity extends BaseActivity {
             return;
         }
 
-/*        if (!TextUtils.isEmpty(user.avatar)) {
-            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
-        }*/
-
         int defaultAvatao;
 
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
@@ -762,9 +758,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 
     public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
