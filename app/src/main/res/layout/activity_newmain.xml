@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -34,8 +36,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dimen_14"
-            android:visibility="invisible"
-            android:background="@drawable/img_new_serach"/>
+            android:background="@drawable/img_new_serach"
+            android:visibility="invisible"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -55,9 +57,9 @@
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
+            android:listSelector="@android:color/transparent"
             android:scrollbars="none"
             android:smoothScrollbar="true"
-            android:listSelector="@android:color/transparent"
             />
 
         <Button

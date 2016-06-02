@@ -215,6 +215,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      * 数据绑定
      */
     public void bindData() {
+        //机会 是否 是创建者
+        if (mSaleDetails.creatorId.equals(MainApp.user.id)) {
+            img_title_right.setVisibility(View.VISIBLE);
+        } else {
+            img_title_right.setVisibility(View.INVISIBLE);
+        }
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
         salesAmount.setText(Utils.setValueFloat(mSaleDetails.getSalesAmount()) + "");

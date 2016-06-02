@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,15 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 /**
  * 任务详情编辑[ 选择【项目 的结束 编辑 删除】弹窗 ]
- * */
-public class SelectEditDeleteActivity extends BaseActivity implements OnClickListener {
+ */
+public class SelectEditDeleteActivity extends Activity implements OnClickListener {
 
     private Button btn_delete, btn_edit, btn_cancel, btn_extra;
     private LinearLayout layout;
@@ -59,9 +59,9 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
         if (intent != null && intent.getExtras() != null) {
             if (!intent.getBooleanExtra("edit", false)) {
                 btn_edit.setVisibility(View.GONE);
-            }else{
-                String editText=intent.getStringExtra("editText");
-                btn_edit.setText(TextUtils.isEmpty(editText)?"编 辑":editText);
+            } else {
+                String editText = intent.getStringExtra("editText");
+                btn_edit.setText(TextUtils.isEmpty(editText) ? "编 辑" : editText);
             }
 
             if (!intent.getBooleanExtra("delete", false)) {
@@ -102,7 +102,11 @@ public class SelectEditDeleteActivity extends BaseActivity implements OnClickLis
 
             //删除
             case R.id.btn_delete:
-                showGeneralDialog(true,true,"确认删除?");
+                final GeneralPopView generalPopView = new GeneralPopView(this, true);
+                generalPopView.show();
+                generalPopView.setMessage("确认删除?");
+                generalPopView.setCanceledOnTouchOutside(true);
+//                showGeneralDialog(true, true, "确认删除?");
                 //确定
                 generalPopView.setSureOnclick(new OnClickListener() {
                     @Override
