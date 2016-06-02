@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -101,7 +100,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         // 激活导航栏设置
         tintManager.setNavigationBarTintEnabled(true);
         // 设置一个颜色给系统栏
-        tintManager.setTintColor(Color.parseColor("#2c9dfc"));
+        tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {

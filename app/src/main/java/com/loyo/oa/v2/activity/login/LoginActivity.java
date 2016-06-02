@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
 import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -53,6 +52,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tintManager.setTintColor(android.R.color.transparent);
         setContentView(R.layout.activity_login);
         super.isNeedLogin = false;
         initUI();

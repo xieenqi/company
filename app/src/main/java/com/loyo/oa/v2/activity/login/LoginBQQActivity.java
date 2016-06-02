@@ -28,7 +28,7 @@ public class LoginBQQActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        tintManager.setTintColor(android.R.color.transparent);
         setContentView(R.layout.activity_bqq_login);
         super.isNeedLogin = false;
         initUI();
