@@ -58,8 +58,8 @@ public class ActivityIntentionProduct extends BaseActivity {
                 float productTalo = 0;
                 float productSale = 0;
                 for (SaleIntentionalProduct ele : listData) {
-                    productTalo += ele.costPrice;
-                    productSale += ele.salePrice;
+                    productTalo += ele.costPrice * ele.quantity;
+                    productSale += ele.salePrice * ele.quantity;
                 }
                 tv_saleToal.setText("¥" + productSale);
                 tv_discount.setText((productSale / productTalo) * 100 + "%");

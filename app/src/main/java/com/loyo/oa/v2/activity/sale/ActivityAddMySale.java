@@ -4,7 +4,10 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -58,7 +61,7 @@ public class ActivityAddMySale extends BaseActivity {
     private ImageView iv_submit;
     private LinearLayout ll_back, ll_customer, ll_stage, ll_estimate, ll_poduct, ll_type, ll_source, tv_custom, ll_transport;
     private EditText et_name, et_money, et_remake;
-    private String customerName, customerId, stageId, chanceId, creatorId;
+    private String customerName, customerId, stageId, chanceId, creatorId, oldStageNmae, newStageName;
     private ArrayList<SaleIntentionalProduct> intentionProductData = new ArrayList<>();//意向产品的数据
     private ArrayList<ContactLeftExtras> filedData;
     private ArrayList<ContactLeftExtras> extensionDatas = new ArrayList<>();
@@ -85,6 +88,8 @@ public class ActivityAddMySale extends BaseActivity {
         iv_submit.setImageResource(R.drawable.right_submit1);
         et_name = (EditText) findViewById(R.id.et_name);
         et_money = (EditText) findViewById(R.id.et_money);
+        et_money.addTextChangedListener(watcherMoney);
+        et_money.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         et_remake = (EditText) findViewById(R.id.et_remake);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_back.setOnTouchListener(Global.GetTouch());
@@ -121,6 +126,22 @@ public class ActivityAddMySale extends BaseActivity {
         tv_transport = (TextView) findViewById(R.id.tv_transport);
     }
 
+    private TextWatcher watcherMoney = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
+        }
+    };
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -202,6 +223,7 @@ public class ActivityAddMySale extends BaseActivity {
             customerName = mSaleDetails.cusName;
             customerId = mSaleDetails.customerId;
             tv_stage.setText(mSaleDetails.stageName);
+            oldStageNmae = mSaleDetails.stageName;
             stageId = mSaleDetails.stageId;
             et_money.setText(Utils.setValueFloat(mSaleDetails.salesAmount) + "");
             tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
@@ -340,6 +362,10 @@ public class ActivityAddMySale extends BaseActivity {
             }
         }
         if ("赢单".equals(tv_stage.getText().toString())) {
+            if (null == intentionProductData) {
+                Toast("赢单必须添加意向产品");
+                return;
+            }
             if (!(intentionProductData.size() > 0)) {
                 final GeneralPopView dailog = showGeneralDialog(false, false, "赢单提交时请添加意向产品！");
                 dailog.setNoCancelOnclick(new View.OnClickListener() {
@@ -381,6 +407,9 @@ public class ActivityAddMySale extends BaseActivity {
         if (isEdit) {
             map.put("id", chanceId);
             map.put("creatorId", creatorId);
+            map.put("content", TextUtils.isEmpty(newStageName) ? "" : "销售阶段由\"" + oldStageNmae + "\"变更为\"" + newStageName + "\"");
+        } else {
+            map.put("content", "创建销售机会");
         }
         map.put("customerName", customerName);
         map.put("customerId", customerId);
@@ -453,6 +482,7 @@ public class ActivityAddMySale extends BaseActivity {
                     if (null != stage) {
                         stageId = stage.id;
                         tv_stage.setText(stage.name);
+                        newStageName = stage.name;
                         if ("输单".equals(stage.name)) {
                             ll_transport.setVisibility(View.VISIBLE);
                         } else {

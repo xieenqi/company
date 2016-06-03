@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -83,8 +84,10 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         tv_price = (TextView) findViewById(R.id.tv_price);
         et_price = (EditText) findViewById(R.id.et_price);
         et_price.addTextChangedListener(watcherPrice);
+        et_price.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         et_number = (EditText) findViewById(R.id.et_number);
         et_number.addTextChangedListener(watcherNumber);
+        et_number.setFilters(new InputFilter[]{Utils.decimalDigits(2)});
         tv_discount = (TextView) findViewById(R.id.tv_discount);
         tv_total = (TextView) findViewById(R.id.tv_total);
         et_remake = (EditText) findViewById(R.id.et_remake);
@@ -233,31 +236,9 @@ public class ActivityAddIntentionProduct extends BaseActivity {
 
         }
     };
-    private TextWatcher watcherNumber = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (!TextUtils.isEmpty(et_price.getText().toString())) {
-                tv_total.setText(Utils.setValueFloat((transformationNumber(s.toString())
-                        * transformationNumber(et_price.getText().toString()))) + "");
-            } else {
-                tv_total.setText("");
-            }
-        }
-    };
     private TextWatcher watcherPrice = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
@@ -267,6 +248,9 @@ public class ActivityAddIntentionProduct extends BaseActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
             if (!TextUtils.isEmpty(tv_price.getText().toString())) {
                 tv_discount.setText(Utils.setValueFloat((transformationNumber(s.toString())
                         / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
@@ -280,6 +264,32 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         }
     };
 
+    private TextWatcher watcherNumber = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!s.toString().contains(".") && s.toString().length() > 7) {
+                s.delete(7, s.toString().length());
+            }
+            if (!TextUtils.isEmpty(et_price.getText().toString())) {
+                tv_total.setText(Utils.setValueFloat((transformationNumber(s.toString())
+                        * transformationNumber(et_price.getText().toString()))) + "");
+            } else {
+                tv_total.setText("");
+            }
+        }
+    };
+
+
     private float transformationNumber(String text) {
         if (!TextUtils.isEmpty(text)) {
             try {
@@ -291,6 +301,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         }
         return -1;
     }
+
 
     /**
      * 选择 产品
