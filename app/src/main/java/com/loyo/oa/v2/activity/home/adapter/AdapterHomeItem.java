@@ -11,28 +11,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
+
 import java.util.ArrayList;
 
 /**
  * 2.1新版首页Adapter
  * Created by yyy on 16/5/27.
  */
-public class AdapterHomeItem extends BaseAdapter{
+public class AdapterHomeItem extends BaseAdapter {
 
     private LayoutInflater inflter;
     private Context mContext;
     private ArrayList<HomeItem> items;
     private ArrayList<HttpMainRedDot> mItemNumbers;
     private boolean crmTi = false;
-    private boolean oaTi  = false;
+    private boolean oaTi = false;
     private Intent mIntent = new Intent();
 
-    public AdapterHomeItem(Context context,ArrayList<HomeItem> items,ArrayList<HttpMainRedDot> mItemNumbers) {
+    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
         this.mContext = context;
         this.items = items;
         this.mItemNumbers = mItemNumbers;
@@ -78,7 +80,7 @@ public class AdapterHomeItem extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final HomeItem item = getItem(position);
+        final HomeItem item = items.get(position);
 
         for (HttpMainRedDot num : mItemNumbers) {//首页红点
             String extra = "";
@@ -94,21 +96,21 @@ public class AdapterHomeItem extends BaseAdapter{
             } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
                 extra = num.bizNum + "个进行中";
                 holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
-                extra = num.bizNum + "个将掉公海";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-                extra = num.bizNum + "个需拜访";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
+            }
+//            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
+//                extra = num.bizNum + "个将掉公海";
+//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+//            } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
+//                extra = num.bizNum + "个需拜访";
+//                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+//            }
+            else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
                 extra = num.bizNum + "个外勤";
                 holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            }else if (num.bizType == 19) { //通知公告红点
-                if (!num.viewed) {
-                    holder.view_number.setVisibility(View.VISIBLE);
-                } else {
-                    holder.view_number.setVisibility(View.GONE);
-                }
+            } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
+                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+            } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
+                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
             }
             if (!TextUtils.isEmpty(extra)) {
                 holder.tv_extra.setText(extra);
@@ -116,15 +118,15 @@ public class AdapterHomeItem extends BaseAdapter{
         }
 
         //列表分组
-        if(item.tag == 1){
+        if (item.tag == 1) {
             holder.item_newmain_topview.setVisibility(crmTi ? View.GONE : View.VISIBLE);
             holder.tv_title.setText("CRM");
             crmTi = true;
-        }else if(item.tag == 2){
+        } else if (item.tag == 2) {
             holder.item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
             holder.tv_title.setText("OA");
             oaTi = true;
-        }else{
+        } else {
             holder.item_newmain_topview.setVisibility(View.GONE);
         }
         holder.img_item.setImageDrawable(mContext.getResources().getDrawable(item.imageViewRes));
@@ -139,10 +141,10 @@ public class AdapterHomeItem extends BaseAdapter{
                         mIntent.setClass(mContext, ContactsActivity.class);
                         mContext.startActivity(mIntent);
                     } else {
-                        Toast.makeText(mContext,"请重新拉去组织架构",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    mIntent.setClass(mContext,items.get(position).cls);
+                    mIntent.setClass(mContext, items.get(position).cls);
                     mContext.startActivity(mIntent);
                 }
             }
