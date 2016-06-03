@@ -20,6 +20,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.commonview.CustomTextView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +45,8 @@ public class ActivityIntentionProduct extends BaseActivity {
     private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
-    private TextView tv_title, tv_saleToal, tv_discount;
+    private TextView tv_title;
+    private CustomTextView tv_saleToal, tv_discount;
     private LinearLayout ll_back, ll_add, ll_statistics;
     private ListView lv_list;
     ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
@@ -61,8 +64,8 @@ public class ActivityIntentionProduct extends BaseActivity {
                     productTalo += ele.costPrice * ele.quantity;
                     productSale += ele.salePrice * ele.quantity;
                 }
-                tv_saleToal.setText("¥" + productSale);
-                tv_discount.setText((productSale / productTalo) * 100 + "%");
+                tv_saleToal.setText("¥" + Utils.setValueDouble(productSale));
+                tv_discount.setText(Utils.setValueDouble((productSale / productTalo) * 100) + "%");
             } else {
                 tv_saleToal.setText("¥" + 0);
                 tv_discount.setText(0 + "%");
@@ -90,8 +93,8 @@ public class ActivityIntentionProduct extends BaseActivity {
         saleProductAdapter = new SaleProductAdapter();
         lv_list = (ListView) findViewById(R.id.lv_list);
         lv_list.setAdapter(saleProductAdapter);
-        tv_saleToal = (TextView) findViewById(R.id.tv_saleToal);
-        tv_discount = (TextView) findViewById(R.id.tv_discount);
+        tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
+        tv_discount = (CustomTextView) findViewById(R.id.tv_discount);
         ll_statistics = (LinearLayout) findViewById(R.id.ll_statistics);
     }
 
@@ -248,11 +251,11 @@ public class ActivityIntentionProduct extends BaseActivity {
             tv_index.setText("意向产品" + (position + 1));
             final SaleIntentionalProduct item = listData.get(position);
             tv_product.setText(item.name);
-            tv_toal_price.setText(item.costPrice + "");
-            tv_sale_price.setText(item.salePrice + "");
-            tv_number.setText(item.quantity + "");
-            tv_discount.setText(item.discount + "%");
-            tv_total_money.setText(item.totalMoney + "");
+            tv_toal_price.setText(Utils.setValueDouble(item.costPrice + ""));
+            tv_sale_price.setText(Utils.setValueDouble(item.salePrice + ""));
+            tv_number.setText(Utils.setValueDouble(item.quantity + ""));
+            tv_discount.setText(Utils.setValueDouble(item.discount) + "%");
+            tv_total_money.setText(Utils.setValueDouble(item.totalMoney + ""));
             tv_memo.setText(item.memo);
             if (!TextUtils.isEmpty(item.unit)) {
                 tv_oldePrice.setText("产品原价(" + item.unit + ")");

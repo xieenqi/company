@@ -106,11 +106,11 @@ public class ActivityAddIntentionProduct extends BaseActivity {
             tv_title.setText("编辑意向产品");
             productId = intentProduct.id;
             tv_product.setText(intentProduct.name);
-            tv_price.setText(intentProduct.costPrice + "");
-            et_price.setText(intentProduct.salePrice + "");
-            et_number.setText(intentProduct.quantity + "");
-            tv_discount.setText(intentProduct.discount + "%");
-            tv_total.setText(intentProduct.totalMoney + "");
+            tv_price.setText(Utils.setValueDouble(intentProduct.costPrice + ""));
+            et_price.setText(Utils.setValueDouble(intentProduct.salePrice + ""));
+            et_number.setText(Utils.setValueDouble(intentProduct.quantity + ""));
+            tv_discount.setText(Utils.setValueDouble(intentProduct.discount) + "%");
+            tv_total.setText(Utils.setValueDouble(intentProduct.totalMoney + ""));
             et_remake.setText(intentProduct.memo);
             if (!TextUtils.isEmpty(intentProduct.unit)) {
                 tv_oldePrice.setText("产品原价(" + intentProduct.unit + ")");
@@ -252,13 +252,13 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 s.delete(7, s.toString().length());
             }
             if (!TextUtils.isEmpty(tv_price.getText().toString())) {
-                tv_discount.setText(Utils.setValueFloat((transformationNumber(s.toString())
+                tv_discount.setText(Utils.setValueDouble((transformationNumber(s.toString())
                         / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
             } else {
                 tv_discount.setText("");
             }
             if (!TextUtils.isEmpty(et_number.getText().toString())) {
-                tv_total.setText((Utils.setValueFloat(transformationNumber(s.toString())
+                tv_total.setText((Utils.setValueDouble(transformationNumber(s.toString())
                         * transformationNumber(et_number.getText().toString()))) + "");
             }
         }
@@ -281,7 +281,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 s.delete(7, s.toString().length());
             }
             if (!TextUtils.isEmpty(et_price.getText().toString())) {
-                tv_total.setText(Utils.setValueFloat((transformationNumber(s.toString())
+                tv_total.setText(Utils.setValueDouble((transformationNumber(s.toString())
                         * transformationNumber(et_price.getText().toString()))) + "");
             } else {
                 tv_total.setText("");
@@ -290,10 +290,10 @@ public class ActivityAddIntentionProduct extends BaseActivity {
     };
 
 
-    private float transformationNumber(String text) {
+    private double transformationNumber(String text) {
         if (!TextUtils.isEmpty(text)) {
             try {
-                return Float.valueOf(text);
+                return Double.valueOf(text);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Toast("你应该输入数字");
@@ -372,16 +372,6 @@ public class ActivityAddIntentionProduct extends BaseActivity {
         product.unit = productUnit;
         return product;
     }
-//    {
-//        "id": "573c2b1935d86037a65b7612",
-//            "name": "棉花糖",
-//            "costPrice": 30,
-//            "salePrice": 30,
-//            "quantity": 3,
-//            "discount": 100,
-//            "totalMoney": 90,
-//            "memo": "",
-//            "costTotalMoney": 90
 
 
 }

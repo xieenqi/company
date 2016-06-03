@@ -68,7 +68,7 @@ public class AdapterSaleTeam extends BaseAdapter {
         }
 
         holder.title.setText(record.getName());
-        holder.money.setText(Utils.setValueFloat(record.getEstimatedAmount()) + "");
+        holder.money.setText(Utils.setValueDouble(record.getEstimatedAmount()) + "");
         holder.creator.setText(record.getCreateName());
         String stageName = "初步接洽";
         if (!record.getStageNmae().isEmpty()) {

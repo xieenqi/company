@@ -18,12 +18,13 @@
         android:gravity="center_vertical"
         android:minHeight="70dp"
         android:orientation="horizontal"
+        android:paddingTop="@dimen/dimen_5"
         android:visibility="gone"
         >
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="34dp">
@@ -36,15 +37,16 @@
                 android:textSize="@dimen/text_sp12"
                 />
 
-            <TextView
+            <com.loyo.oa.v2.common.commonview.CustomTextView
                 android:id="@+id/tv_saleToal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_3"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:text="￥100000"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_sp18"
+                android:textSize="9sp"
                 />
 
         </LinearLayout>
@@ -57,7 +59,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:paddingLeft="44dp">
@@ -70,15 +72,17 @@
                 android:textSize="@dimen/text_sp12"
                 />
 
-            <TextView
+            <com.loyo.oa.v2.common.commonview.CustomTextView
                 android:id="@+id/tv_discount"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="@dimen/dimen_3"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:text="80%"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_sp18"
+                android:textSize="9sp"
                 />
 
         </LinearLayout>

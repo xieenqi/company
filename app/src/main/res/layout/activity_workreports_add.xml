@@ -173,7 +173,7 @@
                         android:orientation="horizontal"
                         android:visibility="gone">
 
-                        <com.loyo.oa.v2.common.NoScroolGridView
+                        <com.loyo.oa.v2.common.commonview.NoScroolGridView
                             android:id="@+id/gv_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"

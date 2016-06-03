@@ -225,7 +225,7 @@ public class ActivityAddMySale extends BaseActivity {
             tv_stage.setText(mSaleDetails.stageName);
             oldStageNmae = mSaleDetails.stageName;
             stageId = mSaleDetails.stageId;
-            et_money.setText(Utils.setValueFloat(mSaleDetails.salesAmount) + "");
+            et_money.setText(Utils.setValueDouble(mSaleDetails.salesAmount) + "");
             tv_estimate.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
             estimatedTime = mSaleDetails.estimatedTime;
             intentionProductData = mSaleDetails.proInfos;

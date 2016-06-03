@@ -223,7 +223,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         }
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
-        salesAmount.setText("" + Utils.setValueFloat(mSaleDetails.estimatedAmount));
+        salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
         estimatedAmount.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());

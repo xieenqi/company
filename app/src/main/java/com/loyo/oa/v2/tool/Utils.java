@@ -1099,16 +1099,25 @@ public class Utils {
     }
 
     /**
-     * 科学计数法转换为 数字
+     * 科学计数法转换为 数字 小数只有两位
      *
      * @param obj
      * @return
      */
-    public static String setValueFloat(Object obj) {
+    public static String setValueDouble(Object obj) {
         if (null == obj) {
             return "没有内容";
         }
-        BigDecimal bigDecimal = new BigDecimal(obj + "");
+        Double d;
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
+        try {
+            d = Double.valueOf(obj + "");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "No Number";
+        }
+
+        BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
         return bigDecimal.toPlainString() + "";
     }
 
