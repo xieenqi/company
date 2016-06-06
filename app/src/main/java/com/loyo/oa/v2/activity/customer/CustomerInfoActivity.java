@@ -315,7 +315,13 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             }
         }
 
-        tv_customer_creator.setText(mCustomer.creator.getName());
+        try {
+            tv_customer_creator.setText(mCustomer.creator.getName());
+        }catch(NullPointerException e){
+            tv_customer_creator.setText("无");
+            e.printStackTrace();
+        }
+
         String responser = (null == mCustomer.owner || null == mCustomer.owner) ? "" : mCustomer.owner.name;
         tv_customer_responser.setText(responser);
         if (members.size() != 0) {

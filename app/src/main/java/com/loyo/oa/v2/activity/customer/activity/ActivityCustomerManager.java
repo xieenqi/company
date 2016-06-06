@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.activity.customer.fragment.FragmentCommCustomer;
 import com.loyo.oa.v2.activity.customer.fragment.FragmentMyCustomer;
 import com.loyo.oa.v2.activity.customer.fragment.FragmentTeamCustomer;
@@ -24,10 +25,12 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Tag;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
@@ -194,7 +197,6 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
         img_title_search_right = (RelativeLayout) findViewById(R.id.img_title_search_right);
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
-        img_title_search_right.setVisibility(View.INVISIBLE);
 
         //超级管理员权限判断
         if(!MainApp.user.isSuperUser()){
@@ -301,13 +303,28 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
                 break;
             case R.id.ll_category:
                 break;
+            //我的 团队 公海切换
             case R.id.layout_title_action:
                 if(SaleItemStatus.length != 1){
                     changeTitleImg();
                 }
                 break;
+            //搜索
             case R.id.img_title_search_right:
-                Toast("搜索机会");
+                int type;
+                if (Utils.hasRights()) {
+                    type = mIndex + 1;
+                } else {
+                    if (mIndex == 0) {
+                        type = 1;
+                    } else {
+                        type = 3;
+                    }
+                }
+                Bundle b = new Bundle();
+                b.putInt(ExtraAndResult.EXTRA_TYPE,type);
+                b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
+                app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;
         }
     }

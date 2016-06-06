@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -17,10 +16,8 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.io.File;
 import java.util.ArrayList;
-
 import uk.co.senab.photoview.PhotoView;
 
 /**
