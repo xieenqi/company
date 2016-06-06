@@ -337,6 +337,9 @@ public class ActivityAddMySale extends BaseActivity {
         } else if (TextUtils.isEmpty(stageId)) {
             Toast("请选择销售阶段");
             return;
+        } else if (TextUtils.isEmpty(et_money.getText().toString())) {
+            Toast("请输预估入销售金额");
+            return;
         } else if (ll_transport.getVisibility() == View.VISIBLE && loseResons.size() == 0) {
             Toast("请选择输单原因");
             return;

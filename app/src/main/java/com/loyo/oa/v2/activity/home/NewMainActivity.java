@@ -172,6 +172,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onStart() {
         super.onStart();
+        LogUtil.d(" 获得newMain现有的token：" + MainApp.getToken());
         //判断登陆是否失效
         if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
             if (StringUtil.isEmpty(MainApp.getToken())) {

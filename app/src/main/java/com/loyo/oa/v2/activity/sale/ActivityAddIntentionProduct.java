@@ -331,7 +331,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
                 tv_product.setText(item.name);
                 productId = item.id;
                 productUnit = item.unit;
-                tv_price.setText(item.unitPrice);
+                tv_price.setText(Utils.setValueDouble(item.unitPrice + ""));
 
                 et_price.setText("");
                 et_number.setText("");
