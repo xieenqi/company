@@ -170,12 +170,6 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -241,6 +235,7 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
         mDeptSource = Common.getLstDepartment();
         deptSort();
         saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler,0x01);
+        getData();
     }
 
 
@@ -490,4 +485,15 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
            }
        }
    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            //客户详情操作回调
+            case ActivityCustomerManager.CUSTOMER_COMM_RUSH:
+                getData();
+                break;
+        }
+    }
 }

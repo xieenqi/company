@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
+import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerExtraData;
@@ -472,7 +473,6 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
      * 更新客戶
      */
     private void updateCustomer() {
-        showLoading("");
         String customerName = tv_customer_name.getText().toString().trim();
         String customerAddress = tv_address.getText().toString().trim();
         String summary = edt_customer_memo.getText().toString().trim();
@@ -486,8 +486,8 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             return;
         }
 
+        showLoading("");
         mLocate.addr = customerAddress;
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", customerName);
         map.put("summary", summary);
@@ -514,7 +514,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
                             isCreator = true;
                         }
                         intent.putExtra("isCreator", isCreator);
-                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                        app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, intent);
                     }
 
                     @Override
@@ -607,9 +607,7 @@ public class CustomerInfoActivity extends BaseFragmentActivity implements Locati
             case REQUEST_CUSTOMER_LABEL:
                 Bundle bundle = data.getExtras();
                 mTagItems = (ArrayList<NewTag>) bundle.getSerializable("data");
-
                 tv_labels.setText(appendTagItem(mTagItems));
-
                 mCustomer.tags = mTagItems;
                 break;
             default:

@@ -283,7 +283,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         initView();
     }
 
-
     /**
      * 数据初始化
      */

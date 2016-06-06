@@ -20,14 +20,12 @@ import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterCommCustomer;
-import com.loyo.oa.v2.activity.customer.adapter.AdapterMyCustomer;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Tag;
-import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -42,10 +40,8 @@ import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
 import com.loyo.oa.v2.tool.customview.ScreenTagPopupView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -135,12 +131,6 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -193,6 +183,7 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
         screen2.setOnClickListener(click);
         btn_add.setOnClickListener(click);
         btn_add.setOnTouchListener(Global.GetTouch());
+        getData();
     }
 
 
@@ -344,5 +335,11 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            //客户详情操作回调
+            case ActivityCustomerManager.CUSTOMER_COMM_RUSH:
+                getData();
+                break;
+        }
     }
 }

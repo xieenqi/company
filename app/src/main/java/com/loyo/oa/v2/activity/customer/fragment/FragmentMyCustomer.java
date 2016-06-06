@@ -148,13 +148,6 @@ public class FragmentMyCustomer extends BaseFragment implements PullToRefreshBas
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
-
     @SuppressLint("InflateParams")
     @Nullable
     @Override
@@ -212,6 +205,7 @@ public class FragmentMyCustomer extends BaseFragment implements PullToRefreshBas
         screen2.setOnClickListener(click);
         btn_add.setOnClickListener(click);
         btn_add.setOnTouchListener(Global.GetTouch());
+        getData();
     }
 
     /**
@@ -236,7 +230,7 @@ public class FragmentMyCustomer extends BaseFragment implements PullToRefreshBas
                     intent.putExtra("Id", mCustomers.get(position-1).getId());
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, ActivityCustomerManager.CUSTOMER_MY);
                     intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
-                    startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                    startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
             }
         });
     }
@@ -415,4 +409,15 @@ public class FragmentMyCustomer extends BaseFragment implements PullToRefreshBas
            }
        }
    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            //客户详情操作回调
+            case ActivityCustomerManager.CUSTOMER_COMM_RUSH:
+                getData();
+                break;
+        }
+    }
 }

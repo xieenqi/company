@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -455,15 +456,10 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             try {
                 Customer retCustomer = MainApp.gson.fromJson(getStr(arg2), Customer.class);
                 Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-
                 isSave = false;
-                //fixes bug293 ykb 07-14
-//                if(items!=null&&!items.isEmpty())
-//                    retCustomer.setType(items);
                 Intent intent = new Intent();
                 intent.putExtra(Customer.class.getName(), retCustomer);
-
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, intent);
 
             } catch (Exception e) {
                 Global.ProcException(e);

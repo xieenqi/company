@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.signin.SignInListActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -33,6 +34,7 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
@@ -132,11 +134,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
     @AfterViews
     void initViews() {
-
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
         getData();
-
     }
 
 
@@ -263,7 +263,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
-//正式启用销售机会 弃用购买意向
+        //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
     }
@@ -398,7 +398,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).delete(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(final Customer newCustomer, final Response response) {
-                app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, new Intent());
+                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, new Intent());
             }
 
             @Override
@@ -416,11 +416,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).toPublic(mCustomer.getId(), new RCallback<Customer>() {
             @Override
             public void success(final Customer newCustomer, final Response response) {
-                //getData();
                 isPutOcen = true;
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+                app.finishActivity(CustomerDetailInfoActivity.this, MainApp.ENTER_TYPE_RIGHT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, new Intent());
             }
 
             @Override
@@ -440,9 +437,8 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         switch (view.getId()) {
             /*返回*/
             case R.id.img_title_left:
-                Intent intent = new Intent();
                 if (isPutOcen) {
-                    app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, intent);
+                    app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, ActivityCustomerManager.CUSTOMER_COMM_RUSH, new Intent());
                 } else {
                     finish();
                 }
@@ -466,7 +462,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).pickedIn(id, new RCallback<Customer>() {
                     @Override
                     public void success(final Customer newCustomer, final Response response) {
-                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, new Intent());
+                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, ActivityCustomerManager.CUSTOMER_COMM_RUSH, new Intent());
                     }
 
                     @Override
@@ -581,14 +577,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-
-            Intent intent = new Intent();
             if (isPutOcen) {
-                app.finishActivity(this, BaseMainListFragment.REQUEST_REVIEW, RESULT_OK, intent);
+                app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, ActivityCustomerManager.CUSTOMER_COMM_RUSH, new Intent());
             } else {
                 finish();
             }
-
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -605,18 +598,13 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     boolean isCreator = bundle.getBoolean("isCreator");
                     if (!isCreator) {
-                        finish();
+                        app.finishActivity(CustomerDetailInfoActivity.this, BaseMainListFragment.REQUEST_REVIEW, ActivityCustomerManager.CUSTOMER_COMM_RUSH, new Intent());
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
 
                 break;
-            case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
-            case FinalVariables.REQUEST_PREVIEW_DEMANDS:
-            case ExtraAndResult.REQUEST_CODE:
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
                 getData();
                 break;
@@ -624,7 +612,12 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 getData();
                 break;
             default:
+                break;
+        }
 
+        switch(resultCode){
+            case ActivityCustomerManager.CUSTOMER_COMM_RUSH:
+                isPutOcen = true;
                 break;
         }
     }
