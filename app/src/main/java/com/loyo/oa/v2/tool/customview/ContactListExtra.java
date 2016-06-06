@@ -94,7 +94,7 @@ public class ContactListExtra extends LinearLayout {
                  * 说   明: 创建时发送时间戳，获取也是时间戳，但是之前服务器数据存在2015-2-3这种时间格式数据，所以这里判断一下。
                  * 解析格式: yyyy-MM-dd HH:mm
                  * */
-                if("long".equals(contactLeftExtras.label)){
+                if("long".equals(contactLeftExtras.type)){
                     try{
                         tv_content.setText(DateTool.timet(contactLeftExtras.val, DateTool.DATE_FORMATE_SPLITE_BY_POINT));
                     }catch (NumberFormatException e){

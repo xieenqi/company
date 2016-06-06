@@ -5,28 +5,28 @@
 
     <LinearLayout
         android:id="@+id/back"
-        android:layout_width="120dp"
+        android:layout_width="60dp"
         android:layout_height="84dp"
         android:layout_gravity="right">
 
         <!--左滑权限暂时弃用-->
-        <RelativeLayout
-            android:visibility="invisible"
-            android:id="@+id/layout_action_update"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:background="#bcbcbc"
-            android:clickable="true">
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/layout_action_update"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#bcbcbc"-->
+        <!--android:clickable="true"-->
+        <!--android:visibility="invisible">-->
 
-            <ImageView
-                android:id="@+id/update"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/update1"/>
+        <!--<ImageView-->
+        <!--android:id="@+id/update"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:scaleType="centerInside"-->
+        <!--android:src="@drawable/update1"/>-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/layout_action_delete"
@@ -71,12 +71,12 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/img_attachment"
+            android:ellipsize="start"
+            android:maxEms="15"
+            android:singleLine="true"
             android:text="xxx.jpg"
             android:textColor="#262626"
             android:textSize="13sp"
-            android:maxEms="15"
-            android:singleLine="true"
-            android:ellipsize="start"
             />
 
         <TextView
@@ -104,6 +104,5 @@
             android:textColor="#555555"
             android:textSize="13sp"
             />
-
     </RelativeLayout>
 </FrameLayout>

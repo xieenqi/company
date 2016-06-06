@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,66 +15,66 @@
         <RelativeLayout
             android:id="@+id/img_title_left"
             android:layout_width="39dp"
-            android:gravity="center_vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
 
             <ImageView
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/back_left1" />
+                android:src="@drawable/back_left1"/>
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_title_1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="fill_parent"
             style="@style/text_title"
-            android:text="选择" />
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="选择"/>
 
         <Button
             android:id="@+id/btn_title_right"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/view_h_title"
-            android:scaleType="center"
-            android:textColor="@color/white"
+            android:layout_marginRight="5dp"
             android:background="@color/title_bg1"
-            android:textSize="17sp"
+            android:scaleType="center"
             android:text="确定"
-            android:layout_marginRight="5dp" />
+            android:textColor="@color/white"
+            android:textSize="17sp"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_checkall"
-        android:background="@color/white"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
 
         <CheckBox
             android:id="@+id/cb_all"
+            style="@style/checkbox2"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="@dimen/margin_side_edge"
-            style="@style/checkbox2"
+            android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:clickable="false"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/tv_title"
-            android:textSize="18sp"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:text=""
-            android:layout_height="match_parent" />
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
@@ -81,61 +83,61 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/layout_dept"
-                android:orientation="vertical"
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_dept_titel"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="部门"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20dp" />
+                    android:textStyle="bold"/>
 
                 <ListView
                     android:id="@+id/listView_department"
-                    android:layout_below="@+id/tv_dept_titel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_dept_titel"
                     android:background="@drawable/layout_bg1"
                     android:divider="@color/activity_split"
-                    android:dividerHeight="0.5dp" />
+                    android:dividerHeight="0.5dp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_user"
-                android:orientation="vertical"
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView_item_titel"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="人员"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20dp" />
+                    android:textStyle="bold"/>
 
                 <ListView
                     android:id="@+id/listView_user"
-                    android:layout_below="@+id/textView_item_titel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_item_titel"
                     android:background="@drawable/layout_bg1"
                     android:divider="@color/activity_split"
-                    android:dividerHeight="0.5dp" />
+                    android:dividerHeight="0.5dp"/>
 
             </LinearLayout>
 

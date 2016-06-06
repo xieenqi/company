@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -87,12 +89,12 @@
                         android:layout_marginBottom="@dimen/dimen_5"
                         android:layout_weight="1"
                         android:gravity="top"
-                        android:lineSpacingExtra="6dp"
-                        android:textSize="14sp"
                         android:hint="地址获取中..."
+                        android:lineSpacingExtra="6dp"
                         android:paddingBottom="@dimen/dimen_10"
                         android:paddingLeft="@dimen/dimen_5"
-                        android:paddingTop="@dimen/dimen_3"/>
+                        android:paddingTop="@dimen/dimen_3"
+                        android:textSize="14sp"/>
 
                     <ImageView
                         android:id="@+id/img_refresh_address"
@@ -133,9 +135,9 @@
                         android:gravity="right|center_vertical"
                         android:hint="请输入联系人姓名"
                         android:inputType="textPersonName"
-                        android:textColor="@color/title_bg1"
                         android:maxLength="20"
-                        android:paddingRight="0dp"/>
+                        android:paddingRight="0dp"
+                        android:textColor="@color/title_bg1"/>
 
                 </LinearLayout>
 
@@ -167,10 +169,10 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint="请输入联系人手机号"
-                        android:textColor="@color/title_bg1"
                         android:inputType="phone"
                         android:maxLength="20"
-                        android:paddingRight="0dp"/>
+                        android:paddingRight="0dp"
+                        android:textColor="@color/title_bg1"/>
 
                 </LinearLayout>
 
@@ -200,12 +202,12 @@
                         android:layout_width="0px"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:textColor="@color/title_bg1"
                         android:gravity="right|center_vertical"
                         android:hint="请输入联系人座机"
                         android:inputType="phone"
                         android:maxLength="20"
-                        android:paddingRight="0dp"/>
+                        android:paddingRight="0dp"
+                        android:textColor="@color/title_bg1"/>
 
                 </LinearLayout>
 
@@ -281,8 +283,8 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
-                        android:textColor="@color/title_bg1"
-                        android:hint=""/>
+                        android:hint=""
+                        android:textColor="@color/title_bg1"/>
 
                     <ImageView
                         android:id="@+id/img_title_right_toUser"

@@ -17,8 +17,8 @@ public class SaleDetails implements Serializable {
     public String name;            //标题
     public String cusName;         //对应客户
     public String customerId;
-    public float salesAmount;      //预估销售金额
-    public float estimatedAmount;  //预计成交时间
+    public float salesAmount;      //预计成交时间
+    public float estimatedAmount;  //预估销售金额
     public String stageName;       //阶段名
     public String stageId;
     public int estimatedTime;

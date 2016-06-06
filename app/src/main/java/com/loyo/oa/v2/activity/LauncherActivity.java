@@ -3,22 +3,24 @@ package com.loyo.oa.v2.activity;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.login.WelcomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -30,14 +32,14 @@ import org.androidannotations.annotations.ViewById;
  * 时间 : 15/11/3.
  */
 @EActivity(R.layout.activity_launcher)
-public class LauncherActivity extends BaseActivity {
+public class LauncherActivity extends Activity {
     @ViewById ImageView iv_launcher_adv, iv_launcher_fade, iv_white;//小微企业工作台、火箭
     @ViewById ViewGroup ll_root, layout_launcher_fade;
     private boolean isWelcom = false;
 
     @AfterViews
     void initVies() {
-        setTouchView(NO_SCROLL);
+//        setTouchView(NO_SCROLL);
         iv_launcher_adv.postDelayed(advRunner, 1000);//小微企业工作台
         new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
             @Override
@@ -92,7 +94,7 @@ public class LauncherActivity extends BaseActivity {
         public void run() {
             //iv_launcher_fade.setY(layout_launcher_fade.getTop() + 200);
             ObjectAnimator animator = ObjectAnimator.ofFloat(iv_launcher_fade, "translationY",
-                    (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), -750.0f);
+                    (float) getResources().getDisplayMetrics().heightPixels - layout_launcher_fade.getHeight(), -760.0f);
             animator.setDuration(500);
             animator.setInterpolator(new AccelerateInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -105,7 +107,7 @@ public class LauncherActivity extends BaseActivity {
                         LogUtil.d("动画进度在v " + value);
                         iv_white.setVisibility(View.VISIBLE);
                     }
-                    if (Math.round(value) == -750) {
+                    if (Math.round(value) == -760) {
                         intentActivity();
                     }
                 }

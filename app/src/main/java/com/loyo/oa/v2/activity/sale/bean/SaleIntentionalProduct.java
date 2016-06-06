@@ -10,11 +10,11 @@ public class SaleIntentionalProduct implements Serializable {
 
     public String id;
     public String name;
-    public float costPrice;
-    public float salePrice;
-    public float quantity;
-    public float discount;
-    public float totalMoney;
+    public double costPrice;
+    public double salePrice;
+    public double quantity;
+    public double discount;
+    public double totalMoney;
     public String memo;
     public String unit;
 

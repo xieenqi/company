@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.tool;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 /**
  * 新建客户选择照片的popwindow
  */
-public class SelectPicPopupWindow extends BaseActivity implements OnClickListener {
+public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
     public static final int GET_IMG = 10;
     private String tag = "SelectPicPopupWindow";
@@ -154,7 +156,11 @@ public class SelectPicPopupWindow extends BaseActivity implements OnClickListene
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(intent, 1);
         } else {
-            showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+            final GeneralPopView generalPopView = new GeneralPopView(this, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+//            showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
             generalPopView.setSureOnclick(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
@@ -207,7 +213,11 @@ public class SelectPicPopupWindow extends BaseActivity implements OnClickListene
                         Global.ProcException(e);
                     }
                 } else {
-                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    final GeneralPopView generalPopView = new GeneralPopView(this, true);
+                    generalPopView.show();
+                    generalPopView.setMessage("需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setCanceledOnTouchOutside(true);
+//                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
                     generalPopView.setSureOnclick(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {

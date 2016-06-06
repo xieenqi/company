@@ -192,7 +192,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         if (null != loseResons) {
             map.put("loseReason", loseResons);
         }
-        map.put("content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
+        map.put("content", "销售阶段由\"" + mSaleDetails.getStageName() + "\"变更为\"" + stageName + "\"");
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
@@ -215,10 +215,16 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      * 数据绑定
      */
     public void bindData() {
+        //机会 是否 是创建者
+        if (mSaleDetails.creatorId.equals(MainApp.user.id)) {
+            img_title_right.setVisibility(View.VISIBLE);
+        } else {
+            img_title_right.setVisibility(View.INVISIBLE);
+        }
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
-        salesAmount.setText(Utils.setValueFloat(mSaleDetails.getSalesAmount()) + "");
-        estimatedAmount.setText(mSaleDetails.getEstimatedAmount() + "");
+        salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
+        estimatedAmount.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());

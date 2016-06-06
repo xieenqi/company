@@ -21,8 +21,10 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -1129,11 +1131,54 @@ public class Utils {
         context.startActivity(intent);
     }
 
-    public static String setValueFloat(Object obj) {
+    /**
+     * 科学计数法转换为 数字 小数只有两位
+     *
+     * @param obj
+     * @return
+     */
+    public static String setValueDouble(Object obj) {
         if (null == obj) {
             return "没有内容";
         }
-        BigDecimal bigDecimal = new BigDecimal(obj + "");
+        Double d;
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
+        try {
+            d = Double.valueOf(obj + "");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "No Number";
+        }
+
+        BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
         return bigDecimal.toPlainString() + "";
+    }
+
+    /**
+     * 设置小数位数控制
+     * 限制输入小数的位数
+     *
+     * @param index
+     */
+    public static InputFilter decimalDigits(final int index) {
+        InputFilter lengthfilter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                // 删除等特殊字符，直接返回
+                if ("".equals(source.toString())) {
+                    return null;
+                }
+                String dValue = dest.toString();
+                String[] splitArray = dValue.split("\\.");
+                if (splitArray.length > 1) {
+                    String dotValue = splitArray[1];
+                    int diff = dotValue.length() + 1 - index;
+                    if (diff > 0) {
+                        return source.subSequence(start, end - diff);
+                    }
+                }
+                return null;
+            }
+        };
+        return lengthfilter;
     }
 }

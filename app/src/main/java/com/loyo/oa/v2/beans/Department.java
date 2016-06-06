@@ -13,16 +13,18 @@ import java.util.ArrayList;
  */
 
 public class Department implements Serializable, SelectUserHelper.SelectUserBase {
-    private String id;
-    private String xpath;
-    private String name;
-    private String superiorId;
-    private String fullPinyin;
-    private String simplePinyin;
-    private long updatedAt;
-    private long createdAt;
-    private boolean isIndex;
-    private ArrayList<User> users = new ArrayList<>();
+    public String id;
+    public String xpath;
+    public String name;
+    public String superiorId;
+    public String simplePinyin;
+    public ArrayList<User> users = new ArrayList<>();
+    public String userNum;
+
+    public boolean isIndex;
+    public String fullPinyin;
+    public long updatedAt;
+    public long createdAt;
     public String title = "";//职务名称
 
     // 部门被选中, 或部门中的用户被全选时的回调

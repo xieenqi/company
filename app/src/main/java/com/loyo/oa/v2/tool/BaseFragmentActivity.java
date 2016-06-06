@@ -3,16 +3,17 @@ package com.loyo.oa.v2.tool;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
@@ -79,7 +81,17 @@ public class BaseFragmentActivity extends FragmentActivity {
         app = (MainApp) getApplicationContext();
         mContext = this;
         registerBaseReceiver();
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         ExitActivity.getInstance().addActivity(this);
+        // 创建状态栏的管理实例
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        // 激活状态栏设置
+        tintManager.setStatusBarTintEnabled(true);
+        // 激活导航栏设置
+        tintManager.setNavigationBarTintEnabled(true);
+        // 设置一个颜色给系统栏
+        tintManager.setTintColor(Color.parseColor("#2c9dfc"));
     }
 
     @Override

@@ -56,17 +56,19 @@
         android:label="@string/app_name"
         android:theme="@style/AppStartLoadTranslucent"
         android:windowSoftInputMode="adjustUnspecified|stateHidden">
+        <!--android:theme="@style/AppStartLoadTranslucent"-->
         <activity
             android:name=".activity.LauncherActivity_"
             android:label="@string/app_name"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:theme="@style/AppStartLoadTranslucent"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="${applicationId}"/>
             </intent-filter>
@@ -76,7 +78,8 @@
         <activity
             android:name=".activity.login.WelcomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
             android:name=".activity.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
@@ -144,7 +147,7 @@
             android:name=".activity.customer.CustomerContactManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.attendance.AttendanceActivity_"
             android:launchMode="standard"
@@ -184,6 +187,7 @@
             android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activity.login.LoginBQQActivity"

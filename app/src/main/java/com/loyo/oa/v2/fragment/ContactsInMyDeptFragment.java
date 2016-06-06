@@ -19,7 +19,7 @@ import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.CharacterParser;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.PinyinComparator;
-import com.loyo.oa.v2.common.SideBar;
+import com.loyo.oa.v2.common.commonview.SideBar;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;

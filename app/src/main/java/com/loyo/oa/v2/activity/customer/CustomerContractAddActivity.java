@@ -126,7 +126,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                             maps.put("tel", contactLeftExtras.val);
 
                         } else if (contactLeftExtras.fieldName.equals("birth")) {
-                            if (!TextUtils.isEmpty(contactLeftExtras.val)) {
+                            if (TextUtils.isEmpty(contactLeftExtras.val)) {
                                 try {
                                     maps.put("birth", mContact.getBirthStr());
                                 } catch (NullPointerException e) {
@@ -161,7 +161,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
                 if (mCustomer != null) {
                     if (mContact == null) {
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                                addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
                             @Override
                             public void success(final Contact contact, final Response response) {
                                 HttpErrorCheck.checkResponse("添加联系人：", response);

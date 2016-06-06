@@ -68,7 +68,7 @@ public class AdapterMySaleList extends BaseAdapter {
         }
         holder.tv_name.setText(record.getName());
         holder.tv_number.setText(record.getStageNmae() + "(" + record.getProb() + "%)");
-        holder.tv_price.setText("预估销售金额:" + Utils.setValueFloat(record.getEstimatedAmount()));
+        holder.tv_price.setText("预估销售金额:" + Utils.setValueDouble(record.getEstimatedAmount()));
 
         return view;
     }

@@ -97,11 +97,11 @@ public class InitDataService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
 
-            LogUtil.d("更新 组织 架构 json：完成" );
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
+            LogUtil.d("更新 组织 架构 json：完成");
 
         } else {
             LogUtil.d("更新 组织 架构 sb 失败");

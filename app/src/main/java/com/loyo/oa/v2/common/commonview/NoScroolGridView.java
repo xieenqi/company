@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.common;
+package com.loyo.oa.v2.common.commonview;
 
 import android.content.Context;
 import android.util.AttributeSet;

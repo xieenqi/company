@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
 
     <!--<include layout="@layout/include_item_title"/>-->
-    <include layout="@layout/include_common_title" />
+    <include layout="@layout/include_common_title"/>
 
     <ListView
         android:id="@+id/lv_deptList"

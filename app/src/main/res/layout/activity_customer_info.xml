@@ -3,6 +3,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/activity_bg"
+
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_common_title1"/>
@@ -10,6 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:scrollbars="none">
 
         <LinearLayout
@@ -104,14 +108,14 @@
                     android:id="@+id/edt_customer_memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_8"
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginRight="@dimen/margin_other_view"
-                    android:layout_marginTop="@dimen/dimen_8"
                     android:background="@null"
                     android:hint="客户简介"
                     android:maxLength="500"
                     android:minHeight="@dimen/dimen_48"
+                    android:paddingBottom="@dimen/dimen_8"
+                    android:paddingTop="@dimen/dimen_8"
                     android:textColor="@color/text33"
                     android:textColorHint="@color/text99"
                     android:textSize="15sp"
@@ -203,11 +207,12 @@
                     android:src="@drawable/right_arrow"/>
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line15"/>
+
             <LinearLayout
                 android:id="@+id/layout_Extra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/view_first_margin_top"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -284,10 +289,11 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <include layout="@layout/include_solid_line15"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/view_first_margin_top"
                 android:background="@color/white"
                 android:orientation="vertical">
 

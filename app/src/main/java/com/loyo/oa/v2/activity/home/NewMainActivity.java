@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.home;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,7 +99,7 @@ import retrofit.client.Response;
  * 2.1新版首页
  * Created by yyy on 16/5/27.
  */
-public class NewMainActivity extends BaseActivity implements View.OnClickListener, LocationUtilGD.AfterLocation,PullToRefreshBase.OnRefreshListener2 {
+public class NewMainActivity extends BaseActivity implements View.OnClickListener, LocationUtilGD.AfterLocation, PullToRefreshBase.OnRefreshListener2 {
 
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
@@ -132,7 +129,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
-                if(null != listView){
+                if (null != listView) {
                     listView.onRefreshComplete();
                 }
                 launch();
@@ -176,6 +173,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onStart() {
         super.onStart();
+        LogUtil.d(" 获得newMain现有的token：" + MainApp.getToken());
         //判断登陆是否失效
         if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
             if (StringUtil.isEmpty(MainApp.getToken())) {
@@ -197,9 +195,9 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         intentJpushInfo();
-/*        if (null != MainApp.user) {
+        if (null != MainApp.user) {
             requestNumber();
-        }*/
+        }
         MobclickAgent.onResume(this);
     }
 
@@ -213,7 +211,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
         mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
+        listView = (PullToRefreshListView) findViewById(R.id.newhome_listview);
+        btn_add = (Button) findViewById(R.id.btn_add);
+        newhome_name = (TextView) findViewById(R.id.newhome_name);
         startService(mIntentCheckUpdate);
+        showLoading("");
         initData();
     }
 
@@ -294,9 +296,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 初始化
      */
     public void initView() {
-        listView = (PullToRefreshListView) findViewById(R.id.newhome_listview);
-        btn_add = (Button) findViewById(R.id.btn_add);
-        newhome_name = (TextView) findViewById(R.id.newhome_name);
 
         newhome_name.setText(MainApp.user.getRealname());
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
@@ -344,13 +343,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      */
     void requestNumber() {
         LogUtil.dee("获取requestNumber");
-        showLoading("");
+
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
                         HttpErrorCheck.checkResponse("a首页红点", response);
-                        mItemNumbers = homeNumbers;
+
+                        mItemNumbers = removalRedNumber(homeNumbers);
                         testJurl();
                     }
 
@@ -360,6 +360,21 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         super.failure(error);
                     }
                 });
+    }
+
+    /**
+     * 首页红点 数据去重重复的
+     * @param oldData
+     * @return
+     */
+    private ArrayList<HttpMainRedDot> removalRedNumber(ArrayList<HttpMainRedDot> oldData) {
+        HashSet<Integer> set = new HashSet<>();
+        ArrayList<HttpMainRedDot> newList = new ArrayList();
+        for (HttpMainRedDot element : oldData) {
+            if (set.add(element.bizType))
+                newList.add(element);
+        }
+        return newList;
     }
 
 

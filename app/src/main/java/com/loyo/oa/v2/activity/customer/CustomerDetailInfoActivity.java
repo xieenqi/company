@@ -263,11 +263,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
-
-        if (Config_project.is_developer_mode) {
-            ll_sale.setVisibility(View.VISIBLE);
-            ll_sale.setOnTouchListener(Global.GetTouch());
-        }
+//正式启用销售机会 弃用购买意向
+        ll_sale.setVisibility(View.VISIBLE);
+        ll_sale.setOnTouchListener(Global.GetTouch());
     }
 
     /**

@@ -554,8 +554,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 if (null != department) {
 
                     String departmentName = department.getName();
-                    int userSize = Common.getAllUsersByDeptId(department.getId(), new ArrayList<User>()).size();
-                    String members = "(" + userSize + "人)";
+                    //部门下的人员数量
+//                    int userSize = Common.getAllUsersByDeptId(department.getId(), new ArrayList<User>()).size();
+                    String members = "(" + department.userNum + "人)";
                     departmentName = departmentName.concat(members);
                     tv_content.setText(departmentName);
 
