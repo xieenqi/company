@@ -251,7 +251,7 @@ public class ActivityAddIntentionProduct extends BaseActivity {
             if (!s.toString().contains(".") && s.toString().length() > 7) {
                 s.delete(7, s.toString().length());
             }
-            if (!TextUtils.isEmpty(tv_price.getText().toString())) {
+            if (!TextUtils.isEmpty(tv_price.getText().toString()) && !"0".equals(tv_price.getText().toString())) {
                 tv_discount.setText(Utils.setValueDouble((transformationNumber(s.toString())
                         / transformationNumber(tv_price.getText().toString()) * 100)) + "%");
             } else {

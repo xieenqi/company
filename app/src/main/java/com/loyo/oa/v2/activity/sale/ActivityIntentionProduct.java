@@ -65,7 +65,8 @@ public class ActivityIntentionProduct extends BaseActivity {
                     productSale += ele.salePrice * ele.quantity;
                 }
                 tv_saleToal.setText("¥" + Utils.setValueDouble(productSale));
-                tv_discount.setText(Utils.setValueDouble((productSale / productTalo) * 100) + "%");
+                if (0 != productTalo)
+                    tv_discount.setText(Utils.setValueDouble((productSale / productTalo) * 100) + "%");
             } else {
                 tv_saleToal.setText("¥" + 0);
                 tv_discount.setText(0 + "%");
