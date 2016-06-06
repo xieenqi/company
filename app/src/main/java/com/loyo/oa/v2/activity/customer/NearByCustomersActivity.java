@@ -17,30 +17,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.fragment.FragmentNearCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 
 /**
  * com.loyo.oa.v2.activity
- * 描述 :【附近客户】页面 个人 和团队
+ * 描述 :【附近客户】个人和团队
  * 作者 : ykb
  * 时间 : 15/9/17.
  */
@@ -49,7 +45,7 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
 
     private String[] TITLES = {"我的客戶(0)", "公司已赢单客户(0)"};
     private MyPagerAdapter adapter;
-    private ArrayList<CustomerCommonFragment> fragmentXes = new ArrayList<>();
+    private ArrayList<FragmentNearCustomer> fragmentXes = new ArrayList<>();
 
     @ViewById
     ViewGroup layout_back;
@@ -185,8 +181,8 @@ public class NearByCustomersActivity extends BaseFragmentActivity {
                     Customer.CUSTOMER_TYPE_NEAR_MINE : Customer.CUSTOMER_TYPE_NEAR_TEAM) : Customer.CUSTOMER_TYPE_NEAR_COMPANY);
             bundle.putString("position", position);
             bundle.putBoolean("isNear", true);
-            CustomerCommonFragment fragment = (CustomerCommonFragment) Fragment.instantiate(this,
-                    CustomerCommonFragment.class.getName(), bundle);
+            FragmentNearCustomer fragment = (FragmentNearCustomer) Fragment.instantiate(this,
+                    FragmentNearCustomer.class.getName(), bundle);
             fragmentXes.add(fragment);
         }
     }

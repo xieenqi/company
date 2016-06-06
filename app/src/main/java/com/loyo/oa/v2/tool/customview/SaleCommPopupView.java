@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.tool.customview;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -11,19 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
-import com.loyo.oa.v2.activity.sale.FragmentMySale;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeamScreenComm;
 import com.loyo.oa.v2.activity.sale.FragmentTeamSale;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
 import java.util.ArrayList;
 
 /**
- * 销售机会 销售阶段,排序 公用筛选View
+ * 【客户 机会】时间排序公用View
  * Created by yyy on 16/5/18.
  */
 public class SaleCommPopupView extends PopupWindow {
@@ -101,13 +99,26 @@ public class SaleCommPopupView extends PopupWindow {
     public void reuseFirm(int position){
         msg = new Message();
         bundle = new Bundle();
-        if(page == ActivitySaleOpportunitiesManager.SCREEN_STAGE){
-            bundle.putString("data",data.get(position).getId());
-            resultTag = FragmentTeamSale.SALETEAM_SCREEN_TAG2;
-        }else if(page == ActivitySaleOpportunitiesManager.SCREEN_SORT){
-            bundle.putString("data",position+1+"");
-            resultTag = FragmentTeamSale.SALETEAM_SCREEN_TAG3;
+
+        switch (page){
+            //【机会】销售阶段筛选
+            case ActivitySaleOpportunitiesManager.SCREEN_STAGE:
+                bundle.putString("data",data.get(position).getId());
+                resultTag = FragmentTeamSale.SALETEAM_SCREEN_TAG2;
+                break;
+            //【机会】排序筛选
+            case ActivitySaleOpportunitiesManager.SCREEN_SORT:
+                bundle.putString("data",position+1+"");
+                resultTag = FragmentTeamSale.SALETEAM_SCREEN_TAG3;
+                break;
+            //【客户】时间筛选
+            case ActivityCustomerManager.CUSTOMER_TIME:
+                bundle.putInt("data",position);
+                resultTag = ActivityCustomerManager.CUSTOMER_TIME;
+                break;
+
         }
+
         msg.setData(bundle);
         msg.what = resultTag;
         mHandler.sendMessage(msg);

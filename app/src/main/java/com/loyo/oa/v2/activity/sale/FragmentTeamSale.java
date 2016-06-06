@@ -39,7 +39,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
-import com.loyo.oa.v2.tool.customview.SaleScreenPopupView;
+import com.loyo.oa.v2.tool.customview.ScreenDeptPopupView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
@@ -51,7 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【团队销售机会列表】
+ * 【团队机会】列表
  * Created by yyy on 16/5/17.
  */
 public class FragmentTeamSale extends BaseFragment implements View.OnClickListener, PullToRefreshListView.OnRefreshListener2 {
@@ -90,8 +90,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private PullToRefreshListView listView;
     private SaleCommPopupView saleCommPopupView;
     private WindowManager.LayoutParams params;
-    private SaleScreenPopupView saleScreenPopupView;
-//    private SaleTeamList mSaleTeamList;
+    private ScreenDeptPopupView saleScreenPopupView;
 
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
@@ -203,7 +202,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
         mDeptSource = Common.getLstDepartment();
         deptSort();
-        saleScreenPopupView = new SaleScreenPopupView(getActivity(), data, mHandler);
+        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler,0x02);
 
         /**
          * 列表监听

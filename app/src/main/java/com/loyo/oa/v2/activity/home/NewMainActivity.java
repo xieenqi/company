@@ -30,6 +30,7 @@ import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
@@ -307,21 +308,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
 
-        //跳转对应功能
-/*        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (items.get(position - 1).title.equals("通讯录")) {
-                    if (null != MainApp.lstDepartment) {
-                        app.startActivity((Activity) mContext, ContactsActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
-                    } else {
-                        Toast("请重新拉去组织架构");
-                    }
-                } else {
-                    app.startActivityForResult((Activity) mContext, items.get(position-1).cls, MainApp.ENTER_TYPE_RIGHT, 1, null);
-                }
-            }
-        });*/
     }
 
     /**
@@ -331,7 +317,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0213", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
                 new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0", 0),
-                new HomeItem(R.drawable.newmain_customer, "客户管理", CustomerManageActivity_.class, "0205", 1),
+                //new HomeItem(R.drawable.newmain_customer, "客户管理", CustomerManageActivity_.class, "0205", 1),
+                new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0", 1),
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", ProjectManageActivity_.class, "0201", 2),

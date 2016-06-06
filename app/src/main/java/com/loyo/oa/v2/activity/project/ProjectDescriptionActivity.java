@@ -32,19 +32,16 @@ public class ProjectDescriptionActivity extends BaseActivity {
     TextView tv_managers;
     @ViewById
     TextView tv_members;
-
     @ViewById
     TextView tv_title;
     @ViewById
     TextView tv_extra;
     @ViewById
     TextView tv_content;
-
     @ViewById
     TextView tv_title_1;
     @ViewById
     ViewGroup img_title_left;
-
     @Extra
     HttpProject project;
 

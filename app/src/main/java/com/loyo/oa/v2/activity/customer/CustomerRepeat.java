@@ -179,19 +179,11 @@ public class CustomerRepeat extends BaseActivity {
                 HttpErrorCheck.checkResponse("查重客户：", response);
                 LogUtil.dll("success result:" + MainApp.gson.toJson(customerRepeatList));
                 setViewdata(customerRepeatList);
-//                mHandler.sendEmptyMessage(0x01);
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-//                    Toast("请检查您的网络连接");
-//
-//                } else if (error.getResponse().getStatus() == 500) {
-//                    Toast("网络异常500,请稍候再试");
-//                }
-
                 finish();
             }
         });

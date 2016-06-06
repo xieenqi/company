@@ -582,7 +582,6 @@ public class DateTool {
         int i = Integer.parseInt(time);
         String times = sdr.format(new Date(i * 1000L));
         return times;
-
     }
 
     /**

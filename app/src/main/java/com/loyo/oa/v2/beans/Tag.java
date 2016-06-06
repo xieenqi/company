@@ -6,13 +6,22 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2014/12/22 0022.
  */
-public class Tag implements Serializable {
+public class Tag implements Serializable{
 
+    private boolean index;
     private boolean enable ;
     private String id ;
-    private ArrayList<TagItem>items=new ArrayList<>();
+    private ArrayList<TagItem>items;
     private String name ;
     private String type ;
+
+    public boolean isIndex() {
+        return index;
+    }
+
+    public void setIndex(boolean index) {
+        this.index = index;
+    }
 
     public String getType() {
         return type;

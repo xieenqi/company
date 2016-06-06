@@ -47,11 +47,15 @@ import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,6 +100,35 @@ public class Utils {
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
+    }
+
+    /**
+     * 深度拷贝
+     * */
+    public static List deepCopy(List src) throws IOException, ClassNotFoundException{
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
+
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in =new ObjectInputStream(byteIn);
+        List dest = (List)in.readObject();
+        return dest;
+    }
+
+
+    /**
+     * 深度拷贝(带泛型)
+     * */
+    public static List<?> deepCopyT(List<?> src) throws IOException, ClassNotFoundException{
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
+
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in =new ObjectInputStream(byteIn);
+        List<?> dest = (List<?>)in.readObject();
+        return dest;
     }
 
 

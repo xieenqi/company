@@ -42,7 +42,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【我的销售机会】
+ * 【销售机会】我的列表
  * Created by yyy on 16/5/17.
  */
 public class FragmentMySale extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {

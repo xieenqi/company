@@ -12,7 +12,7 @@ public class TagItem  implements Serializable,Comparable<TagItem>{
 
     private String name;//	跟进客户
 
-    private boolean isChecked;
+    private boolean isChecked = false;
 
     private String tagId;
 
