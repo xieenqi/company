@@ -718,7 +718,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-
     /**
      * 激光推送要跳转 的 页面
      * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告

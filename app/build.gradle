@@ -44,7 +44,7 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016060301
+        versionCode 2016060302
         versionName '1.2.0'
     }
 
@@ -81,6 +81,14 @@ android {
             def today = new Date().format('yyyyMMdd-HH');
             def file = output.outputFile
             output.outputFile = new File(outputPath, file.name.replace(".apk", "-" + today + ".apk"))
+        }
+    }
+
+    productFlavors {
+        ukuaiqi {}
+        应用宝 {}
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
         }
     }
 
