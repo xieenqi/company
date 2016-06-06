@@ -8,7 +8,6 @@ import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.beans.UserInfo;
@@ -80,11 +79,11 @@ public final class Common {
 
     /**
      * 获取我的部门
-     * */
-    public static Department getMyDeptment(String deptId){
+     */
+    public static Department getMyDeptment(String deptId) {
         Department department = new Department();
-        for(Department department2 : getLstDepartment()){
-            if(department2.getId().equals(deptId)){
+        for (Department department2 : getLstDepartment()) {
+            if (department2.getId().equals(deptId)) {
                 department = department2;
             }
         }
@@ -135,7 +134,7 @@ public final class Common {
 
 
     /**
-     * 获取部门所有人员
+     * 获取部门所有人员 (此操作很耗时)
      *
      * @param deptId
      * @param result
@@ -389,6 +388,7 @@ public final class Common {
     }
 
     public static ArrayList<Department> getLstDepartment(String superDeptId) {
+//        LogUtil.d("state："+System.currentTimeMillis());
         ArrayList<Department> deptList = new ArrayList<>();
 
         if (TextUtils.isEmpty(superDeptId)) {
@@ -400,7 +400,7 @@ public final class Common {
                 }
             }
         }
-
+//        LogUtil.d("end："+System.currentTimeMillis());
         return deptList;
     }
 
