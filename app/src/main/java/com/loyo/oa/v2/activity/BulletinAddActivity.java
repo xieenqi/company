@@ -198,6 +198,7 @@ public class BulletinAddActivity extends BaseActivity {
             }
         } catch (Exception ex) {
             Global.ProcException(ex);
+            Toast("图片不可用");
         }
     }
 
