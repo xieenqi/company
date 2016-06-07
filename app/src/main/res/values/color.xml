@@ -302,14 +302,14 @@
     <color name="black">#000000</color>
     <!-- 黑色 -->
 
-    <color name="iswrite">#2c9dfc</color>
+
     <color name="isteston">#bf73e6</color>
     <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
     <color name="dialog_blue">#2693FB</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
     <color name="activity_split">#c8c7cc</color>
-    <color name="title_bg1">#4db1fe</color>
+    <color name="title_bg1">#2c9dfc</color>
     <color name="line_bg">#d6d6d6</color>
     <color name="text1">#545454</color>
     <color name="text2">#929292</color>

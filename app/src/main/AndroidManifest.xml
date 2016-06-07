@@ -56,16 +56,16 @@
         android:label="@string/app_name"
         android:theme="@style/AppStartLoadTranslucent"
         android:windowSoftInputMode="adjustUnspecified|stateHidden">
+        <!--android:theme="@style/AppStartLoadTranslucent"-->
         <activity
             android:name=".activity.LauncherActivity_"
             android:label="@string/app_name"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:theme="@style/AppStartLoadTranslucent"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
 
@@ -78,7 +78,8 @@
         <activity
             android:name=".activity.login.WelcomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
             android:name=".activity.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
@@ -146,7 +147,7 @@
             android:name=".activity.customer.CustomerContactManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.attendance.AttendanceActivity_"
             android:launchMode="standard"
@@ -186,6 +187,7 @@
             android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activity.login.LoginBQQActivity"
@@ -510,14 +512,11 @@
             android:name=".activity.wfinstance.ProcessChoose"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity
-            android:name=".activity.sale.ActivitySaleDetails"
+            android:name=".activity.home.NewMainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activity.sale.ActivitySaleEditView"
-            android:launchMode="singleTop"
-            android:theme="@style/dialog_edit_delete_StyleBottom"
+            android:windowSoftInputMode="stateAlwaysHidden"
             />
 
         <service
@@ -696,6 +695,21 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activity.customer.SaleManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivitySaleDetails"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivitySaleEditView"
+            android:launchMode="singleTop"
+            android:theme="@style/dialog_edit_delete_StyleBottom"
+            />
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -14,13 +15,13 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.SharedUtil;
 
 /**
+ * 启动
  * Created xnq 16/1/18.
  */
-public class WelcomeActivity extends BaseActivity {
+public class WelcomeActivity extends Activity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#f4f4ff"
+        android:background="@color/activity_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/margin_other_view"
@@ -93,6 +93,7 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_oldePrice"
             style="@style/text_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -123,6 +124,7 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_salePrice"
             style="@style/text_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

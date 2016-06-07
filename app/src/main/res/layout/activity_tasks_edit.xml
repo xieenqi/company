@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
               android:background="@color/white"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical"
     >
 
     <include layout="@layout/include_item_title"/>
@@ -108,103 +110,103 @@
                     android:textSize="15sp"/>
 
                 <ImageView
-                    android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="5dp"
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"/>
 
             </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/task_ll_deadline"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"/>
 
             <LinearLayout
-                android:id="@+id/layout_deadline"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/view_h_fif"
-                android:background="@drawable/layout_bg1"
-                android:gravity="center_vertical">
+                android:id="@+id/task_ll_deadline"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
 
-                <TextView
-                    style="@style/text_item1"
-                    android:layout_width="80dp"
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_deadline"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_fif"
+                    android:background="@drawable/layout_bg1"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:text="截止日期"
+                        android:textSize="15sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_deadline"
+                        style="@style/text_item1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:textColor="@color/title_bg1"
+                        android:textColorHint="#c9c9c9"
+                        android:textSize="15sp"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+
+                </LinearLayout>
+
+                <View
+                    style="@style/view_split"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/margin_side_edge"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_remind"
+                    android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:text="截止日期"
-                    android:textSize="15sp"
-                    />
+                    android:background="@drawable/layout_bg1"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tv_deadline"
-                    style="@style/text_item1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:textColorHint="#c9c9c9"
-                    android:textColor="@color/title_bg1"
-                    android:textSize="15sp"/>
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:text="提醒"
+                        android:textSize="15sp"
+                        />
 
-                <ImageView
-                    android:layout_marginRight="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
+                    <TextView
+                        android:id="@+id/tv_remind"
+                        style="@style/text_item1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:textColor="@color/title_bg1"
+                        android:textColorHint="#c9c9c9"
+                        android:textSize="15sp"
+                        />
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_side_edge"/>
-
-            <LinearLayout
-                android:id="@+id/layout_remind"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/layout_bg1"
-                android:gravity="center_vertical">
-
-                <TextView
-                    style="@style/text_item1"
-                    android:layout_width="80dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:text="提醒"
-                    android:textSize="15sp"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_remind"
-                    style="@style/text_item1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:textColorHint="#c9c9c9"
-                    android:textSize="15sp"
-                    android:textColor="@color/title_bg1"
-                    />
-
-                <ImageView
-                    android:layout_marginRight="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:scaleType="center"
-                    android:src="@drawable/right_arrow"/>
-
-            </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -247,16 +249,16 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:hint="点击添加负责人"
+                        android:textColor="@color/title_bg1"
                         android:textColorHint="#c9c9c9"
                         android:textSize="15sp"
-                        android:textColor="@color/title_bg1"
                         />
 
                     <ImageView
-                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_responsiblePerson"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
                         android:scaleType="center"
                         android:src="@drawable/right_arrow"/>
                 </LinearLayout>
@@ -288,15 +290,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:ellipsize="end"
                         android:gravity="right|center_vertical"
                         android:hint="点击添加参与人"
+                        android:maxEms="15"
                         android:minHeight="@dimen/view_h_fif"
+                        android:singleLine="true"
+                        android:textColor="@color/title_bg1"
                         android:textColorHint="#c9c9c9"
                         android:textSize="15sp"
-                        android:textColor="@color/title_bg1"
-                        android:maxEms="15"
-                        android:ellipsize="end"
-                        android:singleLine="true"
                         />
 
                     <LinearLayout
@@ -316,10 +318,10 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_toUsers"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
                         android:gravity="right|center_vertical"
                         android:scaleType="center"
                         android:src="@drawable/right_arrow"/>
@@ -352,13 +354,13 @@
                     <com.loyo.oa.v2.activity.commonview.SwitchView
                         android:id="@+id/switch_approve"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:layout_marginTop="6dp"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dimen_5"
                         android:layout_marginRight="@dimen/dimen_16"
+                        android:layout_marginTop="6dp"
                         />
 
                 </LinearLayout>
@@ -368,6 +370,7 @@
                     android:layout_height="17dp"
                     android:background="@color/activity_bg"
                     />
+
                 <LinearLayout
                     android:id="@+id/layout_project"
                     android:layout_width="match_parent"
@@ -390,20 +393,20 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical"
-                        android:textColorHint="#c9c9c9"
-                        android:textColor="@color/title_bg1"
-                        android:textSize="15sp"
-                        android:maxEms="17"
                         android:ellipsize="end"
+                        android:gravity="right|center_vertical"
+                        android:maxEms="17"
                         android:singleLine="true"
+                        android:textColor="@color/title_bg1"
+                        android:textColorHint="#c9c9c9"
+                        android:textSize="15sp"
                         />
 
                     <ImageView
-                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_project"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
                         android:gravity="right|center_vertical"
                         android:scaleType="center"
                         android:src="@drawable/right_arrow"/>
@@ -446,10 +449,10 @@
                         />
 
                     <ImageView
-                        android:layout_marginRight="5dp"
                         android:id="@+id/img_title_right_customer"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
                         android:gravity="right|center_vertical"
                         android:scaleType="center"
                         android:src="@drawable/right_arrow"/>

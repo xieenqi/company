@@ -2,6 +2,9 @@ package com.loyo.oa.v2.activity.sale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.commonview.CustomTextView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -24,6 +28,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,12 +45,34 @@ public class ActivityIntentionProduct extends BaseActivity {
     private String saleId = "";
     private int resultAction = 0;
     private int fromPage = 0;
-    private TextView tv_title, tv_productTalo;
-    private LinearLayout ll_back, ll_add;
+    private TextView tv_title;
+    private CustomTextView tv_saleToal, tv_discount;
+    private LinearLayout ll_back, ll_add, ll_statistics;
     private ListView lv_list;
     ArrayList<SaleIntentionalProduct> listData = new ArrayList<>();
     SaleProductAdapter saleProductAdapter;
     private int editItemIndex;//改变item的位置记录
+
+    Handler hadler = new Handler() {
+        @Override
+        public void dispatchMessage(Message msg) {
+            if (listData.size() > 0) {
+                ll_statistics.setVisibility(View.VISIBLE);
+                float productTalo = 0;
+                float productSale = 0;
+                for (SaleIntentionalProduct ele : listData) {
+                    productTalo += ele.costPrice * ele.quantity;
+                    productSale += ele.salePrice * ele.quantity;
+                }
+                tv_saleToal.setText("¥" + Utils.setValueDouble(productSale));
+                if (0 != productTalo)
+                    tv_discount.setText(Utils.setValueDouble((productSale / productTalo) * 100) + "%");
+            } else {
+                tv_saleToal.setText("¥" + 0);
+                tv_discount.setText(0 + "%");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +94,9 @@ public class ActivityIntentionProduct extends BaseActivity {
         saleProductAdapter = new SaleProductAdapter();
         lv_list = (ListView) findViewById(R.id.lv_list);
         lv_list.setAdapter(saleProductAdapter);
-        tv_productTalo = (TextView) findViewById(R.id.tv_productTalo);
+        tv_saleToal = (CustomTextView) findViewById(R.id.tv_saleToal);
+        tv_discount = (CustomTextView) findViewById(R.id.tv_discount);
+        ll_statistics = (LinearLayout) findViewById(R.id.ll_statistics);
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -104,16 +133,7 @@ public class ActivityIntentionProduct extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (listData.size() > 0) {
-            tv_productTalo.setVisibility(View.VISIBLE);
-            float productTalo = 0;
-            float productSale = 0;
-            for (SaleIntentionalProduct ele : listData) {
-                productTalo += ele.costPrice;
-                productSale += ele.salePrice;
-            }
-            tv_productTalo.setText("总金额：¥" + productTalo + ";  总折扣：" + (productSale / productTalo) * 100 + "%");
-        }
+        hadler.sendEmptyMessage(0);
     }
 
     @Override
@@ -139,6 +159,7 @@ public class ActivityIntentionProduct extends BaseActivity {
             public void success(final SaleProductEdit saleProductEdit, final Response response) {
                 HttpErrorCheck.checkResponse("删除意向产品", response);
                 resultAction = ActionCode.SALE_DETAILS_RUSH;
+                hadler.sendEmptyMessage(0);
             }
 
             @Override
@@ -212,6 +233,8 @@ public class ActivityIntentionProduct extends BaseActivity {
                 holderView.tv_memo = (TextView) convertView.findViewById(R.id.tv_memo);
                 holderView.ll_delete = (LinearLayout) convertView.findViewById(R.id.ll_delete);
                 holderView.ll_edit = (LinearLayout) convertView.findViewById(R.id.ll_edit);
+                holderView.tv_oldePrice = (TextView) convertView.findViewById(R.id.tv_oldePrice);
+                holderView.tv_salePrice = (TextView) convertView.findViewById(R.id.tv_salePrice);
                 convertView.setTag(holderView);
             } else {
                 holderView = (HolderView) convertView.getTag();
@@ -222,19 +245,23 @@ public class ActivityIntentionProduct extends BaseActivity {
     }
 
     class HolderView {
-        public TextView tv_index, tv_product, tv_toal_price, tv_sale_price, tv_number, tv_discount, tv_total_money, tv_memo;
+        public TextView tv_index, tv_product, tv_toal_price, tv_sale_price, tv_number, tv_discount, tv_total_money, tv_memo, tv_oldePrice, tv_salePrice;
         public LinearLayout ll_delete, ll_edit;
 
         public void setContentView(final int position) {
             tv_index.setText("意向产品" + (position + 1));
             final SaleIntentionalProduct item = listData.get(position);
             tv_product.setText(item.name);
-            tv_toal_price.setText(item.costPrice + "");
-            tv_sale_price.setText(item.salePrice + "");
-            tv_number.setText(item.quantity + "");
-            tv_discount.setText(item.discount + "%");
-            tv_total_money.setText(item.totalMoney + "");
+            tv_toal_price.setText(Utils.setValueDouble(item.costPrice + ""));
+            tv_sale_price.setText(Utils.setValueDouble(item.salePrice + ""));
+            tv_number.setText(Utils.setValueDouble(item.quantity + ""));
+            tv_discount.setText(Utils.setValueDouble(item.discount) + "%");
+            tv_total_money.setText(Utils.setValueDouble(item.totalMoney + ""));
             tv_memo.setText(item.memo);
+            if (!TextUtils.isEmpty(item.unit)) {
+                tv_oldePrice.setText("产品原价(" + item.unit + ")");
+                tv_salePrice.setText("销售价格(" + item.unit + ")");
+            }
             ll_delete.setOnTouchListener(Global.GetTouch());
             ll_edit.setOnTouchListener(Global.GetTouch());
             /*意向产品 删除*/
@@ -250,6 +277,7 @@ public class ActivityIntentionProduct extends BaseActivity {
                         listData.remove(position);
                         saleProductAdapter.notifyDataSetChanged();
                     }
+                    hadler.sendEmptyMessage(0);
 
                 }
             });

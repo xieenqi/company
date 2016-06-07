@@ -416,8 +416,8 @@ public class ContactsDepartmentFragment extends BaseFragment {
             myDeptId = MainApp.user.role.id;
         }
 
-        int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
-        String members = "(" + userSize + "人)";
+//        int userSize = Common.getAllUsersByDeptId(myDeptId, new ArrayList<User>()).size();
+        String members = "(" + commy.userNum + "人)";//本部门的人数
         if (null != myDeptName) {
             myDeptName = myDeptName.concat(members);
             nameTv.setText(myDeptName);
@@ -554,8 +554,9 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 if (null != department) {
 
                     String departmentName = department.getName();
-                    int userSize = Common.getAllUsersByDeptId(department.getId(), new ArrayList<User>()).size();
-                    String members = "(" + userSize + "人)";
+                    //部门下的人员数量
+//                    int userSize = Common.getAllUsersByDeptId(department.getId(), new ArrayList<User>()).size();
+                    String members = "(" + department.userNum + "人)";
                     departmentName = departmentName.concat(members);
                     tv_content.setText(departmentName);
 

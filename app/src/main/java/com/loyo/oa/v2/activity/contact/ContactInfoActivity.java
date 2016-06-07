@@ -189,7 +189,7 @@ public class ContactInfoActivity extends BaseActivity {
             if (age >= 150) {
                 return;
             }
-            Utils.setContent(tv_birthday, user.birthDay);
+            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
             Utils.setContent(tv_age, age + "");
         }
 

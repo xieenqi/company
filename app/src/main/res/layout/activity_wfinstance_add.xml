@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -32,9 +34,9 @@
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/dimen_17"
                     android:layout_marginLeft="@dimen/margin_side_edge"
                     android:layout_marginTop="@dimen/dimen_17"
-                    android:layout_marginBottom="@dimen/dimen_17"
                     android:text="选择类别"/>
 
                 <TextView
@@ -44,7 +46,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
-                    android:textColor="@color/iswrite"/>
+                    android:textColor="@color/title_bg1"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -79,9 +81,9 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/dimen_17"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginTop="@dimen/dimen_17"
-                        android:layout_marginBottom="@dimen/dimen_17"
                         android:text="选择流程"/>
 
                     <TextView
@@ -92,7 +94,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:text=""
-                        android:textColor="@color/iswrite"/>
+                        android:textColor="@color/title_bg1"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -119,9 +121,9 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:layout_marginBottom="@dimen/dimen_17"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginTop="@dimen/dimen_17"
-                        android:layout_marginBottom="@dimen/dimen_17"
                         android:text="所属部门"/>
 
                     <TextView
@@ -132,7 +134,7 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:text=""
-                        android:textColor="@color/iswrite"/>
+                        android:textColor="@color/title_bg1"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -186,8 +188,8 @@
                     android:layout_height="@dimen/dimen_30"
                     android:background="@color/activity_bg"
                     android:text="新增内容"
-                    android:textSize="@dimen/text_sp15"
-                    android:textColor="@color/green51"/>
+                    android:textColor="@color/green51"
+                    android:textSize="@dimen/text_sp15"/>
 
             </LinearLayout>
 
@@ -205,25 +207,26 @@
                     android:layout_marginTop="@dimen/dimen_17"
                     android:gravity="left"
                     android:hint="备注"
+                    android:maxLength="500"
                     android:minHeight="@dimen/dimen_160"
                     android:minWidth="@dimen/view_h_title"
-                    android:maxLength="500"
                     />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     >
+
                     <TextView
                         android:id="@+id/wordcount"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="20dp"
                         android:text="0/500"
-                        android:textSize="12sp"
                         android:textColor="@color/text99"
+                        android:textSize="12sp"
                         />
                 </RelativeLayout>
 
@@ -238,9 +241,9 @@
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_7"
                         android:layout_marginLeft="@dimen/margin_other_view"
                         android:layout_marginRight="@dimen/margin_other_view"
-                        android:layout_marginBottom="@dimen/dimen_7"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"
@@ -267,8 +270,8 @@
                         style="@style/text_item1"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginBottom="@dimen/dimen_16"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
                         android:layout_marginTop="@dimen/dimen_16"
                         android:text="所属项目"/>
 
@@ -292,8 +295,8 @@
                 <View
                     style="@style/view_split"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_other_view"
                     android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginLeft="@dimen/margin_other_view"
                     />
             </LinearLayout>
 

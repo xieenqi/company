@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.ArrayList;
 
@@ -21,12 +21,20 @@ import java.util.ArrayList;
  */
 public class AdapterMySaleList extends BaseAdapter {
 
-    private ArrayList<SaleRecord> mData;
+    private ArrayList<SaleRecord> mData = new ArrayList<>();
     private Context mContext;
 
-    public AdapterMySaleList(Context context,ArrayList<SaleRecord> data) {
+    public AdapterMySaleList(Context context) {
         mContext = context;
-        mData = data;
+    }
+
+    public ArrayList<SaleRecord> getData() {
+        return mData;
+    }
+
+    public void setData(ArrayList<SaleRecord> newData) {
+        this.mData = newData;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -59,8 +67,8 @@ public class AdapterMySaleList extends BaseAdapter {
             holder = (HolderView) view.getTag();
         }
         holder.tv_name.setText(record.getName());
-        holder.tv_number.setText(record.getStageNmae()+"("+record.getProb()+"%)");
-        holder.tv_price.setText("预估销售金额:"+record.getEstimatedAmount());
+        holder.tv_number.setText(record.getStageNmae() + "(" + record.getProb() + "%)");
+        holder.tv_price.setText("预估销售金额:" + Utils.setValueDouble(record.getEstimatedAmount()));
 
         return view;
     }

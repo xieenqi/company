@@ -2,7 +2,9 @@ package com.loyo.oa.v2.activity.sale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,7 +15,9 @@ import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -24,8 +28,11 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -45,8 +52,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private Intent mIntent;
     private String selectId = "";
     private StringBuffer productBuffer;
+    private StringBuffer loseReasonBuffer;
     private String stageId;
     private String stageName;
+    private ArrayList<CommonTag> loseResons;
 
     private LinearLayout ll_product;
     private LinearLayout ll_stage;
@@ -63,9 +72,10 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView creatorTime;
     private TextView updateTime;
     private TextView winTime;
-    private TextView tv_stageName;
     private TextView product;
     private TextView text_stagename;
+    private ImageView iv_wfstatus;
+    private boolean isDelete = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +103,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         creatorTime = (TextView) findViewById(R.id.creatortime);
         updateTime = (TextView) findViewById(R.id.updatetime);
         winTime = (TextView) findViewById(R.id.wintime);
-        tv_stageName = (TextView) findViewById(R.id.text_stagename);
         product = (TextView) findViewById(R.id.text_product);
         text_stagename = (TextView) findViewById(R.id.text_stagename);
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
         ll_extra = (LinearLayout) findViewById(R.id.ll_extra);
+        iv_wfstatus = (ImageView) findViewById(R.id.iv_wfstatus);
 
         img_title_left.setOnClickListener(this);
         img_title_right.setOnClickListener(this);
@@ -108,9 +118,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         ll_product.setOnTouchListener(Global.GetTouch());
         img_title_right.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
-
-        mIntent = getIntent();
-        selectId = mIntent.getStringExtra("id");
+        iv_wfstatus.setOnTouchListener(Global.GetTouch());
+        iv_wfstatus.setOnClickListener(this);
+        getIntenData();
         getData();
     }
 
@@ -135,6 +145,19 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                         finish();
                     }
                 });
+    }
+
+    private void getIntenData() {
+        mIntent = getIntent();
+        selectId = mIntent.getStringExtra("id");
+        String fromPath = mIntent.getStringExtra("formPath");
+        if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
+            //审批过来不准编辑
+            iv_wfstatus.setEnabled(false);
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
+        }
     }
 
     /**
@@ -164,14 +187,16 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     public void editStage() {
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("StageId", stageId);
-        map.put("Cid", selectId);
-        map.put("LostReason", "无");
-        map.put("Content", "从" + mSaleDetails.getStageName() + "修改为" + stageName);
+        map.put("stageId", stageId);
+        map.put("cId", selectId);
+        if (null != loseResons) {
+            map.put("loseReason", loseResons);
+        }
+        map.put("content", "销售阶段由\"" + mSaleDetails.getStageName() + "\"变更为\"" + stageName + "\"");
         LogUtil.d("编辑销售阶段:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER())
                 .create(ISale.class)
-                .editSaleStage(map,stageId,new RCallback<SaleProductEdit>() {
+                .editSaleStage(map, selectId, new RCallback<SaleProductEdit>() {
                     @Override
                     public void success(SaleProductEdit saleProductEdit, Response response) {
                         HttpErrorCheck.checkResponse("编辑销售阶段", response);
@@ -190,18 +215,24 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      * 数据绑定
      */
     public void bindData() {
+        //机会 是否 是创建者
+        if (MainApp.user.id.equals(mSaleDetails.creatorId)) {
+            img_title_right.setVisibility(View.VISIBLE);
+        } else {
+            img_title_right.setVisibility(View.INVISIBLE);
+        }
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
-        salesAmount.setText(mSaleDetails.getSalesAmount() + "");
-        estimatedAmount.setText(mSaleDetails.getEstimatedAmount() + "");
+        salesAmount.setText("" + Utils.setValueDouble(mSaleDetails.estimatedAmount));
+        estimatedAmount.setText(app.df4.format(new Date(Long.valueOf(mSaleDetails.estimatedTime + "") * 1000)));
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
         creator.setText(mSaleDetails.getCreatorName());
-        creatorTime.setText(mSaleDetails.getCreatedAt() + "");
-        updateTime.setText(mSaleDetails.getUpdatedAt() + "");
+        creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
+        updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));
         winTime.setText(mSaleDetails.getWinTime() + "");
-        tv_stageName.setText(mSaleDetails.getStageName());
+        text_stagename.setText(mSaleDetails.getStageName());
         productBuffer = new StringBuffer();
         if (null != mSaleDetails.getProInfos()) {
             for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
@@ -210,14 +241,51 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         }
         product.setText(productBuffer.toString());
         ll_extra.setVisibility(View.VISIBLE);
-        for (ContactLeftExtras saleDetailsExtraList : mSaleDetails.extensionDatas) {
-            ll_extra.addView(new ViewSaleDetailsExtra(mContext, saleDetailsExtraList));
+        if (ll_extra.getChildCount() != 0) {
+            ll_extra.removeAllViews();
         }
-
+        if (null != mSaleDetails.extensionDatas) {
+            for (ContactLeftExtras saleDetailsExtraList : mSaleDetails.extensionDatas) {
+                ll_extra.addView(new ViewSaleDetailsExtra(mContext, saleDetailsExtraList));
+            }
+        }
         /*当为输单阶段时，显示输单原因*/
         if (mSaleDetails.getProb() == 0) {
             layout_losereson.setVisibility(View.VISIBLE);
-            losereason.setText(mSaleDetails.getLostReason());
+            loseReasonBuffer = new StringBuffer();
+            for (CommonTag commonTag : mSaleDetails.getLoseReason()) {
+                loseReasonBuffer.append(commonTag.getName() + " ");
+            }
+            losereason.setText(loseReasonBuffer.toString());
+        } else {
+            layout_losereson.setVisibility(View.GONE);
+        }
+        if (0 != mSaleDetails.wfState) {//销售阶段是赢单的时候
+            img_title_right.setVisibility(View.INVISIBLE);
+            ll_product.setEnabled(false);
+            ll_stage.setEnabled(false);
+            switch (mSaleDetails.wfState) {
+                case 1:
+                    iv_wfstatus.setImageResource(R.drawable.img_task_wite);
+                    break;
+                case 2:
+                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status2);
+                    break;
+                case 3:
+                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
+                    img_title_right.setVisibility(View.VISIBLE);
+                    ll_product.setEnabled(true);
+                    ll_stage.setEnabled(true);
+                    isDelete = false;
+                    break;
+                case 4:
+                    iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);
+                    break;
+                case 5:
+                    iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
+                    break;
+            }
+
         }
     }
 
@@ -231,6 +299,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             //弹出菜单
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, ActivitySaleEditView.class);
+                intent.putExtra("isDelete", isDelete);
                 startActivityForResult(intent, EDIT_POP_WINDOW);
                 break;
             //意向产品
@@ -247,12 +316,18 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 Bundle stage = new Bundle();
                 stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
                 stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
+                stage.putString(ExtraAndResult.CC_USER_NAME, mSaleDetails.name);
+                stage.putString(ExtraAndResult.EXTRA_BOOLEAN, mSaleDetails.salesAmount + "");
                 stage.putString(ExtraAndResult.EXTRA_DATA, text_stagename.getText().toString());
                 app.startActivityForResult(ActivitySaleDetails.this, ActivitySaleStage.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                 break;
 
-            default:
+            case R.id.iv_wfstatus:
+                Intent wfinstance = new Intent();
+                wfinstance.putExtra(ExtraAndResult.EXTRA_ID, mSaleDetails.wfId);
+                wfinstance.setClass(ActivitySaleDetails.this, WfinstanceInfoActivity_.class);
+                startActivityForResult(wfinstance, ExtraAndResult.REQUEST_CODE);
                 break;
 
         }
@@ -261,22 +336,31 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        int resultAction;
 
         if (resultCode != RESULT_OK) {
             return;
         }
 
-
         switch (requestCode) {
+
+            /**编辑成功后 回调*/
+            case ExtraAndResult.MSG_WHAT_DIALOG:
+                resultAction = data.getIntExtra(ExtraAndResult.RESULT_ID, 0);
+                if (resultAction == ActionCode.SALE_DETAILS_EDIT) {
+                    LogUtil.dee("编辑成功回调");
+                    getData();
+                }
+                break;
+
             /**菜单选项*/
             case EDIT_POP_WINDOW:
                 //编辑回调
                 if (data.getBooleanExtra("edit", false) && null != mSaleDetails) {
                     Bundle editSale = new Bundle();
                     editSale.putSerializable(ExtraAndResult.EXTRA_DATA, mSaleDetails);
-                    //editSale.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
                     app.startActivityForResult(ActivitySaleDetails.this, ActivityAddMySale.class,
-                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, editSale);
+                            MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.MSG_WHAT_DIALOG, editSale);
                 }
                 //删除回调
                 else if (data.getBooleanExtra("delete", false)) {
@@ -285,7 +369,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 break;
             /**意向产品*/
             case ExtraAndResult.REQUEST_CODE_PRODUCT:
-                int resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
+                resultAction = data.getIntExtra(ExtraAndResult.STR_SELECT_TYPE, 0);
                 if (resultAction == ActionCode.SALE_DETAILS_RUSH) {
                     getData();
                 }
@@ -293,8 +377,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             /**销售阶段*/
             case ExtraAndResult.REQUEST_CODE_STAGE:
                 SaleStage stage = (SaleStage) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                loseResons = (ArrayList<CommonTag>) data.getSerializableExtra(ExtraAndResult.RESULT_NAME);
                 if (null != stage) {
-                    tv_stageName.setText(stage.name);
+                    text_stagename.setText(stage.name);
                     stageId = stage.id;
                     stageName = stage.name;
                     editStage();

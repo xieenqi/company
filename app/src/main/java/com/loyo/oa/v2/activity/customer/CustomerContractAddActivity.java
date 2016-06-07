@@ -2,9 +2,11 @@ package com.loyo.oa.v2.activity.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Contact;
@@ -21,8 +23,10 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.ContactAddforExtraData;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -49,6 +53,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
         if (getIntent() != null && getIntent().getExtras() != null) {
             mCustomer = (Customer) getIntent().getExtras().getSerializable("customer");
             mContact = (Contact) getIntent().getExtras().getSerializable("contract");
+            if (null != mContact)
+                super.setTitle("编辑联系人");
         }
         initUI();
     }
@@ -68,7 +74,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
      * 绑定数据
      */
     void bindData() {
-        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext,mContact, mContactLeftExtras, true, R.color.title_bg1, 0));
+        layout_contact_extra_info.addView(new ContactAddforExtraData(mContext, mContact, mContactLeftExtras, true, R.color.title_bg1, 0));
     }
 
     @Override
@@ -79,71 +85,72 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
                 break;
             case R.id.img_title_right:
                 HashMap<String, Object> maps = new HashMap<>();
-                for(ContactLeftExtras contactLeftExtras : mContactLeftExtras){
-                    if(!contactLeftExtras.isSystem){
-                        LogUtil.dee(contactLeftExtras.label+":"+contactLeftExtras.val);
+                for (ContactLeftExtras contactLeftExtras : mContactLeftExtras) {
+                    if (!contactLeftExtras.isSystem) {
+                        LogUtil.dee(contactLeftExtras.label + ":" + contactLeftExtras.val);
                         contactRequestParam = new ContactRequestParam();
                         contactRequestParam.setVal(contactLeftExtras.val);
                         contactRequestParam.properties = contactLeftExtras;
                         requestContactParam.add(contactRequestParam);
-                    }else{
-                        if(contactLeftExtras.fieldName.equals("name")){
+                    } else {
+                        if (contactLeftExtras.fieldName.equals("name")) {
 
-                            if(contactLeftExtras.val.isEmpty()){
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
                                 Toast("姓名不能为空");
                                 return;
                             }
                             maps.put("name", contactLeftExtras.val);
 
-                        }else if(contactLeftExtras.fieldName.equals("wiretel")){
-
-                            if(!contactLeftExtras.val.isEmpty()){
-                                   if(!RegularCheck.isPhone(contactLeftExtras.val)){
-                                       Toast("座机号码格式不正确");
-                                       return;
-                                   }
-                            }
+                        } else if (contactLeftExtras.fieldName.equals("wiretel")) {
+//
+//                            if (!contactLeftExtras.val.isEmpty()) {
+//                                if (!RegularCheck.isPhone(contactLeftExtras.val)) {
+//                                    Toast("座机号码格式不正确");
+//                                    return;
+//                                }
+//                            }
                             maps.put("wiretel", contactLeftExtras.val);
 
-                        }else if(contactLeftExtras.fieldName.equals("tel")){
+                        } else if (contactLeftExtras.fieldName.equals("tel")) {
 
-                            if(contactLeftExtras.val.isEmpty()){
+                            if (contactLeftExtras.required && contactLeftExtras.val.isEmpty()) {
                                 Toast("手机号不能为空");
                                 return;
-                            }else{
-                                if(!RegularCheck.isMobilePhone(contactLeftExtras.val)){
-                                    Toast("手机号码格式不正确");
-                                    return;
-                                }
                             }
+// else {
+//                                if (!RegularCheck.isMobilePhone(contactLeftExtras.val)) {
+//                                    Toast("手机号码格式不正确");
+//                                    return;
+//                                }
+//                            }
                             maps.put("tel", contactLeftExtras.val);
 
-                        }else if(contactLeftExtras.fieldName.equals("birth")){
-                            if(contactLeftExtras.val.isEmpty()){
-                                try{
-                                    maps.put("birth",mContact.getBirthStr());
-                                }catch(NullPointerException e){
+                        } else if (contactLeftExtras.fieldName.equals("birth")) {
+                            if (TextUtils.isEmpty(contactLeftExtras.val)) {
+                                try {
+                                    maps.put("birth", mContact.getBirthStr());
+                                } catch (NullPointerException e) {
                                     e.printStackTrace();
                                 }
-                            }else{
+                            } else {
                                 maps.put("birth", contactLeftExtras.val);
                             }
-                        }else if(contactLeftExtras.fieldName.equals("wx")){
+                        } else if (contactLeftExtras.fieldName.equals("wx")) {
                             maps.put("wx", contactLeftExtras.val);
-                        }else if(contactLeftExtras.fieldName.equals("qq")){
+                        } else if (contactLeftExtras.fieldName.equals("qq")) {
                             maps.put("qq", contactLeftExtras.val);
-                        }else if(contactLeftExtras.fieldName.equals("email")){
-                            if(!contactLeftExtras.val.isEmpty()){
-                                if(!RegularCheck.checkEmail(contactLeftExtras.val)){
+                        } else if (contactLeftExtras.fieldName.equals("email")) {
+                            if (!TextUtils.isEmpty(contactLeftExtras.val)) {
+                                if (!RegularCheck.checkEmail(contactLeftExtras.val)) {
                                     Toast("Email格式不正确");
                                     return;
                                 }
                             }
                             maps.put("email", contactLeftExtras.val);
 
-                        }else if(contactLeftExtras.fieldName.equals("memo")) {
+                        } else if (contactLeftExtras.fieldName.equals("memo")) {
                             maps.put("memo", contactLeftExtras.val);
-                        }else if(contactLeftExtras.fieldName.equals("dept_name")){
+                        } else if (contactLeftExtras.fieldName.equals("dept_name")) {
                             maps.put("deptName", contactLeftExtras.val);
                         }
                     }
@@ -154,7 +161,8 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
 
                 if (mCustomer != null) {
                     if (mContact == null) {
-                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                                addContact(mCustomer.getId(), maps, new RCallback<Contact>() {
                             @Override
                             public void success(final Contact contact, final Response response) {
                                 HttpErrorCheck.checkResponse("添加联系人：", response);
@@ -201,7 +209,7 @@ public class CustomerContractAddActivity extends BaseActivity implements View.On
             public void success(ArrayList<ContactLeftExtras> ContactLeftExtras, Response response) {
                 HttpErrorCheck.checkResponse("联系人动态字段", response);
                 mContactLeftExtras = ContactLeftExtras;
-                LogUtil.dee("获取的联系人动态字段:"+MainApp.gson.toJson(mContactLeftExtras));
+                LogUtil.dee("获取的联系人动态字段:" + MainApp.gson.toJson(mContactLeftExtras));
                 bindData();
             }
 

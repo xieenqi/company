@@ -1,14 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="330dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="330dp"
+              android:layout_height="wrap_content"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical"
     >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/dialog_blue"
-         >
+        >
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -16,13 +20,13 @@
             android:layout_centerVertical="true"
             android:text="时间选择"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <com.loyo.oa.v2.tool.wheel.WheelView
             android:id="@+id/id_week"
@@ -36,21 +40,21 @@
             android:id="@+id/id_day"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
         </com.loyo.oa.v2.tool.wheel.WheelView>
 
         <com.loyo.oa.v2.tool.wheel.WheelView
             android:id="@+id/id_hour"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
         </com.loyo.oa.v2.tool.wheel.WheelView>
 
         <com.loyo.oa.v2.tool.wheel.WheelView
             android:id="@+id/id_min"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
         </com.loyo.oa.v2.tool.wheel.WheelView>
 
     </LinearLayout>
@@ -69,28 +73,28 @@
 
         <TextView
             android:id="@+id/btn_cancel"
-            android:textSize="16sp"
-            android:gravity="center"
             android:layout_width="0dip"
-            android:layout_weight="1"
             android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/attendance_popview_selector"
+            android:gravity="center"
             android:text="不重复"
             android:textColor="@color/dialog_blue"
-            android:background="@drawable/attendance_popview_selector"
+            android:textSize="16sp"
             />
 
         <TextView
             android:id="@+id/btn_confirm"
-            android:textSize="16sp"
-            android:gravity="center"
             android:layout_width="0dip"
-            android:layout_weight="1"
             android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/attendance_popview_selector"
+            android:gravity="center"
             android:text="确定"
             android:textColor="@color/dialog_blue"
-            android:background="@drawable/attendance_popview_selector"
+            android:textSize="16sp"
             />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

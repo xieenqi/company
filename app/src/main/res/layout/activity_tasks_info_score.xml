@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
-    <include layout="@layout/include_common_title" />
+    <include layout="@layout/include_common_title"/>
 
     <View
-        android:layout_width="match_parent"
-        style="@style/view_split" />
+        style="@style/view_split"
+        android:layout_width="match_parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -24,64 +26,64 @@
             >
 
             <TextView
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_width="120dp"
                 style="@style/text_item1"
-                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="是否通过" />
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:text="是否通过"/>
 
 
             <com.loyo.oa.v2.activity.commonview.SwitchView
                 android:id="@+id/task_info_switch"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_marginTop="6dp"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dimen_5"
                 android:layout_marginRight="@dimen/dimen_16"
+                android:layout_marginTop="6dp"
                 />
 
 
-            </RelativeLayout>
+        </RelativeLayout>
 
         <View
-            android:layout_width="match_parent"
-            style="@style/view_split" />
+            style="@style/view_split"
+            android:layout_width="match_parent"/>
 
         <LinearLayout
             android:id="@+id/tasks_info_sorceview"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="@dimen/view_h_title"
             android:gravity="center_vertical"
-            android:layout_height="@dimen/view_h_title">
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="120dp"
                 style="@style/text_item1"
-                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:text="任务评分" />
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:text="任务评分"/>
 
             <RatingBar
                 android:id="@+id/ratingBar_Task"
+                style="@style/roomRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="29dp"
-                style="@style/roomRatingBar"
                 android:gravity="right|center_vertical"
-                android:numStars="5"
                 android:isIndicator="false"
-                android:stepSize="1"
-                android:max="100" />
+                android:max="100"
+                android:numStars="5"
+                android:stepSize="1"/>
 
         </LinearLayout>
 
         <View
-            android:layout_width="match_parent"
-            style="@style/view_split" />
+            style="@style/view_split"
+            android:layout_width="match_parent"/>
 
     </LinearLayout>
 
@@ -89,51 +91,51 @@
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
-        android:layout_marginTop="10dp">
+        android:orientation="vertical">
 
         <View
-            android:layout_width="match_parent"
-            style="@style/view_split" />
+            style="@style/view_split"
+            android:layout_width="match_parent"/>
 
         <EditText
             android:id="@+id/edt_content"
+            style="@style/edtText_normal"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
-            android:minHeight="80dp"
             android:gravity="left|top"
-            android:paddingTop="24px"
             android:hint="请输入审核内容(可填)"
-            style="@style/edtText_normal" />
+            android:minHeight="80dp"
+            android:paddingTop="24px"/>
 
         <View
-            android:layout_width="match_parent"
-            style="@style/view_split" />
+            style="@style/view_split"
+            android:layout_width="match_parent"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_btn"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/view_first_margin_top"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/view_first_margin_top"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_task_agree"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:background="@drawable/btn_rectangle_agree"
             android:text="提 交"
-            android:background="@drawable/btn_rectangle_agree" />
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

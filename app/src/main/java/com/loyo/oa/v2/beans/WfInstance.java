@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +32,10 @@ public class WfInstance extends BaseBeans implements Serializable {
     public BizForm bizForm;//&{bizform BizForm}, optional): ,
     public BizExtData bizExtData;
     public boolean viewed;
-    public Demand demand;
+    public Demand demand;//购买意向
     public ProjectInfoName ProjectInfo;
+
+    public SaleDetails chance;//销售机会
 
     public boolean isViewed() {
         return viewed;

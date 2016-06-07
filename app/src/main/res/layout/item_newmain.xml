@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/item_newmain_topview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#f4f4f4"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/dimen_25"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/item_newmain_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:text="CRM"
+            android:textColor="@color/diseditable"
+            android:textSize="@dimen/text_sp12"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_newmain_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/newmain_selector"
+        android:gravity="center_vertical"
+        android:minHeight="47dp"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/item_newmain_img"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:src="@drawable/newmain_toast"/>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_newmain_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="通知公告"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15"
+                    />
+
+                <ImageView
+                    android:id="@+id/item_newmain_number"
+                    android:layout_width="@dimen/dimen_9"
+                    android:layout_height="@dimen/dimen_9"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/dimen_5"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/bg_view_red_circle"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/item_newmain_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_14"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp12"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="49dp"
+        android:background="@color/lineCC"
+        />
+</LinearLayout>

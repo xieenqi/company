@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.DemandsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -21,8 +22,10 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -37,8 +40,6 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
     private DemandsRadioListViewAdapter demandsRadioListViewAdapter;
     private ArrayList<Demand> lstData_Demand = new ArrayList<Demand>();
     private String customerId, customerName;
-    private Intent mIntent;
-    private Bundle bundle;
     private boolean isMyUser;
     private boolean isChanged;
     private boolean isTopAdd = true;
@@ -93,27 +94,27 @@ public class DemandsManageActivity extends BaseActivity implements View.OnClickL
         map.put("pageSize", isTopAdd ? lstData_Demand.size() >= 20 ? lstData_Demand.size() : 20 : 20);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 getDemands(customerId, map, new RCallback<PaginationX<Demand>>() {
-            @Override
-            public void success(final PaginationX<Demand> demandPaginationX, final Response response) {
-                HttpErrorCheck.checkResponse(" 购买意向详情：", response);
-                listView_demands.onRefreshComplete();
-                if (!PaginationX.isEmpty(demandPaginationX)) {
-                    paginationX = demandPaginationX;
-                    if (isTopAdd) {
-                        lstData_Demand.clear();
+                    @Override
+                    public void success(final PaginationX<Demand> demandPaginationX, final Response response) {
+                        HttpErrorCheck.checkResponse(" 购买意向详情：", response);
+                        listView_demands.onRefreshComplete();
+                        if (!PaginationX.isEmpty(demandPaginationX)) {
+                            paginationX = demandPaginationX;
+                            if (isTopAdd) {
+                                lstData_Demand.clear();
+                            }
+                            lstData_Demand.addAll(paginationX.getRecords());
+                            bindData();
+                        }
                     }
-                    lstData_Demand.addAll(paginationX.getRecords());
-                    bindData();
-                }
-            }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                listView_demands.onRefreshComplete();
-                super.failure(error);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        listView_demands.onRefreshComplete();
+                        super.failure(error);
+                    }
+                });
     }
 
     /**

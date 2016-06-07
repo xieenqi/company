@@ -15,7 +15,7 @@
         android:groupIndicator="@null"/>
 
 
-    <com.loyo.oa.v2.common.SideBar
+    <com.loyo.oa.v2.common.commonview.SideBar
         android:id="@+id/sidrbar"
         android:layout_width="30dp"
         android:layout_height="wrap_content"

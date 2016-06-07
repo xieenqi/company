@@ -59,7 +59,7 @@ public class ContactAddforExtraData extends LinearLayout {
     public ContactAddforExtraData(Context context, Contact mContact, ArrayList<ContactLeftExtras> extras, boolean edit, int valueColor, int valueSize) {
         this(context, null, 0);
         this.extras = extras;
-        this.mContact = mContact;
+        this.mContact = mContact;//为null 不是联系模块
         bindView(edit, valueColor, valueSize);
 
         LogUtil.dee("新增联系人 动态字段Contact:" + MainApp.gson.toJson(mContact));
@@ -111,22 +111,31 @@ public class ContactAddforExtraData extends LinearLayout {
             if (null != mContact) {
                 if (customerExtra.fieldName.equals("name")) {
                     tv_content.setText(mContact.getName());
+                    customerExtra.val = mContact.getName();
                 } else if (customerExtra.fieldName.equals("wiretel")) {
                     tv_content.setText(mContact.getWiretel());
+                    customerExtra.val = mContact.getWiretel();
                 } else if (customerExtra.fieldName.equals("tel")) {
                     tv_content.setText(mContact.getTel());
+                    customerExtra.val = mContact.getTel();
                 } else if (customerExtra.fieldName.equals("birth")) {
                     tv_content.setText(mContact.getBirthStr());
+                    customerExtra.val = mContact.getBirthStr();
                 } else if (customerExtra.fieldName.equals("wx")) {
                     tv_content.setText(mContact.getWx());
+                    customerExtra.val = mContact.getWx();
                 } else if (customerExtra.fieldName.equals("qq")) {
                     tv_content.setText(mContact.getQq());
+                    customerExtra.val = mContact.getQq();
                 } else if (customerExtra.fieldName.equals("email")) {
                     tv_content.setText(mContact.getEmail());
+                    customerExtra.val = mContact.getEmail();
                 } else if (customerExtra.fieldName.equals("memo")) {
                     tv_content.setText(mContact.getMemo());
+                    customerExtra.val = mContact.getMemo();
                 } else if (customerExtra.fieldName.equals("dept_name")) {
                     tv_content.setText(mContact.getDeptName());
+                    customerExtra.val = mContact.getDeptName();
                 } else if (!customerExtra.isSystem) {
                     for (ExtraData extraData : mContact.getExtDatas()) {
                         if (customerExtra.label.equals(extraData.getProperties().getLabel())) {
@@ -161,7 +170,9 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                tv_content.setText(customerExtra.val);
+                if (null == mContact) {
+                    tv_content.setText(customerExtra.val);
+                }
             } else if ("birth".equals(customerExtra.fieldName)) {
                 LogUtil.dll("生日");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
@@ -180,7 +191,9 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                tv_content.setText(customerExtra.val);
+                if (null == mContact) {
+                    tv_content.setText(customerExtra.val);
+                }
             } else if ("long".equals(customerExtra.type)) {
                 LogUtil.dll("时间");
                 LogUtil.dll("long enable:" + customerExtra.enabled);
@@ -199,7 +212,9 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                tv_content.setText(customerExtra.val);
+                if (null == mContact) {
+                    tv_content.setText(customerExtra.val);
+                }
             } else if ("string".equals(customerExtra.type)) {
                 LogUtil.dll("string");
                 LogUtil.dll("string enable:" + customerExtra.enabled);
@@ -213,7 +228,9 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                tv_content.setText(customerExtra.val);
+                if (null == mContact) {
+                    tv_content.setText(customerExtra.val);
+                }
             } else if ("int".equals(customerExtra.type)) {
                 LogUtil.dll("int");
                 LogUtil.dll("int enable:" + customerExtra.enabled);
@@ -227,7 +244,9 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                tv_content.setText(customerExtra.val);
+                if (null == mContact) {
+                    tv_content.setText(customerExtra.val);
+                }
             } else if ("double".equals(customerExtra.type)) {
                 LogUtil.dll("double");
                 LogUtil.dll("double enable:" + customerExtra.enabled);
@@ -241,7 +260,9 @@ public class ContactAddforExtraData extends LinearLayout {
                 if (customerExtra.required) {
                     tv_content.setHint("必填");
                 }
-                tv_content.setText(customerExtra.val);
+                if (null == mContact) {
+                    tv_content.setText(customerExtra.val);
+                }
             }
         }
     }
@@ -368,7 +389,7 @@ public class ContactAddforExtraData extends LinearLayout {
                             String str = year + "." + String.format("%02d", (month + 1)) + "." + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                             textView.setText(str);
                             String times = DateTool.getDataOne(str, DateTool.DATE_FORMATE_SPLITE_BY_POINT);
-                            extra.val = str;
+                            extra.val = times;
                         }
 
                         @Override

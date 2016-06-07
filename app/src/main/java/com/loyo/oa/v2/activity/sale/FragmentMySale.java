@@ -15,28 +15,29 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterMySaleList;
 import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -44,7 +45,7 @@ import retrofit.client.Response;
  * 【我的销售机会】
  * Created by yyy on 16/5/17.
  */
-public class FragmentMySale extends BaseFragment implements PullToRefreshBase.OnRefreshListener2{
+public class FragmentMySale extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
     private Button btn_add;
@@ -52,6 +53,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private LinearLayout screen1;
     private LinearLayout screen2;
     private LinearLayout topview;
+    private RelativeLayout re_nodata;
     private ViewStub emptyView;
     private ImageView tagImage1;
     private ImageView tagImage2;
@@ -59,7 +61,6 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private WindowManager.LayoutParams windowParams;
     private PullToRefreshListView listView;
     private AdapterMySaleList adapter;
-    private SaleMyList mSaleMyList;
     private SaleTeamScreen saleTeamScreen;
 
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
@@ -67,7 +68,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     private ArrayList<SaleStage> mSaleStages;
     private ArrayList<SaleRecord> recordData = new ArrayList<>();
 
-    private String[] sort = {"按最近创建时间","按照最近更新","按照最高金额"};
+    private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
     private String stageId = "";
     private String sortType = "";
     private int requestPage = 1;
@@ -75,9 +76,9 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
 
                 case FragmentTeamSale.SALETEAM_SCREEN_TAG2:
                     isPull = false;
@@ -104,27 +105,28 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             mView = inflater.inflate(R.layout.fragment_my_sale, null);
             initView(mView);
         }
+        getData();
         return mView;
     }
 
     private void initView(View view) {
 
-        for(int i = 0;i<sort.length;i++){
+        for (int i = 0; i < sort.length; i++) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(sort[i]);
-            saleTeamScreen.setId(i+"");
+            saleTeamScreen.setId(i + "");
             saleTeamScreen.setIndex(false);
             sortData.add(saleTeamScreen);
         }
 
         mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
-        getData();
         setStageData();
         listView = (PullToRefreshListView) view.findViewById(R.id.lv_list);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         screen1 = (LinearLayout) view.findViewById(R.id.salemy_screen1);
         screen2 = (LinearLayout) view.findViewById(R.id.salemy_screen2);
         topview = (LinearLayout) view.findViewById(R.id.saleteam_topview);
+        re_nodata = (RelativeLayout) view.findViewById(R.id.re_nodata);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         tagImage1 = (ImageView) view.findViewById(R.id.salemy_screen1_iv1);
         tagImage2 = (ImageView) view.findViewById(R.id.salemy_screen1_iv2);
@@ -141,30 +143,18 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mIntent = new Intent();
-                mIntent.putExtra("id",mSaleMyList.records.get(position - 1).getId());
-                mIntent.setClass(getActivity(),ActivitySaleDetails.class);
-                startActivityForResult(mIntent,getActivity().RESULT_FIRST_USER);
+                mIntent.putExtra("id", adapter.getData().get(position - 1).getId());
+                mIntent.setClass(getActivity(), ActivitySaleDetails.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
             }
         });
     }
 
-    /**
-     * 绑定数据
-     * */
-    public void bindData(){
-        recordData.clear();
-        recordData.addAll(mSaleMyList.getRecords());
-        if(null == adapter){
-            adapter = new AdapterMySaleList(getActivity(),recordData);
-            listView.setAdapter(adapter);
-        }else{
-            adapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         requestPage = 1;
+        isPull = false;
         getData();
     }
 
@@ -177,45 +167,51 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     /**
      * 组装销售阶段筛选数据
-     * */
-    public void setStageData(){
-        for(int i = 0;i<mSaleStages.size();i++){
+     */
+    public void setStageData() {
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部阶段");
+        saleTeamScreen.setId("");
+        saleTeamScreen.setIndex(false);
+        stageData.add(saleTeamScreen);
+        for (int i = 0; i < mSaleStages.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(mSaleStages.get(i).getName());
             saleTeamScreen.setId(mSaleStages.get(i).getId());
             saleTeamScreen.setIndex(false);
             stageData.add(saleTeamScreen);
         }
-        saleTeamScreen = new SaleTeamScreen();
-        saleTeamScreen.setName("全部阶段");
-        saleTeamScreen.setId("");
-        saleTeamScreen.setIndex(false);
-        stageData.add(saleTeamScreen);
+
     }
 
     /**
      * 获取 我的机会列表
-     * */
-    public void getData(){
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("pageIndex",requestPage);
-        map.put("pageSize",10);
-        map.put("stageId",stageId);
-        map.put("sortType",sortType);
-        LogUtil.d("销售机会 发送数据:" + MainApp.gson.toJson(map));
+     */
+    public void getData() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("pageIndex", requestPage);
+        map.put("pageSize", 15);
+        map.put("stageId", stageId);
+        map.put("sortType", sortType);
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleMyList(map, new RCallback<SaleMyList>() {
             @Override
             public void success(SaleMyList saleMyLists, Response response) {
                 HttpErrorCheck.checkResponse("销售机会 客户列表:", response);
-                if(null == saleMyLists.records || saleMyLists.records.size() == 0){
-                    if(isPull){
+                if (null == saleMyLists.records || saleMyLists.records.size() == 0) {
+                    if (isPull) {
                         Toast("没有更多数据了!");
-                    }else{
-                        mSaleMyList = new SaleMyList();
+                    } else {
+                        recordData.clear();
+                        re_nodata.setVisibility(View.VISIBLE);
                     }
                     listView.onRefreshComplete();
-                }else{
-                    mSaleMyList = saleMyLists;
+                } else {
+                    if (isPull) {
+                        recordData.addAll(saleMyLists.records);
+                    } else {
+                        recordData.clear();
+                        recordData = saleMyLists.records;
+                    }
                 }
                 bindData();
                 listView.onRefreshComplete();
@@ -230,10 +226,22 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     }
 
     /**
+     * 绑定数据
+     */
+    public void bindData() {
+        if (null == adapter) {
+            adapter = new AdapterMySaleList(getActivity());
+            adapter.setData(recordData);
+            listView.setAdapter(adapter);
+        } else {
+            adapter.setData(recordData);
+        }
+    }
+
+    /**
      * PopupWindow关闭 恢复背景正常颜色
-     * */
-    private void closePopupWindow(ImageView view)
-    {
+     */
+    private void closePopupWindow(ImageView view) {
         windowParams = getActivity().getWindow().getAttributes();
         windowParams.alpha = 1f;
         getActivity().getWindow().setAttributes(windowParams);
@@ -242,10 +250,10 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
     /**
      * PopupWindow打开，背景变暗
-     * */
-    private void openPopWindow(ImageView view){
+     */
+    private void openPopWindow(ImageView view) {
         windowParams = getActivity().getWindow().getAttributes();
-        windowParams.alpha=0.9f;
+        windowParams.alpha = 0.9f;
         getActivity().getWindow().setAttributes(windowParams);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
@@ -255,17 +263,19 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode){
+        switch (resultCode) {
             //删除后 刷新列表
             case ExtraAndResult.REQUEST_CODE_SOURCE:
+                getData();
+                break;
+            //新增后 刷新列表
+            case ExtraAndResult.REQUEST_CODE_STAGE:
                 getData();
                 break;
 
             default:
                 break;
-
         }
-
     }
 
     private View.OnClickListener click = new View.OnClickListener() {
@@ -275,13 +285,16 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
                 //新建机会
                 case R.id.btn_add:
-                    MainApp.getMainApp().startActivityForResult(mActivity, ActivityAddMySale.class,
-                            MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, null);
+
+                    mIntent = new Intent();
+                    mIntent.setClass(getActivity(),ActivityAddMySale.class);
+                    startActivityForResult(mIntent,getActivity().RESULT_FIRST_USER);
+
                     break;
 
                 //销售阶段
                 case R.id.salemy_screen1:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,stageData,ActivitySaleOpportunitiesManager.SCREEN_STAGE,true);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, ActivitySaleOpportunitiesManager.SCREEN_STAGE, true);
                     saleCommPopupView.showAsDropDown(screen1);
                     openPopWindow(tagImage1);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -294,7 +307,7 @@ public class FragmentMySale extends BaseFragment implements PullToRefreshBase.On
 
                 //排序
                 case R.id.salemy_screen2:
-                    saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,sortData,ActivitySaleOpportunitiesManager.SCREEN_SORT,false);
+                    saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, ActivitySaleOpportunitiesManager.SCREEN_SORT, false);
                     saleCommPopupView.showAsDropDown(screen2);
                     openPopWindow(tagImage2);
                     saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

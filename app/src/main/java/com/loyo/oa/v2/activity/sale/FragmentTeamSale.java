@@ -16,10 +16,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.adapter.AdapterSaleTeam;
-import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
@@ -29,7 +30,6 @@ import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
@@ -42,6 +42,7 @@ import com.loyo.oa.v2.tool.customview.SaleCommPopupView;
 import com.loyo.oa.v2.tool.customview.SaleScreenPopupView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ import retrofit.client.Response;
  * 【团队销售机会列表】
  * Created by yyy on 16/5/17.
  */
-public class FragmentTeamSale extends BaseFragment implements View.OnClickListener,PullToRefreshListView.OnRefreshListener2 {
+public class FragmentTeamSale extends BaseFragment implements View.OnClickListener, PullToRefreshListView.OnRefreshListener2 {
 
     /**
      * 部门筛选回调
@@ -80,7 +81,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private LinearLayout screen1;
     private LinearLayout screen2;
     private LinearLayout screen3;
-    private LinearLayout saleteam_topview;
+    private RelativeLayout rl_nodata;
     private TextView saleteam_screen1_commy;
     private ImageView tagImage1;
     private ImageView tagImage2;
@@ -90,7 +91,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private SaleCommPopupView saleCommPopupView;
     private WindowManager.LayoutParams params;
     private SaleScreenPopupView saleScreenPopupView;
-    private SaleTeamList mSaleTeamList;
+//    private SaleTeamList mSaleTeamList;
 
     private List<Department> mDeptSource;  //部门和用户集合
     private List<Department> newDeptSource = new ArrayList<>();//我的部门
@@ -99,7 +100,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     private ArrayList<SaleRecord> mData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> sortData = new ArrayList<>();
     private ArrayList<SaleTeamScreen> stageData = new ArrayList<>();
-    private String[] sort = {"按最近创建时间","按照最近更新","按照最高金额"};
+    private String[] sort = {"按最近创建时间", "按照最近更新", "按照最高金额"};
 
     private boolean isPull = false;
     private boolean isKind;
@@ -120,10 +121,10 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                     saleTeamScreen = (SaleTeamScreen) msg.getData().getSerializable("data");
                     saleteam_screen1_commy.setText(saleTeamScreen.getName());
                     isKind = msg.getData().getBoolean("kind");
-                    if(isKind){
+                    if (isKind) {
                         userId = "";
                         xPath = saleTeamScreen.getxPath();
-                    }else{
+                    } else {
                         xPath = "";
                         userId = saleTeamScreen.getId();
                     }
@@ -131,7 +132,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                     break;
 
                 case SALETEAM_SCREEN_TAG2:
-                    isPull  = false;
+                    isPull = false;
                     stageId = msg.getData().getString("data");
                     break;
 
@@ -156,6 +157,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             mView = inflater.inflate(R.layout.fragment_team_sale, null);
             initView(mView);
         }
+        getData();
         return mView;
     }
 
@@ -168,14 +170,13 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
         mSaleStages = (ArrayList<SaleStage>) getArguments().get("stage");
 
-        for(int i = 0;i<sort.length;i++){
+        for (int i = 0; i < sort.length; i++) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(sort[i]);
             saleTeamScreen.setIndex(false);
             sortData.add(saleTeamScreen);
         }
 
-        getData();
         setStageData();
         mContext = getActivity();
         params = getActivity().getWindow().getAttributes();
@@ -184,7 +185,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         screen2 = (LinearLayout) view.findViewById(R.id.saleteam_screen2);
         screen3 = (LinearLayout) view.findViewById(R.id.saleteam_screen3);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
-        saleteam_topview = (LinearLayout) view.findViewById(R.id.saleteam_topview);
+        rl_nodata = (RelativeLayout) view.findViewById(R.id.rl_nodata);
         saleteam_screen1_commy = (TextView) view.findViewById(R.id.saleteam_screen1_commy);
         tagImage1 = (ImageView) view.findViewById(R.id.saleteam_screen1_iv1);
         tagImage2 = (ImageView) view.findViewById(R.id.saleteam_screen1_iv2);
@@ -211,7 +212,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mIntent = new Intent();
-                mIntent.putExtra("id",mSaleTeamList.getRecords().get(position - 1).getId());
+                mIntent.putExtra("id", adapterSaleTeam.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), ActivitySaleDetails.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
             }
@@ -223,6 +224,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         requestPage = 1;
+        isPull = false;
         getData();
     }
 
@@ -235,20 +237,20 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     /**
      * 组装销售阶段筛选数据
-     * */
-    public void setStageData(){
-        for(int i = 0;i<mSaleStages.size();i++){
+     */
+    public void setStageData() {
+        saleTeamScreen = new SaleTeamScreen();
+        saleTeamScreen.setName("全部阶段");
+        saleTeamScreen.setId("");
+        saleTeamScreen.setIndex(false);
+        stageData.add(saleTeamScreen);
+        for (int i = 0; i < mSaleStages.size(); i++) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setName(mSaleStages.get(i).getName());
             saleTeamScreen.setId(mSaleStages.get(i).getId());
             saleTeamScreen.setIndex(false);
             stageData.add(saleTeamScreen);
         }
-        saleTeamScreen = new SaleTeamScreen();
-        saleTeamScreen.setName("全部阶段");
-        saleTeamScreen.setId("");
-        saleTeamScreen.setIndex(false);
-        stageData.add(saleTeamScreen);
     }
 
     /**
@@ -257,25 +259,31 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     public void getData() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", requestPage);
-        map.put("pageSize", 10);
+        map.put("pageSize", 15);
         map.put("stageId", stageId);
         map.put("sortType", sortType);
         map.put("xpath", xPath);
         map.put("userId", userId);
-        LogUtil.d("团队机会列表 请求数据:"+MainApp.gson.toJson(map));
+        LogUtil.d("团队机会列表 请求数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ISale.class).getSaleTeamList(map, new RCallback<SaleTeamList>() {
             @Override
             public void success(SaleTeamList saleTeamList, Response response) {
                 HttpErrorCheck.checkResponse("客户列表", response);
                 if (null == saleTeamList.records || saleTeamList.records.size() == 0) {
-                    if(isPull){
+                    if (isPull) {
                         Toast("没有更多数据了!");
-                    }else{
-                        mSaleTeamList = new SaleTeamList();
+                    } else {
+                        mData.clear();
+                        rl_nodata.setVisibility(View.VISIBLE);
                     }
                     listView.onRefreshComplete();
                 } else {
-                    mSaleTeamList = saleTeamList;
+                    if (isPull) {
+                        mData.addAll(saleTeamList.records);
+                    } else {
+                        mData.clear();
+                        mData = saleTeamList.records;
+                    }
                 }
                 bindData();
                 listView.onRefreshComplete();
@@ -289,23 +297,21 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
         });
     }
 
-    public void bindData(){
-        mData.clear();
-        mData.addAll(mSaleTeamList.getRecords());
-        if(null == adapterSaleTeam){
-            adapterSaleTeam = new AdapterSaleTeam(getActivity(),mData);
+    public void bindData() {
+        if (null == adapterSaleTeam) {
+            adapterSaleTeam = new AdapterSaleTeam(getActivity());
+            adapterSaleTeam.setData(mData);
             listView.setAdapter(adapterSaleTeam);
-        }else{
-            adapterSaleTeam.notifyDataSetChanged();
+        } else {
+            adapterSaleTeam.setData(mData);
         }
     }
 
 
     /**
      * PopupWindow关闭 恢复背景正常颜色
-     * */
-    private void closePopupWindow(ImageView view)
-    {
+     */
+    private void closePopupWindow(ImageView view) {
         params = getActivity().getWindow().getAttributes();
         params.alpha = 1f;
         getActivity().getWindow().setAttributes(params);
@@ -314,20 +320,20 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     /**
      * PopupWindow打开，背景变暗
-     * */
-    private void openPopWindow(ImageView view){
+     */
+    private void openPopWindow(ImageView view) {
         params = getActivity().getWindow().getAttributes();
-        params.alpha=0.9f;
+        params.alpha = 0.9f;
         getActivity().getWindow().setAttributes(params);
         view.setBackgroundResource(R.drawable.arrow_up);
     }
 
     /**
      * 组装部门格式
-     * */
-    private void setUser(){
+     */
+    private void setUser() {
         data.clear();
-        for(Department department: newDeptSource){
+        for (Department department : newDeptSource) {
             saleTeamScreen = new SaleTeamScreen();
             saleTeamScreen.setId(department.getId());
             saleTeamScreen.setName(department.getName());
@@ -338,13 +344,13 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     /**
      * 过滤出我的部门
-     * */
+     */
     private void deptSort() {
         newDeptSource.clear();
         User user = MainApp.user;
-        for(Department department : mDeptSource){
-            for(int i = 0;i<user.getDepts().size();i++){
-                if(department.getId().contains(user.getDepts().get(i).getShortDept().getId())){
+        for (Department department : mDeptSource) {
+            for (int i = 0; i < user.getDepts().size(); i++) {
+                if (department.getId().contains(user.getDepts().get(i).getShortDept().getId())) {
                     newDeptSource.add(department);
                 }
             }
@@ -356,9 +362,14 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode){
+        switch (resultCode) {
             //删除后 刷新列表
             case ExtraAndResult.REQUEST_CODE_SOURCE:
+                getData();
+                break;
+
+            //新增后 刷新列表
+            case ExtraAndResult.REQUEST_CODE_STAGE:
                 getData();
                 break;
 
@@ -370,31 +381,34 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 
             //新建机会
             case R.id.btn_add:
-                MainApp.getMainApp().startActivityForResult(mActivity, ActivityAddMySale.class,
-                        MainApp.ENTER_TYPE_RIGHT, FinalVariables.REQUEST_CREATE_LEGWORK, null);
+
+                mIntent = new Intent();
+                mIntent.setClass(getActivity(), ActivityAddMySale.class);
+                startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
+
                 break;
 
 
             //全公司筛选
             case R.id.saleteam_screen1:
 
-                    saleScreenPopupView.showAsDropDown(screen1);
-                    openPopWindow(tagImage1);
-                    saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            closePopupWindow(tagImage1);
-                        }
-                    });
+                saleScreenPopupView.showAsDropDown(screen1);
+                openPopWindow(tagImage1);
+                saleScreenPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        closePopupWindow(tagImage1);
+                    }
+                });
 
                 break;
             //销售阶段
             case R.id.saleteam_screen2:
-                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,stageData,ActivitySaleOpportunitiesManager.SCREEN_STAGE,true);
+                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, stageData, ActivitySaleOpportunitiesManager.SCREEN_STAGE, true);
                 saleCommPopupView.showAsDropDown(screen2);
                 openPopWindow(tagImage2);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -407,7 +421,7 @@ public class FragmentTeamSale extends BaseFragment implements View.OnClickListen
                 break;
             //排序
             case R.id.saleteam_screen3:
-                saleCommPopupView = new SaleCommPopupView(getActivity(),mHandler,sortData,ActivitySaleOpportunitiesManager.SCREEN_SORT,false);
+                saleCommPopupView = new SaleCommPopupView(getActivity(), mHandler, sortData, ActivitySaleOpportunitiesManager.SCREEN_SORT, false);
                 saleCommPopupView.showAsDropDown(screen3);
                 openPopWindow(tagImage3);
                 saleCommPopupView.setOnDismissListener(new PopupWindow.OnDismissListener() {

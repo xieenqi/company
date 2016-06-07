@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/white"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical"
     >
 
@@ -21,9 +23,9 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_14"
-                android:layout_marginRight="@dimen/dimen_14"
-                android:layout_marginTop="@dimen/dimen_14"
+                android:layout_marginLeft="@dimen/margin_other_view"
+                android:layout_marginRight="@dimen/margin_other_view"
+                android:layout_marginTop="@dimen/dimen_10"
                 android:orientation="vertical">
 
                 <TextView
@@ -36,7 +38,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_3"
                     android:orientation="horizontal">
 
                     <TextView
@@ -58,13 +60,13 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="预估销售金额: "
+                        android:text="预估销售金额: ￥"
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp12"/>
 
@@ -80,14 +82,14 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_14"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="预估成交金额: "
+                        android:text="预估成交时间: "
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp12"/>
 
@@ -109,17 +111,24 @@
             <LinearLayout
                 android:id="@+id/ll_stage"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/text_item1"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:layout_marginRight="@dimen/dimen_8"
                     android:text="销售阶段"
                     android:textSize="15sp"/>
+
+                <ImageView
+                    android:id="@+id/iv_wfstatus"
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    />
 
                 <TextView
                     android:id="@+id/text_stagename"
@@ -130,7 +139,7 @@
                     android:gravity="right|center_vertical"
                     android:hint="请选择销售阶段"
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="#c9c9c9"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -147,7 +156,7 @@
             <LinearLayout
                 android:id="@+id/ll_product"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/view_h_title"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -168,7 +177,7 @@
                     android:gravity="right|center_vertical"
                     android:hint="请选择意向产品"
                     android:textColor="@color/title_bg1"
-                    android:textColorHint="#c9c9c9"
+                    android:textColorHint="@color/text99"
                     android:textSize="15sp"/>
 
                 <ImageView
@@ -188,10 +197,10 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_10"
                 android:layout_marginLeft="@dimen/dimen_14"
                 android:layout_marginRight="@dimen/dimen_14"
-                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_marginTop="@dimen/dimen_10"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -243,7 +252,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
@@ -274,7 +283,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
@@ -305,7 +314,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_14"
                 android:layout_marginRight="@dimen/dimen_14"
-                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_marginTop="@dimen/dimen_10"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -332,7 +341,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
@@ -354,7 +363,7 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView
@@ -377,7 +386,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_14"
-                    android:layout_marginTop="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_4"
                     android:orientation="horizontal">
 
                     <TextView

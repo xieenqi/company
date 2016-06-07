@@ -174,9 +174,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         @Override
                         public void onClick(final View view) {
                             generalPopView.dismiss();
-//                            ActivityCompat.requestPermissions(SettingActivity.this,
-//                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                                    RESULT_OK);
                             Utils.doSeting(SettingActivity.this);
                         }
                     });

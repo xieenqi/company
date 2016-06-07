@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
@@ -60,19 +62,20 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int SIGNIN_ADD = 0X02;//新建拜访
     public static final int WORK_ADD = 0X03; //新建工作报告
     public static final int WFIN_ADD = 0X08;   //新建审批
+    public static final int ATTENT_ADD = 0X11;   //考勤打卡
 
     public static final int CUSTOMER_MANAGE = 0X04;//客户管理
     public static final int TASKS_MANAGE = 0X05;//任务管理
     public static final int WORK_MANAGE = 0X06;//工作报告管理
     public static final int PEOJECT_MANAGE = 0x07; //项目管理
     public static final int WFIN_MANAGE = 0x09; //审批列表
-
+    public SystemBarTintManager tintManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         // TODO: 测试用， 正式版本需删除
-        LogUtil.err("当前activity -- " + getClass().getSimpleName() + " -- " + getClass().getPackage());
+        LogUtil.d("当前activity -- " + getClass().getSimpleName() + " -- " + getClass().getPackage());
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
@@ -91,13 +94,13 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
         registerBaseReceiver();
         // 创建状态栏的管理实例
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//        // 激活状态栏设置
-//        tintManager.setStatusBarTintEnabled(true);
-//        // 激活导航栏设置
-//        tintManager.setNavigationBarTintEnabled(true);
-//        // 设置一个颜色给系统栏
-//        tintManager.setTintColor(Color.parseColor("#99000FF"));
+        tintManager = new SystemBarTintManager(this);
+        // 激活状态栏设置
+        tintManager.setStatusBarTintEnabled(true);
+        // 激活导航栏设置
+        tintManager.setNavigationBarTintEnabled(true);
+        // 设置一个颜色给系统栏
+        tintManager.setTintColor(getResources().getColor(R.color.title_bg1));
     }
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {

@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -171,7 +173,7 @@
                         android:orientation="horizontal"
                         android:visibility="gone">
 
-                        <com.loyo.oa.v2.common.NoScroolGridView
+                        <com.loyo.oa.v2.common.commonview.NoScroolGridView
                             android:id="@+id/gv_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
@@ -205,8 +207,8 @@
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginTop="5dp"
                                 android:text="暂无统计数据"
-                                android:textSize="11.5sp"
                                 android:textColor="@color/text99"
+                                android:textSize="11.5sp"
                                 />
 
                         </LinearLayout>
@@ -229,12 +231,11 @@
                     android:id="@+id/edt_content"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_marginBottom="@dimen/dimen_16"
                     android:background="@color/white"
                     android:gravity="left|top"
                     android:hint="请输入报告内容"
-                    android:maxLength="500"
-                    android:minHeight="120dp"
                     android:paddingLeft="0dp"
                     android:paddingRight="@dimen/dimen_14"
                     android:paddingTop="@dimen/dimen_10"
@@ -243,17 +244,19 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     >
+
                     <TextView
                         android:id="@+id/wordcount"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="20dp"
                         android:text="0/500"
-                        android:textSize="12sp"
                         android:textColor="@color/text99"
+                        android:textSize="12sp"
                         />
                 </RelativeLayout>
 

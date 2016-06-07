@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/white"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -38,13 +40,11 @@
                 android:id="@+id/edt_content"
                 style="@style/edtText_normal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:background="@color/white"
                 android:gravity="left|top"
                 android:hint="任务内容"
                 android:inputType="textMultiLine"
-                android:maxLength="500"
-                android:minHeight="120dp"
                 android:paddingLeft="@dimen/margin_side_edge"
                 android:paddingTop="15dp"
                 android:scrollbarStyle="insideInset"
@@ -55,6 +55,7 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 >
 
                 <TextView

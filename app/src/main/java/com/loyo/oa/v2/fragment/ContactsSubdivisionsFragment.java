@@ -160,8 +160,8 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
             Department d = listDepartment.get(position);
             TextView tv_content = com.loyo.oa.v2.tool.ViewHolder.get(convertView, R.id.tv_mydept_content);
             String departmentName = null == d.getName() ? "部门没有名字" : d.getName();
-            int userSize = Common.getUsersByDeptId(d.getId(), new ArrayList<User>()).size();
-            String members = "(" + userSize + "人" + ")";
+//            int userSize = Common.getUsersByDeptId(d.getId(), new ArrayList<User>()).size();
+            String members = "(" + d.userNum + "人" + ")";
             departmentName = departmentName.concat(members);
             tv_content.setText(departmentName);
 
@@ -203,37 +203,54 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            HolderUser holder;
             if (null == convertView) {
                 convertView = LayoutInflater.from(app).inflate(R.layout.item_contact_personnel, null, false);
+                holder = new HolderUser();
+                holder.img = (ImageView) convertView.findViewById(R.id.img);
+                holder.tv_content = (TextView) convertView.findViewById(R.id.tv_name);
+                holder.tv_position = (TextView) convertView.findViewById(R.id.tv_position);
+                holder.catalog = (TextView) convertView.findViewById(R.id.catalog);
+//                holder.lin = (ViewGroup) convertView.findViewById(R.id.line);
+                convertView.setTag(holder);
+
+            } else {
+                holder = (HolderUser) convertView.getTag();
             }
             User user = listUser.get(position);
-            ImageView img = ViewHolder.get(convertView, R.id.img);
-            TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
-            TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
-            TextView catalog = ViewHolder.get(convertView, R.id.catalog);
+//            ImageView img = ViewHolder.get(convertView, R.id.img);
+//            TextView tv_content = ViewHolder.get(convertView, R.id.tv_name);
+//            TextView tv_position = ViewHolder.get(convertView, R.id.tv_position);
+//            TextView catalog = ViewHolder.get(convertView, R.id.catalog);
 
             deptName = new StringBuffer();
             Utils.getDeptName(deptName, user.getDepts());
-            tv_position.setText(deptName.toString());
-            tv_content.setText(user.getRealname());
-            catalog.setVisibility(View.GONE);
+            holder.tv_position.setText(deptName.toString());
+            holder.tv_content.setText(user.getRealname());
+            holder.catalog.setVisibility(View.GONE);
             if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
                 if (user.gender == 2) {
                     defaultAvatar = R.drawable.icon_contact_avatar;
                 } else {
                     defaultAvatar = R.drawable.img_default_user;
                 }
-                img.setImageResource(defaultAvatar);
+                holder.img.setImageResource(defaultAvatar);
             } else {
-                ImageLoader.getInstance().displayImage(user.avatar, img);
+                ImageLoader.getInstance().displayImage(user.avatar, holder.img);
             }
 
-            if (position == listUser.size() - 1) {
-                ViewHolder.get(convertView, R.id.line).setVisibility(View.GONE);
-            } else {
-                ViewHolder.get(convertView, R.id.line).setVisibility(View.VISIBLE);
-            }
+//            if (position == listUser.size() - 1) {
+//                holder.lin.setVisibility(View.GONE);
+//            } else {
+//                holder.lin.setVisibility(View.VISIBLE);
+//            }
             return convertView;
         }
+    }
+
+    class HolderUser {
+        ImageView img;
+        TextView tv_content, tv_position, catalog;
+        ViewGroup lin;
     }
 }

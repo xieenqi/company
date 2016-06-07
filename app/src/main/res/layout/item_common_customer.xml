@@ -14,9 +14,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingBottom="@dimen/dimen_10"
             android:paddingTop="@dimen/dimen_10"
-            android:orientation="vertical"
             >
 
             <LinearLayout
@@ -30,13 +30,14 @@
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
                     android:gravity="left|center"
+                    android:maxEms="13"
+                    android:singleLine="true"
                     android:text="title"
                     android:textColor="@color/text33"
                     android:textSize="15sp"
-                    android:maxEms="13"
-                    android:ellipsize="end"
-                    android:singleLine="true"
                     />
 
                 <ImageView
@@ -57,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_12"
                 android:layout_marginTop="@dimen/dimen_4"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
 
@@ -65,7 +65,6 @@
                     android:id="@+id/img_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_tag"
                     />
@@ -96,7 +95,6 @@
                     android:id="@+id/img_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_customer_tag"
                     />

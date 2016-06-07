@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/white"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_title"/>
@@ -63,6 +65,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:id="@+id/tv_oldePrice"
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,6 +96,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:id="@+id/tv_salePrice"
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,7 +113,7 @@
                     android:background="@color/white"
                     android:gravity="center_vertical|right"
                     android:hint="必填,请输入"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:maxLength="10"
                     android:minHeight="@dimen/view_h_title"
                     android:paddingRight="0dp"
@@ -142,7 +146,7 @@
                     android:background="@color/white"
                     android:gravity="center_vertical|right"
                     android:hint="必填,请输入"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:maxLength="10"
                     android:minHeight="@dimen/view_h_title"
                     android:paddingRight="0dp"

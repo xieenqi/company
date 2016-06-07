@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.MainActivity_;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -52,6 +52,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tintManager.setTintColor(android.R.color.transparent);
         setContentView(R.layout.activity_login);
         super.isNeedLogin = false;
         initUI();
@@ -283,7 +284,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         MainApp.setToken(token.access_token);
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
-                        app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                        //app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                        app.startActivity(LoginActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                     }
                 });
             }
