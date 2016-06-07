@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerRepeat;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.tool.LogUtil;

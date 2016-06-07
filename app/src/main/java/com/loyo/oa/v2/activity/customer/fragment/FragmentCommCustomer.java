@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterCommCustomer;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
@@ -183,6 +183,7 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
         screen2.setOnClickListener(click);
         btn_add.setOnClickListener(click);
         btn_add.setOnTouchListener(Global.GetTouch());
+        showLoading("");
         getData();
     }
 
@@ -219,7 +220,6 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
      * 获取数据,默认设置倒序
      */
     private void getData() {
-        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);

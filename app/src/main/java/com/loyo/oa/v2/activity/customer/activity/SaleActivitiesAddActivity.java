@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.customer;
+package com.loyo.oa.v2.activity.customer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Customer;

@@ -363,7 +363,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4);
                 break;
             case WfInstance.STATUS_FINISHED:
-                //img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status5);
                 img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4); //状态4，5都归类为 已通过
                 break;
             default:
@@ -441,7 +440,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
         for (int i = 0; i < nodes.size(); i++) {
             if (null != nodes.get(i).getExecutorUser() && userId.equals(nodes.get(i).getExecutorUser().getId())) {
                 node = nodes.get(i);
-                break;
+                if(node.getActive() == 2){
+                    break;
+                }
             }
         }
 
@@ -461,7 +462,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     layout_lastwork.setVisibility(View.VISIBLE);
                 }
             }
-
         }
     }
 

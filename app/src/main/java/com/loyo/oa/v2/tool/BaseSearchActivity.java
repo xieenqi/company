@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;

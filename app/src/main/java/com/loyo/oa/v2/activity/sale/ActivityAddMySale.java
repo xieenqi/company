@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
-import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity;
+import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;

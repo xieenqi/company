@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.customer;
+package com.loyo.oa.v2.activity.customer.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
+import com.loyo.oa.v2.activity.customer.activity.CustomerLabelActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.CustomerExtraData;

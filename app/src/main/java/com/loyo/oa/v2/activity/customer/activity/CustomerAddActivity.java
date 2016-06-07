@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.customer;
+package com.loyo.oa.v2.activity.customer.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,10 +17,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
+import com.loyo.oa.v2.activity.customer.activity.CustomerLabelActivity_;
+import com.loyo.oa.v2.activity.customer.bean.HttpAddCustomer;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
