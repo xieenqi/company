@@ -1145,13 +1145,12 @@ public class Utils {
         java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
         try {
             d = Double.valueOf(obj + "");
+            BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
+            return bigDecimal.toPlainString() + "";
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return "No Number";
         }
-
-        BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
-        return bigDecimal.toPlainString() + "";
     }
 
     /**

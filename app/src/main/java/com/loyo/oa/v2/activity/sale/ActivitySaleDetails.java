@@ -216,7 +216,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      */
     public void bindData() {
         //机会 是否 是创建者
-        if (mSaleDetails.creatorId.equals(MainApp.user.id)) {
+        if (MainApp.user.id.equals(mSaleDetails.creatorId)) {
             img_title_right.setVisibility(View.VISIBLE);
         } else {
             img_title_right.setVisibility(View.INVISIBLE);
