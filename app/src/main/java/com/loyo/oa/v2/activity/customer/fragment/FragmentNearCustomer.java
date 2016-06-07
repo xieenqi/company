@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterNearCustomer;
 import com.loyo.oa.v2.application.MainApp;
@@ -43,7 +43,6 @@ public class FragmentNearCustomer extends BaseFragment implements PullToRefreshB
     private ViewStub emptyView;
     private PullToRefreshListView listView;
     private AdapterNearCustomer adapter;
-
     private PaginationX<Customer> mPagination = new PaginationX<>(20);
     private ArrayList<Customer> mCustomers = new ArrayList<>();
 
@@ -92,6 +91,7 @@ public class FragmentNearCustomer extends BaseFragment implements PullToRefreshB
         listView.setEmptyView(emptyView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
+        showLoading("");
         getData();
         DialogHelp.cancelLoading();
     }
@@ -110,7 +110,6 @@ public class FragmentNearCustomer extends BaseFragment implements PullToRefreshB
      * 获取数据,默认设置倒序
      */
     private void getData() {
-        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);

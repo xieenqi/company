@@ -21,9 +21,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.customer.NearByCustomersActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.NearByCustomersActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Department;

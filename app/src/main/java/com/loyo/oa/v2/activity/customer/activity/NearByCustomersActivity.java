@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.customer;
+package com.loyo.oa.v2.activity.customer.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

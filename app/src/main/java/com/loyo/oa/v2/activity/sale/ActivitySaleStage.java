@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity.sale;
 
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,8 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity;
-import com.loyo.oa.v2.activity.customer.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity;
+import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity_;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.activity.sale.bean.SaleStage;

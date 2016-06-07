@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
@@ -31,18 +30,15 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -56,11 +52,8 @@ public class BulletinAddActivity extends BaseActivity {
     @ViewById TextView tv_recevier;
 
     String uuid = StringUtil.getUUID();
-    //    String cc_user_id, cc_department_id, cc_user_name, cc_department_name;
     SignInGridViewAdapter mGridViewAdapter;
     ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
-    //    private ArrayList<NewUser> userss = new ArrayList<>();
-//    private ArrayList<NewUser> depts = new ArrayList<>();
     private Members member = new Members();
     private StringBuffer joinUserId, joinName;
 
@@ -235,23 +228,6 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
 
-//        cc_department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
-//        cc_department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
-//        cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-//        cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-//        String cc = null;
-//        if (cc_department_name != null && cc_user_name != null) {
-//            cc = cc_department_name + "," + cc_user_name;
-//        } else if (cc_department_name != null) {
-//            cc = cc_department_name;
-//        } else if (cc_user_name != null) {
-//            cc = cc_user_name;
-//        }
-//
-//        if (cc != null) {
-//            tv_recevier.setText(cc);
-//        }
-
         member = (Members) data.getSerializableExtra("data");
         joinName = new StringBuffer();
         joinUserId = new StringBuffer();
@@ -276,41 +252,8 @@ public class BulletinAddActivity extends BaseActivity {
             }
             tv_recevier.setText(joinName.toString());
         }
-
-//        setJoinUsers(cc_user_id, cc_user_name, cc_department_id, cc_department_name);
     }
 
-
-//    private void setJoinUsers(final String joinedUserIds, final String joinedUserName, final String departIds, final String departName) {
-//        userss.clear();
-//        depts.clear();
-//        if (!TextUtils.isEmpty(joinedUserIds) && !TextUtils.isEmpty(joinedUserName)) {
-//            String[] userIds = joinedUserIds.split(",");
-//            String[] userNames = joinedUserName.split(",");
-//            for (int i = 0; i < userIds.length; i++) {
-//                NewUser newUser = new NewUser();
-//                newUser.setName(userNames[i]);
-//                newUser.setId(userIds[i]);
-//                userss.add(newUser);
-//            }
-//            if (userss != null && userss.size() > 0) {
-//                member.users = userss;
-//            }
-//        }
-//        if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
-//            String[] dpIds = departIds.split(",");
-//            String[] dpNames = departName.split(",");
-//            for (int i = 0; i < dpIds.length; i++) {
-//                NewUser newUser = new NewUser();
-//                newUser.setName(dpNames[i]);
-//                newUser.setId(dpIds[i]);
-//                depts.add(newUser);
-//            }
-//            if (depts != null && depts.size() > 0) {
-//                member.depts = depts;
-//            }
-//        }
-//    }
 
     /**
      * 过滤 图片数据、

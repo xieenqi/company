@@ -18,11 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.customer.NearByCustomersActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.NearByCustomersActivity_;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterMyCustomer;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterTeamCustomer;
@@ -235,6 +234,7 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
         mDeptSource = Common.getLstDepartment();
         deptSort();
         saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler,0x01);
+        showLoading("");
         getData();
     }
 
@@ -296,7 +296,6 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
      * 获取数据,默认设置倒序
      */
     private void getData() {
-        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);

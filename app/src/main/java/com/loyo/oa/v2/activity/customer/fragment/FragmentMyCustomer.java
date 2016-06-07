@@ -22,9 +22,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.customer.NearByCustomersActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.NearByCustomersActivity_;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterMyCustomer;
 import com.loyo.oa.v2.activity.sale.bean.SaleTeamScreen;
@@ -205,6 +205,7 @@ public class FragmentMyCustomer extends BaseFragment implements PullToRefreshBas
         screen2.setOnClickListener(click);
         btn_add.setOnClickListener(click);
         btn_add.setOnTouchListener(Global.GetTouch());
+        showLoading("");
         getData();
     }
 
@@ -292,7 +293,6 @@ public class FragmentMyCustomer extends BaseFragment implements PullToRefreshBas
      * 获取数据,默认设置倒序
      */
     private void getData() {
-        showLoading("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", page);
         params.put("pageSize", 15);

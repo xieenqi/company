@@ -24,8 +24,8 @@ import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
@@ -341,14 +341,11 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 获取首页红点数据
      */
     void requestNumber() {
-        LogUtil.dee("获取requestNumber");
-
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
                         HttpErrorCheck.checkResponse("a首页红点", response);
-
                         mItemNumbers = removalRedNumber(homeNumbers);
                         testJurl();
                     }

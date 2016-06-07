@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.customer;
+package com.loyo.oa.v2.activity.customer.bean;
 
 import com.loyo.oa.v2.beans.NewTag;
 
@@ -17,9 +17,4 @@ public class HttpAddCustomer implements Serializable {
     public String uuid;
     public int attachmentCount;
     public HttpLoc loc = new HttpLoc();
-
-//    public class Loc {
-//        public String addr;
-//        public ArrayList<Long> loc = new ArrayList<>();
-//    }
 }
