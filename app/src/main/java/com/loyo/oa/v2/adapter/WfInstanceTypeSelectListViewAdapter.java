@@ -90,6 +90,4 @@ public class WfInstanceTypeSelectListViewAdapter extends BaseAdapter {
         TextView tv;
         ImageView img_right;
     }
-
-
 }

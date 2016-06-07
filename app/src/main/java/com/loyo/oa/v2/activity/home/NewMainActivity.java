@@ -47,6 +47,7 @@ import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
@@ -147,7 +148,8 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
-                    app.startActivityForResult(NewMainActivity.this, WfInstanceAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    app.startActivityForResult(NewMainActivity.this, ActivityWfInTypeSelect.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    //app.startActivityForResult(NewMainActivity.this, WfInstanceAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:
