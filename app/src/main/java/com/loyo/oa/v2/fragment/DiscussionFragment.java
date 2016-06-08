@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -16,7 +15,6 @@ import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
-import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;
@@ -35,7 +33,6 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -79,11 +76,16 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         if (layout_discuss_action == null) {
             return;
         }
-        if (status == Project.STATUS_FINISHED) {
+
+        /**
+         * 说 明: 取消讨论权限
+         * 时 间:2016.4.11
+         * */
+/*        if (status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
         } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     /**
@@ -173,21 +175,29 @@ public class DiscussionFragment extends BaseFragment implements PullToRefreshLis
         return mView;
     }
 
+    public HaitHelper getHaitHelper() {
+        return mHaitHelper;
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (project != null && project.status == Project.STATUS_FINISHED) {
+        /**
+         * 说 明: 取消讨论权限
+         * 时 间:2016.4.11
+         * */
+        /*if (project != null && project.status == Project.STATUS_FINISHED) {
             layout_discuss_action.setVisibility(View.GONE);
         } else {
             layout_discuss_action.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mHaitHelper.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        mHaitHelper.onActivityResult(requestCode, resultCode, data);
+//    }
 
     /**
      * 发表讨论

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
          * @param min   分钟
          */
         void onDateTimeChanged(int year, int month, int day, int hour, int min);
+        void onCancel();
     }
 
     private int years, month, day, hour, minutes;
@@ -96,7 +98,7 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
      * @param isOver: 是否判断 过去时间
      * @return
      */
-    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver) {
+    public AlertDialog dateTimePicKDialog(final OnDateTimeChangedListener listener, final boolean isOver,String nebName) {
 
         LinearLayout dateTimeLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.date_pick_layout, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
@@ -108,12 +110,12 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
         ad = new AlertDialog.Builder(mContext)
                 .setTitle(initDateTime)
                 .setView(dateTimeLayout)
-                .setPositiveButton("完成", new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String timeFu = years + "-" + String.format("%02d", (month + 1)) + "-" + day + " " + hour + ":" + minutes;
+                        String timeFu = years + "." + String.format("%02d", (month + 1)) + "." + day + " " + hour + ":" + minutes;
                         try {
-                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy-MM-dd HH:mm"))
-                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy-MM-dd HH:mm"))) {
+                            if (!isOver && Integer.parseInt(DateTool.getDataOne(timeFu, "yyyy.MM.dd HH:mm"))
+                                    < Integer.parseInt(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"))) {
                                 Toast.makeText(mContext, "不能选择过去时间!", Toast.LENGTH_SHORT).show();
                             } else {
                                 listener.onDateTimeChanged(years, month, day, hour, minutes);
@@ -123,8 +125,9 @@ public class DateTimePickDialog implements DatePicker.OnDateChangedListener, Tim
                         }
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(nebName, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        listener.onCancel();
                         ad.dismiss();
                     }
                 }).show();

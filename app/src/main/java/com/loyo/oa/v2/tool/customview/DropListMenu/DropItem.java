@@ -1,19 +1,21 @@
 package com.loyo.oa.v2.tool.customview.DropListMenu;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DropItem {
+public class DropItem implements Serializable {
 
     //正常情况下,点击菜单即消失
     public static final int NORMAL = 0;
     //组内单选
     public static final int GROUP_SINGLE = 1;
-    //组内单选
+    //组内单选消失
     public static final int GROUP_SINGLE_DISMISS = 2;
 
     String Name;
     int Value;
     String mData;
+    boolean isLock = false;
 
     //显示类型
     int SelectType = 0;
@@ -27,7 +29,7 @@ public class DropItem {
         Value = value;
     }
 
-    public DropItem(String name,int value, String data) {
+    public DropItem(String name, int value, String data) {
         this(name, value);
         mData = data;
     }
@@ -36,6 +38,14 @@ public class DropItem {
         Name = name;
         Value = value;
         SubDropItem = subDropItem;
+    }
+
+    public boolean isLock() {
+        return isLock;
+    }
+
+    public void setIsLock(boolean isLock) {
+        this.isLock = isLock;
     }
 
     public String getmData() {

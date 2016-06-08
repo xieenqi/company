@@ -1,12 +1,12 @@
 package com.loyo.oa.v2.activity.contact;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
@@ -15,14 +15,13 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IUser;
-import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -45,6 +44,8 @@ public class ContactInfoActivity extends BaseActivity {
     ViewGroup layout_back;
     @ViewById
     RoundImageView img_title_user;
+    @ViewById
+    TextView tv_title;
     @ViewById
     TextView tv_edit;
     @ViewById
@@ -73,6 +74,7 @@ public class ContactInfoActivity extends BaseActivity {
     User user;
 
     private StringBuffer myDeptName;
+    private int defaultAvatar;
 
 
     @AfterViews
@@ -140,26 +142,37 @@ public class ContactInfoActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        if (null == user){
+        tv_title.setText("通讯录");
+        if (null == user) {
             return;
         }
 
         myDeptName = new StringBuffer();
 
         /*获取部门名字和职位名字，包括多部门情况下*/
-        for(int i = 0;i<user.getDepts().size();i++){
+        for (int i = 0; i < user.getDepts().size(); i++) {
             myDeptName.append(user.getDepts().get(i).getShortDept().getName());
-            if(!user.getDepts().get(i).getTitle().isEmpty()
-                    && user.getDepts().get(i).getTitle().length() >0){
-                myDeptName.append(" | "+user.getDepts().get(i).getTitle());
+            if (!user.getDepts().get(i).getTitle().isEmpty()
+                    && user.getDepts().get(i).getTitle().length() > 0) {
+                myDeptName.append(" | " + user.getDepts().get(i).getTitle());
             }
-            if(i != user.getDepts().size()-1){
+            if (i != user.getDepts().size() - 1) {
                 myDeptName.append(" ; ");
             }
         }
 
-        ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
-        LogUtil.dll("头像地址:"+user.getAvatar());
+        //默认头像，头像获取
+        if (null == user.avatar || user.avatar.isEmpty() || !user.avatar.contains("http")) {
+            if (user.gender == 2) {
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            img_title_user.setImageResource(defaultAvatar);
+        } else {
+            ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
+        }
+
         Utils.setContent(tv_realname, user.getRealname());
         Utils.setContent(tv_deptname, myDeptName.toString());
 
@@ -176,7 +189,7 @@ public class ContactInfoActivity extends BaseActivity {
             if (age >= 150) {
                 return;
             }
-            Utils.setContent(tv_birthday, user.birthDay);
+            Utils.setContent(tv_birthday, user.birthDay.substring(0,10));
             Utils.setContent(tv_age, age + "");
         }
 
@@ -200,10 +213,12 @@ public class ContactInfoActivity extends BaseActivity {
             Toast("联系人电话号码为空");
             return;
         }
-        Uri uri = Uri.parse("smsto:" + user.mobile);
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
-        sendIntent.putExtra("sms_body", "");
-        startActivity(sendIntent);
+        Utils.sendSms(ContactInfoActivity.this, user.mobile);
+
+//        Uri uri = Uri.parse("smsto:" + user.mobile);
+//        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+//        sendIntent.putExtra("sms_body", "");
+//        startActivity(sendIntent);
     }
 
     /**
@@ -214,7 +229,8 @@ public class ContactInfoActivity extends BaseActivity {
             Toast("联系人电话号码为空");
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.mobile));
-        startActivity(intent);
+        Utils.call(ContactInfoActivity.this, user.mobile);
+//        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + user.mobile));
+//        startActivity(intent);
     }
 }

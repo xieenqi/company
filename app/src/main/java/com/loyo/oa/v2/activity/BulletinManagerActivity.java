@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Permission;
+import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
@@ -61,10 +64,25 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
     private NoticeAdapter adapter;
     public final int REQUEST_NEW = 1;
     private LinearLayoutManager layoutManager;
+    private Permission permission;
 
     @AfterViews
     void initViews() {
         setTouchView(-1);
+
+        //超级管理员\权限判断
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                permission = (Permission) MainApp.rootMap.get("0402");
+                if (!permission.isEnable()) {
+                    btn_notice_add.setVisibility(View.INVISIBLE);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("发布公告权限,code错误:0402");
+            }
+        }
+
         img_title_left.setOnTouchListener(Global.GetTouch());
         btn_notice_add.setOnTouchListener(Global.GetTouch());
         lv_notice.setMode(PullToRefreshBase.Mode.BOTH);
@@ -90,6 +108,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         app.getRestAdapter().create(INotice.class).getNoticeList(map, new RCallback<PaginationX<Bulletin>>() {
             @Override
             public void success(final PaginationX<Bulletin> pagination, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 HttpErrorCheck.checkResponse(response);
                 if (!PaginationX.isEmpty(pagination)) {
                     ArrayList<Bulletin> lstData_bulletin_current = pagination.getRecords();
@@ -215,8 +234,9 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             holder.tv_time.setText(app.df3.format(new Date(bulletin.createdAt * 1000)));
             holder.tv_title.setText(bulletin.title);
             holder.tv_content.setText(bulletin.content);
-            holder.tv_name.setText(bulletin.getUserName() + " " + bulletin.creator.depts.get(0).getShortDept().getName()
-                    + " " + bulletin.creator.depts.get(0).getShortDept().title);
+            holder.tv_name.setText(bulletin.getUserName() + " " + (
+                    creatorIsEmpty(bulletin.creator) ? bulletin.creator.depts.get(0).getShortDept().getName() : "")
+                    + " " + (creatorIsEmpty(bulletin.creator) ? bulletin.creator.depts.get(0).getShortDept().title : ""));
 
             ImageLoader.getInstance().displayImage(bulletin.creator.avatar, holder.iv_avatar);
             ArrayList<Attachment> attachments = bulletin.attachments;
@@ -229,6 +249,21 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             } else {
                 holder.gridView.setVisibility(View.GONE);
             }
+        }
+
+        /*8
+        判断创建人部门是数据是否有空
+         */
+        private boolean creatorIsEmpty(User creator) {
+            if (null == creator.depts) {
+                return false;
+            } else if (0 == creator.depts.size()) {
+                return false;
+            } else if (TextUtils.isEmpty(creator.depts.get(0).getShortDept().title) ||
+                    TextUtils.isEmpty(creator.depts.get(0).getShortDept().getName())) {
+                return false;
+            }
+            return true;
         }
 
         @Override

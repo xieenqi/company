@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -14,13 +15,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -33,6 +35,7 @@ import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.TaskCheckPoint;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -50,7 +53,6 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -103,8 +105,10 @@ public class TasksInfoActivity extends BaseActivity {
 
     View v_split;
     @ViewById
-    LinearLayout layout_attachment;
+    RelativeLayout layout_attachment;
 
+    @ViewById
+    TextView tv_repeatTask;
     @ViewById
     TextView tv_task_title;
     @ViewById
@@ -135,18 +139,21 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;
 
     private boolean isOver = false;
     private int statusSize;
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
     private Members member;
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
     public static TasksInfoActivity instance = null;
+    public ArrayList<TextView> taskChildView = new ArrayList<>();
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
     public ArrayList<NewUser> requestDepts = new ArrayList<>();
     public ArrayList<User> aboutDepts = new ArrayList<>();
+    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
+
     public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
@@ -157,12 +164,21 @@ public class TasksInfoActivity extends BaseActivity {
     public TextView tv_task_content;
     public TextView tv_task_status;
     public TextView tv_reviewer;
+    public TextView viewName;
+    public TextView viewContent;
+    private StringBuffer joinUserId;
+    private StringBuffer joinName;
 
     public android.os.Handler mHandler = new android.os.Handler() {
-
         public void handleMessage(final Message msg) {
             if (msg.what == 0x01) {
                 tv_children_info.setText(String.format("(%d/%d)", statusSize, mTask.getchecklists().size()));
+            } else if (msg.what == 0x02) {
+                viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text99));
+            } else if (msg.what == 0x03) {
+                viewContent.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text33));
             }
         }
     };
@@ -177,8 +193,6 @@ public class TasksInfoActivity extends BaseActivity {
     void initUI() {
         super.setTitle("任务详情");
         userId = DBManager.Instance().getUser().getId();
-        userss = new ArrayList<>();
-        depts = new ArrayList<>();
         member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -215,7 +229,9 @@ public class TasksInfoActivity extends BaseActivity {
 
         boolean isInTask = false; //判断当前用户是否在任务中
         for (int i = 0; i < users.size(); i++) {
-            if (MainApp.user.id.equals(users.get(i).getId())) {
+            if (MainApp.user.id.equals(users.get(i).getId())
+                    || isMenberShortDept(users.get(i).getId(), users.get(i).getXpath())
+                    ) {
                 isInTask = true;
                 break;
             }
@@ -225,7 +241,7 @@ public class TasksInfoActivity extends BaseActivity {
             layout_child_add_action.setVisibility(View.VISIBLE);
             layout_attachment.setVisibility(View.VISIBLE);
             v_split.setVisibility(View.VISIBLE);
-            img_title_right.setVisibility(View.VISIBLE);
+            //img_title_right.setVisibility(View.VISIBLE);
         } else {
             layout_child_add_action.setVisibility(View.GONE);
             layout_attachment.setVisibility(View.GONE);
@@ -242,26 +258,49 @@ public class TasksInfoActivity extends BaseActivity {
     }
 
     /**
+     * 多部门的人员有权限
+     *
+     * @param id
+     * @return
+     */
+    private boolean isMenberShortDept(String id, String xpath) {
+        for (UserInfo element : MainApp.user.depts) {
+            if (element.getShortDept().getId().equals(id)
+                    || (null != xpath && element.getShortDept().getXpath().contains(xpath))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 任务属性设置
      */
     void updateUI_task_responsiblePerson() {
-
         childTastUsers.clear();
-        if (IsResponsiblePerson() && (mTask.getStatus() == Task.STATUS_REVIEWING)) {//负责人 任务审核中
+        //参与人
+        if (!IsResponsiblePerson() && !IsCreator()) {
             img_title_right.setVisibility(View.GONE);
-        } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_FINISHED) {
-            img_title_right.setVisibility(View.GONE);
-        } else if (!IsResponsiblePerson() && !IsCreator()) {//参与人
-            img_title_right.setVisibility(View.GONE);
-        } else if (IsResponsiblePerson() && IsCreator() && mTask.getStatus() == Task.STATUS_FINISHED) { //同时为创建者 负责人 任务完成
-            img_title_right.setVisibility(View.VISIBLE);
-        } else {
-            img_title_right.setVisibility(View.VISIBLE);
         }
+        //其他情况
+        switch (mTask.getStatus()) {
+            case Task.STATUS_REVIEWING:
+                if (IsResponsiblePerson()) {
+                    img_title_right.setVisibility(View.GONE);
+                }
+                break;
+
+            case Task.STATUS_FINISHED:
+                if (IsResponsiblePerson()) {
+                    img_title_right.setVisibility(View.GONE);
+                }
+                break;
+        }
+
 
         if (mTask.getResponsiblePerson() != null) {
             realName = mTask.getResponsiblePerson().getName();
-            tv_responsiblePerson.setText("负责人:" + realName);
+            tv_responsiblePerson.setText("负责人: " + realName);
             childTastUsers.add(mTask.getResponsiblePerson());
             childTastUsers.add(mTask.getCreator());
         }
@@ -270,38 +309,136 @@ public class TasksInfoActivity extends BaseActivity {
             if (mTask.members.getAllData().size() > 0) {
                 StringBuffer userNames = new StringBuffer();
                 for (NewUser element : mTask.members.getAllData()) {
-                    userNames.append(element.getName() + ",");
+                    userNames.append(element.getName() + " ");
                 }
-                tv_toUsers.setText("参与人:" + userNames.toString());
+                tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
+                if (null != mTask.members.depts) {
+                    for (NewUser newUser : mTask.members.depts) {
+                        Common.getAllUsersByDeptId(newUser.getId(), childTaskUsers2);
+                    }
+                }
+
+                for (User user : childTaskUsers2) {
+                    childTastUsers.add(user.toShortUser());
+                }
+
+                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
+                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
+
                 getAboutUser();
+
             } else {
                 tv_toUsers.setText("没有参与人");
             }
         }
         if (null != mTask.getProject()) {
             beProjects = mTask.getProject().title;
-            tv_task_project.setText("所属项目：" + beProjects);
+            tv_task_project.setText("所属项目: " + beProjects);
         } else {
             tv_task_project.setText("所属项目：无");
         }
         if (null != mTask.getCustomerName()) {
-            tv_task_aboutuser.setText("关联客户:" + mTask.getCustomerName());
+            tv_task_aboutuser.setText("关联客户: " + mTask.getCustomerName());
         } else {
             tv_task_aboutuser.setText("关联客户: 无");
         }
 
+        /**重复任务赋值*/
+        if (null != mTask.getCornBody() && mTask.getCornBody().getType() != 0) {
+            String caseName = "";
+            String hourMins = "";
+            String weekName = "";
+            String dayName = "";
+
+            String hour = "";
+            String mins = "";
+            switch (mTask.getCornBody().getType()) {
+                case 1:
+                    caseName = "每天";
+                    break;
+
+                case 2:
+                    caseName = "每周";
+                    break;
+
+                case 3:
+                    caseName = "每月";
+                    break;
+            }
+            hour = mTask.getCornBody().getHour() + "";
+            mins = mTask.getCornBody().getMinute() + "";
+
+            /*如果小时分钟为单数，则前面拼上0*/
+            if (hour.length() == 1) {
+                hour = "0" + hour;
+            }
+
+            if (mins.length() == 1) {
+                mins = "0" + mins;
+            }
+            hourMins = hour + ":" + mins;
+
+            //每天
+            if (mTask.getCornBody().getType() == 1) {
+                tv_repeatTask.setText("重复: " + caseName + " " + hourMins + "重复");
+                //每周
+            } else if (mTask.getCornBody().getType() == 2) {
+                switch (mTask.getCornBody().getWeekDay()) {
+                    case 1:
+                        weekName = "日";
+                        break;
+
+                    case 2:
+                        weekName = "一";
+                        break;
+
+                    case 3:
+                        weekName = "二";
+                        break;
+
+                    case 4:
+                        weekName = "三";
+                        break;
+
+                    case 5:
+                        weekName = "四";
+                        break;
+
+                    case 6:
+                        weekName = "五";
+                        break;
+
+                    case 7:
+                        weekName = "六";
+                        break;
+
+                    default:
+                        break;
+                }
+                tv_repeatTask.setText("重复: " + caseName + weekName + " " + hourMins + "重复");
+                //每月
+            } else if (mTask.getCornBody().getType() == 3) {
+                dayName = mTask.getCornBody().getDay() + "号";
+                tv_repeatTask.setText("重复: " + caseName + " " + dayName + " " + hourMins + "重复");
+            }
+            tv_task_audit.setVisibility(View.GONE);
+        } else {
+            tv_repeatTask.setVisibility(View.GONE);
+        }
+
+
         switch (mTask.getStatus()) {
             case 1:
-                iv_task_status.setBackgroundResource(R.drawable.icon_project_processing);
+                iv_task_status.setImageResource(R.drawable.icon_project_processing);
                 break;
 
             case 2:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_wite);
+                iv_task_status.setImageResource(R.drawable.img_task_wite);
                 break;
 
             case 3:
-                iv_task_status.setBackgroundResource(R.drawable.img_task_status_finish);
+                iv_task_status.setImageResource(R.drawable.img_task_status_finish);
                 break;
 
             default:
@@ -330,30 +467,31 @@ public class TasksInfoActivity extends BaseActivity {
             ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
             item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
 
-            if (!TextUtils.isEmpty(reviewer.getUser().getName())) {
-                tv_reviewer.setText(reviewer.getUser().getName());
+            if (!TextUtils.isEmpty(reviewer.user.getName())) {
+                tv_reviewer.setText(reviewer.user.getName());
             }
 
-            if (!TextUtils.isEmpty(reviewer.getReviewedAt() + "")) {
-                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.getReviewedAt() * 1000L)));
+            if (!TextUtils.isEmpty(reviewer.reviewedAt + "")) {
+                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.reviewedAt * 1000L)));
             }
 
-            if (!TextUtils.isEmpty(reviewer.getComment())) {
-                tv_task_content.setText(reviewer.getComment());
+            if (!TextUtils.isEmpty(reviewer.comment)) {
+                tv_task_content.setText(reviewer.comment);
             }
 
-            if ("0".equals(reviewer.getStatus())) {
+            if ("0".equals(reviewer.status)) {
                 item_tasks_sorece.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(reviewer.getScore() + "")) {
-                int rat = (reviewer.getScore() / 20);
+            if (!TextUtils.isEmpty(reviewer.score + "")) {
+                int rat = (reviewer.score / 20);
                 ratingBar_Task.setRating((float) (rat / 1.0));
             }
 
-            if ("1".equals(reviewer.getStatus())) {
+            if ("1".equals(reviewer.status)) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
+                tv_task_status.setVisibility(View.GONE);
             } else {
                 tv_task_status.setText("不通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.red));
@@ -422,23 +560,27 @@ public class TasksInfoActivity extends BaseActivity {
         }
 
         layout_child_Add_area.removeAllViews();
+        taskChildView.clear();
 
         //子任务列表内容，遍历
-        for (final TaskCheckPoint subTask : mTask.getchecklists()) {
+        for (int i = 0; i < mTask.getchecklists().size(); i++) {
 
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            final TaskCheckPoint subTask = mTask.getchecklists().get(i);
+            final View view = LayoutInflater.from(mContext).inflate(R.layout.item_child_task_layout, null, false);
+            RelativeLayout childView = (RelativeLayout) view.findViewById(R.id.item_childtask_info);
 
             //子任务标题
-            TextView viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
+            viewName = (TextView) view.findViewById(R.id.item_tv_child_principal);
             if (subTask.getResponsiblePerson() != null) {
                 viewName.setText(subTask.getResponsiblePerson().getName());
             }
 
             //子任务内容
-            TextView viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
+            viewContent = (TextView) view.findViewById(R.id.item_tv_child_task_content);
             if (!TextUtils.isEmpty(subTask.getcontent())) {
                 viewContent.setText(subTask.getcontent());
             }
+            taskChildView.add(viewContent);
 
             /*Checkbox勾选,赋值*/
             CheckBox childCheckbox = (CheckBox) view.findViewById(R.id.cb);
@@ -449,6 +591,12 @@ public class TasksInfoActivity extends BaseActivity {
                 statusSize++;
             }
 
+            /*初始化完成/未完成状态*/
+            if (isStatus) {
+                viewContent.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                viewContent.setTextColor(getResources().getColor(R.color.text99));
+            }
+
             childCheckbox.setChecked(isStatus);
 
             if (mTask.getStatus() != Task.STATUS_PROCESSING) {
@@ -456,17 +604,22 @@ public class TasksInfoActivity extends BaseActivity {
                 view.setEnabled(false);
                 layout_child_add_action.setVisibility(View.GONE);
             } else {
+                final int finalI = i;
                 childCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(final CompoundButton compoundButton, final boolean isCheck) {
                         if (IsCreator() || IsResponsiblePerson() || MainApp.user.getId().equals(subTask.getResponsiblePerson().getId())) {
                             if (isCheck) {
+                                viewContent = taskChildView.get(finalI);
                                 statusSize++;
                                 mHandler.sendEmptyMessage(0x01);
+                                mHandler.sendEmptyMessage(0x02);
                                 requestTaskupdates(taskId, subTask.getId(), 1);//任务ID，子任务ID，勾选状态
                             } else {
+                                viewContent = taskChildView.get(finalI);
                                 statusSize--;
                                 mHandler.sendEmptyMessage(0x01);
+                                mHandler.sendEmptyMessage(0x03);
                                 requestTaskupdates(taskId, subTask.getId(), 0);
                             }
                         } else {
@@ -481,18 +634,17 @@ public class TasksInfoActivity extends BaseActivity {
                 /**
                  * 子任务编辑跳转
                  * */
-                view.setTag(subTask);
-                view.setOnClickListener(new View.OnClickListener() {
+                childView.setTag(subTask);
+                childView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
 
                         //组装 负责人 于 参与人
                         ArrayList<Reviewer> reponserData = new ArrayList<Reviewer>();
-                        //reponserData.addAll(mTask.getMembers().getUsers());
                         reponserData.addAll(mTask.responsiblePersons);
                         ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
                         for (Reviewer element : reponserData) {
-                            reponserDataUser.add(element.getUser());
+                            reponserDataUser.add(element.user);
                         }
 
                         Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
@@ -541,15 +693,15 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 获取任务信息【子任务等】
      */
-    @Background
     void getTask() {
+        showLoading("");
         if (TextUtils.isEmpty(mTaskId)) {
             Toast("参数不完整");
             finish();
             return;
         }
 
-        app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
+        app.getRestAdapter().create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
                 LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
@@ -564,7 +716,7 @@ public class TasksInfoActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                // LogUtil.d("任务错误信息："+error.getBody().toString());
+                finish();
             }
         });
     }
@@ -572,13 +724,13 @@ public class TasksInfoActivity extends BaseActivity {
     /**
      * 标题左右监听
      */
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.btn_complete, R.id.layout_cb})
     void onClick(final View v) {
 
         switch (v.getId()) {
 
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
 
             case R.id.img_title_right:
@@ -597,15 +749,26 @@ public class TasksInfoActivity extends BaseActivity {
                         intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
                     } else if (mTask.getStatus() == Task.STATUS_REVIEWING) {
-                        intent.putExtra("delete", true);
                         intent.putExtra("extra", "复制任务");
-                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {//创建者 任务完成
-                        intent.putExtra("delete", true);
+                    } else if (mTask.getStatus() == Task.STATUS_FINISHED) {
+                        intent.putExtra("extra", "复制任务");
                     }
                     /*负责人*/
-                } else if (IsResponsiblePerson() && mTask.getStatus() == Task.STATUS_PROCESSING) {
-                    intent.putExtra("edit", true);
-                    intent.putExtra("editText", "修改参与人");
+                } else if (IsResponsiblePerson()) {
+                    switch (mTask.getStatus()) {
+                        case Task.STATUS_PROCESSING:
+                            intent.putExtra("edit", true);
+                            intent.putExtra("editText", "修改参与人");
+                            break;
+
+                        case Task.STATUS_REVIEWING:
+                            intent.putExtra("extra", "复制任务");
+                            break;
+
+                        case Task.STATUS_FINISHED:
+                            intent.putExtra("extra", "复制任务");
+                            break;
+                    }
                 }
 
                 startActivityForResult(intent, REQUEST_EDIT_DELETE);
@@ -619,6 +782,12 @@ public class TasksInfoActivity extends BaseActivity {
                     Toast("子任务尚未完成，不能提交！");
                 }
                 break;
+
+            case R.id.layout_cb:
+
+
+                break;
+
 
             default:
                 break;
@@ -643,7 +812,7 @@ public class TasksInfoActivity extends BaseActivity {
                         @Override
                         public void success(final Task task, final Response response) {
                             if (task != null) {
-                                task.setAck(true);
+                                task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
                                 app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -658,7 +827,7 @@ public class TasksInfoActivity extends BaseActivity {
                     });
         } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
 
-            mTask.setAck(true);
+            mTask.setViewed(true);
             //跳转到评分
             Bundle bundle2 = new Bundle();
             bundle2.putSerializable("mTask", mTask);
@@ -686,28 +855,9 @@ public class TasksInfoActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 获取讨论内容，服务端已弃用，暂注释
-     */
-/*    @Background
-    void getDiscussion() {
-        ITask t = app.getRestAdapter().create(ITask.class);
-        t.getDiscussions(String.valueOf(getId()), new RCallback<PaginationX<Discussion>>() {
-            @Override
-            public void success(PaginationX<Discussion> discussionPaginationX, Response response) {
-
-                if (PaginationX.isEmpty(discussionPaginationX)) {
-                    return;
-                }
-
-                mPageDiscussion = discussionPaginationX;
-                tv_discussion_count.setText(String.valueOf(discussionPaginationX.getTotalRecords()));
-            }
-        });
-    }*/
 
     void showAttachment() {
-        if (ListUtil.IsEmpty(mTask.getAttachments())) {
+        if (null == mTask.getAttachments() || mTask.getAttachments().size() == 0) {
             return;
         }
         tv_attachment_count.setText("(" + (mTask.getAttachments() == null ? 0 : mTask.getAttachments().size()) + ")");
@@ -722,15 +872,31 @@ public class TasksInfoActivity extends BaseActivity {
         switch (requestCode) {
 
             /*选择完参与人后，回调*/
-            case ExtraAndResult.REQUEST_CODE:
-                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-                if (cc_user_id != null && cc_user_name != null) {
-                    setJoinUsers(cc_user_id, cc_user_name);
-                } else {
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+                member = (Members) data.getSerializableExtra("data");
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (member.users.size() == 0 && member.depts.size() == 0) {
                     Toast("未选择相关人员");
+                    joinUserId.reverse();
+                } else {
+                    if (null != member.depts) {
+                        for (NewUser newUser : member.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != member.users) {
+                        for (NewUser newUser : member.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    editJoiner();
                 }
-
                 break;
 
             //编辑 子任务 返回
@@ -744,10 +910,6 @@ public class TasksInfoActivity extends BaseActivity {
                 break;
 
             case REQUEST_EDIT:
-                //TODO:奇怪这里取不到数据
-                //                mTask = (Task) data.getSerializableExtra("task_return");
-                //                joinedUserName = data.getStringExtra("joinedUserName");
-                //                updateUI();
                 getTask();
                 break;
 
@@ -761,10 +923,7 @@ public class TasksInfoActivity extends BaseActivity {
                         bundle.putBoolean("type", IsCreator());
                         app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
                     } else {
-                        Bundle mBundle = new Bundle();
-                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, mBundle);
+                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
                     }
                                 /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
@@ -785,10 +944,7 @@ public class TasksInfoActivity extends BaseActivity {
                     startActivity(intent);
                                 /*修改参与人回调*/
                 } else if (data.getBooleanExtra("editjoiner", false)) {
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);
+                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
 
                 }
                 break;
@@ -846,31 +1002,10 @@ public class TasksInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mTask != null) {
-            mTask.setAck(true);
+            mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-    }
-
-    /**
-     * 参与人组装
-     */
-    void setJoinUsers(final String joinedUserIds, final String joinedUserName) {
-        userss.clear();
-        depts.clear();
-
-        String[] userIds = joinedUserIds.split(",");
-        String[] userNames = joinedUserName.split(",");
-
-        for (int i = 0; i < userIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(userNames[i]);
-            newUser.setId(userIds[i]);
-            userss.add(newUser);
-        }
-
-        member.users = userss;
-        editJoiner();
     }
 
     /**
@@ -892,7 +1027,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mTask.getProjectId())) {
             map.put("projectId", mTask.getProjectId());
         }
-
+        LogUtil.d("修改参与人传递数据：" + app.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
@@ -954,10 +1089,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status", mTask.getStatus());
         bundle.putInt("bizType", 2);
-
         ActivityDiscussDet.startThisActivity(this, 2, mTask.getAttachmentUUId(), mTask.getStatus(), MSG_DISCUSSION);
-
-//        app.startActivityForResult(this, DiscussionActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_DISCUSSION, bundle);
     }
 
     /**

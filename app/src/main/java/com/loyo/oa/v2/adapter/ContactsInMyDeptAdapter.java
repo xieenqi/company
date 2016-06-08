@@ -6,20 +6,17 @@ package com.loyo.oa.v2.adapter;
  * Created by yyy on 15/12/30.
  */
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserInfo;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -30,6 +27,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
     private List<User> list = null;
     private Context mContext;
     private StringBuffer deptName;
+    private int defaultAvatar;
 
     public ContactsInMyDeptAdapter(final Context mContext, final List<User> list) {
         this.mContext = mContext;
@@ -54,7 +52,7 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
         final User mContent = list.get(position);
         if (view == null) {
             viewHolder = new ViewHolder();
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_medleft, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_contact_personnel, null);
 
             viewHolder.tvLetter = (TextView) view.findViewById(R.id.catalog);
             viewHolder.name = (TextView) view.findViewById(R.id.tv_name);
@@ -76,11 +74,20 @@ public class ContactsInMyDeptAdapter extends BaseAdapter implements SectionIndex
 
         User user = list.get(position);
         deptName = new StringBuffer();
-        Utils.getDeptName(deptName,user.getDepts());
-        viewHolder.name.setText(this.list.get(position).getRealname());
+        Utils.getDeptName(deptName, user.getDepts());
+        viewHolder.name.setText(user.getRealname());
         viewHolder.deptInf.setText(deptName.toString());
-        ImageLoader.getInstance().displayImage(this.list.get(position).getAvatar(), viewHolder.img);
 
+        if(null == user.getAvatar() || user.getAvatar().isEmpty() || !user.getAvatar().contains("http")){
+            if (user.gender == 2) {
+                defaultAvatar = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAvatar = R.drawable.img_default_user;
+            }
+            viewHolder.img.setImageResource(defaultAvatar);
+        }else{
+            ImageLoader.getInstance().displayImage(user.getAvatar(), viewHolder.img);
+        }
         return view;
     }
 

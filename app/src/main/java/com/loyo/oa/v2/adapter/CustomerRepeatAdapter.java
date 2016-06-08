@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerRepeat;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -62,7 +61,6 @@ public class CustomerRepeatAdapter extends BaseAdapter {
         }
 
         LogUtil.dll("data:" + listCommon.getRecords().get(position).getName());
-
 
         holder.item_cuslist_tv.setText(listCommon.getRecords().get(position).getName());
         return convertView;

@@ -22,7 +22,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -69,7 +68,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());
 
-        if(!isMyUser){
+        if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
 
@@ -126,8 +125,8 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         //        map.put("userId", 0);
-        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01",app.df5)/1000);
-        map.put("endAt", DateTool.getEndAt_ofDay()/1000);
+        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        map.put("endAt", DateTool.getEndAt_ofDay() / 1000);
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
@@ -135,7 +134,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(final PaginationX<LegWork> paginationX, final Response response) {
-                LogUtil.d(" 拜访签到列表数据： "+MainApp.gson.toJson(paginationX));
+                HttpErrorCheck.checkResponse("拜访签到列表数据：", response);
                 workPaginationX = paginationX;
                 lv.onRefreshComplete();
                 if (isTopAdd) {

@@ -2,7 +2,6 @@
 <resources>
 
 
-
     <color name="province_line_border">#C7C7C7</color>
     <color name="white60">#4dffffff</color>
     <color name="white95">#e6ffffff</color>
@@ -303,15 +302,14 @@
     <color name="black">#000000</color>
     <!-- 黑色 -->
 
-    <color name="iswrite">#2c9dfc</color>
+
     <color name="isteston">#bf73e6</color>
     <color name="isfinish">#83c850</color>
     <color name="pressed">#f0f0f0</color>
     <color name="dialog_blue">#2693FB</color>
     <color name="activity_bg_shadow">#f0f0f0</color>
     <color name="activity_split">#c8c7cc</color>
-    <color name="title_bg1">#4db1fe</color>
-    <color name="title_bg2">#01a98b</color>
+    <color name="title_bg1">#2c9dfc</color>
     <color name="line_bg">#d6d6d6</color>
     <color name="text1">#545454</color>
     <color name="text2">#929292</color>
@@ -332,17 +330,19 @@
     <color name="login_text">#6b6b6b</color>
     <color name="task_agree">#92d754</color>
     <color name="task_notagree">#bfbfbf</color>
+    <color name="work_info_gray">#fbfbfb</color>
+    <color name="work_info_solid">#e6e6e6</color>
 
     <color name="task_discussion_attachment_color">#a0a0a0</color>
 
     <color name="wfinstance_notagree">#ff5652</color>
     <color name="wfinstance_notprocess">#939292</color>
     <color name="wfinstance_agree">#34D434</color>
-
+    <color name="tasklist_gray">#8a8a8a</color>
     <color name="diseditable">#999999</color>
 
     <!-- 多级筛选-->
-    <color name="default_menu_back">#f1f1f1</color>
+    <color name="default_menu_back">#ffffff</color>
     <color name="default_menu_press_back">#fafafa</color>
     <color name="default_menu_press_text">#000000</color>
     <color name="default_menu_text">#00cf9b</color>
@@ -354,12 +354,14 @@
     <color name="graye9">#e9e9e9</color>
     <color name="text33">#333333</color>
     <color name="text99">#999999</color>
-    <color name="lineCC">#cccccc</color>
+    <color name="lineCC">#e6e6e6</color>
     <color name="redE8">#e85840</color>
-    <color name="activity_bg">#f2f2f2</color>
+    <color name="activity_bg">#f4f4f4</color>
     <color name="green51">#51c055</color>
     <color name="gray0990">#E7E7E7</color>
-
+    <color name="colore6">#e6e6e6</color>
+    <color name="item_bj_fb">#fbfbfb</color>
+    <color name="ececec">#ECECEC</color>
 
     <color name="text_black_1">#dd020202</color>
     <color name="text_black_2">#98020202</color>

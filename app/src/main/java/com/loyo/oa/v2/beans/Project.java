@@ -60,7 +60,7 @@ public class Project extends BaseBeans {
     public void setManagers(ArrayList<ProjectAddActivity.ManagersMembers> data) {
         ArrayList<ProjectMember> newData = new ArrayList<>();
         for (ProjectAddActivity.ManagersMembers element : data) {
-            ProjectMember pm = new ProjectMember(element.user.id, element.canreadall);
+            ProjectMember pm = new ProjectMember(element.user.id, element.canReadAll);
             newData.add(pm);
         }
         this.managers = newData;

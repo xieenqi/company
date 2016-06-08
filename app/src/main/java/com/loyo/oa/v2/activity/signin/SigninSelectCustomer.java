@@ -27,11 +27,11 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,7 +47,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
     protected String strSearch;
     protected EditText edt_search;
-    protected TextView tv_search;
+    protected ImageView iv_clean;
     protected View vs_nodata;
     protected PullToRefreshListView expandableListView_search;
     protected ArrayList<Customer> lstData = new ArrayList<>();
@@ -55,7 +55,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
     protected PaginationX paginationX = new PaginationX(20);
     public Customer customer;
     public String position;
-
+    private DecimalFormat df = new DecimalFormat("0.0");
     public Context mContext;
     public int kalo = 0;
     public boolean isTopAdd = true;
@@ -80,8 +80,8 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 onBackPressed();
             }
         });
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setText("取消");
+//        tv_search = (TextView) findViewById(R.id.tv_search);
+//        tv_search.setText("取消");
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -92,7 +92,13 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
                 return false;
             }
         });
-
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        iv_clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
         edt_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(final CharSequence charSequence, final int i, final int i1, final int i2) {
@@ -106,22 +112,22 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
 
             @Override
             public void afterTextChanged(final Editable editable) {
-                if (edt_search.length() == 0) {
-                    tv_search.setText("取消");
-                } else {
-                    tv_search.setText("搜索");
-                }
+//                if (edt_search.length() == 0) {
+//                    tv_search.setText("取消");
+//                } else {
+//                    tv_search.setText("搜索");
+//                }
             }
         });
         edt_search.requestFocus();
 
         /*搜索操作*/
-        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                doSearch();
-            }
-        });
+//        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(final View v) {
+//                doSearch();
+//            }
+//        });
 
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -172,24 +178,38 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
      * 查询客户数据
      */
     void getAllData() {
-        String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
-        HashMap<String, Object> params = new HashMap<>();
-        kalo = 1;
-        params.put("pageIndex", paginationX.getPageIndex());
-        params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-        params.put("keyWords", strSearch);
-        dataRequestvoid(url, params);
+        new LocationUtilGD(this, new LocationUtilGD.AfterLocation() {
+            @Override
+            public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
+                position = String.valueOf(longitude).concat(",").concat(String.valueOf(latitude));
+                String url = FinalVariables.SEARCH_CUSTOMERS_SELF;
+                HashMap<String, Object> params = new HashMap<>();
+                kalo = 1;
+                params.put("pageIndex", paginationX.getPageIndex());
+                params.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
+                params.put("keyWords", strSearch);
+                params.put("position", position);
+                dataRequestvoid(url, params);
+            }
+
+            @Override
+            public void OnLocationGDFailed() {
+                Toast("获取附近客户信息失败！");
+                LocationUtilGD.sotpLocation();
+            }
+        });
     }
 
     /**
      * 请求体
      */
     void dataRequestvoid(final String url, final HashMap<String, Object> params) {
-        Utils.dialogShow(mContext, "请稍候");
+//        Utils.dialogShow(mContext, "请稍候");
+        showLoading("请稍后");
         RestAdapterFactory.getInstance().build(url).create(ICustomer.class).query(params, new Callback<PaginationX<Customer>>() {
             @Override
             public void success(final PaginationX<Customer> customerPaginationX, final Response response) {
-                Utils.dialogDismiss();
+//                Utils.dialogDismiss();
                 HttpErrorCheck.checkResponse(response);
                 expandableListView_search.onRefreshComplete();
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -228,7 +248,7 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
                 expandableListView_search.onRefreshComplete();
-                Utils.dialogDismiss();
+//                Utils.dialogDismiss();
             }
         });
     }
@@ -308,19 +328,34 @@ public class SigninSelectCustomer extends BaseActivity implements PullToRefreshL
             }
 
             Customer customer = lstData.get(i);
-            ImageView status = ViewHolder.get(convertView, R.id.img_status);
             TextView title = ViewHolder.get(convertView, R.id.tv_title);
             TextView content = ViewHolder.get(convertView, R.id.tv_content);
             TextView time = ViewHolder.get(convertView, R.id.tv_time);
             View ack = ViewHolder.get(convertView, R.id.view_ack);
             ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
-            status.setVisibility(View.GONE);
             layout_discuss.setVisibility(View.GONE);
-            content.setVisibility(View.INVISIBLE);
+            content.setVisibility(View.GONE);
 
             time.setVisibility(View.VISIBLE);
             title.setText(customer.name);
             time.setText(customer.distance != null ? "距离: " + customer.distance : "距离: 无");
+
+            if (null != customer.distance) {
+                String distance;
+                if (customer.distance.contains("km")) {
+                    time.setText("距离:" + df.format(Double.parseDouble(customer.distance.replace("km", ""))) + "km");
+                } else if (customer.distance.contains("m")) {
+                    double disa = Float.parseFloat(customer.distance.replace("m", ""));
+                    if (disa <= 100) {
+                        distance = "<0.1km";
+                    } else {
+                        distance = df.format(disa / 1000) + "km";
+                    }
+                    time.setText("距离:" + distance);
+                }
+            } else {
+                time.setText("距离:无");
+            }
 
             return convertView;
         }

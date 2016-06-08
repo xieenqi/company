@@ -3,14 +3,13 @@ package com.loyo.oa.v2.tool;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.API_error;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
-
 import org.apache.http.Header;
 
 /**
@@ -56,7 +55,8 @@ public abstract class BaseAsyncHttpResponseHandler extends AsyncHttpResponseHand
     public void onStart() {
         super.onStart();
         if (getActivity() != null) {
-            getDialog().iLoadingTypeCount_Add(R.string.app_dialog_progress_commit);
+            DialogHelp.showLoading(getActivity(), "正在上传", true);
+            //getDialog().iLoadingTypeCount_Add(R.string.app_dialog_progress_commit);
         }
     }
 
@@ -64,7 +64,8 @@ public abstract class BaseAsyncHttpResponseHandler extends AsyncHttpResponseHand
     public void onFinish() {
         super.onFinish();
         if (getActivity() != null) {
-            getDialog().iLoadingTypeCount_subtract();
+            DialogHelp.cancelLoading();
+            //getDialog().iLoadingTypeCount_subtract();
         }
     }
 

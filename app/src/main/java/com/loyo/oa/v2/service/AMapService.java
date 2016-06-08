@@ -17,14 +17,12 @@ import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LocateData;
-import com.loyo.oa.v2.beans.ServerTime;
 import com.loyo.oa.v2.beans.TrackLog;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.LDBManager;
-import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
@@ -57,9 +55,9 @@ public class AMapService extends Service {
      */
     private static final long MIN_SCAN_SPAN_MILLS = 15 * 1000;
     /**
-     * 请求定位的最小距离间隔
+     * 请求定位的最小距离间隔【定位精度】
      */
-    private static final float MIN_SCAN_SPAN_DISTANCE = 250f;
+    private static final float MIN_SCAN_SPAN_DISTANCE = 260f;
 
     private PowerManager.WakeLock wakeLock;
     private PowerManager manager;
@@ -70,7 +68,7 @@ public class AMapService extends Service {
     private TrackRule trackRule;
     private LocalBinder mBinder = new LocalBinder();
     private LDBManager ldbManager;
-    private boolean isCache;
+    private boolean isCache;//是否有缓存
     private RestAdapter mRestAdapter;
 
     private static AMapLocationClient locationClient = null;
@@ -135,9 +133,9 @@ public class AMapService extends Service {
         locationOption = new AMapLocationClientOption();
         locationOption.setGpsFirst(true);//设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
         //* 注意：只有在高精度模式下的单次定位有效，其他方式无效
-        locationOption.setInterval(1000 * 60);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
+        locationOption.setInterval(1000 * 60 * 2);// 设置发送定位请求的时间间隔,最小值为1000，如果小于1000，按照1000算
         locationOption.setOnceLocation(false);//false持续定位 true单次定位
-        locationOption.setHttpTimeOut(10000);//设置联网超时时间
+        locationOption.setHttpTimeOut(15000);//设置联网超时时间
         locationOption.setNeedAddress(true);
         // 设置定位模式为高精度模式
         locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
@@ -167,7 +165,9 @@ public class AMapService extends Service {
             }
 
             if (aMapLocation != null) {
-                getCurrentTime(aMapLocation);
+                /*不获取服务器时间*/
+                //getCurrentTime(aMapLocation);
+                dealLocation(aMapLocation, System.currentTimeMillis());
             } else {
                 LogUtil.d(TAG + "位置回调失败！");
             }
@@ -183,21 +183,15 @@ public class AMapService extends Service {
      */
     private void dealLocation(AMapLocation aMapLocation, long currentTime) {
         String address = aMapLocation.getAddress();
-        float accuracy = aMapLocation.getAccuracy();
-        String provider = aMapLocation.getProvider();
+        float accuracy = aMapLocation.getAccuracy();//定位精度
+        String provider = aMapLocation.getProvider();//获取定位提供者
         String time = MainApp.getMainApp().df1.format(new Date(aMapLocation.getTime()));
-        boolean isCache = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
+        boolean isTimeMin = currentTime - aMapLocation.getTime() >= 2 * 60 * 1000;
         LogUtil.d("轨迹定位：" + "时间 : " + time + " 模式 : " + provider + " 地址是否有效 : " +
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
-        //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置
-        if ((!TextUtils.equals("gps", provider) && TextUtils.isEmpty(aMapLocation.getAddress())) ||
-                (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0) || accuracy <= 0 ||
-                accuracy > MIN_SCAN_SPAN_DISTANCE || isCache) {
-            return;
-        }
-        if (isEmptyStr(address)) {
+        if (isEmptyStr(address)) {//正常定位 没有获取到地址 就拼接一个地址
             StringBuilder addressBuilder = new StringBuilder();
             combineAddress(aMapLocation.getProvince(), addressBuilder);
             combineAddress(aMapLocation.getCity(), addressBuilder);
@@ -208,47 +202,24 @@ public class AMapService extends Service {
             LogUtil.d("源地址无效,组合的地址 : " + (TextUtils.isEmpty(addressBuilder.toString()) ? "NULL" : addressBuilder.toString()));
             address = addressBuilder.toString();
         }
+        //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
+        if (TextUtils.isEmpty(address) ||
+                (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
+                || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE) {
+            LogUtil.d("当前位置偏移量很大，直接return");
+            return;
+        }
+
 
         if (Global.isConnected()) {
             if (isEmptyStr(address)) {
-                    aMapLocation.setAddress("未知地址");
+                aMapLocation.setAddress("未知地址");
             }
         } else {
             aMapLocation.setAddress("未知地址(离线)");
         }
 
         processLocation(aMapLocation);
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @return
-     */
-
-    private void getCurrentTime(final AMapLocation aMapLocation) {
-        mRestAdapter.create(IMain.class).getServerTime(new RCallback<ServerTime>() {
-            @Override
-            public void success(ServerTime serverTime, Response response) {
-                long time = 0;
-
-                if (null != serverTime) {
-                    time = serverTime.getNow();
-                }
-
-                if (time <= 0) {
-                    time = System.currentTimeMillis();
-                }
-
-                dealLocation(aMapLocation, time);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                dealLocation(aMapLocation, System.currentTimeMillis());
-            }
-        });
     }
 
     /**
@@ -342,9 +313,12 @@ public class AMapService extends Service {
 
             LatLng lastLatLng = new LatLng(tempLat, tempLng);
             LatLng newLatLng = new LatLng(latitude, longitude);
-            double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);
-            LogUtil.d(TAG + " processLocation,distance ,distance : " + distance);
-            if (distance < MIN_SCAN_SPAN_DISTANCE - 50) {
+            double distance = AMapUtils.calculateLineDistance(lastLatLng, newLatLng);//根据用户的起点和终点经纬度计算两点间距离，此距离为相对较短的距离，单位米。
+            LogUtil.d("获取到的distance : " + distance);
+            LogUtil.d("当前位置的distance:" + (MIN_SCAN_SPAN_DISTANCE));
+
+            if (distance != 0.0 && distance < MIN_SCAN_SPAN_DISTANCE) {
+                LogUtil.d("小于请求定位的最小间隔！");
                 return;
             }
         }
@@ -358,44 +332,9 @@ public class AMapService extends Service {
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
         }
-
-        uploadLocation(aMapLocation);
+//        uploadLocation(aMapLocation);
     }
 
-//    /**
-//     * 百度反地理编码获取地址
-//     *
-//     * @param aMapLocation
-//     */
-//    private boolean convertAddressBMap(final AMapLocation aMapLocation) {
-//        com.baidu.mapapi.model.LatLng tempLatLng = LocationUtil.convert(1, aMapLocation.getLatitude(), aMapLocation.getLongitude());
-//        final GeoCoder coder = GeoCoder.newInstance();
-//        OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
-//            @Override
-//            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-//
-//            }
-//
-//            @Override
-//            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-//                coder.destroy();
-//                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-//                    aMapLocation.setAddress("未知地址");
-//                } else {
-//                    aMapLocation.setAddress(reverseGeoCodeResult.getAddress());
-//                }
-//                processLocation(aMapLocation);
-//            }
-//        };
-//        coder.setOnGetGeoCodeResultListener(listener);
-//        boolean result = coder.reverseGeoCode(new ReverseGeoCodeOption().location(tempLatLng));
-//        if (!result) {
-//            LogUtil.d(TAG + "  convertAddressBMap,启动百度反地理编码失败");
-//            coder.destroy();
-//        }
-//
-//        return result;
-//    }
 
     /**
      * 上传轨迹
@@ -415,7 +354,7 @@ public class AMapService extends Service {
             @Override
             public void success(Object trackLog, Response response) {
                 LogUtil.d(TAG + "uploadLocation,轨迹上报成功,address : " + address);
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("上报轨迹", response);
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "1|" + app.df1.format(new Date()));
 
                 SharedUtil.put(app, "lat", String.valueOf(latitude));
@@ -450,6 +389,7 @@ public class AMapService extends Service {
                 app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
+                        HttpErrorCheck.checkResponse("轨迹上传成功： ", response);
                         isCache = false;
                         ldbManager.clearAllLocateDatas();
                     }
@@ -561,4 +501,69 @@ public class AMapService extends Service {
 //    public AMapLocation getLastLocation() {
 //        return mLocationManagerProxy.getLastKnownLocation(LocationProviderProxy.AMapNetwork);
 //    }
+    //    /**
+//     * 百度反地理编码获取地址
+//     *
+//     * @param aMapLocation
+//     */
+//    private boolean convertAddressBMap(final AMapLocation aMapLocation) {
+//        com.baidu.mapapi.model.LatLng tempLatLng = LocationUtil.convert(1, aMapLocation.getLatitude(), aMapLocation.getLongitude());
+//        final GeoCoder coder = GeoCoder.newInstance();
+//        OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
+//            @Override
+//            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+//
+//            }
+//
+//            @Override
+//            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+//                coder.destroy();
+//                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+//                    aMapLocation.setAddress("未知地址");
+//                } else {
+//                    aMapLocation.setAddress(reverseGeoCodeResult.getAddress());
+//                }
+//                processLocation(aMapLocation);
+//            }
+//        };
+//        coder.setOnGetGeoCodeResultListener(listener);
+//        boolean result = coder.reverseGeoCode(new ReverseGeoCodeOption().location(tempLatLng));
+//        if (!result) {
+//            LogUtil.d(TAG + "  convertAddressBMap,启动百度反地理编码失败");
+//            coder.destroy();
+//        }
+//
+//        return result;
+//    }
+    /**
+     * 获取当前时间
+     *
+     * @return
+     */
+//
+//    private void getCurrentTime(final AMapLocation aMapLocation) {
+//        mRestAdapter.create(IMain.class).getServerTime(new RCallback<ServerTime>() {
+//            @Override
+//            public void success(ServerTime serverTime, Response response) {
+//                HttpErrorCheck.checkResponse("轨迹定位－获取当前时间", response);
+//                long time = 0;
+//                if (null != serverTime) {
+//                    time = serverTime.getNow();
+//                }
+//
+//                if (time <= 0) {
+//                    time = System.currentTimeMillis();
+//                }
+//                dealLocation(aMapLocation, time);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                super.failure(error);
+//                HttpErrorCheck.checkError(error);
+//                dealLocation(aMapLocation, System.currentTimeMillis());
+//            }
+//        });
+//    }
+
 }

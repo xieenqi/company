@@ -4,8 +4,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#fafafa"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical"
     >
+
     <include layout="@layout/include_common_title_edit"/>
 
     <LinearLayout
@@ -16,40 +19,43 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_weight="2"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dimen_15"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/tv_project_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxEms="17"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="#383838"
                 android:textSize="15sp"
-                android:singleLine="false"
                 />
 
             <TextView
-                android:layout_marginTop="20dp"
                 android:id="@+id/tv_project_extra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="#999999"
-                android:textSize="13sp" />
+                android:textSize="13sp"/>
 
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_weight="0.5"
             android:layout_width="0dip"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5">
 
             <ImageView
                 android:id="@+id/img_project_status"
@@ -60,7 +66,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/icon_project_processing" />
+                android:src="@drawable/icon_project_processing"/>
 
             <ImageView
                 android:id="@+id/iv_arrow"
@@ -70,7 +76,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/dimen_8"
                 android:scaleType="fitCenter"
-                android:src="@drawable/right_arrow" />
+                android:src="@drawable/right_arrow"/>
         </RelativeLayout>
 
     </LinearLayout>
@@ -91,13 +97,13 @@
             app:pstsIndicatorHeight="1.5dp"
             app:pstsShouldExpand="true"
             app:pstsTabPaddingLeftRight="1dp"
-            app:pstsUnderlineHeight="0.5dp" />
+            app:pstsUnderlineHeight="0.5dp"/>
 
         <com.loyo.oa.v2.tool.customview.NoScrollViewpager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tabs" />
+            android:layout_below="@+id/tabs"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -2,12 +2,14 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.beans.ContactExtras;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerExtraData;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.MembersRoot;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Product;
@@ -106,6 +108,14 @@ public interface ICustomer {
     @GET("/customer/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
+    @GET("/properties/dynamic/")
+    void getDynamic(@QueryMap HashMap<String, Object> map,Callback<ArrayList<CustomerExtraData>> callback);
+
+    /**
+     * 获取参与人权限
+     * */
+    @GET("/config/?key=cust_member_canedit")
+    void getMembersRoot(Callback<MembersRoot> callback);
 
     /**
      * 丢入公海
@@ -281,7 +291,7 @@ public interface ICustomer {
      * @param callback
      */
     @GET("/contact/fields")
-    void getContactsField(Callback<ArrayList<ContactExtras>> callback);
+    void getContactsField(Callback<ArrayList<ContactLeftExtras>> callback);
 
     /**
      * 获取客户联系人的详细数据

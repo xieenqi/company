@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -28,7 +29,10 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- 修改手机连接网路状态权限 <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/> -->
+    <!--<uses-permission android:name="android.permission.MODIFY_PHONE_STATE"/>-->
+    <!--升级到系统权限 修改手机连接网路状态权限-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
 
     <!-- 激光推送 -->
@@ -52,19 +56,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppStartLoadTranslucent"
         android:windowSoftInputMode="adjustUnspecified|stateHidden">
-
-
+        <!--android:theme="@style/AppStartLoadTranslucent"-->
         <activity
             android:name=".activity.LauncherActivity_"
             android:label="@string/app_name"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:theme="@style/AppStartLoadTranslucent"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="cn.jpush.android.ui.PushActivity"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="${applicationId}"/>
             </intent-filter>
         </activity>
 
@@ -72,7 +78,8 @@
         <activity
             android:name=".activity.login.WelcomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
             android:name=".activity.setting.ResetPasswordActivity_"
             android:label="@string/app_name"
@@ -109,17 +116,17 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.customer.CommonTagSelectActivity_"
+            android:name=".activity.customer.activity.CommonTagSelectActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.customer.NearByCustomersActivity_"
+            android:name=".activity.customer.activity.NearByCustomersActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.customer.NearByCustomersMapActivity"
+            android:name=".activity.customer.activity.NearByCustomersMapActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LegworksListActivity_"
@@ -132,15 +139,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.customer.CustomerDetailInfoActivity_"
+            android:name=".activity.customer.activity.CustomerDetailInfoActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.customer.CustomerContactManageActivity_"
+            android:name=".activity.customer.activity.CustomerContactManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.attendance.AttendanceActivity_"
             android:launchMode="standard"
@@ -165,7 +172,7 @@
             android:name=".activity.project.ProjectManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.project.ProjectInfoActivity_"
             android:launchMode="standard"
@@ -180,6 +187,7 @@
             android:name=".activity.login.LoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activity.login.LoginBQQActivity"
@@ -213,7 +221,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.customer.CustomerBaseInfoEditActivity_"
+            android:name=".activity.customer.activity.CustomerBaseInfoEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -221,32 +229,32 @@
             android:name=".activity.customer.CustomerManageActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.customer.CustomerAddActivity_"
+            android:name=".activity.customer.activity.CustomerAddActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.customer.CustomerInfoActivity_"
+            android:name=".activity.customer.activity.CustomerInfoActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.customer.CustomerLabelActivity_"
+            android:name=".activity.customer.activity.CustomerLabelActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.customer.SaleActivitiesManageActivity"
+            android:name=".activity.customer.activity.SaleActivitiesManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.customer.DemandsManageActivity"
+            android:name=".activity.customer.activity.DemandsManageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.customer.DemandsAddActivity"
+            android:name=".activity.customer.activity.DemandsAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
@@ -263,7 +271,7 @@
             android:name=".activity.contact.ContactsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.tasks.TasksInfoActivity_"
             android:launchMode="singleTop"
@@ -363,11 +371,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
-            android:name=".activity.customer.CustomerContractAddActivity"
+            android:name=".activity.customer.activity.CustomerContractAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".activity.customer.SaleActivitiesAddActivity"
+            android:name=".activity.customer.activity.SaleActivitiesAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
@@ -393,7 +401,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".activity.customer.CustomerSearchActivity"
+            android:name=".activity.customer.activity.CustomerSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
@@ -452,11 +460,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.work.WorkReportEditActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
             android:name=".activity.PreviewImageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -483,7 +486,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.customer.CustomerRepeat"
+            android:name=".activity.customer.activity.CustomerRepeat"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
@@ -500,6 +503,21 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.wfinstance.ProcessChoose"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name=".activity.home.NewMainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
+        <activity
+            android:name=".activity.customer.activity.ActivityCustomerManager"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
 
         <service
             android:name=".service.InitDataService_"
@@ -608,7 +626,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION"/>
                 <!-- Required  用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.UNREGISTRATION"/>
+                <!--<action android:name="cn.jpush.android.intent.UNREGISTRATION"/>-->
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
                 <!-- Required  用户接收SDK消息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
@@ -638,7 +656,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2d8b80512b2c5a6110c177828b56bc01"/>
-        <!--我的讨论界面-->
+        <!-- 我的讨论界面 -->
         <activity
             android:name=".activity.discuss.ActivityMyDiscuss"
             android:launchMode="singleTop"
@@ -646,19 +664,60 @@
         <activity
             android:name=".activity.discuss.hait.ActivityHait"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.discuss.ActivityDiscussDet"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <!-- 友盟统计-->
+        <!--销售机会 -->
+        <activity
+            android:name=".activity.sale.ActivitySaleOpportunitiesManager"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivityAddMySale"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activity.sale.ActivitySaleStage"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivityIntentionProduct"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivityAddIntentionProduct"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activity.customer.activity.SaleManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivitySaleDetails"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.sale.ActivitySaleEditView"
+            android:launchMode="singleTop"
+            android:theme="@style/dialog_edit_delete_StyleBottom"
+            />
+        <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="56f0a2a367e58e2176002ad6"></meta-data>
+            android:value="56f0a2a367e58e2176002ad6"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi"/>
-    </application>
 
+        <activity android:name=".activity.commonview.SelectDetUserActivity2"></activity>
+    </application>
 </manifest>

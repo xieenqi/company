@@ -127,9 +127,9 @@ public class SignInGridViewAdapter extends BaseAdapter {
             } else {
 
                 final Attachment attachment = mListData.get(position);
-                final boolean isPic = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
+                final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
-                if (isPic) {
+                if (isImage) {
                     ImageLoader.getInstance().loadImage(mIsAdd ? attachment.getUrl() : setImgUrl(attachment.getUrl()), MainApp.options_3,
                             new BitmapUtil.ImageLoadingListener_ClickShowImg(imageView, position,
                                     mListData, R.drawable.default_image, mIsAdd));
@@ -150,6 +150,8 @@ public class SignInGridViewAdapter extends BaseAdapter {
                     });
                 }
             }
+
+
         }
     }
 
@@ -203,9 +205,10 @@ public class SignInGridViewAdapter extends BaseAdapter {
         //http://loyocloud-01.oss-cn-qingdao.aliyuncs.com/86bdfcb2-9a4e-4629-9f01-9d7f849ec6ae.png
 //loyocloud-01.img-cn-qingdao.aliyuncs.com
         //@1e_1c_0o_0l_100h_100w_90q.src
-        String newUrl = url.replaceAll("loyocloud-01.oss-cn-qingdao.aliyuncs.com", "loyocloud-01.img-cn-qingdao.aliyuncs.com");
-        //LogUtil.d("小图片的url：" + newUrl + "@1e_1c_0o_0l_400h_400w_70q.src");
-        return newUrl + "@1e_1c_0o_0l_400h_400w_70q.src";
+//        String newUrl = url.replaceAll("loyocloud-01.oss-cn-qingdao.aliyuncs.com", "loyocloud-01.img-cn-qingdao.aliyuncs.com");
+        String newUrl = url + "@1e_1c_0o_0l_400h_400w_80q.src";
+        LogUtil.d("小图片的url：" + newUrl);
+        return newUrl;
 
     }
 }

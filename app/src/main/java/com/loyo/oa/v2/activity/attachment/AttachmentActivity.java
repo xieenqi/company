@@ -11,6 +11,7 @@ import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
@@ -59,6 +60,12 @@ public class AttachmentActivity extends BaseActivity {
     @Extra("isOver")
     boolean isOver; //当前业务已经结束
 
+    @Extra("isMyUser")
+    boolean isMyUser;
+
+    @Extra("fromPage")
+    int fromPage;
+
     @ViewById(R.id.listView_attachment)
     SwipeListView mListViewAttachment;
     @ViewById(R.id.tv_upload)
@@ -70,8 +77,14 @@ public class AttachmentActivity extends BaseActivity {
     @AfterViews
     void init() {
         super.setTitle("附件");
-        if (isOver) {
-            tv_upload.setVisibility(View.GONE);
+        if(fromPage == Common.CUSTOMER_PAGE){
+            if (!isMyUser) {
+                tv_upload.setVisibility(View.GONE);
+            }
+        }else{
+            if (isOver) {
+                tv_upload.setVisibility(View.GONE);
+            }
         }
         setTouchView(NO_SCROLL);
         getAttachments();
@@ -85,8 +98,6 @@ public class AttachmentActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
-                LogUtil.dee("获取附件信息:" + MainApp.gson.toJson(attachments));
-                LogUtil.dee("获取附件URL:" + response.getUrl());
                 HttpErrorCheck.checkResponse(response);
                 mListAttachment = attachments;
                 bindAttachment();
@@ -95,7 +106,6 @@ public class AttachmentActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                LogUtil.dee("获取附件信息 失败:");
                 HttpErrorCheck.checkError(error);
                 finish();
             }
@@ -198,8 +208,8 @@ public class AttachmentActivity extends BaseActivity {
                     Global.ProcException(ex);
                 }
                 break;
+
             default:
-                LogUtil.d("其他");
                 break;
 
         }
@@ -213,16 +223,14 @@ public class AttachmentActivity extends BaseActivity {
                 .subscribe(new CommonSubscriber(this) {
                     @Override
                     public void onNext(Serializable attachment) {
-
-                        LogUtil.dee("上传附件成功:" + attachment.toString());
+                        LogUtil.d("上传附件成功:" + attachment.toString());
                         getAttachments();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
-                        LogUtil.dee("上传附件失败:" + e.getMessage());
-                        LogUtil.dee("上传附件失败:" + e.toString());
+                        LogUtil.d("上传附件失败:" + e.getMessage());
+                        LogUtil.d("上传附件失败:" + e.toString());
                         e.getMessage();
                         super.onError(e);
                     }

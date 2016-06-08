@@ -3,6 +3,7 @@ package com.loyo.oa.v2.tool.customview;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -94,10 +95,10 @@ public class WfinstanceViewGroup extends LinearLayout {
          * 加载子条目，根据后台返回的Type，设置不同的EditText属性
          * */
         for (int i = 0; i < lstData.size(); i++) {
-            View view = new View(context);
-            view.setBackgroundColor(getResources().getColor(R.color.activity_split));
-            view.setLayoutParams(new ViewGroup.LayoutParams(-1, 1));
-            addView(view);
+//            View view = new View(context);
+//            view.setBackgroundColor(getResources().getColor(R.color.activity_split));
+//            view.setLayoutParams(new ViewGroup.LayoutParams(-1, 1));
+//            addView(view);
             BizFormFields bizFormFields = lstData.get(i);
             LogUtil.dll("类型TYPE：" + bizFormFields.getDbtype());
             View convertView = inflater.inflate(R.layout.item_bizform_string, this, false);
@@ -135,6 +136,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.addTextChangedListener(new BizFiedTextWatcher(i, value));
                     value.requestFocus();
                     value.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    value.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
                 } else if ("double".equals(bizFormFields.getDbtype())) {//货币 输入数字
                     value.setTag(new String("输入 货币 类型"));
                     value.setFocusableInTouchMode(true);
@@ -144,6 +146,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                     value.requestFocus();
                     value.setTag("double");
                     value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    value.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
                 }
                 label.setText(bizFormFields.getName() + "：");
             }
@@ -178,16 +181,19 @@ public class WfinstanceViewGroup extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.toString().length() > 0) {
-
-                map_Values.put(lstData.get(position).getId(),
-                        !"double".equals(vv.getTag().toString()) ? s.toString() : Double.parseDouble(s.toString()));
-                LogUtil.d(vv.getTag() + "审批输入的内容" + s.toString());
-            } else {
-                if (map_Values.containsKey(lstData.get(position).getId())
-                        && map_Values.get(lstData.get(position).getId()).toString().length() == 1) {
-                    map_Values.put(lstData.get(position).getId(), "");
+            try {
+                if (s.toString().length() > 0) {
+                    map_Values.put(lstData.get(position).getId(),
+                            !"double".equals(vv.getTag().toString()) ? s.toString() : Double.parseDouble(s.toString()));
+                    LogUtil.d(vv.getTag() + "审批输入的内容" + s.toString());
+                } else {
+                    if (map_Values.containsKey(lstData.get(position).getId())
+                            && map_Values.get(lstData.get(position).getId()).toString().length() == 1) {
+                        map_Values.put(lstData.get(position).getId(), "");
+                    }
                 }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
@@ -263,7 +269,12 @@ public class WfinstanceViewGroup extends LinearLayout {
                         map_Values.put(lstData.get(position).getId(), str);
 
                     }
-                },false);
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }, true, "取消");
             }
         }
     }

@@ -19,14 +19,12 @@ import com.loyo.oa.v2.tool.LogUtil;
  * Created xnq 16/1/15.
  */
 public class DialogHelp {
+
     private static Dialog loadingDialog;//加载loading
     private static TextView tipTextView;
-
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
     }
-
-    Animation hyperspaceJumpAnimation;
 
     /**
      * 得到自定义的progressDialog
@@ -65,9 +63,14 @@ public class DialogHelp {
     }
 
     public static void cancelLoading() {
-        if (null != loadingDialog && loadingDialog.isShowing()) {
-            loadingDialog.cancel();
-            loadingDialog = null;
+        try {
+            if (null != loadingDialog && loadingDialog.isShowing()) {
+                loadingDialog.cancel();
+                loadingDialog = null;
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            LogUtil.d("加载loding 参数异常！！！");
         }
     }
 

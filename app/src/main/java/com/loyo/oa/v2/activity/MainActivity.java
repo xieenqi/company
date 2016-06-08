@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -7,12 +8,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -21,23 +26,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
+import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
@@ -52,11 +58,9 @@ import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.common.PusherTest;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
-import com.loyo.oa.v2.beans.Modules;
-import com.loyo.oa.v2.beans.Suites;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
@@ -86,6 +90,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -99,6 +104,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -126,6 +132,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     ImageView img_home_head, img_fast_add, img_bulletinStatus;
     @ViewById
     RelativeLayout group_home_relative;
+    @ViewById
+    ImageButton img_contact;
 
     private Intent mIntentCheckUpdate;
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
@@ -139,6 +147,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind; //0上班  1下班  2加班
+    private Set<String> companyTag;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -148,7 +157,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }
             String action = intent.getAction();
             if (TextUtils.equals(action, FinalVariables.ACTION_DATA_CHANGE)) {
-                LogUtil.dll("进入主页广播回调 launch");
                 launch();
                 testJurl();
             }
@@ -230,7 +238,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
-            mActivity.get().swipe_container.setRefreshing(false);
+            try {
+                mActivity.get().swipe_container.setRefreshing(false);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -249,13 +261,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         unregisterReceiver(baseReceiver);
     }
 
-    /**
-     * 初始化UI处理器
-     */
-    private void handlerEvent() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
-        mHandler = new MHandler(this);
-    }
 
     //刷新数据
     private void onRefresh() {
@@ -290,8 +295,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
-        //首页刷新监听
+        swipe_container.setColorSchemeColors(Color.parseColor("#4db1fe"));
+        //首页刷新监听R.color.title_bg1, R.color.greenyellow, R.color.aquamarine
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -311,6 +316,152 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     /**
+     * 初始化UI处理器
+     */
+    private void handlerEvent() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
+        mHandler = new MHandler(this);
+    }
+
+    /**
+     * 版本更新检查
+     */
+    @Background
+    void checkUpdateService() {
+        mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
+        startService(mIntentCheckUpdate);
+    }
+
+    /**
+     * 显示用户名字和部门的名字,头像，高斯模糊背景处理
+     */
+    void updateUser() {
+        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class, "0205"),
+                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
+                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class, "0206"),
+                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class, "0201"),
+                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class, "0202"),
+                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class, "0203"),
+                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class, "0204"),
+                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class, "0211"),
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")
+        ));
+
+        if (MainApp.user == null) {
+            return;
+        }
+
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            int defaultAcatar;
+            if (MainApp.user.gender == 2) {
+                defaultAcatar = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAcatar = R.drawable.img_default_user;
+            }
+            img_user.setImageResource(defaultAcatar);
+            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), defaultAcatar);
+            Bitmap blur = Utils.doBlur(bitmap, 50, false);
+            img_home_head.setImageResource(android.R.color.transparent);
+            container.setBackgroundDrawable(new BitmapDrawable(blur));
+        } else {
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(final String s, final View view) {
+
+                }
+
+                @Override
+                public void onLoadingFailed(final String s, final View view, final FailReason failReason) {
+
+                }
+
+                @Override
+                public void onLoadingComplete(final String s, final View view, final Bitmap bitmap) {
+                    if (null != bitmap) {
+                        Bitmap blur = Utils.doBlur(bitmap, 50, false);
+                        img_home_head.setImageResource(android.R.color.transparent);
+                        container.setBackgroundDrawable(new BitmapDrawable(blur));
+                        testJurl();
+                    }
+                }
+
+                @Override
+                public void onLoadingCancelled(final String s, final View view) {
+
+                }
+            });
+        }
+        tv_user_name.setText(MainApp.user.getRealname());
+        initPopupMenu();
+    }
+
+    /**
+     * 初始化弹出菜单
+     */
+    private void initPopupMenu() {
+        popupMenu = new PopupMenu(this);
+        popupMenu.setBackGroundResId(R.drawable.icon_home_menubg);
+        popupMenu.setMenuItems(getPopupMenus());
+        popupMenu.setDismissListener(this);
+        popupMenu.setListener(this);
+    }
+
+    /**
+     * 首页业务显示\隐藏权限 判断设置
+     */
+    public void testJurl() {
+
+        //超级管理员判断
+        if (!MainApp.user.isSuperUser()) {
+            if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
+                    0 == MainApp.user.newpermission.size()) {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Looper.prepare();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                testJurl();
+                            }
+                        });
+                        Looper.loop();
+                    }
+                }, 5000);
+                return;
+            }
+
+            ArrayList<Permission> suitesNew = new ArrayList<>();
+            suitesNew.clear();
+            suitesNew.addAll(MainApp.user.newpermission);
+
+            for (Permission permission : suitesNew) {
+                LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
+                for (int i = 0; i < items.size(); i++) {
+                    if (items.get(i).code.equals(permission.getCode())) {
+                        if (!permission.isEnable()) {
+                            items.remove(i);
+                        }
+                    }
+                }
+            }
+
+            try {
+                img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //为了业务使用权限
+        lv_main.setAdapter(adapter);
+        lv_main.setDragEnabled(true);
+        cancelLoading();
+    }
+
+    /**
      * 给激光推送 设置别名
      */
     public void setJpushAlias() {
@@ -326,29 +477,28 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }, 5000);
             return;
         }
+        if (null == companyTag) {
+            companyTag = new HashSet<String>();
+            companyTag.add(MainApp.user.companyId);
+        }
         JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
             @Override
             public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(MainApp.user + " 激光的alias： " + s);
+//                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
-
+            }
+        });
+        JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+//                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
 
-    /**
-     * 初始化弹出菜单
-     */
-    private void initPopupMenu() {
-        popupMenu = new PopupMenu(this);
-        popupMenu.setBackGroundResId(R.drawable.icon_home_menubg);
-        popupMenu.setMenuItems(getPopupMenus());
-        popupMenu.setDismissListener(this);
-        popupMenu.setListener(this);
-    }
 
     /**
      * 获取弹出菜单条目
@@ -413,7 +563,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 validateInfo = _validateInfo;
                 try {
-                    LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.d("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -459,7 +609,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     void startAttanceLocation() {
-        showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
@@ -474,15 +623,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
+        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
+        showLoading("");
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                cancelLoading();
                 attendanceRecords = attendanceRecord;
-                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
-                attendanceRecord.setAddress(address);
-
+                HttpErrorCheck.checkResponse("考勤信息：", response);
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
                 } else {
@@ -514,13 +662,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         Intent intent = new Intent(MainActivity.this, AttendanceAddActivity_.class);
         intent.putExtra("mAttendanceRecord", attendanceRecords);
         intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
-        intent.putExtra("needExtra", validateInfo.isNeedExtra());
+        intent.putExtra("isPopup", validateInfo.isPopup());
         intent.putExtra("outKind", outKind);
         intent.putExtra("serverTime", validateInfo.getServerTime());
         intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
-
 
     /**
      * (翻转前)点击头像，获取能否打卡信息
@@ -547,7 +694,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
-            if (validateInfo.isPopup()) {
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
                 popOutToast();
                 /*不加班*/
             } else {
@@ -562,6 +709,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 0;
             startAttanceLocation();
         }
+
     }
 
     /**
@@ -749,15 +897,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
-    /**
-     * 版本更新检查
-     */
-    @Background
-    void checkUpdateService() {
-        mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
-        startService(mIntentCheckUpdate);
-    }
-
     class ViewHolder {
         RippleView layout_item;
         ImageView img_item;
@@ -822,10 +961,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "个待点评";
+                    extra = num.bizNum + "个待点评(含抄送)";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "个待处理";
+                    extra = num.bizNum + "个未完成";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
                     extra = num.bizNum + "个待审批";
@@ -900,6 +1039,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
+
         //取消
         generalPopView.setCancelOnclick(new View.OnClickListener() {
             @Override
@@ -925,6 +1065,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             initData();
             mInitData = true;
         }
+        permissionLocation();
     }
 
 
@@ -951,127 +1092,12 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
 
-    /**
-     * 显示用户名字和部门的名字,头像，高斯模糊背景处理
-     */
-    void updateUser() {
-
-        items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class),
-                new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class),
-                new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class),
-                new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class),
-                new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class),
-                new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class),
-                // TODO: 添加我的讨论界面
-                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class)));
-
-        if (MainApp.user == null) {
-            return;
-        }
-
-        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
-            img_user.setImageResource(R.drawable.img_default_user);
-            Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_default_user);
-            Bitmap blur = Utils.doBlur(bitmap, 50, false);
-            img_home_head.setImageResource(android.R.color.transparent);
-            container.setBackgroundDrawable(new BitmapDrawable(blur));
-
-        } else {
-
-            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_user);
-            ImageLoader.getInstance().displayImage(MainApp.user.avatar, img_home_head, new ImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(final String s, final View view) {
-
-                }
-
-                @Override
-                public void onLoadingFailed(final String s, final View view, final FailReason failReason) {
-
-                }
-
-                @Override
-                public void onLoadingComplete(final String s, final View view, final Bitmap bitmap) {
-                    if (null != bitmap) {
-                        Bitmap blur = Utils.doBlur(bitmap, 50, false);
-                        img_home_head.setImageResource(android.R.color.transparent);
-                        container.setBackgroundDrawable(new BitmapDrawable(blur));
-                        testJurl();
-                    }
-                }
-
-                @Override
-                public void onLoadingCancelled(final String s, final View view) {
-
-                }
-            });
-        }
-        tv_user_name.setText(MainApp.user.getRealname());
-        initBugly();
-        initPopupMenu();
-    }
-
     @Background
     void initData() {
         Intent intent = new Intent(mContext, InitDataService_.class);
         startService(intent);
         setJpushAlias();
         requestNumber();
-    }
-
-    /**
-     * 首页业务显示\隐藏权限 判断设置
-     */
-    public void testJurl() {
-        if (null == MainApp.user || null == MainApp.user.permission || null == MainApp.user.permission.suites ||
-                0 == MainApp.user.permission.suites.size()) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    testJurl();
-                }
-            }, 5000);
-            LogUtil.d("没有配置权限");
-            return;
-        }
-
-        ArrayList<ClickItem> itemsNew = new ArrayList<>();
-        ArrayList<Suites> suitesNew = new ArrayList<>();
-        suitesNew.add(new Suites());
-        suitesNew.add(new Suites());
-        suitesNew.add(new Suites());
-        for (Suites stuites : MainApp.user.permission.suites) {
-            if ("客户管理".equals(stuites.name)) {
-                suitesNew.remove(0);
-                suitesNew.add(0, stuites);
-            } else if ("协同办公".equals(stuites.name)) {
-                suitesNew.remove(1);
-                suitesNew.add(1, stuites);
-            } else if ("其他".equals(stuites.name)) {
-                suitesNew.remove(2);
-                suitesNew.add(2, stuites);
-            }
-        }
-        for (int i = 0; i < suitesNew.size(); i++) {
-            for (int k = 0; k < items.size(); k++) {
-                for (Modules modules : suitesNew.get(i).getModules()) {
-                    if (items.get(k).title.equals(modules.getName()) && modules.isEnable()) {
-                        itemsNew.add(items.get(k));
-                        continue;
-                    }
-                }
-            }
-        }
-
-        items.clear();
-        items = itemsNew;
-        //默认添加有
-        items.add(new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class));
-        lv_main.setAdapter(adapter);//为了业务使用权限
-        lv_main.setDragEnabled(true);
-        cancelLoading();
     }
 
     /**
@@ -1099,29 +1125,18 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         app.isQQLogin = false;
     }
 
-    @Background
-    void initBugly() {
-        String info = "companyId=" + MainApp.user.company_id;
-        if (MainApp.user.departmentsName != null) {
-            info = info + "," + MainApp.user.departmentsName;
-        }
-
-        if (MainApp.user.getRealname() != null) {
-            info = info + "," + MainApp.user.getRealname();
-        }
-        //CrashReport.setUserId(info);//leak 的东西
-
-    }
 
     public class ClickItem {
         public int imageViewRes;
         public String title;
+        public String code;
         public Class<?> cls;
 
-        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls) {
+        public ClickItem(final int _imageViewRes, final String _title, final Class<?> _cls, final String _code) {
             imageViewRes = _imageViewRes;
             title = _title;
             cls = _cls;
+            code = _code;
         }
     }
 
@@ -1130,9 +1145,13 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onResume();
         intentJpushInfo();
         requestNumber();
-        PusherTest.appTest();
-        LogUtil.d("友盟设备："+PusherTest.getDeviceInfo(this));
+        MobclickAgent.onResume(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onResume(this);
     }
 
     /**
@@ -1140,11 +1159,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
      */
     public void intentJpushInfo() {
-        if (MainApp.jpushData != null) {
+        if (null != MainApp.jpushData) {
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
                 intent.setClass(MainActivity.this, ActivityHait.class);//推送讨论
                 startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            } else if ("delete".equals(MainApp.jpushData.operationType)) {
                 MainApp.jpushData = null;
                 return;
             }
@@ -1202,21 +1224,57 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 获取首页红点数据
      */
     void requestNumber() {
-        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
-            @Override
-            public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                HttpErrorCheck.checkResponse("首页红点", response);
-                mItemNumbers = homeNumbers;
-                adapter.notifyDataSetChanged();
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
+                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
+                    @Override
+                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
+                        HttpErrorCheck.checkResponse("首页红点", response);
+                        mItemNumbers = homeNumbers;
+                        adapter.notifyDataSetChanged();
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
+                });
+    }
+
+    /**
+     * 检查定位权限是否打开
+     */
+    private void permissionLocation() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+//            Toast(" 用户授权 ");
+        } else {
+//            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+//            generalPopView.show();
+//            generalPopView.setMessage("需要使用定位权限\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setCanceledOnTouchOutside(true);
+//            showGeneralDialog(true, true, "需要使用定位权限\\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setSureOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(MainActivity.this,
+//                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                            1);
+//                }
+//            });
+//            generalPopView.setCancelOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                }
+//            });
+
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        }
     }
 }

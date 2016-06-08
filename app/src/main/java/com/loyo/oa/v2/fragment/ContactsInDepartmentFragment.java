@@ -46,8 +46,8 @@ public class ContactsInDepartmentFragment extends BaseFragment {
     public ArrayList<CommonItem> listDatas = new ArrayList<>();
     public MyLetterListView letterView;
     public AlphabetIndexer index;
-    public ViewGroup layout_toast;
-    public TextView tv_toast;
+    //    public ViewGroup layout_toast;
+    public TextView tv_dialog;
     public String mIndex;
     public String depId;
     public boolean isMyDept;
@@ -161,12 +161,10 @@ public class ContactsInDepartmentFragment extends BaseFragment {
      * @param view
      */
     private void bindViewData(View view) {
-        layout_toast = (ViewGroup) view.findViewById(R.id.layout_toast);
-        tv_toast = (TextView) view.findViewById(R.id.tv_toast);
-
+//        layout_toast = (ViewGroup) view.findViewById(R.id.layout_toast);
+        tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
         IndexCursor cursor = new IndexCursor(listDatas);
         index = new AlphabetIndexer(cursor, 0, mIndex);
-
         letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
         letterView.setKeyword(mIndex);
         letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
@@ -177,16 +175,16 @@ public class ContactsInDepartmentFragment extends BaseFragment {
 
                 switch (state) {
                     case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                        layout_toast.setVisibility(View.VISIBLE);
-                        tv_toast.setText(sectionLetter);
+                        tv_dialog.setVisibility(View.VISIBLE);
+                        tv_dialog.setText(sectionLetter);
                         scroll(position);
                         break;
                     case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
-                        tv_toast.setText(sectionLetter);
+                        tv_dialog.setText(sectionLetter);
                         scroll(position);
                         break;
                     case MyLetterListView.FINGER_ACTION_UP:
-                        layout_toast.setVisibility(View.GONE);// 手指离开
+                        tv_dialog.setVisibility(View.GONE);// 手指离开
                         break;
                     default:
                         break;
@@ -269,6 +267,11 @@ public class ContactsInDepartmentFragment extends BaseFragment {
         @Override
         public boolean getWantsAllOnMoveCalls() {
             return false;
+        }
+
+        @Override
+        public void setExtras(Bundle extras) {
+
         }
 
         @Override

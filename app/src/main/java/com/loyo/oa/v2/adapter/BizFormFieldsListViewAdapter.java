@@ -240,7 +240,12 @@ public class BizFormFieldsListViewAdapter extends BaseAdapter {
                         map_Values.put(lstData.get(position).getId(), str);
 
                     }
-                },false);
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                },false,"取消");
 
 //                DatePickerDialog datePickerDialog = new DatePickerDialog(
 //                        textView.getContext(), dateListener,

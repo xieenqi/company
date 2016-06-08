@@ -6,13 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_title"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
     <RelativeLayout
         android:id="@+id/group_home_relative"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="168dp"
         >
 
         <ImageView
@@ -31,30 +33,33 @@
 
             <ImageButton
                 android:id="@+id/img_contact"
-                android:layout_width="@dimen/dimen_25"
-                android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_10"
+                android:layout_width="@dimen/dimen_21"
+                android:layout_height="@dimen/dimen_21"
+                android:layout_marginLeft="@dimen/dimen_19"
+                android:layout_marginTop="@dimen/dimen_15"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_contact"/>
 
             <RelativeLayout
-                android:layout_width="@dimen/dimen_30"
-                android:layout_height="@dimen/dimen_30"
-                android:layout_margin="@dimen/dimen_10">
+                android:layout_width="@dimen/dimen_25"
+                android:layout_height="@dimen/dimen_25"
+                android:layout_marginLeft="@dimen/dimen_19"
+                android:layout_marginTop="@dimen/dimen_15"
+                >
 
                 <ImageButton
                     android:id="@+id/img_bulletin"
-                    android:layout_width="@dimen/dimen_25"
-                    android:layout_height="@dimen/dimen_25"
+                    android:layout_width="@dimen/dimen_21"
+                    android:layout_height="@dimen/dimen_21"
                     android:background="@null"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_home_news"/>
 
                 <ImageView
                     android:id="@+id/img_bulletinStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dimen_9"
+                    android:layout_height="@dimen/dimen_9"
                     android:layout_alignParentRight="true"
                     android:scaleType="fitCenter"
                     android:src="@drawable/bg_view_red_circle"
@@ -69,18 +74,20 @@
 
             <ImageButton
                 android:id="@+id/img_setting"
-                android:layout_width="@dimen/dimen_25"
-                android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_10"
+                android:layout_width="@dimen/dimen_21"
+                android:layout_height="@dimen/dimen_21"
+                android:layout_marginRight="@dimen/dimen_19"
+                android:layout_marginTop="@dimen/dimen_15"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_setting"/>
 
             <ImageButton
                 android:id="@+id/img_fast_add"
-                android:layout_width="@dimen/dimen_25"
-                android:layout_height="@dimen/dimen_25"
-                android:layout_margin="@dimen/dimen_10"
+                android:layout_width="@dimen/dimen_21"
+                android:layout_height="@dimen/dimen_21"
+                android:layout_marginRight="@dimen/dimen_19"
+                android:layout_marginTop="@dimen/dimen_15"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_home_add"/>
@@ -95,8 +102,8 @@
 
             <RelativeLayout
                 android:id="@+id/layout_is_attendance"
-                android:layout_width="@dimen/dimen_110"
-                android:layout_height="@dimen/dimen_110"
+                android:layout_width="@dimen/home_head"
+                android:layout_height="@dimen/home_head"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
                 android:gravity="center"
@@ -104,8 +111,8 @@
                 >
 
                 <TextView
-                    android:layout_width="@dimen/dimen_110"
-                    android:layout_height="@dimen/dimen_110"
+                    android:layout_width="@dimen/home_head"
+                    android:layout_height="@dimen/home_head"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/circle_bg_shpe"
                     android:gravity="center"
@@ -118,8 +125,8 @@
 
             <RelativeLayout
                 android:id="@+id/layout_attendance"
-                android:layout_width="@dimen/dimen_110"
-                android:layout_height="@dimen/dimen_110"
+                android:layout_width="@dimen/home_head"
+                android:layout_height="@dimen/home_head"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
                 android:background="@drawable/circle_bg_shpe"
@@ -128,16 +135,16 @@
                 >
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_110"
-                    android:layout_height="@dimen/dimen_110"
+                    android:layout_width="@dimen/home_head"
+                    android:layout_height="@dimen/home_head"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_zhiwen"
                     />
 
                 <com.loyo.oa.v2.tool.customview.ScanningImageView
-                    android:layout_width="@dimen/dimen_110"
-                    android:layout_height="@dimen/dimen_110"
+                    android:layout_width="@dimen/home_head"
+                    android:layout_height="@dimen/home_head"
                     android:background="@drawable/circle_bg_shpe1"
                     android:scaleType="center"
                     />
@@ -146,14 +153,13 @@
 
             <com.loyo.oa.v2.tool.customview.RoundImageView
                 android:id="@+id/img_title_left"
-                android:layout_width="@dimen/dimen_110"
-                android:layout_height="@dimen/dimen_110"
+                android:layout_width="@dimen/home_head"
+                android:layout_height="@dimen/home_head"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_40"
                 android:scaleType="center"
-                imagecontrol:border_inside_color="#7fffffff"
                 imagecontrol:border_outside_color="#ccffffff"
-                imagecontrol:border_thickness="0.5dp"/>
+                imagecontrol:border_thickness="2dp"/>
 
         </RelativeLayout>
 
@@ -163,14 +169,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_avatar"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginTop="@dimen/dimen_6"
             android:shadowColor="#cccccccc"
             android:shadowDx="0"
             android:shadowDy="3"
             android:shadowRadius="1"
             android:text="用户名"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sp20"/>
+            android:textSize="@dimen/text_sp18"/>
 
         <LinearLayout
             android:id="@+id/layout_network"
@@ -189,7 +195,8 @@
                 android:gravity="center"
                 android:text="无网络连接，请检查网络"
                 android:textColor="@color/white"/>
-        </LinearLayout>android:theme="@style/AppStartLoadTranslucent"
+        </LinearLayout>
+        android:theme="@style/AppStartLoadTranslucent"
 
     </RelativeLayout>
 

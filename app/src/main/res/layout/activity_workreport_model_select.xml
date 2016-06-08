@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              xmlns:ptr="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
-    <include layout="@layout/include_common_title" />
+    <include layout="@layout/include_common_title"/>
 
     <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/listView"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/item_list_selector"
+        android:background="@color/white"
         android:cacheColorHint="#00000000"
         android:divider="@color/activity_split"
         android:dividerHeight="0.5dp"
+        android:drawSelectorOnTop="true"
         android:fadingEdge="none"
         android:fastScrollEnabled="false"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
+        android:listSelector="@drawable/item_list_selector"
         ptr:isSlide="true"
-        ptr:ptrMode="both" />
+        ptr:ptrMode="both"/>
 
 </LinearLayout>

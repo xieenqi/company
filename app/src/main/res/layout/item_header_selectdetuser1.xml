@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/selectdetuser_allcheck"
+        android:layout_width="fill_parent"
+        android:layout_height="49dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:text="全选"
+            android:textColor="@color/col_check_all" />
+
+        <CheckBox
+            android:id="@+id/selectdetuser_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimen_10"
+            android:background="@drawable/checkbox_selectdetuser"
+            android:button="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1"
+        android:layout_marginLeft="@dimen/dimen_10"
+        android:background="@color/md_grey_300" />
+
+    <TextView
+        android:id="@+id/tv_noUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="@dimen/dimen_48"
+        android:text="当前部门暂无职员"
+        android:textColor="@color/redE8"
+        android:textSize="@dimen/text_sp16"
+        android:visibility="gone"/>
+
+</LinearLayout>

@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,6 +139,7 @@ public final class Global {
 //        return false;
 //    }
 
+
     /**
      * 检查是否有网络
      *
@@ -227,8 +227,10 @@ public final class Global {
         return R.drawable.other_file;
     }
 
+    /**
+     * ScroView嵌套listView，手动计算ListView高度
+     */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
-
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;
@@ -238,7 +240,7 @@ public final class Global {
 
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            if (listItem != null) {
+            if (null != listItem) {
                 listItem.measure(0, 0);
                 totalHeight += listItem.getMeasuredHeight();
             }
@@ -250,12 +252,22 @@ public final class Global {
     }
 
     public static Uri getOutputMediaFileUri() {
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "LeShare");
+        String status = Environment.getExternalStorageState();
+        if (!status.equals(Environment.MEDIA_MOUNTED)) {
+            LogUtil.d("内存卡bu 可用");
+            Global.Toast("内存卡不可用");
+            return null;
+        }
+        String timepath = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        String photoPath = Environment.getExternalStorageDirectory() + File.separator + "KuaiQi" + timepath;
+//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+//                "/KuaiQi" + timepath);
+        File mediaStorageDir = new File(photoPath);
+        LogUtil.d(Environment.getExternalStorageState() + "  WENJAIN文件路dfb劲创建失败！" + mediaStorageDir.getPath());
+        mediaStorageDir.mkdir();
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("LeShare", "failed to create directory");
+                LogUtil.d(Environment.getExternalStorageState() + "WENJAIN文件路劲创建失败！" + mediaStorageDir.getPath());
                 return null;
             }
         }
@@ -269,8 +281,7 @@ public final class Global {
 
     //压缩图片,并旋转图片
     public static File scal(Context context, Uri fileUri) throws IOException {
-        String path = Global.getPath(context, fileUri);
-
+        String path = getPath(context, fileUri);
         int degree = readPictureDegree(path);
 
         File outputFile = new File(path);
@@ -279,7 +290,7 @@ public final class Global {
         final long fileMaxSize = 100 * 1024;
 
         if (fileSize >= fileMaxSize) {
-            LogUtil.dll("文件大小超限");
+            LogUtil.d("文件大小超限");
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(path, options);
@@ -301,7 +312,7 @@ public final class Global {
                 bitmap = rotaingImageView(degree, bitmap);
             }
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fos);
 
             fos.close();
 
@@ -310,7 +321,7 @@ public final class Global {
             }
 
         } else {
-            LogUtil.dll("文件大小未超限");
+            LogUtil.d("文件大小未超限");
             File tempFile = outputFile;
             outputFile = getTempFile(context);
             copyFileUsingFileChannels(tempFile, outputFile);
@@ -324,7 +335,7 @@ public final class Global {
         //旋转图片 动作
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
-        System.out.println("angle2=" + angle);
+        LogUtil.d("angle2=" + angle);
         // 创建新的图片
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
                 bitmap.getWidth(), bitmap.getHeight(), matrix, true);
@@ -378,6 +389,7 @@ public final class Global {
             String fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             file = File.createTempFile(fileName, ".jpg", context.getCacheDir());
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return file;
     }

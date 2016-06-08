@@ -212,7 +212,8 @@ public class SwipeListView extends ListView {
             swipeBackView = getContext().getResources().getIdentifier(SWIPE_DEFAULT_BACK_VIEW, "id", getContext().getPackageName());
 
             if (swipeFrontView == 0 || swipeBackView == 0) {
-                throw new RuntimeException(String.format("You forgot the attributes swipeFrontView or swipeBackView. You can add this attributes or use '%s' and '%s' identifiers", SWIPE_DEFAULT_FRONT_VIEW, SWIPE_DEFAULT_BACK_VIEW));
+                throw new RuntimeException(String.format("You forgot the attributes swipeFrontView" +
+                        " or swipeBackView. You can add this attributes or use '%s' and '%s' identifiers", SWIPE_DEFAULT_FRONT_VIEW, SWIPE_DEFAULT_BACK_VIEW));
             }
         }
 

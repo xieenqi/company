@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Task extends BaseBeans implements Serializable{
+public class Task extends BaseBeans implements Serializable {
 
     public static final int STATUS_PROCESSING = 1;  //未完成
     public static final int STATUS_REVIEWING = 2;   //审核中
@@ -25,6 +25,7 @@ public class Task extends BaseBeans implements Serializable{
     public String customerId;
     public boolean remindflag;
     public boolean reviewFlag;
+    public boolean viewed;
     public int score;
     public int status;
     public int remindtime;
@@ -34,17 +35,33 @@ public class Task extends BaseBeans implements Serializable{
     public ArrayList<Attachment> attachments;
     public ArrayList<TaskCheckPoint> checklists;
     public ArrayList<TaskReviewComment> reviewComments;
-    public Members members = new Members();
-    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
     public NewUser responsiblePerson;
     public NewUser creator;
+    public Members members = new Members();
     public ArrayList<Reviewer> reviewers = new ArrayList<>();
+    public CornBody cornBody;
+    public ArrayList<Reviewer> responsiblePersons = new ArrayList<>();
 
     /*保存本地使用*/
     public String responsiblePersonId;
     public String responsiblePersonName;
     public String TaskComment;
 
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
+
+    public CornBody getCornBody() {
+        return cornBody;
+    }
+
+    public void setCornBody(CornBody cornBody) {
+        this.cornBody = cornBody;
+    }
 
     public ArrayList<Reviewer> getReviewers() {
         return reviewers;
@@ -136,29 +153,6 @@ public class Task extends BaseBeans implements Serializable{
         this.responsiblePersonId = responsiblePersonId;
     }
 
-    public boolean isAck() {
-        if (creator.isCurrentUser()) {
-            return true;
-        }
-
-        for (Reviewer responseUser : responsiblePersons) {
-            if (responseUser.getUser() != null && responseUser.getUser().isCurrentUser()) {
-                return responseUser.isViewed();
-            }
-        }
-
-        return true;
-    }
-
-    public void setAck(boolean ack) {
-        for (int i = 0; i < responsiblePersons.size(); i++) {
-            NewUser u = responsiblePersons.get(i).getUser();
-            if (u != null && u.isCurrentUser()) {
-                responsiblePersons.get(i).setViewed(ack);
-                return;
-            }
-        }
-    }
 
     public Task() {
         reviewComments = new ArrayList<TaskReviewComment>();
@@ -180,7 +174,7 @@ public class Task extends BaseBeans implements Serializable{
     }
 
     public ArrayList<Attachment> getAttachments() {
-        if (attachments == null) {
+        if (null == attachments) {
             return new ArrayList<>();
         }
 

@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -30,18 +30,15 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -55,12 +52,10 @@ public class BulletinAddActivity extends BaseActivity {
     @ViewById TextView tv_recevier;
 
     String uuid = StringUtil.getUUID();
-    String cc_user_id, cc_department_id, cc_user_name, cc_department_name;
     SignInGridViewAdapter mGridViewAdapter;
     ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
-    private ArrayList<NewUser> userss = new ArrayList<>();
-    private ArrayList<NewUser> depts = new ArrayList<>();
     private Members member = new Members();
+    private StringBuffer joinUserId, joinName;
 
     @AfterViews
     void init() {
@@ -81,7 +76,8 @@ public class BulletinAddActivity extends BaseActivity {
      */
     @Click(R.id.layout_recevier)
     void receiverClick() {
-        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
+//        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
+        SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
     }
 
     @Click(R.id.img_title_left)
@@ -100,7 +96,7 @@ public class BulletinAddActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(content)) {
             Global.ToastLong("内容不能为空");
             return;
-        } else if (TextUtils.isEmpty(cc_user_id) && TextUtils.isEmpty(cc_department_id)) {
+        } else if (member.users.size() == 0 && member.depts.size() == 0) {
             Global.ToastLong("通知人员不能为空");
             return;
         }
@@ -161,7 +157,8 @@ public class BulletinAddActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
+            public void success(ArrayList<Attachment> attachments, Response response) {
+                HttpErrorCheck.checkResponse("获取通知附件：", response);
                 mAttachment = attachments;
                 init_gridView_photo();
             }
@@ -170,7 +167,6 @@ public class BulletinAddActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
             }
         });
     }
@@ -195,6 +191,7 @@ public class BulletinAddActivity extends BaseActivity {
             }
         } catch (Exception ex) {
             Global.ProcException(ex);
+            Toast("图片不可用");
         }
     }
 
@@ -210,6 +207,7 @@ public class BulletinAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(delAttachment.getId(), map, new RCallback<Attachment>() {
             @Override
             public void success(final Attachment attachment, final Response response) {
+                HttpErrorCheck.checkResponse("删除通知附件：", response);
                 Toast("删除附件成功!");
                 mAttachment.remove(delAttachment);
                 mGridViewAdapter.setDataSource(mAttachment);
@@ -218,69 +216,44 @@ public class BulletinAddActivity extends BaseActivity {
 
             @Override
             public void failure(final RetrofitError error) {
-                Toast("删除附件失败!");
+                HttpErrorCheck.checkError(error);
                 super.failure(error);
             }
         });
     }
 
-    @OnActivityResult(DepartmentUserActivity.request_Code)
+    @OnActivityResult(SelectDetUserActivity2.REQUEST_ALL_SELECT)
     void onDepartmentUserResult(final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK || data == null) {
             return;
         }
 
-        cc_department_id = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_ID);
-        cc_department_name = data.getStringExtra(DepartmentUserActivity.CC_DEPARTMENT_NAME);
-        cc_user_id = data.getStringExtra(DepartmentUserActivity.CC_USER_ID);
-        cc_user_name = data.getStringExtra(DepartmentUserActivity.CC_USER_NAME);
-        String cc = null;
-        if (cc_department_name != null && cc_user_name != null) {
-            cc = cc_department_name + "," + cc_user_name;
-        } else if (cc_department_name != null) {
-            cc = cc_department_name;
-        } else if (cc_user_name != null) {
-            cc = cc_user_name;
-        }
-
-        if (cc != null) {
-            tv_recevier.setText(cc);
-        }
-
-        setJoinUsers(cc_user_id, cc_user_name, cc_department_id, cc_department_name);
-    }
-
-
-    private void setJoinUsers(final String joinedUserIds, final String joinedUserName, final String departIds, final String departName) {
-        userss.clear();
-        depts.clear();
-        if (!TextUtils.isEmpty(joinedUserIds) && !TextUtils.isEmpty(joinedUserName)) {
-            String[] userIds = joinedUserIds.split(",");
-            String[] userNames = joinedUserName.split(",");
-            for (int i = 0; i < userIds.length; i++) {
-                NewUser newUser = new NewUser();
-                newUser.setName(userNames[i]);
-                newUser.setId(userIds[i]);
-                userss.add(newUser);
+        member = (Members) data.getSerializableExtra("data");
+        joinName = new StringBuffer();
+        joinUserId = new StringBuffer();
+        if (member.users.size() == 0 && member.depts.size() == 0) {
+            tv_recevier.setText("没有选择人员");
+            joinUserId.reverse();
+        } else {
+            if (null != member.depts) {
+                for (NewUser newUser : member.depts) {
+                    joinName.append(newUser.getName() + ",");
+                    joinUserId.append(newUser.getId() + ",");
+                }
             }
-            if (userss != null && userss.size() > 0) {
-                member.users = userss;
+            if (null != member.users) {
+                for (NewUser newUser : member.users) {
+                    joinName.append(newUser.getName() + ",");
+                    joinUserId.append(newUser.getId() + ",");
+                }
             }
-        }
-        if (!TextUtils.isEmpty(departIds) && !TextUtils.isEmpty(departName)) {
-            String[] dpIds = departIds.split(",");
-            String[] dpNames = departName.split(",");
-            for (int i = 0; i < dpIds.length; i++) {
-                NewUser newUser = new NewUser();
-                newUser.setName(dpNames[i]);
-                newUser.setId(dpIds[i]);
-                depts.add(newUser);
+            if (!TextUtils.isEmpty(joinName)) {
+                joinName.deleteCharAt(joinName.length() - 1);
             }
-            if (depts != null && depts.size() > 0) {
-                member.depts = depts;
-            }
+            tv_recevier.setText(joinName.toString());
         }
     }
+
 
     /**
      * 过滤 图片数据、

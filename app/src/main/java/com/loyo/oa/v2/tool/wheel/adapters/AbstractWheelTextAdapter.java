@@ -45,7 +45,13 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
     
     /** Default text size */
     public static final int DEFAULT_TEXT_SIZE = 18;
-    
+
+
+    private int paddingLeft = 0;
+    private int paddingRight = 0;
+    private int paddingTop = 15;
+    private int paddingBottom = 15;
+
     // Text settings
     private int textColor = DEFAULT_TEXT_COLOR;
     private int textSize = DEFAULT_TEXT_SIZE;
@@ -188,6 +194,8 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
                 convertView = getView(itemResourceId, parent);
             }
             TextView textView = getTextView(convertView, itemTextResourceId);
+            textView.setPadding(paddingLeft,paddingRight,paddingTop,paddingBottom);
+
             if (textView != null) {
                 CharSequence text = getItemText(index);
                 if (text == null) {
@@ -226,8 +234,8 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
         view.setTextSize(textSize);
         view.setEllipsize(TextUtils.TruncateAt.END);
         view.setLines(1);
-//        view.setCompoundDrawablePadding(20);
-//        view.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+        //view.setCompoundDrawablePadding(20);
+        //view.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
     }
     
     /**

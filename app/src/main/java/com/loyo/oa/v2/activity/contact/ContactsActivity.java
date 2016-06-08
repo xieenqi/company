@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.fragment.ContactsDepartmentFragment;
@@ -21,8 +20,6 @@ import com.loyo.oa.v2.fragment.ContactsInMyDeptFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
-
-import java.util.ArrayList;
 
 /**
  * 通讯录 联系人 页面
@@ -51,7 +48,6 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
 
         departmentFragment = new ContactsDepartmentFragment();
         userFragment = new ContactsInMyDeptFragment();
-
         initUI();
     }
 
@@ -59,9 +55,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         setTouchView(-1);
         getUserAndDepartmentSize();
 
-
         ((TextView) findViewById(R.id.tv_title_1)).setText("通讯录");
-
         ViewUtil.OnTouchListener_view_transparency touch = ViewUtil.OnTouchListener_view_transparency.Instance();
 
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
@@ -73,7 +67,7 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
         img_title_right.setOnTouchListener(touch);
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setTextSize(app.spTopx(18));
+        tabs.setTextSize(app.spTopx(14));
 
         pager = (ViewPager) findViewById(R.id.pager);
         adapter = new MyPagerAdapter(getSupportFragmentManager());

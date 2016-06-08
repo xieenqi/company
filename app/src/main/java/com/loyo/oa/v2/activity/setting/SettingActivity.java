@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.activity.contact.ContactInfoEditActivity_;
+import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -28,14 +28,18 @@ import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.umeng.analytics.MobclickAgent;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -77,6 +81,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     void initUI() {
+
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         layout_profile = (ViewGroup) findViewById(R.id.layout_profile);
         tv_title_1 = (TextView) findViewById(R.id.tv_title_1);
@@ -113,14 +118,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tv_version = (TextView) findViewById(R.id.tv_version);
         try {
             PackageInfo pi = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-            tv_version.setText(pi.versionName);
+            tv_version.setText("当前版本" + pi.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             Global.ProcException(e);
         }
         tv_title_1.setText("设置");
 
         if (app.hasNewVersion) {
-            tv_new_version.setHint("有新版本");
+            tv_new_version.setVisibility(View.VISIBLE);
         }
     }
 
@@ -158,9 +163,27 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 app.startActivity(this, FeedbackActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             case R.id.layout_check_update:
-                mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
-                mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
-                startService(mIntentCheckUpdate);
+                if (PackageManager.PERMISSION_GRANTED ==
+                        getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+                    mIntentCheckUpdate = new Intent(mContext, CheckUpdateService.class);
+                    mIntentCheckUpdate.putExtra("EXTRA_TOAST", true);
+                    startService(mIntentCheckUpdate);
+                } else {
+                    showGeneralDialog(true, true, "需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+                    generalPopView.setSureOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                            Utils.doSeting(SettingActivity.this);
+                        }
+                    });
+                    generalPopView.setCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            generalPopView.dismiss();
+                        }
+                    });
+                }
                 break;
             /*编辑个人资料*/
             case R.id.layout_profile:
@@ -248,8 +271,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         //清楚sp
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);
+        Set<String> complanTag = new HashSet<>();
+        JPushInterface.setAliasAndTags(getApplicationContext(), "", complanTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                LogUtil.d("激光推送已经成功停止（注销）状态" + i);
+                //设置别名 为空
+            }
+        });
         ExitActivity.getInstance().finishAllActivity();
-        MobclickAgent.onProfileSignOff();//暂停友盟账号统计
         app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
     }
 }

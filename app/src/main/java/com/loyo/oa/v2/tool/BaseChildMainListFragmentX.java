@@ -33,6 +33,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -135,10 +136,12 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
 
         LogUtil.d("获取项目详情的任务，报告，审批：GetData,type : " + type + " projectId : "
                 + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
+
         app.getRestAdapter().create(IProject.class).getProjectSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
                 LogUtil.d("获取项目详情的任务，报告，审批json: " + MainApp.gson.toJson(paginationx));
+
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
                     ArrayList lstDataTemp = GetTData(paginationx);

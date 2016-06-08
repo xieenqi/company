@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.attendance;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +98,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
     private SignInGridViewAdapter adapter;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private String strMessage;
+    private int type;
 
     @AfterViews
     void initViews() {
@@ -179,15 +179,20 @@ public class PreviewAttendanceActivity extends BaseActivity {
         if (attendance.state == 5 && attendance.extraState == AttendanceRecord.OUT_STATE_FIELD_OVERTIME) {
             btn_confirm.setVisibility(View.VISIBLE);
             btn_confirm.setText("确认加班");
+            type = 1;
             strMessage = "是否确定该员工的加班?\n" + "确认后将无法取消！";
-        } else {/*确认外勤*/
+            /*确认外勤*/
+        } else if(attendance.state != 5){
             if (attendance.outstate == AttendanceRecord.OUT_STATE_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+                iv_type.setVisibility(View.VISIBLE);
                 btn_confirm.setVisibility(View.VISIBLE);
                 btn_confirm.setText("确认外勤");
+                type = 2;
                 strMessage = "是否确定该员工的外勤?\n" + "确认后将无法取消！";
             } else if (attendance.outstate == AttendanceRecord.OUT_STATE_CONFIRMED_FIELD_WORK) {
                 iv_type.setImageResource(R.drawable.icon_field_work_unconfirm);
+                iv_type.setVisibility(View.VISIBLE);
             }
         }
 
@@ -206,7 +211,7 @@ public class PreviewAttendanceActivity extends BaseActivity {
             }
             String content = info + "打卡时间: " + app.df3.format(new Date(attendance.createtime * 1000));//
             if (!TextUtils.isEmpty(info)) {
-                tv_info.setText(Utils.modifyTextColor(content, Color.RED, 2, 4));
+                tv_info.setText(Utils.modifyTextColor(content, getResources().getColor(R.color.red1), 2, 4));
             } else {
                 tv_info.setText(content);
             }
@@ -236,7 +241,6 @@ public class PreviewAttendanceActivity extends BaseActivity {
                 tv_confirmTime.setText(app.df3.format(new Date(attendance.confirmtime * 1000)));
             }
         }
-
     }
 
     /**
@@ -292,12 +296,13 @@ public class PreviewAttendanceActivity extends BaseActivity {
      */
     private void confirmOutAttendance() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
-                confirmOutAttendance(attendanceId, new RCallback<AttendanceRecord>() {
+                confirmOutAttendance(attendanceId,type,new RCallback<AttendanceRecord>() {
                     @Override
                     public void success(final AttendanceRecord record, final Response response) {
                         HttpErrorCheck.checkResponse(" 考勤返回 ", response);
                         btn_confirm.setVisibility(View.GONE);
                         iv_type.setImageResource(R.drawable.icon_field_work_confirm);
+                        iv_type.setVisibility(View.VISIBLE);
                         Intent intent = new Intent();
                         setResult(RESULT_OK, intent);
                         finish();

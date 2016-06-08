@@ -16,9 +16,11 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
 import com.loyo.oa.v2.activity.signin.SignInfoActivity;
 import com.loyo.oa.v2.adapter.SignInListAdapter;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -58,7 +60,8 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
-    private long endAt;
+    private long endAt, teamAt = 0;
+    private String startTime,endTime;
     private Calendar cal;
     private View mView;
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
@@ -105,14 +108,20 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
             if (null != getArguments()) {
                 if (getArguments().containsKey("user")) {
                     mUser = (User) getArguments().getSerializable("user");
+                    teamAt = getArguments().getLong(ExtraAndResult.EXTRA_DATA);
+                    endAt = teamAt;
                 }
             }
 
             if (!mUser.isCurrentUser()) {
                 btn_add.setVisibility(View.GONE);
             }
-            initTimeStr(System.currentTimeMillis());
-            endAt = DateTool.getEndAt_ofDay();
+            if (teamAt == 0) {
+                initTimeStr(System.currentTimeMillis());
+                endAt = DateTool.getEndAt_ofDay();
+            } else {
+                initTimeStr(teamAt);
+            }
             getData();
         }
         return mView;
@@ -126,11 +135,15 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
 
     /**
      * 初始化时间显示
-     *
+     * 获取某天开始时间和结束时间
      * @param mills
      */
     private void initTimeStr(long mills) {
         String time = app.df12.format(new Date(mills));
+        String startTimestr = app.df5.format(new Date(mills)) + " 00:00:00";
+        String endTimestr = app.df5.format(new Date(mills)) + " 23:59:59";
+        startTime = DateTool.getDataOne(startTimestr,DateTool.DATE_FORMATE_ALL);
+        endTime = DateTool.getDataOne(endTimestr,DateTool.DATE_FORMATE_ALL);
         tv_time.setText(time);
     }
 
@@ -177,6 +190,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      * 前一天
      */
     private void previousDay() {
+        initCalendar();
         if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMinimum(Calendar.DAY_OF_MONTH)) {
             if (cal.get(Calendar.MONTH) == cal.getActualMinimum(Calendar.MONTH)) {
                 cal.set((cal.get(Calendar.YEAR) - 1), cal.getActualMaximum(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -187,7 +201,6 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         } else {
             cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
         }
-
         refreshData();
     }
 
@@ -195,6 +208,7 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
      * 后一天
      */
     private void nextDay() {
+        initCalendar();
         if (cal.get(Calendar.DAY_OF_MONTH) == cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
             if (cal.get(Calendar.MONTH) == cal.getActualMaximum(Calendar.MONTH)) {
                 cal.set((cal.get(Calendar.YEAR) + 1), cal.getActualMinimum(Calendar.MONTH), 1);
@@ -216,10 +230,18 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
     private void refreshData() {
         endAt = cal.getTime().getTime();
         //nextTime=app.df12.format(new Date(endAt));
-        LogUtil.d(" 获得的时间 " + endAt);
         initTimeStr(cal.getTime().getTime());
         onPullDownToRefresh(lv);
+    }
 
+    /**
+     * 团队查看个人初始化日历对象
+     */
+    private void initCalendar() {
+        if (teamAt != 0) {
+            cal.setTimeInMillis(endAt);
+            teamAt = 0;
+        }
     }
 
     /**
@@ -250,11 +272,14 @@ public class SignInOfUserFragment extends BaseFragment implements View.OnClickLi
         showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", mUser.id);
-        map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
-        map.put("endAt", endAt / 1000);
+        /*map.put("startAt", (endAt - DateTool.DAY_MILLIS) / 1000);
+        map.put("endAt", endAt / 1000);*/
+        map.put("startAt", Long.parseLong(startTime));
+        map.put("endAt",  Long.parseLong(endTime));
         map.put("custId", "");
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
+        LogUtil.d("获取拜访列表map数据:"+ MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ILegwork.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(PaginationX<LegWork> paginationX, Response response) {

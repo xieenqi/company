@@ -99,13 +99,19 @@ public class PreviewImageActivity extends BaseActivity {
 
             }
         });
+//        mViewPager.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
     }
 
     /**
      * 删除提示框
-     * */
-    public void dialogToast(){
-        showGeneralDialog(true,true,"是否删除附件?");
+     */
+    public void dialogToast() {
+        showGeneralDialog(true, true, "是否删除附件?");
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
@@ -148,15 +154,14 @@ public class PreviewImageActivity extends BaseActivity {
                 ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
 
             }
-            LogUtil.d("预览 转换 的url：" + bigImagUrl(attachment.getUrl()));
+//            LogUtil.d("预览 转换 的url：" + bigImagUrl(attachment.getUrl()));
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
             return photoView;
         }
 
         @Override
-        public void destroyItem(final ViewGroup container,final int position,final Object object) {
+        public void destroyItem(final ViewGroup container, final int position, final Object object) {
             container.removeView((View) object);
         }
 
@@ -167,9 +172,9 @@ public class PreviewImageActivity extends BaseActivity {
 
     }
 
-    public String bigImagUrl(final String url) {
-        String newUrl = url.replaceAll("loyocloud-01.img-cn-qingdao.aliyuncs.com", "loyocloud-01.oss-cn-qingdao.aliyuncs.com");
-
-        return newUrl.replaceAll("@1e_1c_0o_0l_200h_200w_70q.src", "");
-    }
+//    public String bigImagUrl(final String url) {
+//        String newUrl = url.replaceAll("loyocloud-01.img-cn-qingdao.aliyuncs.com", "loyocloud-01.oss-cn-qingdao.aliyuncs.com");
+//
+//        return newUrl.replaceAll("@1e_1c_0o_0l_200h_200w_70q.src", "");
+//    }
 }

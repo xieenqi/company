@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,10 @@ public class DropListAdapter extends BaseAdapter {
         }
 
         mContext = context;
+
+        for (DropItem ele:mItems) {
+
+        }
     }
 
     public DropListAdapter(Context context, ArrayList<DropItem> items, int selectIndex) {
@@ -44,6 +49,19 @@ public class DropListAdapter extends BaseAdapter {
                 }
             }
         }
+    }
+
+    public void setData(DropItem selectItem) {
+//        this.mItems = newData;
+
+        if (selectItem != null && mItems != null) {
+            for (int i = 0; i < mItems.size(); i++) {
+                if (selectItem.equals(mItems.get(i))) {
+                    mSelectIndex = i;
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -73,15 +91,17 @@ public class DropListAdapter extends BaseAdapter {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         textView.setText(null == item ? "" : item.getName());
 
+        LogUtil.d("mSelectIndex:" + mSelectIndex + ",position:" + position);
+
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
         if (mSelectIndex == position) {
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_menu_select);
+            item.setIsLock(true);
             imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+            item.setIsLock(false);
         }
-//        if (selectItem == position) {
-//            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
-//        } else {
-//            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-//        }
+
         return convertView;
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.SignInOfUserFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
@@ -26,6 +27,8 @@ public class LegworksListActivity extends FragmentActivity {
     @ViewById ViewGroup img_title_left;
     @ViewById TextView tv_title_1;
     @Extra("data") User mUser;
+    @Extra(ExtraAndResult.EXTRA_DATA)
+    long endAt;
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @AfterViews
@@ -35,13 +38,13 @@ public class LegworksListActivity extends FragmentActivity {
         Bundle b = new Bundle();
         b.putSerializable("user", mUser);
         b.putBoolean("disabled", true);
+        b.putLong(ExtraAndResult.EXTRA_DATA, endAt);
         BaseFragment fragment = (BaseFragment) Fragment.instantiate(this, SignInOfUserFragment.class.getName(), b);
         fragmentManager.beginTransaction().replace(R.id.layout_list_container, fragment).commit();
     }
 
     @Click({R.id.img_title_left})
     void onClick() {
-        //onBackPressed();
         finish();
     }
 }

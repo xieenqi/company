@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +14,6 @@ public class WfInstance extends BaseBeans implements Serializable {
     public static final int STATUS_ABORT = 3;
     public static final int STATUS_APPROVED = 4;
     public static final int STATUS_FINISHED = 5;
-
-//            New                 //新发起 流程可以被删除
-//    Processing          //未完成
-//            Abort               //中途审批不通过
-//    Approved            //审批通过
-//            Finished            //经办完成
 
     public String id;//int64, optional): ,
     public String wftemplateId;//int64, optional): ,
@@ -35,9 +31,19 @@ public class WfInstance extends BaseBeans implements Serializable {
     public ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
     public BizForm bizForm;//&{bizform BizForm}, optional): ,
     public BizExtData bizExtData;
-    public boolean ack;
-    public Demand demand;
+    public boolean viewed;
+    public Demand demand;//购买意向
     public ProjectInfoName ProjectInfo;
+
+    public SaleDetails chance;//销售机会
+
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
 
     @Override
     String getOrderStr() {
@@ -55,15 +61,14 @@ public class WfInstance extends BaseBeans implements Serializable {
     }
 
     public class Demand {
-        public int actualNum;
-        public int actualPrice;
-        public int estimatedNum;
-        public int estimatedPrice;
+        public float actualNum;
+        public float actualPrice;
+        public float estimatedNum;
+        public float estimatedPrice;
         public String memo;
         public String unit;
         public String productName;
         public String customerName;
-
     }
 
     public class ProjectInfoName implements Serializable {

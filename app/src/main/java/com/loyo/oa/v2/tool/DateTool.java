@@ -51,7 +51,7 @@ public class DateTool {
     /**
      * yyyy-MM-dd
      */
-    public static final String DATE_DEFAULT_FORMATE1 = "yyyy-MM-dd";
+    public static final String DATE_DEFAULT_FORMATE1 = "yyyy.MM.dd";
 
     public static final String DATE_FORMATE_DAY = "MM.dd";
 
@@ -321,35 +321,78 @@ public class DateTool {
         return calendar.getTimeInMillis();
     }
 
-    /**
-     * @param sdfOut
-     * @return 当前月结束时间
-     */
-    public static String getEndAt_ofMonth(DateFormat sdfOut) {
-        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(new Date());
-        calendar.set(Calendar.DAY_OF_MONTH,
-                calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        return sdfOut.format(calendar.getTime());
-    }
 
     /**
-     * @param sdfOut
-     * @return 当前星期开始时间
-     */
-    public static String getBeginAt_ofWeek(DateFormat sdfOut) {
+     * 获取过去某月 开始时间
+     * */
+    public static long getSomeMonthBeginAt(int index){
         Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(new Date());
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime().getTime();
+    }
 
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return sdfOut.format(calendar.getTime());
+
+    /**
+     * 获取过去某月 结束时间
+     * */
+    public static long getSomeMonthEndAt(int index){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime().getTime();
+    }
+
+    /**
+     * 获取过去某天 开始时间
+     * */
+    public static long getSomeDayBeginAt(int index){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DAY_OF_MONTH, -(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime().getTime();
+    }
+
+    /**
+     * 获取过去某天 结束时间
+     * */
+    public static long getSomeDayEndAt(int index){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DAY_OF_MONTH,-(index + 1));//防止下标为0
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime().getTime();
+    }
+
+    /**
+     * 获取过去某星期 开始时间
+     */
+    public static long getSomeWeekBeginAt(int year,int month,int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year,month,day);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime().getTime();
+    }
+
+    /**
+     * 获取过去某星期 结束时间
+     */
+    public static long getSomeWeekEndAt(int year,int month,int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year,month,day);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime().getTime();
     }
 
     /**
@@ -357,12 +400,10 @@ public class DateTool {
      */
     public static long getBeginAt_ofWeek() {
         Calendar calendar = Calendar.getInstance();
-        //        calendar.setTime(new Date());
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         return calendar.getTime().getTime();
     }
@@ -419,7 +460,6 @@ public class DateTool {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-
         return calendar.getTime().getTime();
     }
 
@@ -508,6 +548,7 @@ public class DateTool {
         return times;
     }
 
+
     /**
      * 自定义格式转时间戳
      */
@@ -541,14 +582,13 @@ public class DateTool {
         int i = Integer.parseInt(time);
         String times = sdr.format(new Date(i * 1000L));
         return times;
-
     }
 
     /**
      * 获取当前时间
      */
     public static String getNowTime() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_AT_MINUTES);
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(DATE_FORMATE_SPLITE_BY_POINT);
         return sDateFormat.format(new java.util.Date());
     }
 

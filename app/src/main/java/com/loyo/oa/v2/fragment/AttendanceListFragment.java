@@ -68,6 +68,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private int qtime, page = 1;
     private int type;//我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;//是否下拉刷新 默认是
+    private long checkdateTime;
 
     private Calendar cal;
     private View mView;
@@ -146,6 +147,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      */
     private void initTimeStr(long mills) {
         String time = "";
+        checkdateTime = mills;
         switch (type) {
             case 1:
                 time = app.df13.format(new Date(mills));
@@ -342,23 +344,27 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
      * 获取团队集合数据
      */
     private void getTeamData() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).getTeamCount(new RCallback<AttendanceList>() {
-            @Override
-            public void success(AttendanceList attendanceLists, Response response) {
-                HttpErrorCheck.checkResponse(type + " 团队Count：", response);
-                attendanceList = attendanceLists;
-                initStatistics();
-            }
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IAttendance.class).
+                getTeamCount(getDateTime((long) qtime), new RCallback<AttendanceList>() {
+                    @Override
+                    public void success(AttendanceList attendanceLists, Response response) {
+                        HttpErrorCheck.checkResponse(type + " 团队Count：", response);
+                        attendanceList = attendanceLists;
+                        initStatistics();
+                    }
 
-            @Override
-            public void failure(RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("团队统计数据，获取失败");
-                super.failure(error);
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                    }
+                });
     }
 
+    private int getDateTime(long qtime) {
+        LogUtil.d("查询【】时间：" + app.df4.format(new Date((qtime * 1000))));
+        return Integer.valueOf(app.df4.format(new Date((qtime * 1000))).replace(".", ""));
+    }
 
     /**
      * 获取列表
@@ -369,7 +375,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
         map.put("qtype", type);
         map.put("qtime", qtime);
         map.put("pageIndex", page);
-        map.put("pageSize", 50);
+        map.put("pageSize", 20);
         app.getRestAdapter().create(IAttendance.class).getAttendances(map, new RCallback<HttpAttendanceList>() {
             @Override
             public void success(HttpAttendanceList result, Response response) {
@@ -395,6 +401,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
+//                cancelLoading();
+//                if (error.getMessage().contains("JsonSyntaxException")) {
+//                    Toast("没有更多数据了");
+//                } else {
+//                }
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -483,17 +494,17 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             TextView iv_extra = ViewHolder.get(view, R.id.iv_extra);
             ImageView iv_recordIn_type = ViewHolder.get(view, R.id.iv_record_in_type);
             ImageView iv_recordOut_type = ViewHolder.get(view, R.id.iv_record_out_type);
-            ImageView divider = ViewHolder.get(view, R.id.devider);
+//            ImageView divider = ViewHolder.get(view, R.id.devider);
 
             String overTimes = "--";
-            int color = getActivity().getResources().getColor(R.color.gray);
+            int color = getActivity().getResources().getColor(R.color.text99);
 
             //加班时间
             if (recordOut != null) {
                 totState = recordOut.getState();
                 outTagstate = recordOut.getTagstate();
 
-                if(recordOut.getState() == 5) {
+                if (recordOut.getState() == 5) {
                     int extraTime = recordOut.getExtraTime();
                     if (extraTime > 60) {
                         overTimes = extraTime / 60 + "小时" + extraTime % 60 + "分";
@@ -502,7 +513,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                     }
 
                     if (recordOut.getExtraState() == 1) {
-                        color = getActivity().getResources().getColor(R.color.gray);
+                        color = getActivity().getResources().getColor(R.color.text99);
                     } else if (recordOut.getExtraState() == 2) {
                         color = getActivity().getResources().getColor(R.color.red);
                     }
@@ -528,7 +539,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 inTagstate = recordIn.getTagstate();
                 if (recordIn.getState() == AttendanceRecord.STATE_BE_LATE) {
 
-                    tv_state.setTextColor(getResources().getColor(R.color.red));
+                    tv_state.setTextColor(getResources().getColor(R.color.red1));
                     tv_state.setText("迟到");
                     tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
                     iv_recordIn_type.setVisibility(View.VISIBLE);
@@ -536,7 +547,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
                 } else if (recordIn.getState() == AttendanceRecord.STATE_NORMAL) {
 
-                    tv_state.setTextColor(getResources().getColor(R.color.black));
+                    tv_state.setTextColor(getResources().getColor(R.color.text99));
                     tv_state.setText("已打卡");
                     tv_time.setText(app.df6.format(new Date(recordIn.getCreatetime() * 1000)));
                     iv_recordIn_type.setVisibility(View.VISIBLE);
@@ -583,11 +594,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             } else if (outTagstate == 2 || inTagstate == 2) {
                 background = R.drawable.attendance_shape_leave;
                 status = "请假";
-                textColor = getResources().getColor(R.color.redE8);
+                textColor = getResources().getColor(R.color.red1);
             } else if (totState == 6) {
                 background = R.drawable.attendance_shape_test;
                 status = "休息";
-                textColor = getResources().getColor(R.color.default_menu_text);
+                textColor = getResources().getColor(R.color.green51);
             }
 
             iv_extra.setText(status);
@@ -598,7 +609,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             if (null != recordOut && recordOut.getState() != 5) {
                 if (recordOut.getState() == AttendanceRecord.STATE_NORMAL) {
 
-                    tv_result.setTextColor(getResources().getColor(R.color.black));
+                    tv_result.setTextColor(getResources().getColor(R.color.text99));
                     tv_result.setText("已打卡");
                     tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
                     iv_recordOut_type.setVisibility(View.VISIBLE);
@@ -607,7 +618,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
 
                 } else if (recordOut.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
 
-                    tv_result.setTextColor(getResources().getColor(R.color.red));
+                    tv_result.setTextColor(getResources().getColor(R.color.red1));
                     tv_result.setText("早退");
                     tv_time1.setText(app.df6.format(new Date(recordOut.getCreatetime() * 1000)));//打卡时间
                     iv_recordOut_type.setVisibility(View.VISIBLE);
@@ -639,11 +650,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 tv_time1.setText("--");
             }
 
-            if (i == getCount() - 1) {
-                divider.setVisibility(View.INVISIBLE);
-            } else {
-                divider.setVisibility(View.VISIBLE);
-            }
+//            if (i == getCount() - 1) {
+//                divider.setVisibility(View.INVISIBLE);
+//            } else {
+//                divider.setVisibility(View.VISIBLE);
+//            }
 
             /**
              * 按键监听
@@ -653,11 +664,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             layout_overtime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(null == recordOut){
+                    if (null == recordOut) {
                         return;
                     }
 
-                    if(recordOut.getState() != 5){
+                    if (recordOut.getState() != 5) {
                         return;
                     }
                     previewAttendance(3, attendance, tv_overtime.getText().toString());
@@ -673,7 +684,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                         return;
                     }
 
-                    if(recordIn.getState() == 4 || recordIn.getState() == 6 || recordIn.getState() == 0){
+                    if (recordIn.getState() == 4 || recordIn.getState() == 6 || recordIn.getState() == 0) {
                         return;
                     }
                     previewAttendance(1, attendance, "");
@@ -686,11 +697,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 @Override
                 public void onClick(View view) {
 
-                    if(null == recordOut){
+                    if (null == recordOut) {
                         return;
                     }
 
-                    if(recordOut.getState() == 5 || recordOut.getState() == 6 || recordOut.getState() == 4 || recordOut.getState() == 0){
+                    if (recordOut.getState() == 5 || recordOut.getState() == 6 || recordOut.getState() == 4 || recordOut.getState() == 0) {
                         return;
                     }
                     previewAttendance(2, attendance, "");

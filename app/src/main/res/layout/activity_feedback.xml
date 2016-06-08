@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_common_title_2"/>
@@ -22,7 +24,7 @@
 
             android:hint="请输入反馈意见"
             android:minHeight="@dimen/dimen_160"
-            android:padding="@dimen/dimen_16"/>
+            android:padding="@dimen/margin_other_view"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +37,7 @@
                 android:id="@+id/gridView_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_margin="@dimen/margin_other_view"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/activity_horizontal_margin"
                 android:listSelector="@android:color/transparent"

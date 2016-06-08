@@ -1,29 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:background="@color/white"
-    android:layout_width="match_parent"
-    android:gravity="center_vertical"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:gravity="center_vertical"
+              android:minHeight="@dimen/dimen_45"
+              android:orientation="vertical"
+    >
 
-    <CheckBox
-        android:id="@+id/cBox"
-        android:layout_width="40dp"
-        android:layout_height="@dimen/view_h_title"
-        style="@style/checkbox1"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center_vertical"
-        android:focusable="false"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/margin_side_edge"
-        android:focusableInTouchMode="false"
-        android:clickable="false" />
+        android:orientation="horizontal"
+        >
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/view_h_title"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:text="类型1" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxEms="15"
+            android:singleLine="true"
+            android:text="类型1"
+            android:textColor="@color/text33"
+            android:textSize="@dimen/text_sp15"
+            />
+
+        <CheckBox
+            android:id="@+id/cBox"
+            style="@style/checkbox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dimen_10"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            />
+    </LinearLayout>
+
+    <include layout="@layout/include_solid_line_left"/>
+</LinearLayout>

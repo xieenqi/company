@@ -36,6 +36,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private TextView tv_customer_name;
     private TextView tv_address;
+    private TextView wordcount;
     private EditText edt_memo;
     private ViewGroup img_title_left, img_title_right;
     private GridView gridView_photo;
@@ -78,10 +80,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             mCustomer = (Customer) intent.getSerializableExtra("data");
             customerId = mCustomer.getId();
             customerName = mCustomer.name;
-
-            LogUtil.dll("name:" + mCustomer.name);
-            LogUtil.dll("id:" + mCustomer.getId());
-
         }
         animation = AnimationUtils.loadAnimation(this, R.anim.rotateanimation);
         initUI();
@@ -103,6 +101,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         img_refresh_address.setOnClickListener(this);
 
         edt_memo = (EditText) findViewById(R.id.edt_memo);
+        wordcount = (TextView) findViewById(R.id.wordcount);
+        edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
 
         ViewGroup layout_customer_name = (ViewGroup) findViewById(R.id.layout_customer_name);
         if (null == mCustomer) {
@@ -223,7 +223,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void success(final LegWork legWork, final Response response) {
                 HttpErrorCheck.checkResponse(" 新增拜访传result：", response);
-                cancelLoading();
                 if (legWork != null) {
                     Toast(getString(R.string.sign) + getString(R.string.app_succeed));
                     if (!TextUtils.isEmpty(legWork.getId())) {
@@ -235,14 +234,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else {
                     Toast("提交失败" + response.getStatus());
-                    legWork.creator = MainApp.user.toShortUser();
+//                    legWork.creator = MainApp.user.toShortUser();
                 }
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                cancelLoading();
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -255,14 +253,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
-                LogUtil.dll("获取附件成功 result:" + MainApp.gson.toJson(attachments));
-                LogUtil.dll("success code:" + response.getStatus());
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
             public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
                 LogUtil.dll("failure code:" + error.getResponse().getStatus());
             }

@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -16,7 +18,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:orientation="vertical"
+            >
             <!-- 类型选择-->
             <LinearLayout
                 android:id="@+id/layout_type"
@@ -29,9 +33,9 @@
                     android:id="@+id/rg"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/view_h_title"
-                    android:layout_marginLeft="@dimen/dimen_16"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_14">
 
                     <RadioButton
                         android:id="@+id/rb1"
@@ -42,7 +46,7 @@
                         android:button="@null"
                         android:drawableLeft="@drawable/cb_bg_selector_checked2"
                         android:text="日报"
-                        android:textColor="@color/text1"
+                        android:textColor="@color/text33"
                         android:textSize="15sp"/>
 
                     <RadioButton
@@ -54,7 +58,7 @@
                         android:button="@null"
                         android:drawableLeft="@drawable/cb_bg_selector_checked2"
                         android:text="周报"
-                        android:textColor="@color/text1"
+                        android:textColor="@color/text33"
                         android:textSize="15sp"/>
 
                     <RadioButton
@@ -66,7 +70,7 @@
                         android:button="@null"
                         android:drawableLeft="@drawable/cb_bg_selector_checked2"
                         android:text="月报"
-                        android:textColor="@color/text1"
+                        android:textColor="@color/text33"
                         android:textSize="15sp"/>
 
                 </RadioGroup>
@@ -79,23 +83,21 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:id="@+id/layout_time"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_14">
 
                     <TextView
                         style="@style/text_item1"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:minWidth="@dimen/dimen_80"
                         android:text="时间"/>
 
                     <TextView
@@ -104,66 +106,65 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right|center_vertical"/>
+                        android:gravity="right|center_vertical"
+                        android:textColor="@color/title_bg1"/>
 
                     <TextView
                         android:id="@+id/tv_resignin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimen_30"
+                        android:layout_width="34dp"
+                        android:layout_height="20dp"
                         android:layout_marginLeft="@dimen/dimen_5"
                         android:layout_marginRight="@dimen/dimen_16"
                         android:background="@drawable/round_bg_shpe4"
                         android:gravity="center"
-                        android:minWidth="@dimen/dimen_40"
                         android:scaleType="center"
                         android:text="补签"
-                        android:textColor="@color/title_bg1"/>
+                        android:textColor="@color/title_bg1"
+                        android:textSize="11.5sp"/>
 
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    />
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_h_title"
-                        android:layout_marginTop="@dimen/dimen_10">
+                        android:paddingLeft="@dimen/dimen_14"
+                        >
 
                         <TextView
                             android:id="@+id/tv_crm"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/dimen_16"
                             android:gravity="center_vertical"
                             android:text="工作动态统计"
-                            android:textSize="18sp"/>
+                            android:textSize="15sp"/>
 
 
                         <com.loyo.oa.v2.activity.commonview.SwitchView
                             android:id="@+id/crm_switch"
-                            xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/dimen_5"
-                            android:layout_marginRight="@dimen/dimen_16"
+                            android:layout_marginRight="@dimen/dimen_14"
                             android:layout_marginTop="6dp"
                             />
 
 
                     </RelativeLayout>
+
+                    <include layout="@layout/include_solid_line_left"/>
 
                     <LinearLayout
                         android:id="@+id/layout_crm"
@@ -172,27 +173,28 @@
                         android:orientation="horizontal"
                         android:visibility="gone">
 
-                        <com.loyo.oa.v2.common.NoScroolGridView
-                            android:id="@+id/gridview_workreports"
+                        <com.loyo.oa.v2.common.commonview.NoScroolGridView
+                            android:id="@+id/gv_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_marginBottom="10dp"
                             android:listSelector="@android:color/transparent"
                             android:numColumns="3"
+                            android:paddingBottom="@dimen/dimen_10"
+                            android:paddingTop="@dimen/dimen_10"
                             />
 
                         <LinearLayout
                             android:id="@+id/no_dysndata_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/beogray"
+                            android:background="@color/white"
                             android:orientation="vertical"
                             android:visibility="gone"
                             >
 
                             <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="60dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/icon_dysn_nodata"
@@ -205,7 +207,8 @@
                                 android:layout_marginBottom="10dp"
                                 android:layout_marginTop="5dp"
                                 android:text="暂无统计数据"
-                                android:textColor="@color/gray"
+                                android:textColor="@color/text99"
+                                android:textSize="11.5sp"
                                 />
 
                         </LinearLayout>
@@ -214,26 +217,48 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <include layout="@layout/include_solid_line15"/>
             <!-- 附件、内容-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_14">
 
                 <EditText
                     android:id="@+id/edt_content"
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_height="120dp"
+                    android:layout_marginBottom="@dimen/dimen_16"
                     android:background="@color/white"
                     android:gravity="left|top"
                     android:hint="请输入报告内容"
-                    android:maxLength="500"
-                    android:minHeight="100dp"
-                    android:padding="10dp"/>
+                    android:paddingLeft="0dp"
+                    android:paddingRight="@dimen/dimen_14"
+                    android:paddingTop="@dimen/dimen_10"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:id="@+id/wordcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="20dp"
+                        android:text="0/500"
+                        android:textColor="@color/text99"
+                        android:textSize="12sp"
+                        />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_photo"
@@ -246,28 +271,22 @@
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="@dimen/dimen_10"
                         android:layout_marginRight="@dimen/dimen_10"
-                        android:layout_marginTop="@dimen/dimen_10"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/activity_horizontal_margin"/>
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"/>
-
                 </LinearLayout>
 
             </LinearLayout>
+
+            <include layout="@layout/include_solid_line15"/>
             <!-- 点平人、抄送人、关联项目-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -276,16 +295,16 @@
                     android:id="@+id/layout_reviewer"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_h_title"
-                    android:layout_marginTop="@dimen/dimen_10"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_14">
 
                     <TextView
                         android:id="@+id/tv_reviewer_label"
                         style="@style/text_item1"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:minWidth="@dimen/dimen_80"
                         android:text="点评人"/>
 
                     <TextView
@@ -305,11 +324,7 @@
                         android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:id="@+id/layout_toUser"
@@ -317,14 +332,15 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_14">
 
 
                     <TextView
                         style="@style/text_item1"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:minWidth="@dimen/dimen_80"
                         android:text="抄送人"/>
 
                     <TextView
@@ -334,9 +350,11 @@
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
                         android:minHeight="@dimen/view_h_title"
+                        android:paddingBottom="@dimen/dimen_10"
+                        android:paddingTop="@dimen/dimen_10"
                         android:singleLine="false"
                         android:textColor="@color/title_bg1"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
 
                     <LinearLayout
                         android:id="@+id/layout_del"
@@ -362,11 +380,7 @@
                         android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
 
                 <LinearLayout
                     android:id="@+id/layout_mproject"
@@ -374,14 +388,15 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:minHeight="@dimen/view_h_title"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimen_14">
 
                     <TextView
                         android:id="@+id/tv_project_label"
                         style="@style/text_item1"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:minWidth="@dimen/dimen_80"
                         android:text="所属项目"/>
 
                     <TextView
@@ -401,11 +416,9 @@
                         android:src="@drawable/right_arrow"/>
                 </LinearLayout>
 
-                <View
-                    style="@style/view_split"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/margin_side_edge"
-                    android:layout_marginRight="@dimen/margin_side_edge"/>
+                <include layout="@layout/include_solid_line_left"/>
+
+                <include layout="@layout/include_solid_line15"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_2"
+    android:background="@drawable/view_dashed_line"
+    android:layerType="software"
+    >
+
+    <!--<View-->
+    <!--style="@style/view_split"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_marginLeft="@dimen/margin_side_edge"/>-->
+</View>

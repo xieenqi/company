@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/tv"
-        android:textSize="@dimen/textsize_content_label"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_55"
-        android:gravity="left|center_vertical"
-        android:layout_marginLeft="4dp"
-        android:text="gsgsgs" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:layout_marginBottom="@dimen/dimen_6"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_h_item_title"
+            android:layout_marginLeft="4dp"
+            android:gravity="left|center_vertical"
+            android:text="gsgsgs"
+            android:textSize="@dimen/textsize_content_label"/>
     </LinearLayout>
 </LinearLayout>

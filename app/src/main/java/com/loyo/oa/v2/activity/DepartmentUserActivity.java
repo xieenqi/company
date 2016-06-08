@@ -128,7 +128,6 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
         if (select_type == TYPE_SELECT_SINGLE) {
             //单一人员选择时，不显示确定按钮
             findViewById(R.id.img_title_right).setVisibility(View.GONE);
-
             vgSearch.setOnClickListener(this);
             vgSearch.setOnTouchListener(touch);
         } else {
@@ -161,9 +160,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
                 app.startActivityForResult(this, DepartmentUserSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
                         DepartmentActivity.RESULT_ON_ACTIVITY_RETURN, null);
                 break;
-
             default:
-
                 break;
         }
     }

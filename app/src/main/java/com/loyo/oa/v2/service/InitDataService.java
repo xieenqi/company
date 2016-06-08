@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -17,13 +18,13 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.EIntentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
@@ -42,20 +43,31 @@ public class InitDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         app = (MainApp) getApplicationContext();
+        if (null != DBManager.Instance().getUser()) {
+            setRootMap(DBManager.Instance().getUser());//取缓存的用户对象
+        }
         RestAdapterFactory.getInstance().build(FinalVariables.GET_PROFILE).create(IUser.class).getProfile(new RCallback<User>() {
             @Override
             public void success(User user, Response response) {
-                HttpErrorCheck.checkResponse("获取user", response);
-                String json = MainApp.gson.toJson(user);
-                MainApp.user = user;
-                sendDataChangeBroad(user);
-                DBManager.Instance().putUser(json);//保存用户信息
-                MobclickAgent.onProfileSignIn(user.name);//友盟账号统计
-                HashMap<String, String> map = new HashMap<>();
-                map.put("name", user.name);
-                map.put("id", user.id);
-                MobclickAgent.onEvent(getApplicationContext(), "name_id", map);
+                try {
+                    HttpErrorCheck.checkResponse("获取user", response);
+                    String json = MainApp.gson.toJson(user);
+                    MainApp.user = user;
+                    setRootMap(user);
+                    sendDataChangeBroad(user);
+                    DBManager.Instance().putUser(json);//保存用户信息
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("name", user.name);
+                    map.put("id", user.id);
+                } catch (Exception E) {
+                    E.printStackTrace();
+                }
+            }
 
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
             }
         });
         try {
@@ -66,15 +78,14 @@ public class InitDataService extends IntentService {
     }
 
     /**
-     * 刷新首页红点数据
+     * 权限数据保存为Map
      */
-    void rushHomeData() {
-        RestAdapterFactory.getInstance().build(FinalVariables.RUSH_HOMEDATA).create(IUser.class).rushHomeDate(new RCallback<User>() {
-            @Override
-            public void success(User user, Response response) {
-                HttpErrorCheck.checkResponse(response);
-            }
-        });
+    void setRootMap(User user) {
+        HashMap<String, Object> map = new HashMap<>();
+        for (Permission permission : user.newpermission) {
+            map.put(permission.getCode(), permission);
+        }
+        MainApp.rootMap = map;
     }
 
     /**
@@ -86,11 +97,11 @@ public class InitDataService extends IntentService {
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
 
-            LogUtil.d("更新 组织 架构 json：" + MainApp.gson.toJson(lstDepartment_current));
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
             //设置缓存
             Common.setLstDepartment(lstDepartment_current);
+            LogUtil.d("更新 组织 架构 json：完成");
 
         } else {
             LogUtil.d("更新 组织 架构 sb 失败");

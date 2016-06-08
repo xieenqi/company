@@ -23,7 +23,6 @@ import retrofit.client.Response;
 public class HttpErrorCheck {
     private static Toast mCurrentToast;
     private static String TAG = "LogoServerV2";
-    private static String MSG = "msg";
 
     protected HttpErrorCheck() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -62,14 +61,14 @@ public class HttpErrorCheck {
         } catch (IOException e) {
             e.printStackTrace();
             // Toast(error.getMessage());
-        } catch (JSONException e) {
-            LogUtil.d("JSON异常err:" + error.getUrl());
-            Toast("服务端数据异常");
-            e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空err:" + error.getUrl());
             e.printStackTrace();
             Toast("连接服务器失败");
+        } catch (JSONException e) {
+            LogUtil.d("JSON异常err:" + error.getUrl());
+            Toast("服务端数据异常");
+            e.printStackTrace();
         }
 
 
@@ -82,18 +81,26 @@ public class HttpErrorCheck {
 
     public static void checkResponse(String tag, Response response) {
         DialogHelp.cancelLoading();
-        MSG = tag;
-        checkResponse(response);
+        try {
+            String result = Utils.convertStreamToString(response.getBody().in());
+            LogUtil.d(tag + " 接口成功result：" + result);
+            LogUtil.d(tag + " 接口成功URL：" + response.getUrl());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            LogUtil.d("Body空response:" + response.getUrl());
+            e.printStackTrace();
+        }
     }
 
     public static void checkResponse(Response response) {
         DialogHelp.cancelLoading();
         try {
             String result = Utils.convertStreamToString(response.getBody().in());
-            LogUtil.d(MSG + " 接口成功result：" + result);
-            LogUtil.d(MSG + " 接口成功URL：" + response.getUrl());
+            LogUtil.d(" 接口成功result：" + result);
+            LogUtil.d( " 接口成功URL：" + response.getUrl());
         } catch (IOException e) {
-
+            e.printStackTrace();
         } catch (NullPointerException e) {
             LogUtil.d("Body空response:" + response.getUrl());
             e.printStackTrace();

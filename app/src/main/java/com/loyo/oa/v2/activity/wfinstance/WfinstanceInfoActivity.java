@@ -19,10 +19,14 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.activity.sale.ActivitySaleDetails;
+import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
+import com.loyo.oa.v2.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.BizFormFields;
+import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -45,6 +49,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -94,12 +99,16 @@ public class WfinstanceInfoActivity extends BaseActivity {
     ViewGroup layout_bottom, layout_wfinstance_content;
     @ViewById
     ImageView img_wfinstance_status;
+    @ViewById
+    LinearLayout ll_sale;
+    @ViewById
+    TextView tv_sale;
 
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
 
     public boolean isOver = false;
-    public String userId;
+    public String userId, saleId;
     public WorkflowNodesListViewAdapter workflowNodesListViewAdapter;
     public ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
     public ArrayList<WfNodes> lstData_WfNodes = new ArrayList<>();
@@ -116,32 +125,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
         getWfinstanceData();
     }
 
-    void initData_WorkflowValues() {
-        if (wfInstance == null || wfInstance.workflowValues == null) {
-            return;
-        }
-        wfInstanceValuesDatas.clear();
-        for (int i = 0; i < wfInstance.workflowValues.size(); i++) {
-            wfInstanceValuesDatas.add(wfInstance.workflowValues.get(i));
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (wfInstance != null && wfInstance.workflowValues != null && wfInstance.workflowValues != null) {
-            wfInstance.ack = true;
-            wfInstance.workflowValues.clear();
-            Intent intent = new Intent();
-            intent.putExtra("review", wfInstance);
-            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     void initUI() {
+        try {
+            userId = DBManager.Instance().getUser().id;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast("人员信息不全");
+            finish();
+        }
 
-        userId = DBManager.Instance().getUser().id;
         getWindow().getDecorView().setOnTouchListener(new ViewUtil.OnTouchListener_softInput_hide());
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -155,171 +147,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
 
     }
 
-
-    /**
-     * 审批内容数据设置
-     */
-    void initUI_listView_wfinstance() {
-
-        ArrayList<BizFormFields> fields = new ArrayList<>();
-        if (wfInstance != null && wfInstance.bizForm != null && wfInstance.bizForm.getFields() != null) {
-            fields = wfInstance.bizForm.getFields();
-        }
-
-        if (null != wfInstanceValuesDatas) {
-            for (int j = 0; j < wfInstanceValuesDatas.size(); j++) {
-                HashMap<String, Object> jsonObject = wfInstanceValuesDatas.get(j);
-                for (int i = 0; i < fields.size(); i++) {
-
-                    BizFormFields field = fields.get(i);
-                    View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
-                    EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
-                    tv_value.setEnabled(false);
-                    tv_value.setText(jsonObject.get(field.getId()) + "");
-                    TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
-                    tv_key.setText(field.getName());
-                    layout_wfinstance_content.addView(view_value);
-                }
-            }
-        }
-
-        //显示删除
-        if (wfInstance.status == WfInstance.STATUS_NEW && wfInstance.creator != null
-                && wfInstance.creator.isCurrentUser() && !("300".equals(wfInstance.bizForm.bizCode + ""))) {
-            img_title_right.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    void initUI_listView_workflowNodes() {
-        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this), wfInstance.serverTime);
-        listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
-        Global.setListViewHeightBasedOnChildren(listView_workflowNodes);
-    }
-
-    void updateUI() {
-        if (wfInstance == null) {
-            return;
-        }
-        tv_time_creator.setText(wfInstance.creator.name + " " + app.df3.format(new Date(wfInstance.createdAt * 1000)) + " 提交");
-        if (wfInstance.creator != null) {
-            tv_title_creator.setText(wfInstance.title);
-
-            if (null != wfInstance.creator.shortPosition) {
-                tv_title_role.setText(wfInstance.creator.shortPosition.getName());
-            }
-        }
-
-        if (!StringUtil.isEmpty(wfInstance.memo)) {
-            layout_memo.setVisibility(View.VISIBLE);
-            tv_memo.setText(wfInstance.memo);
-        } else {
-            if (300 == wfInstance.bizForm.bizCode && !TextUtils.isEmpty(wfInstance.demand.memo)) {
-                layout_memo.setVisibility(View.VISIBLE);
-                tv_memo.setText(wfInstance.demand.memo);
-            } else {
-                layout_memo.setVisibility(View.GONE);
-            }
-        }
-        tv_attachment_count.setText("附件 (" + wfInstance.bizExtData.getAttachmentCount() + ")");
-        tv_projectName.setText(null == wfInstance.ProjectInfo ? "无" : wfInstance.ProjectInfo.title);
-        if (300 == wfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件
-            layout_AttachFile.setVisibility(View.GONE);
-            ll_project.setVisibility(View.GONE);
-        }
-        switch (wfInstance.status) {
-
-            case WfInstance.STATUS_NEW:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status1);
-                break;
-            case WfInstance.STATUS_PROCESSING:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status2);
-                break;
-            case WfInstance.STATUS_ABORT:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status3);
-                break;
-            case WfInstance.STATUS_APPROVED:
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4);
-                break;
-            case WfInstance.STATUS_FINISHED:
-                //img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status5);
-                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4); //状态4，5都归类为 已通过
-                break;
-            default:
-                break;
-        }
-        initUI_listView_wfinstance();
-        initUI_listView_workflowNodes();
-        updateUI_layout_bottom();
-    }
-
-    private String getWfNodesTitle() {
-
-        StringBuilder builder = new StringBuilder();
-        if (null != wfInstance.workflowNodes) {
-            int actives = 0;
-            for (int i = wfInstance.workflowNodes.size() - 1; i >= 0; i--) {
-                WfNodes node = wfInstance.workflowNodes.get(i);
-                if (node.isActive()) {
-                    actives++;
-                }
-            }
-            builder.append("(" + actives + "/" + wfInstance.workflowNodes.size() + ")");
-        } else {
-            builder.append("(0/0)");
-        }
-
-        return builder.toString();
-    }
-
-    /**
-     * 底部同意／驳回 菜单设置
-     */
-
-    void updateUI_layout_bottom() {
-
-        if (wfInstance == null) {
-            return;
-        }
-        tv_wfnodes_title.setText(getWfNodesTitle());
-
-        if (wfInstance.status == WfInstance.STATUS_ABORT || wfInstance.status == WfInstance.STATUS_FINISHED) {
-            return;
-        }
-
-        ArrayList<WfNodes> nodes = wfInstance.workflowNodes;
-        if (nodes == null) {
-            return;
-        }
-
-        WfNodes node = null;
-        for (int i = 0; i < nodes.size(); i++) {
-            if (nodes.get(i).getExecutorUser().getId().equals(userId)) {
-                node = nodes.get(i);
-                break;
-            }
-        }
-
-        if (node != null) {
-            if (node.getActive() == 2) {
-                if (node.isNeedApprove()) {
-                    layout_nopass.setOnTouchListener(touch);
-                    layout_pass.setOnTouchListener(touch);
-                    layout_bottom.setVisibility(View.VISIBLE);
-                    layout_lastwork.setVisibility(View.GONE);
-                } else {
-                    layout_nopass.setOnClickListener(null);
-                    layout_nopass.setOnTouchListener(null);
-                    layout_pass.setOnClickListener(null);
-                    layout_pass.setOnTouchListener(null);
-                    layout_bottom.setVisibility(View.GONE);
-                    layout_lastwork.setVisibility(View.VISIBLE);
-                }
-            }
-
-        }
-    }
-
     /**
      * 获取审批详情
      */
@@ -329,13 +156,13 @@ public class WfinstanceInfoActivity extends BaseActivity {
             finish();
             return;
         }
-
+        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfInstance(wfInstanceId, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance_current, final Response response) {
                 HttpErrorCheck.checkResponse("审批详情返回的数据：", response);
                 wfInstance = wfInstance_current;
-                if (wfInstance_current.workflowNodes != null) {
+                if (null != wfInstance_current && null != wfInstance_current.workflowNodes) {
                     lstData_WfNodes.clear();
                     lstData_WfNodes.addAll(wfInstance_current.workflowNodes);
                 }
@@ -364,21 +191,323 @@ public class WfinstanceInfoActivity extends BaseActivity {
      *
      * @param wfData
      */
-    private void wfData(final WfInstance wfData) {
+    private void wfData(WfInstance wfData) {
+//        if (null == wfData.demand) {
+//            return;
+//        }
+//        List<String> wfList = new ArrayList<>();
+//        String custerName = wfData.demand.customerName;
+//        wfList.add("客户名称：" + (TextUtils.isEmpty(custerName) ? "" : custerName));
+//        wfList.add("产品名称：" + wfData.demand.productName);
+//        wfList.add("预估：数量 " + wfData.demand.estimatedNum + "   单价：" + wfData.demand.estimatedPrice + " " + wfData.demand.unit);
+//        wfList.add("预估：数量 " + wfData.demand.actualNum + "   单价：" + wfData.demand.actualPrice + " " + wfData.demand.unit);
+//        for (String text : wfList) {
+//            View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
+//            TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
+//            tv_key.setText(text);
+//            layout_wfinstance_content.addView(view_value);
+//        }
+        if (null == wfData.chance) {
+            return;
+        }
+        SaleDetails chanceData = wfData.chance;
+        saleId = chanceData.id;
+        ll_sale.setVisibility(View.VISIBLE);
+        ll_sale.setOnTouchListener(Global.GetTouch());
+        tv_sale.setText(chanceData.name);
         List<String> wfList = new ArrayList<>();
-        String custerName = wfData.demand.customerName;
-        wfList.add("客户名称：" + (TextUtils.isEmpty(custerName) ? "" : custerName));
-        wfList.add("产品名称：" + wfData.demand.productName);
-        wfList.add("预估：数量 " + wfData.demand.estimatedNum + "   单价：" + wfData.demand.estimatedPrice + " " + wfData.demand.unit);
-        wfList.add("预估：数量 " + wfData.demand.actualNum + "   单价：" + wfData.demand.actualPrice + " " + wfData.demand.unit);
+        wfList.add("意向产品：" + getProductName(chanceData.proInfos));
+        wfList.add("销售总金额：" + getSaleAmount(chanceData.proInfos));
+        wfList.add("总折扣：" + getProductDiscount(chanceData.proInfos) + "%");
+        wfList.add("对应客户：" + chanceData.cusName);
+        if (!TextUtils.isEmpty(chanceData.chanceType)) {
+            wfList.add("机会类型：" + chanceData.chanceType);
+        }
+        if (!TextUtils.isEmpty(chanceData.chanceSource)) {
+            wfList.add("机会来源：" + chanceData.chanceSource);
+        }
+        if (null != chanceData.extensionDatas) {
+            wfList.addAll(getProductCustomData(chanceData.extensionDatas));
+        }
+        if (!TextUtils.isEmpty(chanceData.memo)) {
+            wfList.add("备注：" + chanceData.memo);
+        }
+        wfList.add("创建时间：" + app.df3.format(Long.valueOf(chanceData.createdAt + "") * 1000));
+
         for (String text : wfList) {
             View view_value = LayoutInflater.from(this).inflate(R.layout.item_wf_data, null, false);
-
             TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
             tv_key.setText(text);
             layout_wfinstance_content.addView(view_value);
         }
+    }
 
+    /**
+     * 获得 机会 意向产品 的名字
+     *
+     * @param data
+     * @return
+     */
+    private String getProductName(ArrayList<SaleIntentionalProduct> data) {
+        String product = "";
+        if (null == data) {
+            return product;
+        }
+        for (SaleIntentionalProduct ele : data) {
+            product += ele.name + "、";
+        }
+        return product.substring(0, product.length() - 1);
+    }
+
+    /**
+     * 获取销售总金额
+     */
+    private float getSaleAmount(ArrayList<SaleIntentionalProduct> data) {
+        float salePrice = 0;
+        if (null == data) {
+            return salePrice;
+        }
+        for (SaleIntentionalProduct ele : data) {
+            salePrice += ele.salePrice * ele.quantity;
+        }
+        return salePrice;
+    }
+
+    /**
+     * 获取意向产品总折扣
+     *
+     * @param data
+     * @return
+     */
+    private float getProductDiscount(ArrayList<SaleIntentionalProduct> data) {
+        float salePrice = 0;
+        float totalMoney = 0;
+        if (null == data) {
+            return 0;
+        }
+        for (SaleIntentionalProduct ele : data) {
+            salePrice += ele.salePrice;
+            totalMoney += ele.totalMoney;
+        }
+        return salePrice / totalMoney;
+    }
+
+    /**
+     * 获取机会的动态字段
+     */
+    private List<String> getProductCustomData(ArrayList<ContactLeftExtras> data) {
+        List<String> newData = new ArrayList<>();
+        for (ContactLeftExtras ele : data) {
+            newData.add(ele.label + "：" + ele.val);
+        }
+        return newData;
+    }
+
+    void initData_WorkflowValues() {
+        if (null == wfInstance || null == wfInstance.workflowValues) {
+            return;
+        }
+        wfInstanceValuesDatas.clear();
+        for (int i = 0; i < wfInstance.workflowValues.size(); i++) {
+            wfInstanceValuesDatas.add(wfInstance.workflowValues.get(i));
+        }
+    }
+
+
+    void updateUI() {
+        if (wfInstance == null) {
+            return;
+        }
+        try {
+            tv_time_creator.setText(wfInstance.creator.name + " " + app.df3.format(new Date(wfInstance.createdAt * 1000)) + " 提交");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        if (wfInstance.creator != null) {
+            tv_title_creator.setText(wfInstance.title);
+
+            if (null != wfInstance.creator.shortPosition) {
+                tv_title_role.setText(wfInstance.creator.shortPosition.getName());
+            }
+        }
+
+        if (!StringUtil.isEmpty(wfInstance.memo)) {
+            layout_memo.setVisibility(View.VISIBLE);
+            tv_memo.setText(wfInstance.memo);
+        } else {
+            if (null != wfInstance.demand && 300 == wfInstance.bizForm.bizCode && !TextUtils.isEmpty(wfInstance.demand.memo)) {
+                layout_memo.setVisibility(View.VISIBLE);
+                tv_memo.setText(wfInstance.demand.memo);
+            } else {
+                layout_memo.setVisibility(View.GONE);
+            }
+        }
+        tv_attachment_count.setText("附件 (" + wfInstance.bizExtData.getAttachmentCount() + ")");
+        tv_projectName.setText(null == wfInstance.ProjectInfo ? "无" : wfInstance.ProjectInfo.title);
+        if (300 == wfInstance.bizForm.bizCode) {//赢单审批隐藏项目 和 附件
+            layout_AttachFile.setVisibility(View.GONE);
+            ll_project.setVisibility(View.GONE);
+        }
+        switch (wfInstance.status) {
+
+            case WfInstance.STATUS_NEW:
+                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status1);
+                break;
+            case WfInstance.STATUS_PROCESSING:
+                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status2);
+                break;
+            case WfInstance.STATUS_ABORT:
+                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status3);
+                break;
+            case WfInstance.STATUS_APPROVED:
+                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4);
+                break;
+            case WfInstance.STATUS_FINISHED:
+                img_wfinstance_status.setImageResource(R.drawable.img_wfinstance_status4); //状态4，5都归类为 已通过
+                break;
+            default:
+                break;
+        }
+        initUI_listView_wfinstance();
+        initUI_listView_workflowNodes();
+        updateUI_layout_bottom();
+    }
+
+    /**
+     * 审批内容数据设置
+     */
+    void initUI_listView_wfinstance() {
+
+        ArrayList<BizFormFields> fields = new ArrayList<>();
+        if (wfInstance != null && wfInstance.bizForm != null && wfInstance.bizForm.getFields() != null) {
+            fields = wfInstance.bizForm.getFields();
+        }
+
+        if (null != wfInstanceValuesDatas) {
+            for (int j = 0; j < wfInstanceValuesDatas.size(); j++) {
+                HashMap<String, Object> jsonObject = wfInstanceValuesDatas.get(j);
+                for (int i = 0; i < fields.size(); i++) {
+                    if (!fields.get(i).isEnable()) {
+                        continue;
+                    }
+                    BizFormFields field = fields.get(i);
+                    View view_value = LayoutInflater.from(this).inflate(R.layout.item_listview_wfinstancevalues_data, null, false);
+                    EditText tv_value = (EditText) view_value.findViewById(R.id.et_value);
+                    tv_value.setEnabled(false);
+                    tv_value.setText(wfinstanceInfoValue(jsonObject.get(field.getId())));
+                    TextView tv_key = (TextView) view_value.findViewById(R.id.tv_key);
+                    tv_key.setText(field.getName() + ": ");
+                    layout_wfinstance_content.addView(view_value);
+                }
+            }
+        }
+
+        //显示删除
+        if (wfInstance.status == WfInstance.STATUS_NEW && wfInstance.creator != null
+                && wfInstance.creator.isCurrentUser() && !("300".equals(wfInstance.bizForm.bizCode + ""))) {
+            img_title_right.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    void initUI_listView_workflowNodes() {
+        workflowNodesListViewAdapter = new WorkflowNodesListViewAdapter(wfInstance.status, lstData_WfNodes, LayoutInflater.from(this), wfInstance.serverTime);
+        listView_workflowNodes.setAdapter(workflowNodesListViewAdapter);
+        Global.setListViewHeightBasedOnChildren(listView_workflowNodes);
+    }
+
+    /**
+     * 底部同意／驳回 菜单设置
+     */
+
+    void updateUI_layout_bottom() {
+
+        if (wfInstance == null) {
+            return;
+        }
+        tv_wfnodes_title.setText(getWfNodesTitle());
+
+        if (wfInstance.status == WfInstance.STATUS_ABORT || wfInstance.status == WfInstance.STATUS_FINISHED) {
+            return;
+        }
+
+        ArrayList<WfNodes> nodes = wfInstance.workflowNodes;
+        if (nodes == null) {
+            return;
+        }
+
+        WfNodes node = null;
+        for (int i = 0; i < nodes.size(); i++) {
+            if (null != nodes.get(i).getExecutorUser() && userId.equals(nodes.get(i).getExecutorUser().getId())) {
+                node = nodes.get(i);
+                if(node.getActive() == 2){
+                    break;
+                }
+            }
+        }
+
+        if (node != null) {
+            if (node.getActive() == 2) {
+                if (node.isNeedApprove()) {
+                    layout_nopass.setOnTouchListener(touch);
+                    layout_pass.setOnTouchListener(touch);
+                    layout_bottom.setVisibility(View.VISIBLE);
+                    layout_lastwork.setVisibility(View.GONE);
+                } else {
+                    layout_nopass.setOnClickListener(null);
+                    layout_nopass.setOnTouchListener(null);
+                    layout_pass.setOnClickListener(null);
+                    layout_pass.setOnTouchListener(null);
+                    layout_bottom.setVisibility(View.GONE);
+                    layout_lastwork.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private String wfinstanceInfoValue(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+
+        if (obj.getClass().toString().contains("Double")) {
+            BigDecimal bigDecimal = new BigDecimal(obj + "");
+            return bigDecimal.doubleValue() + "";
+        } else {
+            return obj + "";
+        }
+    }
+
+    private String getWfNodesTitle() {
+
+        StringBuilder builder = new StringBuilder();
+        if (null != wfInstance.workflowNodes) {
+            int actives = 0;
+            for (int i = wfInstance.workflowNodes.size() - 1; i >= 0; i--) {
+                WfNodes node = wfInstance.workflowNodes.get(i);
+                if (node.isActive()) {
+                    actives++;
+                }
+            }
+            builder.append("(" + actives + "/" + wfInstance.workflowNodes.size() + ")");
+        } else {
+            builder.append("(0/0)");
+        }
+
+        return builder.toString();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (null != wfInstance && null != wfInstance.workflowValues && null != wfInstance.workflowValues) {
+            wfInstance.setViewed(true);
+            wfInstance.workflowValues.clear();
+            Intent intent = new Intent();
+            intent.putExtra("review", wfInstance);
+            app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**
@@ -400,7 +529,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
                     if (null != wfInstance_current.workflowValues) {
                         wfInstance_current.workflowValues.clear();
                     }
-                    wfInstance_current.ack = true;
+                    wfInstance_current.setViewed(true);
                     Intent intent = getIntent();
                     intent.putExtra("review", wfInstance_current);
                     app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -417,7 +546,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         });
     }
 
-    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork, R.id.layout_AttachFile})
+    @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_nopass, R.id.layout_pass, R.id.layout_lastwork,
+            R.id.layout_AttachFile, R.id.ll_sale})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -452,7 +582,11 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 bundle.putInt("bizType", 12);
                 app.startActivityForResult(this, AttachmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, MSG_ATTACHMENT, bundle);
                 break;
-            default:
+            case R.id.ll_sale:
+                Bundle sale = new Bundle();
+                sale.putString("id", saleId);
+                sale.putString("formPath", "审批");
+                app.startActivityForResult(this, ActivitySaleDetails.class, MainApp.ENTER_TYPE_RIGHT, 3, sale);
                 break;
         }
     }
@@ -512,13 +646,6 @@ public class WfinstanceInfoActivity extends BaseActivity {
         });
     }
 
-
-    /**
-     * 判断是否是创建人
-     */
-    public boolean isCreater() {
-        return wfInstance.creator.getId().equals(MainApp.user.getId()) ? true : false;
-    }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {

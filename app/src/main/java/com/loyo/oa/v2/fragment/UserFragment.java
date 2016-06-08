@@ -26,7 +26,6 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.MyLetterListView;
 
 import java.util.ArrayList;
@@ -48,8 +47,8 @@ public class UserFragment extends BaseFragment {
     MyLetterListView letterView;
     AlphabetIndexer index;
 
-    ViewGroup layout_toast;
-    TextView tv_toast;
+//    ViewGroup layout_toast;
+    TextView tv_dialog;
 
     String superDeptId;
     String mIndex;
@@ -95,13 +94,9 @@ public class UserFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_user, container, false);
-
-            layout_toast = (ViewGroup) view.findViewById(R.id.layout_toast);
-            tv_toast = (TextView) view.findViewById(R.id.tv_toast);
-
+            tv_dialog = (TextView) view.findViewById(R.id.tv_dialog);
             IndexCursor cursor = new IndexCursor(lstUserGroupData);
             index = new AlphabetIndexer(cursor, 0, mIndex);
-
             letterView = (MyLetterListView) view.findViewById(R.id.letter_View);
             letterView.setKeyword(mIndex);
             letterView.setOnTouchingLetterChangedListener(new MyLetterListView.OnTouchingLetterChangedListener() {
@@ -112,16 +107,16 @@ public class UserFragment extends BaseFragment {
 
                     switch (state) {
                         case MyLetterListView.FINGER_ACTION_DOWN: // 手指按下
-                            //layout_toast.setVisibility(View.VISIBLE); 禁用拼音检索的 当前拼音显示
-                            tv_toast.setText(sectionLetter);
+                            tv_dialog.setVisibility(View.VISIBLE); //禁用拼音检索的 当前拼音显示
+                            tv_dialog.setText(sectionLetter);
                             scroll(position);
                             break;
                         case MyLetterListView.FINGER_ACTION_MOVE: // 手指滑动
-                            tv_toast.setText(sectionLetter);
+                            tv_dialog.setText(sectionLetter);
                             scroll(position);
                             break;
                         case MyLetterListView.FINGER_ACTION_UP:
-                            layout_toast.setVisibility(View.GONE);// 手指离开
+                            tv_dialog.setVisibility(View.GONE);// 手指离开
                             break;
                         default:
                             break;
@@ -195,6 +190,11 @@ public class UserFragment extends BaseFragment {
         @Override
         public boolean getWantsAllOnMoveCalls() {
             return false;
+        }
+
+        @Override
+        public void setExtras(Bundle extras) {
+
         }
 
         @Override

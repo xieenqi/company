@@ -21,10 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
-import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
@@ -58,7 +58,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     protected String strSearch;
     protected EditText edt_search;
-    protected TextView tv_search;
+    //    protected TextView tv_search;
+    private ImageView iv_clean;
     protected View vs_nodata;
     protected View headerView;
     protected PullToRefreshListView expandableListView_search;
@@ -106,9 +107,16 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 onBackPressed();
             }
         });
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        iv_clean.setOnClickListener(new View.OnClickListener() {
 
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setText("取消");
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
+//        tv_search = (TextView) findViewById(R.id.tv_search);
+//        tv_search.setText("取消");
 
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -134,21 +142,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (edt_search.length() == 0) {
-                    tv_search.setText("取消");
-                } else {
-                    tv_search.setText("搜索");
-                }
-            }
-        });
-        edt_search.requestFocus();
-        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 doSearch();
             }
         });
-
+        edt_search.requestFocus();
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         expandableListView_search.setOnRefreshListener(this);
@@ -242,12 +239,14 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
      */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
-        if (strSearch.length() > 0) {
+        isTopAdd = true;
+        getData();
+/*        if (strSearch.length() > 0) {
             isTopAdd = true;
             getData();
         } else {
             onBackPressed();
-        }
+        }*/
     }
 
     /**
@@ -337,7 +336,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         HttpErrorCheck.checkResponse(response);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        //imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         if (null == o) {
             if (isTopAdd) {
@@ -406,16 +405,12 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_listview_common, null, false);
             }
-
             Object o = getItem(i);
-
-            ImageView status = ViewHolder.get(convertView, R.id.img_status);
             TextView title = ViewHolder.get(convertView, R.id.tv_title);
             TextView content = ViewHolder.get(convertView, R.id.tv_content);
             TextView time = ViewHolder.get(convertView, R.id.tv_time);
             View ack = ViewHolder.get(convertView, R.id.view_ack);
             ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
-            status.setVisibility(View.GONE);
             layout_discuss.setVisibility(View.GONE);
             time.setVisibility(View.VISIBLE);
             //审批
@@ -430,34 +425,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 }
                 //                ack.setVisibility(wfInstance.isAck() ? View.GONE : View.VISIBLE);
 
-                switch (wfInstance.status) {
-                    case WfInstance.STATUS_NEW:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status1);
-                        break;
-                    case WfInstance.STATUS_PROCESSING:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status2);
-                        break;
-                    case WfInstance.STATUS_ABORT:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status3);
-                        break;
-                    case WfInstance.STATUS_APPROVED:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status4);
-                        break;
-                    case WfInstance.STATUS_FINISHED:
-                        status.setImageResource(R.drawable.img_wfinstance_list_status5);
-                        break;
-                }
             }
             //任务
             else if (o instanceof Task) {
                 Task task = (Task) o;
-                if (task.getStatus() == Task.STATUS_PROCESSING) {
-                    status.setImageResource(R.drawable.task_status_1);
-                } else if (task.getStatus() == Task.STATUS_REVIEWING) {
-                    status.setImageResource(R.drawable.task_status_2);
-                } else if (task.getStatus() == Task.STATUS_FINISHED) {
-                    status.setImageResource(R.drawable.task_status_3);
-                }
 
                 try {
                     //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
@@ -477,8 +448,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //报告
             else if (o instanceof WorkReport) {
                 final WorkReport workReport = (WorkReport) o;
-                if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
-                    content.setText("点评: " + workReport.reviewer.getUser().getName());
+                if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
+                    content.setText("点评: " + workReport.reviewer.user.getName());
                 }
                 StringBuilder reportTitle = new StringBuilder(workReport.creator.name + "提交 ");
                 String reportDate = "";
@@ -507,18 +478,11 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
                 time.setText(end);
                 //                ack.setVisibility(workReport.isAck() ? View.GONE : View.VISIBLE);
-                status.setImageResource(workReport.isReviewed() ? R.drawable.img_workreport_list_status2 : R.drawable.img_workreport_list_status1);
 
             }
             //项目
             else if (o instanceof Project) {
                 Project project = (Project) o;
-                if (project.status == 1) {
-                    status.setImageResource(R.drawable.task_status_1);
-                } else {
-                    status.setImageResource(R.drawable.img_project_complete);
-                }
-
                 try {
                     time.setText("提交时间: " + app.df9.format(new Date(project.getCreatedAt())));
                 } catch (Exception e) {
@@ -537,7 +501,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 title.setText(customer.name);
                 content.setText("标签" + Utils.getTagItems(customer));
 
-              /*  if (!TextUtils.isEmpty(customer.distance)) {
+                /*if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);
                 } else {
                     content.setVisibility(View.GONE);
@@ -551,7 +515,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.dll("销毁");
         hideInputKeyboard(edt_search);
     }
 }

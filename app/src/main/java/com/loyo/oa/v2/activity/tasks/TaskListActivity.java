@@ -82,7 +82,6 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         onBackPressed();
     }
 
-
     /**
      * 客户创建新的任务
      */

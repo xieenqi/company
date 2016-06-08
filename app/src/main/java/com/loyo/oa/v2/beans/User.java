@@ -2,16 +2,16 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectUserHelper;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements Serializable, SelectDetUserActivity.SelectUserBase {
+public class User implements Serializable, SelectUserHelper.SelectUserBase {
 
     public String id;
-    public String company_id;
+    public String companyId;
     public String mobile;
     public String simplePinyin;
     public String avatar;
@@ -31,13 +31,14 @@ public class User implements Serializable, SelectDetUserActivity.SelectUserBase 
     public Position shortPosition;
     public Department shortDept;
     public ArrayList<UserInfo> depts = new ArrayList<>();
-    public Permission permission;
+    public ArrayList<Permission> newpermission = new ArrayList<>();
     public boolean isBQQ;
     public boolean index;
-    public boolean isSuperUser;
+    public boolean isSuperUser = false;
     public int gender;
     public long updatedAt;
     public long createdAt;
+
 
     public boolean isSuperUser() {
         return isSuperUser;
@@ -80,9 +81,36 @@ public class User implements Serializable, SelectDetUserActivity.SelectUserBase 
     }
 
 
+
+    @Override
     public String getId() {
-        return id;
+        return TextUtils.isEmpty(id) ? "id" : id;
     }
+
+    @Override
+    public String getDepartId() {
+        if (depts == null)
+            return null;
+        return this.depts.get(0).getShortDept().getId();
+    }
+
+    public boolean isExistDepartment(String id) {
+        if (TextUtils.isEmpty(id))
+            return false;
+        for (int i = 0; i < depts.size(); i++) {
+            UserInfo info = depts.get(i);
+            if (id.equals(info.getShortDept().getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String getName() {
+        return realname;
+    }
+
 
     @Override
     public boolean isDepart() {

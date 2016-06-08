@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/activity_bg"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -29,27 +31,32 @@
                 <TextView
                     style="@style/text_item1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:text="地址"
-                    android:textColor="#999999"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:gravity="top"
+                    android:paddingTop="@dimen/dimen_9"
+                    android:text="地址:"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp15"/>
 
                 <TextView
                     android:id="@+id/tv_address"
                     style="@style/text_item1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="left|center"
+                    android:gravity="top"
+                    android:paddingTop="@dimen/dimen_8"
                     android:singleLine="false"
-                    android:textColor="#383838"
-                    android:textSize="@dimen/textsize_content2"/>
+                    android:text="13"
+                    android:textColor="@color/text33"
+                    android:textSize="@dimen/text_sp15"/>
 
                 <ImageView
                     android:id="@+id/img_refresh_address"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_5"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_other_view"
                     android:scaleType="fitCenter"
                     android:src="@drawable/icon_refresh"/>
 
@@ -57,7 +64,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_10"
+                android:layout_height="@dimen/dimen_15"
                 android:background="@color/activity_bg"
                 />
 
@@ -72,10 +79,11 @@
 
                 <TextView
                     style="@style/text_item1"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="@dimen/dimen_16"
-                    android:text="选择客户"/>
+                    android:layout_marginLeft="@dimen/margin_other_view"
+                    android:text="选择客户"
+                    android:textSize="@dimen/text_sp15"/>
 
                 <TextView
                     android:id="@+id/tv_customer_name"
@@ -88,12 +96,13 @@
                     android:singleLine="false"
                     android:text=""
                     android:textColor="@color/title_bg1"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_sp15"/>
 
                 <ImageView
                     android:id="@+id/img_title_right_customer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:layout_marginRight="@dimen/dimen_4"
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"/>
 
@@ -108,7 +117,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_20"
+                android:layout_marginTop="@dimen/dimen_10"
                 android:orientation="vertical">
 
                 <EditText
@@ -116,25 +125,41 @@
                     style="@style/edtText_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_5"
-                    android:layout_marginRight="@dimen/dimen_5"
                     android:gravity="left"
-                    android:hint="备注"
+                    android:hint="填写备注后将自动增加1条跟进动态（拜访）"
+                    android:maxLength="500"
                     android:minHeight="@dimen/dimen_110"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/wordcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="20dp"
+                        android:text="0/500"
+                        android:textColor="@color/text99"
+                        android:textSize="12sp"
+                        />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20"
                     android:orientation="vertical">
 
                     <GridView
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:layout_margin="@dimen/margin_other_view"
                         android:gravity="center"
                         android:horizontalSpacing="@dimen/activity_horizontal_margin"
                         android:listSelector="@android:color/transparent"

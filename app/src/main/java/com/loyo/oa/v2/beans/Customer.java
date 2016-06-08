@@ -56,12 +56,10 @@ public class Customer extends BaseBeans {
 
     public String id;
     public String name;
-    public String wiretel;
     public Locate loc;
     public long createdAt;
     public ArrayList<ExtraData> extDatas = new ArrayList<>();
     public boolean lock;
-    public long lockAt;
     public long lastActAt;
     public String companyId;
     public User owner;

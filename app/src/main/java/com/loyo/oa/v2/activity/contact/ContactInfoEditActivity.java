@@ -2,6 +2,7 @@ package com.loyo.oa.v2.activity.contact;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -21,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -47,7 +47,6 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
@@ -55,18 +54,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -129,7 +124,9 @@ public class ContactInfoEditActivity extends BaseActivity {
     private EditText et_code;
     private EditText et_mobile;
     private TextView tv_mobile_error;
-    private String[] mounthArr = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+
+    private String birthStr;
+    private int age;
 
     private class MHandler extends Handler {
         private WeakReference<ContactInfoEditActivity> mActivity;
@@ -158,6 +155,11 @@ public class ContactInfoEditActivity extends BaseActivity {
                 tvtime.setTextColor(ContactInfoEditActivity.this.getResources().getColor(R.color.title_bg1));
                 tvtime.setText(des);
             }
+
+            if (msg.what == 0x01) {
+                Utils.setContent(tv_birthday, birthStr);
+                Utils.setContent(tv_age, age + "");
+            }
         }
     }
 
@@ -174,7 +176,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         layout_mobile.setOnTouchListener(Global.GetTouch());
         //et_weixin.addTextChangedListener(new WxTextWatcher(et_weixin, "微信号格式不正确"));
         initData();
-
     }
 
     @Click({R.id.layout_back, R.id.layout_set_avartar, R.id.layout_birthday, R.id.iv_submit, R.id.layout_mobile, R.id.iv_submit})
@@ -205,7 +206,7 @@ public class ContactInfoEditActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_IMAGE);
                 break;
             case R.id.layout_birthday:
-                selectBirthDay();
+                pickDate();
                 break;
             case R.id.iv_submit:
                 //关闭键盘
@@ -219,7 +220,6 @@ public class ContactInfoEditActivity extends BaseActivity {
                 showUpdateMobileDialog();
                 break;
             default:
-
                 break;
         }
     }
@@ -313,9 +313,19 @@ public class ContactInfoEditActivity extends BaseActivity {
             return;
         }
 
-        if (!TextUtils.isEmpty(user.avatar)) {
+        int defaultAvatao;
+
+        if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
+            if (MainApp.user.gender == 2) {
+                defaultAvatao = R.drawable.icon_contact_avatar;
+            } else {
+                defaultAvatao = R.drawable.img_default_user;
+            }
+            img_title_user.setImageResource(defaultAvatao);
+        } else {
             ImageLoader.getInstance().displayImage(user.getAvatar(), img_title_user);
         }
+
 
         path = user.getAvatar();
         Utils.setContent(tv_mobile, user.mobile);
@@ -364,7 +374,16 @@ public class ContactInfoEditActivity extends BaseActivity {
      * 编辑个人信息
      */
     private void updateProfile() {
-        showLoading("");
+
+        if (!et_weixin.getText().toString().isEmpty()) {
+            if (!RegexUtil.regexk(et_weixin.getText().toString(), RegexUtil.StringType.WX)) {
+                Toast("微信号码不正确");
+                return;
+            }
+        }
+
+
+        showLoading("正在提交");
         String tel = tv_mobile.getText().toString();
         String birthDay = tv_birthday.getText().toString();
         String weixinId = et_weixin.getText().toString();
@@ -390,9 +409,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                // Toast("修改个人信息失败");
                 HttpErrorCheck.checkError(error);
-                // finish();
             }
         });
     }
@@ -484,20 +501,25 @@ public class ContactInfoEditActivity extends BaseActivity {
      * @param tel
      */
     private void verifyPhone(final String tel) {
+        //验证手机号
         RestAdapterFactory.getInstance().build(FinalVariables.URL_VERIFY_PHONE).create(IMobile.class).verifyPhone(tel, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
+                HttpErrorCheck.checkResponse("验证手机号", response);
                 tv_get_code.setEnabled(false);
                 countDown();
+                //请求验证码
                 RestAdapterFactory.getInstance().build(FinalVariables.URL_GET_CODE).create(IMobile.class).getVerifyCode(tel, new RCallback<Object>() {
                     @Override
                     public void success(final Object o, final Response response) {
+                        HttpErrorCheck.checkResponse("请求手机验证码", response);
                         Toast("发送验证码成功");
                     }
 
                     @Override
                     public void failure(final RetrofitError error) {
                         super.failure(error);
+                        HttpErrorCheck.checkError(error);
                         Toast("发送验证码失败");
                     }
                 });
@@ -506,6 +528,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 if ("500".equals(error.getMessage().substring(0, 3))) {
                     Toast("该手机号已被录入本系统,请勿重复使用!");
                 }
@@ -536,6 +559,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         app.getRestAdapter(mobile_phone).create(IMobile.class).modifyMobile(map, new RCallback<Object>() {
             @Override
             public void success(final Object o, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 dialog.dismiss();
                 Toast("修改手机号码成功");
                 tv_mobile.setText(mobile);
@@ -545,58 +569,53 @@ public class ContactInfoEditActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 dialog.dismiss();
-                Toast("修改手机号码失败" + error.getMessage());
+                Toast("修改手机号码失败");
             }
         });
     }
 
-
-    private DatePicker findDatePicker(final ViewGroup group) {
-        if (group != null) {
-            for (int i = 0, j = group.getChildCount(); i < j; i++) {
-                View child = group.getChildAt(i);
-                if (child instanceof DatePicker) {
-                    return (DatePicker) child;
-                } else if (child instanceof ViewGroup) {
-                    DatePicker result = findDatePicker((ViewGroup) child);
-                    if (result != null)
-                        return result;
-                }
-            }
-        }
-        return null;
-    }
-
     /**
-     * 设置生日
+     * 功 能: 生日选择器
+     * 说 明: 控件自带按钮错显为英文，找不到原因，只能手动设置按钮监听。
      */
-    private void selectBirthDay() {
 
-        Calendar calendar = Calendar.getInstance(Locale.CHINA);
-        Date date = new Date();
-        calendar.setTime(date);
+    public void pickDate() {
+        Calendar cal = Calendar.getInstance();
+        final DatePickerDialog mDialog = new DatePickerDialog(this, null,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        //手动设置按钮
+        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
-            public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                int age = Utils.getAge(year + "");
+            public void onClick(DialogInterface dialog, int which) {
+                DatePicker datePicker = mDialog.getDatePicker();
+                int year = datePicker.getYear();
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+
+                age = Utils.getAge(year + "");
                 if (age > 0) {
-                    String str = year + "-" + String.format("%02d", (monthOfYear + 1)) + "-" + String.format("%02d", dayOfMonth);
-                    Utils.setContent(tv_birthday, str);
-                    Utils.setContent(tv_age, age + "");
+                    birthStr = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", day);
+                    mHandler.sendEmptyMessage(0x01);
                 } else {
                     Toast("出生日期不能是未来时间，请重新设置");
                 }
             }
-        }, year, month, day);
-        datePickerDialog.show();
+        });
+
+        //取消按钮，如果不需要直接不设置即可
+        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                System.out.println("BUTTON_NEGATIVE~~");
+            }
+        });
+
+        mDialog.show();
     }
+
 
     /**
      * 电话号码编辑框的文本观察器
@@ -624,26 +643,26 @@ public class ContactInfoEditActivity extends BaseActivity {
         }
     }
 
-//    /**
-//     * 微信编辑框的文本观察器
-//     */
-//    private class WxTextWatcher extends ITextWatcher {
-//        private String mDes;
-//        private EditText mEt;
-//
-//        private WxTextWatcher(EditText tv, String des) {
-//            mEt = tv;
-//            mDes = des;
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable editable) {
-//            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
-//            if (!isMobile) {
-//                mEt.setError(mDes);
-//            }
-//        }
-//    }
+    /**
+     * 微信编辑框的文本观察器
+     */
+/*    private class WxTextWatcher extends ITextWatcher {
+        private String mDes;
+        private EditText mEt;
+
+        private WxTextWatcher(EditText tv, String des) {
+            mEt = tv;
+            mDes = des;
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            boolean isMobile = RegexUtil.regexk(editable.toString(), RegexUtil.StringType.WX);
+            if (!isMobile) {
+                mEt.setError(mDes);
+            }
+        }
+    }*/
 
     /**
      * 弹出框控件点击事件
@@ -658,14 +677,16 @@ public class ContactInfoEditActivity extends BaseActivity {
         @Override
         public void onClick(final View view) {
             switch (view.getId()) {
+                //获取验证码
                 case R.id.btn_get_code:
                     getVerifyCode();
-
                     break;
+                //确认修改手机号
                 case R.id.btn_confirm:
                     modifyMobile(mDialog);
                     recycle();
                     break;
+                //取消
                 case R.id.btn_cancel:
                     mDialog.dismiss();
                     recycle();
@@ -737,9 +758,7 @@ public class ContactInfoEditActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 
     public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {

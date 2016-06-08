@@ -42,7 +42,6 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -68,10 +67,13 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById ImageView img_project_status;
     @Extra("projectId") String projectId;
     HttpProject project;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
+    BaseFragment fragmentX = null;
 
     @AfterViews
     void initViews() {
@@ -86,7 +88,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     private void getProject() {
         DialogHelp.showLoading(this, "", true);
-        app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
+        app.getRestAdapter().create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
                 DialogHelp.cancelLoading();
@@ -129,7 +131,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     }
                 } else {
                     if (project.isCreator()) {
-                        intent.putExtra("delete", true);
                         intent.putExtra("extra", "重启项目"); //0:关闭
                     }
                 }
@@ -141,7 +142,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 app.startActivity(this, ProjectDescriptionActivity_.class, MainApp.ENTER_TYPE_BUTTOM, false, b);
                 break;
             default:
-
                 break;
         }
     }
@@ -149,7 +149,10 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("review", project);
+        if(null != project){
+            project.viewed = true;
+            intent.putExtra("review", project);
+        }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
@@ -168,7 +171,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 TITLES[i] += "(" + sizes[i] + ")";
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("project", project);
-                BaseFragment fragmentX = null;
+
                 if (i == 0) {
                     bundle.putInt("type", 2);
                 } else if (i == 1) {
@@ -207,7 +210,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
         User creator = project.creator;
         tv_project_title.setText(project.title);
-        tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
+//        tv_project_extra.setText(creator.getRealname() + " " + app.df2.format(new Date(project.getCreatedAt())) + " 发布");
+        tv_project_extra.setText("负责人：" + managersPersion(project.managers));
 
         if (project.status == 1) {
             img_project_status.setImageResource(R.drawable.icon_project_run);
@@ -225,6 +229,20 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
             }
         }
 
+    }
+
+    /**
+     * 负责人的名字
+     *
+     * @param managers
+     * @return
+     */
+    private String managersPersion(ArrayList<HttpProject.ProjectManaer> managers) {
+        String manaderName = "";
+        for (HttpProject.ProjectManaer ele : managers) {
+            manaderName += ele.user.name + ",";
+        }
+        return manaderName.substring(0, manaderName.length() - 1);
     }
 
     /**
@@ -288,6 +306,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
                         @Override
                         public void success(final Project o, final Response response) {
+                            HttpErrorCheck.checkResponse("删除项目：", response);
                             Intent intent = new Intent();
                             intent.putExtra("delete", project);
                             app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
@@ -303,7 +322,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
                         @Override
                         public void success(final Project o, final Response response) {
-                            DialogHelp.cancelLoading();
                             HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
                             project.status = (project.status == 1 ? 0 : 1);
                             restartActivity();//重启Activity
@@ -311,16 +329,18 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
                         @Override
                         public void failure(final RetrofitError error) {
-                            DialogHelp.cancelLoading();
-                            Toast("有任务未结束,不能结束项目!");
                             HttpErrorCheck.checkError(error);
                         }
                     });
                 }
                 break;
-            default:
+            case 196708://讨论不能够@自己196708
+                if (fragmentX instanceof DiscussionFragment) {
+                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
+                }
 
                 break;
+
         }
     }
 
