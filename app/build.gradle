@@ -21,7 +21,7 @@ android {
     signingConfigs {
         debug {
 //            storeFile file('D:\\android\\key\\loyo_share.keystore')
-          storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
+            storeFile file('/Users/pj/Desktop/key/loyo_share.keystore')
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_share.keystore')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
@@ -31,7 +31,7 @@ android {
 //            storeFile file('D:\\android\\key\\loyo_share.keystore')
 //          keyPassword 'Loyo2012'
 //            storeFile file('/Users/loyo_dev1/Desktop/workspace/key/loyo_android_v2.jks')
-          storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
+            storeFile file('/Users/pj/Desktop/key/loyo_android_v2.jks')
             keyPassword 'android'
             keyAlias 'androiddebugkey'
             storePassword 'android'
@@ -53,7 +53,7 @@ android {
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
-            debuggable false
+            debuggable true
         }
         release {
 //            minifyEnabled false

@@ -214,6 +214,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         newhome_name = (TextView) findViewById(R.id.newhome_name);
         startService(mIntentCheckUpdate);
         showLoading("");
+//        LogUtil.d("  主页别创建 ");
         initData();
     }
 
@@ -303,7 +304,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-
     }
 
     /**
@@ -339,11 +339,13 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 获取首页红点数据
      */
     void requestNumber() {
+        cancelLoading();//列表出现消失dialog
         RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
                 getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
                         HttpErrorCheck.checkResponse("a首页红点", response);
+
                         mItemNumbers = removalRedNumber(homeNumbers);
                         testJurl();
                     }
