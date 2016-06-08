@@ -17,34 +17,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.common.Global;
 
 
-public class MoreWindow extends PopupWindow implements OnClickListener{
+public class MoreWindow extends PopupWindow implements OnClickListener {
 
     private String TAG = MoreWindow.class.getSimpleName();
     private Activity mContext;
     private int mWidth;
     private int mHeight;
-    private int statusBarHeight ;
-    private Bitmap mBitmap= null;
+    private int statusBarHeight;
+    private Bitmap mBitmap = null;
     private Bitmap overlay = null;
     private Handler mHandler;
 
     private RelativeLayout view;
-    private Button  closeBtn;
+    private Button closeBtn;
 /*    private TextView btn1;
     private TextView btn2;
     private TextView btn3;
@@ -60,9 +60,10 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
     private ImageView btn6;
 
 
-    public MoreWindow(Activity context,Handler handler) {
+    public MoreWindow(Activity context, Handler handler) {
         mContext = context;
         mHandler = handler;
+        context.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
     public void init() {
@@ -93,9 +94,9 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         float scaleFactor = 8;
         float radius = 10;
         int width = mBitmap.getWidth();
-        int height =  mBitmap.getHeight();
+        int height = mBitmap.getHeight();
 
-        overlay = Bitmap.createBitmap((int) (width / scaleFactor),(int) (height / scaleFactor),Bitmap.Config.ARGB_8888);
+        overlay = Bitmap.createBitmap((int) (width / scaleFactor), (int) (height / scaleFactor), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(overlay);
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
@@ -106,7 +107,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         return overlay;
     }
 
-    private Animation showAnimation1(final View view,int fromY ,int toY) {
+    private Animation showAnimation1(final View view, int fromY, int toY) {
         AnimationSet set = new AnimationSet(true);
         TranslateAnimation go = new TranslateAnimation(0, 0, fromY, toY);
         go.setDuration(300);
@@ -136,7 +137,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         return set;
     }
 
-    public void initBtnUi(View v){
+    public void initBtnUi(View v) {
 /*        btn1 = (TextView) v.findViewById(R.id.more_window_local);
         btn2 = (TextView) v.findViewById(R.id.more_window_online);
         btn3 = (TextView) v.findViewById(R.id.more_window_delete);
@@ -150,7 +151,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         btn4 = (ImageView) v.findViewById(R.id.more_window_collect);
         btn5 = (ImageView) v.findViewById(R.id.more_window_auto);
         btn6 = (ImageView) v.findViewById(R.id.more_window_external);
-        closeBtn = (Button)v.findViewById(R.id.center_music_window_close);
+        closeBtn = (Button) v.findViewById(R.id.center_music_window_close);
 
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
@@ -170,7 +171,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
     }
 
     public void showMoreWindow(View anchor) {
-        view = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.center_music_more_window, null);
+        view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.center_music_more_window, null);
         setContentView(view);
         initBtnUi(view);
         showAnimation(view);
@@ -180,10 +181,10 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         showAtLocation(anchor, Gravity.BOTTOM, 0, statusBarHeight);
     }
 
-    private void showAnimation(ViewGroup layout){
-        for(int i=0;i<layout.getChildCount();i++){
+    private void showAnimation(ViewGroup layout) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
             final View child = layout.getChildAt(i);
-            if(child.getId() == R.id.center_music_window_close){
+            if (child.getId() == R.id.center_music_window_close) {
                 continue;
             }
             child.setOnClickListener(this);
@@ -203,10 +204,10 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
         }
     }
 
-    private void closeAnimation(ViewGroup layout){
-        for(int i=0;i<layout.getChildCount();i++){
+    private void closeAnimation(ViewGroup layout) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
             final View child = layout.getChildAt(i);
-            if(child.getId() == R.id.center_music_window_close){
+            if (child.getId() == R.id.center_music_window_close) {
                 continue;
             }
             child.setOnClickListener(this);
@@ -246,15 +247,15 @@ public class MoreWindow extends PopupWindow implements OnClickListener{
                         }
                     });
                 }
-            }, (layout.getChildCount()-i-1) * 30);
+            }, (layout.getChildCount() - i - 1) * 30);
 
-            if(child.getId() == R.id.more_window_local){
+            if (child.getId() == R.id.more_window_local) {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         dismiss();
                     }
-                }, (layout.getChildCount()-i) * 30 + 80);
+                }, (layout.getChildCount() - i) * 30 + 80);
             }
         }
 
