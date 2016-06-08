@@ -258,10 +258,11 @@ public final class Global {
             Global.Toast("内存卡不可用");
             return null;
         }
-//        getExternalStorageDirectory().getAbsolutePath()
         String timepath = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                "/KuaiQi" + timepath);
+        String photoPath = Environment.getExternalStorageDirectory() + File.separator + "KuaiQi" + timepath;
+//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+//                "/KuaiQi" + timepath);
+        File mediaStorageDir = new File(photoPath);
         LogUtil.d(Environment.getExternalStorageState() + "  WENJAIN文件路dfb劲创建失败！" + mediaStorageDir.getPath());
         mediaStorageDir.mkdir();
         if (!mediaStorageDir.exists()) {

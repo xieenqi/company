@@ -178,12 +178,14 @@ public class WfInstanceAddActivity extends BaseActivity {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
             public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
                 super.failure(error);
             }

@@ -24,10 +24,9 @@ import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
+import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
-import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
@@ -82,7 +81,6 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -362,6 +360,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 首页红点 数据去重重复的
+     *
      * @param oldData
      * @return
      */
@@ -570,17 +569,12 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
             @Override
             public void success(final ValidateInfo _validateInfo, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("考勤信息:", response);
                 if (null == _validateInfo) {
                     Toast("获取考勤信息失败");
                     return;
                 }
                 validateInfo = _validateInfo;
-                try {
-                    LogUtil.d("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 for (ValidateItem validateItem : validateInfo.getValids()) {
                     if (validateItem.getType() == 1) {
                         inEnable = validateItem.isEnable();
@@ -588,7 +582,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         outEnable = validateItem.isEnable();
                     }
                 }
-
 
                 if (inEnable || outEnable) {
                     setAttendance();

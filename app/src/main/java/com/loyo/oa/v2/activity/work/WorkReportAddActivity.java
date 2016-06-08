@@ -331,6 +331,7 @@ public class WorkReportAddActivity extends BaseActivity {
     private void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             public void success(final ArrayList<Attachment> attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }

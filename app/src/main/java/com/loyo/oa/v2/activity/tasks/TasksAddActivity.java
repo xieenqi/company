@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
@@ -251,7 +252,7 @@ public class TasksAddActivity extends BaseActivity {
      * 新建任务 POST提交
      */
 
-    void requestCommitTask(final String title,final String content) {
+    void requestCommitTask(final String title, final String content) {
 
         showLoading("");
         bizExtData = new PostBizExtData();
@@ -261,14 +262,14 @@ public class TasksAddActivity extends BaseActivity {
         map.put("content", content);
         map.put("responsiblePerson", newUser);
         map.put("members", members);
-        map.put("bizExtData",bizExtData);
+        map.put("bizExtData", bizExtData);
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
 
-        if(switch_approve.getState() == 1){
+        if (switch_approve.getState() == 1) {
             isState = false;
-        }else if(switch_approve.getState() == 4){
+        } else if (switch_approve.getState() == 4) {
             isState = true;
         }
 
@@ -276,9 +277,9 @@ public class TasksAddActivity extends BaseActivity {
             map.put("projectId", projectId);
         }
 
-        if(isKind){
-            map.put("cornBody",cornBody);
-        }else if(!isKind){
+        if (isKind) {
+            map.put("cornBody", cornBody);
+        } else if (!isKind) {
             if (mRemind > 0) {
                 map.put("remindflag", mRemind > 0);
                 map.put("remindtime", remindTime);
@@ -291,7 +292,7 @@ public class TasksAddActivity extends BaseActivity {
         LogUtil.d("任务创建 发送的数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
-            public void success(final Task task,final Response response) {
+            public void success(final Task task, final Response response) {
                 //不需要保存
                 cancelLoading();
                 isSave = false;
@@ -313,7 +314,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
-            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer,R.id.layout_retask})
+            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer, R.id.layout_retask})
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
@@ -338,17 +339,17 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
 
-                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")){
+                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()){
+                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if(tv_retask.getText().toString().equals("不重复") && mDeadline <= 0){
+                if (tv_retask.getText().toString().equals("不重复") && mDeadline <= 0) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
@@ -365,7 +366,7 @@ public class TasksAddActivity extends BaseActivity {
             //重复任务
             case R.id.layout_retask:
                 setRepeatTask();
-                 break;
+                break;
 
             //截至时间
             case R.id.layout_deadline:
@@ -379,7 +380,7 @@ public class TasksAddActivity extends BaseActivity {
 
             //参与人选项
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
+                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
                 break;
 
             case R.id.layout_del:
@@ -437,8 +438,8 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 截至日期选择框
-     * */
-    void setDeadLine(){
+     */
+    void setDeadLine() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
@@ -469,33 +470,33 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 重复任务数据初始化
-     * */
-    void setRepeatParam(String[] str){
+     */
+    void setRepeatParam(String[] str) {
 
-        if(str[0].equals("每天")){
+        if (str[0].equals("每天")) {
             cornBody.setType(1);
-        }else if(str[0].equals("每周")){
+        } else if (str[0].equals("每周")) {
             cornBody.setType(2);
 
-            if(str[1].equals("周一")){
-            cornBody.setWeekDay(2);
-            }else if(str[1].equals("周二")){
+            if (str[1].equals("周一")) {
+                cornBody.setWeekDay(2);
+            } else if (str[1].equals("周二")) {
                 cornBody.setWeekDay(3);
-            }else if(str[1].equals("周三")){
+            } else if (str[1].equals("周三")) {
                 cornBody.setWeekDay(4);
-            }else if(str[1].equals("周四")){
+            } else if (str[1].equals("周四")) {
                 cornBody.setWeekDay(5);
-            }else if(str[1].equals("周五")){
+            } else if (str[1].equals("周五")) {
                 cornBody.setWeekDay(6);
-            }else if(str[1].equals("周六")){
+            } else if (str[1].equals("周六")) {
                 cornBody.setWeekDay(7);
-            }else if(str[1].equals("周日")){
+            } else if (str[1].equals("周日")) {
                 cornBody.setWeekDay(1);
             }
 
-        }else if(str[0].equals("每月")){
+        } else if (str[0].equals("每月")) {
             cornBody.setType(3);
-            cornBody.setDay(Integer.parseInt(str[1].replaceAll("号","")));
+            cornBody.setDay(Integer.parseInt(str[1].replaceAll("号", "")));
         }
 
         cornBody.setHour(Integer.parseInt(str[2].replaceAll("时", "")));
@@ -505,8 +506,8 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 重复任务功能
-     * */
-    void setRepeatTask(){
+     */
+    void setRepeatTask() {
         final RepeatTaskView repeatTaskView = new RepeatTaskView(this);
         repeatTaskView.setCanceledOnTouchOutside(true);
         repeatTaskView.show();
@@ -518,18 +519,18 @@ public class TasksAddActivity extends BaseActivity {
                 setRepeatParam(cityArr);
                 String hour = cityArr[2];
                 String mins = cityArr[3];
-                if(hour.equals("0时")){
-                    hour = "0"+hour;
+                if (hour.equals("0时")) {
+                    hour = "0" + hour;
                 }
 
-                if(mins.equals("0分")) {
-                    mins = "0"+mins;
+                if (mins.equals("0分")) {
+                    mins = "0" + mins;
                 }
 
-                if(cityArr[1].equals("无")){
-                    tv_retask.setText(cityArr[0] + " " + hour.replaceAll("时","") + ":" + mins.replaceAll("分",""));
-                }else{
-                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时","") + ":" + mins.replaceAll("分",""));
+                if (cityArr[1].equals("无")) {
+                    tv_retask.setText(cityArr[0] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
+                } else {
+                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
                 }
                 task_ll_deadline.setVisibility(View.GONE);
                 view_task_approve.setVisibility(View.GONE);
@@ -568,13 +569,15 @@ public class TasksAddActivity extends BaseActivity {
     void getAttachments() {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
-            public void success(final ArrayList<Attachment> _attachments,final Response response) {
+            public void success(final ArrayList<Attachment> _attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = _attachments;
                 init_gridView_photo();
             }
 
             @Override
             public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
                 super.failure(error);
             }
@@ -582,7 +585,7 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -625,11 +628,12 @@ public class TasksAddActivity extends BaseActivity {
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 LogUtil.dll("执行了");
-                                Utils.uploadAttachment(uuid,2,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 2, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
+
                                     @Override
                                     public void onError(final Throwable e) {
                                         super.onError(e);
@@ -647,12 +651,12 @@ public class TasksAddActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
                 Utils.dialogShow(this, "请稍候");
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String,Object> map = new HashMap<String, Object>();
-                map.put("bizType",2);
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("bizType", 2);
                 map.put("uuid", uuid);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
+                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                     @Override
-                    public void success(final Attachment attachment,final Response response) {
+                    public void success(final Attachment attachment, final Response response) {
                         Utils.dialogDismiss();
                         Toast("删除附件成功!");
                         lstData_Attachment.remove(delAttachment);
@@ -717,9 +721,9 @@ public class TasksAddActivity extends BaseActivity {
         super.onDestroy();
         DBManager.Instance().deleteTask();
         if (isSave) {
-            if(switch_approve.getState() == 1){
+            if (switch_approve.getState() == 1) {
                 isState = false;
-            }else if(switch_approve.getState() == 4){
+            } else if (switch_approve.getState() == 4) {
                 isState = true;
             }
 
@@ -744,12 +748,12 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     public class RemindAdapter extends CommonAdapter<String> {
-        public RemindAdapter(final Context context,final List<String> datas,final int layoutId) {
+        public RemindAdapter(final Context context, final List<String> datas, final int layoutId) {
             super(context, datas, layoutId);
         }
 
         @Override
-        public void convert(final ViewHolder holder,final String s) {
+        public void convert(final ViewHolder holder, final String s) {
             holder.setText(R.id.tv, s);
         }
     }

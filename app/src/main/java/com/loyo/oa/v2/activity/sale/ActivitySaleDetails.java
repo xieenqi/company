@@ -319,6 +319,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 stage.putString(ExtraAndResult.CC_USER_NAME, mSaleDetails.name);
                 stage.putString(ExtraAndResult.EXTRA_BOOLEAN, mSaleDetails.salesAmount + "");
                 stage.putString(ExtraAndResult.EXTRA_DATA, text_stagename.getText().toString());
+                stage.putBoolean(ExtraAndResult.EXTRA_STATUS, null == mSaleDetails.proInfos ? false : true);
                 app.startActivityForResult(ActivitySaleDetails.this, ActivitySaleStage.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                 break;

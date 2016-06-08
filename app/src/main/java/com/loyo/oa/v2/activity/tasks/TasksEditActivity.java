@@ -207,27 +207,27 @@ public class TasksEditActivity extends BaseActivity {
         setCornBodyinfo();
     }
 
-    /**
-     * 获取附件(编辑)
-     */
-    void getEditAttachments() {
-        showLoading("");
-        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                cancelLoading();
-                mTask.setAttachments(_attachments);
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                cancelLoading();
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
+//    /**
+//     * 获取附件(编辑)
+//     */
+//    void getEditAttachments() {
+//        showLoading("");
+//        Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
+//            @Override
+//            public void success(final ArrayList<Attachment> _attachments, final Response response) {
+//                cancelLoading();
+//                mTask.setAttachments(_attachments);
+//                init_gridView_photo();
+//            }
+//
+//            @Override
+//            public void failure(final RetrofitError error) {
+//                super.failure(error);
+//                cancelLoading();
+//                HttpErrorCheck.checkError(error);
+//            }
+//        });
+//    }
 
     /**
      * 重复任务数据拆解
@@ -323,12 +323,14 @@ public class TasksEditActivity extends BaseActivity {
         Utils.getAttachments(mTask.getAttachmentUUId(), new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> _attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 mTask.setAttachments(_attachments);
                 init_gridView_photo();
             }
 
             @Override
             public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
                 super.failure(error);
             }
