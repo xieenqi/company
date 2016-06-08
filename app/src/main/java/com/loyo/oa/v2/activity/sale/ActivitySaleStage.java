@@ -56,6 +56,8 @@ public class ActivitySaleStage extends BaseActivity {
     private int type;
     private String title, dataName = "", saleName, salePrice;
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
+    private boolean isProduct;//机会详情过来是否有意向产品
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class ActivitySaleStage extends BaseActivity {
         dataName = intent.getStringExtra(ExtraAndResult.EXTRA_DATA);
         saleName = intent.getStringExtra(ExtraAndResult.CC_USER_NAME);
         salePrice = intent.getStringExtra(ExtraAndResult.EXTRA_BOOLEAN);
+        isProduct = intent.getBooleanExtra(ExtraAndResult.EXTRA_STATUS, false);
     }
 
     public void getData2() {
@@ -118,7 +121,7 @@ public class ActivitySaleStage extends BaseActivity {
 
     /**
      * 获取销售阶段 数据
-     * */
+     */
     public void getData() {
         showLoading("");//HttpSaleBuild.buildSale().
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).
@@ -197,6 +200,10 @@ public class ActivitySaleStage extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (tv_name.getText().toString().contains("赢单") && !TextUtils.isEmpty(saleName)) {
+                        if (!isProduct) {
+                            Toast("赢单必须添加意向产品");
+                            return;
+                        }
                         final GeneralPopView dialog = showGeneralDialog(false, true,
                                 "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称：" + saleName + "\n产品总金额：" + salePrice);
 
@@ -221,7 +228,7 @@ public class ActivitySaleStage extends BaseActivity {
                         setSelect(position);
                         Bundle loseBundle = new Bundle();
                         loseBundle.putSerializable("data", loseResons);
-                        loseBundle.putSerializable("mono",data.get(position));
+                        loseBundle.putSerializable("mono", data.get(position));
                         loseBundle.putString("title", "输单原因");
                         loseBundle.putInt("mode", CommonTagSelectActivity.SELECT_MODE_MULTIPLE);
                         loseBundle.putInt("type", CommonTagSelectActivity.SELECT_TYPE_LOSE_REASON);
@@ -298,9 +305,9 @@ public class ActivitySaleStage extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == ActionCode.SALE_DETAILS_STATE_EDIT){
+        if (resultCode == ActionCode.SALE_DETAILS_STATE_EDIT) {
             loseResons = (ArrayList<CommonTag>) data.getSerializableExtra("data");
-            saleStage  = (SaleStage) data.getSerializableExtra("mono");
+            saleStage = (SaleStage) data.getSerializableExtra("mono");
 
             Intent intent = new Intent();
             intent.putExtra(ExtraAndResult.EXTRA_DATA, saleStage);
