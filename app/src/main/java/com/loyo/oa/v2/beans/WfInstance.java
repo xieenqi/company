@@ -73,6 +73,6 @@ public class WfInstance extends BaseBeans implements Serializable {
 
     public class ProjectInfoName implements Serializable {
         public String title;
-
+        public String id;
     }
 }

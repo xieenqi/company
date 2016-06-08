@@ -106,7 +106,6 @@ public class SelectEditDeleteActivity extends Activity implements OnClickListene
                 generalPopView.show();
                 generalPopView.setMessage("确认删除?");
                 generalPopView.setCanceledOnTouchOutside(true);
-//                showGeneralDialog(true, true, "确认删除?");
                 //确定
                 generalPopView.setSureOnclick(new OnClickListener() {
                     @Override

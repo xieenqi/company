@@ -431,7 +431,7 @@ public class WfInstanceAddActivity extends BaseActivity {
 
                 break;
             //选择类别
-            case R.id.layout_wfinstance://到选择类型页面
+            case R.id.layout_wfinstance:
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
             //所属部门选择

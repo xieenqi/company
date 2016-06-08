@@ -110,15 +110,9 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void onSaveInstanceState(Bundle outState) {
-        LogUtil.d(this.getClass().getName() + "-onSaveInstanceState():开始");
-
         super.onSaveInstanceState(outState);
         outState.putString("token", MainApp.getToken());
         outState.putSerializable("user", MainApp.user);
-
-        //outState.putSerializable("subUsers", MainApp.subUsers);
-
-        LogUtil.d(this.getClass().getName() + "-onSaveInstanceState():完成");
     }
 
     @Override
@@ -133,10 +127,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         if (MainApp.user == null && savedInstanceState.containsKey("user")) {
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
-
-        /*if (MainApp.subUsers == null && savedInstanceState.containsKey("subUsers")) {
-            MainApp.subUsers = (ArrayList<User>) savedInstanceState.getSerializable("subUsers");
-        }*/
 
         LogUtil.d(this.getClass().getName() + "-恢复实例状态: 完成");
     }
@@ -158,12 +148,6 @@ public class BaseFragmentActivity extends FragmentActivity {
             LogUtil.d(" 用户为空 ");
             MainApp.user = DBManager.Instance().getUser();
         }
-
-        /*if (MainApp.subUsers == null) {
-            Log.d(Tag, "subUsers is null");
-            MainApp.subUsers = DBManager.Instance().getSubordinates();
-            Log.d(Tag, "subUsers size" + MainApp.subUsers.size());
-        }*/
 
         super.onResume();
     }
@@ -219,7 +203,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         vg.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                return false;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         xDistance = 0f;
@@ -228,17 +211,13 @@ public class BaseFragmentActivity extends FragmentActivity {
                         yLast = event.getY();
                         break;
                     case MotionEvent.ACTION_MOVE:
-//                    case MotionEvent.ACTION_UP:
                         final float curX = event.getX();
                         final float curY = event.getY();
 
                         xDistance += Math.abs(curX - xLast);
                         yDistance += Math.abs(curY - yLast);
-//                        int i = app.diptoPx(200);
 
                         if (xDistance > Global.GetBackGestureLength()) {
-//                            if (curX > xLast && xDistance > yDistance && xDistance > 150) {
-//                            app.finishActivity((FragmentActivity) mContext, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                             onBackPressed();
 
                         }

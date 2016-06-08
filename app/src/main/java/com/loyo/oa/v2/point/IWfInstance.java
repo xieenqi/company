@@ -57,6 +57,12 @@ public interface IWfInstance {
     void addWfInstance(@Body HashMap<String,Object> map,Callback<WfInstance> callback);
 
     /**
+     * 编辑审批
+     * */
+    @PUT("/wfinstance/{id}")
+    void editWfInstance(@Path("id") String id,@Body HashMap<String,Object> map,Callback<WfInstance> callback);
+
+    /**
      * 审批
      * @param id
      * @param map

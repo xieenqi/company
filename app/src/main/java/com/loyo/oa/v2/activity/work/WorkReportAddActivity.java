@@ -24,6 +24,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
+import com.loyo.oa.v2.activity.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -635,7 +636,7 @@ public class WorkReportAddActivity extends BaseActivity {
             workReport.setViewed(true);
             Intent intent = getIntent();
             intent.putExtra("data", workReport);
-            app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
         }
     }
 

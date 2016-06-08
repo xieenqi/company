@@ -80,10 +80,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        //        if(btn_add.getVisibility()!=View.VISIBLE) {
-        //            btn_add.setVisibility(View.VISIBLE);
-        //            mView.postDelayed(UiRunner,5000);
-        //        }
         return true;
     }
 
@@ -94,17 +90,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-/*                switch (scrollState) {
-                   case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        break;
-                   case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                   case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                       if(btn_add.getVisibility()!=View.VISIBLE) {
-                           btn_add.setVisibility(View.VISIBLE);
-                            mView.postDelayed(UiRunner,5000);
-                       }
-                       break;
-                }*/
     }
 
     @Override
@@ -220,22 +205,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
-            return;
-        }
-
-        switch (requestCode) {
-            case REQUEST_CREATE:
-            case REQUEST_REVIEW:
-                GetData();
-                break;
-        }
-    }
-
-    @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
 
         mExpandableListView.onRefreshComplete();
@@ -264,6 +233,27 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     public void failure(RetrofitError error) {
         HttpErrorCheck.checkError(error);
         mExpandableListView.onRefreshComplete();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        /*if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
+            return;
+        }*/
+
+        if(resultCode == 0x09){
+            GetData();
+        }
+
+        /*switch (requestCode) {
+            case REQUEST_CREATE:
+            case REQUEST_REVIEW:
+                GetData();
+                break;
+        }*/
     }
 
     /**

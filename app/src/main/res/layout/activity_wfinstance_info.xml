@@ -203,7 +203,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dimen_15"
-                            android:textColor="#999999"/>
+                            android:textColor="@color/text99"/>
 
                     </LinearLayout>
 
@@ -275,7 +275,7 @@
                             android:gravity="right|center_vertical"
                             android:maxLength="20"
                             android:singleLine="true"
-                            android:textColor="@color/text33"
+                            android:textColor="@color/text99"
                             android:textSize="@dimen/text_sp15"/>
                     </LinearLayout>
                 </LinearLayout>

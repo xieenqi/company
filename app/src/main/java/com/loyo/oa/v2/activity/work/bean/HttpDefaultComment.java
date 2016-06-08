@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.activity.work;
+package com.loyo.oa.v2.activity.work.bean;
 
 import com.loyo.oa.v2.beans.NewUser;
 

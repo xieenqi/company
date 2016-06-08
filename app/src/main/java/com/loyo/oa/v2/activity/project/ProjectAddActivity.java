@@ -371,7 +371,7 @@ public class ProjectAddActivity extends BaseActivity {
                 cancelLoading();
                 Intent intent = new Intent();
                 intent.putExtra("data", project);
-                app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+                app.finishActivity(ProjectAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
             }
 
             @Override

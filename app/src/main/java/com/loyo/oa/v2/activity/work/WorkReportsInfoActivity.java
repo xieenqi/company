@@ -187,7 +187,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             public void success(final WorkReport workReport, final Response response) {
                 Intent intent = new Intent();
                 intent.putExtra("delete", mWorkReport);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
             }
 
             @Override
@@ -484,17 +484,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_DELETE_WORKREPORT:
-
                      /*编辑回调*/
                 if (data.getBooleanExtra("edit", false)) {
-                    LogUtil.dll("进入回调：编辑");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
                     /*复制回调*/
                 } else if ((data.getBooleanExtra("extra", false))) {
-                    LogUtil.dll("进入回调：复制");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
@@ -502,7 +499,6 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
-                    LogUtil.dll("进入回调：删除");
                 }
                 break;
 

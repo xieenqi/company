@@ -6,8 +6,6 @@
               android:fitsSystemWindows="true"
               android:orientation="vertical">
 
-
-    <!--<include layout="@layout/include_item_title"/>-->
     <include layout="@layout/include_common_title"/>
 
     <ListView
@@ -16,5 +14,4 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         />
-
 </LinearLayout>
