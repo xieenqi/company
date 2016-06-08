@@ -252,12 +252,21 @@ public final class Global {
     }
 
     public static Uri getOutputMediaFileUri() {
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "KuaiQi");
+        String status = Environment.getExternalStorageState();
+        if (!status.equals(Environment.MEDIA_MOUNTED)) {
+            LogUtil.d("内存卡bu 可用");
+            Global.Toast("内存卡不可用");
+            return null;
+        }
+//        getExternalStorageDirectory().getAbsolutePath()
+        String timepath = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                "/KuaiQi" + timepath);
+        LogUtil.d(Environment.getExternalStorageState() + "  WENJAIN文件路dfb劲创建失败！" + mediaStorageDir.getPath());
+        mediaStorageDir.mkdir();
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                LogUtil.d("WENJAIN文件路劲创建失败！");
+                LogUtil.d(Environment.getExternalStorageState() + "WENJAIN文件路劲创建失败！" + mediaStorageDir.getPath());
                 return null;
             }
         }
@@ -271,8 +280,7 @@ public final class Global {
 
     //压缩图片,并旋转图片
     public static File scal(Context context, Uri fileUri) throws IOException {
-        String path = Global.getPath(context, fileUri);
-
+        String path = getPath(context, fileUri);
         int degree = readPictureDegree(path);
 
         File outputFile = new File(path);
@@ -303,7 +311,7 @@ public final class Global {
                 bitmap = rotaingImageView(degree, bitmap);
             }
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fos);
 
             fos.close();
 
@@ -380,6 +388,7 @@ public final class Global {
             String fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             file = File.createTempFile(fileName, ".jpg", context.getCacheDir());
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return file;
     }

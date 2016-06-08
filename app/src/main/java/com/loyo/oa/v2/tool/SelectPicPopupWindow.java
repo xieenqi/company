@@ -153,8 +153,12 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             fileUri = Global.getOutputMediaFileUri();
             LogUtil.d("相机路径：" + fileUri);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-            startActivityForResult(intent, 1);
+            if (null != fileUri) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent, 1);
+            } else {
+                Global.Toast("相机不可用");
+            }
         } else {
             final GeneralPopView generalPopView = new GeneralPopView(this, true);
             generalPopView.show();
