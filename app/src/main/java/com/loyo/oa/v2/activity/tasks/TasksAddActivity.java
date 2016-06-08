@@ -297,7 +297,7 @@ public class TasksAddActivity extends BaseActivity {
                 isSave = false;
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
-                setResult(Activity.RESULT_OK, intent);
+                setResult(0x09, intent);
                 finish();
                 if (isCopy)
                     TasksInfoActivity.instance.finish();

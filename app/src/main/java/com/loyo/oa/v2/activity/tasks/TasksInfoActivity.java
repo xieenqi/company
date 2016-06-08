@@ -863,121 +863,6 @@ public class TasksInfoActivity extends BaseActivity {
         tv_attachment_count.setText("(" + (mTask.getAttachments() == null ? 0 : mTask.getAttachments().size()) + ")");
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-        switch (requestCode) {
-
-            /*选择完参与人后，回调*/
-            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
-                member = (Members) data.getSerializableExtra("data");
-                joinName = new StringBuffer();
-                joinUserId = new StringBuffer();
-                if (member.users.size() == 0 && member.depts.size() == 0) {
-                    Toast("未选择相关人员");
-                    joinUserId.reverse();
-                } else {
-                    if (null != member.depts) {
-                        for (NewUser newUser : member.depts) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (null != member.users) {
-                        for (NewUser newUser : member.users) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (!TextUtils.isEmpty(joinName)) {
-                        joinName.deleteCharAt(joinName.length() - 1);
-                    }
-                    editJoiner();
-                }
-                break;
-
-            //编辑 子任务 返回
-            case REQUEST_EDIT_TASK:
-                layout_child_Add_area.removeAllViews();
-                getTask();
-                break;
-
-            case REQUEST_SCORE:
-                getTask();
-                break;
-
-            case REQUEST_EDIT:
-                getTask();
-                break;
-
-            case REQUEST_EDIT_DELETE:
-
-                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
-                if (data.getBooleanExtra("edit", false)) {
-                    if (IsCreator()) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mTask", mTask);
-                        bundle.putBoolean("type", IsCreator());
-                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
-                    } else {
-                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-                    }
-                                /*删除回调*/
-                } else if (data.getBooleanExtra("delete", false)) {
-                    app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
-                        @Override
-                        public void success(final Task o, final Response response) {
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", mTask);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-                        }
-                    });
-                                /*复制回调*/
-                } else if (data.getBooleanExtra("extra", false)) {
-                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
-                    Bundle mBundle = new Bundle();
-                    mBundle.putSerializable("data", mTask);
-                    intent.putExtras(mBundle);
-                    startActivity(intent);
-                                /*修改参与人回调*/
-                } else if (data.getBooleanExtra("editjoiner", false)) {
-                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
-
-                }
-                break;
-
-            case MSG_ATTACHMENT:
-                if (data == null || data.getExtras() == null) {
-                    return;
-                }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                try {
-                    mTask.setAttachments(attachments);
-                    showAttachment();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case MSG_DISCUSSION:
-                if (data == null || data.getExtras() == null) {
-                    return;
-                }
-
-                mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
-                showDiscussion();
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
-
     @OnActivityResult(REQUEST_CREATE_SUB)
     void onNewSubTaskActivityResult(final int resultCode, final Intent data) {
         if (resultCode != Activity.RESULT_OK || data.hasExtra("data")) {
@@ -1134,4 +1019,119 @@ public class TasksInfoActivity extends BaseActivity {
             childTastUsers.add(user.toShortUser());
         }
     }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+
+            /*选择完参与人后，回调*/
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+                member = (Members) data.getSerializableExtra("data");
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (member.users.size() == 0 && member.depts.size() == 0) {
+                    Toast("未选择相关人员");
+                    joinUserId.reverse();
+                } else {
+                    if (null != member.depts) {
+                        for (NewUser newUser : member.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != member.users) {
+                        for (NewUser newUser : member.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    editJoiner();
+                }
+                break;
+
+            //编辑 子任务 返回
+            case REQUEST_EDIT_TASK:
+                layout_child_Add_area.removeAllViews();
+                getTask();
+                break;
+
+            case REQUEST_SCORE:
+                getTask();
+                break;
+
+            case REQUEST_EDIT:
+                getTask();
+                break;
+
+            case REQUEST_EDIT_DELETE:
+
+                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
+                if (data.getBooleanExtra("edit", false)) {
+                    if (IsCreator()) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("mTask", mTask);
+                        bundle.putBoolean("type", IsCreator());
+                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+                    } else {
+                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+                    }
+                                /*删除回调*/
+                } else if (data.getBooleanExtra("delete", false)) {
+                    app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
+                        @Override
+                        public void success(final Task o, final Response response) {
+                            Intent intent = new Intent();
+                            intent.putExtra("delete", mTask);
+                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+                        }
+                    });
+                                /*复制回调*/
+                } else if (data.getBooleanExtra("extra", false)) {
+                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable("data", mTask);
+                    intent.putExtras(mBundle);
+                    startActivity(intent);
+                                /*修改参与人回调*/
+                } else if (data.getBooleanExtra("editjoiner", false)) {
+                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+
+                }
+                break;
+
+            case MSG_ATTACHMENT:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
+                try {
+                    mTask.setAttachments(attachments);
+                    showAttachment();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case MSG_DISCUSSION:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+
+                mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
+                showDiscussion();
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
 }

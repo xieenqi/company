@@ -635,7 +635,7 @@ public class WorkReportAddActivity extends BaseActivity {
             workReport.setViewed(true);
             Intent intent = getIntent();
             intent.putExtra("data", workReport);
-            app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
+            app.finishActivity(WorkReportAddActivity.this, MainApp.ENTER_TYPE_LEFT, 0x09, intent);
         }
     }
 

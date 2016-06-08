@@ -9,6 +9,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceSearchActivity;
+import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInAdd;
+import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
@@ -63,7 +65,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     @Override
     public void addNewItem() {
         Intent intent = new Intent();
-        intent.setClass(mActivity, WfInstanceAddActivity_.class);
+        intent.setClass(mActivity, ActivityWfInTypeSelect.class);
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
@@ -88,8 +90,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("type", category);
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
-//      map.put("endTime", System.currentTimeMillis() / 1000);
-//      map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).

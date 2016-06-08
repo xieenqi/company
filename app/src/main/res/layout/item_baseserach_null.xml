@@ -9,7 +9,6 @@
         android:layout_height="55dp"
         android:visibility="gone"
         >
-
         <TextView
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
@@ -21,4 +20,5 @@
             android:text="无"
             />
         </RelativeLayout>
+    <include layout="@layout/include_solid_line_left"/>
 </LinearLayout>

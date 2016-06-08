@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.tool;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
@@ -23,7 +22,6 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListV
 
 import java.util.ArrayList;
 
-//项目下子内容共用页父类（排序需要）
 public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, View.OnTouchListener {
 
     protected View mView;
@@ -87,7 +85,6 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
         ExpandableListView expandableListView = mExpandableListView.getRefreshableView();
         initAdapter();
         expand();
-
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -147,14 +144,13 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
-            return;
+        if(resultCode == 0x09){
+            GetData(true, false);
         }
 
         switch (requestCode) {
             case REQUEST_CREATE:
                 T item = (T) data.getSerializableExtra("data");
-
                 if (item == null) {
                     return;
                 }
@@ -162,20 +158,15 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                 return;
             case REQUEST_REVIEW:
                 T reviewItem = (T) data.getSerializableExtra("review");
-
                 boolean deleteFlag = false;
-
                 if (reviewItem == null) {
                     reviewItem = (T) data.getSerializableExtra("delete");
                     deleteFlag = true;
                 }
-
                 if (null == reviewItem) {
                     return;
                 }
-
                 for (int i = 0; i < lstData.size(); i++) {
-
                     if (TextUtils.equals(lstData.get(i).getId(), reviewItem.getId())) {
                         if (deleteFlag) {
                             lstData.remove(i);

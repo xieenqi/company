@@ -57,11 +57,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【新建审批】界面
- *  v2.2 新版新建审批
- *  create by yyy on 2016/06/07
+ * 【编辑审批】界面
+ *  create by yyy on 2016/06/08
  */
-public class ActivityWfInAdd extends BaseActivity {
+public class ActivityWfInEdit extends BaseActivity {
 
     /**
      * 部门选择 请求码
@@ -72,9 +71,8 @@ public class ActivityWfInAdd extends BaseActivity {
     private String endTimeId;
     private String projectId;
     private String deptId;
-    private String mTemplateId;
     private String uuid = StringUtil.getUUID();
-    private String processTitle;
+    private String memo;
     private String cusTitle;
     private String projectTitle;
 
@@ -94,6 +92,7 @@ public class ActivityWfInAdd extends BaseActivity {
     private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
     private ArrayList postValue = new ArrayList<>();
 
+    private WfInstance mWfInstance;
     private BizForm mBizForm;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private List<WfinstanceViewGroup> WfinObj = new ArrayList<WfinstanceViewGroup>();
@@ -111,13 +110,8 @@ public class ActivityWfInAdd extends BaseActivity {
 
     void initView() {
         super.setTitle("新建审批");
-        mBizForm = (BizForm) getIntent().getExtras().getSerializable("bizForm");
-        processTitle = getIntent().getExtras().getString("title");
-        mTemplateId = getIntent().getExtras().getString("mTemplateId");
-        projectId = getIntent().getExtras().getString("projectId");
-        projectTitle = getIntent().getExtras().getString("projectTitle");
+        mWfInstance = (WfInstance) getIntent().getExtras().getSerializable("data");
 
-        cusTitle = MainApp.user.getRealname()+""+mBizForm.getName()+""+processTitle;
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -145,9 +139,30 @@ public class ActivityWfInAdd extends BaseActivity {
         ll_dept.setOnClickListener(onClick);
         edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
 
-        tv_title.setText(cusTitle);
+        if(null != mWfInstance.bizForm){
+            mBizForm = mWfInstance.bizForm;
+            try{
+                setStartendTime();
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+        if(null != mWfInstance.title){
+            cusTitle = mWfInstance.title;
+        }
+        if(null != mWfInstance.ProjectInfo.id){
+            projectId = mWfInstance.ProjectInfo.id;
+        }
+        if(null != mWfInstance.ProjectInfo.title){
+            projectTitle = mWfInstance.ProjectInfo.title;
+        }
+        if(null != mWfInstance.memo){
+            memo = mWfInstance.memo;
+        }
 
-        setStartendTime();
+        tv_title.setText(cusTitle);
+        edt_memo.setText(memo);
+
         init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
@@ -229,12 +244,12 @@ public class ActivityWfInAdd extends BaseActivity {
             switch (v.getId()) {
                 //返回
                 case R.id.img_title_left:
-                    app.finishActivity(ActivityWfInAdd.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                    app.finishActivity(ActivityWfInEdit.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
                     break;
 
                 //所属部门选择
                 case R.id.ll_dept:
-                    app.startActivityForResult(ActivityWfInAdd.this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
+                    app.startActivityForResult(ActivityWfInEdit.this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                     break;
 
                 //所属项目选择
@@ -242,7 +257,7 @@ public class ActivityWfInAdd extends BaseActivity {
                     Bundle bundle2 = new Bundle();
                     bundle2.putInt("from", BaseActivity.WFIN_ADD);
                     bundle2.putInt(ExtraAndResult.EXTRA_STATUS, 1);
-                    app.startActivityForResult(ActivityWfInAdd.this, ProjectSearchActivity.class,
+                    app.startActivityForResult(ActivityWfInEdit.this, ProjectSearchActivity.class,
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;
@@ -290,7 +305,7 @@ public class ActivityWfInAdd extends BaseActivity {
     }
 
     /**
-     * 新建审批 数据请求
+     * 编辑审批 数据请求
      * */
     public void subMinInfo(){
         if (submitData.isEmpty()) {
@@ -368,32 +383,26 @@ public class ActivityWfInAdd extends BaseActivity {
 
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("bizformId", mBizForm.getId());              //表单Id
-        map.put("title", tv_title.getText().toString());     //自定义标题
-        map.put("deptId", deptId);                           //部门 id
-        map.put("workflowValues", workflowValues);           //流程 内容
-        map.put("wftemplateId", mTemplateId);                //流程模板Id
-        map.put("projectId", projectId);                     //项目Id
-        map.put("bizCode", mBizForm.getBizCode());           //流程类型
+        map.put("title", tv_title.getText().toString());       //自定义标题
+        map.put("deptId", deptId);                             //部门 id
+        map.put("workflowValues", workflowValues);             //流程 内容
+        map.put("projectId", projectId);                       //项目Id
+        map.put("memo", edt_memo.getText().toString().trim()); //备注
         if (uuid != null && lstData_Attachment.size() > 0) {
             bizExtData.setAttachmentCount(lstData_Attachment.size());
-            map.put("attachmentUUId", uuid);
             map.put("bizExtData", bizExtData);
         }
-        map.put("memo", edt_memo.getText().toString().trim()); //备注
         LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
         showLoading("");
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).editWfInstance(mWfInstance.id, map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
                 HttpErrorCheck.checkResponse("新建审批cg", response);
                 if (wfInstance != null) {
                     isSave = false;
                     wfInstance.setViewed(true);
-                    Intent intent = getIntent();
-                    intent.putExtra("data", wfInstance);
-                    app.finishActivity(ActivityWfInAdd.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, intent);
+                    app.finishActivity(ActivityWfInEdit.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
                 } else {
                     Toast("服务器错误");
                 }
@@ -500,9 +509,6 @@ public class ActivityWfInAdd extends BaseActivity {
             wfInstance.bizForm = mBizForm;
         }
 
-        if (!TextUtils.isEmpty(mTemplateId)) {
-            wfInstance.wftemplateId = mTemplateId;
-        }
 
         wfInstance.memo = edt_memo.getText().toString().trim();
 

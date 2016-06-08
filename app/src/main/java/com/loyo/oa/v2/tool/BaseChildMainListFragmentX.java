@@ -14,6 +14,8 @@ import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInAdd;
+import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.activity.work.WorkReportAddActivity;
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
@@ -203,7 +205,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 goToCreatePage(TasksAddActivity_.class);
                 break;
             case 12:
-                goToCreatePage(WfInstanceAddActivity_.class);
+                goToCreatePage(ActivityWfInTypeSelect.class);
                 break;
         }
     }

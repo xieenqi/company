@@ -1,12 +1,13 @@
 package com.loyo.oa.v2.activity.wfinstance.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.adapter.WfInstanceTypeSelectListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
@@ -21,8 +22,6 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import retrofit.RetrofitError;
@@ -42,7 +41,11 @@ public class ActivityWfInTypeSelect extends BaseActivity implements View.OnClick
     public PaginationX pagination = new PaginationX(20);
     public BizForm mBizForm;
     public Bundle  mBundle;
+    public Intent  mIntent;
     public static ActivityWfInTypeSelect instance = null;
+
+    public String projectId = null;
+    public String projectTitle = null;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -54,6 +57,13 @@ public class ActivityWfInTypeSelect extends BaseActivity implements View.OnClick
 
     private void initUI() {
         super.setTitle("选择类别");
+        try {
+            projectId = getIntent().getExtras().getString("projectId");
+            projectTitle = getIntent().getExtras().getString("projectTitle");
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
         getData_BizForm();
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(this);
@@ -130,7 +140,9 @@ public class ActivityWfInTypeSelect extends BaseActivity implements View.OnClick
                     } else {
                         mBundle = new Bundle();
                         mBundle.putSerializable("bizForm", bizForm);
-                        app.startActivity(ActivityWfInTypeSelect.this, ActivityProcessSelect.class, MainApp.ENTER_TYPE_RIGHT, false, mBundle);
+                        mBundle.putString("projectTitle", projectTitle);
+                        mBundle.putString("projectId", projectId);
+                        app.startActivityForResult(ActivityWfInTypeSelect.this, ActivityProcessSelect.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
                     }
                 }
             }
@@ -185,5 +197,13 @@ public class ActivityWfInTypeSelect extends BaseActivity implements View.OnClick
             }
         }
         return newField;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == WfInstanceManageActivity.WFIN_FINISH_RUSH){
+            app.finishActivity(ActivityWfInTypeSelect.this, MainApp.ENTER_TYPE_LEFT,0x09, new Intent());
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.adapter.ProcessChooseAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
@@ -30,11 +31,13 @@ public class ActivityProcessSelect extends BaseActivity {
 
     private ListView lv_deptList;
     private LinearLayout img_title_left;
-    private Intent mIntent;
     private Bundle mBundle;
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     public  static ActivityProcessSelect instance = null;
+
+    public String projectId;
+    public String projectTitle;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -46,8 +49,9 @@ public class ActivityProcessSelect extends BaseActivity {
 
     private void initView() {
         super.setTitle("选择流程");
-        mIntent = getIntent();
-        mBizForm = (BizForm) mIntent.getExtras().getSerializable("bizForm");
+        projectId = getIntent().getExtras().getString("projectId");
+        projectTitle = getIntent().getExtras().getString("projectTitle");
+        mBizForm = (BizForm) getIntent().getExtras().getSerializable("bizForm");
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnClickListener(click);
         lv_deptList = (ListView) findViewById(R.id.lv_deptList);
@@ -60,10 +64,12 @@ public class ActivityProcessSelect extends BaseActivity {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 mBundle = new Bundle();
-                mBundle.putSerializable("bizForm",mBizForm);
+                mBundle.putSerializable("bizForm", mBizForm);
                 mBundle.putString("title", wfTemplateArrayList.get(position).getTitle());
-                mBundle.putString("mTemplateId",wfTemplateArrayList.get(position).getId());
-                app.startActivity(ActivityProcessSelect.this,ActivityWfInAdd.class,MainApp.ENTER_TYPE_RIGHT,false,mBundle);
+                mBundle.putString("mTemplateId", wfTemplateArrayList.get(position).getId());
+                mBundle.putString("projectTitle", projectTitle);
+                mBundle.putString("projectId", projectId);
+                app.startActivityForResult(ActivityProcessSelect.this,ActivityWfInAdd.class,MainApp.ENTER_TYPE_RIGHT,0,mBundle);
             }
         });
     }
@@ -95,7 +101,6 @@ public class ActivityProcessSelect extends BaseActivity {
         });
     }
 
-
     private View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -109,4 +114,13 @@ public class ActivityProcessSelect extends BaseActivity {
             }
         }
     };
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == WfInstanceManageActivity.WFIN_FINISH_RUSH){
+            app.finishActivity(ActivityProcessSelect.this, MainApp.ENTER_TYPE_LEFT, WfInstanceManageActivity.WFIN_FINISH_RUSH, new Intent());
+        }
+    }
 }
