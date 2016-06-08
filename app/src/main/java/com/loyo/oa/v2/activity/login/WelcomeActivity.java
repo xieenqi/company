@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.MainActivity_;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.SharedUtil;
@@ -69,7 +69,7 @@ public class WelcomeActivity extends Activity {
                         public void onClick(final View v) {
                             Intent intent = new Intent();
                             intent.setClass(WelcomeActivity.this,
-                                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
+                                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : NewMainActivity.class);
                             startActivity(intent);
                             finish();
                         }
