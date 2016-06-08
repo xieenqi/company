@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity.commonview;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -28,7 +27,6 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -79,6 +77,7 @@ public class FeedbackActivity extends BaseActivity {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> _attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 attachments = _attachments;
                 init_gridView_photo();
             }
@@ -140,7 +139,7 @@ public class FeedbackActivity extends BaseActivity {
         hideInputKeyboard(et_content);
 
         String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快";
-        showGeneralDialog(false,false,message);
+        showGeneralDialog(false, false, message);
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -178,7 +177,7 @@ public class FeedbackActivity extends BaseActivity {
                         File newFile = Global.scal(this, uri);
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid,0,newFile).subscribe(new CommonSubscriber(this) {
+                                Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
@@ -194,11 +193,11 @@ public class FeedbackActivity extends BaseActivity {
             case FinalVariables.REQUEST_DEAL_ATTACHMENT://删除附件
                 try {
                     final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String,Object> map = new HashMap<String, Object>();
-                    map.put("bizType",0);
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", 0);
                     map.put("uuid", uuid);
                     RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).
-                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
+                            create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                         @Override
                         public void success(final Attachment attachment, final Response response) {
                             Toast("删除附件成功!");

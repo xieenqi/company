@@ -253,14 +253,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
-                LogUtil.dll("获取附件成功 result:" + MainApp.gson.toJson(attachments));
-                LogUtil.dll("success code:" + response.getStatus());
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
             public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
                 LogUtil.dll("failure code:" + error.getResponse().getStatus());
             }

@@ -295,6 +295,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> _attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 attachments = _attachments;
                 init_gridView_photo();
             }
@@ -302,6 +303,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
             }
         });
