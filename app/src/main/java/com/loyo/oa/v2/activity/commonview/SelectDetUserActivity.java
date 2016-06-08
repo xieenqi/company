@@ -36,8 +36,10 @@ import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -82,13 +84,48 @@ public class SelectDetUserActivity extends BaseActivity {
     private ArrayList<String> selectUserIds = new ArrayList<>();
     private ArrayList<NewUser> usersList = new ArrayList<>();
     private ArrayList<NewUser> deptsList = new ArrayList<>();
-    private ArrayList<User> selectUserList = new ArrayList<>();//横 list
+    private ArrayList<User> selectUserList = new ArrayList<User>();//横 list
     private NewUser newUser;
     private Members members;
     private Department companySource;
     public static ArrayList<Department> Data;//组织架构 的缓存
     public static final int selectWhat = 130;
     public static final int SELECT_DETEL_WHAT = 140;
+
+    private Map<String, Integer> mSelectDepartCounts = new HashMap<>();
+
+    /**
+     * 用于保存部门中被选中人的数量
+     *
+     * @param departId
+     * @param isAdd
+     */
+    public void pushSelectCounts(String departId, boolean isAdd) {
+        if (mSelectDepartCounts.containsKey(departId)) {
+            int count = mSelectDepartCounts.get(departId);
+            if (!isAdd && count == 1) {
+                mSelectDepartCounts.remove(departId);
+            } else {
+                mSelectDepartCounts.put(departId, isAdd ? ++count : --count);
+            }
+        } else {
+            if (isAdd) {
+                mSelectDepartCounts.put(departId, 1);
+            } else {
+                LogUtil.d(" 选择数据错误：当前hashmap不存在该departId ");
+            }
+        }
+    }
+
+    /**
+     * 用于保存部门中被选中人指定数量
+     *
+     * @param departId
+     * @param count
+     */
+    public void pushDepartAllCounts(String departId, int count) {
+        mSelectDepartCounts.put(departId, count);
+    }
 
     public Handler mHandler = new Handler() {
         @Override
@@ -606,6 +643,30 @@ public class SelectDetUserActivity extends BaseActivity {
      */
     public class SelectDataAdapter extends BaseAdapter {
 
+        private List<SelectUserBase> mSelectList = new ArrayList<>();
+
+        public void updataList(List<SelectUserBase> data) {
+            if (data == null) {
+                data = new ArrayList<>();
+            }
+            this.mSelectList = data;
+            notifyDataSetChanged();
+        }
+
+        public void removeById(String id) {
+            removeById(id, 0);
+        }
+
+        public void removeById(String id, int startIndex) {
+            if (startIndex >= mSelectList.size())
+                return;
+            for (int i = startIndex; i < mSelectList.size(); i++) {
+                if (mSelectList.get(i).equalsId(id)) {
+                    mSelectList.remove(i--);
+                }
+            }
+        }
+
         @Override
         public int getCount() {
             return selectUserList.size();
@@ -673,7 +734,25 @@ public class SelectDetUserActivity extends BaseActivity {
         class Holder {
             RoundImageView head;
             TextView name;
+
+            @Override
+            public boolean equals(Object o) {
+                return super.equals(o);
+            }
         }
     }
 
+    public interface SelectUserBase {
+        public static final String NULL_AVATAR = "NULL_AVATAR";
+
+        String getId();
+
+        boolean isDepart();
+
+        String getAvater();
+
+        int getUserCount();
+
+        boolean equalsId(String id);
+    }
 }

@@ -43,8 +43,8 @@ android {
         applicationId "com.loyo.oa.v2"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2016060302
-        versionName '1.2.0'
+        versionCode 2016060801
+        versionName '1.2.1'
     }
 
     buildTypes {
@@ -53,6 +53,7 @@ android {
             resValue "string", "amaps_api_key", "2d8b80512b2c5a6110c177828b56bc01"
             resValue "string", "app_name", "快启"
             jniDebuggable true
+            debuggable true
         }
         release {
 //            minifyEnabled false
@@ -83,13 +84,17 @@ android {
         }
     }
 
-    productFlavors {
-        ukuaiqi {}
-        应用宝 {}
-        productFlavors.all { flavor ->
-            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
-        }
-    }
+
+
+
+
+//    productFlavors {
+//        ukuaiqi {}
+//        应用宝 {}
+//        productFlavors.all { flavor ->
+//            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
+//        }
+//    }
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')

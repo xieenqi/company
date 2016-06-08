@@ -80,16 +80,8 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     }
 
 
-    @Override
-    public int getUserCount() {
-        return 0;
-    }
 
     @Override
-    public boolean isDepart() {
-        return false;
-    }
-
     public String getId() {
         return TextUtils.isEmpty(id) ? "id" : id;
     }
@@ -114,20 +106,31 @@ public class User implements Serializable, SelectUserHelper.SelectUserBase {
     }
 
     @Override
-    public boolean equalsId(String id) {
-        if (TextUtils.isEmpty(id))
-            return false;
-        return id.equals(this.id);
-    }
-
-    @Override
     public String getName() {
         return realname;
+    }
+
+
+    @Override
+    public boolean isDepart() {
+        return false;
     }
 
     @Override
     public String getAvater() {
         return getAvatar();
+    }
+
+    @Override
+    public int getUserCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean equalsId(String id) {
+        if (TextUtils.isEmpty(id))
+            return false;
+        return id.equals(this.id);
     }
 
     public void setId(String id) {

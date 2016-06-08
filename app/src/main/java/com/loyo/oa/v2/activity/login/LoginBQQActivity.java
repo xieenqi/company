@@ -11,7 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.MainActivity_;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -62,7 +62,7 @@ public class LoginBQQActivity extends BaseActivity {
                     MainApp.setToken(token[1]);
                     MainApp.isQQLogin = true;
                     SharedUtil.put(mContext, FinalVariables.TOKEN, token[1]);
-                    app.startActivity(LoginBQQActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                    app.startActivity(LoginBQQActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                 } else {
                     view.loadUrl(url);
                 }
