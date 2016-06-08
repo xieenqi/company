@@ -145,7 +145,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageIndex", pagination.getPageIndex());
         params.put("pageSize", isTopAdd ? lstData_BizForm.size() >= 2000 ? lstData_BizForm.size() : 2000 : 2000);
-//        params.put("pageSize", 1000);
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).getWfBizForms(params, new RCallback<PaginationX<BizForm>>() {
             @Override
@@ -168,7 +167,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-//                Toast("获取审批类型失败");
                 listView_bizform.onRefreshComplete();
                 super.failure(error);
             }
@@ -202,7 +200,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
                 HttpErrorCheck.checkResponse("获取选择审批流程", response);
                 bizFormFieldsPaginationX = filedPaginationInfo(bizFormFieldsPaginationX);
                 if (null == bizFormFieldsPaginationX || bizFormFieldsPaginationX.size() == 0) {
-                    // Toast("错误:没有配置流程!");
                     final GeneralPopView dailog = showGeneralDialog(true, false, "该审批类别未设置(未启用)审批流程,\n请选择其它类别！");
                     dailog.setNoCancelOnclick(new View.OnClickListener() {
                         @Override
@@ -220,7 +217,6 @@ public class WfInstanceTypeSelectManageActivity extends BaseActivity implements 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-//                Toast("获取审批流程失败");
                 super.failure(error);
             }
         });
