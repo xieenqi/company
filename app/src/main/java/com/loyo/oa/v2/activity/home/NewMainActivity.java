@@ -35,6 +35,7 @@ import com.loyo.oa.v2.activity.home.cusview.MoreWindow;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
+import com.loyo.oa.v2.activity.sale.ActivityAddMySale;
 import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
@@ -43,7 +44,6 @@ import com.loyo.oa.v2.activity.signin.SignInManagerActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
-import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
@@ -165,6 +165,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 case BaseActivity.SIGNIN_ADD:
                     app.startActivityForResult(NewMainActivity.this, SignInActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
                     break;
+                //新建机会
+                case BaseActivity.SALE_ADD:
+                    app.startActivityForResult(NewMainActivity.this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    break;
             }
         }
     };
@@ -246,7 +250,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     public void testJurl() {
         updateUser();
         //超级管理员判断
-        if (!MainApp.user.isSuperUser()) {
+        if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
                     0 == MainApp.user.newpermission.size()) {
                 Timer timer = new Timer();
