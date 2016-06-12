@@ -76,7 +76,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.AttenDancePopView;
-import com.loyo.oa.v2.tool.customview.HafeRoundImageView;
+import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -116,7 +116,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private TextView newhome_name;
     private PullToRefreshListView listView;
     private Button btn_add;
-    private HafeRoundImageView heading;
+    private RoundImageView heading;
     private MoreWindow mMoreWindow;
     private Intent mIntentCheckUpdate;
     private ValidateInfo validateInfo = new ValidateInfo();
@@ -214,7 +214,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmain);
-        heading = (HafeRoundImageView) findViewById(R.id.newhome_heading_img);
+        heading = (RoundImageView) findViewById(R.id.newhome_heading_img);
         heading.setOnClickListener(this);
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
