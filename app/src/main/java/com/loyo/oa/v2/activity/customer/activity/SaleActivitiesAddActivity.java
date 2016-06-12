@@ -107,7 +107,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
         ll_contact.setOnTouchListener(touch);
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
-        ll_contactItem.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
+        ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -266,7 +266,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                     customerName = customer.name;
                 }
                 tv_customer.setText(customerName);
-                ll_contactItem.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
+                ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
                 break;
             //选择客户联系人
             case ExtraAndResult.REQUEST_CODE_STAGE:
