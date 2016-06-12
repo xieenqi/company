@@ -108,6 +108,7 @@ public class WfinstanceInfoActivity extends BaseActivity {
     public final int MSG_DELETE_WFINSTANCE = 100;
     public final int MSG_ATTACHMENT = 200;
 
+    public boolean isPass = false;
     public boolean isOver = false;
     public String userId, saleId;
 
@@ -405,12 +406,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
             }
         }
 
-        //显示删除
-        if (mWfInstance.status == WfInstance.STATUS_NEW && mWfInstance.creator != null
+        if(mWfInstance.status == WfInstance.STATUS_NEW || mWfInstance.status == WfInstance.STATUS_ABORT){
+            isPass = true;
+        }
+
+        //显示菜单
+        if (isPass && mWfInstance.creator != null
                 && mWfInstance.creator.isCurrentUser() && !("300".equals(mWfInstance.bizForm.bizCode + ""))) {
             img_title_right.setVisibility(View.VISIBLE);
         }
-
     }
 
     void initUI_listView_workflowNodes() {
@@ -558,7 +562,9 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                intent.putExtra("delete", true);
+                if(mWfInstance.status == WfInstance.STATUS_NEW){
+                    intent.putExtra("delete", true);
+                }
                 intent.putExtra("edit", true);
                 startActivityForResult(intent, MSG_DELETE_WFINSTANCE);
                 break;

@@ -68,8 +68,6 @@ public class ActivityWfInAdd extends BaseActivity {
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
 
-    private String startTimeId;
-    private String endTimeId;
     private String projectId;
     private String deptId;
     private String mTemplateId;
@@ -95,6 +93,8 @@ public class ActivityWfInAdd extends BaseActivity {
     private ArrayList postValue = new ArrayList<>();
 
     private BizForm mBizForm;
+    private ArrayList<String> startTimeArr = new ArrayList<>();
+    private ArrayList<String> endTimeArr = new ArrayList<>();
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
@@ -162,10 +162,10 @@ public class ActivityWfInAdd extends BaseActivity {
     public void setStartendTime(){
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
-                startTimeId = mBizForm.getFields().get(i).getId();
+                startTimeArr.add(mBizForm.getFields().get(i).getId());
             }
             if (mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()) {
-                endTimeId = mBizForm.getFields().get(i).getId();
+                endTimeArr.add(mBizForm.getFields().get(i).getId());
             }
         }
         layout_wfinstance_data.setVisibility(View.VISIBLE);
@@ -338,38 +338,41 @@ public class ActivityWfInAdd extends BaseActivity {
             }
         }
 
+
         /**
          * 获取请假/出差系统字段的 开始结束时间
          * */
+
         String startTimeDate = "";
         String endTimeDate = "";
 
         long startTimelong;
         long endTimelong;
 
-        if (null != startTimeId) {
+        for(int i = 0;i<startTimeArr.size();i++) {
             for (HashMap<String, Object> map : workflowValues) {
                 Set set = map.entrySet();
                 Iterator it = set.iterator();
                 while (it.hasNext()) {
                     Map.Entry me = (Map.Entry) it.next();
-                    if (startTimeId.equals(me.getKey())) {
-                        startTimeDate = (String) map.get(startTimeId);
+                    if (startTimeArr.get(i).equals(me.getKey())) {
+                        startTimeDate = (String) map.get(startTimeArr.get(i));
                     }
 
-                    if (endTimeId.equals(me.getKey())) {
-                        endTimeDate = (String) map.get(endTimeId);
+                    if (endTimeArr.get(i).equals(me.getKey())) {
+                        endTimeDate = (String) map.get(endTimeArr.get(i));
                     }
                 }
-            }
-            startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-            endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
 
-            if (startTimelong > endTimelong && startTimelong != endTimelong) {
-                Toast("开始时间不能大于结束时间!");
-                return;
+                if (startTimelong > endTimelong && startTimelong != endTimelong) {
+                    Toast("开始时间不能大于结束时间!");
+                    return;
+                }
             }
         }
+
 
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();

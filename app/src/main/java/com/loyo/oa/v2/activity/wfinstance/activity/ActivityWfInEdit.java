@@ -67,8 +67,8 @@ public class ActivityWfInEdit extends BaseActivity {
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
 
-    private String startTimeId;
-    private String endTimeId;
+    private ArrayList<String> startTimeArr = new ArrayList<>();
+    private ArrayList<String> endTimeArr = new ArrayList<>();
     private String projectId;
     private String deptId;
     private String uuid;
@@ -180,10 +180,10 @@ public class ActivityWfInEdit extends BaseActivity {
     public void setStartendTime(){
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
-                startTimeId = mBizForm.getFields().get(i).getId();
+                startTimeArr.add(mBizForm.getFields().get(i).getId());
             }
             if (mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()) {
-                endTimeId = mBizForm.getFields().get(i).getId();
+                endTimeArr.add(mBizForm.getFields().get(i).getId());
             }
         }
         layout_wfinstance_data.setVisibility(View.VISIBLE);
@@ -382,8 +382,6 @@ public class ActivityWfInEdit extends BaseActivity {
             }
         }
 
-        LogUtil.dee("submitData:"+MainApp.gson.toJson(submitData));
-
         for (int i = 0; i < postValue.size(); i++) {
             if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i) == true) {
                 Toast("请填写\"必填项\"");
@@ -400,27 +398,27 @@ public class ActivityWfInEdit extends BaseActivity {
         long startTimelong;
         long endTimelong;
 
-        if (null != startTimeId) {
+        for(int i = 0;i<startTimeArr.size();i++) {
             for (HashMap<String, Object> map : workflowValues) {
                 Set set = map.entrySet();
                 Iterator it = set.iterator();
                 while (it.hasNext()) {
                     Map.Entry me = (Map.Entry) it.next();
-                    if (startTimeId.equals(me.getKey())) {
-                        startTimeDate = (String) map.get(startTimeId);
+                    if (startTimeArr.get(i).equals(me.getKey())) {
+                        startTimeDate = (String) map.get(startTimeArr.get(i));
                     }
 
-                    if (endTimeId.equals(me.getKey())) {
-                        endTimeDate = (String) map.get(endTimeId);
+                    if (endTimeArr.get(i).equals(me.getKey())) {
+                        endTimeDate = (String) map.get(endTimeArr.get(i));
                     }
                 }
-            }
-            startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
-            endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+                startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+                endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
 
-            if (startTimelong > endTimelong && startTimelong != endTimelong) {
-                Toast("开始时间不能大于结束时间!");
-                return;
+                if (startTimelong > endTimelong && startTimelong != endTimelong) {
+                    Toast("开始时间不能大于结束时间!");
+                    return;
+                }
             }
         }
 
