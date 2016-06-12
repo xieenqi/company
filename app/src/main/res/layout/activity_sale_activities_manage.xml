@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/view_h_title"
                 android:gravity="center"
-                android:text="新增跟进动态"
+                android:text="写跟进"
                 android:textColor="@color/title_bg1"
                 android:textSize="@dimen/text_sp15"/>
         </LinearLayout>

@@ -26,6 +26,7 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.RetrofitError;
@@ -205,30 +206,28 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
                 convertView = getLayoutInflater().inflate(R.layout.item_saleactivities_group_child, null);
             }
 
-            TextView tv_previous = ViewHolder.get(convertView, R.id.tv_previous);
-            TextView tv_creator_name = ViewHolder.get(convertView, R.id.tv_creator_name);
+            TextView tv_create_time = ViewHolder.get(convertView, R.id.tv_create_time);
             TextView tv_content = ViewHolder.get(convertView, R.id.tv_content);
+            TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
+            TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
             TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
-            TextView tv_timenow = ViewHolder.get(convertView, R.id.tv_timenow);
-            ViewGroup layout_timenow = ViewHolder.get(convertView, R.id.layout_timenow);
+//            ViewGroup layout_timenow = ViewHolder.get(convertView, R.id.layout_timenow);
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
 
-            if (saleActivity.getRemindAt() != 0) {
-                tv_timenow.setText(DateTool.timet(saleActivity.getRemindAt() + "", DateTool.DATE_FORMATE_CUSTOM_2));
-            } else {
-                tv_timenow.setText("无");
-            }
-
+            tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
             tv_content.setText(saleActivity.getContent());
-            try{
-                tv_creator_name.setText(saleActivity.getCreator().getName());
-                tv_previous.setText(saleActivity.getType().getName());
-            }catch (NullPointerException e){
-                tv_previous.setText("无");
-                e.printStackTrace();
-            }
+            tv_contact_name.setText("联系人：" + saleActivity.contactName);
+            tv_follow_name.setText("跟进人：" + saleActivity.creatorName + " #" + saleActivity.typeName);
 
-            tv_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
+            if (saleActivity.getRemindAt() != 0) {
+                tv_time.setText(app.df3.format(new Date(saleActivity.getRemindAt() * 1000)));
+            } else {
+                tv_time.setText("无");
+            }
+//            LogUtil.d("dq:" + System.currentTimeMillis() + "  yq:" + saleActivity.getRemindAt());
+            if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
+                tv_time.setTextColor(getResources().getColor(R.color.red1));
+            }
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
             } else {

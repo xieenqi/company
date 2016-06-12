@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activity.customer.activity.CustomerContactManageActivity_;
-import com.loyo.oa.v2.activity.customer.activity.CustomerInfoActivity_;
 import com.loyo.oa.v2.activity.signin.SignInListActivity_;
 import com.loyo.oa.v2.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -615,7 +613,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 break;
         }
 
-        switch(resultCode){
+        switch (resultCode) {
             case ActivityCustomerManager.CUSTOMER_COMM_RUSH:
                 isPutOcen = true;
                 break;
