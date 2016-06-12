@@ -15,40 +15,42 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BizFormFields;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- * 描述 审批内容节点 审批内容列表
- * 作者 : xnq
+ * 【审批内容】动态赋值
+ * create by yyy on 2016/06/12
  */
-public class WfinstanceViewGroup extends LinearLayout {
+public class WfinEditViewGroup extends LinearLayout {
+
+    private int position;
     private Context context;
     private ArrayList<BizFormFields> lstData;
     private HashMap<String, Object> map_Values;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<>();
+    private ArrayList<HashMap<String, Object>> wfInstanceValuesDatas = new ArrayList<>();
 
-    private WfinstanceViewGroup(Context c) {
+    private WfinEditViewGroup(Context c) {
         super(c);
         context = c;
     }
 
-    public WfinstanceViewGroup(Context _context, ArrayList<BizFormFields> lstData, ArrayList<HashMap<String, Object>> data) {
+    public WfinEditViewGroup(Context _context, ArrayList<BizFormFields> lstData, ArrayList<HashMap<String, Object>> data,ArrayList<HashMap<String, Object>> value,int position) {
         this(_context);
         setBackgroundColor(getResources().getColor(R.color.white));
         this.lstData = lstData;
+        this.position = position;
         submitData = data;
+        wfInstanceValuesDatas = value;
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setOrientation(LinearLayout.VERTICAL);
-
         for (int i = 0; i < lstData.size(); i++) {
             LogUtil.d(lstData.get(i).getName() + " ：列表名称 ");
         }
@@ -75,7 +77,7 @@ public class WfinstanceViewGroup extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     submitData.remove(getId());
-                    parent.removeView(WfinstanceViewGroup.this);
+                    parent.removeView(WfinEditViewGroup.this);
                     for (int i = 1; i < parent.getChildCount(); i++) {
                         View child = parent.getChildAt(i);
                         int id = child.getId();
@@ -95,10 +97,6 @@ public class WfinstanceViewGroup extends LinearLayout {
          * 加载子条目，根据后台返回的Type，设置不同的EditText属性
          * */
         for (int i = 0; i < lstData.size(); i++) {
-//            View view = new View(context);
-//            view.setBackgroundColor(getResources().getColor(R.color.activity_split));
-//            view.setLayoutParams(new ViewGroup.LayoutParams(-1, 1));
-//            addView(view);
             BizFormFields bizFormFields = lstData.get(i);
             LogUtil.dll("类型TYPE：" + bizFormFields.getDbtype());
             View convertView = inflater.inflate(R.layout.item_bizform_string, this, false);
@@ -154,6 +152,10 @@ public class WfinstanceViewGroup extends LinearLayout {
                 value.setHint("");
                 value.setText((String) map_Values.get(bizFormFields.getId()));
             }
+
+            HashMap<String,Object> map = wfInstanceValuesDatas.get(position);
+            value.setText(map.get(bizFormFields.getId()).toString());
+
             if (bizFormFields.isEnable()) {
                 addView(convertView);
             }
@@ -163,7 +165,6 @@ public class WfinstanceViewGroup extends LinearLayout {
 
     /**
      * 外部获取 内部所输入的数据
-     *
      * @return
      */
     public HashMap<String, Object> getInfoData() {
@@ -206,14 +207,10 @@ public class WfinstanceViewGroup extends LinearLayout {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
         }
-
-        public void getNuber() {
-
-        }
     }
 
 
-    private class ValueOnClickListener_list implements View.OnClickListener {
+    private class ValueOnClickListener_list implements OnClickListener {
         AlertDialog dialog_Wheel_one;
 
         private ValueOnClickListener_list(AlertDialog _dialog, int position) {
@@ -229,7 +226,7 @@ public class WfinstanceViewGroup extends LinearLayout {
     }
 
     /*时间选择*/
-    private class ValueOnClickListener_dateTime implements View.OnClickListener {
+    private class ValueOnClickListener_dateTime implements OnClickListener {
         private TextView textView;
         private int position;
 
@@ -253,7 +250,6 @@ public class WfinstanceViewGroup extends LinearLayout {
                     @Override
                     public boolean onClick_onTimeSet() {
                         map_Values.put(lstData.get(position).getId(), dateListener.strDate + dateListener.strTime);
-                        //                        mainApplication.logUtil.d("map_Values.put(" + (int) mListData.get(position).getId() + "," + dateListener.strDate + dateListener.strTime + ")");
                         return false;
                     }
                 });
@@ -267,7 +263,6 @@ public class WfinstanceViewGroup extends LinearLayout {
                                 + String.format("%02d", day) + String.format(" %02d", hour) + String.format(":%02d", min);
                         textView.setText(str);
                         map_Values.put(lstData.get(position).getId(), str);
-
                     }
 
                     @Override
