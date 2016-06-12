@@ -50,7 +50,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
-import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
+import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -123,7 +123,7 @@ public class WfInstanceAddActivity extends BaseActivity {
      */
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     //审批内容 新建一个的对象 集合
-    private List<WfinstanceViewGroup> WfinObj = new ArrayList<WfinstanceViewGroup>();
+    private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
@@ -461,7 +461,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             newValues.put(field.getId(), "");
         }
         submitData.add(newValues);
-        WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
+        WfinAddViewGroup viewGroup = new WfinAddViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();

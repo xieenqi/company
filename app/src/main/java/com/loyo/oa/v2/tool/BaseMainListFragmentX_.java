@@ -19,7 +19,6 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
-
 import java.util.ArrayList;
 
 public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, View.OnTouchListener {
@@ -146,6 +145,10 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
         if(resultCode == 0x09){
             GetData(true, false);
+        }
+
+        if(null == data){
+            return;
         }
 
         switch (requestCode) {

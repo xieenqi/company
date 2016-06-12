@@ -44,13 +44,13 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
-import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
+import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
+import com.loyo.oa.v2.tool.customview.WfinEditViewGroup;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import retrofit.RetrofitError;
@@ -71,7 +71,7 @@ public class ActivityWfInEdit extends BaseActivity {
     private String endTimeId;
     private String projectId;
     private String deptId;
-    private String uuid = StringUtil.getUUID();
+    private String uuid;
     private String memo;
     private String cusTitle;
     private String projectTitle;
@@ -94,8 +94,8 @@ public class ActivityWfInEdit extends BaseActivity {
 
     private WfInstance mWfInstance;
     private BizForm mBizForm;
+    private ArrayList<HashMap<String,Object>> wfInstanceValuesDatas = new ArrayList<>();
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
-    private List<WfinstanceViewGroup> WfinObj = new ArrayList<WfinstanceViewGroup>();
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
@@ -111,7 +111,8 @@ public class ActivityWfInEdit extends BaseActivity {
     void initView() {
         super.setTitle("编辑审批");
         mWfInstance = (WfInstance) getIntent().getExtras().getSerializable("data");
-
+        uuid = mWfInstance.attachmentUUId;
+        initData_WorkflowValues();
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
         img_title_left = (ViewGroup) findViewById(R.id.img_title_left);
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
@@ -166,6 +167,7 @@ public class ActivityWfInEdit extends BaseActivity {
         init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
+        getAttachments();
     }
 
     /**
@@ -187,7 +189,10 @@ public class ActivityWfInEdit extends BaseActivity {
         layout_wfinstance_data.setVisibility(View.VISIBLE);
         submitData.clear();
         wfinstance_data_container.removeAllViews();
-        addTypeData();
+        //审批内容 有多少组就执行多少次动态view
+        for(int i = 0;i<wfInstanceValuesDatas.size();i++) {
+            editTypeData(i);
+        }
     }
 
     /**
@@ -266,16 +271,53 @@ public class ActivityWfInEdit extends BaseActivity {
                     subMinInfo();
                     break;
 
+                //新增内容
+                case R.id.btn_add:
+                    addTypeData();
+                    break;
+
                 default:
                     break;
             }
         }
     };
 
+    void initData_WorkflowValues() {
+        if (null == mWfInstance || null == mWfInstance.workflowValues) {
+            return;
+        }
+        wfInstanceValuesDatas.clear();
+        for (int i = 0; i < mWfInstance.workflowValues.size(); i++) {
+            wfInstanceValuesDatas.add(mWfInstance.workflowValues.get(i));
+        }
+    }
 
     /**
-     * xnq
-     * 界面上 新增加审批内容 栏目
+     * 编辑加审批内容 栏目
+     */
+    void editTypeData(int position) {
+        if (mBizForm == null) {
+            Toast("请选择类型");
+            return;
+        }
+        if (null == mBizForm.getFields()) {
+            return;
+        }
+
+        HashMap<String, Object> newValues = new HashMap<String, Object>();
+        for (BizFormFields field : mBizForm.getFields()) {
+            newValues.put(field.getId(),wfInstanceValuesDatas.get(position).get(field.getId()));
+        }
+
+        submitData.add(newValues);
+        WfinEditViewGroup viewGroup = new WfinEditViewGroup(this, mBizForm.getFields(), submitData,wfInstanceValuesDatas,position);
+        viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
+        addIsRequired();
+    }
+
+
+    /**
+     * 新增加审批内容 栏目
      */
     void addTypeData() {
         if (mBizForm == null) {
@@ -291,9 +333,8 @@ public class ActivityWfInEdit extends BaseActivity {
             newValues.put(field.getId(), "");
         }
         submitData.add(newValues);
-        WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
+        WfinAddViewGroup viewGroup = new WfinAddViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
-        WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();
     }
 
@@ -340,6 +381,8 @@ public class ActivityWfInEdit extends BaseActivity {
                 return;
             }
         }
+
+        LogUtil.dee("submitData:"+MainApp.gson.toJson(submitData));
 
         for (int i = 0; i < postValue.size(); i++) {
             if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i) == true) {

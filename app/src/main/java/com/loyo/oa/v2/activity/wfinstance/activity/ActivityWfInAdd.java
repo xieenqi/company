@@ -44,7 +44,7 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
-import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
+import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class ActivityWfInAdd extends BaseActivity {
 
     private BizForm mBizForm;
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
-    private List<WfinstanceViewGroup> WfinObj = new ArrayList<WfinstanceViewGroup>();
+    private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
@@ -108,7 +108,6 @@ public class ActivityWfInAdd extends BaseActivity {
         setContentView(R.layout.activity_wfin_add);
         initView();
     }
-
     void initView() {
         super.setTitle("新建审批");
         mBizForm = (BizForm) getIntent().getExtras().getSerializable("bizForm");
@@ -246,9 +245,15 @@ public class ActivityWfInAdd extends BaseActivity {
                             MainApp.ENTER_TYPE_RIGHT,
                             ExtraAndResult.REQUSET_PROJECT, bundle2);
                     break;
+
                 //提交审批
                 case R.id.img_title_right:
                     subMinInfo();
+                    break;
+
+                //新增内容
+                case R.id.btn_add:
+                    addTypeData();
                     break;
 
                 default:
@@ -276,7 +281,7 @@ public class ActivityWfInAdd extends BaseActivity {
             newValues.put(field.getId(), "");
         }
         submitData.add(newValues);
-        WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
+        WfinAddViewGroup viewGroup = new WfinAddViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();
