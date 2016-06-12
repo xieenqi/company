@@ -63,6 +63,8 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     public static final int WORK_ADD = 0X03; //新建工作报告
     public static final int WFIN_ADD = 0X08;   //新建审批
     public static final int ATTENT_ADD = 0X11;   //考勤打卡
+    public static final int SALE_ADD = 0X15;   //新建销售机会
+    public static final int FOLLOW_ADD = 0X16;   //新建销售机会
 
     public static final int CUSTOMER_MANAGE = 0X04;//客户管理
     public static final int TASKS_MANAGE = 0X05;//任务管理
@@ -79,13 +81,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
-
-        /*强制设置系统语言为中文*/
-        Locale locale = new Locale("zh");
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
 
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
@@ -156,7 +151,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:begin");
+        LogUtil.d(this.getClass().getName() + "-onRestoreInstanceState:begin");
         super.onRestoreInstanceState(savedInstanceState);
 
         if (StringUtil.isEmpty(MainApp.getToken())) {
@@ -167,7 +162,7 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
             MainApp.user = (User) savedInstanceState.getSerializable("user");
         }
 
-        app.logUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
+        LogUtil.d(this.getClass().getName() + "-onRestoreInstanceState:end");
     }
 
     @Override
@@ -177,6 +172,13 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         if (MainApp.user == null) {
             MainApp.user = DBManager.Instance().getUser();
         }
+
+        /*强制设置系统语言为中文*/
+        Locale locale = new Locale("zh");
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, null);
         super.onResume();
     }
 
