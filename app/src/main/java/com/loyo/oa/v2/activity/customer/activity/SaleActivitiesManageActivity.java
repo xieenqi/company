@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
@@ -211,7 +212,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             TextView tv_contact_name = ViewHolder.get(convertView, R.id.tv_contact_name);
             TextView tv_follow_name = ViewHolder.get(convertView, R.id.tv_follow_name);
             TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
-//            ViewGroup layout_timenow = ViewHolder.get(convertView, R.id.layout_timenow);
+            ImageView iv_imgTime = ViewHolder.get(convertView, R.id.iv_imgTime);
             SaleActivity saleActivity = lstData_saleActivity_current.get(i);
 
             tv_create_time.setText(DateTool.getDiffTime(saleActivity.getCreateAt() * 1000));
@@ -227,6 +228,7 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
 //            LogUtil.d("dq:" + System.currentTimeMillis() + "  yq:" + saleActivity.getRemindAt());
             if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
                 tv_time.setTextColor(getResources().getColor(R.color.red1));
+                iv_imgTime.setImageResource(R.drawable.icon_tx2);
             }
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);
