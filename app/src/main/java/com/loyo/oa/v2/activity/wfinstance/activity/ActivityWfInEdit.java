@@ -109,7 +109,7 @@ public class ActivityWfInEdit extends BaseActivity {
     }
 
     void initView() {
-        super.setTitle("新建审批");
+        super.setTitle("编辑审批");
         mWfInstance = (WfInstance) getIntent().getExtras().getSerializable("data");
 
         wfinstance_data_container = (LinearLayout) findViewById(R.id.wfinstance_data_container);
