@@ -141,6 +141,7 @@
 
 
             <LinearLayout
+                android:id="@+id/ll_follow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_48"

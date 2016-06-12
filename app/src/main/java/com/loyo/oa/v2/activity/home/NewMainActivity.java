@@ -27,6 +27,7 @@ import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.SaleActivitiesAddActivity;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
@@ -168,6 +169,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 //新建机会
                 case BaseActivity.SALE_ADD:
                     app.startActivityForResult(NewMainActivity.this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    break;
+                //写跟进
+                case BaseActivity.FOLLOW_ADD:
+                    app.startActivityForResult(NewMainActivity.this, SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
                     break;
             }
         }

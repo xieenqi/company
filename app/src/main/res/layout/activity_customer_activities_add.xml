@@ -16,7 +16,46 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_customer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_h_title"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_item1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_side_edge"
+                    android:minWidth="@dimen/dimen_60"
+                    android:text="跟进客户"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/tv_customer"
+                    style="@style/text_item1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:hint="必填,请选择"
+                    android:textColor="@color/title_bg1"
+                    android:textColorHint="@color/text99"
+                    android:textSize="15sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="4dp"
+                    android:scaleType="center"
+                    android:src="@drawable/right_arrow"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,6 +87,52 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_contactItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:id="@+id/ll_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_h_title"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_item1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:minWidth="@dimen/dimen_60"
+                        android:text="联  系  人"
+                        android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_contact_name"
+                        style="@style/text_item1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:hint="请选择"
+                        android:textColor="@color/title_bg1"
+                        android:textColorHint="@color/text99"
+                        android:textSize="15sp"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="4dp"
+                        android:scaleType="center"
+                        android:src="@drawable/right_arrow"/>
+
+                </LinearLayout>
+
+                <include layout="@layout/include_solid_line_left"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/layout_sale_action"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_48"
@@ -62,7 +147,7 @@
                     android:layout_marginLeft="@dimen/margin_other_view"
                     android:gravity="center_vertical"
                     android:minWidth="@dimen/dimen_100"
-                    android:text="跟   进  方   式"
+                    android:text="跟 进 方 式"
                     android:textColor="@color/text33"
                     android:textSize="@dimen/text_sp15"/>
 
@@ -79,6 +164,7 @@
                         android:layout_toLeftOf="@+id/img_right_arrow1"
                         android:background="@null"
                         android:gravity="center_vertical|right"
+                        android:hint="必选,请选择"
                         android:singleLine="false"
                         android:text=""
                         android:textColor="@color/title_bg1"/>
@@ -128,6 +214,7 @@
                         android:layout_toLeftOf="@+id/img_right_arrow"
                         android:background="@null"
                         android:gravity="center_vertical|right"
+                        android:hint="请选择"
                         android:singleLine="false"
                         android:text=""
                         android:textColor="@color/title_bg1"/>

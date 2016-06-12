@@ -6,14 +6,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity_;
+import com.loyo.oa.v2.activity.signin.SigninSelectCustomer;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
+import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.SaleActivity;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ICustomer;
@@ -34,14 +37,15 @@ import retrofit.client.Response;
 
 /**
  * 新建跟进动态
- * */
+ */
 public class SaleActivitiesAddActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewGroup img_title_left, img_title_right, layout_remain_time, layout_sale_action;
     private EditText edt;
-    private TextView tv_sale_action, tv_remain_time;
+    private TextView tv_sale_action, tv_remain_time, tv_customer, tv_contact_name;
     private Customer mCustomer;
-    private String tagItemIds;
+    private String tagItemIds, contactId, contactName = "无";
+    private LinearLayout ll_customer, ll_contact, ll_contactItem;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
     }
 
     void initUI() {
-        super.setTitle("新建跟进动态");
+        super.setTitle("写跟进");
 
         edt = (EditText) findViewById(R.id.edt);
         tv_remain_time = (TextView) findViewById(R.id.tv_remain_time);
@@ -91,6 +95,19 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
         img_title_right = (ViewGroup) findViewById(R.id.img_title_right);
         img_title_right.setOnClickListener(this);
         img_title_right.setOnTouchListener(touch);
+
+        ll_customer = (LinearLayout) findViewById(R.id.ll_customer);
+        ll_customer.setOnClickListener(this);
+        ll_customer.setOnTouchListener(touch);
+        tv_customer = (TextView) findViewById(R.id.tv_customer);
+
+        ll_contactItem = (LinearLayout) findViewById(R.id.ll_contactItem);
+        ll_contact = (LinearLayout) findViewById(R.id.ll_contact);
+        ll_contact.setOnClickListener(this);
+        ll_contact.setOnTouchListener(touch);
+        tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
+        ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
+        ll_contactItem.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -109,7 +126,7 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
             public void onCancel() {
                 tv_remain_time.setText("不提醒");
             }
-        },false,"不提醒");
+        }, false, "不提醒");
     }
 
     @Override
@@ -135,10 +152,11 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 if (StringUtil.isEmpty(content)) {
                     Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
                     return;
-                }
-
-                if (TextUtils.isEmpty(tagItemIds)) {
+                } else if (TextUtils.isEmpty(tagItemIds)) {
                     Toast("请选择跟进方式");
+                    return;
+                } else if (null == mCustomer || TextUtils.isEmpty(mCustomer.getId())) {
+                    Toast("请选择跟进客户");
                     return;
                 }
 
@@ -147,13 +165,17 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 map.put("customerId", mCustomer.getId());
                 map.put("content", content);
                 map.put("typeId", tagItemIds);
-                if(!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")){
+                if (!tv_remain_time.getText().toString().isEmpty() || !tv_remain_time.getText().toString().equals("不提醒")) {
                     map.put("remindAt", DateTool.getDateToTimestamp(tv_remain_time.getText().toString().trim(), app.df2) / 1000);
+                }
+                if (!TextUtils.isEmpty(contactId)) {
+                    map.put("contactId", contactId);
+                    map.put("contactName", contactName);
                 }
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addSaleactivity(map, new RCallback<SaleActivity>() {
                     @Override
                     public void success(final SaleActivity saleActivity, final Response response) {
-                        HttpErrorCheck.checkResponse("新建跟进动态",response);
+                        HttpErrorCheck.checkResponse("新建跟进动态", response);
                         app.finishActivity(SaleActivitiesAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, new Intent());
                     }
 
@@ -165,8 +187,19 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 });
 
                 break;
-
-            default:
+//选择客户
+            case R.id.ll_customer:
+                Bundle b = new Bundle();
+                app.startActivityForResult(SaleActivitiesAddActivity.this, SigninSelectCustomer.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_CUSTOMER, b);
+                break;
+            //选择联系人
+            case R.id.ll_contact:
+                Bundle bContact = new Bundle();
+                bContact.putSerializable(ExtraAndResult.EXTRA_DATA, mCustomer.contacts);
+                bContact.putString(ExtraAndResult.EXTRA_NAME, tv_contact_name.getText().toString());
+                app.startActivityForResult(SaleActivitiesAddActivity.this, ActivityFollowContactSelect.class,
+                        MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, bContact);
                 break;
         }
     }
@@ -177,15 +210,16 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DBManager.Instance().deleteSaleActivity(mCustomer.getId());
-        if (isSave) {
-            mSaleActivity = new SaleActivity();
-            mSaleActivity.setContent(edt.getText().toString());
-
-            mSaleActivity.setType(null);
-            mSaleActivity.setCreator(null);
-            mSaleActivity.setAttachments(null);
-            DBManager.Instance().putSaleActivity(MainApp.gson.toJson(mSaleActivity), mCustomer.getId());
+        if (null != mCustomer) {
+            DBManager.Instance().deleteSaleActivity(mCustomer.getId());
+            if (isSave) {
+                mSaleActivity = new SaleActivity();
+                mSaleActivity.setContent(edt.getText().toString());
+                mSaleActivity.setType(null);
+                mSaleActivity.setCreator(null);
+                mSaleActivity.setAttachments(null);
+                DBManager.Instance().putSaleActivity(MainApp.gson.toJson(mSaleActivity), mCustomer.getId());
+            }
         }
     }
 
@@ -223,8 +257,25 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 tv_sale_action.setText(getSaleTypes(tags));
                 tagItemIds = tags.get(0).getId();
                 break;
-            default:
-
+            //选择客户返回
+            case ExtraAndResult.REQUEST_CODE_CUSTOMER:
+                Customer customer = (Customer) data.getSerializableExtra("data");
+                String customerName = "无";
+                if (null != customer) {
+                    mCustomer = customer;
+                    customerName = customer.name;
+                }
+                tv_customer.setText(customerName);
+                ll_contactItem.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
+                break;
+            //选择客户联系人
+            case ExtraAndResult.REQUEST_CODE_STAGE:
+                Contact contact = (Contact) data.getSerializableExtra(ExtraAndResult.EXTRA_DATA);
+                if (null != contact) {
+                    contactId = contact.getId();
+                    contactName = contact.getName();
+                }
+                tv_contact_name.setText(contactName);
                 break;
         }
     }

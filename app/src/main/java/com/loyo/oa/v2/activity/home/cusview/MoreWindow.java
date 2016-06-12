@@ -46,7 +46,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
 
     private RelativeLayout view;
     private Button closeBtn;
-    private LinearLayout ll_add_sale;
+    private LinearLayout ll_add_sale, ll_follow;
 /*    private TextView btn1;
     private TextView btn2;
     private TextView btn3;
@@ -155,6 +155,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
         btn6 = (ImageView) v.findViewById(R.id.more_window_external);
         closeBtn = (Button) v.findViewById(R.id.center_music_window_close);
         ll_add_sale = (LinearLayout) v.findViewById(R.id.ll_add_sale);
+        ll_follow = (LinearLayout) v.findViewById(R.id.ll_follow);
 
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
@@ -164,6 +165,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
         btn6.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
         ll_add_sale.setOnClickListener(this);
+        ll_follow.setOnClickListener(this);
 
         btn1.setOnTouchListener(Global.GetTouch());
         btn2.setOnTouchListener(Global.GetTouch());
@@ -173,6 +175,7 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
         btn6.setOnTouchListener(Global.GetTouch());
         closeBtn.setOnTouchListener(Global.GetTouch());
         ll_add_sale.setOnTouchListener(Global.GetTouch());
+        ll_follow.setOnTouchListener(Global.GetTouch());
     }
 
     public void showMoreWindow(View anchor) {
@@ -310,6 +313,11 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
             //新建机会
             case R.id.ll_add_sale:
                 mHandler.sendEmptyMessage(NewMainActivity.SALE_ADD);
+                dismiss();
+                break;
+            //写跟进
+            case R.id.ll_follow:
+                mHandler.sendEmptyMessage(NewMainActivity.FOLLOW_ADD);
                 dismiss();
                 break;
         }
