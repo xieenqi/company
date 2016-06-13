@@ -206,6 +206,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
+        HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
 
         mExpandableListView.onRefreshComplete();
         if (null == tPaginationX) {
@@ -214,7 +215,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
         pagination = tPaginationX;
         ArrayList<T> lstDataTemp = tPaginationX.getRecords();
-
+        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+            Toast("没有更多数据了");
+            return;
+        }
         //下接获取最新时，清空
         if (isTopAdd) {
             lstData.clear();
@@ -225,7 +229,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-        HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
 
     }
 
@@ -244,7 +247,7 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
             return;
         }*/
 
-        if(resultCode == 0x09){
+        if (resultCode == 0x09) {
             GetData();
         }
 
