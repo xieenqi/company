@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceSearchActivity;
-import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInAdd;
 import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -94,6 +92,8 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getWfInstances(map, WfInstanceManageFragment.this);
+        //精简数据之
+//        RestAdapterFactory.getInstance().build("http://192.168.31.131:7000").create(IWfInstance.class).getWfInstancesData(map, WfInstanceManageFragment.this);
     }
 
     @Override

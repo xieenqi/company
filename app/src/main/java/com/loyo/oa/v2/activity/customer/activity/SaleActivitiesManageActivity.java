@@ -225,10 +225,13 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
             } else {
                 tv_time.setText("无");
             }
-//            LogUtil.d("dq:" + System.currentTimeMillis() + "  yq:" + saleActivity.getRemindAt());
+            //提醒时间没有过当前时间变红色
             if (saleActivity.getRemindAt() > System.currentTimeMillis() / 1000) {
                 tv_time.setTextColor(getResources().getColor(R.color.red1));
                 iv_imgTime.setImageResource(R.drawable.icon_tx2);
+            } else {
+                tv_time.setTextColor(getResources().getColor(R.color.text66));
+                iv_imgTime.setImageResource(R.drawable.icon_tx1);
             }
             if (i == lstData_saleActivity_current.size() - 1) {
                 convertView.setBackgroundResource(R.drawable.item_bg_buttom);

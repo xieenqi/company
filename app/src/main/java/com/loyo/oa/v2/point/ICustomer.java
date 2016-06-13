@@ -101,19 +101,20 @@ public interface ICustomer {
 
     /**
      * 获取客户详情
+     * /customer/{id}  改之前的接口 20160613
      *
-     * @param id
+     * @param id       customer/mobile/574eb3ef526f155720edde30?_=1465786248655
      * @param callback
      */
-    @GET("/customer/{id}")
+    @GET("/customer/mobile/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
     @GET("/properties/dynamic/")
-    void getDynamic(@QueryMap HashMap<String, Object> map,Callback<ArrayList<CustomerExtraData>> callback);
+    void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<CustomerExtraData>> callback);
 
     /**
      * 获取参与人权限
-     * */
+     */
     @GET("/config/?key=cust_member_canedit")
     void getMembersRoot(Callback<MembersRoot> callback);
 

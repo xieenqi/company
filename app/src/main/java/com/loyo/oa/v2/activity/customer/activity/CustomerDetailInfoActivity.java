@@ -102,7 +102,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     @ViewById
     TextView customer_detail_wiretel;
     @ViewById
-    TextView tv_sale_activity_date;
+    TextView tv_sale_number;
     @ViewById
     TextView tv_visit_times;
     @ViewById
@@ -113,6 +113,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     TextView tv_attachment_count;
     @ViewById
     ViewGroup ll_sale;
+    @ViewById
+    TextView tv_follow_content;
+    @ViewById
+    TextView tv_follow_crecter_type;
+    @ViewById
+    TextView tv_contact_Number;
+    @ViewById
+    TextView tv_sale_count;
 
     /*之前由传过来的Customer获取客户ID，改为直接把客户ID传过来*/
     Customer mCustomer;
@@ -134,31 +142,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
     void initViews() {
         setTouchView(NO_SCROLL);
         tv_title_1.setText("客户详情");
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getData();
     }
-
-
-    /**
-     * 获取参与人权限
-     */
-    void getMembersRoot() {
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                getMembersRoot(new RCallback<MembersRoot>() {
-                    @Override
-                    public void success(MembersRoot membersRoot, Response response) {
-                        HttpErrorCheck.checkResponse("参与人权限", response);
-                        memRoot = membersRoot;
-                        initData();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
 
     /**
      * 获取数据
@@ -187,6 +178,28 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             }
         });
     }
+
+    /**
+     * 获取参与人权限
+     */
+    void getMembersRoot() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
+                getMembersRoot(new RCallback<MembersRoot>() {
+                    @Override
+                    public void success(MembersRoot membersRoot, Response response) {
+                        HttpErrorCheck.checkResponse("参与人权限", response);
+                        memRoot = membersRoot;
+                        initData();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
 
     /**
      * 数据初始化
@@ -238,14 +251,14 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         layout_contact.setOnTouchListener(Global.GetTouch());
         layout_send_sms.setOnTouchListener(Global.GetTouch());
         layout_call.setOnTouchListener(Global.GetTouch());
-        tv_sale_activity_date.setOnTouchListener(Global.GetTouch());
+        tv_sale_number.setOnTouchListener(Global.GetTouch());
         layout_sale_activity.setOnTouchListener(Global.GetTouch());
         layout_visit.setOnTouchListener(Global.GetTouch());
         layout_purchase.setOnTouchListener(Global.GetTouch());
         layout_task.setOnTouchListener(Global.GetTouch());
         layout_attachment.setOnTouchListener(Global.GetTouch());
 
-        tv_sale_activity_date.setText(app.df3.format(new Date(mCustomer.lastActAt * 1000)));
+
         tv_customer_name.setText(mCustomer.name);
         if (null != mCustomer.loc) {
             tv_address.setText("地址：" + mCustomer.loc.addr);
@@ -258,12 +271,23 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             customer_detail_wiretel.setText(contact.getWiretel());
         }
         tv_visit_times.setText("(" + mCustomer.counter.getVisit() + ")");
-        tv_purchase_count.setText("(" + mCustomer.counter.getDemand() + ")");
+        tv_sale_count.setText("(" + mCustomer.counter.getDemand() + ")");
         tv_task_count.setText("(" + mCustomer.counter.getTask() + ")");
         tv_attachment_count.setText("(" + mCustomer.counter.getFile() + ")");
         //正式启用销售机会 弃用购买意向
         ll_sale.setVisibility(View.VISIBLE);
         ll_sale.setOnTouchListener(Global.GetTouch());
+        //突出显示跟进动态
+        tv_sale_number.setText("(" + mCustomer.saleActivityNum + ")");
+        if (null != mCustomer.saleActivityInfo) {
+            tv_follow_content.setText(mCustomer.saleActivityInfo.content);
+            tv_follow_crecter_type.setText(app.df3.format(new Date(mCustomer.saleActivityInfo.createAt * 1000)) + " " +
+                    mCustomer.saleActivityInfo.creatorName + " #" + mCustomer.saleActivityInfo.typeName);
+        } else {
+            tv_follow_content.setVisibility(View.GONE);
+            tv_follow_crecter_type.setVisibility(View.GONE);
+        }
+        tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
     }
 
     /**
@@ -590,7 +614,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_INFO:
-                getData();
+//                getData();
                 /*如果修改了负责人，不是自己，则finish该页面*/
                 try {
                     Bundle bundle = data.getExtras();
@@ -604,10 +628,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
                 break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
-                getData();
+//                getData();
                 break;
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_TASKS:
-                getData();
+//                getData();
                 break;
             default:
                 break;

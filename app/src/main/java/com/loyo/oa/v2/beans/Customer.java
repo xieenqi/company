@@ -77,6 +77,9 @@ public class Customer extends BaseBeans {
     public Industry industry;
     public int winCount;
 
+    public SaleActivity saleActivityInfo;
+    public int saleActivityNum;
+
     @Override
     String getOrderStr() {
         return null;
