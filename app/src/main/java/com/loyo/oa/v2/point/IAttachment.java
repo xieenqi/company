@@ -1,17 +1,9 @@
 package com.loyo.oa.v2.point;
 
-import com.google.gson.JsonElement;
 import com.loyo.oa.v2.beans.Attachment;
-import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.tool.RCallback;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import retrofit.Callback;
-import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
@@ -65,5 +57,9 @@ public interface IAttachment {
     @Multipart
     @POST("/attachment/")
     Observable<Attachment> upload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments);
+
+    @Multipart
+    @POST("/attachment/")
+    void newUpload(@Part("uuid") TypedString uuid,@Part("bizType")int biz,@Part("attachments")TypedFile attachments,Callback<Attachment> callback);
 
 }

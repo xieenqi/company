@@ -200,7 +200,6 @@ public class Utils {
      * @param file
      */
     public static synchronized Observable<Attachment> uploadAttachment(String uuid, int bizType, File file) {
-        LogUtil.d("附件的本地地址：" + file.getParent());
         TypedFile typedFile = new TypedFile("image/*", file);
         TypedString typedUuid = new TypedString(uuid);
         return RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).upload(typedUuid, bizType, typedFile);

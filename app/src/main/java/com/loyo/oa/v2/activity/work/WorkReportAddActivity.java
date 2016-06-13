@@ -73,6 +73,8 @@ import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -136,6 +138,9 @@ public class WorkReportAddActivity extends BaseActivity {
     private boolean isDelayed = false;
     private int mSelectType = WorkReport.DAY;
     private int retroIndex;
+    private int bizType = 1;
+    private int uploadSize;
+    private int uploadNum;
     private String currentValue;
 
     private WeeksDialog weeksDialog = null;
@@ -457,6 +462,9 @@ public class WorkReportAddActivity extends BaseActivity {
         }
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        if(uploadNum == uploadSize){
+            cancelLoading();
+        }
     }
 
     @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
@@ -640,114 +648,6 @@ public class WorkReportAddActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-        switch (requestCode) {
-            /*所属项目回调*/
-            case FinalVariables.REQUEST_SELECT_PROJECT:
-                Project _project = (Project) data.getSerializableExtra("data");
-                if (null != _project) {
-                    projectId = _project.id;
-                    tv_project.setText(_project.title);
-                } else {
-                    projectId = "";
-                    tv_project.setText("无");
-                }
-                break;
-
-            case SelectPicPopupWindow.GET_IMG:
-                try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        final File newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, 1, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        app.logUtil.e("onNext");
-                                        getAttachments();
-                                    }
-                                });
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
-                break;
-
-            /*删除附件回调*/
-            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                try {
-                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("bizType", 1);
-                    map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment attachment, final Response response) {
-                            Toast("删除附件成功!");
-                            lstData_Attachment.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
-                } catch (Exception e) {
-                    Global.ProcException(e);
-                }
-                break;
-
-            case SelectDetUserActivity2.REQUEST_ONLY://用户单选, 点评人
-                NewUser u = (NewUser) data.getSerializableExtra("data");
-                mReviewer = new Reviewer(u);
-                mReviewer.user = u;
-                tv_reviewer.setText(u.getRealname());
-                break;
-            case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
-                members = (Members) data.getSerializableExtra("data");
-                joinName = new StringBuffer();
-                joinUserId = new StringBuffer();
-                if (members.users.size() == 0 && members.depts.size() == 0) {
-                    tv_toUser.setText("无抄送人");
-                    joinUserId.reverse();
-                } else {
-                    if (null != members.depts) {
-                        for (NewUser newUser : members.depts) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (null != members.users) {
-                        for (NewUser newUser : members.users) {
-                            joinName.append(newUser.getName() + ",");
-                            joinUserId.append(newUser.getId() + ",");
-                        }
-                    }
-                    if (!TextUtils.isEmpty(joinName)) {
-                        joinName.deleteCharAt(joinName.length() - 1);
-                    }
-                    tv_toUser.setText(joinName.toString());
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * 补签显示数据初始化
      */
@@ -872,4 +772,143 @@ public class WorkReportAddActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            showLoading("正在上传");
+        }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        getAttachments();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            /*所属项目回调*/
+            case FinalVariables.REQUEST_SELECT_PROJECT:
+                Project _project = (Project) data.getSerializableExtra("data");
+                if (null != _project) {
+                    projectId = _project.id;
+                    tv_project.setText(_project.title);
+                } else {
+                    projectId = "";
+                    tv_project.setText("无");
+                }
+                break;
+
+            /*上传附件回调*/
+            case SelectPicPopupWindow.GET_IMG:
+                try {
+                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    uploadSize = 0;
+                    uploadNum  = pickPhots.size();
+                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                        Uri uri = Uri.parse(item.path);
+                        final File newFile = Global.scal(this, uri);
+
+                        if (newFile != null && newFile.length() > 0) {
+                            if (newFile.exists()) {
+                                newUploadAttachement(newFile);
+                                /*Utils.uploadAttachment(uuid, 1, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
+                                    @Override
+                                    public void onNext(final Serializable serializable) {
+                                        app.logUtil.e("onNext");
+                                        getAttachments();
+                                    }
+                                });*/
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Global.ProcException(ex);
+                }
+
+                break;
+
+            /*删除附件回调*/
+            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
+                try {
+                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("bizType", bizType);
+                    map.put("uuid", uuid);
+                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
+                        @Override
+                        public void success(final Attachment attachment, final Response response) {
+                            Toast("删除附件成功!");
+                            lstData_Attachment.remove(delAttachment);
+                            signInGridViewAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void failure(final RetrofitError error) {
+                            HttpErrorCheck.checkError(error);
+                            Toast("删除附件失败!");
+                            super.failure(error);
+                        }
+                    });
+                } catch (Exception e) {
+                    Global.ProcException(e);
+                }
+                break;
+
+            case SelectDetUserActivity2.REQUEST_ONLY://用户单选, 点评人
+                NewUser u = (NewUser) data.getSerializableExtra("data");
+                mReviewer = new Reviewer(u);
+                mReviewer.user = u;
+                tv_reviewer.setText(u.getRealname());
+                break;
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
+                members = (Members) data.getSerializableExtra("data");
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (members.users.size() == 0 && members.depts.size() == 0) {
+                    tv_toUser.setText("无抄送人");
+                    joinUserId.reverse();
+                } else {
+                    if (null != members.depts) {
+                        for (NewUser newUser : members.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != members.users) {
+                        for (NewUser newUser : members.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    tv_toUser.setText(joinName.toString());
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 }

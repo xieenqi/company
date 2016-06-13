@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity.tasks;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
@@ -33,6 +31,7 @@ import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -70,6 +69,8 @@ import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * 【创建任务】 页面
@@ -150,9 +151,12 @@ public class TasksAddActivity extends BaseActivity {
     private PostBizExtData bizExtData;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
-    private int remindTime;
     private long mDeadline;
+    private int remindTime;
     private int mRemind = 0;
+    private int bizType = 2;
+    private int uploadSize;
+    private int uploadNum;
     private boolean isCopy;
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
@@ -246,6 +250,9 @@ public class TasksAddActivity extends BaseActivity {
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        if(uploadNum == uploadSize){
+            cancelLoading();
+        }
     }
 
     /**
@@ -562,6 +569,32 @@ public class TasksAddActivity extends BaseActivity {
         tv_responsiblePerson.setText(newUser.getName());
     }
 
+    /**
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            showLoading("正在上传");
+        }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        getAttachments();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
 
     /**
      * 获取附件(创建)
@@ -617,18 +650,21 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
+            /*上传附件回调*/
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>)
                             data.getSerializableExtra("data");
+                    uploadSize = 0;
+                    uploadNum  = pickPhots.size();
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                LogUtil.dll("执行了");
-                                Utils.uploadAttachment(uuid, 2, newFile).subscribe(new CommonSubscriber(this) {
+                                newUploadAttachement(newFile);
+                                /*Utils.uploadAttachment(uuid, 2, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
@@ -638,7 +674,7 @@ public class TasksAddActivity extends BaseActivity {
                                     public void onError(final Throwable e) {
                                         super.onError(e);
                                     }
-                                });
+                                });*/
                             }
                         }
                     }
