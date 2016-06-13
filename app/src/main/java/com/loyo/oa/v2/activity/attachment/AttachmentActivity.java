@@ -5,13 +5,13 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
@@ -24,21 +24,23 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 
 /**
@@ -73,6 +75,8 @@ public class AttachmentActivity extends BaseActivity {
 
     private ArrayList<Attachment> mListAttachment;
     private AttachmentSwipeAdapter adapter;
+    private int uploadSize;
+    private int uploadNum;
 
     @AfterViews
     void init() {
@@ -117,7 +121,6 @@ public class AttachmentActivity extends BaseActivity {
      */
     void bindAttachment() {
         if (ListUtil.IsEmpty(mListAttachment)) {
-            LogUtil.dee("没有附件 return");
             return;
         }
 
@@ -139,6 +142,9 @@ public class AttachmentActivity extends BaseActivity {
         } else {
             adapter.setData(mListAttachment);
             adapter.notifyDataSetChanged();
+        }
+        if(uploadNum == uploadSize){
+            DialogHelp.cancelLoading();
         }
     }
 
@@ -188,25 +194,30 @@ public class AttachmentActivity extends BaseActivity {
                     }
                 }
                 break;
+
+            //附件上传回调
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
                     if (pickPhots == null) {
                         return;
                     }
+                    uploadSize = 0;
+                    uploadNum  = pickPhots.size();
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                uploadAttachment(newFile);
-                                //uploadAttachmentTest(newFile);
+                                //uploadAttachment(newFile);
+                                newUploadAttachement(newFile);
                             }
                         }
                     }
                 } catch (Exception ex) {
                     Global.ProcException(ex);
                 }
+
                 break;
 
             default:
@@ -223,17 +234,40 @@ public class AttachmentActivity extends BaseActivity {
                 .subscribe(new CommonSubscriber(this) {
                     @Override
                     public void onNext(Serializable attachment) {
-                        LogUtil.d("上传附件成功:" + attachment.toString());
                         getAttachments();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtil.d("上传附件失败:" + e.getMessage());
-                        LogUtil.d("上传附件失败:" + e.toString());
                         e.getMessage();
                         super.onError(e);
                     }
                 });
+    }
+
+    /**
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            DialogHelp.showLoading(mContext, "正在上传", true);
+        }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType,typedFile,
+        new RCallback<Attachment>() {
+            @Override
+            public void success(final Attachment attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                getAttachments();
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
     }
 }

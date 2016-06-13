@@ -74,7 +74,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         findViewById(R.id.ll_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_OK);
                 finish();
             }
         });

@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 @EActivity(R.layout.activity_bulletin_add)
 public class BulletinAddActivity extends BaseActivity {
@@ -51,9 +53,12 @@ public class BulletinAddActivity extends BaseActivity {
     @ViewById ViewGroup layout_recevier;
     @ViewById TextView tv_recevier;
 
-    String uuid = StringUtil.getUUID();
-    SignInGridViewAdapter mGridViewAdapter;
-    ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
+    private int bizType = 0;
+    private int uploadSize;
+    private int uploadNum;
+    private String uuid = StringUtil.getUUID();
+    private SignInGridViewAdapter mGridViewAdapter;
+    private ArrayList<Attachment> mAttachment = new ArrayList<>();//照片附件的数据
     private Members member = new Members();
     private StringBuffer joinUserId, joinName;
 
@@ -69,6 +74,9 @@ public class BulletinAddActivity extends BaseActivity {
     void init_gridView_photo() {
         mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
+        if(uploadNum == uploadSize){
+            cancelLoading();
+        }
     }
 
     /**
@@ -77,7 +85,7 @@ public class BulletinAddActivity extends BaseActivity {
     @Click(R.id.layout_recevier)
     void receiverClick() {
 //        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
-        SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(),true);
+        SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
     }
 
     @Click(R.id.img_title_left)
@@ -171,6 +179,32 @@ public class BulletinAddActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            showLoading("正在上传");
+        }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        getAttachments();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
     @OnActivityResult(SelectPicPopupWindow.GET_IMG)
     void onPhotoResult(final Intent data) {
         try {
@@ -180,12 +214,13 @@ public class BulletinAddActivity extends BaseActivity {
                 File newFile = Global.scal(this, uri);
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
-                        Utils.uploadAttachment(uuid, 0, newFile).subscribe(new CommonSubscriber(this) {
+                        newUploadAttachement(newFile);
+                        /*Utils.uploadAttachment(uuid, bizType, newFile).subscribe(new CommonSubscriber(this) {
                             @Override
                             public void onNext(final Serializable serializable) {
                                 getAttachments();
                             }
-                        });
+                        });*/
                     }
                 }
             }

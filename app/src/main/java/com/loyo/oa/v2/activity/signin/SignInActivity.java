@@ -294,6 +294,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                    }
                                 });
                             }
                         }

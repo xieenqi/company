@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.Set;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * 【编辑审批】界面
@@ -75,6 +77,9 @@ public class ActivityWfInEdit extends BaseActivity {
     private String memo;
     private String cusTitle;
     private String projectTitle;
+    private int bizType = 12;
+    private int uploadSize;
+    private int uploadNum;
 
     private ViewGroup img_title_left;
     private ViewGroup img_title_right;
@@ -240,6 +245,9 @@ public class ActivityWfInEdit extends BaseActivity {
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        if(uploadNum == uploadSize){
+            cancelLoading();
+        }
     }
 
 
@@ -457,6 +465,32 @@ public class ActivityWfInEdit extends BaseActivity {
         });
     }
 
+    /**
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            showLoading("正在上传");
+        }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        getAttachments();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -469,18 +503,26 @@ public class ActivityWfInEdit extends BaseActivity {
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    uploadSize = 0;
+                    uploadNum  = pickPhots.size();
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
 
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, 12, newFile).subscribe(new CommonSubscriber(this) {
+                                newUploadAttachement(newFile);
+                               /* Utils.uploadAttachment(uuid, bizType, newFile).subscribe(new CommonSubscriber(this) {
                                     @Override
                                     public void onNext(final Serializable serializable) {
                                         getAttachments();
                                     }
-                                });
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                    }
+                                });*/
                             }
                         }
                     }
@@ -495,7 +537,7 @@ public class ActivityWfInEdit extends BaseActivity {
 
                 final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
                 HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("bizType", 12);
+                map.put("bizType", bizType);
                 map.put("uuid", uuid);
                 RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
                     @Override

@@ -67,6 +67,8 @@ import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -138,6 +140,7 @@ public class TasksEditActivity extends BaseActivity {
     private StringBuffer joinUserId = new StringBuffer();
     private boolean isState;
     private boolean isKind;
+
 
     @AfterViews
         //类似onCreate方法执行入口
@@ -657,11 +660,6 @@ public class TasksEditActivity extends BaseActivity {
                 dialog_Product.dismiss();
             }
         });
-    }
-
-    void setResponsiblePersion(final User user) {
-        newUser = user.toShortUser();
-        tv_responsiblePerson.setText(newUser.getName());
     }
 
     @Override
