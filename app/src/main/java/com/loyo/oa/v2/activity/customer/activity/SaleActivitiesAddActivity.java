@@ -108,8 +108,26 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
         tv_contact_name = (TextView) findViewById(R.id.tv_contact_name);
         ll_customer.setVisibility(null == mCustomer ? View.VISIBLE : View.GONE);
         ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);
+        if(null!=mCustomer){
+            getDefaultContact( mCustomer.contacts);
+        }
     }
 
+    /**
+     * 获取客户的默认联系人
+     * @param data
+     */
+    private void getDefaultContact(ArrayList<Contact> data){
+    for(Contact ele:data){
+        if(!ele.isDefault()){
+            continue;
+        }else {
+            contactId=ele.getId();
+            contactName=ele.getName();
+            tv_contact_name.setText(contactName);
+        }
+    }
+}
     /**
      * 选择下次跟进时间
      */
@@ -263,7 +281,8 @@ public class SaleActivitiesAddActivity extends BaseActivity implements View.OnCl
                 String customerName = "无";
                 if (null != customer) {
                     mCustomer = customer;
-                    customerName = customer.name;
+                    customerName=customer.name;
+                    getDefaultContact( mCustomer.contacts);
                 }
                 tv_customer.setText(customerName);
                 ll_contactItem.setVisibility(null == mCustomer ? View.GONE : View.VISIBLE);

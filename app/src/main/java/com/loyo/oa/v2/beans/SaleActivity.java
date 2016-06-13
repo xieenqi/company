@@ -8,20 +8,35 @@ import java.util.ArrayList;
  */
 public class SaleActivity extends BaseBeans implements Serializable {
     private ArrayList<Attachment> attachments;//array[&{common Attachment}], optional): ,
-    private String content;//string, optional): ,
-    private long createAt;//&{time Time}, optional): ,
     private NewUser creator;//&{organization User}, optional): ,
     private String customerId;//int64, optional): ,
-    private String id;//int, optional): ,
     private String opportunityId;//int64, optional): ,
     private String tagItemIds;//string, optional): ,
     private CommonTag type;//array[&{tag TagItem}], optional): ,
     private long updatedAt;//&{time Time}, optional):
-    private long remindAt;
 
+    //精简过后的跟进动态 ben  20160612
+    public String id;
+    public String creatorName;
+    public long createAt;
+    public String content;
+    public String typeName;
+    public long remindAt;
+    public String contactName;
+
+    //    type SaleActivitySimple struct {
+//        Id          bson.ObjectId `json:"id"`
+//        CreatorName string        `json:"creatorName"` //跟进人
+//        CreateAt    int64         `json:"createAt"`
+//        Content     string        `json:"content,omitempty"`
+//        RemindAt    int64         `json:"remindAt"`
+//        TypeName    string        `json:"typeName,omitempty"`
+//        ContactId   string        `json:"-"`
+//        ContactName string        `json:"contactName,omitempty"` //联系人
+//    }
     @Override
     String getOrderStr() {
-        return getCreateAt()+"";
+        return getCreateAt() + "";
     }
 
     public ArrayList<Attachment> getAttachments() {
