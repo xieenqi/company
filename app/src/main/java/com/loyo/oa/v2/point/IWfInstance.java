@@ -109,7 +109,7 @@ public interface IWfInstance {
      * @param map
      * @param callback
      */
-    @GET("/api/v1/workflow_instances")
+    @GET("/v1/workflow_instances")
     void getWfInstancesData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstance>> callback);
 
 

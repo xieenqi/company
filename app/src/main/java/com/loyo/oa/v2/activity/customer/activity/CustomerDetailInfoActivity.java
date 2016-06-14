@@ -311,7 +311,7 @@ public class CustomerDetailInfoActivity extends BaseActivity {
 
         LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
         View menuView = mLayoutInflater.inflate(R.layout.popu_child_task_edit_layout, null, false);
-        menuView.getBackground().setAlpha(100);
+        menuView.getBackground().setAlpha(80);
         Button btn_child_delete_task = (Button) menuView.findViewById(R.id.btn_child_delete_task);
         Button btnCancel = (Button) menuView.findViewById(R.id.btn_cancel_edit);
         Button btnUpdate = (Button) menuView.findViewById(R.id.btn_child_add_update);
