@@ -14,19 +14,21 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import uk.co.senab.photoview.PhotoView;
 
 /**
  * 预览图片
  */
-public class PreviewImageActivity extends BaseActivity {
+public class PreviewImageActivity2 extends BaseActivity {
 
     private ViewPager mViewPager;
-    private ArrayList<Attachment> mNewAttachments = null;
+    private ArrayList<SelectPicPopupWindow.ImageInfo> mNewAttachments = null;
     private TextView delete;
 
     private int mPosition;
@@ -52,21 +54,19 @@ public class PreviewImageActivity extends BaseActivity {
 
 
         if (getIntent().hasExtra("data")) {
-            ArrayList<Attachment> attachments = (ArrayList<Attachment>) getIntent().getSerializableExtra("data");
+            ArrayList<SelectPicPopupWindow.ImageInfo> attachments = (ArrayList<SelectPicPopupWindow.ImageInfo>) getIntent().getSerializableExtra("data");
             int position = getIntent().getIntExtra("position", 0);
 
-            for (Attachment attachment : attachments) {
-                if ((attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE)) {
+            for (SelectPicPopupWindow.ImageInfo imageInfo : attachments) {
                     if (mNewAttachments == null) {
                         mNewAttachments = new ArrayList<>();
                     }
 
-                    mNewAttachments.add(attachment);
+                    mNewAttachments.add(imageInfo);
 
-                    if (attachment.equals(attachments.get(position))) {
+                    if (imageInfo.equals(attachments.get(position))) {
                         mNewPosition = position;
                     }
-                }
             }
 
             if (mNewAttachments == null || mNewAttachments.size() == 0) {
@@ -97,12 +97,6 @@ public class PreviewImageActivity extends BaseActivity {
 
             }
         });
-//        mViewPager.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
     }
 
     /**
@@ -116,8 +110,8 @@ public class PreviewImageActivity extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
                 Intent intent = new Intent();
-                intent.putExtra("delAtm", mNewAttachments.get(mPosition));
-                MainApp.getMainApp().finishActivity(PreviewImageActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                intent.putExtra("position",mPosition);
+                MainApp.getMainApp().finishActivity(PreviewImageActivity2.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
             }
         });
 
@@ -128,7 +122,6 @@ public class PreviewImageActivity extends BaseActivity {
                 generalPopView.dismiss();
             }
         });
-
     }
 
     class SamplePagerAdapter extends PagerAdapter {
@@ -140,16 +133,20 @@ public class PreviewImageActivity extends BaseActivity {
 
         @Override
         public View instantiateItem(final ViewGroup container, final int position) {
-
+            File imgFile = null;
             PhotoView photoView = new PhotoView(container.getContext());
-            Attachment attachment = mNewAttachments.get(position);
-            File imgFile = attachment.getFile();
-            LogUtil.d("预览图片的url：" + attachment.getUrl());
+            SelectPicPopupWindow.ImageInfo imageInfo = mNewAttachments.get(position);
+            Uri uri = Uri.parse(imageInfo.path);
+            try {
+                imgFile = Global.scal(mContext, uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            LogUtil.d("预览图片的url：" + imageInfo.path);
             if (imgFile != null) {
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {
-
-                ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+                ImageLoader.getInstance().displayImage(imageInfo.path, photoView);
 
             }
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -165,7 +162,5 @@ public class PreviewImageActivity extends BaseActivity {
         public boolean isViewFromObject(final View view, final Object object) {
             return view == object;
         }
-
     }
-
 }

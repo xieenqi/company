@@ -504,21 +504,14 @@ public class BitmapUtil {
                 }
                 LogUtil.d("yula预览的图片：" + newAttachment.get(i).url);
             }
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("data", newAttachment);
-//            bundle.putInt("position", newPosistion);
-//            MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
-//
+
             Bundle bundle = new Bundle();
             bundle.putSerializable("data", newAttachment);
             bundle.putInt("position", newPosistion);
             bundle.putBoolean("isEdit", isEdit);
-//            MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
             MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageActivity.class,
                     MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 
-
         }
     }
-
 }

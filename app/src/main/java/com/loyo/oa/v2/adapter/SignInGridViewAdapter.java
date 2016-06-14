@@ -2,7 +2,6 @@ package com.loyo.oa.v2.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -23,9 +21,13 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.io.File;
 import java.util.ArrayList;
+
+
+/**
+ * 【附件GridView】通用
+ * */
 
 public class SignInGridViewAdapter extends BaseAdapter {
 
@@ -33,7 +35,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private ArrayList<Attachment> mListData;
     private Activity mActivity;
     private ArrayList<File> mBitmaps = new ArrayList<>();
-    private Uri fileUri;
     private int fromPage;
 
     private boolean mIsAdd;
@@ -134,7 +135,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
                             new BitmapUtil.ImageLoadingListener_ClickShowImg(imageView, position,
                                     mListData, R.drawable.default_image, mIsAdd));
                 } else {
-                    //                      显示文件
+                    //显示文件
                     imageView.setImageResource(R.drawable.other_file);
                     textView.setText(attachment.getOriginalName());
 
@@ -150,8 +151,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
                     });
                 }
             }
-
-
         }
     }
 
@@ -161,8 +160,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-
-            LogUtil.dll("mListData Size:" + mListData.size());
 
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {

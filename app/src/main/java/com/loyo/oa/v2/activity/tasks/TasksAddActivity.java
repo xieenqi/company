@@ -20,7 +20,7 @@ import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.customer.activity.CustomerSearchActivity;
-import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.CornBody;
@@ -31,7 +31,6 @@ import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -40,7 +39,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -54,15 +52,12 @@ import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 import com.loyo.oa.v2.tool.customview.RepeatTaskView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,10 +137,9 @@ public class TasksAddActivity extends BaseActivity {
     String customerName;
 
     private AlertDialog dialog_Product;
-    private SignInGridViewAdapter signInGridViewAdapter;
+    private ImageGridViewAdapter imageGridViewAdapter;
     private NewUser newUser;
     private CornBody cornBody;
-    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private StringBuffer strBuf;
     private Members members;
     private PostBizExtData bizExtData;
@@ -160,9 +154,13 @@ public class TasksAddActivity extends BaseActivity {
     private boolean isCopy;
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
+
+    private String title;
+    private String content;
     private StringBuffer joinName;
     private StringBuffer joinUserId;
     private String uuid = StringUtil.getUUID();
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
 
 
     @AfterViews
@@ -234,42 +232,36 @@ public class TasksAddActivity extends BaseActivity {
             u.realname = mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
         }
-        //截至日期设置,需求没要求默认时间，暂注释
-        /*  if (mTask.getPlanEndAt() > 0) {
-            mDeadline = mTask.getPlanEndAt();
-            tv_deadline.setText(app.df3.format(new Date(mDeadline * 1000)));
-        }*/
 
         if (!TextUtils.isEmpty(projectTitle)) {
             tv_Project.setText(projectTitle);
         }
-        getBundle();
+         getBundle();
 
     }
 
+    /**
+     * 图片列表绑定
+     * */
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
-        if(uploadNum == uploadSize){
-            cancelLoading();
-        }
+        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
     /**
      * 新建任务 POST提交
      */
 
-    void requestCommitTask(final String title, final String content) {
-
-        showLoading("");
+    void requestCommitTask() {
+        LogUtil.dee("pickPhots size:"+pickPhots.size());
         bizExtData = new PostBizExtData();
-        bizExtData.setAttachmentCount(lstData_Attachment.size());
+        bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
         map.put("responsiblePerson", newUser);
         map.put("members", members);
-        map.put("bizExtData", bizExtData);
+        map.put("bizExtData", bizExtData); //上传图片的数量
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
@@ -300,6 +292,7 @@ public class TasksAddActivity extends BaseActivity {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 //不需要保存
                 cancelLoading();
                 isSave = false;
@@ -315,7 +308,6 @@ public class TasksAddActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                cancelLoading();
             }
         });
     }
@@ -324,18 +316,20 @@ public class TasksAddActivity extends BaseActivity {
             R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer, R.id.layout_retask})
     void onClick(final View v) {
         switch (v.getId()) {
+
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
                 break;
 
+            //提交任务
             case R.id.img_title_right:
-                String title = edt_title.getText().toString().trim();
+                title = edt_title.getText().toString().trim();
                 if (TextUtils.isEmpty(title)) {
                     Toast(getString(R.string.app_title) + getString(R.string.app_no_null));
                     break;
                 }
 
-                String content = edt_content.getText().toString().trim();
+                content = edt_content.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
                     Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
                     break;
@@ -366,8 +360,7 @@ public class TasksAddActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-
-                requestCommitTask(title, content);
+                newUploadAttachement();
                 break;
 
             //重复任务
@@ -572,49 +565,40 @@ public class TasksAddActivity extends BaseActivity {
     /**
      * 批量上传附件
      * */
-    private void newUploadAttachement(File file){
-        if(uploadSize == 0){
-            showLoading("正在上传");
+    private void newUploadAttachement(){
+        showLoading("正在提交");
+        try {
+            uploadSize = 0;
+            uploadNum  = pickPhots.size();
+            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                Uri uri = Uri.parse(item.path);
+                File newFile = Global.scal(this, uri);
+                if (newFile != null && newFile.length() > 0) {
+                    if (newFile.exists()) {
+                        TypedFile typedFile = new TypedFile("image/*", newFile);
+                        TypedString typedUuid = new TypedString(uuid);
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                                new RCallback<Attachment>() {
+                                    @Override
+                                    public void success(final Attachment attachments, final Response response) {
+                                        uploadSize++;
+                                        if(uploadSize == uploadNum){
+                                            requestCommitTask();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void failure(final RetrofitError error) {
+                                        super.failure(error);
+                                        HttpErrorCheck.checkError(error);
+                                    }
+                                });
+                            }
+                        }
+                    }
+        } catch (Exception ex) {
+            Global.ProcException(ex);
         }
-        uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        getAttachments();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
-                    }
-                });
-    }
-
-
-    /**
-     * 获取附件(创建)
-     */
-    void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                lstData_Attachment = _attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
     }
 
     @Override
@@ -652,60 +636,15 @@ public class TasksAddActivity extends BaseActivity {
 
             /*上传附件回调*/
             case SelectPicPopupWindow.GET_IMG:
-                try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>)
-                            data.getSerializableExtra("data");
-                    uploadSize = 0;
-                    uploadNum  = pickPhots.size();
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                newUploadAttachement(newFile);
-                                /*Utils.uploadAttachment(uuid, 2, newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                    }
-
-                                    @Override
-                                    public void onError(final Throwable e) {
-                                        super.onError(e);
-                                    }
-                                });*/
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
+                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+                LogUtil.dee("回调 pickPhots size:" + pickPhots.size());
+                init_gridView_photo();
                 break;
+
             //附件删除回调
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this, "请稍候");
-                final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("bizType", 2);
-                map.put("uuid", uuid);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachment, final Response response) {
-                        Utils.dialogDismiss();
-                        Toast("删除附件成功!");
-                        lstData_Attachment.remove(delAttachment);
-                        init_gridView_photo();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        Utils.dialogDismiss();
-                        Toast("删除附件失败!");
-                        super.failure(error);
-                    }
-                });
+                pickPhots.remove(data.getExtras().getInt("position"));
+                init_gridView_photo();
                 break;
 
             //用户单选, 负责人

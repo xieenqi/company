@@ -57,6 +57,8 @@ import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * 【新建 客户】 页面
@@ -105,6 +107,9 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     private String tagItemIds;
     private String myAddress;
     private boolean isFocused = false;
+    private int bizType = 0x01;
+    private int uploadSize;
+    private int uploadNum;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -113,14 +118,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 et_address.setText(myAddress);
             }
         }
-
-//        @Override
-//        public void handleMessage(Message msg) {
-//            if (msg.what == 0x01) {
-//                et_address.setText(myAddress);
-//                mGpsAddress = myAddress;
-//            }
-//        }
     };
 
 
@@ -183,10 +180,60 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 获取附件(创建)
+     */
+    void getAttachments() {
+        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
+            @Override
+            public void success(final ArrayList<Attachment> _attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                lstData_Attachment = _attachments;
+                init_gridView_photo();
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+                Toast("获取附件失败");
+                super.failure(error);
+            }
+        });
+    }
+
+    /**
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            showLoading("正在上传");
+        }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(uuid);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        getAttachments();
+                    }
+
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
+    }
+
 
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        if(uploadNum == uploadSize){
+            cancelLoading();
+        }
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.tv_search,
@@ -286,7 +333,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } catch (Exception e) {
                     Global.ProcException(e);
                 }
-
                 ServerAPI.request(CustomerAddActivity.this, ServerAPI.POST, FinalVariables.customers, stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncAddCustomer.class);
 
                 break;
@@ -299,13 +345,96 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                 break;
 
-            /*case R.id.btn_add_new_contract:
-                app.startActivityForResult((Activity) mContext, CustomerContractAddActivity.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_CUSTOMER_NEW_CONTRACT, null);
-                break;*/
             default:
-
                 break;
         }
+    }
+
+
+    void setContract(final Contact c) {
+        if (c == null) return;
+        mContacts.add(c);
+        layout_newContract.setVisibility(View.VISIBLE);
+        View view = LayoutInflater.from(this).inflate(R.layout.item_customer_new_contract, null, false);
+        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+        tv_name.setText(c.getName());
+        tv_phone.setText(c.getTel());
+        layout_newContract.addView(view);
+    }
+
+    public class AsyncAddCustomer extends BaseActivityAsyncHttpResponseHandler {
+
+        @Override
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
+            try {
+                Customer retCustomer = MainApp.gson.fromJson(getStr(arg2), Customer.class);
+                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+                isSave = false;
+                Intent intent = new Intent();
+                intent.putExtra(Customer.class.getName(), retCustomer);
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, intent);
+
+            } catch (Exception e) {
+                Global.ProcException(e);
+            }
+        }
+    }
+
+/*    public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
+        File file;
+
+        public void setBitmap(final File imageFile) {
+            file = imageFile;
+        }
+
+        @Override
+        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
+            try {
+                Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
+                attachment.saveFile(file);
+                lstData_Attachment.add(attachment);
+                init_gridView_photo();
+            } catch (Exception e) {
+                Global.ProcException(e);
+            }
+        }
+    }*/
+
+    boolean isSave = true;
+    Customer mCustomer;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        DBManager.Instance().deleteCustomer();
+        if (isSave) {
+            mCustomer = new Customer();
+            mCustomer.name = (edt_name.getText().toString().trim());
+
+            ArrayList<Contact> contacts = new ArrayList<>();
+
+            if (mContacts != null && mContacts.size() > 0) {
+                contacts.addAll(mContacts);
+            }
+
+            Contact defaultContact = new Contact();
+            defaultContact.setName(edt_contract.getText().toString());
+            defaultContact.setTel(edt_contract_tel.getText().toString());
+            defaultContact.setIsDefault(true);
+            contacts.add(0, defaultContact);
+            mCustomer.contacts = contacts;
+
+            mCustomer.owner = null;
+            mCustomer.members = null;
+            mCustomer.tags = null;
+            mCustomer.creator = null;
+
+            DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
+        }
+
+        locationGd.sotpLocation();
     }
 
     @Override
@@ -321,7 +450,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
 
                 Bundle bundle1 = data.getExtras();
                 edt_name.setText(bundle1.getString("name"));
-                LogUtil.d("customer收到数据:" + bundle1.getString("name"));
 
                 break;
 
@@ -360,21 +488,27 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                 } else
                     tv_labels.setText("");
                 break;
+
             case REQUEST_CUSTOMER_NEW_CONTRACT:
 
                 Contact contact = (Contact) data.getSerializableExtra("data");
                 setContract(contact);
 
                 break;
+
+
+            /*上传附件回调*/
             case SelectPicPopupWindow.GET_IMG:
                 try {
                     ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    uploadSize = 0;
+                    uploadNum  = pickPhots.size();
                     for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                         Uri uri = Uri.parse(item.path);
                         File newFile = Global.scal(this, uri);
-
                         if (newFile != null && newFile.length() > 0) {
-                            RequestParams params = new RequestParams();
+                            newUploadAttachement(newFile);
+/*                            RequestParams params = new RequestParams();
                             params.put("uuid", uuid);
 
                             if (newFile.exists()) {
@@ -385,7 +519,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
                             ServerAPI.ParamInfo paramInfo = new ServerAPI.ParamInfo("bitmap", newFile);
                             lstParamInfo.add(paramInfo);
                             ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null,
-                                    params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);
+                                    params, AsyncHandler_Upload_New_Attachments.class, lstParamInfo);*/
                         }
                     }
                 } catch (Exception ex) {
@@ -432,95 +566,4 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    void setContract(final Contact c) {
-        if (c == null) return;
-
-        mContacts.add(c);
-
-        layout_newContract.setVisibility(View.VISIBLE);
-
-        View view = LayoutInflater.from(this).inflate(R.layout.item_customer_new_contract, null, false);
-        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
-
-        tv_name.setText(c.getName());
-        tv_phone.setText(c.getTel());
-
-        layout_newContract.addView(view);
-    }
-
-    public class AsyncAddCustomer extends BaseActivityAsyncHttpResponseHandler {
-
-        @Override
-        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
-            try {
-                Customer retCustomer = MainApp.gson.fromJson(getStr(arg2), Customer.class);
-                Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
-                isSave = false;
-                Intent intent = new Intent();
-                intent.putExtra(Customer.class.getName(), retCustomer);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, intent);
-
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }
-        }
-    }
-
-    public class AsyncHandler_Upload_New_Attachments extends BaseActivityAsyncHttpResponseHandler {
-        File file;
-
-        public void setBitmap(final File imageFile) {
-            file = imageFile;
-        }
-
-        @Override
-        public void onSuccess(final int arg0, final Header[] arg1, final byte[] arg2) {
-            try {
-                Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
-                attachment.saveFile(file);
-                lstData_Attachment.add(attachment);
-
-                init_gridView_photo();
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }
-        }
-    }
-
-    boolean isSave = true;
-    Customer mCustomer;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        DBManager.Instance().deleteCustomer();
-        if (isSave) {
-            mCustomer = new Customer();
-            mCustomer.name = (edt_name.getText().toString().trim());
-
-            ArrayList<Contact> contacts = new ArrayList<>();
-
-            if (mContacts != null && mContacts.size() > 0) {
-                contacts.addAll(mContacts);
-            }
-
-            Contact defaultContact = new Contact();
-            defaultContact.setName(edt_contract.getText().toString());
-            defaultContact.setTel(edt_contract_tel.getText().toString());
-            defaultContact.setIsDefault(true);
-            contacts.add(0, defaultContact);
-            mCustomer.contacts = contacts;
-
-            mCustomer.owner = null;
-            mCustomer.members = null;
-            mCustomer.tags = null;
-            mCustomer.creator = null;
-
-            DBManager.Instance().putCustomer(MainApp.gson.toJson(mCustomer));
-        }
-
-        locationGd.sotpLocation();
-    }
 }
