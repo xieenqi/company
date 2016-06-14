@@ -253,7 +253,6 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
-        LogUtil.dee("pickPhots size:"+pickPhots.size());
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -637,7 +636,6 @@ public class TasksAddActivity extends BaseActivity {
             /*上传附件回调*/
             case SelectPicPopupWindow.GET_IMG:
                 pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
-                LogUtil.dee("回调 pickPhots size:" + pickPhots.size());
                 init_gridView_photo();
                 break;
 
