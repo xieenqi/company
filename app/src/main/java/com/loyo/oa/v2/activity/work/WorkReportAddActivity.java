@@ -19,12 +19,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.work.bean.HttpDefaultComment;
+import com.loyo.oa.v2.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -43,7 +43,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -56,29 +55,24 @@ import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.SingleRowWheelView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * 工作报告新建  [承载 编辑 新建]
+ * 【工作报告】新建 编辑
  */
 
 @EActivity(R.layout.activity_workreports_add)
@@ -142,16 +136,20 @@ public class WorkReportAddActivity extends BaseActivity {
     private int uploadSize;
     private int uploadNum;
     private String currentValue;
+    private String content;
 
     private WeeksDialog weeksDialog = null;
     private SignInGridViewAdapter signInGridViewAdapter;
+    private ImageGridViewAdapter imageGridViewAdapter;
     private workReportAddgridViewAdapter workGridViewAdapter;
     private ArrayList<Attachment> lstData_Attachment = null;
+    private ArrayList<NewUser> users = new ArrayList<>();
+    private ArrayList<NewUser> depts = new ArrayList<>();
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private String uuid = StringUtil.getUUID();
     private Reviewer mReviewer;
     private Members members = new Members();
-    private ArrayList<NewUser> users = new ArrayList<>();
-    private ArrayList<NewUser> depts = new ArrayList<>();
+
     private ArrayList<WorkReportDyn> dynList;
     private StringBuffer joinUserId;
     private StringBuffer joinName;
@@ -267,7 +265,8 @@ public class WorkReportAddActivity extends BaseActivity {
             rb1.setEnabled(false);
             rb2.setEnabled(false);
             rb3.setEnabled(false);
-            getEditAttachments();
+            //getEditAttachments();
+            gridView_photo.setVisibility(View.GONE);
 
         } else if (type == TYPE_PROJECT) {
             projectAddWorkReport();
@@ -330,24 +329,6 @@ public class WorkReportAddActivity extends BaseActivity {
 
     }
 
-    /**
-     * 获取附件(创建)
-     */
-    private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                lstData_Attachment = attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                super.failure(error);
-                HttpErrorCheck.checkError(error);
-            }
-        });
-    }
 
     /**
      * 获取附件(编辑)
@@ -358,7 +339,7 @@ public class WorkReportAddActivity extends BaseActivity {
             public void success(final ArrayList<Attachment> attachments, final Response response) {
                 HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
-                init_gridView_photo();
+                edit_gridView_photo();
             }
 
             @Override
@@ -456,15 +437,28 @@ public class WorkReportAddActivity extends BaseActivity {
 
     }
 
-    void init_gridView_photo() {
+    /**
+     * 编辑gridView绑定
+     * */
+    void edit_gridView_photo() {
         if (lstData_Attachment == null) {
             lstData_Attachment = new ArrayList<>();
         }
+        for(Attachment attachment : lstData_Attachment){
+            pickPhots.add(new SelectPicPopupWindow.ImageInfo(attachment.url));
+        }
+        LogUtil.dee("pickPhots结构:"+MainApp.gson.toJson(pickPhots));
+
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
-        if(uploadNum == uploadSize){
-            cancelLoading();
-        }
+    }
+
+    /**
+     * 新建gridView绑定
+     * */
+    void init_gridView_photo() {
+        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
     @Click({R.id.tv_resignin, R.id.img_title_left, R.id.img_title_right, R.id.layout_reviewer, R.id.layout_toUser, R.id.layout_del, R.id.layout_mproject})
@@ -479,7 +473,7 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*提交*/
             case R.id.img_title_right:
-                String content = edt_content.getText().toString().trim();
+                content = edt_content.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
                     Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
                     break;
@@ -494,40 +488,13 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 }
 
-                bizExtData = new PostBizExtData();
-                bizExtData.setAttachmentCount(lstData_Attachment.size());
-                isDelayed = tv_time.getText().toString().contains("补签") ? true : false;
-                if (mSelectType == 2 && isDelayed) {
-                    beginAt = weeksDialog.GetBeginandEndAt()[0];
-                    endAt = weeksDialog.GetBeginandEndAt()[1];
-                }
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("content", content);
-                map.put("type", mSelectType);
-                map.put("beginAt", beginAt / 1000);
-                map.put("endAt", endAt / 1000);
-                if (!TextUtils.isEmpty(projectId)) {
-                    map.put("projectId", projectId);
-                }
-                map.put("attachmentUUId", uuid);
-                map.put("bizExtData", bizExtData);
-                map.put("reviewer", mReviewer);//点评人
-                map.put("members", members);//抄送人
-                if (null != dynList) {
-                    map.put("crmDatas", dynList);//工作动态统计
+
+                if(type == TYPE_EDIT){
+                    requestCommitWork();
+                }else{
+                    newUploadAttachement();
                 }
 
-                if (type != TYPE_EDIT) {
-                    map.put("isDelayed", isDelayed);
-                }
-                LogUtil.d(" 报告参数   " + app.gson.toJson(map));
-
-                /*报告新建／编辑*/
-                if (type == TYPE_EDIT) {
-                    updateReport(map);
-                } else {
-                    creteReport(map);
-                }
                 break;
 
             /*选择日期*/
@@ -595,7 +562,6 @@ public class WorkReportAddActivity extends BaseActivity {
      * 编辑报告请求
      */
     public void updateReport(final HashMap map) {
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).updateWorkReport(mWorkReport.getId(), map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
@@ -616,7 +582,6 @@ public class WorkReportAddActivity extends BaseActivity {
      * 新建报告请求
      */
     public void creteReport(final HashMap map) {
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).createWorkReport(map, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport workReport, final Response response) {
@@ -774,30 +739,120 @@ public class WorkReportAddActivity extends BaseActivity {
     }
 
     /**
+     * 提交报告
+     * */
+    private void requestCommitWork(){
+
+        bizExtData = new PostBizExtData();
+        if(type == TYPE_EDIT){
+            bizExtData.setAttachmentCount(mWorkReport.bizExtData.getAttachmentCount());
+        }else{
+            bizExtData.setAttachmentCount(pickPhots.size());
+        }
+        isDelayed = tv_time.getText().toString().contains("补签") ? true : false;
+        if (mSelectType == 2 && isDelayed) {
+            beginAt = weeksDialog.GetBeginandEndAt()[0];
+            endAt = weeksDialog.GetBeginandEndAt()[1];
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("content", content);
+        map.put("type", mSelectType);
+        map.put("beginAt", beginAt / 1000);
+        map.put("endAt", endAt / 1000);
+        if (!TextUtils.isEmpty(projectId)) {
+            map.put("projectId", projectId);
+        }
+        map.put("attachmentUUId", uuid);
+        map.put("bizExtData", bizExtData);
+        map.put("reviewer", mReviewer);//点评人
+        map.put("members", members);//抄送人
+        if (null != dynList) {
+            map.put("crmDatas", dynList);//工作动态统计
+        }
+
+        if (type != TYPE_EDIT) {
+            map.put("isDelayed", isDelayed);
+        }
+        LogUtil.d(" 报告参数   " + app.gson.toJson(map));
+
+        /*报告新建／编辑*/
+        if (type == TYPE_EDIT) {
+            updateReport(map);
+        } else {
+            creteReport(map);
+        }
+    }
+
+    /**
      * 批量上传附件
      * */
-    private void newUploadAttachement(File file){
-        if(uploadSize == 0){
-            showLoading("正在上传");
-        }
-        uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        getAttachments();
-                    }
+    private void newUploadAttachement(){
+        showLoading("正在提交");
+        try {
+            uploadSize = 0;
+            uploadNum  = pickPhots.size();
+            LogUtil.dee("pickPhots siez:"+pickPhots.size());
+            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                Uri uri = Uri.parse(item.path);
+                File newFile = Global.scal(this, uri);
+                if (newFile != null && newFile.length() > 0) {
+                    if (newFile.exists()) {
+                        TypedFile typedFile = new TypedFile("image/*", newFile);
+                        TypedString typedUuid = new TypedString(uuid);
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                                new RCallback<Attachment>() {
+                                    @Override
+                                    public void success(final Attachment attachments, final Response response) {
+                                        uploadSize++;
+                                        if(uploadSize == uploadNum){
+                                            requestCommitWork();
+                                        }
+                                    }
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                                    @Override
+                                    public void failure(final RetrofitError error) {
+                                        super.failure(error);
+                                        HttpErrorCheck.checkError(error);
+                                    }
+                                });
                     }
-                });
+                }
+            }
+        } catch (Exception ex) {
+            LogUtil.dee("异常抛出");
+            Global.ProcException(ex);
+        }
     }
+
+    /**
+     * 删除附件
+     * */
+    private void deleteAttachement(final Intent data){
+        try {
+            final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("bizType", bizType);
+            map.put("uuid", uuid);
+            RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
+                @Override
+                public void success(final Attachment attachment, final Response response) {
+                    Toast("删除附件成功!");
+                    lstData_Attachment.remove(delAttachment);
+                    signInGridViewAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void failure(final RetrofitError error) {
+                    HttpErrorCheck.checkError(error);
+                    Toast("删除附件失败!");
+                    super.failure(error);
+                }
+            });
+        } catch (Exception e) {
+            Global.ProcException(e);
+        }
+    }
+
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -820,67 +875,30 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*上传附件回调*/
             case SelectPicPopupWindow.GET_IMG:
-                try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
-                    uploadSize = 0;
-                    uploadNum  = pickPhots.size();
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        final File newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                newUploadAttachement(newFile);
-                                /*Utils.uploadAttachment(uuid, 1, newFile).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        app.logUtil.e("onNext");
-                                        getAttachments();
-                                    }
-                                });*/
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
+                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+                init_gridView_photo();
                 break;
 
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                try {
-                    final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("bizType", bizType);
-                    map.put("uuid", uuid);
-                    RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                        @Override
-                        public void success(final Attachment attachment, final Response response) {
-                            Toast("删除附件成功!");
-                            lstData_Attachment.remove(delAttachment);
-                            signInGridViewAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                            Toast("删除附件失败!");
-                            super.failure(error);
-                        }
-                    });
-                } catch (Exception e) {
-                    Global.ProcException(e);
+                if(type == TYPE_EDIT){
+                    deleteAttachement(data);
+                }else{
+                    pickPhots.remove(data.getExtras().getInt("position"));
+                    init_gridView_photo();
                 }
                 break;
 
-            case SelectDetUserActivity2.REQUEST_ONLY://用户单选, 点评人
+            //用户单选, 点评人
+            case SelectDetUserActivity2.REQUEST_ONLY:
                 NewUser u = (NewUser) data.getSerializableExtra("data");
                 mReviewer = new Reviewer(u);
                 mReviewer.user = u;
                 tv_reviewer.setText(u.getRealname());
                 break;
-            case SelectDetUserActivity2.REQUEST_ALL_SELECT: //用户选择, 抄送人
+
+            //用户选择, 抄送人
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
                 members = (Members) data.getSerializableExtra("data");
                 joinName = new StringBuffer();
                 joinUserId = new StringBuffer();
