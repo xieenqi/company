@@ -70,6 +70,7 @@ public class AMapService extends Service {
     private LDBManager ldbManager;
     private boolean isCache;//是否有缓存
     private RestAdapter mRestAdapter;
+    private String oldAddress = "";
 
     private static AMapLocationClient locationClient = null;
     private static AMapLocationClientOption locationOption = null;
@@ -205,11 +206,11 @@ public class AMapService extends Service {
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         if (TextUtils.isEmpty(address) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
-                || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE) {
+                || accuracy <= 0 || accuracy > MIN_SCAN_SPAN_DISTANCE || oldAddress.equals(address)) {
             LogUtil.d("当前位置偏移量很大，直接return");
             return;
         }
-
+        oldAddress = address;
 
         if (Global.isConnected()) {
             if (isEmptyStr(address)) {

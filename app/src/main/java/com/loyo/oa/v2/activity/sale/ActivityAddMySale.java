@@ -3,6 +3,7 @@ package com.loyo.oa.v2.activity.sale;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -258,6 +259,9 @@ public class ActivityAddMySale extends BaseActivity {
         }
     }
 
+    private final static String[] tracyColors = {"#f8668a", "#4ec469", "#4ddac2", "#31cbe8", "#88b9f7", "#7fcaff", "#f18f73", "#fdb485", "#fde068", "#12db8a"};
+    private final static float[] tracywhit = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+
     /**
      * 获取动态字段
      */
@@ -286,7 +290,13 @@ public class ActivityAddMySale extends BaseActivity {
                     }
                 }
                 tv_custom.addView(new ContactAddforExtraData(mContext, null, filedData, true, R.color.title_bg1, 0));
-
+                for (int i = 0; i < tracyColors.length; i++) {
+                    TrapezoidView view = new TrapezoidView(ActivityAddMySale.this);
+                    view.setDefaultCorol(Color.parseColor(tracyColors[i]));
+                    view.setBottomWidth(tracywhit[i]);
+                    tv_custom.addView(view);
+                    LogUtil.d(tracywhit[i]+"kongjian个数：" + tv_custom.getChildCount());
+                }
             }
 
             @Override
