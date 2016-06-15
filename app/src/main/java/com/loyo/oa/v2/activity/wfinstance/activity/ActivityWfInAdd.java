@@ -15,6 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.activity.wfinstance.DepartmentChoose;
 import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
+import com.loyo.oa.v2.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -95,6 +96,7 @@ public class ActivityWfInAdd extends BaseActivity {
     private EditText edt_memo;
     private EditText tv_title;
     private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
     private ArrayList postValue = new ArrayList<>();
 
     private BizForm mBizForm;
@@ -102,9 +104,8 @@ public class ActivityWfInAdd extends BaseActivity {
     private ArrayList<String> endTimeArr = new ArrayList<>();
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
-    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<Boolean> isRequiredList = new ArrayList<>();
-    private SignInGridViewAdapter signInGridViewAdapter;
+    private ImageGridViewAdapter imageGridViewAdapter;
     private PostBizExtData bizExtData;
 
     @Override
@@ -202,31 +203,9 @@ public class ActivityWfInAdd extends BaseActivity {
         }
     }
 
-    /**
-     * 获取附件
-     */
-    private void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> attachments, final Response response) {
-                lstData_Attachment = attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
-    }
-
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
-        if(uploadNum == uploadSize){
-            cancelLoading();
-        }
+        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
 
@@ -256,7 +235,12 @@ public class ActivityWfInAdd extends BaseActivity {
 
                 //提交审批
                 case R.id.img_title_right:
-                    subMinInfo();
+                    //没有附件
+                    if(pickPhots.size() == 0){
+                        subMinInfo();
+                    }else{
+                        newUploadAttachement();
+                    }
                     break;
 
                 //新增内容
@@ -313,6 +297,8 @@ public class ActivityWfInAdd extends BaseActivity {
             Toast("请输选择部门");
             return;
         }
+
+
 
         /**审批内容，装进Post数据的list中*/
         postValue.clear();
@@ -381,6 +367,9 @@ public class ActivityWfInAdd extends BaseActivity {
             }
         }
 
+        if(pickPhots.size() == 0){
+            showLoading("正在提交");
+        }
 
         bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
@@ -391,15 +380,14 @@ public class ActivityWfInAdd extends BaseActivity {
         map.put("wftemplateId", mTemplateId);                //流程模板Id
         map.put("projectId", projectId);                     //项目Id
         map.put("bizCode", mBizForm.getBizCode());           //流程类型
-        if (uuid != null && lstData_Attachment.size() > 0) {
-            bizExtData.setAttachmentCount(lstData_Attachment.size());
+        if (uuid != null && pickPhots.size() > 0) {
+            bizExtData.setAttachmentCount(pickPhots.size());
             map.put("attachmentUUId", uuid);
             map.put("bizExtData", bizExtData);
         }
         map.put("memo", edt_memo.getText().toString().trim()); //备注
         LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
-        showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).addWfInstance(map, new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
@@ -427,27 +415,40 @@ public class ActivityWfInAdd extends BaseActivity {
     /**
      * 批量上传附件
      * */
-    private void newUploadAttachement(File file){
-        if(uploadSize == 0){
-            showLoading("正在上传");
-        }
-        uploadSize++;
-        TypedFile typedFile = new TypedFile("image/*", file);
-        TypedString typedUuid = new TypedString(uuid);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
-                new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachments, final Response response) {
-                        HttpErrorCheck.checkResponse(response);
-                        getAttachments();
-                    }
+    private void newUploadAttachement(){
+        showLoading("正在提交");
+        try {
+            uploadSize = 0;
+            uploadNum  = pickPhots.size();
+            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                Uri uri = Uri.parse(item.path);
+                File newFile = Global.scal(this, uri);
+                if (newFile != null && newFile.length() > 0) {
+                    if (newFile.exists()) {
+                        TypedFile typedFile = new TypedFile("image/*", newFile);
+                        TypedString typedUuid = new TypedString(uuid);
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                                new RCallback<Attachment>() {
+                                    @Override
+                                    public void success(final Attachment attachments, final Response response) {
+                                        uploadSize++;
+                                        if(uploadSize == uploadNum){
+                                            subMinInfo();
+                                        }
+                                    }
 
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        super.failure(error);
-                        HttpErrorCheck.checkError(error);
+                                    @Override
+                                    public void failure(final RetrofitError error) {
+                                        super.failure(error);
+                                        HttpErrorCheck.checkError(error);
+                                    }
+                                });
                     }
-                });
+                }
+            }
+        } catch (Exception ex) {
+            Global.ProcException(ex);
+        }
     }
 
     @Override
@@ -460,57 +461,14 @@ public class ActivityWfInAdd extends BaseActivity {
 
             //上传附件回调
             case SelectPicPopupWindow.GET_IMG:
-                try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
-                    uploadSize = 0;
-                    uploadNum  = pickPhots.size();
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-                        if (newFile != null && newFile.length() > 0) {
-                            newUploadAttachement(newFile);
-                            /*if (newFile.exists()) {
-                                Utils.uploadAttachment(uuid, 12, newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        super.onError(e);
-                                    }
-                                });
-                            }*/
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
+                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+                init_gridView_photo();
                 break;
 
             /*附件删除*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-
-                final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("bizType", bizType);
-                map.put("uuid", uuid);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()), map, new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachment, final Response response) {
-                        Toast("删除附件成功!");
-                        lstData_Attachment.remove(delAttachment);
-                        init_gridView_photo();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        Toast("删除附件失败!");
-                        super.failure(error);
-                    }
-                });
+                pickPhots.remove(data.getExtras().getInt("position"));
+                init_gridView_photo();
                 break;
 
             /*选择部门回调*/

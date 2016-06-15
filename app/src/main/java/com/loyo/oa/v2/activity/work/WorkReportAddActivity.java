@@ -488,9 +488,10 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 }
 
-
-                if(type == TYPE_EDIT){
+                //没有附件
+                if(pickPhots.size() == 0){
                     requestCommitWork();
+                    //有附件
                 }else{
                     newUploadAttachement();
                 }
@@ -742,6 +743,9 @@ public class WorkReportAddActivity extends BaseActivity {
      * 提交报告
      * */
     private void requestCommitWork(){
+        if(pickPhots.size() == 0){
+            showLoading("正在提交");
+        }
 
         bizExtData = new PostBizExtData();
         if(type == TYPE_EDIT){

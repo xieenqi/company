@@ -240,6 +240,11 @@ public class MultiImageSelectorFragment extends Fragment {
                 if(mImageAdapter.isShowCamera()){
                     // 如果显示照相机，则第一个Grid显示为照相机，处理特殊逻辑
                     if(i == 0){
+                        //判断是否达到最大相片数量
+                        if(mDesireImageCount == resultList.size()){
+                            Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         showCameraAction();
                     }else{
                         // 正常操作

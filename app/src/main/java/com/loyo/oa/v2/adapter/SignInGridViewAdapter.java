@@ -115,11 +115,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
         public void setContent(final int position) {
 
             if (position == mListData.size()) {
-                if (mListData.size() <= 9) {
+                if(mListData.size() == 9){
+                    imageView.setVisibility(View.GONE);
+                }else{
                     imageView.setImageResource(R.drawable.icon_add_file);
                     imageView.setBackgroundResource(R.drawable.icon_add_file);
-                } else {
-                    imageView.setVisibility(View.INVISIBLE);
                 }
                 if (isCreator) {
                     imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
@@ -160,7 +160,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
                 if (mListData.size() == 3) {
@@ -176,9 +175,9 @@ public class SignInGridViewAdapter extends BaseAdapter {
             else if (mListData.size() <= 9) {
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
+                intent.putExtra("imgsize",(9-mListData.size()));
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
-
         }
     }
 

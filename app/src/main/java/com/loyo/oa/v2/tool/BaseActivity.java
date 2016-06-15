@@ -236,7 +236,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         public Activity getActivity() {
             return (Activity) mContext;
         }
-
     }
 
     public static class BaseHandler extends Handler {

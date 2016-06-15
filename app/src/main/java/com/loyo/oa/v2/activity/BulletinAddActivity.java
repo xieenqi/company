@@ -22,7 +22,6 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -36,7 +35,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import retrofit.RetrofitError;
@@ -84,13 +82,11 @@ public class BulletinAddActivity extends BaseActivity {
      */
     @Click(R.id.layout_recevier)
     void receiverClick() {
-//        app.startActivityForResult(this, DepartmentUserActivity.class, MainApp.ENTER_TYPE_RIGHT, DepartmentUserActivity.request_Code, null);
         SelectDetUserActivity2.startThisForAllSelect(BulletinAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
     }
 
     @Click(R.id.img_title_left)
     void close() {
-        //onBackPressed();
         finish();
     }
 
@@ -109,14 +105,13 @@ public class BulletinAddActivity extends BaseActivity {
             return;
         }
 
-
         showGeneralDialog(true, true, getString(R.string.app_bulletin_message));
         //确认
         generalPopView.setSureOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-
                 generalPopView.dismiss();
+                showLoading("正在提交");
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("title", title);
                 map.put("content", content);
@@ -138,7 +133,6 @@ public class BulletinAddActivity extends BaseActivity {
                             setResult(RESULT_OK, intent);
                         }
                         finish();
-                        // onBackPressed();
                     }
 
                     @Override
@@ -147,7 +141,6 @@ public class BulletinAddActivity extends BaseActivity {
                         super.failure(error);
                     }
                 });
-
             }
         });
         //取消
@@ -215,18 +208,11 @@ public class BulletinAddActivity extends BaseActivity {
                 if (newFile != null && newFile.length() > 0) {
                     if (newFile.exists()) {
                         newUploadAttachement(newFile);
-                        /*Utils.uploadAttachment(uuid, bizType, newFile).subscribe(new CommonSubscriber(this) {
-                            @Override
-                            public void onNext(final Serializable serializable) {
-                                getAttachments();
-                            }
-                        });*/
                     }
                 }
             }
         } catch (Exception ex) {
             Global.ProcException(ex);
-            Toast("图片不可用");
         }
     }
 

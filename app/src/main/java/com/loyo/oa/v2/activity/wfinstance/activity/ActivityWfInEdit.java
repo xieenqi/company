@@ -104,7 +104,6 @@ public class ActivityWfInEdit extends BaseActivity {
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private ArrayList<Boolean> isRequiredList = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
-    private PostBizExtData bizExtData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,11 +167,12 @@ public class ActivityWfInEdit extends BaseActivity {
 
         tv_title.setText(cusTitle);
         edt_memo.setText(memo);
+        gridView_photo.setVisibility(View.GONE);
 
-        init_gridView_photo();
+        //init_gridView_photo();
         projectAddWfinstance();
         setDefaultDept();
-        getAttachments();
+        //getAttachments();
     }
 
     /**
@@ -430,17 +430,13 @@ public class ActivityWfInEdit extends BaseActivity {
             }
         }
 
-        bizExtData = new PostBizExtData();
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", tv_title.getText().toString());       //自定义标题
         map.put("deptId", deptId);                             //部门 id
         map.put("workflowValues", workflowValues);             //流程 内容
         map.put("projectId", projectId);                       //项目Id
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        if (uuid != null && lstData_Attachment.size() > 0) {
-            bizExtData.setAttachmentCount(lstData_Attachment.size());
-            map.put("bizExtData", bizExtData);
-        }
+        map.put("bizExtData", mWfInstance.bizExtData.getAttachmentCount());
         LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
         showLoading("");
@@ -512,17 +508,6 @@ public class ActivityWfInEdit extends BaseActivity {
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
                                 newUploadAttachement(newFile);
-                               /* Utils.uploadAttachment(uuid, bizType, newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        super.onError(e);
-                                    }
-                                });*/
                             }
                         }
                     }

@@ -110,7 +110,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
                 if (pickPhots.size() == 3) {
@@ -126,9 +125,9 @@ public class ImageGridViewAdapter extends BaseAdapter {
             else if (pickPhots.size() <= 9) {
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
+                intent.putExtra("imgsize",(9-pickPhots.size()));
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
-
         }
     }
 

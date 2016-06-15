@@ -253,6 +253,9 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
+        if(pickPhots.size() == 0){
+            showLoading("正在提交");
+        }
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -359,7 +362,13 @@ public class TasksAddActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-                newUploadAttachement();
+                //没有附件
+                if(pickPhots.size() == 0){
+                    requestCommitTask();
+                //有附件
+                }else{
+                    newUploadAttachement();
+                }
                 break;
 
             //重复任务
