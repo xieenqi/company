@@ -45,6 +45,8 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     private Intent mIntent;
     private Uri fileUri;
     private int imgSize;
+    private boolean addpg;
+    private boolean localpic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +73,14 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
         /**判断是直接调用相机，还是弹出选相框*/
         if (null != getIntent() && null != getIntent().getExtras()) {
-            imgSize = getIntent().getIntExtra("imgsize",0);
-            LogUtil.dee("size:"+imgSize);
-            boolean localpic = getIntent().getBooleanExtra("localpic", false);
+            addpg    = getIntent().getBooleanExtra("addpg", false);
+            localpic = getIntent().getBooleanExtra("localpic", false);
+            imgSize  = getIntent().getIntExtra("imgsize",0);
+
+            if(!addpg){
+                imgSize = 9;
+            }
+
             if (!localpic) {
                 takePhotoIntent();
             }

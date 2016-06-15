@@ -2,14 +2,13 @@ package com.loyo.oa.v2.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attachment.AttachmentRightActivity_;
 import com.loyo.oa.v2.activity.project.HttpProject;
@@ -19,12 +18,10 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.ListUtil;
@@ -32,18 +29,14 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.loyo.oa.v2.tool.customview.swipelistview.SwipeListView;
-
-import org.apache.http.Header;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * com.loyo.oa.v2.fragment
@@ -60,6 +53,8 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     private AttachmentSwipeAdapter adapter;
     private ViewGroup layout_upload;
     private int bizType = 5;
+    private int uploadSize;
+    private int uploadNum;
     private boolean isOver;
 
     @Override
@@ -139,13 +134,9 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_upload:
-                Intent intent = new Intent(mActivity, MultiImageSelectorActivity.class);
-                // 是否显示拍摄图片
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-                // 最大可选择图片数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 10);
-                // 选择模式
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
+                Intent intent = new Intent(getActivity(), SelectPicPopupWindow.class);
+                intent.putExtra("localpic", true);
+                intent.putExtra("addpg", false);
                 startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
                 break;
         }
@@ -221,39 +212,43 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
         }
     }
 
+
     /**
-     * 上传图片成功
-     */
-    public class AsyncHandler_Upload_New_Attachment extends BaseAsyncHttpResponseHandler {
-        File file;
-
-        public void setBitmap(File imageFile) {
-            file = imageFile;
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(File file){
+        if(uploadSize == 0){
+            DialogHelp.showLoading(getActivity(), "正在上传", true);
         }
+        uploadSize++;
+        TypedFile typedFile = new TypedFile("image/*", file);
+        TypedString typedUuid = new TypedString(mProject.attachmentUUId);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType,typedFile,
+                new RCallback<Attachment>() {
+                    @Override
+                    public void success(final Attachment attachments, final Response response) {
+                        HttpErrorCheck.checkResponse(response);
+                        try {
+                            Attachment attachment = attachments;
+                            if (mAttachments != null) {
+                                mAttachments.add(0, attachment);
+                            } else {
+                                mAttachments = new ArrayList<>(Arrays.asList(attachment));
+                            }
+                            bindAttachment(mAttachments);
+                        } catch (Exception e) {
+                            Global.ProcException(e);
+                        }
+                    }
 
-        @Override
-        public Activity getActivity() {
-            return mActivity;
-        }
-
-        @Override
-        public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-            try {
-                Attachment attachment = MainApp.gson.fromJson(getStr(arg2), Attachment.class);
-                attachment.saveFile(file);
-
-                if (mAttachments != null) {
-                    mAttachments.add(0, attachment);
-                } else {
-                    mAttachments = new ArrayList<>(Arrays.asList(attachment));
-                }
-                bindAttachment(mAttachments);
-            } catch (Exception e) {
-                Global.ProcException(e);
-            }
-        }
-
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        super.failure(error);
+                        HttpErrorCheck.checkError(error);
+                    }
+                });
     }
+
 
     @Override
     public void onRightClick(Bundle b) {
@@ -289,28 +284,26 @@ public class AttachmentFragment extends BaseFragment implements View.OnClickList
              * 附件上传回调
              * */
             case SelectPicPopupWindow.GET_IMG:
-                List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                for (String p : mSelectPath) {
-                    File newFile = new File(p);
-                    try {
-                        if (newFile != null && newFile.length() > 0) {
-                            RequestParams params = new RequestParams();
-                            params.put("uuid", mProject.attachmentUUId);
-                            params.put("bizType", bizType);
-
-                            if (newFile.exists()) {
-                                params.put("attachments", newFile, "image/jpeg");
-                            }
-
-                            ArrayList<ServerAPI.ParamInfo> lstParamInfo = new ArrayList<ServerAPI.ParamInfo>();
-                            ServerAPI.ParamInfo paramInfo = new ServerAPI.ParamInfo("bitmap", newFile);
-                            lstParamInfo.add(paramInfo);
-                            ServerAPI.request(this, ServerAPI.POST, FinalVariables.attachments, null, params, AsyncHandler_Upload_New_Attachment.class, lstParamInfo);
-                        }
-                    } catch (Exception e) {
-                        Global.ProcException(e);
+                try {
+                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data");
+                    if (pickPhots == null) {
+                        return;
                     }
+                    uploadSize = 0;
+                    uploadNum  = pickPhots.size();
+                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                        Uri uri = Uri.parse(item.path);
+                        File newFile = Global.scal(getActivity(), uri);
+                        if (newFile != null && newFile.length() > 0) {
+                            if (newFile.exists()) {
+                                newUploadAttachement(newFile);
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Global.ProcException(ex);
                 }
+
                 break;
         }
     }
