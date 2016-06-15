@@ -14,7 +14,6 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.UploadImgUtil;
-import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 
@@ -70,7 +69,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
             item_info = new Item_info();
             item_info.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             item_info.textView = (TextView) convertView.findViewById(R.id.tv_filename);
-            ViewUtil.setViewHigh(item_info.imageView, 1);
+            //ViewUtil.setViewHigh(item_info.imageView, 1);
 
             convertView.setTag(item_info);
         } else {
@@ -126,6 +125,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 intent.putExtra("imgsize",(9-pickPhots.size()));
+                intent.putExtra("addpg",true);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
         }
@@ -133,10 +133,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     public static void setAdapter(final GridView gv, final ImageGridViewAdapter adapter) {
         gv.setAdapter(adapter);
-        if (adapter.getCount() % 3 == 0) {
+       /* if (adapter.getCount() % 3 == 0) {
             ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
         } else {
             ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
-        }
+        }*/
     }
 }

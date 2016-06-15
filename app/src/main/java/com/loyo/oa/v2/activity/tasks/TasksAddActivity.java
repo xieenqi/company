@@ -50,6 +50,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 import com.loyo.oa.v2.tool.customview.RepeatTaskView;
 import org.androidannotations.annotations.AfterViews;
@@ -122,7 +123,7 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     EditText edt_title;
     @ViewById
-    GridView gridView_photo;
+    CusGridView gridView_photo;
     @Extra
     String projectId;
     @Extra

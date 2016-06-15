@@ -45,6 +45,7 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
 import java.io.File;
 import java.io.Serializable;
@@ -92,7 +93,7 @@ public class ActivityWfInAdd extends BaseActivity {
     private TextView tv_dept;
     private TextView tv_project;
     private Button btn_add;
-    private GridView gridView_photo;
+    private CusGridView gridView_photo;
     private EditText edt_memo;
     private EditText tv_title;
     private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
@@ -133,7 +134,7 @@ public class ActivityWfInAdd extends BaseActivity {
         tv_dept = (TextView) findViewById(R.id.tv_dept);
         tv_project = (TextView) findViewById(R.id.tv_project);
         btn_add = (Button) findViewById(R.id.btn_add);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         tv_title = (EditText) findViewById(R.id.tv_title);
 

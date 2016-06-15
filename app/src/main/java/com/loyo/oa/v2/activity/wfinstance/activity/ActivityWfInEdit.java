@@ -44,6 +44,7 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
 import com.loyo.oa.v2.tool.customview.WfinEditViewGroup;
 import java.io.File;
@@ -91,7 +92,7 @@ public class ActivityWfInEdit extends BaseActivity {
     private TextView tv_dept;
     private TextView tv_project;
     private Button btn_add;
-    private GridView gridView_photo;
+    private CusGridView gridView_photo;
     private EditText edt_memo;
     private EditText tv_title;
     private WfInstanceAdd wfInstanceAdd = new WfInstanceAdd();
@@ -127,7 +128,7 @@ public class ActivityWfInEdit extends BaseActivity {
         tv_dept = (TextView) findViewById(R.id.tv_dept);
         tv_project = (TextView) findViewById(R.id.tv_project);
         btn_add = (Button) findViewById(R.id.btn_add);
-        gridView_photo = (GridView) findViewById(R.id.gridView_photo);
+        gridView_photo = (CusGridView) findViewById(R.id.gridView_photo);
         edt_memo = (EditText) findViewById(R.id.edt_memo);
         tv_title = (EditText) findViewById(R.id.tv_title);
 
@@ -436,7 +437,6 @@ public class ActivityWfInEdit extends BaseActivity {
         map.put("workflowValues", workflowValues);             //流程 内容
         map.put("projectId", projectId);                       //项目Id
         map.put("memo", edt_memo.getText().toString().trim()); //备注
-        map.put("bizExtData", mWfInstance.bizExtData.getAttachmentCount());
         LogUtil.dee("新建审批 发送数据:" + MainApp.gson.toJson(map));
 
         showLoading("");

@@ -54,6 +54,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.SingleRowWheelView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -109,7 +110,7 @@ public class WorkReportAddActivity extends BaseActivity {
     @ViewById
     ImageView img_title_toUser;
     @ViewById
-    GridView gridView_photo;
+    CusGridView gridView_photo;
     @ViewById
     GridView gv_workreports;
     @ViewById

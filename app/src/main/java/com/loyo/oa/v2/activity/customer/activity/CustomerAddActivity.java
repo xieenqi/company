@@ -21,6 +21,7 @@ import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.activity.CustomerLabelActivity_;
 import com.loyo.oa.v2.activity.customer.bean.HttpAddCustomer;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity;
 import com.loyo.oa.v2.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -29,12 +30,15 @@ import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.NewTag;
 import com.loyo.oa.v2.beans.TagItem;
+import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.point.ICustomer;
+import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
@@ -44,6 +48,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -94,7 +99,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
     @ViewById
     Button btn_add_new_contract;
     @ViewById
-    GridView gridView_photo;
+    CusGridView gridView_photo;
 
     private ImageView img_refresh_address;
     private ImageGridViewAdapter imageGridViewAdapter;
@@ -188,26 +193,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /**
-     * 获取附件(创建)
-     */
-    void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments, final Response response) {
-                HttpErrorCheck.checkResponse(response);
-                lstData_Attachment = _attachments;
-                init_gridView_photo();
-            }
-
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
-    }
 
     /**
      * 批量上传附件
@@ -365,10 +350,64 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
             super.onFailure(i, headers, bytes, throwable);
+            cancelLoading();
         }
     }
 
     public void requestCommitTask(){
+        HttpAddCustomer addCustomerData = new HttpAddCustomer();
+        addCustomerData.loc.addr = customerAddress;
+        addCustomerData.loc.loc.add(app.longitude);
+        addCustomerData.loc.loc.add(app.latitude);
+        if (tags != null && tags.size() > 0) {
+            for (NewTag tag : tags) {
+                NewTag newtag = new NewTag();
+                newtag.tId = tag.tId;
+                newtag.itemId = tag.itemId;
+                newtag.itemName = tag.itemName;
+                addCustomerData.tags.add(newtag);
+            }
+        }
+
+        HashMap<String,Object> map = new HashMap<>();
+        if (pickPhots.size() > 0) {
+            map.put("attachmentCount",pickPhots.size());
+            map.put("uuid",uuid);
+        }
+        map.put("loc", addCustomerData.loc);
+        map.put("name", customer_name);
+        map.put("pname", customerContract);
+        map.put("ptel", customerContractTel);
+        map.put("wiretel", customerWrietele);
+        map.put("tags", addCustomerData.tags);
+
+
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).addNewCustomer(map, new RCallback<Customer>() {
+            @Override
+            public void success(final Customer customer, final Response response) {
+                HttpErrorCheck.checkResponse(response);
+                try {
+                    Customer retCustomer = customer;
+                    Toast(getString(R.string.app_add) + getString(R.string.app_succeed));
+                    isSave = false;
+                    Intent intent = new Intent();
+                    intent.putExtra(Customer.class.getName(), retCustomer);
+                    app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_LEFT, ActivityCustomerManager.CUSTOMER_COMM_RUSH, intent);
+
+                } catch (Exception e) {
+                    Global.ProcException(e);
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+/*    public void requestCommitTask(){
         if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
             Contact defaultContact;
             defaultContact = new Contact();
@@ -411,7 +450,7 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
             Global.ProcException(e);
         }
         ServerAPI.request(CustomerAddActivity.this, ServerAPI.POST, FinalVariables.customers, stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncAddCustomer.class);
-    }
+    }*/
 
     boolean isSave = true;
     Customer mCustomer;
