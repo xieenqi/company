@@ -31,7 +31,7 @@ import java.util.Date;
 
 /**
  * 任务管理列表的adapter
- * <p>
+ * <p/>
  * xnq
  */
 public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePagingGroupDataAdapter_<T> {
@@ -56,7 +56,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         TextView content = ViewHolder.get(convertView, R.id.tv_content);
         TextView time = ViewHolder.get(convertView, R.id.tv_time);
         TextView timeOut = ViewHolder.get(convertView, R.id.tv_timeOut);
-        ImageView iv_repeattask = ViewHolder.get(convertView,R.id.iv_repeattask);
+        ImageView iv_repeattask = ViewHolder.get(convertView, R.id.iv_repeattask);
         View ack = ViewHolder.get(convertView, R.id.view_ack);
         ViewGroup layout_discuss = ViewHolder.get(convertView, R.id.layout_discuss);
         TextView tv_discuss_num = ViewHolder.get(convertView, R.id.tv_disscuss_num);
@@ -69,10 +69,15 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             if (wfInstance.title != null) {
                 title.setText(wfInstance.title);
             }
-            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.created_at * 1000)));
-//            if (wfInstance.creator != null && wfInstance.nextExecutor != null) {
-//            }
-            content.setText("审批人: " + wfInstance.next_executor_name);
+//            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.created_at * 1000)));
+////            if (wfInstance.creator != null && wfInstance.nextExecutor != null) {
+////            }
+//            content.setText("审批人: " + wfInstance.next_executor_name);
+
+            time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
+            if (wfInstance.creator != null && wfInstance.nextExecutor != null) {
+                content.setText("审批人: " + wfInstance.nextExecutor.getRealname());
+            }
             ack.setVisibility(wfInstance.isViewed() ? View.GONE : View.VISIBLE);
 
             /**任务*/
@@ -83,7 +88,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             /*任务超时判断*/
             try {
                 /**重复任务赋值*/
-                if(null != task.getCornBody() && task.getCornBody().getType() != 0){
+                if (null != task.getCornBody() && task.getCornBody().getType() != 0) {
                     isOk = true;
                     Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_repeattask);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -97,7 +102,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
                     String hour = "";
                     String mins = "";
-                    switch(task.getCornBody().getType()){
+                    switch (task.getCornBody().getType()) {
                         case 1:
                             caseName = "每天";
                             break;
@@ -110,25 +115,25 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                             caseName = "每月";
                             break;
                     }
-                    hour = task.getCornBody().getHour()+"";
-                    mins = task.getCornBody().getMinute()+"";
+                    hour = task.getCornBody().getHour() + "";
+                    mins = task.getCornBody().getMinute() + "";
 
             /*如果小时分钟为单数，则前面拼上0*/
-                    if(hour.length() == 1){
-                        hour = "0"+hour;
+                    if (hour.length() == 1) {
+                        hour = "0" + hour;
                     }
 
-                    if(mins.length() == 1){
-                        mins = "0"+mins;
+                    if (mins.length() == 1) {
+                        mins = "0" + mins;
                     }
-                    hourMins = hour+":"+mins;
+                    hourMins = hour + ":" + mins;
 
                     //每天
-                    if(task.getCornBody().getType() == 1){
+                    if (task.getCornBody().getType() == 1) {
                         time.setText(caseName + " " + hourMins + " 重复");
                         //每周
-                    }else if(task.getCornBody().getType() == 2){
-                        switch (task.getCornBody().getWeekDay()){
+                    } else if (task.getCornBody().getType() == 2) {
+                        switch (task.getCornBody().getWeekDay()) {
                             case 1:
                                 weekName = "日";
                                 break;
@@ -162,11 +167,11 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                         }
                         time.setText(caseName + weekName + " " + hourMins + " 重复");
                         //每月
-                    }else if(task.getCornBody().getType() == 3){
-                        dayName = task.getCornBody().getDay()+"号";
+                    } else if (task.getCornBody().getType() == 3) {
+                        dayName = task.getCornBody().getDay() + "号";
                         time.setText(caseName + " " + dayName + " " + hourMins + " 重复");
                     }
-                }else{
+                } else {
                     isOk = false;
                     textColor = R.color.tasklist_gray;
                     Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"));
@@ -188,7 +193,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 title.setText(task.getTitle());
             }
             time.setTextColor(mContext.getResources().getColor(textColor));
-            iv_repeattask.setVisibility(isOk ? View.VISIBLE:View.GONE);
+            iv_repeattask.setVisibility(isOk ? View.VISIBLE : View.GONE);
 
             /**报告*/
         } else if (obj instanceof WorkReport) {
@@ -229,8 +234,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 reportTitle.append(" (补签)");
             }
 
-            String isDelayedTitle = workReport.isDelayed ? "(补签)":" ";
-            title.setText(workReport.title+" "+isDelayedTitle);
+            String isDelayedTitle = workReport.isDelayed ? "(补签)" : " ";
+            title.setText(workReport.title + " " + isDelayedTitle);
 
             String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
             time.setText(end);

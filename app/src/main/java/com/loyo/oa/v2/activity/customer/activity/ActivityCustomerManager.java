@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.fragment.FragmentCommCustomer;
 import com.loyo.oa.v2.activity.customer.fragment.FragmentMyCustomer;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -48,52 +50,52 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
 
     /**
      * 筛选取消
-     * */
+     */
     public final static int CUSTOMER_CANCEL = 200;
 
     /**
      * 标签确定
-     * */
+     */
     public final static int CUSTOMER_TAG = 202;
 
     /**
      * 时间筛选
-     * */
+     */
     public final static int CUSTOMER_TIME = 201;
 
     /**
      * 部门筛选
-     * */
+     */
     public final static int CUSTOMER_DEPT_CREEN = 0x01;
 
     /**
      * 公海挑入
-     * */
-    public final static int CUSTOMER_COMM_RUSH  = 0x02;
+     */
+    public final static int CUSTOMER_COMM_RUSH = 0x02;
 
     /**
      * 我的客户
-     * */
-    public final static int CUSTOMER_MY   = 1;
+     */
+    public final static int CUSTOMER_MY = 1;
 
     /**
      * 团队客户
-     * */
-    public final static int CUSTOMER_TEAM   = 2;
+     */
+    public final static int CUSTOMER_TEAM = 2;
 
     /**
      * 公海客户
-     * */
-    public final static int CUSTOMER_COMM   = 3;
+     */
+    public final static int CUSTOMER_COMM = 3;
 
     /**
      * 个人附近客户
-     * */
+     */
     public final static int NEARCUS_SELF = 1;
 
     /**
      * 团队附近客户
-     * */
+     */
     public final static int NEARCUS_TEAM = 2;
 
 
@@ -109,7 +111,7 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
     private float mRotation = 0;
 
     private Permission permission = (Permission) MainApp.rootMap.get("0404");
-    private String[] SaleItemStatus = new String[]{"我的客户", "团队客户","公海客户"};
+    private String[] SaleItemStatus = new String[]{"我的客户", "团队客户", "公海客户"};
     private List<BaseFragment> fragments = new ArrayList<>();
     private ArrayList<Tag> mTags;
     private ArrayList<Tag> mTags1;
@@ -130,7 +132,7 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
     /**
      * 获取客户标签 筛选menu
      */
-    public void getStageData(){
+    public void getStageData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
                 GetTags(new RCallback<ArrayList<com.loyo.oa.v2.beans.Tag>>() {
@@ -158,7 +160,7 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
 
     /**
      * 深克隆筛选数据
-     * */
+     */
     private void cloneMdata(ArrayList<Tag> tags) throws IOException, ClassNotFoundException {
         mTags1 = new ArrayList<>(tags.size());
         mTags2 = new ArrayList<>(tags.size());
@@ -188,33 +190,33 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
         img_title_search_right.setOnTouchListener(Global.GetTouch());
 
         //超级管理员权限判断
-        if(!MainApp.user.isSuperUser()){
-            try{
+        if (!MainApp.user.isSuperUser()) {
+            try {
                 perTeam = (Permission) MainApp.rootMap.get("0308"); //团队客户
                 perOcean = (Permission) MainApp.rootMap.get("0309"); //公海客户
-                if(!perTeam.isEnable() && !perOcean.isEnable()){
+                if (!perTeam.isEnable() && !perOcean.isEnable()) {
                     SaleItemStatus = new String[]{"我的客户"};
                     imageArrow.setVisibility(View.INVISIBLE);
-                }else if(perTeam.isEnable() && !perOcean.isEnable()){
+                } else if (perTeam.isEnable() && !perOcean.isEnable()) {
                     SaleItemStatus = new String[]{"我的客户", "团队客户"};
                     publicOrTeam = true;
                     imageArrow.setVisibility(View.VISIBLE);
-                }else if(!perTeam.isEnable() && perOcean.isEnable()){
+                } else if (!perTeam.isEnable() && perOcean.isEnable()) {
                     SaleItemStatus = new String[]{"我的客户", "公海客户"};
                     publicOrTeam = false;
                     imageArrow.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     imageArrow.setVisibility(View.VISIBLE);
                 }
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 Toast("团队/公海客户,code错误:0308,0309");
             }
-        }else{
+        } else {
             imageArrow.setVisibility(View.VISIBLE);
         }
 
-        if(SaleItemStatus.length != 1){
+        if (SaleItemStatus.length != 1) {
             layout_title_action.setOnTouchListener(Global.GetTouch());
         }
 
@@ -241,17 +243,17 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
     private void initChildren() {
         for (int i = 0; i < SaleItemStatus.length; i++) {
             BaseFragment fragment = null;
-            if (i == 0) {
+            if ("我的客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags1);
                 b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, FragmentMyCustomer.class.getName(), b);
-            } else if(i  == 1){
+            } else if ("团队客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags2);
                 b.putSerializable("permission", permission);
                 fragment = (BaseFragment) Fragment.instantiate(this, FragmentTeamCustomer.class.getName(), b);
-            } else {
+            } else if ("公海客户".equals(SaleItemStatus[i])) {
                 Bundle b = new Bundle();
                 b.putSerializable("tag", mTags3);
                 b.putSerializable("permission", permission);
@@ -294,7 +296,7 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
                 break;
             //我的 团队 公海切换
             case R.id.layout_title_action:
-                if(SaleItemStatus.length != 1){
+                if (SaleItemStatus.length != 1) {
                     changeTitleImg();
                 }
                 break;
@@ -311,7 +313,7 @@ public class ActivityCustomerManager extends BaseFragmentActivity implements Vie
                     }
                 }
                 Bundle b = new Bundle();
-                b.putInt(ExtraAndResult.EXTRA_TYPE,type);
+                b.putInt(ExtraAndResult.EXTRA_TYPE, type);
                 b.putInt("from", BaseActivity.CUSTOMER_MANAGE);
                 app.startActivity(this, CustomerSearchActivity.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 break;

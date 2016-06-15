@@ -510,6 +510,8 @@ public final class Common {
 
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
+            if(null == MainApp.user.depts)
+                continue;
             for (int j = 0; j < MainApp.user.depts.size(); j++) {
                 if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {
                     positions = i;

@@ -35,7 +35,7 @@ import retrofit.client.Response;
  */
 public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstance> {
 
-    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我申请", "我审批", "我经办"};
+    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我提交的", "我审批的", "我经办的"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
 
     private int category = 0;
@@ -92,8 +92,9 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getWfInstances(map, WfInstanceManageFragment.this);
-        //精简数据之
-//        RestAdapterFactory.getInstance().build(ConfigAppURL.WFINSTANCE_URL).create(IWfInstance.class).getWfInstancesData(map, WfInstanceManageFragment.this);
+//        //精简数据之
+//        RestAdapterFactory.getInstance().build(ConfigAppURL.WFINSTANCE_URL).create(IWfInstance.class).
+//                getWfInstancesData(map, WfInstanceManageFragment.this);
     }
 
     @Override
