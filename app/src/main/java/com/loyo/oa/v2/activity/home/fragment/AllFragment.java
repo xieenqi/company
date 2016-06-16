@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-
 public class AllFragment extends Fragment implements OnPageChangeListener {
     Button b;
     private int select = 0;

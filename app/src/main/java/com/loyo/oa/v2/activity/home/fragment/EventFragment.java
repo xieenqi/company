@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.loyo.oa.v2.R;
 
+/**
+ * 【应用】fragment
+ */
 public class EventFragment extends Fragment {
     private AllFragment mAllFragment;
     //	private NearFragmengt mNearFragment;
@@ -32,7 +35,7 @@ public class EventFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-		onInit();
+        onInit();
     }
 
     private void onInit() {

@@ -17,11 +17,13 @@ import com.loyo.oa.v2.activity.home.ActivityMainHome;
 
 import java.util.ArrayList;
 
-
+/**
+ * 【主界面】fragment
+ */
 public class HomeFragment extends Fragment implements OnPageChangeListener {
-        private EventFragment mEventFragment;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
+    private EventFragment mEventFragment;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
     private MailListFragment mMailListFragment;
-//    private FoundFragment mFoundFragment;
+    //    private FoundFragment mFoundFragment;
 //    private PersionFragment mPersionFragment;
     private ArrayList<RadioButton> title = new ArrayList<RadioButton>();// 4个标题
     ViewPager pager;

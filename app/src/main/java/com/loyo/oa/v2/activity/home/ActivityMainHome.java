@@ -12,7 +12,7 @@ import com.loyo.oa.v2.activity.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activity.home.fragment.SlidingFragmentActivity;
 
 /**
- * 带侧滑的主界面
+ * 带侧滑的【主界面】
  * <p/>
  * Created by xeq on 16/6/15.
  */

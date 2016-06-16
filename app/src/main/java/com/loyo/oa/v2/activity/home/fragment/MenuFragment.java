@@ -10,7 +10,9 @@ import android.widget.Button;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
 
-
+/**
+ * 【侧边栏】fragment
+ */
 public class MenuFragment extends Fragment {
     private Button vButton;
 

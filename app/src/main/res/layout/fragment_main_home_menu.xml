@@ -1,19 +1,19 @@
 <FrameLayout android:id="@+id/menu_fragment"
              xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
+             android:background="@color/yellow"
              android:layout_height="fill_parent">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="84dip"
-        android:background="#e1e1e1"
         android:gravity="center">
 
         <Button
             android:id="@+id/change_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="全城活动"
+            android:text="侧边栏"
             android:textColor="#ffffff"
             android:textSize="15sp"/>
     </LinearLayout>
