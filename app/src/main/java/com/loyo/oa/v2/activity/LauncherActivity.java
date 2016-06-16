@@ -128,7 +128,7 @@ public class LauncherActivity extends Activity {
                     TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);*/
             //新版主页
             intent.setClass(LauncherActivity.this,
-                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : ActivityMainHome.class);
+                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : ActivityMainHome.class);//ActivityMainHome  NewMainActivity
         }
         startActivity(intent);
         finish();

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.cusview.SlidingMenu;
@@ -113,30 +115,30 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         getSlidingMenu().showContent();
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        // TODO Auto-generated method stub
-//        if (keyCode == KeyEvent.KEYCODE_BACK
-//                && event.getAction() == KeyEvent.ACTION_DOWN) {
-//            if (selectIndex != 0) {
-//                if (mHomeFragment == null) {
-//                    mHomeFragment = new HomeFragment();
-//                }
-//                changeContent(mHomeFragment);
-//                selectIndex = 0;
-//            } else {
-//                if ((System.currentTimeMillis() - exitTime) > 2000) {
-//                    Toast.makeText(MainActivity.this, "再按一次退出程序",
-//                            Toast.LENGTH_SHORT).show();
-//                    exitTime = System.currentTimeMillis();
-//                } else {
-//                    finish();
-//                }
-//            }
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (selectIndex != 0) {
+                if (mHomeFragment == null) {
+                    mHomeFragment = new HomeFragment();
+                }
+                changeContent(mHomeFragment);
+                selectIndex = 0;
+            } else {
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    Toast.makeText(ActivityMainHome.this, "再按一次退出程序",
+                            Toast.LENGTH_SHORT).show();
+                    exitTime = System.currentTimeMillis();
+                } else {
+                    finish();
+                }
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     protected void onStart() {
