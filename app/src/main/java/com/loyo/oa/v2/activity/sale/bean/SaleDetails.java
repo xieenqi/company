@@ -34,6 +34,8 @@ public class SaleDetails implements Serializable {
     public int winTime;            //赢单时间
     public int wfState = 0;//1【待审批】2【审批中】3【审批不通过】4【审批通过】5【审批完结】
     public String wfId;
+    public String directorId;      //负责人ID
+    public String directorName;    //负责人名字
 
     public ArrayList<ContactLeftExtras> extensionDatas;    //动态字段
 
@@ -52,6 +54,22 @@ public class SaleDetails implements Serializable {
 
     public void setProInfos(ArrayList<SaleIntentionalProduct> proInfos) {
         this.proInfos = proInfos;
+    }
+
+    public String getDirectorName() {
+        return directorName;
+    }
+
+    public void setDirectorName(String directorName) {
+        this.directorName = directorName;
+    }
+
+    public String getDirectorId() {
+        return directorId;
+    }
+
+    public void setDirectorId(String directorId) {
+        this.directorId = directorId;
     }
 
     public String getStageName() {

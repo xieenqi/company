@@ -325,6 +325,29 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="负责人: "
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:id="@+id/director"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/dimen_4"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="创建人: "
                         android:textColor="@color/text99"
                         android:textSize="@dimen/text_sp14"/>
