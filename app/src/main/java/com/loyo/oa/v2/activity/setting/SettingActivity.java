@@ -139,7 +139,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                //onBackPressed();
                 finish();
                 break;
             case R.id.btn_setting_exit:
@@ -269,6 +268,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         //清楚token与用户资料
         MainApp.setToken(null);
         MainApp.user = null;
+        stopService(rushTokenIntent);
+        RushTokenService.cancelJc();
+
         //清楚本地登录状态
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);

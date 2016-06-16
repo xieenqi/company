@@ -17,21 +17,24 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【Token刷新】服务
+ * 【Token刷新】获取服务
  *
- * Created by yyy on 16/6/16.
+ *  Created by yyy on 16/6/16.
+ *  Explain:防止程序长期停留在后台，没被销毁，但是token过期，导致不能操作
+ *         定期获取最新token，规避这种风险
  */
 public class RushTokenService extends IntentService {
 
     public int timeNum;
     public int rushCycle = 103680; //调用周期 3天
 
-    public Timer timer;
-    public TimerTask timerTask;
+    public static Timer timer;
+    public static TimerTask timerTask;
     public Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
             if(msg.what == 0x01)
+                timeNum = 0;
                 getToken();
         }
     };
@@ -51,7 +54,7 @@ public class RushTokenService extends IntentService {
             public void success(Token token, Response response) {
                 HttpErrorCheck.checkResponse("获取Token", response);
                 MainApp.setToken(token.access_token);
-                LogUtil.dee("新Token:"+MainApp.getToken());
+                LogUtil.dee("新Token:" + MainApp.getToken());
             }
 
             @Override
@@ -69,15 +72,20 @@ public class RushTokenService extends IntentService {
             public void run() {
                 timeNum++;
                 if(timeNum == rushCycle){
-                    timeNum = 0;
                     mHandler.sendEmptyMessage(0x01);
-                    timer.cancel();
-                    timerTask.cancel();
+                    cancelJc();
                     timerInit();
                 }
             }
         };
-        timer.schedule(timerTask,0,1000);
+        timer.schedule(timerTask, 0, 1000);
+    }
+
+    public static void cancelJc(){
+        timer.cancel();
+        timerTask.cancel();
+        timer = null;
+        timerTask = null;
     }
 
     public class Token {

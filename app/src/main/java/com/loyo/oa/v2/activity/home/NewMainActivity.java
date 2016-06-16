@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.BulletinManagerActivity_;
@@ -215,6 +214,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmain);
+        startService(rushTokenIntent);
         heading = (RoundImageView) findViewById(R.id.newhome_heading_img);
         heading.setOnClickListener(this);
         //注册拉去组织架构的广播
@@ -226,7 +226,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         newhome_name = (TextView) findViewById(R.id.newhome_name);
         startService(mIntentCheckUpdate);
         showLoading("");
-//        LogUtil.d("  主页别创建 ");
         initData();
     }
 
@@ -299,7 +298,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      */
     public void initData() {
         startService(new Intent(mContext,InitDataService_.class));
-        startService(new Intent(mContext, RushTokenService.class));
     }
 
     /**
