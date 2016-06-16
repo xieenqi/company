@@ -325,7 +325,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0", 0),
                 //new HomeItem(R.drawable.newmain_customer, "客户管理", CustomerManageActivity_.class, "0205", 1),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
-                new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0", 1),
+                new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", ProjectManageActivity_.class, "0201", 2),
                 new HomeItem(R.drawable.newmain_task, "任务计划", TasksManageActivity_.class, "0202", 2),
