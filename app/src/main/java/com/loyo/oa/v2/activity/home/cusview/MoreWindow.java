@@ -27,12 +27,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.common.Global;
 
-
+/**
+ * 【主页菜单】 快捷创建页
+ * */
 public class MoreWindow extends PopupWindow implements OnClickListener {
 
     private String TAG = MoreWindow.class.getSimpleName();
@@ -43,16 +44,9 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
     private Bitmap mBitmap = null;
     private Bitmap overlay = null;
     private Handler mHandler;
-
     private RelativeLayout view;
     private Button closeBtn;
     private LinearLayout ll_add_sale, ll_follow;
-/*    private TextView btn1;
-    private TextView btn2;
-    private TextView btn3;
-    private TextView btn4;
-    private TextView btn5;
-    private TextView btn6;*/
 
     private ImageView btn1;
     private ImageView btn2;
@@ -140,13 +134,6 @@ public class MoreWindow extends PopupWindow implements OnClickListener {
     }
 
     public void initBtnUi(View v) {
-/*        btn1 = (TextView) v.findViewById(R.id.more_window_local);
-        btn2 = (TextView) v.findViewById(R.id.more_window_online);
-        btn3 = (TextView) v.findViewById(R.id.more_window_delete);
-        btn4 = (TextView) v.findViewById(R.id.more_window_collect);
-        btn5 = (TextView) v.findViewById(R.id.more_window_auto);
-        btn6 = (TextView) v.findViewById(R.id.more_window_external);*/
-
         btn1 = (ImageView) v.findViewById(R.id.more_window_local);
         btn2 = (ImageView) v.findViewById(R.id.more_window_online);
         btn3 = (ImageView) v.findViewById(R.id.more_window_delete);
