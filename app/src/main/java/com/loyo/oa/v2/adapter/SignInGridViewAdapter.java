@@ -173,9 +173,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
             /*拜访签到*/
             else if (mListData.size() <= 9) {
+                LogUtil.dee("mListData:"+mListData.size());
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
                 intent.putExtra("imgsize",(9-mListData.size()));
+                intent.putExtra("addpg",true);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
         }
@@ -184,11 +186,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
     public static void setAdapter(final GridView gv, final SignInGridViewAdapter adapter) {
         gv.setAdapter(adapter);
-        if (adapter.getCount() % 3 == 0) {
+/*        if (adapter.getCount() % 3 == 0) {
             ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
         } else {
             ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
-        }
+        }*/
     }
 
     /**

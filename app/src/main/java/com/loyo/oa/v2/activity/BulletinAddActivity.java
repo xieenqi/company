@@ -29,6 +29,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.tool.customview.CusGridView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -47,7 +49,7 @@ public class BulletinAddActivity extends BaseActivity {
 
     @ViewById EditText edt_title;
     @ViewById EditText edt_content;
-    @ViewById GridView gridView_photo;
+    @ViewById CusGridView gridView_photo;
     @ViewById ViewGroup layout_recevier;
     @ViewById TextView tv_recevier;
 
