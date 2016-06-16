@@ -21,8 +21,8 @@ import java.util.ArrayList;
  * 【主界面】fragment
  */
 public class HomeFragment extends Fragment implements OnPageChangeListener {
-    private EventFragment mEventFragment;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
-    private MailListFragment mMailListFragment;
+    private FragmentHomeApplication mFragmentHomeApplication;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
+    private FragmentHomeStatistics mFragmentHomeStatistics;
     //    private FoundFragment mFoundFragment;
 //    private PersionFragment mPersionFragment;
     private ArrayList<RadioButton> title = new ArrayList<RadioButton>();// 4个标题
@@ -74,15 +74,15 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    if (mEventFragment == null) {
-                        mEventFragment = new EventFragment();
+                    if (mFragmentHomeApplication == null) {
+                        mFragmentHomeApplication = new FragmentHomeApplication();
                     }
-                    return mEventFragment;
+                    return mFragmentHomeApplication;
                 case 1:
-                    if (mMailListFragment == null) {
-                        mMailListFragment = new MailListFragment();
+                    if (mFragmentHomeStatistics == null) {
+                        mFragmentHomeStatistics = new FragmentHomeStatistics();
                     }
-                    return mMailListFragment;
+                    return mFragmentHomeStatistics;
 //                case 2:
 //                    if (mFoundFragment == null) {
 //                        mFoundFragment = new FoundFragment();

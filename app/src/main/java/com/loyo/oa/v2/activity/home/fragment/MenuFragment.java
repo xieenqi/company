@@ -30,7 +30,7 @@ public class MenuFragment extends Fragment {
         onInit();
     }
 
-    private EventFragment mEventFragment;
+    private FragmentHomeApplication mFragmentHomeApplication;
 
     private String makeFragmentName(int viewId, int index) {
         return "android:switcher:" + viewId + ":" + index;
@@ -43,18 +43,18 @@ public class MenuFragment extends Fragment {
             public void onClick(View v) {
                 //得到fragment的名字只限于FragmentPagerAdapter里面的
                 String name = makeFragmentName(ActivityMainHome.index, 0);
-                mEventFragment = (EventFragment) getFragmentManager()
+                mFragmentHomeApplication = (FragmentHomeApplication) getFragmentManager()
                         .findFragmentByTag(name);
                 String a;
-                if (mEventFragment != null) {
-                    a = mEventFragment.getChangeEvent();
+                if (mFragmentHomeApplication != null) {
+                    a = mFragmentHomeApplication.getChangeEvent();
                     if ("All".equals(a)) {
-                        mEventFragment.gotoShiftEvent(2);
-                        mEventFragment.setChangeEvent("Near");
+                        mFragmentHomeApplication.gotoShiftEvent(2);
+                        mFragmentHomeApplication.setChangeEvent("Near");
 
                     } else {
-                        mEventFragment.gotoShiftEvent(1);
-                        mEventFragment.setChangeEvent("All");
+                        mFragmentHomeApplication.gotoShiftEvent(1);
+                        mFragmentHomeApplication.setChangeEvent("All");
                     }
                 }
                 ((ActivityMainHome) getActivity()).togggle();

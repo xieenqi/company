@@ -18,7 +18,7 @@ import com.loyo.oa.v2.R;
 /**
  * 【统计】fragment
  */
-public class MailListFragment extends Fragment {
+public class FragmentHomeStatistics extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
