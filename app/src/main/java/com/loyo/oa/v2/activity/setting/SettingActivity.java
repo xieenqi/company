@@ -26,6 +26,7 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IUser;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -265,10 +266,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     void exit() {
-        //安全退出
+        //清楚token与用户资料
         MainApp.setToken(null);
         MainApp.user = null;
-        //清楚sp
+        //清楚本地登录状态
         SharedUtil.clearInfo(mContext);
         JPushInterface.stopPush(app);
         Set<String> complanTag = new HashSet<>();

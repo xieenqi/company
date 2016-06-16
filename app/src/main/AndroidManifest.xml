@@ -546,6 +546,10 @@
         <service
             android:name=".service.CheckUpdateService"
             android:enabled="true"/>
+        <service
+            android:name=".service.RushTokenService"
+            android:enabled="true"
+            />
 
         <receiver android:name=".service.TrackLogRecevier"/>
         <receiver android:name=".service.TrackRuleReceiver">

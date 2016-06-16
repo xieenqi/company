@@ -218,10 +218,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 登陆
      *
      * @param body 表单
-     *             、 @param type 1，微信登录；2，普通登录
-     *             <p/>
-     *             成功 getStatus 状态码
-     *             失败 getKind 状态码
+     *
+     * 1，微信登录；2，普通登录
+     * 成功 getStatus 状态码
+     * 失败 getKind 状态码
      */
     private void login(final HashMap<String, Object> body) {
         RestAdapter adapter = new RestAdapter.Builder()
@@ -270,7 +270,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     /**
-     * 登录cg
+     * 登录成功
      */
     private void loginSuccess(final Token token) {
         Timer timer = new Timer();
