@@ -10,19 +10,25 @@ import android.widget.ProgressBar;
 
 import com.loyo.oa.v2.R;
 
+import java.util.Random;
+
 /**
  * 添加 过程统计 数据
  * Created by xeq on 16/6/16.
  */
 public class ProcessDataAdapter extends LinearLayout {
     private Context mContext;
-
+    int[] colors = {R.drawable.shape_progressbar_mini20, R.drawable.shape_progressbar_mini21, R.drawable.shape_progressbar_mini22,
+            R.drawable.shape_progressbar_mini23, R.drawable.shape_progressbar_mini24, R.drawable.shape_progressbar_mini25,
+            R.drawable.shape_progressbar_mini26, R.drawable.shape_progressbar_mini27, R.drawable.shape_progressbar_mini28,
+            R.drawable.shape_progressbar_mini29};
 
     public ProcessDataAdapter(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
-        setOrientation(HORIZONTAL);
+        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        setOrientation(VERTICAL);
+        setPadding(0,10,0,10);
         bindView();
     }
 
@@ -34,7 +40,17 @@ public class ProcessDataAdapter extends LinearLayout {
     private void bindView() {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.item_process, null, false);
         ProgressBar pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
-        pb_progress.setProgress(86);
-        pb_progress.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_mini20));
+        pb_progress.setProgress(46);
+        pb_progress.setProgressDrawable(getResources().getDrawable(colors[getRandomNumber()]));
+        this.addView(view);
+    }
+
+    private int getRandomNumber(){
+        Random random = new Random();
+        for(int i = 0; i < 9;i++) {
+            System.out.println(Math.abs(random.nextInt())%9);
+            return Math.abs(random.nextInt())%9;
+        }
+        return 0;
     }
 }
