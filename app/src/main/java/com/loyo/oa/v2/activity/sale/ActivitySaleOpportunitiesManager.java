@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -53,8 +55,10 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
     private ImageView img_title_arrow;
     private ListView lv_sale;
     private TextView tv_title_1;
+    private ImageView imageArrow;
     private RelativeLayout layout_title_action, img_title_search_right;
 
+    private Permission permission;
     private Animation rotateAnimation;//标题动画
     private String[] SaleItemStatus = new String[]{"我的机会", "团队机会"};
     private List<BaseFragment> fragments = new ArrayList<>();
@@ -92,6 +96,7 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
 
     private void init() {
         setTitle("我的机会");
+        imageArrow = (ImageView) findViewById(R.id.img_title_arrow);
         img_title_left = (LinearLayout) findViewById(R.id.img_title_left);
         img_title_left.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnClickListener(this);
@@ -108,6 +113,22 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
         img_title_search_right.setOnClickListener(this);
         img_title_search_right.setOnTouchListener(Global.GetTouch());
         img_title_search_right.setVisibility(View.INVISIBLE);
+
+        //超级管理员\权限判断
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                permission = (Permission) MainApp.rootMap.get("0327");
+                if (!permission.isEnable()) {
+                    SaleItemStatus = new String[]{"我的机会"};
+                    imageArrow.setVisibility(View.INVISIBLE);
+                    layout_title_action.setEnabled(false);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("团队机会权限,code错误:0327");
+            }
+        }
+
         getStageData();
     }
 
