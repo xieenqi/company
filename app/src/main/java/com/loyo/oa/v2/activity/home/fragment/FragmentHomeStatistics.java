@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.adapter.FunnelDataAdapter;
 import com.loyo.oa.v2.activity.home.adapter.ProcessDataAdapter;
+import com.loyo.oa.v2.activity.home.bean.HttpBulking;
 import com.loyo.oa.v2.activity.home.bean.HttpProcess;
 import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
 import com.loyo.oa.v2.activity.home.bean.HttpStatistics;
@@ -35,7 +37,8 @@ public class FragmentHomeStatistics extends Fragment {
 
     private final static String[] tracyColors = {"#f8668a", "#4ec469", "#4ddac2", "#31cbe8", "#88b9f7", "#7fcaff", "#f18f73", "#fdb485", "#fde068", "#12db8a"};
     private LinearLayout ll_process, ll_funnel;
-    ProgressBar pb_progress_vertical;
+    ProgressBar pb_progress_vertical1, pb_progress_vertical2;
+    TextView tv_number1, tv_name1, tv_number2, tv_name2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +57,15 @@ public class FragmentHomeStatistics extends Fragment {
     private void initView(View view) {
         ll_process = (LinearLayout) view.findViewById(R.id.ll_process);
         ll_funnel = (LinearLayout) view.findViewById(R.id.ll_funnel);
-        pb_progress_vertical = (ProgressBar) view.findViewById(R.id.pb_progress_vertical);
+        pb_progress_vertical1 = (ProgressBar) view.findViewById(R.id.pb_progress_vertical1);
+        pb_progress_vertical1.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
+        pb_progress_vertical2 = (ProgressBar) view.findViewById(R.id.pb_progress_vertical2);
+        pb_progress_vertical2.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
+        tv_number1 = (TextView) view.findViewById(R.id.tv_number1);
+        tv_number2 = (TextView) view.findViewById(R.id.tv_number2);
+        tv_name1 = (TextView) view.findViewById(R.id.tv_name1);
+        tv_name2 = (TextView) view.findViewById(R.id.tv_name2);
 
-        pb_progress_vertical.setProgress(46);
-        pb_progress_vertical.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
 
         getStatisticAllData();
     }
@@ -77,6 +85,7 @@ public class FragmentHomeStatistics extends Fragment {
             public void success(HttpStatistics httpStatistics, Response response) {
                 HttpErrorCheck.checkResponse("销售统计全部数据：", response);
                 setprocessData(httpStatistics.process);
+                setBulkingData(httpStatistics.bulking);
                 setFunnelData(httpStatistics.salechance);
             }
 
@@ -103,11 +112,28 @@ public class FragmentHomeStatistics extends Fragment {
     }
 
     /**
+     * 设置 增量统计
+     */
+    private void setBulkingData(List<HttpBulking> data) {
+    for(HttpBulking ele : data){
+        if(ele.typeId==1){
+            pb_progress_vertical1.setProgress(ele.totalNum);
+            tv_name1.setText(ele.name);
+            tv_number1.setText(ele.totalNum+"");
+        }else {
+            pb_progress_vertical2.setProgress(ele.totalNum);
+            tv_name2.setText(ele.name);
+            tv_number2.setText(ele.totalNum+"");
+        }
+    }
+    }
+
+    /**
      * 设置 销售漏斗
      */
     private void setFunnelData(List<HttpSalechance> data) {
         for (int i = 0; i < data.size(); i++) {
-            ll_funnel.addView(new FunnelDataAdapter(getActivity(), i,data.get(i)));
+            ll_funnel.addView(new FunnelDataAdapter(getActivity(), i, data.get(i)));
         }
     }
 
