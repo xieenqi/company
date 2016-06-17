@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class ProcessDataAdapter extends LinearLayout {
     private Context mContext;
-    int[] colors = {R.drawable.shape_progressbar_mini20, R.drawable.shape_progressbar_mini21, R.drawable.shape_progressbar_mini22,
+    private int[] colors = {R.drawable.shape_progressbar_mini20, R.drawable.shape_progressbar_mini21, R.drawable.shape_progressbar_mini22,
             R.drawable.shape_progressbar_mini23, R.drawable.shape_progressbar_mini24, R.drawable.shape_progressbar_mini25,
             R.drawable.shape_progressbar_mini26, R.drawable.shape_progressbar_mini27, R.drawable.shape_progressbar_mini28,
             R.drawable.shape_progressbar_mini29};
@@ -28,7 +28,7 @@ public class ProcessDataAdapter extends LinearLayout {
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         setOrientation(VERTICAL);
-        setPadding(0,10,0,10);
+        setPadding(0, 10, 0, 10);
         bindView();
     }
 
@@ -45,11 +45,11 @@ public class ProcessDataAdapter extends LinearLayout {
         this.addView(view);
     }
 
-    private int getRandomNumber(){
+    private int getRandomNumber() {
         Random random = new Random();
-        for(int i = 0; i < 9;i++) {
-            System.out.println(Math.abs(random.nextInt())%9);
-            return Math.abs(random.nextInt())%9;
+        for (int i = 0; i < 9; i++) {
+            System.out.println(Math.abs(random.nextInt()) % 9);
+            return Math.abs(random.nextInt()) % 9;
         }
         return 0;
     }
