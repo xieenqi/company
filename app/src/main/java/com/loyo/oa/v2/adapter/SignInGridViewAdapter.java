@@ -186,11 +186,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
     public static void setAdapter(final GridView gv, final SignInGridViewAdapter adapter) {
         gv.setAdapter(adapter);
-/*        if (adapter.getCount() % 3 == 0) {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
-        } else {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
-        }*/
     }
 
     /**

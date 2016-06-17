@@ -32,7 +32,6 @@ import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.activity.home.bean.MoreWindowItem;
-import com.loyo.oa.v2.activity.home.cusview.MoreWindow;
 import com.loyo.oa.v2.activity.home.cusview.MoreWindowCase;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
@@ -119,7 +118,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
-    private MoreWindow mMoreWindow;
     private MoreWindowCase mMoreWindowcase;
     private Intent mIntentCheckUpdate;
     private ValidateInfo validateInfo = new ValidateInfo();
@@ -355,18 +353,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 new MoreWindowItem("拜访签到","0000",R.drawable.newmain_post_sign)));
 
     }
-
-    /**
-     * 显示弹出菜单
-     */
-/*    void showMoreWindow(View view) {
-        if (null == mMoreWindow) {
-            mMoreWindow = new MoreWindow(this, mHandler);
-            mMoreWindow.init();
-        }
-        mMoreWindow.showMoreWindow(view);
-    }*/
-
 
     /**
      * 显示弹出菜单
@@ -825,27 +811,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-
-    /**
-     * slidingMenu设置(备用)
-     */
-    public void slidingMenuInit() {
-        // configure the SlidingMenu
-        SlidingMenu menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        // 设置触摸屏幕的模式
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setShadowWidthRes(R.dimen.dimen_30);
-        //menu.setShadowDrawable(R.drawable.shadow);
-
-        // 设置滑动菜单视图的宽度
-        menu.setBehindOffsetRes(R.dimen.dimen_150);
-        // 设置渐入渐出效果的值
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        //为侧滑菜单设置布局
-        menu.setMenu(R.layout.slidingmenu_left);
-    }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
