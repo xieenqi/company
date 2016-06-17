@@ -171,6 +171,7 @@ public class AttachmentActivity extends BaseActivity {
     void addAttachment() {
         Intent intent = new Intent(this, SelectPicPopupWindow.class);
         intent.putExtra("localpic", true);
+        intent.putExtra("addpg", false);
         startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
     }
 
@@ -209,7 +210,6 @@ public class AttachmentActivity extends BaseActivity {
                         File newFile = Global.scal(this, uri);
                         if (newFile != null && newFile.length() > 0) {
                             if (newFile.exists()) {
-                                //uploadAttachment(newFile);
                                 newUploadAttachement(newFile);
                             }
                         }
@@ -224,25 +224,6 @@ public class AttachmentActivity extends BaseActivity {
                 break;
 
         }
-    }
-
-    /**
-     * 上传附件
-     */
-    private void uploadAttachment(File file) {
-        Utils.uploadAttachment(uuid, bizType, file)
-                .subscribe(new CommonSubscriber(this) {
-                    @Override
-                    public void onNext(Serializable attachment) {
-                        getAttachments();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.getMessage();
-                        super.onError(e);
-                    }
-                });
     }
 
     /**

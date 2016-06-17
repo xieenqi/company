@@ -28,7 +28,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * App  一启动 就开启服务 调用户的数据
+ * 【组织架构】后台拉取服务
  * xnq
  */
 @EIntentService
@@ -96,7 +96,6 @@ public class InitDataService extends IntentService {
                 .create(IUser.class).getOrganization();
 
         if (!ListUtil.IsEmpty(lstDepartment_current)) {
-
             //写DB
             DBManager.Instance().putOrganization(MainApp.gson.toJson(lstDepartment_current));
             //设置缓存

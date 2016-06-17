@@ -44,6 +44,9 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
     private LinearLayout layout;
     private Intent mIntent;
     private Uri fileUri;
+    private int imgSize;
+    private boolean addpg;
+    private boolean localpic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,14 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
         /**判断是直接调用相机，还是弹出选相框*/
         if (null != getIntent() && null != getIntent().getExtras()) {
-            boolean localpic = getIntent().getBooleanExtra("localpic", false);
+            addpg    = getIntent().getBooleanExtra("addpg", false);
+            localpic = getIntent().getBooleanExtra("localpic", false);
+            imgSize  = getIntent().getIntExtra("imgsize",0);
+
+            if(!addpg){
+                imgSize = 9;
+            }
+
             if (!localpic) {
                 takePhotoIntent();
             }
@@ -144,7 +154,7 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
                 // 是否显示拍摄图片
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
                 // 最大可选择图片数量
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, imgSize);
                 // 选择模式
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);

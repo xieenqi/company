@@ -54,6 +54,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.WeeksDialog;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.SingleRowWheelView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -109,7 +110,7 @@ public class WorkReportAddActivity extends BaseActivity {
     @ViewById
     ImageView img_title_toUser;
     @ViewById
-    GridView gridView_photo;
+    CusGridView gridView_photo;
     @ViewById
     GridView gv_workreports;
     @ViewById
@@ -488,9 +489,10 @@ public class WorkReportAddActivity extends BaseActivity {
                     }
                 }
 
-
-                if(type == TYPE_EDIT){
+                //没有附件
+                if(pickPhots.size() == 0){
                     requestCommitWork();
+                    //有附件
                 }else{
                     newUploadAttachement();
                 }
@@ -742,6 +744,9 @@ public class WorkReportAddActivity extends BaseActivity {
      * 提交报告
      * */
     private void requestCommitWork(){
+        if(pickPhots.size() == 0){
+            showLoading("正在提交");
+        }
 
         bizExtData = new PostBizExtData();
         if(type == TYPE_EDIT){

@@ -50,6 +50,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
 
 import org.androidannotations.annotations.AfterViews;
@@ -103,7 +104,7 @@ public class WfInstanceAddActivity extends BaseActivity {
     @ViewById Button btn_add;
     @ViewById TextView tv_WfTemplate;
     @ViewById TextView tv_bizform;
-    @ViewById GridView gridView_photo;
+    @ViewById CusGridView gridView_photo;
     @ViewById EditText edt_memo;
     @Extra
     String projectId;

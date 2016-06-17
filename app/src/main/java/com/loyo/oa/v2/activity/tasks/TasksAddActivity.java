@@ -50,6 +50,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 import com.loyo.oa.v2.tool.customview.RepeatTaskView;
 import org.androidannotations.annotations.AfterViews;
@@ -122,7 +123,7 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     EditText edt_title;
     @ViewById
-    GridView gridView_photo;
+    CusGridView gridView_photo;
     @Extra
     String projectId;
     @Extra
@@ -253,6 +254,9 @@ public class TasksAddActivity extends BaseActivity {
      */
 
     void requestCommitTask() {
+        if(pickPhots.size() == 0){
+            showLoading("正在提交");
+        }
         bizExtData = new PostBizExtData();
         bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
@@ -359,7 +363,13 @@ public class TasksAddActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-                newUploadAttachement();
+                //没有附件
+                if(pickPhots.size() == 0){
+                    requestCommitTask();
+                //有附件
+                }else{
+                    newUploadAttachement();
+                }
                 break;
 
             //重复任务

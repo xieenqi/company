@@ -78,7 +78,7 @@
                 android:background="@drawable/layout_bg1"
                 android:orientation="vertical">
 
-                <GridView
+                <com.loyo.oa.v2.tool.customview.CusGridView
                     android:id="@+id/gridView_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,7 +87,8 @@
                     android:horizontalSpacing="@dimen/activity_horizontal_margin"
                     android:listSelector="@android:color/transparent"
                     android:numColumns="3"
-                    android:verticalSpacing="@dimen/activity_horizontal_margin"/>
+                    android:verticalSpacing="@dimen/activity_horizontal_margin"
+                    />
 
             </LinearLayout>
 

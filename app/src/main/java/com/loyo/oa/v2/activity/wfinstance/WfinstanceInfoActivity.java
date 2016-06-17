@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
@@ -64,7 +63,7 @@ import retrofit.client.Response;
  */
 
 @EActivity(R.layout.activity_wfinstance_info)
-public class WfinstanceInfoActivity extends BaseActivity {
+public class  WfinstanceInfoActivity extends BaseActivity {
 
     @ViewById
     ListView_inScrollView listView_workflowNodes;
@@ -414,6 +413,8 @@ public class WfinstanceInfoActivity extends BaseActivity {
         if (isPass && mWfInstance.creator != null
                 && mWfInstance.creator.isCurrentUser() && !("300".equals(mWfInstance.bizForm.bizCode + ""))) {
             img_title_right.setVisibility(View.VISIBLE);
+        }else if(mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")){
+            img_title_right.setVisibility(View.VISIBLE);
         }
     }
 
@@ -562,10 +563,15 @@ public class WfinstanceInfoActivity extends BaseActivity {
                 break;
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                if(mWfInstance.status == WfInstance.STATUS_NEW){
+                //赢单未通过
+                if(mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")){
                     intent.putExtra("delete", true);
+                }else{
+                    if(mWfInstance.status == WfInstance.STATUS_NEW){
+                        intent.putExtra("delete", true);
+                    }
+                    intent.putExtra("edit", true);
                 }
-                intent.putExtra("edit", true);
                 startActivityForResult(intent, MSG_DELETE_WFINSTANCE);
                 break;
             /*同意*/

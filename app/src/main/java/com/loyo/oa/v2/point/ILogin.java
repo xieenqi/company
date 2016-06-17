@@ -2,10 +2,12 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.service.RushTokenService;
 
 import java.util.HashMap;
 
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 
@@ -16,6 +18,7 @@ import retrofit.http.PUT;
  * 时间 : 15/8/4.
  */
 public interface ILogin {
+
     /**
      * 登陆
      *
@@ -33,5 +36,9 @@ public interface ILogin {
      */
     @PUT("/users/bindingWX")
     void updateWxUnionId(@Body HashMap<String, Object> body, retrofit.Callback<User> cb);
+
+
+    @GET("/newtoken")
+    void getNewToken(retrofit.Callback<RushTokenService.Token> back);
 
 }

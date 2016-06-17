@@ -1,5 +1,8 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
@@ -301,4 +304,7 @@ public interface ICustomer {
      */
     @GET("/contact/{customerId}")
     void getCustomerContacts(@Path("customerId") String id, Callback<Customer> callback);
+
+    @POST("/customer/")
+    void addNewCustomer(@Body Map<String,Object> map,Callback<Customer> callback);
 }
