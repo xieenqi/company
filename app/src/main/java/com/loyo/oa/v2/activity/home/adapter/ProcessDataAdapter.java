@@ -1,6 +1,7 @@
 package com.loyo.oa.v2.activity.home.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.bean.HttpProcess;
+import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.Random;
 
@@ -20,16 +22,17 @@ import java.util.Random;
  */
 public class ProcessDataAdapter extends LinearLayout {
     private Context mContext;
-    private HttpProcess data;
+    View view;
+    TextView tv_name, tv_number;
+    ProgressBar pb_progress;
     private int[] colors = {R.drawable.shape_progressbar_mini20, R.drawable.shape_progressbar_mini21, R.drawable.shape_progressbar_mini22,
             R.drawable.shape_progressbar_mini23, R.drawable.shape_progressbar_mini24, R.drawable.shape_progressbar_mini25,
             R.drawable.shape_progressbar_mini26, R.drawable.shape_progressbar_mini27, R.drawable.shape_progressbar_mini28,
             R.drawable.shape_progressbar_mini29};
 
-    public ProcessDataAdapter(Context context, HttpProcess data) {
+    public ProcessDataAdapter(Context context, String name, int value, int max) {
         this(context, null, 0);
-        this.data = data;
-
+        bindView(name, value, max);
     }
 
     public ProcessDataAdapter(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -38,17 +41,19 @@ public class ProcessDataAdapter extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         setOrientation(VERTICAL);
         setPadding(0, 10, 0, 10);
-        bindView();
+        view = LayoutInflater.from(mContext).inflate(R.layout.item_process, null);
+        tv_name = (TextView) view.findViewById(R.id.tv_name);
+        pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
+        tv_number = (TextView) view.findViewById(R.id.tv_number);
+        LogUtil.d("chan传参数>>>>2");
     }
 
-    private void bindView() {
-        final View view = LayoutInflater.from(mContext).inflate(R.layout.item_process, null, false);
-        TextView tv_name = (TextView) findViewById(R.id.tv_name);
-        ProgressBar pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
-        TextView tv_number = (TextView) findViewById(R.id.tv_number);
-//        tv_name.setText(TextUtils.isEmpty(data.value) ? "无" : data.value);
-//        tv_number.setText(TextUtils.isEmpty(data.totalNum + "") ? "无" : data.totalNum + "次");
-//        pb_progress.setProgress(data.totalNum);
+    private void bindView(String name, int value, int max) {
+        tv_name.setText(name);
+        tv_number.setText(value + "次");
+        pb_progress.setMax(max);
+        pb_progress.setProgress(value);
+
         pb_progress.setProgressDrawable(getResources().getDrawable(colors[getRandomNumber()]));
         this.addView(view);
     }

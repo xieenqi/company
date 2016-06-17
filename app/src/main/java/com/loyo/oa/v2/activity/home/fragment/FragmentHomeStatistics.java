@@ -88,8 +88,14 @@ public class FragmentHomeStatistics extends Fragment {
      * 设置 过程统计
      */
     private void setprocessData(List<HttpProcess> data) {
+        int max = 0;
+        for (HttpProcess ele : data) {
+            if (max < ele.totalNum)
+                max = ele.totalNum;
+        }
         for (int i = 0; i < data.size(); i++) {
-            ll_process.addView(new ProcessDataAdapter(getActivity(), data.get(i)));
+            HttpProcess processData = data.get(i);
+            ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max));
         }
     }
 

@@ -12,6 +12,7 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="@dimen/dimen_30"
         android:text="拜访"
         android:textColor="@color/text99"
         android:textSize="@dimen/text_sp14" />
