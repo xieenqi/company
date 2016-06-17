@@ -31,7 +31,9 @@ import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
+import com.loyo.oa.v2.activity.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activity.home.cusview.MoreWindow;
+import com.loyo.oa.v2.activity.home.cusview.MoreWindowCase;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
@@ -104,6 +106,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
     private ArrayList<HomeItem> items;
+    private ArrayList<MoreWindowItem> caseItems;
     private Set<String> companyTag;
     private AdapterHomeItem adapter;
     private Boolean inEnable;
@@ -117,6 +120,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
     private Button btn_add;
     private RoundImageView heading;
     private MoreWindow mMoreWindow;
+    private MoreWindowCase mMoreWindowcase;
     private Intent mIntentCheckUpdate;
     private ValidateInfo validateInfo = new ValidateInfo();
 
@@ -287,6 +291,14 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                         }
                     }
                 }
+
+                for(int i = 0;i<caseItems.size();i++){
+                    if(caseItems.get(i).code.equals(permission.getCode())){
+                        if(!permission.isEnable()){
+                            caseItems.remove(i);
+                        }
+                    }
+                }
             }
         }
         initView();
@@ -296,7 +308,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 数据初始化
      */
     public void initData() {
-        startService(new Intent(mContext,InitDataService_.class));
+        startService(new Intent(mContext, InitDataService_.class));
     }
 
     /**
@@ -319,10 +331,10 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
      * 组装首页Item数据
      */
     void updateUser() {
+
         items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0213", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
                 new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0", 0),
-                //new HomeItem(R.drawable.newmain_customer, "客户管理", CustomerManageActivity_.class, "0205", 1),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
@@ -331,17 +343,38 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 new HomeItem(R.drawable.newmain_report, "工作报告", WorkReportsManageActivity.class, "0203", 2),
                 new HomeItem(R.drawable.newmain_wfin, "审批流程", WfInstanceManageActivity.class, "0204", 2),
                 new HomeItem(R.drawable.newmain_attent, "考勤管理", AttendanceActivity_.class, "0211", 2)));
+
+
+        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务","0202",R.drawable.newmain_post_task),
+                new MoreWindowItem("申请审批","0204",R.drawable.newmain_post_wif),
+                new MoreWindowItem("提交报告","0203",R.drawable.newmain_post_report),
+                new MoreWindowItem("新建客户","0205",R.drawable.newmain_post_customer),
+                new MoreWindowItem("写跟进","0000",R.drawable.newmain_post_follow),
+                new MoreWindowItem("新建机会","0215",R.drawable.newmain_post_sale),
+                new MoreWindowItem("考勤打卡","0000",R.drawable.newmain_post_att),
+                new MoreWindowItem("拜访签到","0000",R.drawable.newmain_post_sign)));
+
     }
 
     /**
      * 显示弹出菜单
      */
-    void showMoreWindow(View view) {
+/*    void showMoreWindow(View view) {
         if (null == mMoreWindow) {
             mMoreWindow = new MoreWindow(this, mHandler);
             mMoreWindow.init();
         }
         mMoreWindow.showMoreWindow(view);
+    }*/
+
+
+    /**
+     * 显示弹出菜单
+     */
+    void showMoreWindow(View view) {
+        mMoreWindowcase = new MoreWindowCase(this, mHandler,caseItems);
+        mMoreWindowcase.init();
+        mMoreWindowcase.showMoreWindow(view);
     }
 
     /**
@@ -354,7 +387,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
                         HttpErrorCheck.checkResponse("a首页红点", response);
-
                         mItemNumbers = removalRedNumber(homeNumbers);
                         testJurl();
                     }
