@@ -71,6 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10"
             android:layout_marginTop="@dimen/dimen_10"
+            android:minHeight="100dp"
             android:orientation="vertical"/>
 
         <include layout="@layout/include_solid_line15"/>
@@ -134,5 +135,124 @@
             chart:chart_axisColor="#ffffff"
             />
 
+        <include layout="@layout/include_solid_line15"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_10"
+            android:paddingLeft="@dimen/margin_other_view"
+            android:paddingRight="@dimen/margin_other_view"
+            android:paddingTop="@dimen/dimen_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="业绩目标"
+                android:textColor="@color/text66"
+                android:textSize="@dimen/text_sp18"
+                />
+
+            <RadioGroup
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_10"
+                    android:button="@null"
+                    android:checked="true"
+                    android:text="本周"
+                    android:textColor="@drawable/color_text_table2"
+                    android:textSize="@dimen/text_sp15"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:button="@null"
+                    android:text="本月"
+                    android:textColor="@drawable/color_text_table2"
+                    android:textSize="@dimen/text_sp15"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <include layout="@layout/include_solid_line_left"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_20"
+            android:paddingTop="@dimen/dimen_25"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                >
+
+                <com.loyo.oa.v2.activity.home.cusview.LoopView
+                    android:id="@+id/lv_round1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20"
+                    android:text="目标赢单量  16"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已完成  15"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                >
+
+                <com.loyo.oa.v2.activity.home.cusview.LoopView
+                    android:id="@+id/lv_round2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20"
+                    android:text="目标赢单量  16"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已完成  15"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
