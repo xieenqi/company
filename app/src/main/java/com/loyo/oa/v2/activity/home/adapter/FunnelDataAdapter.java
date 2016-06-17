@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
 
 /**
  * 添加 销售漏斗 数据
@@ -22,25 +24,29 @@ public class FunnelDataAdapter extends LinearLayout {
     };
 //    private int index;
 
-    public FunnelDataAdapter(Context context, AttributeSet attrs, int defStyleAttr,int index) {
+    public FunnelDataAdapter(Context context, AttributeSet attrs, int defStyleAttr,int index,HttpSalechance data) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         setOrientation(VERTICAL);
         setPadding(0, 5, 0, 5);
-        bindView(index);
+        bindView(index,data);
     }
 
-    public FunnelDataAdapter(Context context, int index) {
-        this(context, null, 0,index);
+    public FunnelDataAdapter(Context context, int index, HttpSalechance data) {
+        this(context, null, 0,index,data);
 //        this.index = index;
 
     }
 
-    private void bindView(int index) {
+    private void bindView(int index,HttpSalechance data) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.item_funnel, null, false);
+       TextView tv_number= (TextView) view.findViewById(R.id.tv_number);
+        TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
         ImageView iv_img = (ImageView) view.findViewById(R.id.iv_img);
         iv_img.setImageResource(colors[index]);
+        tv_number.setText(data.totalNum+"单");
+        tv_name.setText(data.stageName+data.totalMoney+"万");
         this.addView(view);
     }
 }

@@ -13,12 +13,14 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.adapter.FunnelDataAdapter;
 import com.loyo.oa.v2.activity.home.adapter.ProcessDataAdapter;
 import com.loyo.oa.v2.activity.home.bean.HttpProcess;
+import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
 import com.loyo.oa.v2.activity.home.bean.HttpStatistics;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IStatistics;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class FragmentHomeStatistics extends Fragment {
 
         pb_progress_vertical.setProgress(46);
         pb_progress_vertical.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
-        setFunnelData();
+
         getStatisticAllData();
     }
 
@@ -75,6 +77,7 @@ public class FragmentHomeStatistics extends Fragment {
             public void success(HttpStatistics httpStatistics, Response response) {
                 HttpErrorCheck.checkResponse("销售统计全部数据：", response);
                 setprocessData(httpStatistics.process);
+                setFunnelData(httpStatistics.salechance);
             }
 
             @Override
@@ -102,9 +105,9 @@ public class FragmentHomeStatistics extends Fragment {
     /**
      * 设置 销售漏斗
      */
-    private void setFunnelData() {
-        for (int i = 0; i < 10; i++) {
-            ll_funnel.addView(new FunnelDataAdapter(getActivity(), i));
+    private void setFunnelData(List<HttpSalechance> data) {
+        for (int i = 0; i < data.size(); i++) {
+            ll_funnel.addView(new FunnelDataAdapter(getActivity(), i,data.get(i)));
         }
     }
 
