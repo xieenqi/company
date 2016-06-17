@@ -178,7 +178,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
         }
     };
 
-
     @Override
     protected void onStart() {
         super.onStart();

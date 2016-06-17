@@ -1,17 +1,39 @@
 package com.loyo.oa.v2.activity.home;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.BulletinManagerActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.activity.home.fragment.HomeFragment;
 import com.loyo.oa.v2.activity.home.fragment.MenuFragment;
 import com.loyo.oa.v2.activity.home.fragment.SlidingFragmentActivity;
+import com.loyo.oa.v2.activity.login.LoginActivity;
+import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
+import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.FinalVariables;
+import com.loyo.oa.v2.service.CheckUpdateService;
+import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.StringUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * 带侧滑的【主界面】
@@ -19,6 +41,8 @@ import com.loyo.oa.v2.activity.home.fragment.SlidingFragmentActivity;
  * Created by xeq on 16/6/15.
  */
 public class ActivityMainHome extends SlidingFragmentActivity {
+
+
     private SlidingMenu sm;
     private Fragment selectCurrentFragment;// 当前显示的fragment的标记
     private int selectIndex = 0;
@@ -27,6 +51,18 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     private HomeFragment mHomeFragment;
     //主要保存当前显示的是第几个fragment的索引值
     public static int index = 0;
+    private boolean mInitData;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        intentJpushInfo();
+        if (null != MainApp.user) {
+            //requestNumber();
+        }
+        MobclickAgent.onResume(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,12 +176,101 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+
+    /**
+     * 检查定位权限是否打开
+     */
+    private void permissionLocation() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+        } else {
+            ActivityCompat.requestPermissions(ActivityMainHome.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        }
+    }
+
     @Override
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
-        System.out.println("!!!!222222222!!!!!!!!!!onStart");
+        LogUtil.d(" 获得newMain现有的token：" + MainApp.getToken());
+        //判断登陆是否失效
+        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
+            if (StringUtil.isEmpty(MainApp.getToken())) {
+                Toast.makeText(this, "您的登陆已经失效,请重新登陆!", Toast.LENGTH_SHORT).show();
+                MainApp.getMainApp().startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
+                return;
+            }
+        }
+
+        //初始化 用户数据
+        if (!mInitData) {
+            startService(new Intent(this, InitDataService_.class));
+            mInitData = true;
+        }
+        permissionLocation();
+
     }
+
+    /**
+     * 激光推送要跳转 的 页面
+     * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
+     */
+    public void intentJpushInfo() {
+        if (null != MainApp.jpushData) {
+            Intent intent = new Intent();
+            if ("discuss".equals(MainApp.jpushData.operationType)) {
+                intent.setClass(ActivityMainHome.this, ActivityHait.class);//推送讨论
+                startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            } else if ("delete".equals(MainApp.jpushData.operationType)) {
+                MainApp.jpushData = null;
+                return;
+            }
+            switch (MainApp.jpushData.buzzType) {
+                case 1:
+                    intent.setClass(ActivityMainHome.this, TasksInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 2:
+                    intent.setClass(ActivityMainHome.this, WorkReportsInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 3:
+                    intent.setClass(ActivityMainHome.this, WfinstanceInfoActivity_.class);
+                    intent.putExtra(ExtraAndResult.EXTRA_ID, MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 4:
+                    intent.setClass(ActivityMainHome.this, ProjectInfoActivity_.class);
+                    intent.putExtra("projectId", MainApp.jpushData.buzzId);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 5://通知公告
+                    intent.setClass(ActivityMainHome.this, BulletinManagerActivity_.class);
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                case 6://客户详情
+                    intent.setClass(ActivityMainHome.this, CustomerDetailInfoActivity_.class);
+                    intent.putExtra("Id", MainApp.jpushData.buzzId);
+                    intent.putExtra(ExtraAndResult.EXTRA_TYPE, 1);//默认我的客户
+                    startActivity(intent);
+                    MainApp.jpushData = null;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 
     @Override
     protected void onRestart() {
