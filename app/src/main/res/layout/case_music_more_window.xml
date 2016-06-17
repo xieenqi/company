@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#90FFFFFF"
+                android:clipToPadding="true"
+                android:fitsSystemWindows="true"
+    >
+
+
+    <GridView
+        android:id="@+id/case_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:layout_above="@+id/case_bottom_view"
+        >
+    </GridView>
+
+    <LinearLayout
+        android:id="@+id/case_bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dimen_20"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/case_music_window_close"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/newmain_cancel_btn"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+</RelativeLayout>
