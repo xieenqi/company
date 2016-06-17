@@ -165,8 +165,6 @@ public class MainApp extends Application {
             RequestInterceptor requestInterceptor = new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {
-                    //System.out.print(" 获取的token ："+String.format("Bearer %s", MainApp.getToken()));
-
                     request.addHeader("Authorization", String.format("Bearer %s", MainApp.getToken()));
                     request.addHeader("LoyoPlatform", cellInfo.getLoyoPlatform());
                     request.addHeader("LoyoAgent", cellInfo.getLoyoAgent());

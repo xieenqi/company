@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
@@ -30,16 +29,14 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 机会详情
+ * 【机会详情】
  * Created by yyy on 16/5/19.
  */
 public class ActivitySaleDetails extends BaseActivity implements View.OnClickListener {
@@ -74,6 +71,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView winTime;
     private TextView product;
     private TextView text_stagename;
+    private TextView director;
     private ImageView iv_wfstatus;
     private boolean isDelete = true;
 
@@ -104,6 +102,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         updateTime = (TextView) findViewById(R.id.updatetime);
         winTime = (TextView) findViewById(R.id.wintime);
         product = (TextView) findViewById(R.id.text_product);
+        director = (TextView) findViewById(R.id.director);
         text_stagename = (TextView) findViewById(R.id.text_stagename);
         ll_product = (LinearLayout) findViewById(R.id.ll_product);
         ll_stage = (LinearLayout) findViewById(R.id.ll_stage);
@@ -228,6 +227,11 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
+        if(null != mSaleDetails.getDirectorName() || !TextUtils.isEmpty(mSaleDetails.getDirectorName())){
+            director.setText(mSaleDetails.getDirectorName());
+        }else{
+            director.setText("无");
+        }
         creator.setText(mSaleDetails.getCreatorName());
         creatorTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getCreatedAt() + "") * 1000)));
         updateTime.setText(app.df3.format(new Date(Long.valueOf(mSaleDetails.getUpdatedAt() + "") * 1000)));

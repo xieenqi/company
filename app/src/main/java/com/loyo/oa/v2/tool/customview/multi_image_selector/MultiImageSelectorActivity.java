@@ -85,7 +85,6 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
                 && PackageManager.PERMISSION_GRANTED ==
                 getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
         } else {
-//            showGeneralDialog(true, true, "需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
             final GeneralPopView generalPopView = new GeneralPopView(this, true);
             generalPopView.show();
             generalPopView.setMessage("需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
@@ -94,12 +93,6 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
                 @Override
                 public void onClick(final View view) {
                     generalPopView.dismiss();
-//                            ActivityCompat.requestPermissions(ContactInfoEditActivity.this,
-//                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                                    RESULT_OK);
-//                            ActivityCompat.requestPermissions(ContactInfoEditActivity.this,
-//                                    new String[]{Manifest.permission.CAMERA},
-//                                    RESULT_OK);
                     Utils.doSeting(MultiImageSelectorActivity.this);
                     finish();
                 }

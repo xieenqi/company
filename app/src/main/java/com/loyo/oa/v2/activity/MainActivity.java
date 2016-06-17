@@ -135,6 +135,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     ImageButton img_contact;
 
+    private int data;
     private Intent mIntentCheckUpdate;
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;

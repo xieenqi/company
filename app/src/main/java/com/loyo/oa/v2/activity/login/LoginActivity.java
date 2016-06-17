@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
+import com.loyo.oa.v2.activity.home.ActivityMainHome;
 import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -218,10 +219,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 登陆
      *
      * @param body 表单
-     *             、 @param type 1，微信登录；2，普通登录
-     *             <p/>
-     *             成功 getStatus 状态码
-     *             失败 getKind 状态码
+     *
+     * 1，微信登录；2，普通登录
+     * 成功 getStatus 状态码
+     * 失败 getKind 状态码
      */
     private void login(final HashMap<String, Object> body) {
         RestAdapter adapter = new RestAdapter.Builder()
@@ -270,7 +271,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     /**
-     * 登录cg
+     * 登录成功
      */
     private void loginSuccess(final Token token) {
         Timer timer = new Timer();
@@ -285,7 +286,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
                         //app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
-                        app.startActivity(LoginActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                        //app.startActivity(LoginActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
+                        app.startActivity(LoginActivity.this, ActivityMainHome.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                     }
                 });
             }

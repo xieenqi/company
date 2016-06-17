@@ -115,11 +115,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
         public void setContent(final int position) {
 
             if (position == mListData.size()) {
-                if (mListData.size() <= 9) {
+                if(mListData.size() == 9){
+                    imageView.setVisibility(View.GONE);
+                }else{
                     imageView.setImageResource(R.drawable.icon_add_file);
                     imageView.setBackgroundResource(R.drawable.icon_add_file);
-                } else {
-                    imageView.setVisibility(View.INVISIBLE);
                 }
                 if (isCreator) {
                     imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
@@ -160,7 +160,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
                 if (mListData.size() == 3) {
@@ -174,22 +173,19 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
             /*拜访签到*/
             else if (mListData.size() <= 9) {
+                LogUtil.dee("mListData:"+mListData.size());
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
+                intent.putExtra("imgsize",(9-mListData.size()));
+                intent.putExtra("addpg",true);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
-
         }
     }
 
 
     public static void setAdapter(final GridView gv, final SignInGridViewAdapter adapter) {
         gv.setAdapter(adapter);
-        if (adapter.getCount() % 3 == 0) {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
-        } else {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
-        }
     }
 
     /**

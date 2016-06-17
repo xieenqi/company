@@ -24,6 +24,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.INotice;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
@@ -197,7 +198,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
         private TextView tv_content;
         private TextView tv_name;
         private RoundImageView iv_avatar;
-        private GridView gridView;
+        private CusGridView gridView;
 
         public BulletinViewHolder(final View itemView) {
             super(itemView);
@@ -206,7 +207,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             tv_content = (TextView) itemView.findViewById(R.id.tv_notice_content);
             tv_name = (TextView) itemView.findViewById(R.id.tv_notice_publisher);
             iv_avatar = (RoundImageView) itemView.findViewById(R.id.iv_notice_publisher_avatar);
-            gridView = (GridView) itemView.findViewById(R.id.gv_notice_attachemnts);
+            gridView = (CusGridView) itemView.findViewById(R.id.gv_notice_attachemnts);
         }
     }
 
@@ -244,14 +245,12 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
                 holder.gridView.setVisibility(View.VISIBLE);
                 SignInGridViewAdapter adapter = new SignInGridViewAdapter(BulletinManagerActivity.this, attachments, false, true, true, 0);
                 SignInGridViewAdapter.setAdapter(holder.gridView, adapter);
-                //holder.gridView.setAdapter(adapter);
-                //GridViewUtils.updateGridViewLayoutParams(holder.gridView,5);
             } else {
                 holder.gridView.setVisibility(View.GONE);
             }
         }
 
-        /*8
+        /*
         判断创建人部门是数据是否有空
          */
         private boolean creatorIsEmpty(User creator) {

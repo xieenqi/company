@@ -34,6 +34,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
+import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
@@ -45,14 +46,15 @@ import java.util.Locale;
 
 public class BaseActivity extends Activity implements GestureDetector.OnGestureListener {
 
-    public CustomProgressDialog customProgressDialog;
     protected MainApp app;
     protected boolean isNeedLogin = true;
     protected Context mContext;
     protected static final int NO_SCROLL = -1;
+    public CustomProgressDialog customProgressDialog;
+    public GeneralPopView generalPopView;
+    public Intent rushTokenIntent;
     private int mTouchViewGroupId;
     private GestureDetector mDetector;
-    public GeneralPopView generalPopView;
 
     /**
      * 搜索跳转分类
@@ -76,11 +78,10 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        // TODO: 测试用， 正式版本需删除
-        LogUtil.d("当前activity -- " + getClass().getSimpleName() + " -- " + getClass().getPackage());
         app = (MainApp) getApplicationContext();
         mContext = this;
         mDetector = new GestureDetector(this, this);
+        rushTokenIntent = new Intent(this, RushTokenService.class);
 
         ExitActivity.getInstance().addActivity(this);
         if (customProgressDialog == null) {
@@ -236,7 +237,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         public Activity getActivity() {
             return (Activity) mContext;
         }
-
     }
 
     public static class BaseHandler extends Handler {

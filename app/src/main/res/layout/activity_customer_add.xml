@@ -324,7 +324,7 @@
 
                     <include layout="@layout/include_solid_line_left"/>
 
-                    <GridView
+                    <com.loyo.oa.v2.tool.customview.CusGridView
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -335,11 +335,7 @@
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/activity_horizontal_margin"/>
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>
