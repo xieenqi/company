@@ -139,7 +139,12 @@ public class Config_project {
         return SERVER_URL_EXTRA().concat("/api/v2/");
     }
 
-    public static String API_URL_WORKDYSN() {
+    /**
+     * 获取 销售统计 数据
+     *
+     * @return
+     */
+    public static String API_URL_STATISTICS() {
         return SERVER_URL().concat("/api/v2/");
     }
 
