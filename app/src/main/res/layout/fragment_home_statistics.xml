@@ -125,15 +125,93 @@
 
         <include layout="@layout/include_solid_line_left"/>
 
-        <com.loyo.oa.v2.activity.home.cusview.incrementview.BarChartView
-            android:id="@+id/bcv_view"
-            xmlns:chart="http://schemas.android.com/apk/res-auto"
+        <!--<com.loyo.oa.v2.activity.home.cusview.incrementview.BarChartView-->
+        <!--android:id="@+id/bcv_view"-->
+        <!--xmlns:chart="http://schemas.android.com/apk/res-auto"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:paddingBottom="5dp"-->
+        <!--android:paddingTop="20dp"-->
+        <!--chart:chart_axisColor="#ffffff"-->
+        <!--/>-->
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="20dp"
-            chart:chart_axisColor="#ffffff"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_20"
+            android:paddingTop="30dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12"
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp14"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_progress_vertical"
+                    style="@style/ProgressBarMini"
+                    android:layout_width="30dp"
+                    android:layout_height="115dp"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="拜访"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_number2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12"
+                    android:textColor="@color/text66"
+                    android:textSize="@dimen/text_sp14"/>
+
+                <ProgressBar
+                    android:id="@+id/pb_progress_vertical2"
+                    style="@style/ProgressBarMini"
+                    android:layout_width="30dp"
+                    android:layout_height="115dp"
+                    android:layout_marginBottom="@dimen/dimen_10"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:id="@+id/tv_name2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="拜访"
+                    android:textColor="@color/text99"
+                    android:textSize="@dimen/text_sp14"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <include layout="@layout/include_solid_line15"/>
 
@@ -253,6 +331,69 @@
                     android:textColor="@color/text99"
                     android:textSize="@dimen/text_sp14"/>
             </LinearLayout>
+        </LinearLayout>
+
+        <include layout="@layout/include_solid_line15"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_10"
+            android:paddingLeft="@dimen/margin_other_view"
+            android:paddingRight="@dimen/margin_other_view"
+            android:paddingTop="@dimen/dimen_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="销售漏斗"
+                android:textColor="@color/text66"
+                android:textSize="@dimen/text_sp18"
+                />
+
+            <RadioGroup
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_10"
+                    android:button="@null"
+                    android:checked="true"
+                    android:text="本周"
+                    android:textColor="@drawable/color_text_table2"
+                    android:textSize="@dimen/text_sp15"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:button="@null"
+                    android:text="本月"
+                    android:textColor="@drawable/color_text_table2"
+                    android:textSize="@dimen/text_sp15"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <include layout="@layout/include_solid_line_left"/>
+
+        <LinearLayout
+            android:id="@+id/ll_funnel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:minHeight="100dp"
+            android:orientation="vertical"
+            >
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
