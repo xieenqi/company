@@ -2,17 +2,16 @@ package com.loyo.oa.v2.activity.home;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
@@ -28,8 +27,6 @@ import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.FinalVariables;
-import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
@@ -98,7 +95,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
                 .replace(R.id.left_menu_frame, menuFragment).commit();
         // 偏移
         // sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        sm.setBehindOffset(metric.widthPixels / 2 - 200);
+        sm.setBehindOffset(metric.widthPixels / 4 );
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
         sm.setFadeDegree(0.25f);

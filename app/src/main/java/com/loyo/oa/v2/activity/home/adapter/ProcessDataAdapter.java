@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.home.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,9 +46,9 @@ public class ProcessDataAdapter extends LinearLayout {
         TextView tv_name = (TextView) findViewById(R.id.tv_name);
         ProgressBar pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
         TextView tv_number = (TextView) findViewById(R.id.tv_number);
-        tv_name.setText(TextUtils.isEmpty(data.value) ? "无" : data.value);
-        tv_number.setText(TextUtils.isEmpty(data.totalNum + "") ? "无" : data.totalNum + "次");
-        pb_progress.setProgress(data.totalNum);
+//        tv_name.setText(TextUtils.isEmpty(data.value) ? "无" : data.value);
+//        tv_number.setText(TextUtils.isEmpty(data.totalNum + "") ? "无" : data.totalNum + "次");
+//        pb_progress.setProgress(data.totalNum);
         pb_progress.setProgressDrawable(getResources().getDrawable(colors[getRandomNumber()]));
         this.addView(view);
     }

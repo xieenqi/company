@@ -9,5 +9,5 @@ import java.io.Serializable;
 public class HttpAchieves implements Serializable {
     public int achieveType;
     public int achieveMoney;
-    public int finshMoney;
+    public long finshMoney;
 }
