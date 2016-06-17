@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.adapter.FunnelDataAdapter;
 import com.loyo.oa.v2.activity.home.adapter.ProcessDataAdapter;
+import com.loyo.oa.v2.activity.home.bean.HttpProcess;
 import com.loyo.oa.v2.activity.home.bean.HttpStatistics;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IStatistics;
@@ -19,6 +20,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -51,7 +53,7 @@ public class FragmentHomeStatistics extends Fragment {
         ll_process = (LinearLayout) view.findViewById(R.id.ll_process);
         ll_funnel = (LinearLayout) view.findViewById(R.id.ll_funnel);
         pb_progress_vertical = (ProgressBar) view.findViewById(R.id.pb_progress_vertical);
-        setprocessData();
+
         pb_progress_vertical.setProgress(46);
         pb_progress_vertical.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
         setFunnelData();
@@ -72,6 +74,7 @@ public class FragmentHomeStatistics extends Fragment {
             @Override
             public void success(HttpStatistics httpStatistics, Response response) {
                 HttpErrorCheck.checkResponse("销售统计全部数据：", response);
+                setprocessData(httpStatistics.process);
             }
 
             @Override
@@ -84,9 +87,9 @@ public class FragmentHomeStatistics extends Fragment {
     /**
      * 设置 过程统计
      */
-    private void setprocessData() {
-        for (int i = 0; i < 5; i++) {
-            ll_process.addView(new ProcessDataAdapter(getActivity()));
+    private void setprocessData(List<HttpProcess> data) {
+        for (int i = 0; i < data.size(); i++) {
+            ll_process.addView(new ProcessDataAdapter(getActivity(), data.get(i)));
         }
     }
 
