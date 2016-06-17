@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.BulletinManagerActivity_;
