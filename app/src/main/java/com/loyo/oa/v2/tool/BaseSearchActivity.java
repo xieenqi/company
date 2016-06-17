@@ -58,7 +58,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     protected String strSearch;
     protected EditText edt_search;
-    //    protected TextView tv_search;
+    //protected TextView tv_search;
     private ImageView iv_clean;
     protected View vs_nodata;
     protected View headerView;
@@ -109,7 +109,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         });
         iv_clean = (ImageView) findViewById(R.id.iv_clean);
         iv_clean.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 edt_search.setText("");
@@ -429,7 +428,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //任务
             else if (o instanceof Task) {
                 Task task = (Task) o;
-
                 try {
                     //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
                     time.setText("任务截止时间: " + app.df3.format(new Date(task.getCreatedAt())));

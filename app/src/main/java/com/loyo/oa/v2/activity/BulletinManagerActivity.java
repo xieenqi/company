@@ -251,7 +251,7 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
             }
         }
 
-        /*8
+        /*
         判断创建人部门是数据是否有空
          */
         private boolean creatorIsEmpty(User creator) {
