@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.home.fragment;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
@@ -72,8 +72,6 @@ import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.analytics.MobclickAgent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -81,7 +79,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -96,7 +93,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private Fragment currentFragment = null;
     private String changeEvent = "All"; // 全成All/身边Near
 
-    private  GeneralPopView generalPopView;
+    private GeneralPopView generalPopView;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
@@ -110,12 +107,10 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private boolean mInitData;
     private int outKind; //0上班  1下班  2加班
 
-    private TextView newhome_name;
     private PullToRefreshListView listView;
     private Button btn_add;
     private RoundImageView heading;
     private MoreWindowCase mMoreWindowcase;
-    private Intent mIntentCheckUpdate;
     private ValidateInfo validateInfo = new ValidateInfo();
 
 
@@ -142,20 +137,19 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             switch (msg.what) {
                 //新建任务
                 case BaseActivity.TASKS_ADD:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), TasksAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(),TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), ActivityWfInTypeSelect.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
-                    //app.startActivityForResult(NewMainActivity.this, WfInstanceAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(), ActivityWfInTypeSelect.class), Activity.RESULT_FIRST_USER);
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(), WorkReportAddActivity_.class), Activity.RESULT_FIRST_USER);
                     break;
                 //新建客户
                 case BaseActivity.TASKS_ADD_CUSTOMER:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), CustomerAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(), CustomerAddActivity_.class), Activity.RESULT_FIRST_USER);
                     break;
                 //考勤打卡
                 case BaseActivity.ATTENT_ADD:
@@ -163,42 +157,39 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                     break;
                 //拜访签到
                 case BaseActivity.SIGNIN_ADD:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), SignInActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(), SignInActivity.class), Activity.RESULT_FIRST_USER);
                     break;
                 //新建机会
                 case BaseActivity.SALE_ADD:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(), ActivityAddMySale.class), Activity.RESULT_FIRST_USER);
                     break;
                 //写跟进
                 case BaseActivity.FOLLOW_ADD:
-                    MainApp.getMainApp().startActivityForResult(getActivity(), SaleActivitiesAddActivity.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
+                    startActivityForResult(new Intent(getActivity(), SaleActivitiesAddActivity.class), Activity.RESULT_FIRST_USER);
                     break;
             }
         }
     };
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            requestNumber();
+        }
+    }
 
     public FragmentHomeApplication(RoundImageView img){
         heading = img;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home_application, container,
                 false);
+
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
