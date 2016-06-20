@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
+import com.loyo.oa.v2.tool.Utils;
 
 /**
  * 添加 销售漏斗 数据
@@ -46,7 +47,7 @@ public class FunnelDataAdapter extends LinearLayout {
         ImageView iv_img = (ImageView) view.findViewById(R.id.iv_img);
         iv_img.setImageResource(colors[index]);
         tv_number.setText(data.totalNum + "单");
-        tv_name.setText(data.stageName + ":￥" + data.totalMoney);
+        tv_name.setText(data.stageName + ":￥" + Utils.setValueDouble(data.totalMoney));
         this.addView(view);
     }
 }

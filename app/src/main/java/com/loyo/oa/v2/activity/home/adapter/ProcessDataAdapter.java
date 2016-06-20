@@ -27,9 +27,9 @@ public class ProcessDataAdapter extends LinearLayout {
             R.drawable.shape_progressbar_mini26, R.drawable.shape_progressbar_mini27, R.drawable.shape_progressbar_mini28,
             R.drawable.shape_progressbar_mini29};
 
-    public ProcessDataAdapter(Context context, String name, int value, int max) {
+    public ProcessDataAdapter(Context context, String name, int value, int max, int index) {
         this(context, null, 0);
-        bindView(name, value, max);
+        bindView(name, value, max, index);
     }
 
     public ProcessDataAdapter(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -44,13 +44,12 @@ public class ProcessDataAdapter extends LinearLayout {
         tv_number = (TextView) view.findViewById(R.id.tv_number);
     }
 
-    private void bindView(String name, int value, int max) {
+    private void bindView(String name, int value, int max, int index) {
         tv_name.setText(name);
         tv_number.setText(value + "次");
         pb_progress.setMax(max);
         pb_progress.setProgress(value);
-
-        pb_progress.setProgressDrawable(getResources().getDrawable(colors[getRandomNumber()]));
+        pb_progress.setProgressDrawable(getResources().getDrawable(colors[index]));
         this.addView(view);
     }
 

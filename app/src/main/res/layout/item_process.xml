@@ -12,7 +12,9 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="@dimen/dimen_30"
+        android:maxWidth="@dimen/dimen_30"
+        android:minWidth="@dimen/dimen_35"
+        android:singleLine="true"
         android:text=""
         android:textColor="@color/text99"
         android:textSize="@dimen/text_sp14"/>
@@ -30,6 +32,10 @@
         android:id="@+id/tv_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="right"
+        android:maxWidth="@dimen/dimen_35"
+        android:minWidth="@dimen/dimen_20"
+        android:singleLine="true"
         android:text=""
         android:textColor="@color/text66"
         android:textSize="@dimen/text_sp14"/>

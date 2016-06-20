@@ -37,7 +37,6 @@ import retrofit.client.Response;
  */
 public class FragmentHomeStatistics extends BaseFragment {
 
-    private final static String[] tracyColors = {"#f8668a", "#4ec469", "#4ddac2", "#31cbe8", "#88b9f7", "#7fcaff", "#f18f73", "#fdb485", "#fde068", "#12db8a"};
     private LinearLayout ll_process, ll_funnel, ll_achieves1, ll_achieves2;
     ProgressBar pb_progress_vertical1, pb_progress_vertical2;
     TextView tv_number1, tv_name1, tv_number2, tv_name2, tv_achieves_toal1, tv_achieves_toal2, tv_achieves_finsh1, tv_achieves_finsh2;
@@ -249,15 +248,20 @@ public class FragmentHomeStatistics extends BaseFragment {
     private void setprocessData(List<HttpProcess> data) {
         int max = 0;
         for (HttpProcess ele : data) {
-            if (max < ele.totalNum)
-                max = ele.totalNum;
+            max += ele.totalNum;
         }
         if (ll_process.getChildCount() > 0) {
             ll_process.removeAllViews();
         }
+        int j = 10;
         for (int i = 0; i < data.size(); i++) {
             HttpProcess processData = data.get(i);
-            ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max));
+            if (!(i >= 10)) {
+                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, i));
+            } else {
+                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, i - j));
+                j--;
+            }
         }
     }
 
@@ -265,13 +269,19 @@ public class FragmentHomeStatistics extends BaseFragment {
      * 设置 增量统计
      */
     private void setBulkingData(List<HttpBulking> data) {
+        int max = 0;
+        for (HttpBulking ele : data) {
+            max += ele.totalNum;
+        }
         for (HttpBulking ele : data) {
             if (ele.typeId == 1) {
                 pb_progress_vertical1.setProgress(ele.totalNum);
+                pb_progress_vertical1.setMax(max);
                 tv_name1.setText(ele.name);
                 tv_number1.setText(ele.totalNum + "");
             } else {
                 pb_progress_vertical2.setProgress(ele.totalNum);
+                pb_progress_vertical2.setMax(max);
                 tv_name2.setText(ele.name);
                 tv_number2.setText(ele.totalNum + "");
             }

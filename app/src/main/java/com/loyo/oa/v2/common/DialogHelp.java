@@ -22,6 +22,7 @@ public class DialogHelp {
 
     private static Dialog loadingDialog;//加载loading
     private static TextView tipTextView;
+
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
     }
@@ -63,6 +64,7 @@ public class DialogHelp {
     }
 
     public static void cancelLoading() {
+        LogUtil.d("消失取消log");
         try {
             if (null != loadingDialog && loadingDialog.isShowing()) {
                 loadingDialog.cancel();
