@@ -1,8 +1,13 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.activity.home.bean.HttpAchieves;
+import com.loyo.oa.v2.activity.home.bean.HttpBulking;
+import com.loyo.oa.v2.activity.home.bean.HttpProcess;
+import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
 import com.loyo.oa.v2.activity.home.bean.HttpStatistics;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -14,7 +19,7 @@ import retrofit.http.QueryMap;
  */
 public interface IStatistics {
     /**
-     * 第一次获取 销售统计全部数据
+     * 第一次获取 【销售统计全部】数据
      *
      * @param map
      * @param callback statistics/query?startAt=1465747200&endAt=1466352000
@@ -23,38 +28,38 @@ public interface IStatistics {
     void getNoticeList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
 
     /**
-     * 获取 过程统计 的 今日 本周 数据
+     * 获取 【过程统计】 的 今日 本周 数据
      *
      * @param map
      * @param callback
      */
     @GET("/statistics/process/query")
-    void geProcessList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+    void getProcessList(@QueryMap HashMap<String, Object> map, Callback<List<HttpProcess>> callback);
 
     /**
-     * 获取 增量统计 的 今日 本周 数据
+     * 获取 【增量统计】 的 今日 本周 数据
      *
      * @param map
      * @param callback
      */
     @GET("/statistics/bulking/query")
-    void geBulkingList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+    void getBulkingList(@QueryMap HashMap<String, Object> map, Callback<List<HttpBulking>> callback);
 
     /**
-     * 获取 业绩目标 的 本周 本月 数据
+     * 获取 【业绩目标】 的 本周 本月 数据
      *
      * @param map
      * @param callback
      */
     @GET("/statistics/achieve/query")
-    void geAchievesList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+    void getAchievesList(@QueryMap HashMap<String, Object> map, Callback<List<HttpAchieves>> callback);
 
     /**
-     * 获取 销售漏斗 的 本周 本月 数据
+     * 获取 【销售漏斗】 的 本周 本月 数据
      *
      * @param map
      * @param callback
      */
     @GET("/statistics/salechance/query")
-    void geFunnelList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+    void getFunnelList(@QueryMap HashMap<String, Object> map, Callback<List<HttpSalechance>> callback);
 }
