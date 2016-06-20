@@ -515,6 +515,12 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
+            android:name=".activity.home.ActivityMainHome"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
+        <activity
             android:name=".activity.customer.activity.ActivityCustomerManager"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"

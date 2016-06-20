@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,12 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.tool.BaseFragment;
 
 /**
  * Created by Administrator on 2014/12/11 0011.
  */
-public class SignInFilterFragment extends Fragment {
+public class SignInFilterFragment extends BaseFragment {
     View view;
 
     ListView lv_subordinates;

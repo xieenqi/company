@@ -30,7 +30,6 @@ import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
@@ -149,7 +148,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        if(null != project){
+        if (null != project) {
             project.viewed = true;
             intent.putExtra("review", project);
         }
@@ -264,8 +263,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
     /**
      * 项目删除
-     * */
-    public void deleteProject(){
+     */
+    public void deleteProject() {
         app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
             @Override
             public void success(final Project o, final Response response) {
@@ -284,8 +283,8 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
 
     /**
      * 项目重启/删除
-     * */
-    public void restartProject(){
+     */
+    public void restartProject() {
         DialogHelp.showLoading(this, "", true);
         app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
             @Override
@@ -331,7 +330,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         }
         switch (requestCode) {
             case TasksInfoActivity.REQUEST_SCORE:
-            //选择编辑回调
+                //选择编辑回调
             case TasksInfoActivity.REQUEST_EDIT:
                 getProject();
                 break;

@@ -16,31 +16,31 @@
 
     <!-- 拖动排序的listview-->
     <declare-styleable name="DragSortListView">
-        <attr name="collapsed_height" format="dimension" />
-        <attr name="drag_scroll_start" format="float" />
-        <attr name="max_drag_scroll_speed" format="float" />
-        <attr name="float_background_color" format="color" />
+        <attr name="collapsed_height" format="dimension"/>
+        <attr name="drag_scroll_start" format="float"/>
+        <attr name="max_drag_scroll_speed" format="float"/>
+        <attr name="float_background_color" format="color"/>
         <attr name="remove_mode">
-            <enum name="clickRemove" value="0" />
-            <enum name="flingRemove" value="1" />
+            <enum name="clickRemove" value="0"/>
+            <enum name="flingRemove" value="1"/>
         </attr>
         <attr name="track_drag_sort" format="boolean"/>
         <attr name="float_alpha" format="float"/>
         <attr name="slide_shuffle_speed" format="float"/>
         <attr name="remove_animation_duration" format="integer"/>
         <attr name="drop_animation_duration" format="integer"/>
-        <attr name="drag_enabled" format="boolean" />
-        <attr name="sort_enabled" format="boolean" />
-        <attr name="remove_enabled" format="boolean" />
+        <attr name="drag_enabled" format="boolean"/>
+        <attr name="sort_enabled" format="boolean"/>
+        <attr name="remove_enabled" format="boolean"/>
         <attr name="drag_start_mode">
-            <enum name="onDown" value="0" />
-            <enum name="onMove" value="1" />
+            <enum name="onDown" value="0"/>
+            <enum name="onMove" value="1"/>
             <enum name="onLongPress" value="2"/>
         </attr>
-        <attr name="drag_handle_id" format="integer" />
-        <attr name="fling_handle_id" format="integer" />
-        <attr name="click_remove_id" format="integer" />
-        <attr name="use_default_controller" format="boolean" />
+        <attr name="drag_handle_id" format="integer"/>
+        <attr name="fling_handle_id" format="integer"/>
+        <attr name="click_remove_id" format="integer"/>
+        <attr name="use_default_controller" format="boolean"/>
     </declare-styleable>
 
 
@@ -198,6 +198,35 @@
         </attr>
         <attr name="swipeDrawableChecked" format="reference"/>
         <attr name="swipeDrawableUnchecked" format="reference"/>
+    </declare-styleable>
+
+    <!-- 主页 侧滑控件-->
+    <attr name="rightPadding" format="dimension"/>
+    <declare-styleable name="SlidingMenu">
+        <attr name="rightPadding"/>
+    </declare-styleable>
+    <!--增量统计控件-->
+    <declare-styleable name="ChartAttrs">
+
+        <attr name="chart_axisThickness" format="dimension"/>
+        <attr name="chart_axisColor" format="reference|color"/>
+        <attr name="chart_axisBorderSpacing" format="dimension"/>
+        <attr name="chart_axisTopSpacing" format="dimension"/>
+
+        <attr name="chart_labels" format="boolean"/>
+        <attr name="chart_labelColor" format="reference|color"/>
+        <attr name="chart_fontSize" format="dimension"/>
+        <attr name="chart_typeface" format="string"/>
+
+        <attr name="chart_shadowColor" format="reference|color"/>
+        <attr name="chart_shadowDx" format="dimension"/>
+        <attr name="chart_shadowDy" format="dimension"/>
+        <attr name="chart_shadowRadius" format="dimension"/>
+
+    </declare-styleable>
+    <declare-styleable name="BarChartAttrs">
+        <attr name="chart_barSpacing" format="dimension"/>
+        <attr name="chart_setSpacing" format="dimension"/>
     </declare-styleable>
 
 </resources>

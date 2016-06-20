@@ -54,7 +54,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public ViewGroup img_title_left;
     public ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
     public ViewGroup layout_check_update;
-    public Intent mIntentCheckUpdate;
+    public Intent    mIntentCheckUpdate;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
