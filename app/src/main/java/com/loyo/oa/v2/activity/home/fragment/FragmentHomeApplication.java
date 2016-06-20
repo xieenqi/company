@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.BulletinManagerActivity_;
@@ -104,7 +103,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private Boolean inEnable;
     private Boolean outEnable;
     private boolean isJPus = false;//别名是否设置成功
-    private boolean mInitData;
     private int outKind; //0上班  1下班  2加班
 
     private PullToRefreshListView listView;
@@ -183,6 +181,11 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         heading = img;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        initData();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -197,7 +200,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
         DialogHelp.showLoading(getActivity(), "", true);
-        initData();
         return mView;
     }
 
@@ -215,7 +217,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
         ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
-
     }
 
     /**
@@ -229,7 +230,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
 
     void launch() {
         setJpushAlias();
@@ -510,6 +510,14 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                         }
                     }
                 }
+
+                for(int i = 0;i<caseItems.size();i++){
+                    if(caseItems.get(i).code.equals(permission.getCode())){
+                        if(!permission.isEnable()){
+                            caseItems.remove(i);
+                        }
+                    }
+                }
             }
         }
         initView();
@@ -537,7 +545,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                 new MoreWindowItem("申请审批","0204",R.drawable.newmain_post_wif),
                 new MoreWindowItem("提交报告","0203",R.drawable.newmain_post_report),
                 new MoreWindowItem("新建客户","0205",R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进","0000",R.drawable.newmain_post_follow),
+                new MoreWindowItem("写跟进","0205",R.drawable.newmain_post_follow),
                 new MoreWindowItem("新建机会","0215",R.drawable.newmain_post_sale),
                 new MoreWindowItem("考勤打卡","0000",R.drawable.newmain_post_att),
                 new MoreWindowItem("拜访签到","0000",R.drawable.newmain_post_sign)));

@@ -80,7 +80,6 @@ import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,7 +87,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -291,7 +289,17 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 for(int i = 0;i<caseItems.size();i++){
                     if(caseItems.get(i).code.equals(permission.getCode())){
                         if(!permission.isEnable()){
+                             caseItems.remove(i);
+
+                        }
+                    }
+                }
+
+                for(int i = 0;i<caseItems.size();i++){
+                    if(caseItems.get(i).code.equals(permission.getCode())){
+                        if(!permission.isEnable()){
                             caseItems.remove(i);
+
                         }
                     }
                 }
@@ -345,7 +353,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 new MoreWindowItem("申请审批","0204",R.drawable.newmain_post_wif),
                 new MoreWindowItem("提交报告","0203",R.drawable.newmain_post_report),
                 new MoreWindowItem("新建客户","0205",R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进","0000",R.drawable.newmain_post_follow),
+                new MoreWindowItem("写跟进","0205",R.drawable.newmain_post_follow),
                 new MoreWindowItem("新建机会","0215",R.drawable.newmain_post_sale),
                 new MoreWindowItem("考勤打卡","0000",R.drawable.newmain_post_att),
                 new MoreWindowItem("拜访签到","0000",R.drawable.newmain_post_sign)));

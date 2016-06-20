@@ -49,7 +49,6 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     private HomeFragment mHomeFragment;
     //主要保存当前显示的是第几个fragment的索引值
     public static int index = 0;
-    private boolean mInitData;
 
 
     @Override
@@ -64,14 +63,8 @@ public class ActivityMainHome extends SlidingFragmentActivity {
                 return;
             }
         }
-
-        //初始化 用户数据
-        if (!mInitData) {
-            startService(new Intent(this, InitDataService_.class));
-            mInitData = true;
-        }
+        startService(new Intent(this, InitDataService_.class));
         permissionLocation();
-
     }
 
 
@@ -79,9 +72,6 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     protected void onResume() {
         super.onResume();
         intentJpushInfo();
-        if (null != MainApp.user) {
-            //requestNumber();
-        }
         MobclickAgent.onResume(this);
     }
 

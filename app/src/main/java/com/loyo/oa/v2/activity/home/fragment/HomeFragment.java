@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.activity.home.fragment;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,14 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 

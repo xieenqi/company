@@ -137,11 +137,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
 
     private int data;
     private Intent mIntentCheckUpdate;
-    private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
     private boolean mInitData;
     private ClickItemAdapter adapter;
     private PopupMenu popupMenu;
+    private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
