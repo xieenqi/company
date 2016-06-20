@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.home.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,11 @@ import android.widget.RadioButton;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
+import com.loyo.oa.v2.activity.setting.SettingActivity;
+import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.tool.customview.RoundImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -21,18 +27,28 @@ import java.util.ArrayList;
  * 【主界面】fragment
  */
 public class HomeFragment extends Fragment implements OnPageChangeListener {
+
     private FragmentHomeApplication mFragmentHomeApplication;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
     private FragmentHomeStatistics mFragmentHomeStatistics;
-    //    private FoundFragment mFoundFragment;
-//    private PersionFragment mPersionFragment;
+    //private FoundFragment mFoundFragment;
+    //private PersionFragment mPersionFragment;
     private ArrayList<RadioButton> title = new ArrayList<RadioButton>();// 4个标题
-    ViewPager pager;
+    private ViewPager pager;
+    private RoundImageView heading;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
+        //getActivity().startService(new Intent(getActivity(), InitDataService_.class));
+        initView(view);
+        return view;
+    }
+
+
+    private void initView(View view){
+        heading = (RoundImageView) view.findViewById(R.id.newhome_heading_img);
         pager = (ViewPager) view.findViewById(R.id.pager);
         pager.setAdapter(new MyPagerAdapter(getActivity()
                 .getSupportFragmentManager()));
@@ -41,8 +57,15 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
         title.add((RadioButton) view.findViewById(R.id.title2));
         title.get(0).setOnClickListener(new MyOnClickListener(0));// 设置响应
         title.get(1).setOnClickListener(new MyOnClickListener(1));
-        return view;
+
+        heading.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainApp.getMainApp().startActivity(getActivity(), SettingActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+            }
+        });
     }
+
 
     private class MyOnClickListener implements OnClickListener {
         private int index;
@@ -75,7 +98,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
             switch (position) {
                 case 0:
                     if (mFragmentHomeApplication == null) {
-                        mFragmentHomeApplication = new FragmentHomeApplication();
+                        mFragmentHomeApplication = new FragmentHomeApplication(heading);
                     }
                     return mFragmentHomeApplication;
                 case 1:
