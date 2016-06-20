@@ -83,10 +83,29 @@ public class FragmentHomeStatistics extends Fragment {
      */
     private void getStatisticAllData() {
         HashMap<String, Object> map = new HashMap<>();
-//        map.put("pageIndex", pagination.getPageIndex());
-//        map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);
-//        map.put("joinType", mJoinType);
-//        map.put("status", mStatus);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
+                .create(IStatistics.class).getNoticeList(map, new Callback<HttpStatistics>() {
+            @Override
+            public void success(HttpStatistics httpStatistics, Response response) {
+                HttpErrorCheck.checkResponse("销售统计全部数据：", response);
+                setprocessData(httpStatistics.process);
+                setBulkingData(httpStatistics.bulking);
+                setFunnelData(httpStatistics.salechance);
+                setAchievesData(httpStatistics.achieves);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 获取 过程统计 今日 本周 的数据
+     */
+    private void getProcessInfo() {
+        HashMap<String, Object> map = new HashMap<>();
         RestAdapterFactory.getInstance().build(Config_project.API_URL_STATISTICS())
                 .create(IStatistics.class).getNoticeList(map, new Callback<HttpStatistics>() {
             @Override
@@ -152,8 +171,8 @@ public class FragmentHomeStatistics extends Fragment {
                 ll_achieves2.setVisibility(View.VISIBLE);
                 tv_achieves_toal2.setText("目标金额  " + ele.achieveMoney);
                 tv_achieves_finsh2.setText("已完成  " + ele.finshMoney);
-                lv_round2.setMaxCount(ele.achieveMoney);
-                lv_round2.setCount(ele.finshMoney);
+                lv_round2.setMaxCount(100);
+                lv_round2.setCount(59);
             }
         }
 

@@ -21,4 +21,40 @@ public interface IStatistics {
      */
     @GET("/statistics/query")
     void getNoticeList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+
+    /**
+     * 获取 过程统计 的 今日 本周 数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/statistics/process/query")
+    void geProcessList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+
+    /**
+     * 获取 增量统计 的 今日 本周 数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/statistics/bulking/query")
+    void geBulkingList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+
+    /**
+     * 获取 业绩目标 的 本周 本月 数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/statistics/achieve/query")
+    void geAchievesList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
+
+    /**
+     * 获取 销售漏斗 的 本周 本月 数据
+     *
+     * @param map
+     * @param callback
+     */
+    @GET("/statistics/salechance/query")
+    void geFunnelList(@QueryMap HashMap<String, Object> map, Callback<HttpStatistics> callback);
 }
