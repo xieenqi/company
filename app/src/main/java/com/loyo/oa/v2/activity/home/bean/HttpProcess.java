@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class HttpProcess implements Serializable {
     public String key;
-    public String value;
-    public int totalNum;
+    public String value="";
+    public int totalNum=0;
     public String redval;
 }
