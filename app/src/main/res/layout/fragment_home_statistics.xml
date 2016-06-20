@@ -46,6 +46,7 @@
                     android:layout_marginRight="@dimen/dimen_10"
                     android:button="@null"
                     android:checked="true"
+                    android:drawableLeft="@drawable/sale_drawable"
                     android:text="今日"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -56,6 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_10"
                     android:button="@null"
+
                     android:text="本周"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -65,14 +67,28 @@
 
         <include layout="@layout/include_solid_line_left"/>
 
-        <LinearLayout
-            android:id="@+id/ll_process"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:minHeight="100dp"
-            android:orientation="vertical"/>
+            android:layout_marginTop="@dimen/dimen_10">
+
+            <LinearLayout
+                android:id="@+id/ll_process"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="131dp"
+                android:orientation="vertical"
+                />
+
+            <ImageView
+                android:id="@+id/im_process_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_process_no"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
 
         <include layout="@layout/include_solid_line15"/>
 
@@ -135,84 +151,101 @@
         <!--android:paddingTop="20dp"-->
         <!--chart:chart_axisColor="#ffffff"-->
         <!--/>-->
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:paddingBottom="@dimen/dimen_20"
-            android:paddingTop="30dp">
+            android:paddingTop="30dp"
+            >
+
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
+                android:id="@+id/ll_bulking_yes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 >
 
-                <TextView
-                    android:id="@+id/tv_number1"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text66"
-                    android:textSize="@dimen/text_sp14"/>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    >
 
-                <ProgressBar
-                    android:id="@+id/pb_progress_vertical1"
-                    style="@style/ProgressBarMini"
-                    android:layout_width="30dp"
-                    android:layout_height="115dp"
-                    android:layout_marginBottom="@dimen/dimen_10"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/tv_number1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <ProgressBar
+                        android:id="@+id/pb_progress_vertical1"
+                        style="@style/ProgressBarMini"
+                        android:layout_width="30dp"
+                        android:layout_height="115dp"
+                        android:layout_marginBottom="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_10"
+                        android:layout_weight="1"/>
 
 
-                <TextView
-                    android:id="@+id/tv_name1"
+                    <TextView
+                        android:id="@+id/tv_name1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_number2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/text66"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <ProgressBar
+                        android:id="@+id/pb_progress_vertical2"
+                        style="@style/ProgressBarMini"
+                        android:layout_width="30dp"
+                        android:layout_height="115dp"
+                        android:layout_marginBottom="@dimen/dimen_10"
+                        android:layout_marginTop="@dimen/dimen_10"
+                        android:layout_weight="1"/>
+
+
+                    <TextView
+                        android:id="@+id/tv_name2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+            <ImageView
+                android:id="@+id/im_bulking_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_bulking_no"
+                android:visibility="gone"
+                />
 
-                <TextView
-                    android:id="@+id/tv_number2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text66"
-                    android:textSize="@dimen/text_sp14"/>
-
-                <ProgressBar
-                    android:id="@+id/pb_progress_vertical2"
-                    style="@style/ProgressBarMini"
-                    android:layout_width="30dp"
-                    android:layout_height="115dp"
-                    android:layout_marginBottom="@dimen/dimen_10"
-                    android:layout_marginTop="@dimen/dimen_10"
-                    android:layout_weight="1"/>
-
-
-                <TextView
-                    android:id="@+id/tv_name2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
-            </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <include layout="@layout/include_solid_line15"/>
 
@@ -266,83 +299,98 @@
 
         <include layout="@layout/include_solid_line_left"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/dimen_100"
-            android:orientation="horizontal"
             android:paddingBottom="@dimen/dimen_20"
             android:paddingTop="@dimen/dimen_25"
             >
 
-            <LinearLayout
-                android:id="@+id/ll_achieves1"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/im_achieves_no"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
+                android:src="@drawable/img_achieves_no"
                 android:visibility="gone"
-                >
-
-                <com.loyo.oa.v2.activity.home.cusview.LoopView
-                    android:id="@+id/lv_round1"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_achieves_toal1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
-
-                <TextView
-                    android:id="@+id/tv_achieves_finsh1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
-            </LinearLayout>
+                />
 
             <LinearLayout
-                android:id="@+id/ll_achieves2"
-                android:layout_width="wrap_content"
+                android:id="@+id/ll_achieves_yes"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:visibility="gone"
+                android:minHeight="135dp"
+                android:orientation="horizontal"
                 >
 
-                <com.loyo.oa.v2.activity.home.cusview.LoopView
-                    android:id="@+id/lv_round2"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_achieves_toal2"
+                <LinearLayout
+                    android:id="@+id/ll_achieves1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
 
-                <TextView
-                    android:id="@+id/tv_achieves_finsh2"
+                    <com.loyo.oa.v2.activity.home.cusview.LoopView
+                        android:id="@+id/lv_round1"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_achieves_toal1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_20"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:id="@+id/tv_achieves_finsh1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_achieves2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text99"
-                    android:textSize="@dimen/text_sp14"/>
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+                    <com.loyo.oa.v2.activity.home.cusview.LoopView
+                        android:id="@+id/lv_round2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_achieves_toal2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_20"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+
+                    <TextView
+                        android:id="@+id/tv_achieves_finsh2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/text99"
+                        android:textSize="@dimen/text_sp14"/>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <include layout="@layout/include_solid_line15"/>
 
@@ -396,16 +444,27 @@
 
         <include layout="@layout/include_solid_line_left"/>
 
-        <LinearLayout
-            android:id="@+id/ll_funnel"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:minHeight="100dp"
-            android:orientation="vertical"
-            >
+            android:layout_marginTop="@dimen/dimen_10">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_funnel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="108dp"
+                android:orientation="vertical"
+                />
+
+            <ImageView
+                android:id="@+id/im_funnel_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_funnel_no"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
     </LinearLayout>
 </ScrollView>
