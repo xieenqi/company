@@ -31,6 +31,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
+import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -55,6 +56,29 @@ public class ActivityMainHome extends SlidingFragmentActivity {
 
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        LogUtil.d(" 获得newMain现有的token：" + MainApp.getToken());
+        //判断登陆是否失效
+        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
+            if (StringUtil.isEmpty(MainApp.getToken())) {
+                Toast.makeText(this, "您的登陆已经失效,请重新登陆!", Toast.LENGTH_SHORT).show();
+                MainApp.getMainApp().startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
+                return;
+            }
+        }
+
+        //初始化 用户数据
+        if (!mInitData) {
+            startService(new Intent(this, InitDataService_.class));
+            mInitData = true;
+        }
+        permissionLocation();
+
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         intentJpushInfo();
@@ -68,6 +92,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
+        startService(new Intent(this, RushTokenService.class));
         onInitSlideMenu();
     }
 
@@ -190,27 +215,6 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LogUtil.d(" 获得newMain现有的token：" + MainApp.getToken());
-        //判断登陆是否失效
-        if (MainApp.user == null || TextUtils.isEmpty(MainApp.user.id)) {
-            if (StringUtil.isEmpty(MainApp.getToken())) {
-                Toast.makeText(this, "您的登陆已经失效,请重新登陆!", Toast.LENGTH_SHORT).show();
-                MainApp.getMainApp().startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
-                return;
-            }
-        }
-
-        //初始化 用户数据
-        if (!mInitData) {
-            startService(new Intent(this, InitDataService_.class));
-            mInitData = true;
-        }
-        permissionLocation();
-
-    }
 
     /**
      * 激光推送要跳转 的 页面

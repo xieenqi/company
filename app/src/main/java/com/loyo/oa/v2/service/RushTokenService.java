@@ -52,7 +52,6 @@ public class RushTokenService extends IntentService {
         RestAdapterFactory.getInstance().build(FinalVariables.GET_TOKEN).create(ILogin.class).getNewToken(new RCallback<Token>() {
             @Override
             public void success(Token token, Response response) {
-                HttpErrorCheck.checkResponse("获取Token", response);
                 MainApp.setToken(token.access_token);
                 LogUtil.dee("新Token:" + MainApp.getToken());
             }

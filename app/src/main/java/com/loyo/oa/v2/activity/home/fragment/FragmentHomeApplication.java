@@ -71,6 +71,7 @@ import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【应用】fragment
+ * 【首页应用】fragment
  */
 public class FragmentHomeApplication extends Fragment implements LocationUtilGD.AfterLocation,PullToRefreshBase.OnRefreshListener2{
 
@@ -95,7 +96,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private Fragment currentFragment = null;
     private String changeEvent = "All"; // 全成All/身边Near
 
-    public GeneralPopView generalPopView;
+    private  GeneralPopView generalPopView;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
@@ -176,10 +177,14 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         }
     };
 
+
+    public FragmentHomeApplication(RoundImageView img){
+        heading = img;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
 
     }
 
@@ -194,7 +199,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home_application, container,
                 false);
-        //startService(rushTokenIntent);
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
@@ -216,10 +220,11 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             }
         });
 
-
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
+
     }
 
     /**
@@ -231,38 +236,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-//        onInit();
     }
 
-//    private void onInit() {
-//        //fagment的基本用法就不介绍了
-//        mAllFragment = new AllFragment();
-//        currentFragment = mAllFragment;
-//        getActivity().getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.content_frame_tab1, mAllFragment, "AllFragment")
-//                .commit();
-//    }
-
-//    private void switchFragment(Fragment to) {
-//        if (currentFragment != to) {
-//            FragmentTransaction transaction = getActivity()
-//                    .getSupportFragmentManager().beginTransaction();
-//            if (!to.isAdded()) { // 先判断是否被add过
-//                transaction
-//                        .hide(currentFragment)
-//                        .add(R.id.content_frame_tab1, to,
-//                                to.getClass().getSimpleName())
-//                        .commitAllowingStateLoss(); // 隐藏当前的fragment，add下一个到Activity中
-//            } else {
-//                transaction.hide(currentFragment).show(to)
-//                        .commitAllowingStateLoss(); // 隐藏当前的fragment，显示下一个
-//            }
-//            currentFragment = to;
-//
-//        }
-//    }
 
     void launch() {
         setJpushAlias();
