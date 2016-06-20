@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 【  任务管理】 界面
+ * 【任务管理】 界面
  */
 
 public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {

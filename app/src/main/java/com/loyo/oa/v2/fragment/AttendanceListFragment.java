@@ -4,23 +4,31 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
+import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.activity.attendance.PreviewAttendanceActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.DayofAttendance;
+import com.loyo.oa.v2.beans.ValidateInfo;
+import com.loyo.oa.v2.beans.ValidateItem;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -29,10 +37,13 @@ import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
+import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
+import com.loyo.oa.v2.tool.customview.AttenDancePopView;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,10 +61,13 @@ import retrofit.client.Response;
  * 作者 : ykb
  * 时间 : 15/9/15.
  */
-public class AttendanceListFragment extends BaseFragment implements View.OnClickListener {
+public class AttendanceListFragment extends BaseFragment implements View.OnClickListener,LocationUtilGD.AfterLocation {
 
     private ViewGroup imgTimeLeft;
     private ViewGroup imgTimeRight;
+    private Boolean inEnable;
+    private Boolean outEnable;
+    private Button   btn_add;
     private ListView lv;
     private TextView tv_time;
     private TextView tv_count_title;
@@ -63,11 +77,17 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private TextView tv_unattendance;//未打卡
     private TextView tv_field_work;//外勤
     private AttendanceList attendanceList;
+    private AttendanceRecord attendanceRecords = new AttendanceRecord();
+    private HashMap<String, Object> map = new HashMap<>();
     private ArrayList<DayofAttendance> attendances = new ArrayList<DayofAttendance>();
+    private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceListAdapter adapter;
+    private GeneralPopView generalPopView;
+
     private int qtime, page = 1;
     private int type;//我的考勤【1】 团队考勤【2】
     private boolean isPullDowne = true;//是否下拉刷新 默认是
+    private int outKind; //0上班  1下班  2加班
     private long checkdateTime;
 
     private Calendar cal;
@@ -86,12 +106,15 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             tv_unattendance = (TextView) mView.findViewById(R.id.tv_un_attendance);
             tv_field_work = (TextView) mView.findViewById(R.id.tv_field_work);
             tv_leave_overtime = (TextView) mView.findViewById(R.id.tv_leave_overtime);
+            btn_add = (Button) mView.findViewById(R.id.btn_add);
             imgTimeLeft = (ViewGroup) mView.findViewById(R.id.img_time_left);
             imgTimeRight = (ViewGroup) mView.findViewById(R.id.img_time_right);
             imgTimeLeft.setOnTouchListener(Global.GetTouch());
             imgTimeRight.setOnTouchListener(Global.GetTouch());
+            btn_add.setOnTouchListener(Global.GetTouch());
             imgTimeLeft.setOnClickListener(this);
             imgTimeRight.setOnClickListener(this);
+            btn_add.setOnClickListener(this);
 
             lv = (ListView) mView.findViewById(R.id.listView_attendance);
 
@@ -184,6 +207,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     public void onClick(View view) {
         page = 1;
         switch (view.getId()) {
+
+            case R.id.btn_add:
+                getValidateInfo();
+                break;
+
             case R.id.img_time_left:
                 switch (type) {
                     case 1:
@@ -216,6 +244,204 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 break;
         }
     }
+
+
+    /**
+     * 跳转考勤界面，封装数据
+     */
+    public void intentValue() {
+        Intent intent = new Intent(getActivity(), AttendanceAddActivity_.class);
+        intent.putExtra("mAttendanceRecord", attendanceRecords);
+        intent.putExtra("needPhoto", validateInfo.isNeedPhoto());
+        intent.putExtra("isPopup", validateInfo.isPopup());
+        intent.putExtra("outKind", outKind);
+        intent.putExtra("serverTime", validateInfo.getServerTime());
+        intent.putExtra("extraWorkStartTime", attendanceRecords.getExtraWorkStartTime());
+        startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
+    }
+
+    /**
+     * 通用提示弹出框init
+     */
+    public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
+        generalPopView = new GeneralPopView(getActivity(), isKind);
+        generalPopView.show();
+        generalPopView.setMessage(message);
+        generalPopView.setCanceledOnTouchOutside(isOut);
+        return generalPopView;
+    }
+
+    /**
+     * 早退提示
+     */
+    public void attanceWorry() {
+        showGeneralDialog(false, true, getString(R.string.app_attanceworry_message));
+        //确认
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                generalPopView.dismiss();
+                intentValue();
+            }
+        });
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                generalPopView.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 获取可用的考勤
+     *
+     * @return
+     */
+    private ValidateItem availableValidateItem() {
+        ValidateItem validateItem = null;
+        for (int i = 0; i < validateInfo.getValids().size(); i++) {
+            validateItem = validateInfo.getValids().get(i);
+            if (validateItem.isEnable() && !validateItem.ischecked()) {
+                break;
+            }
+        }
+        return validateItem;
+    }
+
+    void startAttanceLocation() {
+        ValidateItem validateItem = availableValidateItem();
+        if (null == validateItem) {
+            return;
+        }
+        int type = validateItem.getType();
+        map.clear();
+        map.put("inorout", type);
+        new LocationUtilGD(getActivity(), this);
+    }
+
+
+    /**
+     * 判断上班下班
+     */
+    public void dealInOutWork() {
+        /*上班*/
+        if (inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+            /*下班*/
+        } else if (outEnable) {
+            outKind = 1;
+            startAttanceLocation();
+        }
+    }
+
+    /**
+     * 加班提示框
+     */
+    public void popOutToast() {
+        final AttenDancePopView popView = new AttenDancePopView(getActivity());
+        popView.show();
+        popView.setCanceledOnTouchOutside(true);
+
+        /*正常下班*/
+        popView.generalOutBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                outKind = 1;
+                startAttanceLocation();
+                popView.dismiss();
+            }
+        });
+
+       /*完成加班*/
+        popView.finishOutBtn(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                outKind = 2;
+                startAttanceLocation();
+                popView.dismiss();
+            }
+        });
+
+        /*取消*/
+        popView.cancels(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                popView.dismiss();
+            }
+        });
+    }
+
+
+    private void setAttendance() {
+        if (null == validateInfo) {
+            return;
+        }
+
+        if (!Global.isConnected()) {
+            Toast("没有网络连接，不能打卡");
+            return;
+        }
+        /*工作日*/
+        if (validateInfo.isWorkDay()) {
+            /*加班*/
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
+                popOutToast();
+                /*不加班*/
+            } else {
+                dealInOutWork();
+            }
+            /*非工作日，下班状态*/
+        } else if (!validateInfo.isWorkDay() && outEnable) {
+            outKind = 2;
+            startAttanceLocation();
+            /*非工作日，上班状态*/
+        } else if (!validateInfo.isWorkDay() && inEnable) {
+            outKind = 0;
+            startAttanceLocation();
+        }
+    }
+
+    /**
+     * 获取能否打卡的信息
+     */
+    private void getValidateInfo() {
+        showLoading("加载中...");
+        app.getRestAdapter().create(IAttendance.class).validateAttendance(new RCallback<ValidateInfo>() {
+            @Override
+            public void success(final ValidateInfo _validateInfo, final Response response) {
+                HttpErrorCheck.checkResponse("考勤信息:", response);
+                if (null == _validateInfo) {
+                    Toast("获取考勤信息失败");
+                    return;
+                }
+                validateInfo = _validateInfo;
+                for (ValidateItem validateItem : validateInfo.getValids()) {
+                    if (validateItem.getType() == 1) {
+                        inEnable = validateItem.isEnable();
+                    } else if (validateItem.getType() == 2) {
+                        outEnable = validateItem.isEnable();
+                    }
+                }
+
+                if (inEnable || outEnable) {
+                    setAttendance();
+                }
+                //已打卡完毕 跳转考勤列表
+                else {
+                    Toast("您今天已经打卡完毕");
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
 
     /**
      * 前一月
@@ -401,11 +627,6 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-//                cancelLoading();
-//                if (error.getMessage().contains("JsonSyntaxException")) {
-//                    Toast("没有更多数据了");
-//                } else {
-//                }
                 HttpErrorCheck.checkError(error);
             }
         });
@@ -439,6 +660,40 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
             page = 1;
             getData(page);
         }
+    }
+
+    @Override
+    public void OnLocationGDSucessed(final String address, double longitude, double latitude, String radius) {
+        map.put("originalgps", longitude + "," + latitude);
+        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
+        DialogHelp.showLoading(getActivity(), "", true);
+        MainApp.getMainApp().getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
+            @Override
+            public void success(final AttendanceRecord attendanceRecord, final Response response) {
+                attendanceRecords = attendanceRecord;
+                HttpErrorCheck.checkResponse("考勤信息：", response);
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
+                if (attendanceRecord.getState() == 3) {
+                    attanceWorry();
+                } else {
+                    intentValue();
+                }
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                super.failure(error);
+                HttpErrorCheck.checkError(error);
+            }
+        });
+        LocationUtilGD.sotpLocation();
+    }
+
+    @Override
+    public void OnLocationGDFailed() {
+        LocationUtilGD.sotpLocation();
+        DialogHelp.cancelLoading();
+        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
     }
 
     /**
