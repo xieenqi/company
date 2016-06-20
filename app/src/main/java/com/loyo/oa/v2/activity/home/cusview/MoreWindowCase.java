@@ -26,17 +26,18 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.activity.home.adapter.AdapterMoreWindow;
 import com.loyo.oa.v2.activity.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.BaseActivity;
+
 import java.util.ArrayList;
 
 /**
  * 【主页菜单】 快捷创建页
- * */
+ */
 public class MoreWindowCase extends PopupWindow {
 
     private Activity mContext;
@@ -47,17 +48,17 @@ public class MoreWindowCase extends PopupWindow {
     private Button closeBtn;
     private ArrayList<MoreWindowItem> data;
     private AdapterMoreWindow mAdapter;
-    private GridView  gridView;
+    private GridView gridView;
 
     private int mWidth;
     private int mHeight;
     private int statusBarHeight;
 
-    public MoreWindowCase(Activity context, Handler handler,ArrayList<MoreWindowItem> data) {
-        if(null == data){
+    public MoreWindowCase(Activity context, Handler handler, ArrayList<MoreWindowItem> data) {
+        if (null == data) {
             data = new ArrayList<>();
         }
-        this.data   = data;
+        this.data = data;
         mContext = context;
         mHandler = handler;
         context.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -139,9 +140,9 @@ public class MoreWindowCase extends PopupWindow {
         closeBtn.setOnTouchListener(Global.GetTouch());
         gridView = (GridView) v.findViewById(R.id.case_gridview);
 
-        if(null == mAdapter){
-            mAdapter = new AdapterMoreWindow(data,mContext,mHandler);
-        }else{
+        if (null == mAdapter) {
+            mAdapter = new AdapterMoreWindow(data, mContext, mHandler);
+        } else {
             mAdapter.notifyDataSetChanged();
         }
 
@@ -165,42 +166,42 @@ public class MoreWindowCase extends PopupWindow {
 
                 switch (data.get(position).name) {
                     case "新建任务":
-                        mHandler.sendEmptyMessage(NewMainActivity.TASKS_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.TASKS_ADD);
                         dismiss();
                         break;
 
                     case "申请审批":
-                        mHandler.sendEmptyMessage(NewMainActivity.WFIN_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.WFIN_ADD);
                         dismiss();
                         break;
 
                     case "提交报告":
-                        mHandler.sendEmptyMessage(NewMainActivity.WORK_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.WORK_ADD);
                         dismiss();
                         break;
 
                     case "新建客户":
-                        mHandler.sendEmptyMessage(NewMainActivity.TASKS_ADD_CUSTOMER);
+                        mHandler.sendEmptyMessage(BaseActivity.TASKS_ADD_CUSTOMER);
                         dismiss();
                         break;
 
                     case "写跟进":
-                        mHandler.sendEmptyMessage(NewMainActivity.FOLLOW_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.FOLLOW_ADD);
                         dismiss();
                         break;
 
                     case "新建机会":
-                        mHandler.sendEmptyMessage(NewMainActivity.SALE_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.SALE_ADD);
                         dismiss();
                         break;
 
                     case "考勤打卡":
-                        mHandler.sendEmptyMessage(NewMainActivity.ATTENT_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.ATTENT_ADD);
                         dismiss();
                         break;
 
                     case "拜访签到":
-                        mHandler.sendEmptyMessage(NewMainActivity.SIGNIN_ADD);
+                        mHandler.sendEmptyMessage(BaseActivity.SIGNIN_ADD);
                         dismiss();
                         break;
                 }
@@ -221,7 +222,7 @@ public class MoreWindowCase extends PopupWindow {
 
     /**
      * 弹出动画
-     * */
+     */
     private void showAnimation() {
 
         mHandler.postDelayed(new Runnable() {

@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.adapter.FunnelDataAdapter;
@@ -24,6 +23,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IStatistics;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
@@ -44,6 +44,7 @@ public class FragmentHomeStatistics extends BaseFragment {
     LoopView lv_round1, lv_round2;
     RadioButton rb_process_today, rb_process_week, rb_bulking_today, rb_bulking_week, rb_achieves_week, rb_achieves_month, rb_funnel_week, rb_funnel_month;
     private ImageView im_process_no, im_funnel_no, im_bulking_no, im_achieves_no;
+    private boolean isRRefresh = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,6 +140,7 @@ public class FragmentHomeStatistics extends BaseFragment {
      * 获取销售统计全部数据
      */
     private void getStatisticAllData() {
+        isRRefresh = true;
         rb_process_today.setChecked(true);
         rb_bulking_today.setChecked(true);
         rb_achieves_week.setChecked(true);
@@ -357,17 +359,19 @@ public class FragmentHomeStatistics extends BaseFragment {
         }
     }
 
-
+    /**
+     * 选择此页面刷新全部数据
+     */
     public void onInIt() {
-        Toast.makeText(getActivity(), "我收到tab1微信的传召", Toast.LENGTH_SHORT).show();
+        if (isRRefresh)
+            getStatisticAllData();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        System.out
-                .println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onActivityCreated()");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onActivityCreated()");
     }
 
     @Override
@@ -388,7 +392,7 @@ public class FragmentHomeStatistics extends BaseFragment {
     public void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onResume()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onResume()");
     }
 
     @Override

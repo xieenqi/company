@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
-import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
