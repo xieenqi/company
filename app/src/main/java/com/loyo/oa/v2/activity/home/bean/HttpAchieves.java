@@ -8,6 +8,6 @@ import java.io.Serializable;
  */
 public class HttpAchieves implements Serializable {
     public int achieveType;
-    public int achieveMoney;
-    public long finshMoney;
+    public long achieveMoney;//目标总量
+    public long finshMoney;//完成量
 }

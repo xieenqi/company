@@ -9,6 +9,12 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.tool.Utils;
+
+/**
+ * 圆形统计控件
+ */
 public class LoopView extends View {
     private int width;
     private int height;
@@ -28,16 +34,14 @@ public class LoopView extends View {
     private float barWidth = 15;
 
     private RectF rect;
-
-    // private Paint circleRing;
-    // private Paint circleColor;
-    // private Paint textPaint;
-
-    private int mAscent;
     private Paint loopPaint;
-    private int count;
-    private int maxCount;
+
+    private long count;
+    private long maxCount;
     private int textSize = 47;
+    private String rightRoundDeflautCoror = "#f4f8fe";//右半圆颜色
+    private String lefttRoundDeflautCoror = "#4ab0fd";//左半圆颜色
+    private String deflautTextCoror = "#999999";//字的颜色
 
     public LoopView(Context context) {
         super(context);
@@ -54,24 +58,48 @@ public class LoopView extends View {
         loopPaint = new Paint();
     }
 
-    public void setCount(int c) {
+    public void setCount(long c) {
         count = c;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setMaxCount(int c) {
+    public void setMaxCount(long c) {
         maxCount = c;
     }
 
-    public int getMaxCount() {
+    public long getMaxCount() {
         return maxCount;
     }
 
     public void setTextSize(int c) {
         textSize = c;
+    }
+
+    public String getRightRoundDeflautCoror() {
+        return rightRoundDeflautCoror;
+    }
+
+    public void setRightRoundDeflautCoror(String rightRoundDeflautCoror) {
+        this.rightRoundDeflautCoror = rightRoundDeflautCoror;
+    }
+
+    public String getLefttRoundDeflautCoror() {
+        return lefttRoundDeflautCoror;
+    }
+
+    public void setLefttRoundDeflautCoror(String lefttRoundDeflautCoror) {
+        this.lefttRoundDeflautCoror = lefttRoundDeflautCoror;
+    }
+
+    public String getDeflautTextCoror() {
+        return deflautTextCoror;
+    }
+
+    public void setDeflautTextCoror(String deflautTextCoror) {
+        this.deflautTextCoror = deflautTextCoror;
     }
 
     @Override
@@ -100,26 +128,26 @@ public class LoopView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        loopPaint.setColor(Color.GRAY);
+//右半圆
+        loopPaint.setColor(Color.parseColor(rightRoundDeflautCoror));
         loopPaint.setAntiAlias(true);
         loopPaint.setStrokeWidth(15);
         canvas.drawCircle(center_x, center_y, outerRadius, loopPaint);
-
-        loopPaint.setColor(Color.rgb(0, 189, 0));
+//左半圆
+        loopPaint.setColor(Color.parseColor(lefttRoundDeflautCoror));
         loopPaint.setAntiAlias(true);
         loopPaint.setStrokeWidth(25);
 //		count = 75;
 //		maxCount = 100;
         angle = (new Double(((float) count / (float) maxCount) * 360)).intValue();
         canvas.drawArc(rect, startAngle, angle, true, loopPaint);
-
+//中间圆
         loopPaint.setColor(Color.WHITE);
         loopPaint.setAntiAlias(true);
         loopPaint.setStrokeWidth(15);
         canvas.drawCircle(center_x, center_y, innerRadius, loopPaint);
 
-        loopPaint.setColor(Color.rgb(0, 189, 0));
+        loopPaint.setColor(Color.parseColor(deflautTextCoror));
         loopPaint.setAntiAlias(true);
         loopPaint.setTextAlign(Paint.Align.CENTER);
         loopPaint.setStrokeWidth(15);
@@ -127,8 +155,20 @@ public class LoopView extends View {
         FontMetrics fontMetrics = loopPaint.getFontMetrics();
         float fontHeight = fontMetrics.bottom - fontMetrics.top;
         float textBaseY = height - (height - fontHeight) / 2 - fontMetrics.bottom;
-        canvas.drawText(String.valueOf(count) + "%", center_y, textBaseY, loopPaint);
+        canvas.drawText(setPercentageData(maxCount, count), center_y, textBaseY, loopPaint);
 
+    }
+
+    /**
+     * 设置百分数的值 限制小数两位
+     */
+    private String setPercentageData(long max, long count) {
+        if (0 == max) {
+            return "0%";
+        } else {
+            LogUtil.d("百分比值："+Utils.setValueDouble(count / max*100) + "%");
+            return Utils.setValueDouble(count / max*100) + "%";
+        }
     }
 
     public void refalsh() {

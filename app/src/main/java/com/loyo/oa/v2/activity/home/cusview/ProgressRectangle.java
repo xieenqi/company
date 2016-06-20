@@ -17,7 +17,6 @@ import android.view.View;
  * @version 1.0.0
  *          {@link http://blog.csdn.net/wangjinyu501/article/details/38298737}
  * @category 仿solo桌面内存清理效果
- * @since 2014.7.30
  */
 public class ProgressRectangle extends View {
 

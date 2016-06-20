@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.activity.home.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.home.bean.HttpProcess;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.Random;
 
@@ -45,7 +42,6 @@ public class ProcessDataAdapter extends LinearLayout {
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         pb_progress = (ProgressBar) view.findViewById(R.id.pb_progress);
         tv_number = (TextView) view.findViewById(R.id.tv_number);
-        LogUtil.d("chan传参数>>>>2");
     }
 
     private void bindView(String name, int value, int max) {

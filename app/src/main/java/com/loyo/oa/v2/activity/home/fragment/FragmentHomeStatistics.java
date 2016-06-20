@@ -13,16 +13,17 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.adapter.FunnelDataAdapter;
 import com.loyo.oa.v2.activity.home.adapter.ProcessDataAdapter;
+import com.loyo.oa.v2.activity.home.bean.HttpAchieves;
 import com.loyo.oa.v2.activity.home.bean.HttpBulking;
 import com.loyo.oa.v2.activity.home.bean.HttpProcess;
 import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
 import com.loyo.oa.v2.activity.home.bean.HttpStatistics;
+import com.loyo.oa.v2.activity.home.cusview.LoopView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IStatistics;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,9 +37,10 @@ import retrofit.client.Response;
 public class FragmentHomeStatistics extends Fragment {
 
     private final static String[] tracyColors = {"#f8668a", "#4ec469", "#4ddac2", "#31cbe8", "#88b9f7", "#7fcaff", "#f18f73", "#fdb485", "#fde068", "#12db8a"};
-    private LinearLayout ll_process, ll_funnel;
+    private LinearLayout ll_process, ll_funnel, ll_achieves1, ll_achieves2;
     ProgressBar pb_progress_vertical1, pb_progress_vertical2;
-    TextView tv_number1, tv_name1, tv_number2, tv_name2;
+    TextView tv_number1, tv_name1, tv_number2, tv_name2, tv_achieves_toal1, tv_achieves_toal2, tv_achieves_finsh1, tv_achieves_finsh2;
+    LoopView lv_round1, lv_round2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,14 @@ public class FragmentHomeStatistics extends Fragment {
         tv_number2 = (TextView) view.findViewById(R.id.tv_number2);
         tv_name1 = (TextView) view.findViewById(R.id.tv_name1);
         tv_name2 = (TextView) view.findViewById(R.id.tv_name2);
-
-
+        ll_achieves1 = (LinearLayout) view.findViewById(R.id.ll_achieves1);
+        ll_achieves2 = (LinearLayout) view.findViewById(R.id.ll_achieves2);
+        lv_round1 = (LoopView) view.findViewById(R.id.lv_round1);
+        lv_round2 = (LoopView) view.findViewById(R.id.lv_round2);
+        tv_achieves_toal1 = (TextView) view.findViewById(R.id.tv_achieves_toal1);
+        tv_achieves_toal2 = (TextView) view.findViewById(R.id.tv_achieves_toal2);
+        tv_achieves_finsh1 = (TextView) view.findViewById(R.id.tv_achieves_finsh1);
+        tv_achieves_finsh2 = (TextView) view.findViewById(R.id.tv_achieves_finsh2);
         getStatisticAllData();
     }
 
@@ -87,6 +95,7 @@ public class FragmentHomeStatistics extends Fragment {
                 setprocessData(httpStatistics.process);
                 setBulkingData(httpStatistics.bulking);
                 setFunnelData(httpStatistics.salechance);
+                setAchievesData(httpStatistics.achieves);
             }
 
             @Override
@@ -115,17 +124,39 @@ public class FragmentHomeStatistics extends Fragment {
      * 设置 增量统计
      */
     private void setBulkingData(List<HttpBulking> data) {
-    for(HttpBulking ele : data){
-        if(ele.typeId==1){
-            pb_progress_vertical1.setProgress(ele.totalNum);
-            tv_name1.setText(ele.name);
-            tv_number1.setText(ele.totalNum+"");
-        }else {
-            pb_progress_vertical2.setProgress(ele.totalNum);
-            tv_name2.setText(ele.name);
-            tv_number2.setText(ele.totalNum+"");
+        for (HttpBulking ele : data) {
+            if (ele.typeId == 1) {
+                pb_progress_vertical1.setProgress(ele.totalNum);
+                tv_name1.setText(ele.name);
+                tv_number1.setText(ele.totalNum + "");
+            } else {
+                pb_progress_vertical2.setProgress(ele.totalNum);
+                tv_name2.setText(ele.name);
+                tv_number2.setText(ele.totalNum + "");
+            }
         }
     }
+
+    /**
+     * 设置 业绩目标
+     */
+    private void setAchievesData(List<HttpAchieves> data) {
+        for (HttpAchieves ele : data) {
+            if (1 == ele.achieveType) {
+                ll_achieves1.setVisibility(View.VISIBLE);
+                tv_achieves_toal1.setText("目标赢单量  " + ele.achieveMoney);
+                tv_achieves_finsh1.setText("已完成  " + ele.finshMoney);
+                lv_round1.setMaxCount(ele.achieveMoney);
+                lv_round1.setCount(ele.finshMoney);
+            } else if (2 == ele.achieveType) {
+                ll_achieves2.setVisibility(View.VISIBLE);
+                tv_achieves_toal2.setText("目标金额  " + ele.achieveMoney);
+                tv_achieves_finsh2.setText("已完成  " + ele.finshMoney);
+                lv_round2.setMaxCount(ele.achieveMoney);
+                lv_round2.setCount(ele.finshMoney);
+            }
+        }
+
     }
 
     /**
