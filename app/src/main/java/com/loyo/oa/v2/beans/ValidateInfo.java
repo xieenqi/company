@@ -19,6 +19,15 @@ public class ValidateInfo implements Serializable {
     private boolean needPhoto;
     private boolean isPopup;
     private boolean isWorkDay;
+    private boolean extraTimeSwitch;
+
+    public boolean isExtraTimeSwitch() {
+        return extraTimeSwitch;
+    }
+
+    public void setExtraTimeSwitch(boolean extraTimeSwitch) {
+        this.extraTimeSwitch = extraTimeSwitch;
+    }
 
     public boolean isWorkDay() {
         return isWorkDay;

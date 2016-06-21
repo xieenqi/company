@@ -92,9 +92,11 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getWfInstances(map, WfInstanceManageFragment.this);
-//        //精简数据之
-//        RestAdapterFactory.getInstance().build(ConfigAppURL.WFINSTANCE_URL).create(IWfInstance.class).
-//                getWfInstancesData(map, WfInstanceManageFragment.this);
+
+
+/*        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
+                FinalVariables.wfinstance).create(IWfInstance.class).
+                getWfInstancesData(map, WfInstanceManageFragment.this);*/
     }
 
     @Override

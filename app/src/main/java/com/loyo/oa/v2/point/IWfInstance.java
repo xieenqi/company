@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -86,6 +87,15 @@ public interface IWfInstance {
     void getWfInstances(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstance>> callback);
 
     /**
+     * 获取审批列表(v2.2 精简版)
+     *
+     * @param map
+     * @param  callback
+     * */
+    @GET("/mobile/simplify")
+    void getWfInstancesData(@QueryMap HashMap<String,Object> map,Callback<PaginationX<WfInstanceRecord>> callback);
+
+    /**
      * 获取审批详情
      *
      * @param id
@@ -102,15 +112,6 @@ public interface IWfInstance {
      */
     @DELETE("/wfinstance/{id}")
     void deleteWfinstance(@Path("id") String id, Callback<WfInstance> callback);
-
-    /**
-     * 获取审批列表  精简数据结构
-     *http://192.168.31.131:7000/api/v1/workflow_instances?pageIndex=1&pageSize=20&type=3&biz_form_id=5715f055526f1524137c4412
-     * @param map
-     * @param callback
-     */
-    @GET("/v1/workflow_instances")
-    void getWfInstancesData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WfInstance>> callback);
 
 
 }
