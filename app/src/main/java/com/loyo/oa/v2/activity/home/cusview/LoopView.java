@@ -9,7 +9,6 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
 
 /**
@@ -36,9 +35,9 @@ public class LoopView extends View {
     private RectF rect;
     private Paint loopPaint;
 
-    private long count;
-    private long maxCount;
-    private int textSize = 47;
+    private double count;
+    private double maxCount;
+    private int textSize = 38;
     private String rightRoundDeflautCoror = "#f4f8fe";//右半圆颜色
     private String lefttRoundDeflautCoror = "#4ab0fd";//左半圆颜色
     private String deflautTextCoror = "#999999";//字的颜色
@@ -58,19 +57,19 @@ public class LoopView extends View {
         loopPaint = new Paint();
     }
 
-    public void setCount(long c) {
+    public void setCount(double c) {
         count = c;
     }
 
-    public long getCount() {
+    public double getCount() {
         return count;
     }
 
-    public void setMaxCount(long c) {
+    public void setMaxCount(double c) {
         maxCount = c;
     }
 
-    public long getMaxCount() {
+    public double getMaxCount() {
         return maxCount;
     }
 
@@ -162,11 +161,15 @@ public class LoopView extends View {
     /**
      * 设置百分数的值 限制小数两位
      */
-    private String setPercentageData(long max, long count) {
+    private String setPercentageData(double max, double count) {
         if (0 == max) {
             return "0%";
         } else {
-            LogUtil.d("百分------------------------------------------------------------------比值：" + ((double) count / (double) max) * 100 + "%");
+//            BigDecimal a2 = new BigDecimal(Double.toString(count));
+//            BigDecimal b2 = new BigDecimal(Double.toString(max));
+//            LogUtil.d("百分------------------------------------------------------------------比值：" + a2.divide(b2, 2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100 + "%");
+//            return Utils.setValueDouble(a2.divide(b2, 2, BigDecimal.ROUND_HALF_UP).doubleValue()) + "%";
+
             return Utils.setValueDouble(((double) count / (double) max) * 100) + "%";
         }
     }

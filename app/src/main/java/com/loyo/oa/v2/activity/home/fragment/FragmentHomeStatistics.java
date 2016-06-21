@@ -25,6 +25,7 @@ import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -330,16 +331,18 @@ public class FragmentHomeStatistics extends BaseFragment {
         for (HttpAchieves ele : data) {
             if (1 == ele.achieveType) {
                 ll_achieves1.setVisibility(View.VISIBLE);
-                tv_achieves_toal1.setText("目标赢单量  " + ele.achieveMoney);
-                tv_achieves_finsh1.setText("已完成  " + ele.finshMoney);
+                tv_achieves_toal1.setText("目标赢单量  " + Utils.setValueDouble(ele.achieveMoney));
+                tv_achieves_finsh1.setText("已完成  " + Utils.setValueDouble(ele.finshMoney));
                 lv_round1.setMaxCount(ele.achieveMoney);
                 lv_round1.setCount(ele.finshMoney);
+                lv_round1.refalsh();
             } else if (2 == ele.achieveType) {
                 ll_achieves2.setVisibility(View.VISIBLE);
-                tv_achieves_toal2.setText("目标金额  " + ele.achieveMoney);
-                tv_achieves_finsh2.setText("已完成  " + ele.finshMoney);
+                tv_achieves_toal2.setText("目标金额  " + Utils.setValueDouble(ele.achieveMoney));
+                tv_achieves_finsh2.setText("已完成  " + Utils.setValueDouble(ele.finshMoney));
                 lv_round2.setMaxCount(ele.achieveMoney);
                 lv_round2.setCount(ele.finshMoney);
+                lv_round2.refalsh();
             }
         }
 
