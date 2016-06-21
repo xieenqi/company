@@ -37,7 +37,8 @@ public interface ISale {
     /**
      * 获取 销售阶段
      */
-    @GET("/salestage")
+    @GET("/salestage/alluse")
+// /salestage
     void getSaleStage(Callback<ArrayList<SaleStage>> callback);
 
     /**

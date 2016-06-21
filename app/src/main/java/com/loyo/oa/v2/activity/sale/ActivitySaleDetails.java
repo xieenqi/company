@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
@@ -29,9 +30,11 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.ViewSaleDetailsExtra;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -227,9 +230,9 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
         chanceType.setText(mSaleDetails.getChanceType());
         chanceSource.setText(mSaleDetails.getChanceSource());
         memo.setText(mSaleDetails.getMemo());
-        if(null != mSaleDetails.getDirectorName() || !TextUtils.isEmpty(mSaleDetails.getDirectorName())){
+        if (null != mSaleDetails.getDirectorName() || !TextUtils.isEmpty(mSaleDetails.getDirectorName())) {
             director.setText(mSaleDetails.getDirectorName());
-        }else{
+        } else {
             director.setText("无");
         }
         creator.setText(mSaleDetails.getCreatorName());
@@ -242,8 +245,8 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             for (SaleIntentionalProduct sitpeoduct : mSaleDetails.getProInfos()) {
                 productBuffer.append(sitpeoduct.name + "、");
             }
+            product.setText(productBuffer.toString().substring(0, productBuffer.toString().length() - 1));
         }
-        product.setText(productBuffer.toString());
         ll_extra.setVisibility(View.VISIBLE);
         if (ll_extra.getChildCount() != 0) {
             ll_extra.removeAllViews();

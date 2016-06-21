@@ -28,7 +28,6 @@ import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.RushTokenService;
@@ -100,9 +99,9 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         // 侧滑显示左边
         sm.setMode(SlidingMenu.LEFT);
         setBehindContentView(R.layout.fragment_home_left_menu);
-        sm.setSlidingEnabled(true);
         // 控制是否slidingmenu可开有滑动手势。
-        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);//TOUCHMODE_FULLSCREEN
+        sm.setSlidingEnabled(false);
+        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);// TOUCHMODE_NONE
         // 设置阴影宽度。
         sm.setShadowWidthRes(R.dimen.dimen_15);
         sm.setShadowDrawable(R.drawable.shadow);
@@ -111,8 +110,8 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.left_menu_frame, menuFragment).commit();
         // 偏移
-         sm.setBehindOffsetRes(R.dimen.dimen_10);
-        sm.setBehindOffset(metric.widthPixels / 4 );
+        sm.setBehindOffsetRes(R.dimen.dimen_10);
+        sm.setBehindOffset(metric.widthPixels / 4);
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
         sm.setFadeDegree(0.25f);
@@ -177,7 +176,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
                 changeContent(mHomeFragment);
                 selectIndex = 0;
             } else {
-                    onBackPressed();
+                onBackPressed();
             }
             return true;
         }
