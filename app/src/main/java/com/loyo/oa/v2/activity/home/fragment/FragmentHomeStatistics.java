@@ -338,8 +338,8 @@ public class FragmentHomeStatistics extends BaseFragment {
                 ll_achieves2.setVisibility(View.VISIBLE);
                 tv_achieves_toal2.setText("目标金额  " + ele.achieveMoney);
                 tv_achieves_finsh2.setText("已完成  " + ele.finshMoney);
-                lv_round2.setMaxCount(100);
-                lv_round2.setCount(59);
+                lv_round2.setMaxCount(ele.achieveMoney);
+                lv_round2.setCount(ele.finshMoney);
             }
         }
 

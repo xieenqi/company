@@ -100,7 +100,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         setBehindContentView(R.layout.fragment_home_left_menu);
         sm.setSlidingEnabled(true);
         // 控制是否slidingmenu可开有滑动手势。
-        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);//TOUCHMODE_FULLSCREEN
         // 设置阴影宽度。
         sm.setShadowWidthRes(R.dimen.dimen_15);
         sm.setShadowDrawable(R.drawable.shadow);
@@ -109,7 +109,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.left_menu_frame, menuFragment).commit();
         // 偏移
-        // sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+         sm.setBehindOffsetRes(R.dimen.dimen_10);
         sm.setBehindOffset(metric.widthPixels / 4 );
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
@@ -118,7 +118,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
 
     //打开侧滑
     public void togggle() {
-        sm.toggle();
+//        sm.toggle();
     }
 
     //拦截侧滑
