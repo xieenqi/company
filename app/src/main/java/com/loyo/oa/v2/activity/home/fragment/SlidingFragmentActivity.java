@@ -1,15 +1,15 @@
 package com.loyo.oa.v2.activity.home.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
 import com.loyo.oa.v2.activity.home.cusview.SlidingMenu;
+import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 
-public class SlidingFragmentActivity extends FragmentActivity implements SlidingActivityBase {
+public class SlidingFragmentActivity extends BaseFragmentActivity implements SlidingActivityBase {
 
     private SlidingActivityHelper mHelper;
 

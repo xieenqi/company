@@ -108,8 +108,12 @@ public class ContactInfoEditActivity extends BaseActivity {
     TextView tv_departments;
     @ViewById
     TextView tv_positions;
+    @ViewById
+    TextView name_title_user;
     @Extra
     User user;
+
+
 
     private int mobile_phone = 1;
     private boolean isRun = true;
@@ -329,6 +333,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         path = user.getAvatar();
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
+        Utils.setContent(name_title_user,MainApp.user.getRealname());
         if (user.gender == 2) {
             sex_male.setChecked(true);
         } else if (user.gender == 1) {

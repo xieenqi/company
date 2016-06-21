@@ -166,8 +166,8 @@ public class LoopView extends View {
         if (0 == max) {
             return "0%";
         } else {
-            LogUtil.d("百分比值：" + count / max * 100 + "%");
-            return Utils.setValueDouble(count / max * 100) + "%";
+            LogUtil.d("百分------------------------------------------------------------------比值：" + ((double) count / (double) max) * 100 + "%");
+            return Utils.setValueDouble(((double) count / (double) max) * 100) + "%";
         }
     }
 

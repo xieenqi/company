@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
@@ -27,6 +28,8 @@ import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -45,7 +48,6 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     private Fragment selectCurrentFragment;// 当前显示的fragment的标记
     private int selectIndex = 0;
     private MenuFragment menuFragment;
-    private long exitTime = 0;
     private HomeFragment mHomeFragment;
     //主要保存当前显示的是第几个fragment的索引值
     public static int index = 0;
@@ -100,7 +102,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         setBehindContentView(R.layout.fragment_home_left_menu);
         sm.setSlidingEnabled(true);
         // 控制是否slidingmenu可开有滑动手势。
-        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);//TOUCHMODE_FULLSCREEN
         // 设置阴影宽度。
         sm.setShadowWidthRes(R.dimen.dimen_15);
         sm.setShadowDrawable(R.drawable.shadow);
@@ -109,7 +111,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.left_menu_frame, menuFragment).commit();
         // 偏移
-        // sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+         sm.setBehindOffsetRes(R.dimen.dimen_10);
         sm.setBehindOffset(metric.widthPixels / 4 );
         sm.setBehindScrollScale(0);
         // 设置多少进出slidingmenu消失
@@ -118,7 +120,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
 
     //打开侧滑
     public void togggle() {
-        sm.toggle();
+//        sm.toggle();
     }
 
     //拦截侧滑
@@ -175,13 +177,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
                 changeContent(mHomeFragment);
                 selectIndex = 0;
             } else {
-                if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    Toast.makeText(ActivityMainHome.this, "再按一次退出程序",
-                            Toast.LENGTH_SHORT).show();
-                    exitTime = System.currentTimeMillis();
-                } else {
-                    finish();
-                }
+                    onBackPressed();
             }
             return true;
         }
@@ -291,4 +287,30 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         System.out.println("!!!!!!22222222!!!!!!!!onDestroy");
     }
 
+    /**
+     * 退出应用
+     */
+    @Override
+    public void onBackPressed() {
+        showGeneralDialog(true, true, getString(R.string.app_exit_message));
+        //确定
+        generalPopView.setSureOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                generalPopView.dismiss();
+                //android 5.0以后不能隐式启动或关闭服务
+                stopService(new Intent(mContext, CheckUpdateService.class));
+                stopService(new Intent(mContext, RushTokenService.class));
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
+
+        //取消
+        generalPopView.setCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                generalPopView.dismiss();
+            }
+        });
+    }
 }
