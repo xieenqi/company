@@ -106,30 +106,30 @@ public class Utils {
 
     /**
      * 深度拷贝
-     * */
-    public static List deepCopy(List src) throws IOException, ClassNotFoundException{
+     */
+    public static List deepCopy(List src) throws IOException, ClassNotFoundException {
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(byteOut);
         out.writeObject(src);
 
         ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-        ObjectInputStream in =new ObjectInputStream(byteIn);
-        List dest = (List)in.readObject();
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        List dest = (List) in.readObject();
         return dest;
     }
 
 
     /**
      * 深度拷贝(带泛型)
-     * */
-    public static List<?> deepCopyT(List<?> src) throws IOException, ClassNotFoundException{
+     */
+    public static List<?> deepCopyT(List<?> src) throws IOException, ClassNotFoundException {
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(byteOut);
         out.writeObject(src);
 
         ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-        ObjectInputStream in =new ObjectInputStream(byteIn);
-        List<?> dest = (List<?>)in.readObject();
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        List<?> dest = (List<?>) in.readObject();
         return dest;
     }
 
@@ -1142,6 +1142,28 @@ public class Utils {
         }
         Double d;
         java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
+        try {
+            d = Double.valueOf(obj + "");
+            BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
+            return bigDecimal.toPlainString() + "";
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "No Number";
+        }
+    }
+
+    /**
+     * 科学计数法转换为 数字 只显示整数部分
+     *
+     * @param obj
+     * @return
+     */
+    public static String setValueDouble2(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+        Double d;
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#");
         try {
             d = Double.valueOf(obj + "");
             BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
