@@ -35,11 +35,12 @@
                 android:background="@color/white"
                 android:gravity="center_vertical">
 
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/layout_img_user"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     >
 
                     <com.loyo.oa.v2.tool.customview.RoundImageView
@@ -48,8 +49,20 @@
                         android:layout_height="@dimen/dimen_40"
                         android:layout_marginLeft="@dimen/margin_side_edge"
                         android:src="@drawable/icon_contact_avatar"
+                        android:layout_gravity="center_vertical"
                         />
-                </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/name_title_user"
+                        android:layout_toRightOf="@+id/img_title_user"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="name"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -74,10 +87,16 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_15"
+                android:background="@color/activity_bg"
+                />
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_15"
                 android:background="@color/white"
                 android:orientation="vertical"
                 >

@@ -3,7 +3,6 @@ package com.loyo.oa.v2.activity.project;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;

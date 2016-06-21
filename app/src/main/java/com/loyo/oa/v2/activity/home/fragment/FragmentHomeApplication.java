@@ -528,9 +528,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
      */
     void updateUser() {
 
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0213", 0),
+        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
-                new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0", 0),
+                new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0213", 0),
                 new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
@@ -548,7 +548,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                 new MoreWindowItem("写跟进","0205",R.drawable.newmain_post_follow),
                 new MoreWindowItem("新建机会","0215",R.drawable.newmain_post_sale),
                 new MoreWindowItem("考勤打卡","0000",R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到","0000",R.drawable.newmain_post_sign)));
+                new MoreWindowItem("拜访签到","0206",R.drawable.newmain_post_sign)));
 
     }
 

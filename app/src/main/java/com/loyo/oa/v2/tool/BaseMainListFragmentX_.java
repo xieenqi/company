@@ -28,15 +28,12 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     protected LayoutInflater mInflater;
     protected TextView tv_add;
     private ViewStub emptyView;
-
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
-
     protected PaginationX<T> pagination = new PaginationX<>(20);
+    protected PullToRefreshExpandableListView mExpandableListView;
     protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();
     protected ArrayList<T> lstData;
-
-    protected PullToRefreshExpandableListView mExpandableListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +55,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
             layout_add = (ViewGroup) mView.findViewById(R.id.layout_add);
             tv_add = (TextView) mView.findViewById(R.id.tv_add);
-            layout_add.setOnTouchListener(Global.GetTouch());
+            //layout_add.setOnTouchListener(Global.GetTouch());
             layout_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -37,7 +37,6 @@ public class GeneralPopView extends Dialog {
             findViewById(R.id.dialog_nocancelpopview_ll).setVisibility(View.GONE);
             findViewById(R.id.dialog_generalpopview_ll).setVisibility(View.VISIBLE);
         }
-
     }
 
     public void setMessage(String strMessage) {
