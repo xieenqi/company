@@ -146,7 +146,6 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 //申请审批
                 case BaseActivity.WFIN_ADD:
                     app.startActivityForResult(NewMainActivity.this, ActivityWfInTypeSelect.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
-                    //app.startActivityForResult(NewMainActivity.this, WfInstanceAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, 1, null);
                     break;
                 //提交报告
                 case BaseActivity.WORK_ADD:

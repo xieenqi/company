@@ -71,11 +71,11 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private ListView lv;
     private TextView tv_time;
     private TextView tv_count_title;
-    private TextView tv_later;//迟到
-    private TextView tv_leave_early;//早退
+    private TextView tv_later;         //迟到
+    private TextView tv_leave_early;   //早退
     private TextView tv_leave_overtime;//加班
-    private TextView tv_unattendance;//未打卡
-    private TextView tv_field_work;//外勤
+    private TextView tv_unattendance;  //未打卡
+    private TextView tv_field_work;    //外勤
     private AttendanceList attendanceList;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
@@ -85,9 +85,9 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
     private GeneralPopView generalPopView;
 
     private int qtime, page = 1;
-    private int type;//我的考勤【1】 团队考勤【2】
-    private boolean isPullDowne = true;//是否下拉刷新 默认是
-    private int outKind; //0上班  1下班  2加班
+    private int type;                    //我的考勤【1】 团队考勤【2】
+    private boolean isPullDowne = true;  //是否下拉刷新 默认是
+    private int outKind;                 //0上班  1下班  2加班
     private long checkdateTime;
 
     private Calendar cal;
