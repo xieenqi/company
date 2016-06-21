@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.RoundImageView;
 
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
     }
 
 
-    private void initView(View view){
+    private void initView(View view) {
         heading = (RoundImageView) view.findViewById(R.id.newhome_heading_img);
         pager = (ViewPager) view.findViewById(R.id.pager);
         pager.setAdapter(new MyPagerAdapter(getActivity()
@@ -159,6 +161,10 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
             ((ActivityMainHome) getActivity()).gotoStart();
         }
         title.get(index).setChecked(true);// 设置被选中，否则布局里面的背景不会切换
+        if (1 == index) {
+            mFragmentHomeStatistics.onInIt();
+        }
+        LogUtil.d("选择值：" + index);
     }
 
 }

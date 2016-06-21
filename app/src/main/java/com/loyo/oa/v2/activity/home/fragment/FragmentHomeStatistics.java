@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.home.adapter.FunnelDataAdapter;
@@ -23,6 +23,7 @@ import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IStatistics;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 
 import java.util.HashMap;
@@ -37,11 +38,13 @@ import retrofit.client.Response;
  */
 public class FragmentHomeStatistics extends BaseFragment {
 
-    private LinearLayout ll_process, ll_funnel, ll_achieves1, ll_achieves2;
+    private LinearLayout ll_process, ll_funnel, ll_achieves1, ll_achieves2, ll_bulking_yes, ll_achieves_yes;
     ProgressBar pb_progress_vertical1, pb_progress_vertical2;
     TextView tv_number1, tv_name1, tv_number2, tv_name2, tv_achieves_toal1, tv_achieves_toal2, tv_achieves_finsh1, tv_achieves_finsh2;
     LoopView lv_round1, lv_round2;
     RadioButton rb_process_today, rb_process_week, rb_bulking_today, rb_bulking_week, rb_achieves_week, rb_achieves_month, rb_funnel_week, rb_funnel_month;
+    private ImageView im_process_no, im_funnel_no, im_bulking_no, im_achieves_no;
+    private boolean isRRefresh = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,12 @@ public class FragmentHomeStatistics extends BaseFragment {
         rb_achieves_month.setOnClickListener(click);
         rb_funnel_week.setOnClickListener(click);
         rb_funnel_month.setOnClickListener(click);
+        im_process_no = (ImageView) view.findViewById(R.id.im_process_no);
+        im_funnel_no = (ImageView) view.findViewById(R.id.im_funnel_no);
+        im_bulking_no = (ImageView) view.findViewById(R.id.im_bulking_no);
+        ll_bulking_yes = (LinearLayout) view.findViewById(R.id.ll_bulking_yes);
+        im_achieves_no = (ImageView) view.findViewById(R.id.im_achieves_no);
+        ll_achieves_yes = (LinearLayout) view.findViewById(R.id.ll_achieves_yes);
         getStatisticAllData();
     }
 
@@ -131,6 +140,7 @@ public class FragmentHomeStatistics extends BaseFragment {
      * 获取销售统计全部数据
      */
     private void getStatisticAllData() {
+        isRRefresh = true;
         rb_process_today.setChecked(true);
         rb_bulking_today.setChecked(true);
         rb_achieves_week.setChecked(true);
@@ -246,13 +256,18 @@ public class FragmentHomeStatistics extends BaseFragment {
      * 设置 过程统计
      */
     private void setprocessData(List<HttpProcess> data) {
+        if (ll_process.getChildCount() > 0) {
+            ll_process.removeAllViews();
+        }
+        if (null == data || data.size() == 0) {
+            im_process_no.setVisibility(View.VISIBLE);
+            return;
+        }
         int max = 0;
         for (HttpProcess ele : data) {
             max += ele.totalNum;
         }
-        if (ll_process.getChildCount() > 0) {
-            ll_process.removeAllViews();
-        }
+
         int j = 10;
         for (int i = 0; i < data.size(); i++) {
             HttpProcess processData = data.get(i);
@@ -269,6 +284,15 @@ public class FragmentHomeStatistics extends BaseFragment {
      * 设置 增量统计
      */
     private void setBulkingData(List<HttpBulking> data) {
+        if (null == data || data.size() == 0) {
+            im_bulking_no.setVisibility(View.VISIBLE);
+            ll_bulking_yes.setVisibility(View.GONE);
+            return;
+        } else {
+            im_bulking_no.setVisibility(View.GONE);
+            ll_bulking_yes.setVisibility(View.VISIBLE);
+        }
+
         int max = 0;
         for (HttpBulking ele : data) {
             max += ele.totalNum;
@@ -292,6 +316,15 @@ public class FragmentHomeStatistics extends BaseFragment {
      * 设置 业绩目标
      */
     private void setAchievesData(List<HttpAchieves> data) {
+        if (null == data || data.size() == 0) {
+            im_achieves_no.setVisibility(View.VISIBLE);
+            ll_achieves_yes.setVisibility(View.GONE);
+            return;
+        } else {
+            im_achieves_no.setVisibility(View.GONE);
+            ll_achieves_yes.setVisibility(View.VISIBLE);
+        }
+
         for (HttpAchieves ele : data) {
             if (1 == ele.achieveType) {
                 ll_achieves1.setVisibility(View.VISIBLE);
@@ -317,22 +350,28 @@ public class FragmentHomeStatistics extends BaseFragment {
         if (ll_funnel.getChildCount() > 0) {
             ll_funnel.removeAllViews();
         }
+        if (null == data || data.size() == 0) {
+            im_funnel_no.setVisibility(View.VISIBLE);
+            return;
+        }
         for (int i = 0; i < data.size(); i++) {
             ll_funnel.addView(new FunnelDataAdapter(getActivity(), i, data.get(i)));
         }
     }
 
-
+    /**
+     * 选择此页面刷新全部数据
+     */
     public void onInIt() {
-        Toast.makeText(getActivity(), "我收到tab1微信的传召", Toast.LENGTH_SHORT).show();
+        if (isRRefresh)
+            getStatisticAllData();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        System.out
-                .println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onActivityCreated()");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onActivityCreated()");
     }
 
     @Override
@@ -353,7 +392,7 @@ public class FragmentHomeStatistics extends BaseFragment {
     public void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onResume()");
+        LogUtil.d("~~~~~~~~~~~~~~~~~~~~~~fragment2-->onResume()");
     }
 
     @Override
