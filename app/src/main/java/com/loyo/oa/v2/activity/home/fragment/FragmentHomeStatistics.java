@@ -66,7 +66,7 @@ public class FragmentHomeStatistics extends BaseFragment {
         pb_progress_vertical1 = (ProgressBar) view.findViewById(R.id.pb_progress_vertical1);
         pb_progress_vertical1.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
         pb_progress_vertical2 = (ProgressBar) view.findViewById(R.id.pb_progress_vertical2);
-        pb_progress_vertical2.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical1));
+        pb_progress_vertical2.setProgressDrawable(getResources().getDrawable(R.drawable.shape_progressbar_vertical2));
         tv_number1 = (TextView) view.findViewById(R.id.tv_number1);
         tv_number2 = (TextView) view.findViewById(R.id.tv_number2);
         tv_name1 = (TextView) view.findViewById(R.id.tv_name1);
@@ -262,6 +262,8 @@ public class FragmentHomeStatistics extends BaseFragment {
         if (null == data || data.size() == 0) {
             im_process_no.setVisibility(View.VISIBLE);
             return;
+        } else {
+            im_process_no.setVisibility(View.GONE);
         }
         int max = 0;
         for (HttpProcess ele : data) {
@@ -353,7 +355,10 @@ public class FragmentHomeStatistics extends BaseFragment {
         if (null == data || data.size() == 0) {
             im_funnel_no.setVisibility(View.VISIBLE);
             return;
+        } else {
+            im_funnel_no.setVisibility(View.GONE);
         }
+
         for (int i = 0; i < data.size(); i++) {
             ll_funnel.addView(new FunnelDataAdapter(getActivity(), i, data.get(i)));
         }

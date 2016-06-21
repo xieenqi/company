@@ -332,6 +332,8 @@
     <color name="task_notagree">#bfbfbf</color>
     <color name="work_info_gray">#fbfbfb</color>
     <color name="work_info_solid">#e6e6e6</color>
+    <!-- 销售统计 进度条 的背景颜色-->
+    <color name="progress_bj">#f4f8fe</color>
 
     <color name="task_discussion_attachment_color">#a0a0a0</color>
 
