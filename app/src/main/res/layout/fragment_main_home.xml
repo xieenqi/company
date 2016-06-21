@@ -58,7 +58,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dimen_14"
             android:background="@drawable/img_new_serach"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

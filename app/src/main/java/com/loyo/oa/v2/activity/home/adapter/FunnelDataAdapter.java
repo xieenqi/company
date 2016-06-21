@@ -46,8 +46,8 @@ public class FunnelDataAdapter extends LinearLayout {
         TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
         ImageView iv_img = (ImageView) view.findViewById(R.id.iv_img);
         iv_img.setImageResource(colors[index]);
-        tv_number.setText(data.totalNum + "单");
-        tv_name.setText(data.stageName + ":￥" + Utils.setValueDouble(data.totalMoney));
+        tv_number.setText(data.stageName + "");
+        tv_name.setText(Utils.setValueDouble2(data.totalNum) + "单 ￥" + Utils.setValueDouble(data.totalMoney));
         this.addView(view);
     }
 }

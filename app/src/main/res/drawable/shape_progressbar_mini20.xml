@@ -7,22 +7,22 @@
             <gradient
                 android:angle="270"
                 android:centerY="0.75"
-                android:endColor="#F4f8fe"
-                android:startColor="#F4f8fe"/>
+                android:endColor="@color/progress_bj"
+                android:startColor="@color/progress_bj"/>
         </shape>
     </item>
     <!--<item android:id="@android:id/secondaryProgress">-->
-        <!--<clip>-->
-            <!--<shape>-->
-                <!--<corners android:radius="0dip"/>-->
+    <!--<clip>-->
+    <!--<shape>-->
+    <!--<corners android:radius="0dip"/>-->
 
-                <!--<gradient-->
-                    <!--android:angle="270"-->
-                    <!--android:centerY="0.75"-->
-                    <!--android:endColor="#df0024"-->
-                    <!--android:startColor="#df0024"/>-->
-            <!--</shape>-->
-        <!--</clip>-->
+    <!--<gradient-->
+    <!--android:angle="270"-->
+    <!--android:centerY="0.75"-->
+    <!--android:endColor="#df0024"-->
+    <!--android:startColor="#df0024"/>-->
+    <!--</shape>-->
+    <!--</clip>-->
     <!--</item>-->
     <item android:id="@android:id/progress">
         <clip>
@@ -32,8 +32,8 @@
                 <gradient
                     android:angle="270"
                     android:centerY="0.75"
-                    android:endColor="#f8668a"
-                    android:startColor="#f8668a"/>
+                    android:endColor="@color/progress00"
+                    android:startColor="@color/progress00"/>
             </shape>
         </clip>
     </item>
