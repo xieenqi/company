@@ -334,6 +334,18 @@
     <color name="work_info_solid">#e6e6e6</color>
     <!-- 销售统计 进度条 的背景颜色-->
     <color name="progress_bj">#f4f8fe</color>
+    <!-- 进度条的颜色-->
+    <color name="progress00">#f4f8fe</color>
+    <color name="progress01">#f4f8fe</color>
+    <color name="progress02">#f4f8fe</color>
+    <color name="progress03">#f4f8fe</color>
+    <color name="progress04">#f4f8fe</color>
+    <color name="progress05">#f4f8fe</color>
+    <color name="progress06">#f4f8fe</color>
+    <color name="progress07">#f4f8fe</color>
+    <color name="progress08">#f4f8fe</color>
+    <color name="progress09">#f4f8fe</color>
+
 
     <color name="task_discussion_attachment_color">#a0a0a0</color>
 
