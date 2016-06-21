@@ -9,12 +9,9 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInAdd;
 import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.activity.work.WorkReportAddActivity;
 import com.loyo.oa.v2.activity.project.HttpProject;
@@ -27,6 +24,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PagingGroupData_;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstance;
@@ -34,6 +32,7 @@ import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -51,13 +50,18 @@ import retrofit.client.Response;
  * 时间 : 15/9/7.
  */
 public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implements AbsListView.OnScrollListener {
+
     private CommonExpandableListAdapter adapter;
     private HttpProject mProject;
     private int type;
-
-    private FrameLayout indicatorGroup;
     private int indicatorGroupId = -1;
     private int indicatorGroupHeight;
+    private boolean taskPsn = true;
+    private boolean workPsn = true;
+    private boolean wiftPsn = true;
+    private Permission permission;
+    private FrameLayout indicatorGroup;
+    private GeneralPopView generalPopView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
             }
         }
         super.onCreate(savedInstanceState);
+        initView();
     }
 
     @Override
@@ -116,6 +121,33 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         }
         if (!mProject.isProjectRelevant()) {
             layout_add.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void initView(){
+
+        //超级管理员\权限判断
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                permission = (Permission) MainApp.rootMap.get("0202");
+                if (!permission.isEnable()) {
+                    taskPsn = false;
+                }
+
+                permission = (Permission) MainApp.rootMap.get("0203");
+                if (!permission.isEnable()) {
+                    workPsn = false;
+                }
+
+                permission = (Permission) MainApp.rootMap.get("0204");
+                if (!permission.isEnable()) {
+                    wiftPsn = false;
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("发布公告权限,code错误:0402");
+            }
         }
     }
 
@@ -192,20 +224,45 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         adapter.notifyDataSetChanged();
     }
 
+
+    public void showPop(){
+        generalPopView = new GeneralPopView(getActivity(),false);
+        generalPopView.show();
+        generalPopView.setMessage("此功能权限已关闭，请联系管理员开启后再试！");
+        generalPopView.setNoCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generalPopView.dismiss();
+            }
+        });
+    }
+
     /**
-     * 新建 一个任务 ，报告，审批
+     * 新建报告 任务 审批
      */
     @Override
     public void addNewItem() {
         switch (type) {
             case 1:
-                goToCreatePage(WorkReportAddActivity_.class);
+                if(!workPsn){
+                    showPop();
+                }else{
+                    goToCreatePage(WorkReportAddActivity_.class);
+                }
                 break;
             case 2:
-                goToCreatePage(TasksAddActivity_.class);
+                if(!taskPsn){
+                    showPop();
+                }else{
+                    goToCreatePage(TasksAddActivity_.class);
+                }
                 break;
             case 12:
-                goToCreatePage(ActivityWfInTypeSelect.class);
+                if(!wiftPsn){
+                    showPop();
+                }else{
+                    goToCreatePage(ActivityWfInTypeSelect.class);
+                }
                 break;
         }
     }

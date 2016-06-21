@@ -16,6 +16,7 @@ import com.loyo.oa.v2.activity.sale.ActivitySaleDetails;
 import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
@@ -25,6 +26,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 
@@ -35,13 +37,14 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【购买意向】
+ * 【销售机会】客户详情中新增
  */
 
 public class SaleManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
     private ViewGroup img_title_left, layout_add;
     private TextView tv_add;
+    private Permission permission;
     private PullToRefreshListView listView_demands;
     private AdapterCustomerSale listAdapter;
     private ArrayList<SaleRecord> listData = new ArrayList<>();
@@ -84,6 +87,17 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         layout_add.setOnClickListener(this);
         layout_add.setOnTouchListener(new ViewUtil.OnTouchListener_view_transparency());
         listView_demands = (PullToRefreshListView) findViewById(R.id.listView_demands);
+
+        //超级管理员\权限判断
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                permission = (Permission) MainApp.rootMap.get("0215");
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("发布公告权限,code错误:0402");
+            }
+        }
+
     }
 
     @Override
@@ -146,13 +160,27 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 onBackPressed();
                 break;
             case R.id.layout_add:
-                if (customerId == null) {
-                    break;
+
+                if(!permission.isEnable()){
+                    showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
+                    .setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            generalPopView.dismiss();
+                        }
+                    });
+
+                }else{
+                    if (customerId == null) {
+                        break;
+                    }
+                    bundle = new Bundle();
+                    bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
+                    bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
+                    app.startActivityForResult(this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                 }
-                bundle = new Bundle();
-                bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
-                bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
-                app.startActivityForResult(this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
+
+
                 break;
             default:
                 break;
