@@ -336,7 +336,11 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             }
             /*非工作日，下班状态*/
         } else if (!validateInfo.isWorkDay() && outEnable) {
-            outKind = 2;
+            if(validateInfo.isExtraTimeSwitch()){
+                outKind = 2;
+            }else{
+                outKind = 1;
+            }
             startAttanceLocation();
             /*非工作日，上班状态*/
         } else if (!validateInfo.isWorkDay() && inEnable) {
