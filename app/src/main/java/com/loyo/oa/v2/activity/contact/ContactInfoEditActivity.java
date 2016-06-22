@@ -726,6 +726,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
 
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
