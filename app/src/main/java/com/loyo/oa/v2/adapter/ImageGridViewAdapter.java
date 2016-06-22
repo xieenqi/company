@@ -69,7 +69,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
             item_info = new Item_info();
             item_info.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             item_info.textView = (TextView) convertView.findViewById(R.id.tv_filename);
-            //ViewUtil.setViewHigh(item_info.imageView, 1);
 
             convertView.setTag(item_info);
         } else {
@@ -133,10 +132,5 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     public static void setAdapter(final GridView gv, final ImageGridViewAdapter adapter) {
         gv.setAdapter(adapter);
-       /* if (adapter.getCount() % 3 == 0) {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
-        } else {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
-        }*/
     }
 }

@@ -317,10 +317,12 @@ public class ContactAddforExtraData extends LinearLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (!isOne) {
+            /*if (!isOne) {
                 extra.val = s.toString();
             }
-            isOne = false;
+            isOne = false;*/
+
+            extra.val = s.toString();
         }
 
         @Override

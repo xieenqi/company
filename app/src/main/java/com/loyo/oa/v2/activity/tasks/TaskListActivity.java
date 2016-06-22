@@ -105,7 +105,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      */
     @Click(R.id.layout_add)
     void createNewTask() {
-        if (!permission.isEnable()) {
+        if (null != permission && !permission.isEnable()) {
             showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                     .setNoCancelOnclick(new View.OnClickListener() {
                         @Override

@@ -89,7 +89,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         listView_demands = (PullToRefreshListView) findViewById(R.id.listView_demands);
 
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
+        if (null != MainApp.user  && !MainApp.user.isSuperUser()) {
             try {
                 permission = (Permission) MainApp.rootMap.get("0215");
             } catch (NullPointerException e) {
@@ -97,7 +97,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 Toast("发布公告权限,code错误:0402");
             }
         }
-
     }
 
     @Override
@@ -161,27 +160,27 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.layout_add:
 
-                if(!permission.isEnable()){
-                    showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
-                    .setNoCancelOnclick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            generalPopView.dismiss();
+                    if(null != permission && !permission.isEnable()){
+                        showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
+                                .setNoCancelOnclick(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        generalPopView.dismiss();
+                                    }
+                                });
+
+                    }else{
+                        if (customerId == null) {
+                            break;
                         }
-                    });
-
-                }else{
-                    if (customerId == null) {
-                        break;
+                        bundle = new Bundle();
+                        bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
+                        bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
+                        app.startActivityForResult(this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
                     }
-                    bundle = new Bundle();
-                    bundle.putString(ExtraAndResult.EXTRA_NAME, customerName);
-                    bundle.putString(ExtraAndResult.EXTRA_ID, customerId);
-                    app.startActivityForResult(this, ActivityAddMySale.class, MainApp.ENTER_TYPE_RIGHT, CREATE_DEMANDS, bundle);
-                }
-
 
                 break;
+
             default:
                 break;
         }
