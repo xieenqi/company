@@ -12,10 +12,10 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="@dimen/dimen_30"
-        android:minWidth="@dimen/dimen_35"
+        android:maxWidth="@dimen/dimen_70"
+        android:minWidth="@dimen/dimen_70"
         android:singleLine="true"
-        android:text=""
+        android:text="我玩我玩"
         android:textColor="@color/text99"
         android:textSize="@dimen/text_sp14"/>
 
@@ -24,8 +24,6 @@
         style="@style/ProgressBarMini"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_marginLeft="@dimen/dimen_10"
-        android:layout_marginRight="@dimen/dimen_10"
         android:layout_weight="1"/>
 
     <TextView
@@ -33,8 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:maxWidth="@dimen/dimen_35"
-        android:minWidth="@dimen/dimen_20"
+        android:maxWidth="@dimen/dimen_70"
+        android:minWidth="@dimen/dimen_35"
         android:singleLine="true"
         android:text=""
         android:textColor="@color/text66"
