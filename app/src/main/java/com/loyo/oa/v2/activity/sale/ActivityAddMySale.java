@@ -537,9 +537,9 @@ public class ActivityAddMySale extends BaseActivity {
             for (SaleIntentionalProduct ele : intentionProductData) {
                 productName += ele.name + "、";
             }
+        } else {
+            return "";
         }
-
-
         return productName.substring(0, productName.length() - 1);
     }
 

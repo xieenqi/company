@@ -77,6 +77,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
     private TextView director;
     private ImageView iv_wfstatus;
     private boolean isDelete = true;
+    private double totalMoney;//意向产品总金额
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,10 +219,14 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
      */
     public void bindData() {
         //机会 是否 是创建者
-        if (MainApp.user.id.equals(mSaleDetails.creatorId)) {
+        if (MainApp.user.id.equals(mSaleDetails.creatorId) && mSaleDetails.prob != 100) {
             img_title_right.setVisibility(View.VISIBLE);
+            ll_stage.setEnabled(true);
+            ll_product.setEnabled(true);
         } else {
             img_title_right.setVisibility(View.INVISIBLE);
+            ll_stage.setEnabled(false);
+            ll_product.setEnabled(false);
         }
         title.setText(mSaleDetails.getName());
         customer.setText(mSaleDetails.getCusName());
@@ -271,6 +276,7 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
             img_title_right.setVisibility(View.INVISIBLE);
             ll_product.setEnabled(false);
             ll_stage.setEnabled(false);
+            iv_wfstatus.setVisibility(View.VISIBLE);
             switch (mSaleDetails.wfState) {
                 case 1:
                     iv_wfstatus.setImageResource(R.drawable.img_task_wite);
@@ -293,6 +299,12 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     break;
             }
 
+        }
+        //计算产品总金额
+        if (null != mSaleDetails.proInfos) {
+            for (SaleIntentionalProduct ele : mSaleDetails.proInfos) {
+                totalMoney += ele.totalMoney * ele.quantity;
+            }
         }
     }
 
@@ -324,13 +336,13 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                 stage.putInt(ExtraAndResult.EXTRA_TYPE, ActivitySaleStage.SALE_STAGE);
                 stage.putString(ExtraAndResult.EXTRA_NAME, "销售阶段");
                 stage.putString(ExtraAndResult.CC_USER_NAME, mSaleDetails.name);
-                stage.putString(ExtraAndResult.EXTRA_BOOLEAN, mSaleDetails.salesAmount + "");
+                stage.putString(ExtraAndResult.EXTRA_BOOLEAN, Utils.setValueDouble(totalMoney) + "");
                 stage.putString(ExtraAndResult.EXTRA_DATA, text_stagename.getText().toString());
                 stage.putBoolean(ExtraAndResult.EXTRA_STATUS, null == mSaleDetails.proInfos ? false : true);
                 app.startActivityForResult(ActivitySaleDetails.this, ActivitySaleStage.class,
                         MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE_STAGE, stage);
                 break;
-
+            //到审批
             case R.id.iv_wfstatus:
                 Intent wfinstance = new Intent();
                 wfinstance.putExtra(ExtraAndResult.EXTRA_ID, mSaleDetails.wfId);
