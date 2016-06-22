@@ -94,7 +94,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getWfInstances(map, WfInstanceManageFragment.this);*/
 
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getWfInstancesData(map, WfInstanceManageFragment.this);
@@ -103,7 +102,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstance) mAdapter.getChild(groupPosition, childPosition)).getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstanceRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }
