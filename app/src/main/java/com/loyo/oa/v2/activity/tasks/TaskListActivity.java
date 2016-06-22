@@ -71,7 +71,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         }
 
         layout_add.setOnTouchListener(Global.GetTouch());
-        getData();
+
 
         //超级管理员\权限判断
         if (!MainApp.user.isSuperUser()) {
@@ -82,6 +82,12 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
                 Toast("发布公告权限,code错误:0402");
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Override
@@ -99,7 +105,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      */
     @Click(R.id.layout_add)
     void createNewTask() {
-        if(!permission.isEnable()){
+        if (!permission.isEnable()) {
             showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
                     .setNoCancelOnclick(new View.OnClickListener() {
                         @Override
@@ -108,7 +114,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
                         }
                     });
 
-        }else{
+        } else {
             Bundle b = new Bundle();
             b.putString(ExtraAndResult.EXTRA_ID, mCustomer.id);
             b.putString(ExtraAndResult.EXTRA_NAME, mCustomer.name);
@@ -126,14 +132,14 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.setOnRefreshListener(this);
             lv.getRefreshableView().setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                 @Override
-                public boolean onGroupClick(final ExpandableListView parent,final View v,final int groupPosition,final long id) {
+                public boolean onGroupClick(final ExpandableListView parent, final View v, final int groupPosition, final long id) {
                     return true;
                 }
             });
 
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
-                public boolean onChildClick(final ExpandableListView parent,final View v,final int groupPosition,final int childPosition,final long id) {
+                public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
                     Task task = (Task) adapter.getChild(groupPosition, childPosition);
                     openTaskDetial(task);
                     return false;
@@ -206,7 +212,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     }
 
     @Override
-    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || null == data) {
             return;
