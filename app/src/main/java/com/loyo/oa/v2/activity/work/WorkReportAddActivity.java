@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
@@ -56,17 +57,20 @@ import com.loyo.oa.v2.tool.WeeksDialog;
 import com.loyo.oa.v2.tool.customview.CountTextWatcher;
 import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.SingleRowWheelView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -440,15 +444,15 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 编辑gridView绑定
-     * */
+     */
     void edit_gridView_photo() {
         if (lstData_Attachment == null) {
             lstData_Attachment = new ArrayList<>();
         }
-        for(Attachment attachment : lstData_Attachment){
+        for (Attachment attachment : lstData_Attachment) {
             pickPhots.add(new SelectPicPopupWindow.ImageInfo(attachment.url));
         }
-        LogUtil.dee("pickPhots结构:"+MainApp.gson.toJson(pickPhots));
+        LogUtil.dee("pickPhots结构:" + MainApp.gson.toJson(pickPhots));
 
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
@@ -456,9 +460,9 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 新建gridView绑定
-     * */
+     */
     void init_gridView_photo() {
-        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        imageGridViewAdapter = new ImageGridViewAdapter(this, true, true, 0, pickPhots);
         ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
@@ -490,10 +494,10 @@ public class WorkReportAddActivity extends BaseActivity {
                 }
 
                 //没有附件
-                if(pickPhots.size() == 0){
+                if (pickPhots.size() == 0) {
                     requestCommitWork();
                     //有附件
-                }else{
+                } else {
                     newUploadAttachement();
                 }
 
@@ -742,16 +746,16 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 提交报告
-     * */
-    private void requestCommitWork(){
-        if(pickPhots.size() == 0){
+     */
+    private void requestCommitWork() {
+        if (pickPhots.size() == 0) {
             showLoading("正在提交");
         }
 
         bizExtData = new PostBizExtData();
-        if(type == TYPE_EDIT){
+        if (type == TYPE_EDIT) {
             bizExtData.setAttachmentCount(mWorkReport.bizExtData.getAttachmentCount());
-        }else{
+        } else {
             bizExtData.setAttachmentCount(pickPhots.size());
         }
         isDelayed = tv_time.getText().toString().contains("补签") ? true : false;
@@ -790,13 +794,13 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(){
+     */
+    private void newUploadAttachement() {
         showLoading("正在提交");
         try {
             uploadSize = 0;
-            uploadNum  = pickPhots.size();
-            LogUtil.dee("pickPhots siez:"+pickPhots.size());
+            uploadNum = pickPhots.size();
+            LogUtil.dee("pickPhots siez:" + pickPhots.size());
             for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
                 Uri uri = Uri.parse(item.path);
                 File newFile = Global.scal(this, uri);
@@ -809,7 +813,7 @@ public class WorkReportAddActivity extends BaseActivity {
                                     @Override
                                     public void success(final Attachment attachments, final Response response) {
                                         uploadSize++;
-                                        if(uploadSize == uploadNum){
+                                        if (uploadSize == uploadNum) {
                                             requestCommitWork();
                                         }
                                     }
@@ -831,8 +835,8 @@ public class WorkReportAddActivity extends BaseActivity {
 
     /**
      * 删除附件
-     * */
-    private void deleteAttachement(final Intent data){
+     */
+    private void deleteAttachement(final Intent data) {
         try {
             final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
             HashMap<String, Object> map = new HashMap<String, Object>();
@@ -886,9 +890,9 @@ public class WorkReportAddActivity extends BaseActivity {
 
             /*删除附件回调*/
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                if(type == TYPE_EDIT){
+                if (type == TYPE_EDIT) {
                     deleteAttachement(data);
-                }else{
+                } else {
                     pickPhots.remove(data.getExtras().getInt("position"));
                     init_gridView_photo();
                 }
