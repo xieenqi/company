@@ -33,11 +33,11 @@ import org.json.JSONObject;
  */
 @EActivity(R.layout.activity_customer_baseinfo_edit_layout)
 public class CustomerBaseInfoEditActivity extends BaseActivity {
+
     @ViewById
     EditText edt_customer_basesummary;
     @ViewById
     EditText edt_basename;
-
     @Extra("Customer")
     Customer customer;
 
