@@ -203,6 +203,7 @@ public class AMapService extends Service {
             LogUtil.d("源地址无效,组合的地址 : " + (TextUtils.isEmpty(addressBuilder.toString()) ? "NULL" : addressBuilder.toString()));
             address = addressBuilder.toString();
         }
+        oldAddress = SharedUtil.get(app, "address");
         //排除偏移巨大的点:非gps时地址为空、经纬度为0、精度小于等于0或大于150、是缓存的位置 (!TextUtils.equals("gps", provider) && !  || isCache
         if (TextUtils.isEmpty(address) ||
                 (aMapLocation.getLatitude() == 0 && aMapLocation.getLongitude() == 0)
@@ -210,8 +211,6 @@ public class AMapService extends Service {
             LogUtil.d("当前位置偏移量很大，直接return");
             return;
         }
-        oldAddress = address;
-
         if (Global.isConnected()) {
             if (isEmptyStr(address)) {
                 aMapLocation.setAddress("未知地址");
@@ -360,6 +359,7 @@ public class AMapService extends Service {
 
                 SharedUtil.put(app, "lat", String.valueOf(latitude));
                 SharedUtil.put(app, "lng", String.valueOf(longitude));
+                SharedUtil.put(app, "address", address);
             }
 
             @Override

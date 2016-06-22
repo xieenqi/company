@@ -97,7 +97,7 @@ public class ActivityFollowContactSelect extends BaseActivity {
             ImageView iv_img = (ImageView) convertView.findViewById(R.id.iv_img);
 
             tv_name.setText(data.get(position).getName());
-            if (dataName.equals(data.get(position))) {
+            if (dataName.equals(data.get(position).getName())) {
                 iv_img.setVisibility(View.VISIBLE);
             } else {
                 iv_img.setVisibility(View.INVISIBLE);
