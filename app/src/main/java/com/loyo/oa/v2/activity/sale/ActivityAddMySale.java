@@ -539,6 +539,7 @@ public class ActivityAddMySale extends BaseActivity {
             }
         }
 
+
         return productName.substring(0, productName.length() - 1);
     }
 

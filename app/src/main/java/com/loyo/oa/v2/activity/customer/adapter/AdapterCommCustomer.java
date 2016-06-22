@@ -49,7 +49,7 @@ public class AdapterCommCustomer extends BaseAdapter{
     public void permissionTest(ImageView img) {
             /*超级管理员/Web控制权限判断*/
         if (!MainApp.user.isSuperUser()) {
-            if (!permission.isEnable()) {
+            if (null != permission && !permission.isEnable()) {
                 img.setVisibility(View.INVISIBLE);
             }
         }

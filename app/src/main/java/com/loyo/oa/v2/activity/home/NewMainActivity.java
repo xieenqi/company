@@ -279,7 +279,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 LogUtil.d(permission.getName() + ":" + permission.getCode() + "-" + permission.isEnable());
                 for (int i = 0; i < items.size(); i++) {
                     if (items.get(i).code.equals(permission.getCode())) {
-                        if (!permission.isEnable()) {
+                        if (null != permission && !permission.isEnable()) {
                             items.remove(i);
                         }
                     }
@@ -287,7 +287,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
                 for(int i = 0;i<caseItems.size();i++){
                     if(caseItems.get(i).code.equals(permission.getCode())){
-                        if(!permission.isEnable()){
+                        if(null != permission && !permission.isEnable()){
                              caseItems.remove(i);
 
                         }
@@ -296,7 +296,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
 
                 for(int i = 0;i<caseItems.size();i++){
                     if(caseItems.get(i).code.equals(permission.getCode())){
-                        if(!permission.isEnable()){
+                        if(null != permission && !permission.isEnable()){
                             caseItems.remove(i);
 
                         }
