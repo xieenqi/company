@@ -730,7 +730,6 @@ public class ContactInfoEditActivity extends BaseActivity {
         if(null == data){
             return;
         }
-
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
 
             List<String> mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);

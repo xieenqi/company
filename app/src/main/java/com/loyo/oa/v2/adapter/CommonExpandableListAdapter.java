@@ -10,22 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity;
 import com.loyo.oa.v2.activity.commonview.DiscussionActivity_;
-import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.DiscussCounter;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -63,21 +61,19 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
         ImageView iv_disscuss_status = ViewHolder.get(convertView, R.id.img_discuss_status);
 
         /**审批*/
-
-        if (obj instanceof WfInstance) {
-            WfInstance wfInstance = (WfInstance) obj;
+        if (obj instanceof WfInstanceRecord) {
+            WfInstanceRecord wfInstance = (WfInstanceRecord) obj;
             if (wfInstance.title != null) {
                 title.setText(wfInstance.title);
             }
 
             time.setText("提交时间: " + app.df3.format(new Date(wfInstance.createdAt * 1000)));
-            if (wfInstance.nextExecutor != null) {
-                content.setText("审批人: " + wfInstance.nextExecutor.name);
+            if (wfInstance.nextExecutorName != null) {
+                content.setText("审批人: " + wfInstance.nextExecutorName);
             }
             ack.setVisibility(wfInstance.viewed ? View.GONE : View.VISIBLE);
 
             /**任务*/
-
         } else if (obj instanceof Task) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
             Task task = (Task) obj;
