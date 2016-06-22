@@ -89,7 +89,7 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
         listView_demands = (PullToRefreshListView) findViewById(R.id.listView_demands);
 
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
+        if (null != MainApp.user  && !MainApp.user.isSuperUser()) {
             try {
                 permission = (Permission) MainApp.rootMap.get("0215");
             } catch (NullPointerException e) {
