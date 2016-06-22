@@ -7,8 +7,7 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-
-    public static boolean isRelease = false;                            //是否是正式产品
+    public static boolean isRelease = true;                            //是否是正式产品
 
     //public static final Boolean is_developer_mode = false;           //生产模式
 
@@ -148,6 +147,5 @@ public class Config_project {
     public static String API_URL_STATISTICS() {
         return SERVER_URL().concat("/api/v2/");
     }
-
 
 }

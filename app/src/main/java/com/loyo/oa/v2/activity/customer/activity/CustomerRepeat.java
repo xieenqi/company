@@ -82,7 +82,7 @@ public class CustomerRepeat extends BaseActivity {
         lv_list = (ListView) findViewById(R.id.lv_list);
         tv_customer_onlyname = (TextView) findViewById(R.id.tv_customer_onlyname);
         edt_search = (EditText) findViewById(R.id.edt_search);
-//        tv_serach = (TextView) findViewById(R.id.tv_serach);
+//      tv_serach = (TextView) findViewById(R.id.tv_serach);
         iv_clean = (ImageView) findViewById(R.id.iv_clean);
         img_title_left = (RelativeLayout) findViewById(R.id.img_title_left);
         edt_search.setText(customerName);
