@@ -23,18 +23,22 @@
         <RadioGroup
             android:id="@+id/tab_menu"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:gravity="center|bottom"
+            android:orientation="horizontal"
+            >
 
             <RadioButton
                 android:id="@+id/title1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_10"
+                android:layout_marginRight="@dimen/dimen_5"
                 android:button="@null"
                 android:checked="true"
+                android:drawableBottom="@drawable/rb_home"
+                android:drawablePadding="@dimen/dimen_8"
+                android:gravity="center_horizontal"
                 android:text="应用"
                 android:textColor="@drawable/color_text_table"
                 android:textSize="@dimen/text_sp18"/>
@@ -43,13 +47,22 @@
                 android:id="@+id/title2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_marginLeft="@dimen/dimen_5"
                 android:button="@null"
+                android:drawableBottom="@drawable/rb_home"
+                android:drawablePadding="@dimen/dimen_8"
+                android:gravity="center_horizontal"
                 android:text="统计"
                 android:textColor="@drawable/color_text_table"
                 android:textSize="@dimen/text_sp18"/>
 
         </RadioGroup>
+
+        <!--<TabHost-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--</TabHost>-->
 
         <ImageView
             android:layout_width="@dimen/dimen_20"
