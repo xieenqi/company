@@ -2,6 +2,7 @@ package com.loyo.oa.v2.beans;
 import java.io.Serializable;
 
 /**
+ * 【审批列表】精简接口bean
  * Created by yyy on 16/6/21.
  */
 public class WfInstanceRecord extends BaseBeans implements Serializable{
