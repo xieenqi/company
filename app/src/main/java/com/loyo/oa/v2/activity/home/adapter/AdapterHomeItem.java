@@ -38,7 +38,7 @@ public class AdapterHomeItem extends BaseAdapter {
         this.mContext = context;
         this.items = items;
         this.mItemNumbers = mItemNumbers;
-        inflter = LayoutInflater.from(mContext);
+        inflter = LayoutInflater.from(context);
     }
 
     @Override

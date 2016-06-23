@@ -271,15 +271,18 @@ public class FragmentHomeStatistics extends BaseFragment {
             max += ele.totalNum;
         }
 
-        int j = 10;
+        int j = 0;
         for (int i = 0; i < data.size(); i++) {
             HttpProcess processData = data.get(i);
-            if (!(i >= 10)) {
-                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, i));
+            if (j < 10) {
+                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, j));
+                j++;
             } else {
-                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, i - j));
-                j--;
+                j=0;
+                ll_process.addView(new ProcessDataAdapter(getActivity(), processData.value, processData.totalNum, max, j));
+                j++;
             }
+
         }
     }
 
