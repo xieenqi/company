@@ -111,6 +111,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private MoreWindowCase mMoreWindowcase;
     private ValidateInfo validateInfo = new ValidateInfo();
 
+    public FragmentHomeApplication(RoundImageView heading){
+        this.heading = heading;
+    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -177,10 +180,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         }
     }
 
-    public FragmentHomeApplication(RoundImageView img){
-        heading = img;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -199,7 +198,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         listView = (PullToRefreshListView) mView.findViewById(R.id.newhome_listview);
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
-        DialogHelp.showLoading(getActivity(), "", true);
+        if(null != items){
+            DialogHelp.showLoading(getActivity(), "", true);
+        }
         return mView;
     }
 
@@ -216,7 +217,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar,heading);
     }
 
     /**

@@ -28,13 +28,14 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
+
     protected MainApp app;
     protected Context mContext;
     private Toast mCurrentToast;
     private int mTouchViewGroupId = -1;
     public GeneralPopView generalPopView;
-
     final String Tag = "BaseFragmentActivity";
+
 
     protected BroadcastReceiver baseReceiver = new BroadcastReceiver() {
         @Override
@@ -84,7 +85,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         ExitActivity.getInstance().addActivity(this);
         // 创建状态栏的管理实例
-
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         // 激活状态栏设置
         tintManager.setStatusBarTintEnabled(true);

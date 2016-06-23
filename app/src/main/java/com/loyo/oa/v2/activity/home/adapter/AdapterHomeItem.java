@@ -11,13 +11,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
-
 import java.util.ArrayList;
 
 /**
@@ -38,7 +36,11 @@ public class AdapterHomeItem extends BaseAdapter {
         this.mContext = context;
         this.items = items;
         this.mItemNumbers = mItemNumbers;
-        inflter = LayoutInflater.from(context);
+        try{
+            inflter = LayoutInflater.from(context);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -37,11 +37,10 @@ import com.umeng.analytics.MobclickAgent;
 
 /**
  * 带侧滑的【主界面】
- * <p/>
+ *
  * Created by xeq on 16/6/15.
  */
 public class ActivityMainHome extends SlidingFragmentActivity {
-
 
     private SlidingMenu sm;
     private Fragment selectCurrentFragment;// 当前显示的fragment的标记
@@ -50,7 +49,6 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     private HomeFragment mHomeFragment;
     //主要保存当前显示的是第几个fragment的索引值
     public static int index = 0;
-
 
     @Override
     protected void onStart() {
@@ -80,6 +78,10 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
+        if(savedInstanceState!= null){
+            String FRAGMENTS_TAG = "Android:support:fragments";
+            savedInstanceState.remove(FRAGMENTS_TAG);
+        }
         startService(new Intent(this, RushTokenService.class));
         onInitSlideMenu();
     }
@@ -262,28 +264,24 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     protected void onRestart() {
         // TODO Auto-generated method stub
         super.onRestart();
-        System.out.println("!!!22222222222!!!!onRestart");
     }
 
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        System.out.println("!!!!!!!2222222222222222!!!!!!!onPause");
     }
 
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        System.out.println("!!!!!222222222!!!!!!!!!onStop");
     }
 
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        System.out.println("!!!!!!22222222!!!!!!!!onDestroy");
     }
 
     /**

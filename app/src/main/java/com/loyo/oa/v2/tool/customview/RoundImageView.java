@@ -12,12 +12,16 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.LogUtil;
+
+import java.io.Serializable;
 
 
 /**
@@ -28,6 +32,7 @@ import com.loyo.oa.v2.tool.LogUtil;
  * @author Alan
  */
 public class RoundImageView extends ImageView {
+
     private String tag = "RoundImageView";
     private int mBorderThickness = 0;
     private Context mContext;
