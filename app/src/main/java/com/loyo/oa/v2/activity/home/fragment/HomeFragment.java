@@ -29,18 +29,16 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 
     private FragmentHomeApplication mFragmentHomeApplication;//tab1又实现2个fragment 我自己的项目有这个需求 点击侧滑直接切换tab的fragment
     private FragmentHomeStatistics mFragmentHomeStatistics;
-    //private FoundFragment mFoundFragment;
-    //private PersionFragment mPersionFragment;
     private ArrayList<RadioButton> title = new ArrayList<RadioButton>();// 4个标题
     private ViewPager pager;
     private RoundImageView heading;
+    private Bundle mBundle;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
-        //getActivity().startService(new Intent(getActivity(), InitDataService_.class));
         initView(view);
         return view;
     }
@@ -98,6 +96,10 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
                 case 0:
                     if (mFragmentHomeApplication == null) {
                         mFragmentHomeApplication = new FragmentHomeApplication(heading);
+/*                        mBundle = new Bundle();
+                        mBundle.putParcelable("view",heading);
+                        mFragmentHomeApplication.setArguments(mBundle);*/
+
                     }
                     return mFragmentHomeApplication;
                 case 1:
@@ -105,17 +107,6 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
                         mFragmentHomeStatistics = new FragmentHomeStatistics();
                     }
                     return mFragmentHomeStatistics;
-//                case 2:
-//                    if (mFoundFragment == null) {
-//                        mFoundFragment = new FoundFragment();
-//                    }
-//                    return mFoundFragment;
-//
-//                case 3:
-//                    if (mPersionFragment == null) {
-//                        mPersionFragment = new PersionFragment();
-//                    }
-//                    return mPersionFragment;
 
                 default:
                     return null;

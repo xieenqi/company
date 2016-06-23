@@ -545,6 +545,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
+        <activity android:name=".activity.commonview.SelectDetUserActivity2"></activity>
 
         <service
             android:name=".service.InitDataService_"
@@ -760,6 +761,6 @@
             android:name="UMENG_CHANNEL"
             android:value="ukuaiqi"/>
 
-        <activity android:name=".activity.commonview.SelectDetUserActivity2"></activity>
+
     </application>
 </manifest>
