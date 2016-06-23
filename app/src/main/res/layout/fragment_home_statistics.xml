@@ -15,13 +15,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_45"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dimen_10"
             android:paddingLeft="@dimen/margin_other_view"
             android:paddingRight="@dimen/margin_other_view"
-            android:paddingTop="@dimen/dimen_10">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -34,19 +33,20 @@
             <RadioGroup
                 android:id="@+id/tab_menu"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="right|center_vertical"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/rb_process_today"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dimen_5"
                     android:button="@null"
                     android:checked="true"
-                    android:drawableLeft="@drawable/sale_drawable"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="今日"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -54,10 +54,11 @@
                 <RadioButton
                     android:id="@+id/rb_process_week"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_5"
                     android:button="@null"
-
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="本周"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -94,13 +95,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_45"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dimen_10"
             android:paddingLeft="@dimen/margin_other_view"
             android:paddingRight="@dimen/margin_other_view"
-            android:paddingTop="@dimen/dimen_10">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
 
             <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:orientation="horizontal">
@@ -120,9 +120,11 @@
                 <RadioButton
                     android:id="@+id/rb_bulking_today"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dimen_5"
                     android:button="@null"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="今日"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -130,9 +132,11 @@
                 <RadioButton
                     android:id="@+id/rb_bulking_week"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_5"
                     android:button="@null"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="本周"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -251,13 +255,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_45"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dimen_10"
             android:paddingLeft="@dimen/margin_other_view"
             android:paddingRight="@dimen/margin_other_view"
-            android:paddingTop="@dimen/dimen_10">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -269,7 +272,7 @@
 
             <RadioGroup
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:orientation="horizontal">
@@ -277,9 +280,11 @@
                 <RadioButton
                     android:id="@+id/rb_achieves_week"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dimen_5"
                     android:button="@null"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="本周"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -287,9 +292,11 @@
                 <RadioButton
                     android:id="@+id/rb_achieves_month"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_5"
                     android:button="@null"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="本月"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -396,13 +403,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_45"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dimen_10"
             android:paddingLeft="@dimen/margin_other_view"
             android:paddingRight="@dimen/margin_other_view"
-            android:paddingTop="@dimen/dimen_10">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -414,7 +420,7 @@
 
             <RadioGroup
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:orientation="horizontal">
@@ -423,8 +429,10 @@
                     android:id="@+id/rb_funnel_week"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/dimen_10"
+                    android:layout_marginRight="@dimen/dimen_5"
                     android:button="@null"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="本周"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
@@ -432,9 +440,11 @@
                 <RadioButton
                     android:id="@+id/rb_funnel_month"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_5"
                     android:button="@null"
+                    android:drawableBottom="@drawable/rb_home_sale"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="本月"
                     android:textColor="@drawable/color_text_table2"
                     android:textSize="@dimen/text_sp15"/>
