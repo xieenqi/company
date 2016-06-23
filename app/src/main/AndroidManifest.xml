@@ -460,7 +460,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.PreviewImageActivity"
+            android:name=".activity.ActivityPreviewImageList"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -748,7 +748,7 @@
             android:theme="@style/dialog_edit_delete_StyleBottom"
             />
         <activity
-            android:name=".activity.PreviewImageActivity2"
+            android:name=".activity.ActivityPreviewImageAdd"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
