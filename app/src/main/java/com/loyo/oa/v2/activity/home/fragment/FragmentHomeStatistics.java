@@ -364,7 +364,7 @@ public class FragmentHomeStatistics extends BaseFragment {
         } else {
             im_funnel_no.setVisibility(View.GONE);
         }
-        int bjIndex = 10-data.size();
+        int bjIndex = 10 - data.size();
         for (int i = 0; i < data.size(); i++) {
             ll_funnel.addView(new FunnelDataAdapter(getActivity(), i, data.get(i), bjIndex));
             bjIndex++;
