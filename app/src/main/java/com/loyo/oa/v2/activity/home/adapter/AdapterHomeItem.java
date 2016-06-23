@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
+
 import java.util.ArrayList;
 
 /**
@@ -32,20 +34,30 @@ public class AdapterHomeItem extends BaseAdapter {
     private boolean oaTi = false;
     private Intent mIntent = new Intent();
 
+    public AdapterHomeItem(Context context) {
+        this.mContext = context;
+    }
+
     public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
         this.mContext = context;
         this.items = items;
         this.mItemNumbers = mItemNumbers;
-        try{
+        try {
             inflter = LayoutInflater.from(context);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
+    public void setData(ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
+        this.items = items;
+        this.mItemNumbers = mItemNumbers;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return items.size();
+        return null == items ? 0 : items.size();
     }
 
     @Override

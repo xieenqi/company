@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
@@ -50,6 +51,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -64,6 +66,7 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
@@ -71,6 +74,7 @@ import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,6 +82,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -86,7 +91,7 @@ import retrofit.client.Response;
 /**
  * 【首页应用】fragment
  */
-public class FragmentHomeApplication extends Fragment implements LocationUtilGD.AfterLocation,PullToRefreshBase.OnRefreshListener2{
+public class FragmentHomeApplication extends Fragment implements LocationUtilGD.AfterLocation, PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
     private Fragment currentFragment = null;
@@ -111,7 +116,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private MoreWindowCase mMoreWindowcase;
     private ValidateInfo validateInfo = new ValidateInfo();
 
-    public FragmentHomeApplication(RoundImageView heading){
+    public FragmentHomeApplication(RoundImageView heading) {
         this.heading = heading;
     }
 
@@ -138,7 +143,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             switch (msg.what) {
                 //新建任务
                 case BaseActivity.TASKS_ADD:
-                    startActivityForResult(new Intent(getActivity(),TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    startActivityForResult(new Intent(getActivity(), TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
@@ -175,7 +180,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
+        if (requestCode == 1) {
             requestNumber();
         }
     }
@@ -198,14 +203,26 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         listView = (PullToRefreshListView) mView.findViewById(R.id.newhome_listview);
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
-        if(null != items){
+        if (null != items) {
             DialogHelp.showLoading(getActivity(), "", true);
         }
+        adapter = new AdapterHomeItem(getActivity());
+        listView.setAdapter(adapter);
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        listView.setOnRefreshListener(this);
+        String itemInfo = SharedUtil.get(getActivity(), ExtraAndResult.HOME_ITEM);
+        String redNumberInfo = SharedUtil.get(getActivity(), ExtraAndResult.HOME_ITEM);
+//        if(){
+//
+//        }
         return mView;
     }
 
-    public void initView(){
-        adapter = new AdapterHomeItem(getActivity(), items, mItemNumbers);
+    public void initView() {
+        //此处缓存首页数据
+        SharedUtil.put(getActivity().getApplicationContext(), ExtraAndResult.HOME_ITEM, MainApp.gson.toJson(items));
+        SharedUtil.put(getActivity().getApplicationContext(), ExtraAndResult.HOME_RED_NUMBER, MainApp.gson.toJson(mItemNumbers));
+        adapter.setData(items, mItemNumbers);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,10 +231,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             }
         });
 
-        listView.setAdapter(adapter);
-        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        listView.setOnRefreshListener(this);
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar,heading);
+        ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
     }
 
     /**
@@ -323,7 +337,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         }
 
         if (!Global.isConnected()) {
-            Toast.makeText(getActivity(),"没有网络连接，不能打卡",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "没有网络连接，不能打卡", Toast.LENGTH_SHORT).show();
             return;
         }
         /*工作日*/
@@ -337,9 +351,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             }
             /*非工作日，下班状态*/
         } else if (!validateInfo.isWorkDay() && outEnable) {
-            if(validateInfo.isExtraTimeSwitch()){
+            if (validateInfo.isExtraTimeSwitch()) {
                 outKind = 2;
-            }else{
+            } else {
                 outKind = 1;
             }
             startAttanceLocation();
@@ -508,17 +522,17 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                     }
                 }
 
-                for(int i = 0;i<caseItems.size();i++){
-                    if(caseItems.get(i).code.equals(permission.getCode())){
-                        if(!permission.isEnable()){
+                for (int i = 0; i < caseItems.size(); i++) {
+                    if (caseItems.get(i).code.equals(permission.getCode())) {
+                        if (!permission.isEnable()) {
                             caseItems.remove(i);
                         }
                     }
                 }
 
-                for(int i = 0;i<caseItems.size();i++){
-                    if(caseItems.get(i).code.equals(permission.getCode())){
-                        if(!permission.isEnable()){
+                for (int i = 0; i < caseItems.size(); i++) {
+                    if (caseItems.get(i).code.equals(permission.getCode())) {
+                        if (!permission.isEnable()) {
                             caseItems.remove(i);
                         }
                     }
@@ -546,14 +560,14 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                 new HomeItem(R.drawable.newmain_attent, "考勤管理", AttendanceActivity_.class, "0211", 2)));
 
 
-        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务","0202",R.drawable.newmain_post_task),
-                new MoreWindowItem("申请审批","0204",R.drawable.newmain_post_wif),
-                new MoreWindowItem("提交报告","0203",R.drawable.newmain_post_report),
-                new MoreWindowItem("新建客户","0205",R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进","0205",R.drawable.newmain_post_follow),
-                new MoreWindowItem("新建机会","0215",R.drawable.newmain_post_sale),
-                new MoreWindowItem("考勤打卡","0000",R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到","0206",R.drawable.newmain_post_sign)));
+        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
+                new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
+                new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
+                new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
+                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
+                new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
+                new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
+                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
 
     }
 
@@ -572,7 +586,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
      * 显示弹出菜单
      */
     void showMoreWindow(View view) {
-        mMoreWindowcase = new MoreWindowCase(getActivity(), mHandler,caseItems);
+        mMoreWindowcase = new MoreWindowCase(getActivity(), mHandler, caseItems);
         mMoreWindowcase.init();
         mMoreWindowcase.showMoreWindow(view);
     }
@@ -715,7 +729,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(),"获取打卡位置失败",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
     }
 
     @Override
