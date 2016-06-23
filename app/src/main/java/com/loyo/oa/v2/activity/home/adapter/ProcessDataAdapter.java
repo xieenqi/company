@@ -49,6 +49,8 @@ public class ProcessDataAdapter extends LinearLayout {
         tv_number.setText(value + "次");
         pb_progress.setMax(max);
         pb_progress.setProgress(value);
+//        if (index > 9)
+//            index = 9;
         pb_progress.setProgressDrawable(getResources().getDrawable(colors[index]));
         this.addView(view);
     }

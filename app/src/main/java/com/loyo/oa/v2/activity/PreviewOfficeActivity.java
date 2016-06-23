@@ -41,7 +41,7 @@ public class PreviewOfficeActivity extends Activity {
                             handler.proceed();
                         }
                     });
-                    LogUtil.d(" web显示图片URL："+url);
+                    LogUtil.d(" web显示图片URL：" + url);
                     mWebView.loadUrl(url);
                 } catch (Exception e) {
                     Global.ProcException(e);

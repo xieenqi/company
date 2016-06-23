@@ -36,6 +36,7 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+//【附件适配器】
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
     public static final int REQUEST_ATTACHMENT = 4000;
@@ -158,12 +159,12 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
 
                 } else if (attachment.getAttachmentType() == Attachment.AttachmentType.OFFICE) {
-
                     //预览文件
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data", attachment.getUrl());
                     app.startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
-
+                } else {
+                    Global.Toast("不支持的附件类型");
                 }
             }
         });
@@ -267,7 +268,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         public TextView tv_title;
         public TextView tv_time;
         public ViewGroup front;
-//        public ViewGroup layout_action_update;
+        //        public ViewGroup layout_action_update;
         public ViewGroup layout_action_delete;
     }
 }

@@ -26,6 +26,7 @@ import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.util.ArrayList;
@@ -204,8 +205,9 @@ public class ActivitySaleStage extends BaseActivity {
                             Toast("赢单必须添加意向产品");
                             return;
                         }
+                        String tt = "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称：" + saleName + "\n产品总金额：￥" + salePrice;
                         final GeneralPopView dialog = showGeneralDialog(false, true,
-                                "赢单提交后不能修改,请确认赢单产品金额和数量是否正确！\n客户名称：" + saleName + "\n产品总金额：" + salePrice);
+                                Utils.modifyTextColor(tt, getResources().getColor(R.color.red1), 0, 10).toString());
 
                         dialog.setSureOnclick(new View.OnClickListener() {
                             @Override
