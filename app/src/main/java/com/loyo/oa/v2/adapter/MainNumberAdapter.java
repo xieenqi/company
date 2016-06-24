@@ -7,9 +7,9 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ClickItem;
 import com.loyo.oa.v2.beans.HomeNumber;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
-import com.loyo.oa.v2.tool.customview.RippleView;
+import com.loyo.oa.v2.adapter.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.adapter.commonadapter.ViewHolder;
+import com.loyo.oa.v2.ui.customview.RippleView;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.ArrayList;

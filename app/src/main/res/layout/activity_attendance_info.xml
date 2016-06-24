@@ -27,7 +27,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/margin_other_view">
 
-                <com.loyo.oa.v2.tool.customview.RoundImageView
+                <com.loyo.oa.v2.ui.customview.RoundImageView
                     android:id="@+id/iv_avartar"
                     android:layout_width="@dimen/dimen_40"
                     android:layout_height="@dimen/dimen_40"

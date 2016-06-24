@@ -12,11 +12,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WfNodes;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.pullToRefresh.internal.LoadingLayout;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

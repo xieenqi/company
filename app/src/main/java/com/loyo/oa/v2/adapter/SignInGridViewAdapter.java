@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.PreviewOfficeActivity;
+import com.loyo.oa.v2.ui.activity.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.ExtraAndResult;

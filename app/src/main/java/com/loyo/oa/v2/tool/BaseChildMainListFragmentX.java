@@ -11,14 +11,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
-import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
-import com.loyo.oa.v2.activity.work.WorkReportAddActivity;
-import com.loyo.oa.v2.activity.project.HttpProject;
-import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
-import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
-import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
-import com.loyo.oa.v2.activity.work.WorkReportsInfoActivity_;
+import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceInfoActivity_;
+import com.loyo.oa.v2.ui.activity.wfinstance.WfInTypeSelectActivity;
+import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity;
+import com.loyo.oa.v2.ui.activity.project.HttpProject;
+import com.loyo.oa.v2.ui.activity.tasks.TasksAddActivity_;
+import com.loyo.oa.v2.ui.activity.tasks.TasksInfoActivity_;
+import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity_;
+import com.loyo.oa.v2.ui.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
@@ -32,9 +32,8 @@ import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
+import com.loyo.oa.v2.ui.customview.GeneralPopView;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -261,7 +260,7 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
                 if(!wiftPsn){
                     showPop();
                 }else{
-                    goToCreatePage(ActivityWfInTypeSelect.class);
+                    goToCreatePage(WfInTypeSelectActivity.class);
                 }
                 break;
         }

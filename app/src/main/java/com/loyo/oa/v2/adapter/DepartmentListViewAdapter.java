@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.DepartmentActivity;
-import com.loyo.oa.v2.activity.DepartmentUserActivity;
+import com.loyo.oa.v2.ui.activity.other.DepartmentActivity;
+import com.loyo.oa.v2.ui.activity.other.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 

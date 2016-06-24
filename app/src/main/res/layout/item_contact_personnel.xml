@@ -33,7 +33,7 @@
         android:layout_marginTop="@dimen/dimen_8"
         android:gravity="center_vertical">
 
-        <com.loyo.oa.v2.tool.customview.RoundImageView
+        <com.loyo.oa.v2.ui.customview.RoundImageView
             android:id="@+id/img"
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"

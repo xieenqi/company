@@ -25,7 +25,7 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
+import com.loyo.oa.v2.ui.customview.GeneralPopView;
 
 public class BaseFragmentActivity extends FragmentActivity {
 

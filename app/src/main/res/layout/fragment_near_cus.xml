@@ -48,7 +48,7 @@
             android:inflatedId="@+id/layout_nodata"
             android:layout="@layout/item_layout_nodata"/>
 
-        <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+        <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/lv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

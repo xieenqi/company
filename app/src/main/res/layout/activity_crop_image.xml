@@ -21,13 +21,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.loyo.oa.v2.tool.customview.multi_image_selector.crop.ClipSquareImageView
+        <com.loyo.oa.v2.ui.customview.multi_image_selector.crop.ClipSquareImageView
             android:id="@+id/clipSquareIV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"/>
 
-        <com.loyo.oa.v2.tool.customview.multi_image_selector.crop.ClipSquareView
+        <com.loyo.oa.v2.ui.customview.multi_image_selector.crop.ClipSquareView
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

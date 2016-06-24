@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleDetails;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/whitesmoke">
 
-    <com.loyo.oa.v2.tool.customview.DropListMenu.DropListMenu
+    <com.loyo.oa.v2.ui.customview.DropListMenu.DropListMenu
         android:id="@+id/droplist_menu"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_50"
@@ -21,7 +21,7 @@
         android:background="@color/whitesmoke"
         />
 
-    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/listView_customers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

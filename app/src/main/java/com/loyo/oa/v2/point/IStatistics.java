@@ -1,10 +1,10 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.home.bean.HttpAchieves;
-import com.loyo.oa.v2.activity.home.bean.HttpBulking;
-import com.loyo.oa.v2.activity.home.bean.HttpProcess;
-import com.loyo.oa.v2.activity.home.bean.HttpSalechance;
-import com.loyo.oa.v2.activity.home.bean.HttpStatistics;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpAchieves;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpBulking;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpProcess;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpSalechance;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpStatistics;
 
 import java.util.HashMap;
 import java.util.List;
