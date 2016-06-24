@@ -29,10 +29,10 @@ import java.util.List;
  */
 
 public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
+
     private int mJoinType = 0, mStatus = 0;
     private static final String[] TYPE_TAG = new String[]{"全部类型", "我分派的", "我负责的", "我参与的"};
     private static final String[] STATUS_TAG = new String[]{"全部状态", "未完成", "待审核", "已完成"};
-
     private CommonExpandableListAdapter mAdapter;
 
     @Override
