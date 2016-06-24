@@ -51,10 +51,10 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.ValidateInfo;
 import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.DialogHelp;
-import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.AMapService;
@@ -66,7 +66,6 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.AttenDancePopView;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
@@ -101,7 +100,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
-    private ArrayList<HomeItem> items;
+    private ArrayList<HomeItem> items = new ArrayList<>();
     private ArrayList<MoreWindowItem> caseItems;
     private Set<String> companyTag;
     private AdapterHomeItem adapter;
@@ -132,6 +131,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                     listView.onRefreshComplete();
                 }
                 launch();
+                LogUtil.d("接受广播、+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             }
         }
     };
@@ -177,13 +177,14 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         }
     };
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            requestNumber();
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        LogUtil.d(requestCode + "，，，，，，！！！！！！！！！！！，，，，，，，接受 、、、、、、、、@@@@@@@@@@@@@@@@@@@@@@@、、、、、、、、" + resultCode);
+//        if (requestCode == 1) {
+//            requestNumber();
+//        }
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -196,7 +197,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home_application, container,
                 false);
-
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
@@ -210,19 +210,21 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-        String itemInfo = SharedUtil.get(getActivity(), ExtraAndResult.HOME_ITEM);
-        String redNumberInfo = SharedUtil.get(getActivity(), ExtraAndResult.HOME_ITEM);
-//        if(){
-//
-//        }
+        items = DBManager.Instance().getHomeItem();
+        if (null != items && items.size() > 0) {
+            adapter.setItemData(items);
+        }
+        updateUser();
         return mView;
     }
 
     public void initView() {
-        //此处缓存首页数据
-        SharedUtil.put(getActivity().getApplicationContext(), ExtraAndResult.HOME_ITEM, MainApp.gson.toJson(items));
-        SharedUtil.put(getActivity().getApplicationContext(), ExtraAndResult.HOME_RED_NUMBER, MainApp.gson.toJson(mItemNumbers));
-        adapter.setData(items, mItemNumbers);
+//        LogUtil.d( "，，，，，，！！！！！！！！！！！，，，，，，，接设置数据受 、、、、、、、、@@@@@@@@@@@@@@@@@@@@@@@、、、、、、、、" );
+        DBManager.Instance().deleteHomeItem();
+//        //此处缓存首页数据
+        DBManager.Instance().putHomeItem(MainApp.gson.toJson(mItemNumbers));
+        adapter.setItemData(items);
+        adapter.setRedNumbreData(mItemNumbers);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,6 +252,35 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         setJpushAlias();
         requestNumber();
         startTrack();
+    }
+
+    /**
+     * 组装首页Item数据
+     */
+    void updateUser() {
+
+        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0", 0),
+                new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
+                new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0213", 0),
+                new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
+                new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
+                new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
+                new HomeItem(R.drawable.newmain_project, "项目管理", ProjectManageActivity_.class, "0201", 2),
+                new HomeItem(R.drawable.newmain_task, "任务计划", TasksManageActivity_.class, "0202", 2),
+                new HomeItem(R.drawable.newmain_report, "工作报告", WorkReportsManageActivity.class, "0203", 2),
+                new HomeItem(R.drawable.newmain_wfin, "审批流程", WfInstanceManageActivity.class, "0204", 2),
+                new HomeItem(R.drawable.newmain_attent, "考勤管理", AttendanceActivity_.class, "0211", 2)));
+
+
+        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
+                new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
+                new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
+                new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
+                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
+                new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
+                new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
+                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
+
     }
 
     /**
@@ -486,7 +517,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
-        updateUser();
+
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
@@ -542,34 +573,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         initView();
     }
 
-    /**
-     * 组装首页Item数据
-     */
-    void updateUser() {
-
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0", 0),
-                new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
-                new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0213", 0),
-                new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
-                new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
-                new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
-                new HomeItem(R.drawable.newmain_project, "项目管理", ProjectManageActivity_.class, "0201", 2),
-                new HomeItem(R.drawable.newmain_task, "任务计划", TasksManageActivity_.class, "0202", 2),
-                new HomeItem(R.drawable.newmain_report, "工作报告", WorkReportsManageActivity.class, "0203", 2),
-                new HomeItem(R.drawable.newmain_wfin, "审批流程", WfInstanceManageActivity.class, "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", AttendanceActivity_.class, "0211", 2)));
-
-
-        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
-                new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
-                new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
-                new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
-                new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
-                new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
-
-    }
 
     /**
      * 通用提示弹出框init
