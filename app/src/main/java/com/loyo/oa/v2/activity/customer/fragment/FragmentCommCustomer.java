@@ -181,8 +181,7 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
 
         screen1.setOnClickListener(click);
         screen2.setOnClickListener(click);
-        btn_add.setOnClickListener(click);
-        btn_add.setOnTouchListener(Global.GetTouch());
+        btn_add.setVisibility(View.GONE);
         showLoading("");
         getData();
     }
@@ -294,13 +293,6 @@ public class FragmentCommCustomer extends BaseFragment implements PullToRefreshB
        @Override
        public void onClick(View v) {
            switch (v.getId()) {
-
-               //新建客户
-               case R.id.btn_add:
-                   mIntent = new Intent();
-                   mIntent.setClass(getActivity(), CustomerAddActivity_.class);
-                   startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-                   break;
 
                //时间
                case R.id.cus_screen1:

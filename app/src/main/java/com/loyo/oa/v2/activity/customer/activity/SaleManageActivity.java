@@ -110,7 +110,6 @@ public class SaleManageActivity extends BaseActivity implements View.OnClickList
      * 获取销售机会
      */
     private void getData() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", page);
         map.put("pageSize", 20);

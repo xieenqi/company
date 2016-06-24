@@ -217,7 +217,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         listView.setAdapter(adapter);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar,heading);
+        if(null != MainApp.user && null != MainApp.user.avatar){
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar,heading);
+        }
     }
 
     /**

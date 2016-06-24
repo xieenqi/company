@@ -34,7 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【跟进动态】  客户的
+ * 【跟进动态】 客户的
  */
 public class SaleActivitiesManageActivity extends BaseActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 
@@ -69,7 +69,6 @@ public class SaleActivitiesManageActivity extends BaseActivity implements View.O
      * 获取数据
      */
     private void getData() {
-        showLoading("");
         if (customer != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("pageIndex", paginationX.getPageIndex());
