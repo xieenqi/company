@@ -288,6 +288,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             tv_follow_crecter_type.setVisibility(View.GONE);
         }
         tv_contact_Number.setText("(" + mCustomer.contacts.size() + ")");
+//正式启用销售机会 弃用购买意向
+        ll_sale.setVisibility(View.VISIBLE);
+        ll_sale.setOnTouchListener(Global.GetTouch());
     }
 
     /**
@@ -627,6 +630,11 @@ public class CustomerDetailInfoActivity extends BaseActivity {
                 }
 
                 break;
+            case FinalVariables.REQUEST_PREVIEW_LEGWORKS:
+            case FinalVariables.REQUEST_PREVIEW_DEMANDS:
+            case ExtraAndResult.REQUEST_CODE:
+            case FinalVariables.REQUEST_DEAL_ATTACHMENT:
+            case FinalVariables.REQUEST_PREVIEW_CUSTOMER_ACTIVITIS:
             case FinalVariables.REQUEST_PREVIEW_CUSTOMER_CONTACTS:
 //                getData();
                 break;

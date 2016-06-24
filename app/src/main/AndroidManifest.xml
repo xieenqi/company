@@ -752,7 +752,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"

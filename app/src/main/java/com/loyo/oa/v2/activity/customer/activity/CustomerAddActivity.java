@@ -407,51 +407,6 @@ public class CustomerAddActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-/*    public void requestCommitTask(){
-        if (!StringUtil.isEmpty(customerContract) || !StringUtil.isEmpty(customerContractTel)) {
-            Contact defaultContact;
-            defaultContact = new Contact();
-            defaultContact.setName(customerContract);
-            defaultContact.setTel(customerContractTel);
-            defaultContact.setIsDefault(true);
-
-            if (mContacts.size() > 0 && mContacts.get(0).isDefault()) {
-                mContacts.set(0, defaultContact);
-            } else {
-                mContacts.add(0, defaultContact);
-            }
-        }
-        StringEntity stringEntity = null;
-        try {
-            HttpAddCustomer addCustomerData = new HttpAddCustomer();
-            addCustomerData.name = customer_name;
-            if (pickPhots.size() > 0) {
-                addCustomerData.uuid = uuid;
-                addCustomerData.attachmentCount = pickPhots.size();
-            }
-            addCustomerData.loc.addr = customerAddress;
-            addCustomerData.loc.loc.add(app.longitude);
-            addCustomerData.loc.loc.add(app.latitude);
-            addCustomerData.pname = customerContract;
-            addCustomerData.ptel = customerContractTel;
-            addCustomerData.wiretel = customerWrietele;
-            if (tags != null && tags.size() > 0) {
-                for (NewTag tag : tags) {
-                    NewTag newtag = new NewTag();
-                    newtag.tId = tag.tId;
-                    newtag.itemId = tag.itemId;
-                    newtag.itemName = tag.itemName;
-                    addCustomerData.tags.add(newtag);
-                }
-            }
-            stringEntity = new StringEntity(MainApp.gson.toJson(addCustomerData), "UTF-8");
-            LogUtil.dll("新建客户 发送参数:" + MainApp.gson.toJson(addCustomerData));
-        } catch (Exception e) {
-            Global.ProcException(e);
-        }
-        ServerAPI.request(CustomerAddActivity.this, ServerAPI.POST, FinalVariables.customers, stringEntity, ServerAPI.CONTENT_TYPE_JSON, AsyncAddCustomer.class);
-    }*/
-
     boolean isSave = true;
     Customer mCustomer;
 

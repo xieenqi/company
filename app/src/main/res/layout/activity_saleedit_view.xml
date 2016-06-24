@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -35,6 +36,7 @@
             android:text="编 辑"
             android:textColor="@color/title_bg1"/>
 
+
         <Button
             android:id="@+id/btn_delete"
             android:layout_width="match_parent"
@@ -45,6 +47,7 @@
             android:background="@drawable/round_bg_shpe2"
             android:text="删 除"
             android:textColor="@color/red1"/>
+
 
         <Button
             android:id="@+id/btn_cancel"

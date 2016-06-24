@@ -37,7 +37,6 @@ public class WfInstance extends BaseBeans implements Serializable {
     public SaleDetails chance;//销售机会
     public boolean viewed;
 
-
     public boolean isViewed() {
         return viewed;
     }

@@ -40,6 +40,7 @@ import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
+import com.loyo.oa.v2.activity.home.NewMainActivity;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;

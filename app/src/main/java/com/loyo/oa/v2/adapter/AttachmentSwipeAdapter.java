@@ -270,7 +270,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         public TextView tv_title;
         public TextView tv_time;
         public ViewGroup front;
-        //        public ViewGroup layout_action_update;
+        //public ViewGroup layout_action_update;
         public ViewGroup layout_action_delete;
     }
 }

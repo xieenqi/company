@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.CellInfo;
@@ -47,7 +46,6 @@ import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -63,7 +61,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import rx.Observable;
@@ -1153,6 +1150,7 @@ public class Utils {
     }
 
     /**
+<<<<<<< HEAD
      * 科学计数法转换为 数字 只显示整数部分
      *
      * @param obj
@@ -1175,6 +1173,8 @@ public class Utils {
     }
 
     /**
+=======
+>>>>>>> aeb990a3799d722263d5efb5aa327c8dddabf47b
      * 设置小数位数控制
      * 限制输入小数的位数
      *

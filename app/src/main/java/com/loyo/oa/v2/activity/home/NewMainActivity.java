@@ -288,7 +288,7 @@ public class NewMainActivity extends BaseActivity implements View.OnClickListene
                 for(int i = 0;i<caseItems.size();i++){
                     if(caseItems.get(i).code.equals(permission.getCode())){
                         if(null != permission && !permission.isEnable()){
-                             caseItems.remove(i);
+                            caseItems.remove(i);
 
                         }
                     }

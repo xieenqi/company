@@ -662,9 +662,9 @@ public class  WfinstanceInfoActivity extends BaseActivity {
         });
     }
 
-   /**
-    * 审批删除
-    * */
+    /**
+     * 审批删除
+     * */
     public void deleteWfin(){
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(mWfInstance.getId(), new RCallback<WfInstance>() {
             @Override

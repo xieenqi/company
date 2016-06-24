@@ -4,7 +4,6 @@ package com.loyo.oa.v2.tool.customview;
  * 正方形 带圆角的imagview
  * Created by loyo_dev1 on 16/5/27.
  */
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;

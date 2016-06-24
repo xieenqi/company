@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
@@ -27,11 +26,9 @@ import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -128,7 +125,6 @@ public class ActivitySaleOpportunitiesManager extends BaseFragmentActivity imple
                 Toast("团队机会权限,code错误:0327");
             }
         }
-
         getStageData();
     }
 

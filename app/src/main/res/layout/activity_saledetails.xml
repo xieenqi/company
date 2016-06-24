@@ -128,7 +128,6 @@
                     android:id="@+id/iv_wfstatus"
                     android:layout_width="50dp"
                     android:layout_height="20dp"
-                    android:visibility="gone"
                     />
 
                 <TextView

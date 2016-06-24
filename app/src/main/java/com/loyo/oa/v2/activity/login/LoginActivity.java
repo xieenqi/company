@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.VerifyAccountActivity_;
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
@@ -27,11 +26,9 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.tool.customview.WaveView;
-
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -284,8 +281,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         MainApp.setToken(token.access_token);
                         SharedUtil.put(mContext, FinalVariables.TOKEN, token.access_token);
                         SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);//预览过引导页面内
-                        //app.startActivity(LoginActivity.this, MainActivity_.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
-                        //app.startActivity(LoginActivity.this, NewMainActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                         app.startActivity(LoginActivity.this, ActivityMainHome.class, MainApp.ENTER_TYPE_BUTTOM, true, new Bundle());
                     }
                 });

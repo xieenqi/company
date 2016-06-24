@@ -298,7 +298,6 @@ public class ActivitySaleDetails extends BaseActivity implements View.OnClickLis
                     iv_wfstatus.setImageResource(R.drawable.img_task_status_finish);
                     break;
             }
-
         }
         //计算产品总金额
         if (null != mSaleDetails.proInfos) {

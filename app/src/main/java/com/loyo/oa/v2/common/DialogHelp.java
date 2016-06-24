@@ -22,7 +22,6 @@ public class DialogHelp {
 
     private static Dialog loadingDialog;//加载loading
     private static TextView tipTextView;
-
     public static void showLoading(Context context, String msg) {
         showLoading(context, msg, true);
     }

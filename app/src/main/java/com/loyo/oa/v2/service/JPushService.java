@@ -6,19 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.loyo.oa.v2.activity.home.ActivityMainHome;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;
 import com.loyo.oa.v2.tool.ExitActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Iterator;
-
 import cn.jpush.android.api.JPushInterface;
 
 /**

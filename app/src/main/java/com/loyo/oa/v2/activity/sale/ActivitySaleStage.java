@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.sale;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity;
 import com.loyo.oa.v2.activity.customer.activity.CommonTagSelectActivity_;
@@ -28,10 +28,8 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.customview.GeneralPopView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -49,16 +47,13 @@ public class ActivitySaleStage extends BaseActivity {
     private SaleStage saleStage;
     private SaleStageAdapter adapterStage;
     private SourceTypeAdapter adapterSourceType;
-
     public static final int SALE_STAGE = 1;//销售阶段
     public static final int SALE_TYPE = 2;//机会类型
     public static final int SALE_SOURCE = 3;//机会来源
-
     private int type;
     private String title, dataName = "", saleName, salePrice;
     private ArrayList<CommonTag> loseResons = new ArrayList<>();
     private boolean isProduct;//机会详情过来是否有意向产品
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
