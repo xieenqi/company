@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,6 +118,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
     @Extra(ExtraAndResult.EXTRA_ID)
     String workReportId;//推送的id
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;//推送的id
 
     public WorkReport mWorkReport;
     public PaginationX<Discussion> mPageDiscussion;
@@ -158,10 +161,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
             return;
         }
         showLoading("");
-        app.getRestAdapter().create(IWorkReport.class).get(workReportId, new RCallback<WorkReport>() {
+        app.getRestAdapter().create(IWorkReport.class).get(workReportId, keyType, new RCallback<WorkReport>() {
             @Override
             public void success(final WorkReport _workReport, final Response response) {
-                HttpErrorCheck.checkResponse(response);
+                HttpErrorCheck.checkResponse("报告信息：", response);
                 mWorkReport = _workReport;
                 updateUI(mWorkReport);
             }
@@ -169,7 +172,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                Toast("网络异常，请稍后再试");
+                HttpErrorCheck.checkError(error);
                 finish();
             }
         });
@@ -184,7 +187,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             public void success(final WorkReport workReport, final Response response) {
                 Intent intent = new Intent();
                 intent.putExtra("delete", mWorkReport);
-                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
             }
 
             @Override
@@ -248,7 +251,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
             case WorkReport.WEEK:
                 reportType = " 周报";
                 crmName = "本周工作动态统计";
-                reportDate = app.df4.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df4.format(new Date(mWorkReport.endAt * 1000));
+                reportDate = app.df7.format(new Date(mWorkReport.beginAt * 1000)) + "-" + app.df7.format(new Date(mWorkReport.endAt * 1000));
                 break;
             case WorkReport.MONTH:
                 reportType = " 月报";
@@ -266,7 +269,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
         tv_crm.setText(crmName);
         tv_discussion_count.setText("讨论 (" + mWorkReport.bizExtData.getDiscussCount() + ")");
-        tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
+        //tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
 
         edt_workReport_title.setText(title.toString());
 //        webView_content.getSettings().setJavaScriptEnabled(true);
@@ -280,10 +283,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
         } else {
             mHandler.sendEmptyMessage(UPDATE_SUCCESS);
         }
-        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.getUser() ? mWorkReport.reviewer.getUser() : null;
-        tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : mWorkReport.content);
-        tv_reviewer.setText(mWorkReport.reviewer.getUser().getName());
-        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: "+getJoinUserNames());
+        NewUser reviewer = null != mWorkReport.reviewer && null != mWorkReport.reviewer.user ? mWorkReport.reviewer.user : null;
+        tv_workContent.setText(TextUtils.isEmpty(mWorkReport.content) ? "无" : (mWorkReport.content.toString().contains("<") ? Html.fromHtml(mWorkReport.content) : mWorkReport.content));
+        tv_reviewer.setText(mWorkReport.reviewer.user.getName());
+        tv_toUser.setText(getJoinUserNames().isEmpty() ? "抄送人: 无抄送人" : "抄送人: " + getJoinUserNames());
 
         tv_workReport_time.setText("提交时间：" + date);
 
@@ -297,18 +300,21 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.isReviewed()) {
             layout_score.setVisibility(View.VISIBLE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status2);
-            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.getUser().getName());
-            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.getReviewedAt() + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
+            tv_reviewer_.setText("点评人：" + mWorkReport.reviewer.user.getName());
+            tv_review_time.setText(DateTool.timet(mWorkReport.reviewer.reviewedAt + "", DateTool.DATE_FORMATE_SPLITE_BY_POINT));
             btn_workreport_review.setVisibility(View.GONE);
-            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.getScore())).intValue() / 20);
+            ratingBar_workReport.setProgress(Integer.valueOf(String.valueOf(mWorkReport.reviewer.score)).intValue() / 20);
 
-            if (!StringUtil.isEmpty(mWorkReport.reviewer.getComment())) {
-                edt_content.setText(mWorkReport.reviewer.getComment());
+            if (!StringUtil.isEmpty(mWorkReport.reviewer.comment)) {
+                edt_content.setText(mWorkReport.reviewer.comment);
                 edt_content.setEnabled(false);
             } else {
                 layout_content.setVisibility(View.GONE);
             }
-
+            if (!mWorkReport.creator.id.equals(MainApp.user.id)) {
+                //显示编辑、删除按钮
+                img_title_right.setVisibility(View.GONE);
+            }
         } else {
             layout_score.setVisibility(View.GONE);
             img_workreport_status.setImageResource(R.drawable.img_workreport_status1);
@@ -332,10 +338,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
 
 
     void showAttachment() {
-        if (ListUtil.IsEmpty(mWorkReport.attachments)) {
-            return;
+        if (null != mWorkReport.bizExtData) {
+            tv_attachment_count.setText("附件 (" + mWorkReport.bizExtData.getAttachmentCount() + ")");
         }
-        tv_attachment_count.setText("附件 (" + (mWorkReport.attachments == null ? 0 : mWorkReport.attachments.size()) + ")");
     }
 
     void showDiscussion() {
@@ -348,8 +353,8 @@ public class WorkReportsInfoActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        if (mWorkReport != null) {
-            mWorkReport.ack = true;
+        if (null != mWorkReport) {
+            mWorkReport.setViewed(true);
             intent.putExtra("review", mWorkReport);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -360,11 +365,9 @@ public class WorkReportsInfoActivity extends BaseActivity {
      */
     @Click(R.id.layout_attachment)
     void clickAttachment() {
-        if (("1").equals(mWorkReport.reviewer.getStatus())) {
+        if (("1").equals(mWorkReport.reviewer.status)) {
             isOver = true;
         }
-        LogUtil.dll("status:" + mWorkReport.reviewer.getStatus());
-        LogUtil.dll("isOver:" + isOver);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", mWorkReport.attachments);
         bundle.putSerializable("uuid", mWorkReport.attachmentUUId);
@@ -381,10 +384,10 @@ public class WorkReportsInfoActivity extends BaseActivity {
     void clickDiscussion() {
         Bundle bundle = new Bundle();
         bundle.putString("attachmentUUId", mWorkReport.attachmentUUId);
-        bundle.putInt("status", Integer.parseInt(mWorkReport.reviewer.getStatus()));
+        bundle.putInt("status", Integer.parseInt(mWorkReport.reviewer.status));
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
-        int status = Integer.parseInt(mWorkReport.reviewer.getStatus());
+        int status = Integer.parseInt(mWorkReport.reviewer.status);
         ActivityDiscussDet.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
     }
 
@@ -398,11 +401,11 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.img_title_right:
-                if (mWorkReport.isReviewed()) {
-                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
-                    intent.putExtra("extra", "复制报告");
-                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
-                } else {
+                if (null != mWorkReport.creator && app.user.id.equals(mWorkReport.creator.getId())) {
+//                    Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
+//                    intent.putExtra("extra", "复制报告");
+//                    startActivityForResult(intent, MSG_DELETE_WORKREPORT);
+//                } else {//只有创建者才可以负责报告
                     LogUtil.dll("报告详情，右上角按钮 else");
                     Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                     intent.putExtra("delete", true);
@@ -441,13 +444,15 @@ public class WorkReportsInfoActivity extends BaseActivity {
         if (mWorkReport.members.users != null || mWorkReport.members.depts != null) {
             if (mWorkReport.members.users != null) {
                 for (int i = 0; i < mWorkReport.members.users.size(); i++) {
-                    result.append(mWorkReport.members.users.get(i).getName() + ",");
+                    if (null != mWorkReport && null != mWorkReport.members && null != mWorkReport.members.users && null != mWorkReport.members.users.get(i)) {
+                        result.append(mWorkReport.members.users.get(i).getName() + " ");
+                    }
                 }
             }
 
             if (mWorkReport.members.depts != null) {
                 for (int i = 0; i < mWorkReport.members.depts.size(); i++) {
-                    result.append(mWorkReport.members.depts.get(i).getName() + ",");
+                    result.append(mWorkReport.members.depts.get(i).getName() + " ");
                 }
             }
             return result.toString();
@@ -479,17 +484,14 @@ public class WorkReportsInfoActivity extends BaseActivity {
                 break;
 
             case MSG_DELETE_WORKREPORT:
-
                      /*编辑回调*/
                 if (data.getBooleanExtra("edit", false)) {
-                    LogUtil.dll("进入回调：编辑");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_EDIT);
                     app.startActivity((Activity) mContext, WorkReportAddActivity_.class, MainApp.ENTER_TYPE_RIGHT, true, bundle, true);
                     /*复制回调*/
                 } else if ((data.getBooleanExtra("extra", false))) {
-                    LogUtil.dll("进入回调：复制");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("mWorkReport", mWorkReport);
                     bundle.putInt("type", WorkReportAddActivity.TYPE_CREATE_FROM_COPY);
@@ -497,24 +499,27 @@ public class WorkReportsInfoActivity extends BaseActivity {
                     /*删除回调*/
                 } else if (data.getBooleanExtra("delete", false)) {
                     delete_WorkReport();
-                    LogUtil.dll("进入回调：删除");
                 }
                 break;
 
             case MSG_ATTACHMENT:
-                LogUtil.dll("MSG_ATTACHMENT");
-                if (data == null || data.getExtras() == null) {
-                    LogUtil.dll("MSG_ATTACHMENT return");
-                    return;
+                try {
+                    LogUtil.dll("MSG_ATTACHMENT");
+                    if (null == data || null == data.getExtras()) {
+                        LogUtil.dll("MSG_ATTACHMENT return");
+                        return;
+                    }
+                    ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
+                    mWorkReport.bizExtData.setAttachmentCount(attachments.size());
+                    showAttachment();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                mWorkReport.attachments = attachments;
-                showAttachment();
                 break;
 
             case MSG_DISCUSSION:
                 LogUtil.dll("MSG_DISCUSSION");
-                if (data == null || data.getExtras() == null) {
+                if (null == data || null == data.getExtras()) {
                     LogUtil.dll("MSG_DISCUSSION return");
                     return;
                 }

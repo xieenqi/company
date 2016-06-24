@@ -30,7 +30,6 @@ import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip;
@@ -67,10 +66,13 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @ViewById ImageView img_project_status;
     @Extra("projectId") String projectId;
     HttpProject project;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;
 
     MyPagerAdapter adapter;
     private ArrayList<BaseFragment> fragmentXes = new ArrayList<>();
     private ArrayList<OnProjectChangeCallback> callbacks = new ArrayList<>();
+    BaseFragment fragmentX = null;
 
     @AfterViews
     void initViews() {
@@ -85,7 +87,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     private void getProject() {
         DialogHelp.showLoading(this, "", true);
-        app.getRestAdapter().create(IProject.class).getProjectById(projectId, new RCallback<HttpProject>() {
+        app.getRestAdapter().create(IProject.class).getProjectById(projectId, keyType, new RCallback<HttpProject>() {
             @Override
             public void success(final HttpProject _project, final Response response) {
                 DialogHelp.cancelLoading();
@@ -146,7 +148,10 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("review", project);
+        if (null != project) {
+            project.viewed = true;
+            intent.putExtra("review", project);
+        }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
     }
 
@@ -155,7 +160,6 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
      */
     private void initData(final HttpProject project) {
         if (null == project) {
-            LogUtil.dll("return 了");
             return;
         }
         if (adapter == null) {
@@ -165,7 +169,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                 TITLES[i] += "(" + sizes[i] + ")";
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("project", project);
-                BaseFragment fragmentX = null;
+
                 if (i == 0) {
                     bundle.putInt("type", 2);
                 } else if (i == 1) {
@@ -257,6 +261,46 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         tabs.notifyDataSetChanged();
     }
 
+    /**
+     * 项目删除
+     */
+    public void deleteProject() {
+        app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
+            @Override
+            public void success(final Project o, final Response response) {
+                HttpErrorCheck.checkResponse("删除项目：", response);
+                Intent intent = new Intent();
+                intent.putExtra("delete", project);
+                app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
+    /**
+     * 项目重启/删除
+     */
+    public void restartProject() {
+        DialogHelp.showLoading(this, "", true);
+        app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
+            @Override
+            public void success(final Project o, final Response response) {
+                HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
+                project.status = (project.status == 1 ? 0 : 1);
+                restartActivity();//重启Activity
+            }
+
+            @Override
+            public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
+            }
+        });
+    }
+
     public class MyPagerAdapter extends FragmentPagerAdapter {
         public MyPagerAdapter(final FragmentManager fm) {
             super(fm);
@@ -286,6 +330,7 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
         }
         switch (requestCode) {
             case TasksInfoActivity.REQUEST_SCORE:
+                //选择编辑回调
             case TasksInfoActivity.REQUEST_EDIT:
                 getProject();
                 break;
@@ -296,43 +341,23 @@ public class ProjectInfoActivity extends BaseFragmentActivity implements OnLoadS
                     bundle.putSerializable(ExtraAndResult.EXTRA_OBJ, project);
                     app.startActivityForResult(this, ProjectAddActivity_.class, MainApp.ENTER_TYPE_RIGHT,
                             TasksInfoActivity.REQUEST_EDIT, bundle);
-                } else if (data.getBooleanExtra("delete", false)) {/*删除回调*/
-                    app.getRestAdapter().create(IProject.class).deleteProject(project.getId(), new RCallback<Project>() {
-                        @Override
-                        public void success(final Project o, final Response response) {
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", project);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            HttpErrorCheck.checkError(error);
-                        }
-                    });
-                } else if (data.getBooleanExtra("extra", false)) { /*结束任务或重启任务*/
-                    DialogHelp.showLoading(this, "", true);
-                    app.getRestAdapter().create(IProject.class).UpdateStatus(project.getId(), project.status == 1 ? 2 : 1, new RCallback<Project>() {
-                        @Override
-                        public void success(final Project o, final Response response) {
-                            DialogHelp.cancelLoading();
-                            HttpErrorCheck.checkResponse("结束 和 编辑项目：", response);
-                            project.status = (project.status == 1 ? 0 : 1);
-                            restartActivity();//重启Activity
-                        }
-
-                        @Override
-                        public void failure(final RetrofitError error) {
-                            DialogHelp.cancelLoading();
-                            Toast("有任务未结束,不能结束项目!");
-                            HttpErrorCheck.checkError(error);
-                        }
-                    });
+                }
+                //删除回调
+                else if (data.getBooleanExtra("delete", false)) {
+                    deleteProject();
+                }
+                //结束任务或重启任务
+                else if (data.getBooleanExtra("extra", false)) {
+                    restartProject();
                 }
                 break;
-            default:
+            case 196708://讨论不能够@自己196708
+                if (fragmentX instanceof DiscussionFragment) {
+                    ((DiscussionFragment) fragmentX).getHaitHelper().onActivityResult(requestCode, resultCode, data);
+                }
 
                 break;
+
         }
     }
 

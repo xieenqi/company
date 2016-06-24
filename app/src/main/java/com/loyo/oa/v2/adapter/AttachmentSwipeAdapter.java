@@ -12,9 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.PreviewImageActivity;
+import com.loyo.oa.v2.activity.ActivityPreviewImageList;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
-import com.loyo.oa.v2.activity.attachment.AttachmentRightActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
@@ -37,6 +36,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * 【附件适配器】
+ * */
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
     public static final int REQUEST_ATTACHMENT = 4000;
@@ -54,7 +56,8 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         void onRightClick(Bundle b);
     }
 
-    public AttachmentSwipeAdapter(final Context _context, final ArrayList<Attachment> _attachments, final ArrayList<User> _users, final int bizType, final String uuid, boolean isOver) {
+    public AttachmentSwipeAdapter(Context _context, ArrayList<Attachment> _attachments,
+                                  ArrayList<User> _users, int bizType, String uuid, boolean isOver) {
         super();
         mAttachments = _attachments;
         mContext = _context;
@@ -116,7 +119,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.tv_creator = (TextView) convertView.findViewById(R.id.tv_creator);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_createtime);
-            holder.layout_action_update = (ViewGroup) convertView.findViewById(R.id.layout_action_update);
+//          holder.layout_action_update = (ViewGroup) convertView.findViewById(R.id.layout_action_update);
             holder.layout_action_delete = (ViewGroup) convertView.findViewById(R.id.layout_action_delete);
 
             convertView.setTag(holder);
@@ -155,15 +158,15 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     bundle.putSerializable("data", mAttachments);
                     bundle.putSerializable("position", position);
                     bundle.putBoolean("isEdit", false);
-                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
+                    MainApp.getMainApp().startActivity((Activity) mContext, ActivityPreviewImageList.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
 
                 } else if (attachment.getAttachmentType() == Attachment.AttachmentType.OFFICE) {
-
                     //预览文件
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("data", attachment.getUrl());
                     app.startActivity((Activity) mContext, PreviewOfficeActivity.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
-
+                } else {
+                    Global.Toast("不支持的附件类型");
                 }
             }
         });
@@ -187,20 +190,20 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     holder.layout_action_delete.setVisibility(View.INVISIBLE);
                 }
             }
-            /**权限设置*/
-            holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", attachment);
-                    bundle.putSerializable("users", users);
-                    if (null != callback) {
-                        callback.onRightClick(bundle);
-                    } else {
-                        app.startActivityForResult((Activity) mContext, AttachmentRightActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_ATTACHMENT, bundle);
-                    }
-                }
-            });
+//            /**权限设置*/
+//            holder.layout_action_update.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("data", attachment);
+//                    bundle.putSerializable("users", users);
+//                    if (null != callback) {
+//                        callback.onRightClick(bundle);
+//                    } else {
+//                        app.startActivityForResult((Activity) mContext, AttachmentRightActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_ATTACHMENT, bundle);
+//                    }
+//                }
+//            });
 
             /**附件删除*/
             holder.layout_action_delete.setOnClickListener(new View.OnClickListener() {
@@ -267,7 +270,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
         public TextView tv_title;
         public TextView tv_time;
         public ViewGroup front;
-        public ViewGroup layout_action_update;
+        //        public ViewGroup layout_action_update;
         public ViewGroup layout_action_delete;
     }
 }

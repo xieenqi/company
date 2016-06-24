@@ -6,14 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.wfinstance.WfInstanceAddActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceSearchActivity;
+import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.IWfInstance;
@@ -33,9 +34,9 @@ import retrofit.client.Response;
 /**
  * 【审批流程】界面的 fragment
  */
-public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstance> {
+public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInstanceRecord> {
 
-    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我申请", "我审批", "我经办"};
+    private static final String FILTER_CATEGORY[] = new String[]{"全部类型", "我提交的", "我审批的", "我经办的"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待审批", "审批中", "未通过", "已通过"};
 
     private int category = 0;
@@ -63,7 +64,7 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
     @Override
     public void addNewItem() {
         Intent intent = new Intent();
-        intent.setClass(mActivity, WfInstanceAddActivity_.class);
+        intent.setClass(mActivity, ActivityWfInTypeSelect.class);
         startActivityForResult(intent, REQUEST_CREATE);
     }
 
@@ -88,18 +89,20 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("type", category);
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
-//      map.put("endTime", System.currentTimeMillis() / 1000);
-//      map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+
+/*        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
+                FinalVariables.wfinstance).create(IWfInstance.class).
+                getWfInstances(map, WfInstanceManageFragment.this);*/
 
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
-                getWfInstances(map, WfInstanceManageFragment.this);
+                getWfInstancesData(map, WfInstanceManageFragment.this);
     }
 
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstance) mAdapter.getChild(groupPosition, childPosition)).getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WfInstanceRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WfinstanceInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }

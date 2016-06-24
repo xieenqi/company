@@ -7,21 +7,24 @@ import com.loyo.oa.v2.BuildConfig;
  */
 public class Config_project {
 
-    public static boolean isRelease = true; //是否是正式产品
+    public static boolean isRelease = true;                            //是否是正式产品
 
-    //public static final Boolean is_developer_mode = false; //生产模式
+    //public static final Boolean is_developer_mode = false;           //生产模式
 
-    public static final Boolean is_developer_mode = BuildConfig.DEBUG; //dbug模式`
+    public static final Boolean is_developer_mode = BuildConfig.DEBUG; //dbug模式
 
-    //public static String IP = "http://192.168.31.131";        //内部测试环境
+    public static String IP = "http://192.168.31.131";                //内部测试环境
 
-    public static String IP = "http://staging.ukuaiqi.com"; //产品预上线环境
+    //public static String IP = "http://staging.ukuaiqi.com";          //产品预上线环境
 
-    //public static String IP = "http://112.74.66.99";        //产品预上线环境
+    //public static String IP = "http://112.74.66.99";                 //产品预上线环境
 
-    //public static String IP = "http://ukuaiqi.com";         //网站产品正式环境
+    //public static String IP = "http://ukuaiqi.com";                  //网站产品正式环境
 
     //public static String IP = "http://192.168.31.136";
+
+    //public static String IP = "http://192.168.31.155";
+
 
     protected Config_project() {
         throw new UnsupportedOperationException(); // 防止子类调用
@@ -31,28 +34,32 @@ public class Config_project {
      * 正式产品的域名
      */
     private static class Domain {
+
         /**
          * 账号中心
          */
         public static String account = "http://user.ukuaiqi.com";
 
         /**
-         * crm 客户管理
+         * crm 客户管理crm.ukuaiqi.co
          */
-        public static String crm = "http://crm.ukuaiqi.com";
+        public static String crm = "http://ukuaiqi.com/p/oa";
+
         /**
-         * oa 系统
+         * oa 系统oa.ukuaiqi.com
          */
-        public static String oa = "http://oa.ukuaiqi.com";
+        public static String oa = "http://ukuaiqi.com/p/oa";
 
         /**
          * attachment 附件
          */
         public static String attachment = "http://attachment.ukuaiqi.com";
+
         /**
-         * discuss 讨论
+         * discuss 讨论discuss.ukuaiqi.com
          */
-        public static String discuss = "http://discuss.ukuaiqi.com";
+        public static String discuss = "http://ukuaiqi.com/p/oa";
+
         /**
          * statistics 统计
          */
@@ -70,17 +77,14 @@ public class Config_project {
      * 讨论地址
      */
     public static String SERVER_URL_EXTRA() {
-        return isRelease ? Domain.discuss : IP + ":8050";
+        return isRelease ? Domain.discuss : IP + ":8070";
     }
 
     /**
      * 客户地址
-     *
-     * staging端口号依然是:8090
-     * 131 136等内网端口号:8070
      */
     public static String SERVER_URL_CUSTOMER() {
-        return isRelease ? Domain.crm : IP + ":8090";
+        return isRelease ? Domain.crm : IP + ":8070";
     }
 
     /**
@@ -135,9 +139,13 @@ public class Config_project {
         return SERVER_URL_EXTRA().concat("/api/v2/");
     }
 
-    public static String API_URL_WORKDYSN() {
+    /**
+     * 获取 销售统计 数据
+     *
+     * @return
+     */
+    public static String API_URL_STATISTICS() {
         return SERVER_URL().concat("/api/v2/");
     }
-
 
 }

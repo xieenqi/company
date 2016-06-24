@@ -21,7 +21,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.AttendanceListFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
-import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -54,7 +53,7 @@ public class AttendanceActivity extends BaseFragmentActivity {
     @ViewById(R.id.lv_attendance_category)
     ListView categoryListView;
 
-    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};;
+    private String[] ATTENDANCE_FILTER_STRS = new String[]{"我的考勤", "团队考勤"};
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
     private Permission permission;
@@ -76,9 +75,8 @@ public class AttendanceActivity extends BaseFragmentActivity {
         tv_title_1.setText("我的考勤");
         imageArrow.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
-        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
-        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
-
+//        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
         //超级管理员判断
         if(!MainApp.user.isSuperUser()){
@@ -102,14 +100,14 @@ public class AttendanceActivity extends BaseFragmentActivity {
         initCategoryUI();
         initChildren();
 
-        //获得权限
-        if (null != MainApp.user.role) {
+        //数据权限 暂时取消
+/*        if (null != MainApp.user.role) {
             Identity = MainApp.user.role.getDataRange();
         }
         if (Identity == mIdentity) {
             imageArrow.setVisibility(View.GONE);
             layout_title_action.setEnabled(false);
-        }
+        }*/
     }
 
     @Click({R.id.img_title_left, R.id.layout_title_action})
@@ -162,7 +160,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
     private Animation initAnimation() {
         RotateAnimation rotateAnimation = new RotateAnimation(ROTATE_START, ROTATE_END, Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_X,// X轴
                 Animation.RELATIVE_TO_SELF, ROTATE_PIVOT_Y);// y轴
-
         rotateAnimation.setDuration(ROTATE_TIME);
         rotateAnimation.setFillAfter(true);             //保留在终止位置
         rotateAnimation.setFillEnabled(true);

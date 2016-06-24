@@ -3,19 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="@dimen/dimen_70"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="70dp"
             android:clickable="false"
             >
+
             <CheckBox
                 android:id="@+id/cb"
                 android:layout_width="wrap_content"
@@ -28,65 +31,58 @@
         </LinearLayout>
 
 
-    <RelativeLayout
-        android:id="@+id/item_childtask_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <TextView
-            android:id="@+id/item_tv_child_task_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:gravity="center_vertical"
-            android:text="@string/child_task_content_default"
-            android:textColor="@color/text33"
-            android:textSize="14sp"/>
-
-        <View
-            android:id="@+id/view_splite"
+        <RelativeLayout
+            android:id="@+id/item_childtask_info"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/item_tv_child_task_content"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:background="@color/white"/>
-
-        <TextView
-            android:id="@+id/tv_label"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_below="@+id/view_splite"
-            android:gravity="center_vertical"
-            android:text="负责人:"
-            android:textColor="@color/text99"
-            android:textSize="14sp"
-            />
-
-        <TextView
-            android:id="@+id/item_tv_child_principal"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view_splite"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_toLeftOf="@+id/view_arrow"
-            android:layout_toRightOf="@+id/tv_label"
-            android:gravity="center_vertical"
-            android:minHeight="40dp"
-            android:text="张可"
-            android:textColor="@color/text99"
-            android:textSize="14sp"
-            />
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:id="@+id/item_tv_child_task_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:gravity="center_vertical"
+                android:text="@string/child_task_content_default"
+                android:textColor="@color/text33"
+                android:textSize="14sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/item_tv_child_task_content"
+                android:gravity="center_vertical"
+                android:text="负责人:"
+                android:textColor="@color/text99"
+                android:textSize="14sp"
+                />
+
+            <TextView
+                android:id="@+id/item_tv_child_principal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_tv_child_task_content"
+                android:layout_marginLeft="@dimen/margin_side_edge"
+                android:layout_toRightOf="@+id/tv_label"
+                android:gravity="center_vertical"
+                android:minHeight="40dp"
+                android:text="张可"
+                android:textColor="@color/text99"
+                android:textSize="14sp"
+                />
+
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/view_arrow"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="5dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="6dp"
             android:scaleType="center"
             android:src="@drawable/right_arrow"/>
-    </RelativeLayout>
 
     </LinearLayout>
 

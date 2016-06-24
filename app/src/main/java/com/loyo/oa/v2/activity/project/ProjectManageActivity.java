@@ -16,6 +16,8 @@ import org.androidannotations.annotations.EActivity;
  * 描述 :项目列表主界面
  * 作者 : ykb
  * 时间 : 15/9/7.
+ *
+ * 项目业务page的刷新回调在BaseMainListFragmentX_中
  */
 @EActivity(R.layout.activity_project)
 public class ProjectManageActivity extends BaseFragmentActivity {

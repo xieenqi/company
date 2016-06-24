@@ -28,13 +28,12 @@ public class TasksSearchActivity extends BaseSearchActivity<Task> {
     public void getData() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("keyword", strSearch);
-       // params.put("endAt", System.currentTimeMillis() / 1000);
+        //params.put("endAt", System.currentTimeMillis() / 1000);
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getPageIndex());
         params.put("pageSize", isTopAdd?lstData.size()>=20?lstData.size():20:20);
         params.put("joinType",0);
         params.put("status",0);
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(params, this);
-
     }
 }

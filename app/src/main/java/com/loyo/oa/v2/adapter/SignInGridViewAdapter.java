@@ -2,7 +2,6 @@ package com.loyo.oa.v2.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -23,9 +21,13 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.io.File;
 import java.util.ArrayList;
+
+
+/**
+ * 【附件GridView】通用
+ * */
 
 public class SignInGridViewAdapter extends BaseAdapter {
 
@@ -33,7 +35,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private ArrayList<Attachment> mListData;
     private Activity mActivity;
     private ArrayList<File> mBitmaps = new ArrayList<>();
-    private Uri fileUri;
     private int fromPage;
 
     private boolean mIsAdd;
@@ -114,11 +115,11 @@ public class SignInGridViewAdapter extends BaseAdapter {
         public void setContent(final int position) {
 
             if (position == mListData.size()) {
-                if (mListData.size() <= 9) {
+                if(mListData.size() == 9){
+                    imageView.setVisibility(View.GONE);
+                }else{
                     imageView.setImageResource(R.drawable.icon_add_file);
                     imageView.setBackgroundResource(R.drawable.icon_add_file);
-                } else {
-                    imageView.setVisibility(View.INVISIBLE);
                 }
                 if (isCreator) {
                     imageView.setOnClickListener(new OnClickListener_addImg());//添加图片
@@ -127,14 +128,14 @@ public class SignInGridViewAdapter extends BaseAdapter {
             } else {
 
                 final Attachment attachment = mListData.get(position);
-                final boolean isPic = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
+                final boolean isImage = (attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE);
 
-                if (isPic) {
+                if (isImage) {
                     ImageLoader.getInstance().loadImage(mIsAdd ? attachment.getUrl() : setImgUrl(attachment.getUrl()), MainApp.options_3,
                             new BitmapUtil.ImageLoadingListener_ClickShowImg(imageView, position,
                                     mListData, R.drawable.default_image, mIsAdd));
                 } else {
-                    //                      显示文件
+                    //显示文件
                     imageView.setImageResource(R.drawable.other_file);
                     textView.setText(attachment.getOriginalName());
 
@@ -150,8 +151,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
                     });
                 }
             }
-
-
         }
     }
 
@@ -161,9 +160,6 @@ public class SignInGridViewAdapter extends BaseAdapter {
     private class OnClickListener_addImg implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-
-            LogUtil.dll("mListData Size:" + mListData.size());
-
             /*考勤*/
             if (fromPage == ExtraAndResult.FROMPAGE_ATTENDANCE) {
                 if (mListData.size() == 3) {
@@ -177,22 +173,19 @@ public class SignInGridViewAdapter extends BaseAdapter {
 
             /*拜访签到*/
             else if (mListData.size() <= 9) {
+                LogUtil.dee("mListData:"+mListData.size());
                 Intent intent = new Intent(mActivity, SelectPicPopupWindow.class);
                 intent.putExtra("localpic", localpic);
+                intent.putExtra("imgsize",(9-mListData.size()));
+                intent.putExtra("addpg",true);
                 mActivity.startActivityForResult(intent, SelectPicPopupWindow.GET_IMG);
             }
-
         }
     }
 
 
     public static void setAdapter(final GridView gv, final SignInGridViewAdapter adapter) {
         gv.setAdapter(adapter);
-        if (adapter.getCount() % 3 == 0) {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3));
-        } else {
-            ViewUtil.setViewHigh(gv, (1f / 3f) * (adapter.getCount() / 3 + 1));
-        }
     }
 
     /**
@@ -206,7 +199,7 @@ public class SignInGridViewAdapter extends BaseAdapter {
 //loyocloud-01.img-cn-qingdao.aliyuncs.com
         //@1e_1c_0o_0l_100h_100w_90q.src
 //        String newUrl = url.replaceAll("loyocloud-01.oss-cn-qingdao.aliyuncs.com", "loyocloud-01.img-cn-qingdao.aliyuncs.com");
-        String newUrl = url + "@1e_1c_0o_0l_200h_200w_80q.src";
+        String newUrl = url + "@1e_1c_0o_0l_400h_400w_80q.src";
         LogUtil.d("小图片的url：" + newUrl);
         return newUrl;
 

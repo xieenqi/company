@@ -25,19 +25,18 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 【  任务管理】 界面
+ * 【任务管理】 界面
  */
 
 public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
+
     private int mJoinType = 0, mStatus = 0;
     private static final String[] TYPE_TAG = new String[]{"全部类型", "我分派的", "我负责的", "我参与的"};
     private static final String[] STATUS_TAG = new String[]{"全部状态", "未完成", "待审核", "已完成"};
-
     private CommonExpandableListAdapter mAdapter;
 
     @Override
     public void GetData() {
-        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("pageIndex", pagination.getPageIndex());
         map.put("pageSize", isTopAdd ? lstData.size() >= 20 ? lstData.size() : 20 : 20);

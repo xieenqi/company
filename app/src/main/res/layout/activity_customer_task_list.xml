@@ -4,6 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/white"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <LinearLayout
@@ -26,8 +28,7 @@
             android:layout_above="@+id/layout_add"
             android:animateLayoutChanges="true"
             android:cacheColorHint="#00000000"
-            android:divider="@color/activity_split"
-            android:dividerHeight="0.5dp"
+            android:divider="@null"
             android:drawSelectorOnTop="false"
             android:fadingEdge="none"
             android:fastScrollEnabled="false"
@@ -47,30 +48,30 @@
             android:background="@color/whitesmoke">
 
             <LinearLayout
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:orientation="horizontal"
                 >
 
-            <ImageView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_common_add"
-                android:layout_marginRight="5dp"
-                />
-
-                <TextView
-                    android:layout_gravity="center"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="新建任务"
-                    android:textSize="15sp"
-                    android:textColor="@color/title_bg1"/>
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/icon_common_add"
+                    />
 
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="新建任务"
+                    android:textColor="@color/title_bg1"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

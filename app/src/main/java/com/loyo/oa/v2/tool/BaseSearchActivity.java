@@ -15,12 +15,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.activity.wfinstance.WfinstanceInfoActivity_;
@@ -57,7 +58,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
     protected String strSearch;
     protected EditText edt_search;
-    protected TextView tv_search;
+    //protected TextView tv_search;
+    private ImageView iv_clean;
     protected View vs_nodata;
     protected View headerView;
     protected PullToRefreshListView expandableListView_search;
@@ -105,9 +107,15 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 onBackPressed();
             }
         });
-
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_search.setText("取消");
+        iv_clean = (ImageView) findViewById(R.id.iv_clean);
+        iv_clean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edt_search.setText("");
+            }
+        });
+//        tv_search = (TextView) findViewById(R.id.tv_search);
+//        tv_search.setText("取消");
 
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -133,21 +141,10 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (edt_search.length() == 0) {
-                    tv_search.setText("取消");
-                } else {
-                    tv_search.setText("搜索");
-                }
-            }
-        });
-        edt_search.requestFocus();
-        findViewById(R.id.tv_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 doSearch();
             }
         });
-
+        edt_search.requestFocus();
         expandableListView_search = (PullToRefreshListView) findViewById(R.id.expandableListView_search);
         expandableListView_search.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         expandableListView_search.setOnRefreshListener(this);
@@ -241,12 +238,14 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
      */
     public void doSearch() {
         strSearch = edt_search.getText().toString().trim();
-        if (strSearch.length() > 0) {
+        isTopAdd = true;
+        getData();
+/*        if (strSearch.length() > 0) {
             isTopAdd = true;
             getData();
         } else {
             onBackPressed();
-        }
+        }*/
     }
 
     /**
@@ -336,7 +335,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
         HttpErrorCheck.checkResponse(response);
         expandableListView_search.onRefreshComplete();
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        //imm.hideSoftInputFromWindow(edt_search.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         if (null == o) {
             if (isTopAdd) {
@@ -429,7 +428,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //任务
             else if (o instanceof Task) {
                 Task task = (Task) o;
-
                 try {
                     //                time.setText("任务截止时间: " + DateTool.formateServerDate(task.getCreatedAt(), app.df3));
                     time.setText("任务截止时间: " + app.df3.format(new Date(task.getCreatedAt())));
@@ -448,8 +446,8 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
             //报告
             else if (o instanceof WorkReport) {
                 final WorkReport workReport = (WorkReport) o;
-                if (null != workReport.reviewer && null != workReport.reviewer.getUser() && !TextUtils.isEmpty(workReport.reviewer.getUser().getName())) {
-                    content.setText("点评: " + workReport.reviewer.getUser().getName());
+                if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
+                    content.setText("点评: " + workReport.reviewer.user.getName());
                 }
                 StringBuilder reportTitle = new StringBuilder(workReport.creator.name + "提交 ");
                 String reportDate = "";
@@ -501,7 +499,7 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
                 title.setText(customer.name);
                 content.setText("标签" + Utils.getTagItems(customer));
 
-              /*  if (!TextUtils.isEmpty(customer.distance)) {
+                /*if (!TextUtils.isEmpty(customer.distance)) {
                     content.setText("距离：" + customer.distance);
                 } else {
                     content.setVisibility(View.GONE);
@@ -515,7 +513,6 @@ public abstract class BaseSearchActivity<T extends BaseBeans> extends BaseActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.dll("销毁");
         hideInputKeyboard(edt_search);
     }
 }

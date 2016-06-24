@@ -93,8 +93,8 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
             /*审批
             * 状态4,5暂时都归类为 已通过
             * */
-            else if (item instanceof WfInstance) {
-                WfInstance wfInstance = (WfInstance) item;
+            else if (item instanceof WfInstanceRecord) {
+                WfInstanceRecord wfInstance = (WfInstanceRecord) item;
                 switch (wfInstance.status) {
                     case WfInstance.STATUS_NEW:
                         order = "待审批";

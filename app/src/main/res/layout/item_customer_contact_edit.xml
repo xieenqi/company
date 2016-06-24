@@ -15,10 +15,10 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:gravity="center_vertical"
             android:text="联系人1"
-            android:textColor="#A1A1A1"
+            android:textColor="@color/text99"
             android:textSize="14sp"/>
 
         <LinearLayout
@@ -63,11 +63,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <View
-        style="@style/view_split"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/margin_side_edge"
-        android:layout_marginRight="@dimen/margin_side_edge"/>
+    <include layout="@layout/include_solid_line_left"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,7 +84,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="姓名"/>
+                android:text="姓        名"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_name"
@@ -103,11 +101,7 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_phone"
@@ -123,7 +117,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="手机"/>
+                android:text="手        机"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_phone"
@@ -174,11 +170,7 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_wiretel"
@@ -194,7 +186,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="座机"/>
+                android:text="座        机"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_wiletel"
@@ -223,11 +217,7 @@
         </LinearLayout>
 
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_depart"
@@ -242,7 +232,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="部门职务"/>
+                android:text="部门职务"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_depart"
@@ -257,11 +249,7 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_qq"
@@ -277,7 +265,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="QQ"/>
+                android:text="Q Q"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_qq"
@@ -292,11 +282,7 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_birthday"
@@ -312,7 +298,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="生日"/>
+                android:text="生        日"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_birthday"
@@ -328,11 +316,7 @@
         </LinearLayout>
 
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_wx"
@@ -348,7 +332,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="微信"/>
+                android:text="微        信"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_wx"
@@ -363,11 +349,7 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_email"
@@ -383,7 +365,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="邮箱"/>
+                android:text="E-Mail"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_email"
@@ -398,18 +382,14 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
 
         <LinearLayout
             android:id="@+id/layout_memo"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/view_h_title"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            android:gravity="center_vertical"
+            android:minHeight="@dimen/view_h_title"
             android:orientation="horizontal">
 
             <TextView
@@ -418,7 +398,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_side_edge"
                 android:gravity="center_vertical"
-                android:text="备注"/>
+                android:text="备        注"
+                android:textColor="@color/text33"
+                android:textSize="@dimen/text_sp15"/>
 
             <TextView
                 android:id="@+id/tv_memo"
@@ -428,16 +410,14 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
+                android:paddingBottom="@dimen/dimen_5"
+                android:paddingTop="@dimen/dimen_5"
                 android:textColor="#999999"
                 />
 
         </LinearLayout>
 
-        <View
-            style="@style/view_split"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:layout_marginRight="@dimen/margin_side_edge"/>
+        <include layout="@layout/include_solid_line_left"/>
     </LinearLayout>
 
 

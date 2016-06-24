@@ -3,12 +3,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/whitesmoke"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical"
     >
 
     <include
         android:id="@+id/include_common"
-        layout="@layout/include_header_search_filter"/>
+        layout="@layout/include_header_title_search_filter"/>
 
     <FrameLayout
         android:layout_width="match_parent"

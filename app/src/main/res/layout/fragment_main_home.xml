@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_h_title"
+        android:background="@color/title_bg1"
+        android:gravity="center_vertical"
+        >
+
+        <com.loyo.oa.v2.tool.customview.RoundImageView
+            android:id="@+id/newhome_heading_img"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/img_default_user"/>
+
+        <RadioGroup
+            android:id="@+id/tab_menu"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|bottom"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:id="@+id/title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dimen_5"
+                android:button="@null"
+                android:checked="true"
+                android:drawableBottom="@drawable/rb_home"
+                android:drawablePadding="@dimen/dimen_8"
+                android:gravity="center_horizontal"
+                android:text="应用"
+                android:textColor="@drawable/color_text_table"
+                android:textSize="@dimen/text_sp18"/>
+
+            <RadioButton
+                android:id="@+id/title2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:button="@null"
+                android:drawableBottom="@drawable/rb_home"
+                android:drawablePadding="@dimen/dimen_8"
+                android:gravity="center_horizontal"
+                android:text="统计"
+                android:textColor="@drawable/color_text_table"
+                android:textSize="@dimen/text_sp18"/>
+
+        </RadioGroup>
+
+        <!--<TabHost-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--</TabHost>-->
+
+        <ImageView
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="@dimen/dimen_20"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimen_14"
+            android:background="@drawable/img_new_serach"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

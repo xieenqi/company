@@ -49,7 +49,6 @@ import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -81,6 +80,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     TextView tv_time;
     @ViewById
     TextView tv_count_time;
+    @ViewById
+    TextView tv_count_time2;
     @ViewById
     TextView tv_address;
     @ViewById
@@ -118,7 +119,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
     private boolean isRun;
     private MHandler mHandler = new MHandler(this);
     private Animation animation;
-    private String tvTimeName;
+    private static String tvTimeName;
 
     public static final int CLOCKIN_STATE_NO = 1; //上班打卡状态
     public static final int CLOCKIN_STATE_OFF = 1; //下班打卡状态
@@ -151,15 +152,26 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         }
 
         @Override
-        public void handleMessage(final Message msg) {
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String time = String.valueOf(msg.what);
             String des = "请在".concat(time).concat("秒内完成打卡");
-            SpannableStringBuilder builder = Utils.modifyTextColor(des, Color.RED, des.length() - TEXT_LEN - time.length(), des.length() - TEXT_LEN);
+            SpannableStringBuilder builder = Utils.modifyTextColor(des, Color.parseColor("#f5625a"), des.length() - TEXT_LEN - time.length(), des.length() - TEXT_LEN);
+
+            TextView tvtime2 = mActivity.get().tv_count_time2;
             TextView tvtime = mActivity.get().tv_count_time;
-            if (null != tvtime) {
-                tvtime.setText(builder);
+            if ("加班时间:".equals(tvTimeName)) {
+                tvtime2.setVisibility(View.VISIBLE);
+                tvtime.setVisibility(View.GONE);
+                if (null != tvtime2) {
+                    tvtime2.setText(builder);
+                }
+            } else {
+                if (null != tvtime) {
+                    tvtime.setText(builder);
+                }
             }
+
             if (0 == msg.what) {
                 mActivity.get().recycle();
                 mActivity.get().showTimeOutDialog();
@@ -255,12 +267,12 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             et_reason.setHint("请输入加班原因");
             String time = (DateTool.timet(extraWorkStartTime + "", DateTool.DATE_FORMATE_TRANSACTION)
                     + "-" + DateTool.timet(serverTime + "", DateTool.DATE_FORMATE_TRANSACTION));
-            SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
+            SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time.setText(tvTimeName + builder);
-            tv_time.setTextColor(Color.GREEN);
+            tv_time.setTextColor(getResources().getColor(R.color.green51));
         } else {/*正常上下班*/
             String time = tvTimeName.concat(app.df6.format(new Date(mAttendanceRecord.getCreatetime() * 1000)));
-            SpannableStringBuilder builder = Utils.modifyTextColor(time, Color.GREEN, 5, time.length());
+            SpannableStringBuilder builder = Utils.modifyTextColor(time, getResources().getColor(R.color.green51), 5, time.length());
             tv_time.setText(builder);
             if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE || mAttendanceRecord.getState() == AttendanceRecord.STATE_LEAVE_EARLY) {
                 if (mAttendanceRecord.getState() == AttendanceRecord.STATE_BE_LATE) {
@@ -283,6 +295,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> _attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 attachments = _attachments;
                 init_gridView_photo();
             }
@@ -290,6 +303,7 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
             }
         });
@@ -325,13 +339,15 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
                     return;
                 }
 
-                if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
+                /*暂时取消外勤判断 */
+                /*if (mAttendanceRecord.getOutstate() != AttendanceRecord.OUT_STATE_OFFICE_WORK
                         && mAttendanceRecord.getState() != 5) {
                     showOutAttendanceDialog();
                 } else {
                     commitAttendance();
-                }
+                }*/
 
+                commitAttendance();
                 break;
 
             case R.id.iv_refresh_address:
@@ -438,53 +454,63 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         map.put("createtime", mAttendanceRecord.getCreatetime());
         map.put("originalgps", mAttendanceRecord.getOriginalgps());
         map.put("gpsinfo", mAttendanceRecord.getGpsinfo());
-        map.put("address", mAttendanceRecord.getAddress());
+//        map.put("address", mAttendanceRecord.getAddress());
+        map.put("address", tv_address.getText().toString());
         map.put("reason", reason);
         map.put("state", state);
         map.put("outstate", mAttendanceRecord.getOutstate());
         map.put("extraWorkStartTime", extraWorkStartTime);
         map.put("extraWorkEndTime", serverTime);
 
-        if(isPopup){
-            if(outKind == 1){
-                map.put("extraChooseState",1);
-            }else if(outKind == 2){
-                map.put("extraChooseState",2);
+        map.put("confirmExtraTime", mAttendanceRecord.getConfirmExtraTime());
+        map.put("confirmtime", mAttendanceRecord.getConfirmtime());
+        map.put("extraState", mAttendanceRecord.getExtraState());
+        map.put("extraTime", mAttendanceRecord.getExtraTime());
+        map.put("leaveDays", mAttendanceRecord.getLeaveDays());
+        map.put("remainTime", mAttendanceRecord.getRemainTime());
+        map.put("tagstate", mAttendanceRecord.getTagstate());
+
+
+        if (isPopup) {
+            if (outKind == 1) {
+                map.put("extraChooseState", 1);
+            } else if (outKind == 2) {
+                map.put("extraChooseState", 2);
             }
         }
         if (attachments.size() != 0) {
             map.put("attachementuuid", uuid);
         }
-        LogUtil.dll("提交考勤:" + MainApp.gson.toJson(map));
+        LogUtil.d("提交考勤:" + MainApp.gson.toJson(map));
         app.getRestAdapter().create(IAttendance.class).confirmAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                Toast("打卡成功!");
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                onBackPressed();
                 try {
-                    LogUtil.dll("result:" + Utils.convertStreamToString(response.getBody().in()));
-                } catch (IOException e) {
+                    Toast("打卡成功!");
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    onBackPressed();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    Toast("请检查您的网络连接");
-                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    if (error.getResponse().getStatus() == 500) {
-                        Toast("网络异常500，请稍候再试");
-                        try {
-                            LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+//                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+//                    Toast("请检查您的网络连接");
+//                } else if (error.getKind() == RetrofitError.Kind.HTTP) {
+//                    if (error.getResponse().getStatus() == 500) {
+//                        Toast("网络异常500，请稍候再试");
+//                        try {
+//                            LogUtil.dll("error:" + Utils.convertStreamToString(error.getResponse().getBody().in()));
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
             }
         });
     }

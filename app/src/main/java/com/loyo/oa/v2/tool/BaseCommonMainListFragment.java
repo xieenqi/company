@@ -19,10 +19,6 @@ import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.tool.customview.filterview.DropDownMenu;
@@ -84,10 +80,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        //        if(btn_add.getVisibility()!=View.VISIBLE) {
-        //            btn_add.setVisibility(View.VISIBLE);
-        //            mView.postDelayed(UiRunner,5000);
-        //        }
         return true;
     }
 
@@ -98,17 +90,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-/*                switch (scrollState) {
-                   case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        break;
-                   case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                   case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                       if(btn_add.getVisibility()!=View.VISIBLE) {
-                           btn_add.setVisibility(View.VISIBLE);
-                            mView.postDelayed(UiRunner,5000);
-                       }
-                       break;
-                }*/
     }
 
     @Override
@@ -131,13 +112,13 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
                 }
             });
 
-            if(!MainApp.user.isSuperUser()){
-                try{
-                    permission = (Permission)MainApp.rootMap.get("0401");
-                    if(!permission.isEnable() && MainApp.permissionPage == 1){
+            if (null != MainApp.user && !MainApp.user.isSuperUser()) {
+                try {
+                    permission = (Permission) MainApp.rootMap.get("0401");
+                    if (!permission.isEnable() && MainApp.permissionPage == 1) {
                         btn_add.setVisibility(View.INVISIBLE);
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                     Toast("创建项目权限,code错误");
                 }
@@ -224,23 +205,8 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
-            return;
-        }
-
-        switch (requestCode) {
-            case REQUEST_CREATE:
-            case REQUEST_REVIEW:
-                GetData();
-                break;
-        }
-    }
-
-    @Override
     public void success(PaginationX<T> tPaginationX, Response response) {
+        HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
 
         mExpandableListView.onRefreshComplete();
         if (null == tPaginationX) {
@@ -249,7 +215,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
 
         pagination = tPaginationX;
         ArrayList<T> lstDataTemp = tPaginationX.getRecords();
-
+        if (null != lstDataTemp && lstDataTemp.size() == 0) {
+            Toast("没有更多数据了");
+            return;
+        }
         //下接获取最新时，清空
         if (isTopAdd) {
             lstData.clear();
@@ -260,7 +229,6 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
         changeAdapter();
         expand();
 
-        HttpErrorCheck.checkResponse("项目、任务、报告、审批的统一界面 result:", response);
 
     }
 
@@ -268,6 +236,27 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     public void failure(RetrofitError error) {
         HttpErrorCheck.checkError(error);
         mExpandableListView.onRefreshComplete();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        /*if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
+            return;
+        }*/
+
+        if (resultCode == 0x09) {
+            GetData();
+        }
+
+        /*switch (requestCode) {
+            case REQUEST_CREATE:
+            case REQUEST_REVIEW:
+                GetData();
+                break;
+        }*/
     }
 
     /**

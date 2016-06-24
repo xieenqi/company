@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
 
     <LinearLayout
@@ -25,7 +27,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="16dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/back_left1" />
+                android:src="@drawable/back_left1"/>
 
         </RelativeLayout>
 
@@ -44,7 +46,7 @@
             android:singleLine="false"
             android:textColor="#6f6f6f"
             android:textColorHint="#c9c9c9"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"/>
 
         <TextView
             android:id="@+id/tv_selectuser_search"
@@ -53,7 +55,7 @@
             android:gravity="center_vertical"
             android:padding="10dp"
             android:text="搜索"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
     </LinearLayout>
 
     <ListView

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.adapter.DepartmentListViewAdapter;
 import com.loyo.oa.v2.adapter.UserListViewAdapter;
@@ -20,7 +19,6 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ViewUtil;
-
 import java.util.ArrayList;
 
 public class DepartmentActivity extends FragmentActivity implements View.OnClickListener {
@@ -32,7 +30,7 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
     public int select_type; //选择类型(0=多选，1=单选)
     public int show_type;   //页面类型（0=部门+人员,1=仅人员）
-//    public String title;
+//  public String title;
 
     //部门Id
     public String deptId;
@@ -45,7 +43,6 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
     DepartmentListViewAdapter deptAdapter;
     UserListViewAdapter userAdapter;
-
     private int count;
 
     @Override
@@ -55,7 +52,6 @@ public class DepartmentActivity extends FragmentActivity implements View.OnClick
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-
             select_type = bundle.getInt(DepartmentUserActivity.STR_SELECT_TYPE, 0);
             show_type = bundle.getInt(DepartmentUserActivity.STR_SHOW_TYPE, 0);
 //          title = bundle.getString(DepartmentUserActivity.STR_TITEL);

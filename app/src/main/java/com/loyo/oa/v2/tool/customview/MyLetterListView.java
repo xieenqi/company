@@ -15,7 +15,8 @@ import com.loyo.oa.v2.R;
 public class MyLetterListView extends View {
 
     OnTouchingLetterChangedListener onTouchingLetterChangedListener;
-    String[] keyword = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    String[] keyword = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+            "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"};
     int choose = -1;
     Paint paint = new Paint();
     boolean showBkg = false;
@@ -41,7 +42,7 @@ public class MyLetterListView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (showBkg) {
-            canvas.drawColor(Color.parseColor("#000000"));
+            canvas.drawColor(Color.parseColor("#4c000000"));
         }
 
         int height = getHeight();
@@ -52,16 +53,12 @@ public class MyLetterListView extends View {
         }
         float singleHeight = height / count;
         for (int i = 0; i < keyword.length; i++) {
-            //			paint.setColor(Color.WHITE);	//设置字体的颜色
-            //            paint.setColor(getResources().getColor(R.color.gray_));
-            paint.setColor(getResources().getColor(R.color.title_bg1));
+            paint.setColor(getResources().getColor(R.color.text99));//设置字体的颜色
             paint.setTypeface(Typeface.DEFAULT_BOLD);
-            //			paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.navigation_fontsize));//设置字体的大小
-            //paint.setTextSize(16 * density);//设置字体的大小
-            paint.setTextSize(25);//设置字体的大小
+            paint.setTextSize(32);//设置字体的大小
             paint.setAntiAlias(true);
             if (i == choose) {
-                paint.setColor(Color.parseColor("#3399ff"));
+                paint.setColor(getResources().getColor(R.color.title_bg1));
                 paint.setFakeBoldText(true);
             }
             float xPos = width / 2 - paint.measureText(keyword[i]) / 2;

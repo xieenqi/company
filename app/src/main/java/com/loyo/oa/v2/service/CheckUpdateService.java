@@ -38,10 +38,8 @@ public class CheckUpdateService extends Service {
 
     boolean isChecking = false, isToast = false;
     CompleteReceiver completeReceiver;
-
     DownloadManager downloadManager;
     long enqueue = 0;
-
     UpdateInfo mUpdateInfo;
 
     @Override
@@ -78,17 +76,20 @@ public class CheckUpdateService extends Service {
     }
 
     void downloadApp() {
+
         if (enqueue == 0) {
             Global.Toast("正在更新最新版..");
-            LogUtil.dll("版本更新地址:"+mUpdateInfo.apkUrl);
+            LogUtil.d("版本更新地址:" + mUpdateInfo.apkUrl);
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mUpdateInfo.apkUrl))
                     .setTitle(getResources().getString(R.string.app_name))
                     .setDescription("下载" + mUpdateInfo.versionName)
                     .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mUpdateInfo.apkName())
                     .setVisibleInDownloadsUi(true);
+
             try {
                 enqueue = downloadManager.enqueue(request);
             } catch (Exception ex) {
+                LogUtil.d("下载异常抛出");
                 Global.ProcException(ex);
             }
         }
@@ -99,7 +100,6 @@ public class CheckUpdateService extends Service {
         if (completeReceiver != null) {
             unregisterReceiver(completeReceiver);
         }
-
         super.onDestroy();
     }
 
@@ -127,31 +127,34 @@ public class CheckUpdateService extends Service {
             public void success(UpdateInfo updateInfo, Response response) {
 //                HttpErrorCheck.checkResponse(response);
                 mUpdateInfo = updateInfo;
-                LogUtil.dll("版本更新信息:"+MainApp.gson.toJson(updateInfo));
+                LogUtil.dll("版本更新信息:" + MainApp.gson.toJson(updateInfo));
+                try {
+                    if (updateInfo.versionCode > Global.getVersion()) {
+                        //有新版本
+                        MainApp.getMainApp().hasNewVersion = true;
+                        if (updateInfo.autoUpdate) {//后台自动更新
+                            deleteFile();
+                            downloadApp();
+                        } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
+                            deleteFile();
+                            Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
+                            intentUpdateTipActivity.putExtra("data", updateInfo);
+                            intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intentUpdateTipActivity);
+                        } else {
+                            stopSelf();
+                        }
 
-                if (updateInfo.versionCode > Global.getVersion()) {
-                    //有新版本
-                    MainApp.getMainApp().hasNewVersion = true;
-                    if (updateInfo.autoUpdate) {//后台自动更新
-                        deleteFile();
-                        downloadApp();
-                    } else if (updateInfo.forceUpdate || isToast) {//弹窗提示更新
-                        deleteFile();
-                        Intent intentUpdateTipActivity = new Intent(CheckUpdateService.this, UpdateTipActivity.class);
-                        intentUpdateTipActivity.putExtra("data", updateInfo);
-                        intentUpdateTipActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intentUpdateTipActivity);
                     } else {
+                        if (isToast) {
+                            Global.Toast("你的软件已经是最新版本");
+                        }
                         stopSelf();
                     }
-                    
-                } else {
-                    if (isToast) {
-                        Global.Toast("你的软件已经是最新版本");
-                    }
-                    stopSelf();
+                    isChecking = false;
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-                isChecking = false;
             }
 
             @Override
@@ -166,7 +169,7 @@ public class CheckUpdateService extends Service {
 
     /**
      * 删除APK
-     * */
+     */
     private void deleteFile() {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path, mUpdateInfo.apkName());

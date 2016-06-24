@@ -55,7 +55,6 @@ public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagin
             item_info_Child.img = (ImageView) convertView.findViewById(R.id.img);
             item_info_Child.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
             item_info_Child.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-            item_info_Child.view_line1 = convertView.findViewById(R.id.view_line1);
             item_info_Child.tv_user_name = (TextView) convertView.findViewById(R.id.tv_user_name);
             item_info_Child.tv_customer_name = (TextView) convertView.findViewById(R.id.tv_customer_name);
 
@@ -94,7 +93,6 @@ public class LegworkExpandableListAdapter<T extends BaseBeans> extends BasePagin
     class Item_info_Child {
         ImageView img;
         TextView tv_address;
-        View view_line1;
         TextView tv_time;
         TextView tv_user_name;
         TextView tv_customer_name;

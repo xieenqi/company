@@ -1,183 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              >
-
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/margin_other_view"
+        android:paddingRight="@dimen/margin_other_view">
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/tv_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:gravity="left|center"
+            android:text="2016.05.30 13:56"
+            android:textColor="@color/text66"
+            android:textSize="12sp"/>
+
+
+        <TextView
+            android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:gravity="left|center"
-                android:text="方式: "
-                android:textColor="#383838"
-                android:textSize="15sp"
-                />
-
-            <TextView
-                android:id="@+id/tv_previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="left|center"
-                android:text=""
-                android:textColor="#383838"
-                android:textSize="15sp"
-                />
-
-        </LinearLayout>
+            android:layout_marginTop="@dimen/dimen_4"
+            android:lineSpacingMultiplier="1.1"
+            android:text=""
+            android:textColor="@color/text66"
+            android:textSize="@dimen/text_sp15"/>
 
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_contact_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="@dimen/dimen_4"
+            android:drawableLeft="@drawable/icon_tel"
+            android:drawablePadding="@dimen/dimen_10"
+            android:gravity="left|center"
+            android:text=""
+            android:textColor="@color/text99"
+            android:textSize="@dimen/text_sp12"/>
 
-            <ImageView
-                android:scaleType="centerInside"
-                android:layout_width="16sp"
-                android:layout_height="16sp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/icon_follow_up_creator"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="left|center"
-                android:text="跟进人: "
-                android:textColor="@color/text2"
-                android:textSize="14sp"
-                />
-
-
-            <TextView
-                android:id="@+id/tv_creator_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="left|center"
-                android:text=""
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_follow_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:scaleType="centerInside"
-                android:layout_width="16sp"
-                android:layout_height="16sp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/icon_follow_up_content"
-                />
-
-
-            <TextView
-                android:singleLine="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:gravity="left"
-                android:text="内容: "
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
-
-
-            <TextView
-                android:id="@+id/tv_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="left|center"
-                android:text=""
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
-
+            android:layout_marginTop="@dimen/dimen_4"
+            android:drawableLeft="@drawable/icon_follow"
+            android:drawablePadding="@dimen/dimen_10"
+            android:gravity="left|center"
+            android:text=""
+            android:textColor="@color/text99"
+            android:textSize="@dimen/text_sp12"/>
 
         <LinearLayout
-            android:id="@+id/layout_timenow"
-            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
-                android:scaleType="centerInside"
-                android:layout_width="16sp"
-                android:layout_height="16sp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/icon_customer_follow_time"
-                />
-
-
-            <TextView
-                android:singleLine="false"
+                android:id="@+id/iv_imgTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10"
-                android:gravity="left"
-                android:text="下次跟进提醒: "
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
-
+                android:src="@drawable/icon_tx1"/>
 
             <TextView
-                android:id="@+id/tv_timenow"
+                android:id="@+id/tv_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="left|center"
-                android:text=""
-                android:textColor="@color/text2"
-                android:textSize="14sp"/>
 
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/dimen_10"
+                android:text=""
+                android:textColor="@color/text99"
+                android:textSize="@dimen/text_sp12"/>
         </LinearLayout>
 
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_10"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_side_edge"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/text2"
-            android:textSize="12sp"/>
-
     </LinearLayout>
 
 
-</RelativeLayout>
+    <include layout="@layout/include_solid_line_left"/>
+</LinearLayout>

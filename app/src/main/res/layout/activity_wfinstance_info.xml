@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/activity_bg"
+              android:background="@color/white"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <LinearLayout
@@ -17,7 +19,8 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,14 +40,14 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical">
 
                         <LinearLayout
                             android:id="@+id/layout_creator"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="@dimen/dimen_14"
                             android:gravity="center_vertical">
 
                             <TextView
@@ -52,10 +55,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="@dimen/margin_side_edge"
+                                android:layout_marginLeft="@dimen/margin_other_view"
                                 android:layout_marginRight="10dp"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
                                 android:gravity="center_vertical"
-                                android:textSize="@dimen/textsize_content_label"/>
+                                android:maxEms="50"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@color/text33"
+                                android:textSize="@dimen/textsize_content1"/>
 
                             <TextView
                                 android:id="@+id/tv_title_role"
@@ -64,7 +73,19 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_toRightOf="@+id/tv_title_creator"
                                 android:gravity="center_vertical"
-                                android:textSize="13sp"/>
+                                android:textSize="13sp"
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/img_wfinstance_status"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center|right"
+                                android:layout_marginRight="@dimen/margin_side_edge"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/img_wfinstance_status1"/>
 
                         </LinearLayout>
 
@@ -73,75 +94,99 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/layout_creator"
+                            android:layout_marginBottom="@dimen/dimen_14"
                             android:layout_marginLeft="@dimen/margin_side_edge"
                             android:layout_marginRight="10dp"
-                            android:layout_marginTop="5dp"
-                            android:gravity="center_vertical"
-                            android:textColor="#a6a6a6"
-                            android:textSize="@dimen/textsize_content2"/>
-
-                        <ImageView
-                            android:id="@+id/img_wfinstance_status"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="@dimen/margin_side_edge"
-                            android:gravity="center_vertical"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/img_wfinstance_status1"/>
+                            android:layout_marginTop="@dimen/dimen_5"
+                            android:text=""
+                            android:textColor="@color/diseditable"
+                            android:textSize="@dimen/textsize_content3"/>
 
                     </RelativeLayout>
 
-                    <View
+                    <include layout="@layout/include_solid_line_left"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_sale"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_3"
-                        android:layout_margin="@dimen/dimen_10"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:background="@drawable/view_dashed_line"
-                        android:layerType="software"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/text_item1"
+                                android:layout_width="80dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/margin_side_edge"
+                                android:text="销售机会"
+                                android:textSize="15sp"/>
+
+                            <TextView
+                                android:id="@+id/tv_sale"
+                                style="@style/text_item1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="right|center_vertical"
+                                android:textColor="@color/title_bg1"
+                                android:textColorHint="@color/text99"
+                                android:textSize="15sp"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="5dp"
+                                android:scaleType="center"
+                                android:src="@drawable/right_arrow"/>
+
+                        </LinearLayout>
+
+                        <include layout="@layout/include_solid_line_left"/>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_wfinstance_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_15"
+                        android:layout_marginLeft="@dimen/margin_side_edge"
+                        android:layout_marginRight="@dimen/margin_side_edge"
                         android:orientation="vertical">
-
-                        <!--<ListView
-                            android:visibility="gone"
-                            android:id="@+id/listView_wfinstance"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/margin_other_view"
-                            android:divider="@color/activity_bg"
-                            android:dividerHeight="@dimen/margin_other_view"/>-->
-
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_memo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/view_first_margin_top"
                         android:background="@drawable/layout_bg1"
                         android:orientation="vertical">
 
                         <View
-                            style="@style/view_split"
+                            android:id="@+id/view_dashed_line"
                             android:layout_width="match_parent"
-                            android:layout_marginLeft="@dimen/dimen_16"/>
+                            android:layout_height="3dp"
+                            android:layout_marginLeft="@dimen/margin_other_view"
+                            android:background="@drawable/view_dashed_line"
+                            android:layerType="software"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_h_title"
+                            android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <ImageView
                                 style="@style/image_label"
+                                android:layout_marginBottom="@dimen/dimen_15"
                                 android:layout_marginLeft="@dimen/margin_side_edge"
                                 android:layout_marginRight="@dimen/margin_other_view"
+                                android:layout_marginTop="@dimen/dimen_15"
                                 android:src="@drawable/icon_attendance_explanation"/>
 
                             <TextView
@@ -157,10 +202,8 @@
                             style="@style/edtText_normal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_8"
-                            android:gravity="center_vertical"
-                            android:minHeight="@dimen/view_h_title"
-                            android:textColor="#999999"/>
+                            android:layout_marginBottom="@dimen/dimen_15"
+                            android:textColor="@color/text99"/>
 
                     </LinearLayout>
 
@@ -168,32 +211,29 @@
                         android:id="@+id/layout_AttachFile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_8"
                         android:background="@color/white"
                         android:orientation="vertical">
 
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="match_parent"
-                            android:layout_marginLeft="@dimen/dimen_16"/>
+                        <include layout="@layout/include_solid_line_left"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_h_title"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/layout_bg1"
-                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/tv_attachment_count"
-                                style="@style/text_item2"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/dimen_16"
+                                android:layout_marginBottom="@dimen/dimen_17"
+                                android:layout_marginLeft="@dimen/margin_other_view"
+                                android:layout_marginTop="@dimen/dimen_17"
                                 android:layout_weight="1"
                                 android:gravity="left|center_vertical"
                                 android:text="附件 (0)"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/text33"
+                                android:textSize="@dimen/text_sp15"/>
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -202,73 +242,72 @@
                                 android:src="@drawable/right_arrow"/>
 
                         </LinearLayout>
-
-
-                        <View
-                            style="@style/view_split"
-                            android:layout_width="match_parent"/>
-
-
                     </LinearLayout>
+
+                    <include layout="@layout/include_solid_line_left"/>
 
                     <LinearLayout
                         android:id="@+id/ll_project"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
+                            android:layout_marginBottom="@dimen/dimen_17"
+                            android:layout_marginLeft="@dimen/margin_other_view"
+                            android:layout_marginTop="@dimen/dimen_17"
                             android:gravity="left|center_vertical"
                             android:text="所属项目"
                             android:textColor="@color/text33"
-                            android:textSize="@dimen/text_sp16"/>
+                            android:textSize="@dimen/text_sp15"/>
 
                         <TextView
                             android:id="@+id/tv_projectName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dimen_2"
                             android:layout_marginRight="@dimen/dimen_16"
                             android:layout_weight="1"
+                            android:ellipsize="end"
                             android:gravity="right|center_vertical"
                             android:maxLength="20"
+                            android:singleLine="true"
                             android:textColor="@color/text99"
-                            />
+                            android:textSize="@dimen/text_sp15"/>
                     </LinearLayout>
-
                 </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/dimen_15"
+                    android:background="@color/graypy"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/view_first_margin_top"
                     android:background="@color/white"
                     android:orientation="vertical">
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"/>
-
                     <LinearLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="@dimen/view_h_title"
+                        android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
-                            style="@style/text_item2"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/dimen_17"
                             android:layout_marginLeft="@dimen/dimen_16"
+                            android:layout_marginTop="@dimen/dimen_17"
                             android:gravity="left|center_vertical"
                             android:text="审批流程"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/text33"
+                            android:textSize="@dimen/text_sp15"/>
 
                         <TextView
                             android:id="@+id/tv_wfnodes_title"
@@ -278,14 +317,16 @@
                             android:layout_marginLeft="@dimen/dimen_4"
                             android:gravity="left|center_vertical"
                             android:text="(0/0)"
-                            android:textColor="#999999"/>
+                            android:textColor="@color/text33"/>
 
                     </LinearLayout>
 
                     <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"
-                        android:layout_marginLeft="@dimen/margin_side_edge"/>
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="@dimen/margin_other_view"
+                        android:background="@color/lineCC"
+                        />
 
                     <com.loyo.oa.v2.tool.customview.ListView_inScrollView
                         android:id="@+id/listView_workflowNodes"
@@ -297,15 +338,9 @@
                         android:dividerHeight="0dp"
                         android:listSelector="@android:color/transparent"/>
 
-                    <View
-                        style="@style/view_split"
-                        android:layout_width="match_parent"/>
                 </LinearLayout>
-
             </LinearLayout>
-
         </ScrollView>
-
     </LinearLayout>
 
     <LinearLayout
@@ -315,8 +350,7 @@
         android:layout_gravity="bottom"
         android:background="@drawable/layout_bg1"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"

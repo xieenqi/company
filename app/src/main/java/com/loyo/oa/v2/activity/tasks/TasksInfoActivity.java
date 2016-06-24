@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.discuss.ActivityDiscussDet;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -139,11 +139,11 @@ public class TasksInfoActivity extends BaseActivity {
     Button btn_complete;
     @Extra(ExtraAndResult.EXTRA_ID)//推送的id   ="56935898526f152260000016"
             String mTaskId;
+    @Extra(ExtraAndResult.EXTRA_TYPE)
+    String keyType;
 
     private boolean isOver = false;
     private int statusSize;
-    private ArrayList<NewUser> userss;
-    private ArrayList<NewUser> depts;
     private Members member;
     private Task mTask;
     public PaginationX<Discussion> mPageDiscussion;
@@ -152,6 +152,8 @@ public class TasksInfoActivity extends BaseActivity {
     public ArrayList<NewUser> childTastUsers = new ArrayList<>();
     public ArrayList<NewUser> requestDepts = new ArrayList<>();
     public ArrayList<User> aboutDepts = new ArrayList<>();
+    public ArrayList<User> childTaskUsers2 = new ArrayList<>();
+
     public ArrayList<Department> deptSource = Common.getLstDepartment();
     public LinearLayout layout_test_Add_area;
     public LinearLayout layout_task_testfather;
@@ -164,6 +166,8 @@ public class TasksInfoActivity extends BaseActivity {
     public TextView tv_reviewer;
     public TextView viewName;
     public TextView viewContent;
+    private StringBuffer joinUserId;
+    private StringBuffer joinName;
 
     public android.os.Handler mHandler = new android.os.Handler() {
         public void handleMessage(final Message msg) {
@@ -189,8 +193,6 @@ public class TasksInfoActivity extends BaseActivity {
     void initUI() {
         super.setTitle("任务详情");
         userId = DBManager.Instance().getUser().getId();
-        userss = new ArrayList<>();
-        depts = new ArrayList<>();
         member = new Members();
         ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(ViewUtil.OnTouchListener_softInput_hide.Instance());
@@ -262,7 +264,6 @@ public class TasksInfoActivity extends BaseActivity {
      * @return
      */
     private boolean isMenberShortDept(String id, String xpath) {
-        LogUtil.d("部门的值："+xpath);
         for (UserInfo element : MainApp.user.depts) {
             if (element.getShortDept().getId().equals(id)
                     || (null != xpath && element.getShortDept().getXpath().contains(xpath))) {
@@ -285,14 +286,12 @@ public class TasksInfoActivity extends BaseActivity {
         switch (mTask.getStatus()) {
             case Task.STATUS_REVIEWING:
                 if (IsResponsiblePerson()) {
-                    LogUtil.d("负责人 审核中");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
 
             case Task.STATUS_FINISHED:
                 if (IsResponsiblePerson()) {
-                    LogUtil.d("负责人 已完成");
                     img_title_right.setVisibility(View.GONE);
                 }
                 break;
@@ -310,11 +309,25 @@ public class TasksInfoActivity extends BaseActivity {
             if (mTask.members.getAllData().size() > 0) {
                 StringBuffer userNames = new StringBuffer();
                 for (NewUser element : mTask.members.getAllData()) {
-                    userNames.append(element.getName() + ",");
+                    userNames.append(element.getName() + " ");
                 }
                 tv_toUsers.setText("参与人: " + userNames.toString());
                 childTastUsers.addAll(mTask.members.users);
+                if (null != mTask.members.depts) {
+                    for (NewUser newUser : mTask.members.depts) {
+                        Common.getAllUsersByDeptId(newUser.getId(), childTaskUsers2);
+                    }
+                }
+
+                for (User user : childTaskUsers2) {
+                    childTastUsers.add(user.toShortUser());
+                }
+
+                LogUtil.d("参与人:" + MainApp.gson.toJson(mTask.members));
+                LogUtil.d("子任务负责人:" + MainApp.gson.toJson(childTastUsers));
+
                 getAboutUser();
+
             } else {
                 tv_toUsers.setText("没有参与人");
             }
@@ -454,28 +467,28 @@ public class TasksInfoActivity extends BaseActivity {
             ratingBar_Task = (RatingBar) mView.findViewById(R.id.ratingBar_Task);
             item_tasks_sorece = (LinearLayout) mView.findViewById(R.id.item_tasks_sorece);
 
-            if (!TextUtils.isEmpty(reviewer.getUser().getName())) {
-                tv_reviewer.setText(reviewer.getUser().getName());
+            if (!TextUtils.isEmpty(reviewer.user.getName())) {
+                tv_reviewer.setText(reviewer.user.getName());
             }
 
-            if (!TextUtils.isEmpty(reviewer.getReviewedAt() + "")) {
-                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.getReviewedAt() * 1000L)));
+            if (!TextUtils.isEmpty(reviewer.reviewedAt + "")) {
+                tv_reviewtime.setText(MainApp.getMainApp().df10.format(new Date(reviewer.reviewedAt * 1000L)));
             }
 
-            if (!TextUtils.isEmpty(reviewer.getComment())) {
-                tv_task_content.setText(reviewer.getComment());
+            if (!TextUtils.isEmpty(reviewer.comment)) {
+                tv_task_content.setText(reviewer.comment);
             }
 
-            if ("0".equals(reviewer.getStatus())) {
+            if ("0".equals(reviewer.status)) {
                 item_tasks_sorece.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(reviewer.getScore() + "")) {
-                int rat = (reviewer.getScore() / 20);
+            if (!TextUtils.isEmpty(reviewer.score + "")) {
+                int rat = (reviewer.score / 20);
                 ratingBar_Task.setRating((float) (rat / 1.0));
             }
 
-            if ("1".equals(reviewer.getStatus())) {
+            if ("1".equals(reviewer.status)) {
                 tv_task_status.setText("通过");
                 tv_task_status.setTextColor(getResources().getColor(R.color.green));
                 tv_task_status.setVisibility(View.GONE);
@@ -631,7 +644,7 @@ public class TasksInfoActivity extends BaseActivity {
                         reponserData.addAll(mTask.responsiblePersons);
                         ArrayList<NewUser> reponserDataUser = new ArrayList<NewUser>();
                         for (Reviewer element : reponserData) {
-                            reponserDataUser.add(element.getUser());
+                            reponserDataUser.add(element.user);
                         }
 
                         Intent intent = new Intent(TasksInfoActivity.this, ChildTaskEdit.class);
@@ -688,7 +701,7 @@ public class TasksInfoActivity extends BaseActivity {
             return;
         }
 
-        app.getRestAdapter().create(ITask.class).getTask(mTaskId, new RCallback<Task>() {
+        app.getRestAdapter().create(ITask.class).getTask(mTaskId, keyType, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
                 LogUtil.dee("任务详情:" + MainApp.gson.toJson(task));
@@ -702,7 +715,7 @@ public class TasksInfoActivity extends BaseActivity {
             @Override
             public void failure(final RetrofitError error) {
                 super.failure(error);
-                Toast("网络异常，请稍后再试");
+                HttpErrorCheck.checkError(error);
                 finish();
             }
         });
@@ -717,7 +730,7 @@ public class TasksInfoActivity extends BaseActivity {
         switch (v.getId()) {
 
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
 
             case R.id.img_title_right:
@@ -799,7 +812,7 @@ public class TasksInfoActivity extends BaseActivity {
                         @Override
                         public void success(final Task task, final Response response) {
                             if (task != null) {
-                                task.setAck(true);
+                                task.setViewed(true);
                                 Intent intent = new Intent();
                                 intent.putExtra("review", task);
                                 app.finishActivity(TasksInfoActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
@@ -814,7 +827,7 @@ public class TasksInfoActivity extends BaseActivity {
                     });
         } else if (mTask.getStatus() == Task.STATUS_REVIEWING && mTask.getCreator().isCurrentUser()) {
 
-            mTask.setAck(true);
+            mTask.setViewed(true);
             //跳转到评分
             Bundle bundle2 = new Bundle();
             bundle2.putSerializable("mTask", mTask);
@@ -842,141 +855,13 @@ public class TasksInfoActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 获取讨论内容，服务端已弃用，暂注释
-     */
-/*    @Background
-    void getDiscussion() {
-        ITask t = app.getRestAdapter().create(ITask.class);
-        t.getDiscussions(String.valueOf(getId()), new RCallback<PaginationX<Discussion>>() {
-            @Override
-            public void success(PaginationX<Discussion> discussionPaginationX, Response response) {
-
-                if (PaginationX.isEmpty(discussionPaginationX)) {
-                    return;
-                }
-
-                mPageDiscussion = discussionPaginationX;
-                tv_discussion_count.setText(String.valueOf(discussionPaginationX.getTotalRecords()));
-            }
-        });
-    }*/
 
     void showAttachment() {
-        if (ListUtil.IsEmpty(mTask.getAttachments())) {
+        if (null == mTask.getAttachments() || mTask.getAttachments().size() == 0) {
             return;
         }
         tv_attachment_count.setText("(" + (mTask.getAttachments() == null ? 0 : mTask.getAttachments().size()) + ")");
     }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-        switch (requestCode) {
-
-            /*选择完参与人后，回调*/
-            case ExtraAndResult.REQUEST_CODE:
-                String cc_user_id = data.getStringExtra(ExtraAndResult.CC_USER_ID);
-                String cc_user_name = data.getStringExtra(ExtraAndResult.CC_USER_NAME);
-                if (cc_user_id != null && cc_user_name != null) {
-                    setJoinUsers(cc_user_id, cc_user_name);
-                } else {
-                    Toast("未选择相关人员");
-                }
-
-                break;
-
-            //编辑 子任务 返回
-            case REQUEST_EDIT_TASK:
-                layout_child_Add_area.removeAllViews();
-                getTask();
-                break;
-
-            case REQUEST_SCORE:
-                getTask();
-                break;
-
-            case REQUEST_EDIT:
-                //TODO:奇怪这里取不到数据
-                //                mTask = (Task) data.getSerializableExtra("task_return");
-                //                joinedUserName = data.getStringExtra("joinedUserName");
-                //                updateUI();
-                getTask();
-                break;
-
-            case REQUEST_EDIT_DELETE:
-
-                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
-                if (data.getBooleanExtra("edit", false)) {
-                    if (IsCreator()) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mTask", mTask);
-                        bundle.putBoolean("type", IsCreator());
-                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
-                    } else {
-                        Bundle mBundle = new Bundle();
-                        mBundle.putInt(ExtraAndResult.STR_SHOW_TYPE, ExtraAndResult.TYPE_SHOW_USER);
-                        mBundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_MULTUI);
-                        app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, mBundle);
-                    }
-                                /*删除回调*/
-                } else if (data.getBooleanExtra("delete", false)) {
-                    app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
-                        @Override
-                        public void success(final Task o, final Response response) {
-                            Intent intent = new Intent();
-                            intent.putExtra("delete", mTask);
-                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, RESULT_OK, intent);
-                        }
-                    });
-                                /*复制回调*/
-                } else if (data.getBooleanExtra("extra", false)) {
-                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
-                    Bundle mBundle = new Bundle();
-                    mBundle.putSerializable("data", mTask);
-                    intent.putExtras(mBundle);
-                    startActivity(intent);
-                                /*修改参与人回调*/
-                } else if (data.getBooleanExtra("editjoiner", false)) {
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-                    app.startActivityForResult(this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT, ExtraAndResult.REQUEST_CODE, bundle);
-
-                }
-                break;
-
-            case MSG_ATTACHMENT:
-                if (data == null || data.getExtras() == null) {
-                    return;
-                }
-                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
-                try {
-                    mTask.setAttachments(attachments);
-                    showAttachment();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case MSG_DISCUSSION:
-                if (data == null || data.getExtras() == null) {
-                    return;
-                }
-
-                mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
-                showDiscussion();
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
 
     @OnActivityResult(REQUEST_CREATE_SUB)
     void onNewSubTaskActivityResult(final int resultCode, final Intent data) {
@@ -1002,31 +887,10 @@ public class TasksInfoActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mTask != null) {
-            mTask.setAck(true);
+            mTask.setViewed(true);
             intent.putExtra("data", mTask);
         }
         app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);
-    }
-
-    /**
-     * 参与人组装
-     */
-    void setJoinUsers(final String joinedUserIds, final String joinedUserName) {
-        userss.clear();
-        depts.clear();
-
-        String[] userIds = joinedUserIds.split(",");
-        String[] userNames = joinedUserName.split(",");
-
-        for (int i = 0; i < userIds.length; i++) {
-            NewUser newUser = new NewUser();
-            newUser.setName(userNames[i]);
-            newUser.setId(userIds[i]);
-            userss.add(newUser);
-        }
-
-        member.users = userss;
-        editJoiner();
     }
 
     /**
@@ -1048,7 +912,7 @@ public class TasksInfoActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mTask.getProjectId())) {
             map.put("projectId", mTask.getProjectId());
         }
-
+        LogUtil.d("修改参与人传递数据：" + app.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).updateJioner(mTask.getId(), map, new RCallback<Task>() {
             @Override
             public void success(final Task task, final Response response) {
@@ -1155,4 +1019,119 @@ public class TasksInfoActivity extends BaseActivity {
             childTastUsers.add(user.toShortUser());
         }
     }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+
+            /*选择完参与人后，回调*/
+            case SelectDetUserActivity2.REQUEST_ALL_SELECT:
+                member = (Members) data.getSerializableExtra("data");
+                joinName = new StringBuffer();
+                joinUserId = new StringBuffer();
+                if (member.users.size() == 0 && member.depts.size() == 0) {
+                    Toast("未选择相关人员");
+                    joinUserId.reverse();
+                } else {
+                    if (null != member.depts) {
+                        for (NewUser newUser : member.depts) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (null != member.users) {
+                        for (NewUser newUser : member.users) {
+                            joinName.append(newUser.getName() + ",");
+                            joinUserId.append(newUser.getId() + ",");
+                        }
+                    }
+                    if (!TextUtils.isEmpty(joinName)) {
+                        joinName.deleteCharAt(joinName.length() - 1);
+                    }
+                    editJoiner();
+                }
+                break;
+
+            //编辑 子任务 返回
+            case REQUEST_EDIT_TASK:
+                layout_child_Add_area.removeAllViews();
+                getTask();
+                break;
+
+            case REQUEST_SCORE:
+                getTask();
+                break;
+
+            case REQUEST_EDIT:
+                getTask();
+                break;
+
+            case REQUEST_EDIT_DELETE:
+
+                /*编辑回调 创建人可编辑 负责人只能修改参与人*/
+                if (data.getBooleanExtra("edit", false)) {
+                    if (IsCreator()) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("mTask", mTask);
+                        bundle.putBoolean("type", IsCreator());
+                        app.startActivityForResult(this, TasksEditActivity_.class, MainApp.ENTER_TYPE_RIGHT, REQUEST_EDIT, bundle);
+                    } else {
+                        SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+                    }
+                                /*删除回调*/
+                } else if (data.getBooleanExtra("delete", false)) {
+                    app.getRestAdapter().create(ITask.class).deleteTask(mTask.getId(), new RCallback<Task>() {
+                        @Override
+                        public void success(final Task o, final Response response) {
+                            Intent intent = new Intent();
+                            intent.putExtra("delete", mTask);
+                            app.finishActivity((Activity) mContext, MainApp.ENTER_TYPE_RIGHT, 0x09, intent);
+                        }
+                    });
+                                /*复制回调*/
+                } else if (data.getBooleanExtra("extra", false)) {
+                    Intent intent = new Intent(TasksInfoActivity.this, TasksAddActivity_.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable("data", mTask);
+                    intent.putExtras(mBundle);
+                    startActivity(intent);
+                                /*修改参与人回调*/
+                } else if (data.getBooleanExtra("editjoiner", false)) {
+                    SelectDetUserActivity2.startThisForAllSelect(this, joinUserId == null ? null : joinUserId.toString(), true);
+
+                }
+                break;
+
+            case MSG_ATTACHMENT:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+                ArrayList<Attachment> attachments = (ArrayList<Attachment>) data.getSerializableExtra("data");
+                try {
+                    mTask.setAttachments(attachments);
+                    showAttachment();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case MSG_DISCUSSION:
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
+
+                mPageDiscussion = (PaginationX<Discussion>) data.getSerializableExtra("data");
+                showDiscussion();
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
 }

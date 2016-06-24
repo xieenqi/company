@@ -17,8 +17,17 @@ public class BizFormFields implements Serializable {
     private boolean required;
     private boolean enable;
     private boolean canUpdate;
-
+    private boolean isSystem;
     private long updatedAt;
+
+
+    public boolean isSystem() {
+        return isSystem;
+    }
+
+    public void setIsSystem(boolean isSystem) {
+        this.isSystem = isSystem;
+    }
 
     public String getValue() {
         return value;

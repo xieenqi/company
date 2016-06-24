@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/include_item_title"/>
@@ -32,12 +34,10 @@
                 android:gravity="left|center_vertical"
                 android:hint="通知标题"
                 android:maxLength="50"
-                android:paddingLeft="@dimen/margin_other_view"/>
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view"/>
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_other_view"/>
+            <include layout="@layout/include_solid_line_left"/>
 
             <EditText
                 android:id="@+id/edt_content"
@@ -50,29 +50,31 @@
                 android:hint="请输入通知内容"
                 android:maxLength="500"
                 android:minHeight="180dp"
-                android:padding="10dp"/>
+                android:paddingLeft="@dimen/margin_other_view"
+                android:paddingRight="@dimen/margin_other_view"
+                android:paddingTop="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dimen_5"
+                >
 
-                <GridView
+                <com.loyo.oa.v2.tool.customview.CusGridView
                     android:id="@+id/gridView_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/activity_horizontal_margin"
                     android:gravity="center"
                     android:horizontalSpacing="@dimen/activity_horizontal_margin"
                     android:listSelector="@android:color/transparent"
                     android:numColumns="3"
+                    android:paddingLeft="@dimen/margin_other_view"
+                    android:paddingRight="@dimen/margin_other_view"
                     android:verticalSpacing="@dimen/activity_horizontal_margin"/>
             </LinearLayout>
 
-            <View
-                style="@style/view_split"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/margin_other_view"/>
+            <include layout="@layout/include_solid_line_left"/>
 
             <LinearLayout
                 android:id="@+id/layout_recevier"
@@ -103,6 +105,7 @@
                     android:id="@+id/img_title_right_reviewer"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dimen_4"
                     android:scaleType="center"
                     android:src="@drawable/right_arrow"/>
             </LinearLayout>

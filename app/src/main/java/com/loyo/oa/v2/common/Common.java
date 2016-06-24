@@ -3,7 +3,6 @@ package com.loyo.oa.v2.common;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
-
 import com.loyo.oa.v2.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
@@ -14,7 +13,6 @@ import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.StringUtil;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +76,63 @@ public final class Common {
     }
 
     /**
+     * 获取我的部门
+     */
+    public static Department getMyDeptment(String deptId) {
+        Department department = new Department();
+        for (Department department2 : getLstDepartment()) {
+            if (department2.getId().equals(deptId)) {
+                department = department2;
+            }
+        }
+        return department;
+    }
+
+    /**
      * 获取部门所有人员（包含部门下属所有部门里的人员）
+     *
+     * @param deptId
+     * @param result
+     * @return
+     */
+    public static ArrayList<User> getAllUsersByDeptId(String deptId, ArrayList<User> result) {
+        ArrayList<Department> departments = getLstDepartment(deptId);
+        ArrayList<User> users = getListUser(deptId);
+
+        if (null != users && !users.isEmpty()) {
+            for (int i = 0; i < users.size(); i++) {
+                User u = users.get(i);
+                if (!result.contains(u)) {
+                    result.add(u);
+                }
+            }
+        }
+
+        if (null != departments && !departments.isEmpty()) {
+            for (int i = 0; i < departments.size(); i++) {
+                getUsersByDeptId(departments.get(i).getId(), result);
+            }
+        }
+        if (null != departments && !departments.isEmpty()) {
+            for (int i = 0; i < departments.size(); i++) {
+                ArrayList<User> mUsers = departments.get(i).getUsers();
+                if (null != mUsers && !mUsers.isEmpty()) {
+                    for (int j = 0; j < mUsers.size(); j++) {
+                        User u = mUsers.get(j);
+                        if (!result.contains(u)) {
+                            result.add(u);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 获取部门所有人员 (此操作很耗时)
      *
      * @param deptId
      * @param result
@@ -99,7 +153,7 @@ public final class Common {
 
         if (null != departments && !departments.isEmpty()) {
             for (int i = 0; i < departments.size(); i++) {
-//                getUsersByDeptId(departments.get(i).getId(), result);
+                getUsersByDeptId(departments.get(i).getId(), result);
             }
         }
         if (null != departments && !departments.isEmpty()) {
@@ -128,8 +182,6 @@ public final class Common {
      * @return
      */
     public static ArrayList<ContactsGroup> getContactsGroups(String deptId) {
-
-
         List<Department> departmentList = getLstDepartment(deptId);//全部 组织 架构
         if (departmentList == null || departmentList.isEmpty()) {
             return new ArrayList<>();
@@ -334,6 +386,7 @@ public final class Common {
     }
 
     public static ArrayList<Department> getLstDepartment(String superDeptId) {
+//        LogUtil.d("state："+System.currentTimeMillis());
         ArrayList<Department> deptList = new ArrayList<>();
 
         if (TextUtils.isEmpty(superDeptId)) {
@@ -345,7 +398,7 @@ public final class Common {
                 }
             }
         }
-
+//        LogUtil.d("end："+System.currentTimeMillis());
         return deptList;
     }
 
@@ -457,6 +510,8 @@ public final class Common {
 
         /*获取我的部门下标*/
         for (int i = 0; i < getLstDepartment().size(); i++) {
+            if(null == MainApp.user.depts)
+                continue;
             for (int j = 0; j < MainApp.user.depts.size(); j++) {
                 if (getLstDepartment().get(i).getId().equals(MainApp.user.depts.get(j).getShortDept().getId())) {
                     positions = i;

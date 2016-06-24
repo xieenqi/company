@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -11,20 +12,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.MainActivity_;
+import com.loyo.oa.v2.activity.home.ActivityMainHome;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.common.ExtraAndResult;
+import com.loyo.oa.v2.tool.SharedUtil;
 
 /**
+ * 启动
  * Created xnq 16/1/18.
  */
-public class WelcomeActivity extends BaseActivity {
+public class WelcomeActivity extends Activity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
+        SharedUtil.putBoolean(getApplicationContext(), ExtraAndResult.WELCOM_KEY, true);
         viewPager.setAdapter(new PagerAdapter() {
 
             private static final int COUNT = 4;
@@ -65,7 +69,7 @@ public class WelcomeActivity extends BaseActivity {
                         public void onClick(final View v) {
                             Intent intent = new Intent();
                             intent.setClass(WelcomeActivity.this,
-                                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : MainActivity_.class);
+                                    TextUtils.isEmpty(MainApp.getToken()) ? LoginActivity.class : ActivityMainHome.class);
                             startActivity(intent);
                             finish();
                         }

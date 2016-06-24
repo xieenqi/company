@@ -23,7 +23,6 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.fragment.SignInOfTeamFragment;
 import com.loyo.oa.v2.fragment.SignInOfUserFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
-import com.loyo.oa.v2.tool.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -54,7 +53,6 @@ public class SignInManagerActivity extends FragmentActivity {
     @ViewById(R.id.lv_signin_category)
     ListView categoryListView;
 
-
     private Permission permission;
     private Animation rotateAnimation;
     private CommonCategoryAdapter categoryAdapter;
@@ -68,8 +66,8 @@ public class SignInManagerActivity extends FragmentActivity {
         tv_title_1.setText("我的拜访");
         layout_title_action.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
-        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
-        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
         /*超级管理员,Web权限判断*/
         if(!MainApp.user.isSuperUser()){

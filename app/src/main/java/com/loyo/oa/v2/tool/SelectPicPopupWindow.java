@@ -2,7 +2,9 @@ package com.loyo.oa.v2.tool;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -10,30 +12,41 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
+import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 新建客户选择照片的popwindow
+ * 【附件上传】自定义popwindow
+ *
+ * create by yyy on 2016/03/11
  */
 public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
-    public static final int GET_IMG = 10;
-    private String tag = "SelectPicPopupWindow";
-    private TextView btn_take_photo;//拍照
-    private TextView btn_pick_photo;//从相册选
-    private TextView btn_cancel;//取消
-    private LinearLayout layout;
-    private Uri fileUri;
+    public  static final int GET_IMG  = 10;
+    private static final int PHOTO   = 1;
+    private static final int PICTURE = 2;
     private static final String RESTORE_FILEURI = "fileUri";
+    private List<String> mSelectPath;
+
+    private TextView btn_take_photo;
+    private TextView btn_pick_photo;
+    private TextView btn_cancel;
+    private LinearLayout layout;
+    private Intent mIntent;
+    private Uri fileUri;
+    private int imgSize;
+    private boolean addpg;
+    private boolean localpic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +72,15 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         btn_take_photo.setOnClickListener(this);
 
         /**判断是直接调用相机，还是弹出选相框*/
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            boolean localpic = getIntent().getBooleanExtra("localpic", false);
+        if (null != getIntent() && null != getIntent().getExtras()) {
+            addpg    = getIntent().getBooleanExtra("addpg", false);
+            localpic = getIntent().getBooleanExtra("localpic", false);
+            imgSize  = getIntent().getIntExtra("imgsize",0);
+
+            if(!addpg){
+                imgSize = 9;
+            }
+
             if (!localpic) {
                 takePhotoIntent();
             }
@@ -112,45 +132,6 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (resultCode != RESULT_OK) {
-            finish();
-            return;
-        }
-
-        ArrayList<ImageInfo> pickArray = new ArrayList<>();
-        Intent i = new Intent();
-
-        if (requestCode == 1) {
-            //拍照
-            pickArray.add(new ImageInfo(fileUri.toString()));
-            if (pickArray.isEmpty()) {
-                setResult(RESULT_CANCELED);
-            } else {
-                i.putExtra("data", pickArray);
-                setResult(RESULT_OK, i);
-            }
-        } else if(requestCode == 2){
-            //选择文件
-            if (data.getData() != null) {
-                pickArray.add(new ImageInfo(data.getData().toString()));
-                i.putExtra("data", pickArray);
-                setResult(RESULT_OK, i);
-            }
-        }
-        finish();
-        //选择完或者拍完照后会在这里处理，然后我们继续使用setResult返回Intent以便可以传递数据和调用
-    }
-
-    private void takePhotoIntent(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = Global.getOutputMediaFileUri();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        startActivityForResult(intent, 1);
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -167,31 +148,149 @@ public class SelectPicPopupWindow extends Activity implements OnClickListener {
 
             /*从相册选*/
             case R.id.btn_pick_photo:
-                try {
-                    //选择照片的时候也一样，我们用Action为Intent.ACTION_GET_CONTENT，
-                    //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_PICK);
-                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //dealPermisson();
 
-//                    intent.setType("image/*");
-//                    //android 4.4
-//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-//                        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-//                    } else {
-//                        intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    }
+                Intent intent = new Intent(this, MultiImageSelectorActivity.class);
+                // 是否显示拍摄图片
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                // 最大可选择图片数量
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, imgSize);
+                // 选择模式
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_CROP_CIRCLE, false);
+                startActivityForResult(intent, PICTURE);
 
-                    startActivityForResult(intent, 2);
-                } catch (ActivityNotFoundException e) {
-                    Global.ProcException(e);
-                }
                 break;
+
             case R.id.btn_cancel:
                 finish();
                 break;
+
             default:
                 break;
         }
+    }
+
+    /**
+     * 处理拍照权限
+     * */
+    private void takePhotoIntent() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")
+                && PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.CAMERA", "com.loyo.oa.v2")) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            fileUri = Global.getOutputMediaFileUri();
+            LogUtil.d("相机路径：" + fileUri);
+            if (null != fileUri) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent, PHOTO);
+            } else {
+                Global.Toast("相机不可用");
+            }
+        } else {
+            final GeneralPopView generalPopView = new GeneralPopView(this, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用储存权限、相机权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                    Utils.doSeting(SelectPicPopupWindow.this);
+                    finish();
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                    finish();
+                }
+            });
+        }
+    }
+
+    /**
+     * 处理相册权限
+     * */
+    public void dealPermisson(){
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", "com.loyo.oa.v2")) {
+            try {
+                //选择照片的时候也一样，我们用Action为Intent.ACTION_GET_CONTENT，
+                //有些人使用其他的Action但我发现在有些机子中会出问题，所以优先选择这个
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_PICK);
+                intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, PICTURE);
+            } catch (ActivityNotFoundException e) {
+                Global.ProcException(e);
+            }
+        } else {
+            final GeneralPopView generalPopView = new GeneralPopView(this, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用储存权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                    Utils.doSeting(SelectPicPopupWindow.this);
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            finish();
+            return;
+        }
+
+        ArrayList<ImageInfo> pickArray = new ArrayList<>();
+        mIntent = new Intent();
+
+        switch (requestCode){
+
+            //拍照回调
+            case PHOTO:
+                pickArray.add(new ImageInfo(fileUri.toString()));
+                if (pickArray.isEmpty()) {
+                    setResult(RESULT_CANCELED);
+                } else {
+                    mIntent.putExtra("data", pickArray);
+                    setResult(RESULT_OK, mIntent);
+                }
+                break;
+
+            //相册选择回调
+            case PICTURE:
+                if(null != data){
+                    mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    for(String path : mSelectPath){
+                        pickArray.add(new ImageInfo("file://"+path));
+                    }
+                    mIntent.putExtra("data", pickArray);
+                    setResult(RESULT_OK, mIntent);
+                }
+
+                //选择文件
+           /* if (data.getData() != null) {
+                pickArray.add(new ImageInfo(data.getData().toString()));
+                i.putExtra("data", pickArray);
+                setResult(RESULT_OK, i);
+            }*/
+                break;
+
+        }
+        finish();
     }
 }

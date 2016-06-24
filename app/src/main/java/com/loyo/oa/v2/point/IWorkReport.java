@@ -1,12 +1,10 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.work.HttpDefaultComment;
-import com.loyo.oa.v2.beans.Discussion;
+import com.loyo.oa.v2.activity.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.beans.WorkReportDyn;
 import com.loyo.oa.v2.beans.WorkReportTpl;
-import com.loyo.oa.v2.beans.WorkreportLastUsers;
 import com.loyo.oa.v2.common.FinalVariables;
 
 import java.util.ArrayList;
@@ -27,13 +25,14 @@ import retrofit.http.QueryMap;
  */
 public interface IWorkReport {
 
-    @GET("/discussions?bizType=1")
-    void getDiscussions(@Query("bizId") String id, retrofit.Callback<PaginationX<Discussion>> cb);
+//    @GET("/discussions?bizType=1")
+//    void getDiscussions(@Query("bizId") String id, retrofit.Callback<PaginationX<Discussion>> cb);
+//
+//    @POST("/discussions")
+//    void createDiscussion(
+//            @Body HashMap<String, Object> body,
+//            retrofit.Callback<Discussion> cb);
 
-    @POST("/discussions")
-    void createDiscussion(
-            @Body HashMap<String, Object> body,
-            retrofit.Callback<Discussion> cb);
 
     @GET(FinalVariables.workreports + "template/{id}")
     void getTpl(@Path("id") String id, Callback<WorkReportTpl> cb);
@@ -41,8 +40,8 @@ public interface IWorkReport {
     @DELETE(FinalVariables.workreports + "template/{id}")
     void deleteTpl(@Path("id") String id, Callback<WorkReportTpl> cb);
 
-    @GET(FinalVariables.workreports + "lastusers")
-    void getLastUsers(Callback<WorkreportLastUsers> cb);
+//    @GET(FinalVariables.workreports + "lastusers")
+//    void getLastUsers(Callback<WorkreportLastUsers> cb);
 
 
     /**
@@ -50,9 +49,9 @@ public interface IWorkReport {
      *
      * @param map
      * @param cb
-     * */
+     */
     @GET("/statistics/process/number")
-    void getDynamic(@QueryMap HashMap<String,Object> map, Callback<ArrayList<WorkReportDyn>> cb);
+    void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<WorkReportDyn>> cb);
 
     /**
      * 根据ID获取报告详情
@@ -61,7 +60,7 @@ public interface IWorkReport {
      * @param cb
      */
     @GET("/wreport/{id}")
-    void get(@Path("id") String id, Callback<WorkReport> cb);
+    void get(@Path("id") String id, @Query("key") String key, Callback<WorkReport> cb);
 
     /**
      * 根据筛选条件获取报告列表
@@ -105,6 +104,7 @@ public interface IWorkReport {
 
     /**
      * 获取默认的点评人
+     *
      * @param cb
      */
     @GET("/wreport/latest")

@@ -14,6 +14,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;
+import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -22,7 +23,6 @@ import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
@@ -59,6 +59,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     private PaginationX<LegWork> workPaginationX = new PaginationX<>(20);
     private ArrayList<LegWork> legWorks = new ArrayList<>();
     private SignInListAdapter adapter;
+    private Permission permission;
     private boolean isTopAdd;
     private boolean isChanged;
 
@@ -68,13 +69,21 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText("拜访签到");
         layout_back.setOnTouchListener(Global.GetTouch());
-
-        if(!isMyUser){
+        if (!isMyUser) {
             layout_add.setVisibility(View.GONE);
         }
-
         layout_add.setOnTouchListener(Global.GetTouch());
         getData();
+
+        //超级管理员\权限判断
+        if (!MainApp.user.isSuperUser()) {
+            try {
+                permission = (Permission) MainApp.rootMap.get("0206");
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast("发布公告权限,code错误:0402");
+            }
+        }
     }
 
     @Override
@@ -92,9 +101,19 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
      */
     @Click(R.id.layout_add)
     void createNewSignIn() {
-        Bundle b = new Bundle();
-        b.putSerializable("data", mCustomer);
-        app.startActivityForResult(this, SignInActivity.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_CREATE_LEGWORK, b);
+        if(null != permission && !permission.isEnable()){
+            showGeneralDialog(true, false, "此功能权限已关闭，请联系管理员开启后再试！")
+                    .setNoCancelOnclick(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            generalPopView.dismiss();
+                        }
+                    });
+        }else{
+            Bundle b = new Bundle();
+            b.putSerializable("data", mCustomer);
+            app.startActivityForResult(this, SignInActivity.class, MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_CREATE_LEGWORK, b);
+        }
     }
 
     /**
@@ -126,8 +145,8 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
     private void getData() {
         HashMap<String, Object> map = new HashMap<>();
         //        map.put("userId", 0);
-        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01",app.df5)/1000);
-        map.put("endAt", DateTool.getEndAt_ofDay()/1000);
+        map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
+        map.put("endAt", DateTool.getEndAt_ofDay() / 1000);
         map.put("customerId", mCustomer.getId());
         map.put("pageIndex", workPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? legWorks.size() >= 20 ? legWorks.size() : 20 : 20);
@@ -135,7 +154,7 @@ public class SignInListActivity extends BaseActivity implements PullToRefreshBas
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getLegworks(map, new RCallback<PaginationX<LegWork>>() {
             @Override
             public void success(final PaginationX<LegWork> paginationX, final Response response) {
-                LogUtil.d(" 拜访签到列表数据： "+MainApp.gson.toJson(paginationX));
+                HttpErrorCheck.checkResponse("拜访签到列表数据：", response);
                 workPaginationX = paginationX;
                 lv.onRefreshComplete();
                 if (isTopAdd) {

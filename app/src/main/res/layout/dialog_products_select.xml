@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+<LinearLayout
     android:id="@+id/dialog"
-    android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/margin_other_view"
         android:cacheColorHint="#00000000"
-        android:divider="@color/activity_split"
-        android:paddingLeft="25dp"
-        android:dividerHeight="0.5dp">
+        android:divider="@color/lineCC"
+        android:dividerHeight="0.5dp"
+        android:paddingLeft="@dimen/margin_other_view"
+        android:scrollbars="none">
 
     </ListView>
 

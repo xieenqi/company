@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:clipToPadding="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
     <include layout="@layout/include_childtask_title_layout"/>
 
     <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
-        android:divider="@null"
         android:id="@+id/lv_child_task"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:divider="@null">
     </com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView>
 
 

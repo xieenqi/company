@@ -59,13 +59,20 @@ public class TasksInfoScoreActivity extends BaseActivity {
 
     public SwitchView task_info_switch;
     public LinearLayout tasks_info_sorceview;
-
+    private boolean isPc = false;
 
     @AfterViews
     void init() {
         super.setTitle("任务审核");
         setTouchView(R.id.layout_btn);
         getTempTask();
+
+        ratingBar_Task.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                isPc = true;
+            }
+        });
     }
 
     void getTempTask() {
@@ -106,12 +113,16 @@ public class TasksInfoScoreActivity extends BaseActivity {
                 comment = edt_content.getText().toString().trim();
                 sorce = ratingBar_Task.getProgress() * 20;
                 if(status == 0) {
-                    if (comment.isEmpty()) {
-                        Toast("请输入评语");
-                    } else {
-                        verfyTask(sorce, status, comment);
+                    if(comment.isEmpty()){
+                        Toast("点评内容不能为空!");
+                        return;
                     }
+                    verfyTask(sorce, status, comment);
                 }else{
+                    if(!isPc){
+                        Toast("请评分!");
+                        return;
+                    }
                     verfyTask(sorce, status, comment);
                 }
                 break;

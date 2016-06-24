@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:id="@+id/ll_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_grey_100"
+    android:background="@color/activity_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/include_common_title" />
+    <include layout="@layout/include_common_title"/>
 
     <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/listView_discussion"
@@ -15,7 +18,7 @@
         android:layout_weight="1"
         android:background="@color/activity_bg"
         android:divider="@color/activity_split"
-        android:dividerHeight="0.5dp" />
+        android:dividerHeight="0.5dp"/>
 
     <LinearLayout
         android:id="@+id/layout_comment"
@@ -24,8 +27,8 @@
         android:background="@color/white"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:minHeight="48dp"
         android:gravity="center_vertical"
+        android:minHeight="48dp"
         android:paddingBottom="5dp">
 
         <EditText
@@ -40,13 +43,13 @@
             android:maxLines="8"
             android:minHeight="@dimen/dimen_36"
             android:singleLine="false"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="26dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/md_grey_400" />
+            android:background="@color/md_grey_400"/>
 
         <TextView
             android:id="@+id/tv_send"
@@ -55,7 +58,7 @@
             android:gravity="center"
             android:text="发送"
             android:textColor="@color/title_bg1"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

@@ -11,11 +11,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_marginLeft="@dimen/margin_other_view"
             android:scaleType="fitCenter"
             android:src="@drawable/back_left1"/>
 

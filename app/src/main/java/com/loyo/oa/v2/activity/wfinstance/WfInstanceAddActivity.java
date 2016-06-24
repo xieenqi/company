@@ -40,6 +40,7 @@ import com.loyo.oa.v2.point.IWfInstance;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
+import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
@@ -48,7 +49,9 @@ import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
-import com.loyo.oa.v2.tool.customview.WfinstanceViewGroup;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
+import com.loyo.oa.v2.tool.customview.WfinAddViewGroup;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -60,8 +63,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -80,18 +85,26 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 部门选择 请求码
      */
     public static final int RESULT_DEPT_CHOOSE = 5;
+    /**
+     * 流程选择 请求码
+     */
+    public static final int RESULT_PROCESS_CHOOSE = 7;
+
+    private String startTimeId;
+    private String endTimeId;
 
     @ViewById ViewGroup img_title_left;
     @ViewById ViewGroup img_title_right;
     @ViewById ViewGroup layout_wfinstance_data;
     @ViewById ViewGroup ll_dept;
+    @ViewById TextView wordcount;
     @ViewById TextView tv_dept;
     @ViewById ViewGroup ll_project;
     @ViewById TextView tv_project;
     @ViewById Button btn_add;
     @ViewById TextView tv_WfTemplate;
     @ViewById TextView tv_bizform;
-    @ViewById GridView gridView_photo;
+    @ViewById CusGridView gridView_photo;
     @ViewById EditText edt_memo;
     @Extra
     String projectId;
@@ -111,7 +124,7 @@ public class WfInstanceAddActivity extends BaseActivity {
      */
     private ArrayList<HashMap<String, Object>> submitData = new ArrayList<HashMap<String, Object>>();
     //审批内容 新建一个的对象 集合
-    private List<WfinstanceViewGroup> WfinObj = new ArrayList<WfinstanceViewGroup>();
+    private List<WfinAddViewGroup> WfinObj = new ArrayList<WfinAddViewGroup>();
     private BizForm mBizForm;
     private ArrayList<WfTemplate> wfTemplateArrayList;
     private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
@@ -130,8 +143,8 @@ public class WfInstanceAddActivity extends BaseActivity {
         img_title_right.setOnTouchListener(Global.GetTouch());
         btn_add.setOnTouchListener(Global.GetTouch());
         ll_project.setOnClickListener(click);
+        edt_memo.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
-        //getTempWfintance();
         projectAddWfinstance();
         setDefaultDept();
     }
@@ -140,6 +153,10 @@ public class WfInstanceAddActivity extends BaseActivity {
      * 设置默认的部门 信息
      */
     public void setDefaultDept() {
+        if (null == MainApp.user.depts || MainApp.user.depts.size() <= 0) {
+            tv_dept.setText("没有归属部门");
+            return;
+        }
         Department myDepartment = MainApp.user.depts.get(0).getShortDept();
         tv_dept.setText(myDepartment.getName());
         deptId = myDepartment.getId();
@@ -162,12 +179,14 @@ public class WfInstanceAddActivity extends BaseActivity {
         Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
             @Override
             public void success(final ArrayList<Attachment> attachments, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 lstData_Attachment = attachments;
                 init_gridView_photo();
             }
 
             @Override
             public void failure(final RetrofitError error) {
+                HttpErrorCheck.checkError(error);
                 Toast("获取附件失败");
                 super.failure(error);
             }
@@ -193,27 +212,6 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
     };
 
-//    /**
-//     * 获取审批模板
-//     */
-//    void getTempWfintance() {
-//
-//        WfInstance wfInstance = DBManager.Instance().getWfInstance();
-//        if (wfInstance == null) {
-//            return;
-//        }
-//
-//        if (!TextUtils.isEmpty(wfInstance.wftemplateId)) {
-//            mTemplateId = wfInstance.wftemplateId;
-//        }
-//
-//        if (wfInstance.bizForm != null) {
-//            mBizForm = wfInstance.bizForm;
-//            intBizForm();
-//        }
-//        edt_memo.setText(wfInstance.memo);
-//
-//    }
 
     void init_gridView_photo() {
         signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
@@ -279,6 +277,18 @@ public class WfInstanceAddActivity extends BaseActivity {
                 if (mBizForm != null) {
                     intBizForm();
                 }
+
+                /*审批开始时间不能小于结束时间，
+                从审批内容里获取到 开始时间 结束时间 的id
+                再根据这个id去获取 开始结束 时间的值    */
+                for (int i = 0; i < mBizForm.getFields().size(); i++) {
+                    if (mBizForm.getFields().get(i).getName().equals("开始时间") && mBizForm.getFields().get(i).isSystem()) {
+                        startTimeId = mBizForm.getFields().get(i).getId();
+                    }
+                    if (mBizForm.getFields().get(i).getName().equals("结束时间") && mBizForm.getFields().get(i).isSystem()) {
+                        endTimeId = mBizForm.getFields().get(i).getId();
+                    }
+                }
                 break;
 
             case SelectPicPopupWindow.GET_IMG:
@@ -328,6 +338,13 @@ public class WfInstanceAddActivity extends BaseActivity {
                 });
                 break;
 
+            /*选择流程回调*/
+            case RESULT_PROCESS_CHOOSE:
+                int position = data.getExtras().getInt("position");
+                mTemplateId = wfTemplateArrayList.get(position).getId();
+                tv_WfTemplate.setText(wfTemplateArrayList.get(position).getTitle());
+                break;
+
             /*选择部门回调*/
             case RESULT_DEPT_CHOOSE:
                 UserInfo userInfo = (UserInfo) data.getSerializableExtra(DepartmentChoose.class.getName());
@@ -373,20 +390,6 @@ public class WfInstanceAddActivity extends BaseActivity {
             @Override
             public void success(final ArrayList<WfTemplate> bizFormFieldsPaginationX, final Response response) {
                 HttpErrorCheck.checkResponse("获取审批流程", response);
-//                /**
-//                 * 过滤流程节点是否可用
-//                 */
-//                if (null != wfTemplateArrayList) {
-//                    mTemplateId = "";
-//                    wfTemplateArrayList = null;
-//                }
-//                ArrayList<WfTemplate> newWfTemplateData = new ArrayList<>();
-//                for (WfTemplate element : bizFormFieldsPaginationX) {
-//                    if (element.isEnable() && null != element.getWfTplNodes()) {
-//                        newWfTemplateData.add(element);
-//                    }
-//                }
-//                wfTemplateArrayList = newWfTemplateData;
                 wfTemplateArrayList = bizFormFieldsPaginationX;
                 initUI_Dialog_WfTemplate();
             }
@@ -409,31 +412,35 @@ public class WfInstanceAddActivity extends BaseActivity {
             case R.id.btn_add:
                 addTypeData();
                 break;
+            //选择流程
             case R.id.layout_WfTemplate:
-                if (mBizForm == null) {
-                    Toast("请选择类型");
+/*                if (mBizForm == null) {
+                    Toast("请选择类别");
                     break;
                 } else if (dialog_follow != null && !dialog_follow.isShowing()) {
                     dialog_follow.show();
+                }*/
+
+                if (mBizForm == null) {
+                    Toast("请选择类别");
+                    break;
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", wfTemplateArrayList);
+                app.startActivityForResult(this, ProcessChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_PROCESS_CHOOSE, bundle);
+
                 break;
-            case R.id.layout_wfinstance://到选择类型页面
+            //选择类别
+            case R.id.layout_wfinstance:
                 app.startActivityForResult(this, WfInstanceTypeSelectManageActivity.class, MainApp.ENTER_TYPE_RIGHT, RESULT_WFINSTANCT_TYPE, null);
                 break;
+            //所属部门选择
             case R.id.ll_dept:
                 app.startActivityForResult(this, DepartmentChoose.class, MainApp.ENTER_TYPE_RIGHT, RESULT_DEPT_CHOOSE, null);
                 break;
             default:
                 break;
-        }
-    }
-
-    public void info() {
-        if (WfinObj == null)
-            return;
-        HashMap<String, Object> mapInfo = WfinObj.get(0).getInfoData();
-        for (Map.Entry<String, Object> entry : mapInfo.entrySet()) {
-            LogUtil.dll("KEY:" + entry.getKey() + "Value:" + entry.getValue());
         }
     }
 
@@ -455,7 +462,7 @@ public class WfInstanceAddActivity extends BaseActivity {
             newValues.put(field.getId(), "");
         }
         submitData.add(newValues);
-        WfinstanceViewGroup viewGroup = new WfinstanceViewGroup(this, mBizForm.getFields(), submitData);
+        WfinAddViewGroup viewGroup = new WfinAddViewGroup(this, mBizForm.getFields(), submitData);
         viewGroup.bindView(submitData.size() > 0 ? submitData.size() - 1 : submitData.size(), wfinstance_data_container);
         WfinObj.add(viewGroup);//新增一个内容 就存起来
         addIsRequired();
@@ -467,8 +474,8 @@ public class WfInstanceAddActivity extends BaseActivity {
 //            layout_edit.setVisibility(View.GONE);
 //        }
 
+    /*内容是否必填，加入list*/
     void addIsRequired() {
-        LogUtil.dll("执行 addIsRequired");
         for (int i = 0; i < mBizForm.getFields().size(); i++) {
             isRequiredList.add(mBizForm.getFields().get(i).isRequired());
         }
@@ -518,8 +525,41 @@ public class WfInstanceAddActivity extends BaseActivity {
         }
 
         for (int i = 0; i < postValue.size(); i++) {
-            if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i)) {
+            if (TextUtils.isEmpty(postValue.get(i).toString()) && isRequiredList.get(i) == true) {
                 Toast("请填写\"必填项\"");
+                return;
+            }
+        }
+
+        /**
+         * 获取请假/出差系统字段的 开始结束时间
+         * */
+        String startTimeDate = "";
+        String endTimeDate = "";
+
+        long startTimelong;
+        long endTimelong;
+
+        if (null != startTimeId) {
+            for (HashMap<String, Object> map : workflowValues) {
+                Set set = map.entrySet();
+                Iterator it = set.iterator();
+                while (it.hasNext()) {
+                    Map.Entry me = (Map.Entry) it.next();
+                    if (startTimeId.equals(me.getKey())) {
+                        startTimeDate = (String) map.get(startTimeId);
+                    }
+
+                    if (endTimeId.equals(me.getKey())) {
+                        endTimeDate = (String) map.get(endTimeId);
+                    }
+                }
+            }
+            startTimelong = Long.valueOf(DateTool.getDataOne(startTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+            endTimelong = Long.valueOf(DateTool.getDataOne(endTimeDate, DateTool.DATE_FORMATE_AT_MINUTES));
+
+            if (startTimelong > endTimelong && startTimelong != endTimelong) {
+                Toast("开始时间不能大于结束时间!");
                 return;
             }
         }
@@ -547,7 +587,7 @@ public class WfInstanceAddActivity extends BaseActivity {
                 cancelLoading();
                 if (wfInstance != null) {
                     isSave = false;
-                    wfInstance.ack = true;
+                    wfInstance.setViewed(true);
                     Intent intent = getIntent();
                     intent.putExtra("data", wfInstance);
                     app.finishActivity(WfInstanceAddActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_OK, intent);

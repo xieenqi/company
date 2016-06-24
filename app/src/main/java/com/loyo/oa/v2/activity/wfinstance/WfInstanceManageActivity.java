@@ -15,6 +15,11 @@ import com.loyo.oa.v2.tool.ViewUtil;
  */
 public class WfInstanceManageActivity extends BaseFragmentActivity {
 
+    /**
+     * 流程类型回调
+     * */
+    public final static int WFIN_FINISH_RUSH = 1;
+
     public WfInstanceManageFragment fragment = new WfInstanceManageFragment();
 
     @Override

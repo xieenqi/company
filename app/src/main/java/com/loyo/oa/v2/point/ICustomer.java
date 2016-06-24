@@ -1,13 +1,18 @@
 package com.loyo.oa.v2.point;
 
+import android.telecom.Call;
+
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.CommonTag;
 import com.loyo.oa.v2.beans.Contact;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.beans.CustomerExtraData;
 import com.loyo.oa.v2.beans.CustomerRepeatList;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.Industry;
 import com.loyo.oa.v2.beans.LegWork;
+import com.loyo.oa.v2.beans.MembersRoot;
 import com.loyo.oa.v2.beans.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Product;
@@ -99,13 +104,22 @@ public interface ICustomer {
 
     /**
      * 获取客户详情
+     * /customer/{id}  改之前的接口 20160613
      *
-     * @param id
+     * @param id       customer/mobile/574eb3ef526f155720edde30?_=1465786248655
      * @param callback
      */
-    @GET("/customer/{id}")
+    @GET("/customer/mobile/{id}")
     void getCustomerById(@Path("id") String id, Callback<Customer> callback);
 
+    @GET("/properties/dynamic/")
+    void getDynamic(@QueryMap HashMap<String, Object> map, Callback<ArrayList<CustomerExtraData>> callback);
+
+    /**
+     * 获取参与人权限
+     */
+    @GET("/config/?key=cust_member_canedit")
+    void getMembersRoot(Callback<MembersRoot> callback);
 
     /**
      * 丢入公海
@@ -290,4 +304,7 @@ public interface ICustomer {
      */
     @GET("/contact/{customerId}")
     void getCustomerContacts(@Path("customerId") String id, Callback<Customer> callback);
+
+    @POST("/customer/")
+    void addNewCustomer(@Body Map<String,Object> map,Callback<Customer> callback);
 }

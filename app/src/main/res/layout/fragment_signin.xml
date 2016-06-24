@@ -5,19 +5,22 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         >
 
         <LinearLayout
             android:id="@+id/img_time_left"
             android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/dimen_55"
-            android:layout_marginLeft="@dimen/dimen_80"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="vertical"
+            android:paddingRight="@dimen/dimen_5">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -40,11 +43,11 @@
         <LinearLayout
             android:id="@+id/img_time_right"
             android:layout_width="@dimen/dimen_55"
-            android:layout_height="@dimen/dimen_55"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/dimen_80"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimen_5">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -55,7 +58,7 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -80,7 +83,7 @@
             android:layout_marginLeft="@dimen/dimen_16"
             android:gravity="left|center"
             android:text=""
-            android:textColor="#999999"
+            android:textColor="@color/text99"
             android:textSize="@dimen/text_sp14"
             />
 
@@ -91,7 +94,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="left|center"
             android:text=""
-            android:textColor="#999999"
+            android:textColor="@color/text99"
             android:textSize="@dimen/text_sp14"
             />
     </LinearLayout>
@@ -138,6 +141,7 @@
             android:layout_height="match_parent"
             android:background="@color/whitesmoke"
             android:cacheColorHint="#00000000"
+            android:divider="@null"
             android:drawSelectorOnTop="true"
             android:fadingEdge="none"
             android:fastScrollEnabled="false"

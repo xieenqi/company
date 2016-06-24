@@ -10,27 +10,29 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.application.MainApp;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class WeeksDialog {
+
     /**
      * 显示操作结果的result
      */
-    TextView resultTview;
+    private TextView resultTview;
+    private int singleIndex = 0;
 
-    int singleIndex = 0;
-
-    SparseArray<HashMap<String, Long>> sourseList = new SparseArray();
-
-    HashMap<String, Long> returnHashMap = new HashMap<String, Long>();
-
-    Context mContext;
-    String sourseArray[];
-
-    Date curDate = new Date();
+    private SparseArray<HashMap<String, Long>> sourseList = new SparseArray();
+    private HashMap<String, Long> returnHashMap = new HashMap<String, Long>();
+    private Context mContext;
+    private String sourseArray[];
+    private String sourseToWeek[];
+    private String dateR;
+    private Date curDate = new Date();
 
     public TextView getResultTview() {
         return resultTview;
@@ -55,7 +57,7 @@ public class WeeksDialog {
 
         long monday, sunday;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             monday = cal.getTime().getTime();
             cal.add(Calendar.DATE, 6);
@@ -78,19 +80,38 @@ public class WeeksDialog {
         setDataSource();
 
         if (sourseList != null) {
+
+            /*不含本周数据*/
             ArrayList<String> exList = new ArrayList<String>();
             for (int i = 0; i < sourseList.size(); i++) {
                 HashMap<String, Long> item = sourseList.get(i);
                 long begin = item.get("begin");
                 long end = item.get("end");
 
+                /*周报补签，取消本周显示*/
                 if (i == 0) {
-                    exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
+                    //exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
                 } else {
                     exList.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)));
                 }
             }
             sourseArray = exList.toArray(new String[exList.size()]);
+
+            /*包含本周数据*/
+            ArrayList<String> exListToWeek = new ArrayList<String>();
+            for (int i = 0; i < sourseList.size(); i++) {
+                HashMap<String, Long> item = sourseList.get(i);
+                long begin = item.get("begin");
+                long end = item.get("end");
+
+                /*周报补签，取消本周显示*/
+                if (i == 0) {
+                    exListToWeek.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)).concat(" (本周)"));
+                } else {
+                    exListToWeek.add(DateTool.getMMDD(begin).concat(" - ").concat(DateTool.getMMDD(end)));
+                }
+            }
+            sourseToWeek = exListToWeek.toArray(new String[exList.size()]);
         }
     }
 
@@ -105,13 +126,15 @@ public class WeeksDialog {
     private DialogInterface.OnClickListener btnListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int which) {// 按下项所在的索引
+            LogUtil.dee("周报按下的索引:"+singleIndex);
             String date=sourseArray[singleIndex].replace(" (本周)", "").split("-")[1];
-            String dateR=sourseArray[singleIndex].replace(" (本周)", "");
+            dateR=sourseArray[singleIndex].replace(" (本周)", "");
             if (DateTool.getDateToTimestamp(date,MainApp.getMainApp().df7)<DateTool.getBeginAt_ofWeek())
             {
                 dateR+="(补签)";
             }
             resultTview.setText(dateR);
+            LogUtil.dee("AAAA:"+sourseToWeek[0]);
         }
     };
 
@@ -125,6 +148,38 @@ public class WeeksDialog {
     };
 
     public String GetDefautlText() {
-        return sourseArray[singleIndex].replace(" (本周)", "");
+        return sourseToWeek[0].replace(" (本周)", "");
+    }
+
+    /**
+     * 获取当前星期开始 结束时间
+     * */
+    public Long[] getNowBeginandEndAt(){
+        Calendar calendar = Calendar.getInstance();
+        Long[] begAndendAt = new Long[2];
+        String biber = sourseToWeek[0].replace("(本周)", "").trim();
+        String[] gdragon = biber.split("-");
+        String[] begAt = gdragon[0].trim().split("\\.");
+        String[] endAt = gdragon[1].trim().split("\\.");
+
+        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR),(Integer.valueOf(begAt[0])-1),Integer.valueOf(begAt[1]));
+        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR),(Integer.valueOf(endAt[0])-1),Integer.valueOf(endAt[1]));
+        return begAndendAt;
+    }
+
+    /**
+     * 获取选中星期的开始 结束时间
+     * */
+    public Long[] GetBeginandEndAt(){
+        Calendar calendar = Calendar.getInstance();
+        Long[] begAndendAt = new Long[2];
+        String biber = dateR.replace("(补签)","").trim();
+        String[] gdragon = biber.split("-");
+        String[] begAt = gdragon[0].trim().split("\\.");
+        String[] endAt = gdragon[1].trim().split("\\.");
+
+        begAndendAt[0] = DateTool.getSomeWeekBeginAt(calendar.get(calendar.YEAR),(Integer.valueOf(begAt[0])-1),Integer.valueOf(begAt[1]));
+        begAndendAt[1] = DateTool.getSomeWeekEndAt(calendar.get(calendar.YEAR),(Integer.valueOf(endAt[0])-1),Integer.valueOf(endAt[1]));
+        return begAndendAt;
     }
 }

@@ -10,6 +10,7 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.ITrackLog;
+import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.service.TrackLogRecevier;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
@@ -103,8 +104,7 @@ public class TrackRule implements Serializable {
             app.getRestAdapter().create(ITrackLog.class).getTrackRule(new RCallback<TrackRule>() {
                 @Override
                 public void success(TrackRule trackRule, Response response) {
-                    LogUtil.d("后台轨迹规则加载成功！");
-                    HttpErrorCheck.checkResponse(response);
+                    HttpErrorCheck.checkResponse("后台轨迹规则加载成功！", response);
                     if (null != trackRule && trackRule.enable) {
                         DBManager.Instance().putTrackRule(MainApp.gson.toJson(trackRule));
                         SendTrackRuleBroadcast(app, trackRule);
@@ -117,6 +117,13 @@ public class TrackRule implements Serializable {
                 SendTrackRuleBroadcast(app, trackRule);
             }
         }
+    }
+
+    public static void initUserData(Context context) {
+//        Intent intent = new Intent(context, InitDataService.class);
+//        context.startService(intent);
+
+        InitDataService_.intent(context).start();
     }
 
     /**

@@ -2,7 +2,7 @@ package com.loyo.oa.v2.activity.project;
 
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
-
+import com.loyo.oa.v2.beans.UserInfo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,12 +47,12 @@ public class HttpProject implements Serializable {
 
     public class ProjectMember implements Serializable {
         public User user = new User();
-        public Dept dept;
+        public Dept dept = new Dept();
         public boolean canReadAll;
     }
 
     /**
-     * @是否和项目相关
+     * @是否和项目相关 说  明:比较个人id相和部门id，并且是多部门情况下
      */
     public boolean isProjectRelevant() {
         String myId = MainApp.user.id;
@@ -67,7 +67,16 @@ public class HttpProject implements Serializable {
             if (null != member.user && myId.equals(member.user.id)) {
                 return true;
             }
+
+            for (UserInfo userInfo : MainApp.user.getDepts()) {
+                if (null != member.dept && null != userInfo.getShortDept() && null != member.dept.xpath && null != userInfo.getShortDept().getXpath() &&
+                        userInfo.getShortDept().getXpath().contains(member.dept.xpath)) {
+                    //部门id改成部门XPath
+                    return true;
+                }
+            }
         }
+
         if (myId.equals(creator.id)) {
             return true;
         }

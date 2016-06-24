@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import android.text.TextUtils;
+
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;
@@ -72,7 +74,7 @@ public class NewUser implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return TextUtils.isEmpty(name) ? " " : name;
     }
 
     public NewUser setName(String name) {

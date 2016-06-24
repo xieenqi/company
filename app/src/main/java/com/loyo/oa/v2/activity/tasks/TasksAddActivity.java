@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activity.tasks;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,9 +18,8 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.activity.commonview.SwitchView;
 import com.loyo.oa.v2.activity.project.ProjectSearchActivity;
-import com.loyo.oa.v2.activity.commonview.SelectDetUserActivity;
-import com.loyo.oa.v2.activity.customer.CustomerSearchActivity;
-import com.loyo.oa.v2.adapter.SignInGridViewAdapter;
+import com.loyo.oa.v2.activity.customer.activity.CustomerSearchActivity;
+import com.loyo.oa.v2.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.CornBody;
@@ -31,7 +28,6 @@ import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;
 import com.loyo.oa.v2.beans.PostBizExtData;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Reviewer;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -42,7 +38,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttachment;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.CommonSubscriber;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -50,27 +45,25 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
 import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.tool.customview.CountTextWatcher;
+import com.loyo.oa.v2.tool.customview.CusGridView;
 import com.loyo.oa.v2.tool.customview.DateTimePickDialog;
 import com.loyo.oa.v2.tool.customview.RepeatTaskView;
-import com.loyo.oa.v2.tool.customview.SelectCityView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 /**
  * 【创建任务】 页面
@@ -105,6 +98,8 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     ImageView img_title_right_toUsers;
     @ViewById
+    TextView wordcount;
+    @ViewById
     TextView tv_retask;
     @ViewById
     TextView tv_responsiblePerson;
@@ -125,7 +120,7 @@ public class TasksAddActivity extends BaseActivity {
     @ViewById
     EditText edt_title;
     @ViewById
-    GridView gridView_photo;
+    CusGridView gridView_photo;
     @Extra
     String projectId;
     @Extra
@@ -140,24 +135,30 @@ public class TasksAddActivity extends BaseActivity {
     String customerName;
 
     private AlertDialog dialog_Product;
-    private SignInGridViewAdapter signInGridViewAdapter;
+    private ImageGridViewAdapter imageGridViewAdapter;
     private NewUser newUser;
     private CornBody cornBody;
-    private ArrayList<Attachment> lstData_Attachment = new ArrayList<>();
     private StringBuffer strBuf;
     private Members members;
     private PostBizExtData bizExtData;
     private ArrayList<NewUser> userss;
     private ArrayList<NewUser> depts;
-    private int remindTime;
     private long mDeadline;
+    private int remindTime;
     private int mRemind = 0;
+    private int bizType = 2;
+    private int uploadSize;
+    private int uploadNum;
     private boolean isCopy;
     private boolean isState = true;
     private boolean isKind;//true:重复 //截止
+
+    private String title;
+    private String content;
     private StringBuffer joinName;
     private StringBuffer joinUserId;
     private String uuid = StringUtil.getUUID();
+    private ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = new ArrayList<>();
 
 
     @AfterViews
@@ -176,7 +177,7 @@ public class TasksAddActivity extends BaseActivity {
         cornBody = new CornBody();
         strBuf = new StringBuffer();
         switch_approve.setState(true);
-
+        edt_content.addTextChangedListener(new CountTextWatcher(wordcount));
         init_gridView_photo();
         setTouchView(-1);
         getTempTask();
@@ -229,46 +230,45 @@ public class TasksAddActivity extends BaseActivity {
             u.realname = mTask.getResponsiblePersonName();
             setResponsiblePersion(u);
         }
-        //截至日期设置,需求没要求默认时间，暂注释
-        /*  if (mTask.getPlanEndAt() > 0) {
-            mDeadline = mTask.getPlanEndAt();
-            tv_deadline.setText(app.df3.format(new Date(mDeadline * 1000)));
-        }*/
 
         if (!TextUtils.isEmpty(projectTitle)) {
             tv_Project.setText(projectTitle);
         }
-        getBundle();
+         getBundle();
 
     }
 
+    /**
+     * 图片列表绑定
+     * */
     void init_gridView_photo() {
-        signInGridViewAdapter = new SignInGridViewAdapter(this, lstData_Attachment, true, true, true, 0);
-        SignInGridViewAdapter.setAdapter(gridView_photo, signInGridViewAdapter);
+        imageGridViewAdapter = new ImageGridViewAdapter(this,true,true,0,pickPhots);
+        ImageGridViewAdapter.setAdapter(gridView_photo, imageGridViewAdapter);
     }
 
     /**
      * 新建任务 POST提交
      */
 
-    void requestCommitTask(final String title,final String content) {
-
-        showLoading("");
+    void requestCommitTask() {
+        if(pickPhots.size() == 0){
+            showLoading("正在提交");
+        }
         bizExtData = new PostBizExtData();
-        bizExtData.setAttachmentCount(lstData_Attachment.size());
+        bizExtData.setAttachmentCount(pickPhots.size());
         HashMap<String, Object> map = new HashMap<>();
         map.put("title", title);
         map.put("content", content);
         map.put("responsiblePerson", newUser);
         map.put("members", members);
-        map.put("bizExtData",bizExtData);
+        map.put("bizExtData", bizExtData); //上传图片的数量
         map.put("attachmentUUId", uuid);
         map.put("customerId", customerId);
         map.put("customerName", customerName);
 
-        if(switch_approve.getState() == 1){
+        if (switch_approve.getState() == 1) {
             isState = false;
-        }else if(switch_approve.getState() == 4){
+        } else if (switch_approve.getState() == 4) {
             isState = true;
         }
 
@@ -276,9 +276,9 @@ public class TasksAddActivity extends BaseActivity {
             map.put("projectId", projectId);
         }
 
-        if(isKind){
-            map.put("cornBody",cornBody);
-        }else if(!isKind){
+        if (isKind) {
+            map.put("cornBody", cornBody);
+        } else if (!isKind) {
             if (mRemind > 0) {
                 map.put("remindflag", mRemind > 0);
                 map.put("remindtime", remindTime);
@@ -291,13 +291,14 @@ public class TasksAddActivity extends BaseActivity {
         LogUtil.d("任务创建 发送的数据:" + MainApp.gson.toJson(map));
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).create(map, new RCallback<Task>() {
             @Override
-            public void success(final Task task,final Response response) {
+            public void success(final Task task, final Response response) {
+                HttpErrorCheck.checkResponse(response);
                 //不需要保存
                 cancelLoading();
                 isSave = false;
                 Intent intent = new Intent();
                 intent.putExtra("data", task);
-                setResult(Activity.RESULT_OK, intent);
+                setResult(0x09, intent);
                 finish();
                 if (isCopy)
                     TasksInfoActivity.instance.finish();
@@ -307,27 +308,28 @@ public class TasksAddActivity extends BaseActivity {
             public void failure(final RetrofitError error) {
                 super.failure(error);
                 HttpErrorCheck.checkError(error);
-                cancelLoading();
             }
         });
     }
 
     @Click({R.id.img_title_left, R.id.img_title_right, R.id.layout_responsiblePerson,
-            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer,R.id.layout_retask})
+            R.id.layout_deadline, R.id.tv_toUsers, R.id.layout_del, R.id.layout_project, R.id.layout_mycustomer, R.id.layout_retask})
     void onClick(final View v) {
         switch (v.getId()) {
+
             case R.id.img_title_left:
                 app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
                 break;
 
+            //提交任务
             case R.id.img_title_right:
-                String title = edt_title.getText().toString().trim();
+                title = edt_title.getText().toString().trim();
                 if (TextUtils.isEmpty(title)) {
                     Toast(getString(R.string.app_title) + getString(R.string.app_no_null));
                     break;
                 }
 
-                String content = edt_content.getText().toString().trim();
+                content = edt_content.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
                     Toast(getString(R.string.app_content) + getString(R.string.app_no_null));
                     break;
@@ -338,17 +340,17 @@ public class TasksAddActivity extends BaseActivity {
                     break;
                 }
 
-                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")){
+                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().equals("不重复")) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if(tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()){
+                if (tv_deadline.getText().toString().equals("不截止") && tv_retask.getText().toString().trim().isEmpty()) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
 
-                if(tv_retask.getText().toString().equals("不重复") && mDeadline <= 0){
+                if (tv_retask.getText().toString().equals("不重复") && mDeadline <= 0) {
                     Toast("截止日期或重复任务必选一个功能！");
                     break;
                 }
@@ -358,14 +360,19 @@ public class TasksAddActivity extends BaseActivity {
                     Toast("负责人" + getString(R.string.app_no_null));
                     break;
                 }
-
-                requestCommitTask(title, content);
+                //没有附件
+                if(pickPhots.size() == 0){
+                    requestCommitTask();
+                //有附件
+                }else{
+                    newUploadAttachement();
+                }
                 break;
 
             //重复任务
             case R.id.layout_retask:
                 setRepeatTask();
-                 break;
+                break;
 
             //截至时间
             case R.id.layout_deadline:
@@ -379,7 +386,7 @@ public class TasksAddActivity extends BaseActivity {
 
             //参与人选项
             case R.id.tv_toUsers:
-                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString());
+                SelectDetUserActivity2.startThisForAllSelect(TasksAddActivity.this, joinUserId == null ? null : joinUserId.toString(), true);
                 break;
 
             case R.id.layout_del:
@@ -437,8 +444,8 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 截至日期选择框
-     * */
-    void setDeadLine(){
+     */
+    void setDeadLine() {
         DateTimePickDialog dateTimePickDialog = new DateTimePickDialog(this, null);
         dateTimePickDialog.dateTimePicKDialog(new DateTimePickDialog.OnDateTimeChangedListener() {
             @Override
@@ -453,6 +460,7 @@ public class TasksAddActivity extends BaseActivity {
                 layout_remind.setEnabled(true);
                 tv_remind.setTextColor(mContext.getResources().getColor(R.color.title_bg1));
             }
+
             @Override
             public void onCancel() {
                 isKind = true;
@@ -463,38 +471,38 @@ public class TasksAddActivity extends BaseActivity {
                 layout_retask_view.setVisibility(View.VISIBLE);
             }
 
-        }, false);
+        }, false, "不截止");
     }
 
     /**
      * 重复任务数据初始化
-     * */
-    void setRepeatParam(String[] str){
+     */
+    void setRepeatParam(String[] str) {
 
-        if(str[0].equals("每天")){
+        if (str[0].equals("每天")) {
             cornBody.setType(1);
-        }else if(str[0].equals("每周")){
+        } else if (str[0].equals("每周")) {
             cornBody.setType(2);
 
-            if(str[1].equals("周一")){
-            cornBody.setWeekDay(2);
-            }else if(str[1].equals("周二")){
+            if (str[1].equals("周一")) {
+                cornBody.setWeekDay(2);
+            } else if (str[1].equals("周二")) {
                 cornBody.setWeekDay(3);
-            }else if(str[1].equals("周三")){
+            } else if (str[1].equals("周三")) {
                 cornBody.setWeekDay(4);
-            }else if(str[1].equals("周四")){
+            } else if (str[1].equals("周四")) {
                 cornBody.setWeekDay(5);
-            }else if(str[1].equals("周五")){
+            } else if (str[1].equals("周五")) {
                 cornBody.setWeekDay(6);
-            }else if(str[1].equals("周六")){
+            } else if (str[1].equals("周六")) {
                 cornBody.setWeekDay(7);
-            }else if(str[1].equals("周日")){
+            } else if (str[1].equals("周日")) {
                 cornBody.setWeekDay(1);
             }
 
-        }else if(str[0].equals("每月")){
+        } else if (str[0].equals("每月")) {
             cornBody.setType(3);
-            cornBody.setDay(Integer.parseInt(str[1].replaceAll("号","")));
+            cornBody.setDay(Integer.parseInt(str[1].replaceAll("号", "")));
         }
 
         cornBody.setHour(Integer.parseInt(str[2].replaceAll("时", "")));
@@ -504,8 +512,8 @@ public class TasksAddActivity extends BaseActivity {
 
     /**
      * 重复任务功能
-     * */
-    void setRepeatTask(){
+     */
+    void setRepeatTask() {
         final RepeatTaskView repeatTaskView = new RepeatTaskView(this);
         repeatTaskView.setCanceledOnTouchOutside(true);
         repeatTaskView.show();
@@ -517,18 +525,18 @@ public class TasksAddActivity extends BaseActivity {
                 setRepeatParam(cityArr);
                 String hour = cityArr[2];
                 String mins = cityArr[3];
-                if(hour.equals("0时")){
-                    hour = "0"+hour;
+                if (hour.equals("0时")) {
+                    hour = "0" + hour;
                 }
 
-                if(mins.equals("0分")) {
-                    mins = "0"+mins;
+                if (mins.equals("0分")) {
+                    mins = "0" + mins;
                 }
 
-                if(cityArr[1].equals("无")){
-                    tv_retask.setText(cityArr[0] + " " + hour.replaceAll("时","") + ":" + mins.replaceAll("分",""));
-                }else{
-                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时","") + ":" + mins.replaceAll("分",""));
+                if (cityArr[1].equals("无")) {
+                    tv_retask.setText(cityArr[0] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
+                } else {
+                    tv_retask.setText(cityArr[0] + " " + cityArr[1] + " " + hour.replaceAll("时", "") + ":" + mins.replaceAll("分", ""));
                 }
                 task_ll_deadline.setVisibility(View.GONE);
                 view_task_approve.setVisibility(View.GONE);
@@ -560,28 +568,47 @@ public class TasksAddActivity extends BaseActivity {
         tv_responsiblePerson.setText(newUser.getName());
     }
 
-
     /**
-     * 获取附件(创建)
-     */
-    void getAttachments() {
-        Utils.getAttachments(uuid, new RCallback<ArrayList<Attachment>>() {
-            @Override
-            public void success(final ArrayList<Attachment> _attachments,final Response response) {
-                lstData_Attachment = _attachments;
-                init_gridView_photo();
-            }
+     * 批量上传附件
+     * */
+    private void newUploadAttachement(){
+        showLoading("正在提交");
+        try {
+            uploadSize = 0;
+            uploadNum  = pickPhots.size();
+            for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
+                Uri uri = Uri.parse(item.path);
+                File newFile = Global.scal(this, uri);
+                if (newFile != null && newFile.length() > 0) {
+                    if (newFile.exists()) {
+                        TypedFile typedFile = new TypedFile("image/*", newFile);
+                        TypedString typedUuid = new TypedString(uuid);
+                        RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).newUpload(typedUuid, bizType, typedFile,
+                                new RCallback<Attachment>() {
+                                    @Override
+                                    public void success(final Attachment attachments, final Response response) {
+                                        uploadSize++;
+                                        if(uploadSize == uploadNum){
+                                            requestCommitTask();
+                                        }
+                                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                Toast("获取附件失败");
-                super.failure(error);
-            }
-        });
+                                    @Override
+                                    public void failure(final RetrofitError error) {
+                                        super.failure(error);
+                                        HttpErrorCheck.checkError(error);
+                                    }
+                                });
+                            }
+                        }
+                    }
+        } catch (Exception ex) {
+            Global.ProcException(ex);
+        }
     }
 
     @Override
-    public void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
@@ -613,58 +640,16 @@ public class TasksAddActivity extends BaseActivity {
                 }
                 break;
 
+            /*上传附件回调*/
             case SelectPicPopupWindow.GET_IMG:
-                try {
-                    ArrayList<SelectPicPopupWindow.ImageInfo> pickPhots = (ArrayList<SelectPicPopupWindow.ImageInfo>)
-                            data.getSerializableExtra("data");
-                    for (SelectPicPopupWindow.ImageInfo item : pickPhots) {
-                        Uri uri = Uri.parse(item.path);
-                        File newFile = Global.scal(this, uri);
-
-                        if (newFile != null && newFile.length() > 0) {
-                            if (newFile.exists()) {
-                                LogUtil.dll("执行了");
-                                Utils.uploadAttachment(uuid,2,newFile).subscribe(new CommonSubscriber(this) {
-                                    @Override
-                                    public void onNext(final Serializable serializable) {
-                                        getAttachments();
-                                    }
-                                    @Override
-                                    public void onError(final Throwable e) {
-                                        super.onError(e);
-                                    }
-                                });
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    Global.ProcException(ex);
-                }
-
+                pickPhots.addAll((ArrayList<SelectPicPopupWindow.ImageInfo>) data.getSerializableExtra("data"));
+                init_gridView_photo();
                 break;
+
             //附件删除回调
             case FinalVariables.REQUEST_DEAL_ATTACHMENT:
-                Utils.dialogShow(this, "请稍候");
-                final Attachment delAttachment = (Attachment) data.getSerializableExtra("delAtm");
-                HashMap<String,Object> map = new HashMap<String, Object>();
-                map.put("bizType",2);
-                map.put("uuid", uuid);
-                RestAdapterFactory.getInstance().build(Config_project.API_URL_ATTACHMENT()).create(IAttachment.class).remove(String.valueOf(delAttachment.getId()),map, new RCallback<Attachment>() {
-                    @Override
-                    public void success(final Attachment attachment,final Response response) {
-                        Utils.dialogDismiss();
-                        Toast("删除附件成功!");
-                        lstData_Attachment.remove(delAttachment);
-                        init_gridView_photo();
-                    }
-
-                    @Override
-                    public void failure(final RetrofitError error) {
-                        Utils.dialogDismiss();
-                        Toast("删除附件失败!");
-                        super.failure(error);
-                    }
-                });
+                pickPhots.remove(data.getExtras().getInt("position"));
+                init_gridView_photo();
                 break;
 
             //用户单选, 负责人
@@ -716,9 +701,9 @@ public class TasksAddActivity extends BaseActivity {
         super.onDestroy();
         DBManager.Instance().deleteTask();
         if (isSave) {
-            if(switch_approve.getState() == 1){
+            if (switch_approve.getState() == 1) {
                 isState = false;
-            }else if(switch_approve.getState() == 4){
+            } else if (switch_approve.getState() == 4) {
                 isState = true;
             }
 
@@ -743,12 +728,12 @@ public class TasksAddActivity extends BaseActivity {
     }
 
     public class RemindAdapter extends CommonAdapter<String> {
-        public RemindAdapter(final Context context,final List<String> datas,final int layoutId) {
+        public RemindAdapter(final Context context, final List<String> datas, final int layoutId) {
             super(context, datas, layoutId);
         }
 
         @Override
-        public void convert(final ViewHolder holder,final String s) {
+        public void convert(final ViewHolder holder, final String s) {
             holder.setText(R.id.tv, s);
         }
     }

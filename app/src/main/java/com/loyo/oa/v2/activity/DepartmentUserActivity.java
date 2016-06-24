@@ -51,8 +51,8 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
     private Button btn_title_right;
     private DepartmentFragment departmentFragment; //部门fragment
     private UserFragment userFragment;             //员工fragment
-    public int show_type;   //页面类型（0=部门+人员,1=仅人员）
-    public int select_type; //选择类型 (0=多选，1=单选)
+    public int show_type;                          //页面类型（0=部门+人员,1=仅人员）
+    public int select_type;                        //选择类型 (0=多选，1=单选)
     public String superDeptId;
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;
@@ -128,7 +128,6 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
         if (select_type == TYPE_SELECT_SINGLE) {
             //单一人员选择时，不显示确定按钮
             findViewById(R.id.img_title_right).setVisibility(View.GONE);
-
             vgSearch.setOnClickListener(this);
             vgSearch.setOnTouchListener(touch);
         } else {
@@ -161,9 +160,7 @@ public class DepartmentUserActivity extends FragmentActivity implements View.OnC
                 app.startActivityForResult(this, DepartmentUserSearchActivity.class, MainApp.ENTER_TYPE_RIGHT,
                         DepartmentActivity.RESULT_ON_ACTIVITY_RETURN, null);
                 break;
-
             default:
-
                 break;
         }
     }

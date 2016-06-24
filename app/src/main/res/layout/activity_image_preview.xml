@@ -1,23 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_48"
+        android:background="@color/title_bg1"
+        >
+
+        <ImageView
+            android:id="@+id/back_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="@dimen/margin_other_view"
+            android:src="@drawable/back_left1"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/show_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3/2"
+            android:textSize="19sp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ImageView
+            android:id="@+id/delete_image"
+            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/dimen_20"
+            android:layout_height="@dimen/dimen_20"
+            android:gravity="center"
+            android:background="@drawable/delete1"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_other_view"
+            android:visibility="gone"
+           />
+
+        </RelativeLayout>
 
     <com.loyo.oa.v2.tool.customview.HackyViewPager
-    android:id="@+id/view_pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
-    <TextView
-        android:visibility="gone"
-        android:text="删除"
-        android:gravity="center"
-        android:layout_width="@dimen/dimen_65"
-        android:layout_height="@dimen/dimen_65"
-        android:layout_marginBottom="@dimen/dimen_3"
-        android:layout_gravity="bottom|center_horizontal"
-        android:textColor="@color/white"
-        android:background="@drawable/bg_del_img_shanpe"
-        android:id="@+id/delete_image"/>
-</FrameLayout>
+</LinearLayout>

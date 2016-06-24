@@ -5,9 +5,9 @@ import java.io.Serializable;
 /**
  * Created by yyy on 16/3/29.
  */
-public class CornBody implements Serializable{
+public class CornBody implements Serializable {
 
-    private int type;
+    private int type = 0;
     private int day;
     private int weekDay;
     private int hour;

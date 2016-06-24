@@ -37,7 +37,6 @@ public class GeneralPopView extends Dialog {
             findViewById(R.id.dialog_nocancelpopview_ll).setVisibility(View.GONE);
             findViewById(R.id.dialog_generalpopview_ll).setVisibility(View.VISIBLE);
         }
-
     }
 
     public void setMessage(String strMessage) {
@@ -49,8 +48,9 @@ public class GeneralPopView extends Dialog {
      *
      * @param listener
      */
-    public void setSureOnclick(View.OnClickListener listener) {
+    public GeneralPopView setSureOnclick(View.OnClickListener listener) {
         findViewById(R.id.dialog_generalpopview_sure).setOnClickListener(listener);
+        return this;
     }
 
     /**
@@ -58,8 +58,9 @@ public class GeneralPopView extends Dialog {
      *
      * @param listener
      */
-    public void setCancelOnclick(View.OnClickListener listener) {
+    public GeneralPopView setCancelOnclick(View.OnClickListener listener) {
         findViewById(R.id.dialog_generalpopview_cancel).setOnClickListener(listener);
+        return this;
     }
 
     /**

@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 

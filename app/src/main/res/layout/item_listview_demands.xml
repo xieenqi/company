@@ -17,10 +17,12 @@
             android:layout_marginLeft="@dimen/dimen_10"
             android:layout_marginTop="@dimen/dimen_10"
             android:gravity="left|center"
+            android:layout_marginRight="55dp"
             android:singleLine="false"
             android:text="金牛万达"
             android:textColor="#383838"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            />
 
         <ImageView
             android:id="@+id/img_edit_damand"

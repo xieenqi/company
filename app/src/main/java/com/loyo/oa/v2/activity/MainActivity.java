@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.activity;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -7,12 +8,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -26,19 +31,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
-import com.loyo.oa.v2.activity.customer.CustomerAddActivity_;
-import com.loyo.oa.v2.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.customer.CustomerManageActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.activity.customer.activity.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.discuss.hait.ActivityHait;
 import com.loyo.oa.v2.activity.login.LoginActivity;
 import com.loyo.oa.v2.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
+import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.setting.SettingActivity;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
@@ -62,7 +67,6 @@ import com.loyo.oa.v2.beans.ValidateItem;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.common.PusherTest;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
@@ -100,6 +104,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -130,18 +135,20 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @ViewById
     ImageButton img_contact;
 
+    private int data;
     private Intent mIntentCheckUpdate;
-    private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private MHandler mHandler;
     private boolean mInitData;
     private ClickItemAdapter adapter;
     private PopupMenu popupMenu;
+    private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private ValidateInfo validateInfo = new ValidateInfo();
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private HashMap<String, Object> map = new HashMap<>();
     private Boolean inEnable;
     private Boolean outEnable;
     private int outKind; //0上班  1下班  2加班
+    private Set<String> companyTag;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -232,7 +239,11 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
-            mActivity.get().swipe_container.setRefreshing(false);
+            try {
+                mActivity.get().swipe_container.setRefreshing(false);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -285,7 +296,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             return;
         }
         layout_network.setVisibility(Global.isConnected() ? View.GONE : View.VISIBLE);
-        swipe_container.setColorSchemeColors(R.color.title_bg1, R.color.greenyellow, R.color.title_bg2, R.color.title_bg1);
+        swipe_container.setColorSchemeColors(Color.parseColor("#4db1fe"));
         //首页刷新监听R.color.title_bg1, R.color.greenyellow, R.color.aquamarine
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -327,22 +338,25 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      */
     void updateUser() {
         items = new ArrayList<>(Arrays.asList(new ClickItem(R.drawable.icon_home_customer, "客户管理", CustomerManageActivity_.class, "0205"),
+                new ClickItem(R.drawable.ic_home_message, "销售机会", ActivitySaleOpportunitiesManager.class, "0"),
                 new ClickItem(R.drawable.icon_home_signin, "客户拜访", SignInManagerActivity_.class, "0206"),
                 new ClickItem(R.drawable.icon_home_project, "项目管理", ProjectManageActivity_.class, "0201"),
                 new ClickItem(R.drawable.home_task, "任务计划", TasksManageActivity_.class, "0202"),
                 new ClickItem(R.drawable.icon_home_report, "工作报告", WorkReportsManageActivity.class, "0203"),
                 new ClickItem(R.drawable.icon_home_wfinstance, "审批流程", WfInstanceManageActivity.class, "0204"),
                 new ClickItem(R.drawable.icon_home_attendance, "考勤管理", AttendanceActivity_.class, "0211"),
-                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")));
+                new ClickItem(R.drawable.ic_home_message, "我的讨论", ActivityMyDiscuss.class, "0")
+        ));
 
         if (MainApp.user == null) {
             return;
         }
+
         if (null == MainApp.user.avatar || MainApp.user.avatar.isEmpty() || !MainApp.user.avatar.contains("http")) {
             int defaultAcatar;
-            if(MainApp.user.gender == 2){
+            if (MainApp.user.gender == 2) {
                 defaultAcatar = R.drawable.icon_contact_avatar;
-            }else{
+            } else {
                 defaultAcatar = R.drawable.img_default_user;
             }
             img_user.setImageResource(defaultAcatar);
@@ -407,12 +421,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        new Handler().post(new Runnable() {
+                        Looper.prepare();
+                        runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 testJurl();
                             }
                         });
+                        Looper.loop();
                     }
                 }, 5000);
                 return;
@@ -437,7 +453,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 img_contact.setVisibility(((Permission) MainApp.rootMap.get("0213")).isEnable() ? View.VISIBLE : View.GONE);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast("通讯录权限，code错误:0213");
             }
         }
 
@@ -463,14 +478,24 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             }, 5000);
             return;
         }
+        if (null == companyTag) {
+            companyTag = new HashSet<String>();
+            companyTag.add(MainApp.user.companyId);
+        }
         JPushInterface.setAlias(this, MainApp.user.id, new TagAliasCallback() {
             @Override
             public void gotResult(final int i, final String s, final Set<String> set) {
                 if (i != 0) {
                     setJpushAlias();
                 }
-                LogUtil.d(MainApp.user + " 激光的alias： " + s);
+//                LogUtil.d(MainApp.user + " 激光的alias： " + s + "  状态" + i);
                 isQQLogin();
+            }
+        });
+        JPushInterface.setTags(this, companyTag, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+//                LogUtil.d(MainApp.user.companyId + " 激光的tags： " + "  状态:" + i);
             }
         });
     }
@@ -539,7 +564,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
                 }
                 validateInfo = _validateInfo;
                 try {
-                    LogUtil.dll("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
+                    LogUtil.d("考勤信息:" + Utils.convertStreamToString(response.getBody().in()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -585,7 +610,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     }
 
     void startAttanceLocation() {
-        showLoading("");
         ValidateItem validateItem = availableValidateItem();
         if (null == validateItem) {
             return;
@@ -600,15 +624,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
     @Override
     public void OnLocationGDSucessed(final String address, final double longitude, final double latitude, final String radius) {
         map.put("originalgps", longitude + "," + latitude);
-        LogUtil.dll("经纬度:" + MainApp.gson.toJson(map));
+        LogUtil.d("经纬度:" + MainApp.gson.toJson(map));
+        showLoading("");
         app.getRestAdapter().create(IAttendance.class).checkAttendance(map, new RCallback<AttendanceRecord>() {
             @Override
             public void success(final AttendanceRecord attendanceRecord, final Response response) {
-                cancelLoading();
                 attendanceRecords = attendanceRecord;
-                LogUtil.dll("check:" + MainApp.gson.toJson(attendanceRecord));
-                attendanceRecord.setAddress(address);
-
+                HttpErrorCheck.checkResponse("考勤信息：", response);
+                attendanceRecord.setAddress(TextUtils.isEmpty(address) ? "没有获取到有效地址" : address);
                 if (attendanceRecord.getState() == 3) {
                     attanceWorry();
                 } else {
@@ -647,7 +670,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         startActivityForResult(intent, FinalVariables.REQUEST_CHECKIN_ATTENDANCE);
     }
 
-
     /**
      * (翻转前)点击头像，获取能否打卡信息
      */
@@ -673,7 +695,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         /*工作日*/
         if (validateInfo.isWorkDay()) {
             /*加班*/
-            if (validateInfo.isPopup()) {
+            if (validateInfo.isPopup() && LocationUtilGD.permissionLocation()) {
                 popOutToast();
                 /*不加班*/
             } else {
@@ -688,6 +710,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             outKind = 0;
             startAttanceLocation();
         }
+
     }
 
     /**
@@ -939,25 +962,25 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             for (HttpMainRedDot num : mItemNumbers) {//首页红点
                 String extra = "";
                 if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                    extra = num.bizNum + "待点评";
+                    extra = num.bizNum + "个待点评(含抄送)";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                    extra = num.bizNum + "未完成";
+                    extra = num.bizNum + "个未完成";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                    extra = num.bizNum + "待审批";
+                    extra = num.bizNum + "个待审批";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                    extra = num.bizNum + "进行中";
+                    extra = num.bizNum + "个进行中";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户管理") && num.bizType == 6)) {
-                    extra = num.bizNum + "将掉公海";
+                    extra = num.bizNum + "个将掉公海";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("客户拜访") && num.bizType == 11)) {
-                    extra = num.bizNum + "需拜访";
+                    extra = num.bizNum + "个需拜访";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                    extra = num.bizNum + "外勤";
+                    extra = num.bizNum + "个外勤";
                     holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
                 } else if (num.bizType == 19) {
                     if (!num.viewed) {
@@ -1043,6 +1066,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
             initData();
             mInitData = true;
         }
+        permissionLocation();
     }
 
 
@@ -1122,8 +1146,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
         super.onResume();
         intentJpushInfo();
         requestNumber();
-        PusherTest.appTest();
-        LogUtil.d("友盟设备：" + PusherTest.getDeviceInfo(this));
         MobclickAgent.onResume(this);
     }
 
@@ -1138,11 +1160,14 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * buzzType 1，任务2，报告3，审批 4，项目  5，通知公告
      */
     public void intentJpushInfo() {
-        if (MainApp.jpushData != null) {
+        if (null != MainApp.jpushData) {
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
                 intent.setClass(MainActivity.this, ActivityHait.class);//推送讨论
                 startActivity(intent);
+                MainApp.jpushData = null;
+                return;
+            } else if ("delete".equals(MainApp.jpushData.operationType)) {
                 MainApp.jpushData = null;
                 return;
             }
@@ -1200,21 +1225,57 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnPopupMenuD
      * 获取首页红点数据
      */
     void requestNumber() {
-        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
-            @Override
-            public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
-                HttpErrorCheck.checkResponse("首页红点", response);
-                mItemNumbers = homeNumbers;
-                adapter.notifyDataSetChanged();
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
+        RestAdapterFactory.getInstance().build(Config_project.MAIN_RED_DOT).create(IMain.class).
+                getNumber(new RCallback<ArrayList<HttpMainRedDot>>() {
+                    @Override
+                    public void success(final ArrayList<HttpMainRedDot> homeNumbers, final Response response) {
+                        HttpErrorCheck.checkResponse("首页红点", response);
+                        mItemNumbers = homeNumbers;
+                        adapter.notifyDataSetChanged();
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
 
-            @Override
-            public void failure(final RetrofitError error) {
-                HttpErrorCheck.checkError(error);
-                super.failure(error);
-                mHandler.sendEmptyMessageDelayed(0, 500);
-            }
-        });
+                    @Override
+                    public void failure(final RetrofitError error) {
+                        HttpErrorCheck.checkError(error);
+                        super.failure(error);
+                        mHandler.sendEmptyMessageDelayed(0, 500);
+                    }
+                });
+    }
+
+    /**
+     * 检查定位权限是否打开
+     */
+    private void permissionLocation() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                getPackageManager().checkPermission("android.permission.ACCESS_FINE_LOCATION", "com.loyo.oa.v2")) {
+//            Toast(" 用户授权 ");
+        } else {
+//            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+//            generalPopView.show();
+//            generalPopView.setMessage("需要使用定位权限\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setCanceledOnTouchOutside(true);
+//            showGeneralDialog(true, true, "需要使用定位权限\\n请在”设置”>“应用”>“权限”中配置权限");
+//            generalPopView.setSureOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(MainActivity.this,
+//                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                            1);
+//                }
+//            });
+//            generalPopView.setCancelOnclick(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    generalPopView.dismiss();
+//                }
+//            });
+
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        }
     }
 }

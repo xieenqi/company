@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.tool;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;
@@ -20,10 +19,8 @@ import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshExpandableListView;
-
 import java.util.ArrayList;
 
-//项目下子内容共用页父类（排序需要）
 public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, View.OnTouchListener {
 
     protected View mView;
@@ -31,15 +28,12 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     protected LayoutInflater mInflater;
     protected TextView tv_add;
     private ViewStub emptyView;
-
     public static final int REQUEST_CREATE = 4;
     public static final int REQUEST_REVIEW = 5;
-
     protected PaginationX<T> pagination = new PaginationX<>(20);
+    protected PullToRefreshExpandableListView mExpandableListView;
     protected ArrayList<PagingGroupData_<T>> pagingGroupDatas = new ArrayList<>();
     protected ArrayList<T> lstData;
-
-    protected PullToRefreshExpandableListView mExpandableListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +55,7 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
 
             layout_add = (ViewGroup) mView.findViewById(R.id.layout_add);
             tv_add = (TextView) mView.findViewById(R.id.tv_add);
-            layout_add.setOnTouchListener(Global.GetTouch());
+            //layout_add.setOnTouchListener(Global.GetTouch());
             layout_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,7 +81,6 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
         ExpandableListView expandableListView = mExpandableListView.getRefreshableView();
         initAdapter();
         expand();
-
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -147,14 +140,17 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
+        if(resultCode == 0x09){
+            GetData(true, false);
+        }
+
+        if(null == data){
             return;
         }
 
         switch (requestCode) {
             case REQUEST_CREATE:
                 T item = (T) data.getSerializableExtra("data");
-
                 if (item == null) {
                     return;
                 }
@@ -162,20 +158,15 @@ public abstract class BaseMainListFragmentX_<T extends BaseBeans> extends BaseFr
                 return;
             case REQUEST_REVIEW:
                 T reviewItem = (T) data.getSerializableExtra("review");
-
                 boolean deleteFlag = false;
-
                 if (reviewItem == null) {
                     reviewItem = (T) data.getSerializableExtra("delete");
                     deleteFlag = true;
                 }
-
                 if (null == reviewItem) {
                     return;
                 }
-
                 for (int i = 0; i < lstData.size(); i++) {
-
                     if (TextUtils.equals(lstData.get(i).getId(), reviewItem.getId())) {
                         if (deleteFlag) {
                             lstData.remove(i);

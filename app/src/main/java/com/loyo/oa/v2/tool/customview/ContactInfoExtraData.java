@@ -37,6 +37,7 @@ public class ContactInfoExtraData extends LinearLayout {
     private AlertDialog dialog;
     private Context mContext;
     private ArrayList<ExtraData> extras = new ArrayList<>();
+    private boolean isRoot;
 
     public ContactInfoExtraData(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -45,9 +46,10 @@ public class ContactInfoExtraData extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public ContactInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize) {
+    public ContactInfoExtraData(Context context, ArrayList<ExtraData> extras, boolean edit, int valueColor, int valueSize,boolean isRoot) {
         this(context, null, 0);
         this.extras = extras;
+        this.isRoot = isRoot;
         bindView(edit, valueColor, valueSize);
     }
 
@@ -78,6 +80,10 @@ public class ContactInfoExtraData extends LinearLayout {
 
             View extra = LayoutInflater.from(mContext).inflate(R.layout.item_customer_extra, null, false);
             extra.setEnabled(edit);
+            LogUtil.d("isRoot:"+isRoot);
+            if(!isRoot){
+                extra.setEnabled(false);
+            }
 
             TextView tv_tag = (TextView) extra.findViewById(R.id.tv_tag);
             final EditText tv_content = (EditText) extra.findViewById(R.id.et_content);
@@ -259,7 +265,7 @@ public class ContactInfoExtraData extends LinearLayout {
                     public void onCancel() {
 
                     }
-                },true);
+                },true,"取消");
             }
         }
     }

@@ -9,6 +9,7 @@ import android.widget.Switch;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.activity.project.ProjectAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
@@ -16,12 +17,12 @@ import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
 
 import java.util.ArrayList;
 
-public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.ProjectMember> {
+public class ProjectMemberListViewAdapter extends CommonAdapter<ProjectAddActivity.ManagersMembers> {
 
-    ArrayList<HttpProject.ProjectMember> mProjectMembers;
+    ArrayList<ProjectAddActivity.ManagersMembers> mProjectMembers;
     ProjectMemberAction mAction;
 
-    public ArrayList<HttpProject.ProjectMember> GetProjectMembers() {
+    public ArrayList<ProjectAddActivity.ManagersMembers> GetProjectMembers() {
         return mProjectMembers;
     }
 
@@ -29,22 +30,21 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.Proj
         mAction = action;
     }
 
-    public ProjectMemberListViewAdapter(final Context context, final ArrayList<HttpProject.ProjectMember> projectMembers) {
+    public ProjectMemberListViewAdapter(final Context context, final ArrayList<ProjectAddActivity.ManagersMembers> projectMembers) {
         super(context, projectMembers, R.layout.item_listview_project_members);
         mProjectMembers = projectMembers;
     }
 
     @Override
-    public void convert(final ViewHolder holder, final HttpProject.ProjectMember projectMember) {
+    public void convert(final ViewHolder holder, final ProjectAddActivity.ManagersMembers projectMember) {
 
-        LogUtil.d(" 参与人的数据： " + MainApp.gson.toJson(projectMember));
-        if (!TextUtils.isEmpty(projectMember.user.getRealname())) {
-            holder.setText(R.id.tv_member, projectMember.user.getRealname());
-        } else if (projectMember.dept != null) {
+        if (null != projectMember.user.name) {
+            holder.setText(R.id.tv_member, projectMember.user.name);
+        } else if (null != projectMember.dept.name) {
             holder.setText(R.id.tv_member, projectMember.dept.name);
         }
 
-        ImageView view = holder.getView(R.id.img_project_member_delete);
+        final ImageView view = holder.getView(R.id.img_project_member_delete);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -55,12 +55,23 @@ public class ProjectMemberListViewAdapter extends CommonAdapter<HttpProject.Proj
             }
         });
 
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.performClick();
+            }
+        });
+        /*默认设置参与人可看全部*/
+        ProjectAddActivity.ManagersMembers p = mProjectMembers.get(holder.getPosition());
+        p.canReadAll = true;
+
+        /*隐藏参与人权限，弃用*/
         Switch sw = holder.getView(R.id.switch_member);
         sw.setChecked(projectMember.canReadAll);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                HttpProject.ProjectMember p = mProjectMembers.get(holder.getPosition());
+                ProjectAddActivity.ManagersMembers p = mProjectMembers.get(holder.getPosition());
                 if (p != null) {
                     p.canReadAll = isChecked;
                 }

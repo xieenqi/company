@@ -15,16 +15,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.application.MainApp;
@@ -40,13 +46,19 @@ import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
+import com.loyo.oa.v2.tool.customview.GeneralPopView;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +81,56 @@ public class Utils {
 
     protected Utils() {
         throw new UnsupportedOperationException(); // 防止子类调用
+    }
+
+    /**
+     * ScroView嵌套listView，手动计算ListView高度
+     */
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
+    /**
+     * 深度拷贝
+     */
+    public static List deepCopy(List src) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
+
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        List dest = (List) in.readObject();
+        return dest;
+    }
+
+
+    /**
+     * 深度拷贝(带泛型)
+     */
+    public static List<?> deepCopyT(List<?> src) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
+
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        List<?> dest = (List<?>) in.readObject();
+        return dest;
     }
 
 
@@ -274,16 +336,40 @@ public class Utils {
      * @param context
      * @param tel
      */
-    public static void sendSms(Context context, String tel) {
+    public static void sendSms(final Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
             Global.Toast("电话号码为空");
             return;
         }
-        Uri uri = Uri.parse("smsto:" + tel);
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        sendIntent.putExtra("sms_body", "");
-        context.startActivity(sendIntent);
+        if (PackageManager.PERMISSION_GRANTED ==
+                context.getPackageManager().checkPermission("android.permission.SEND_SMS", "com.loyo.oa.v2")) {
+            Uri uri = Uri.parse("smsto:" + tel);
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+            sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            sendIntent.putExtra("sms_body", "");
+            context.startActivity(sendIntent);
+        } else {
+            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用短信权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
+//                            new String[]{Manifest.permission.SEND_SMS},
+//                            RESULT_OK);
+                    doSeting(context);
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                }
+            });
+        }
     }
 
     /**
@@ -292,14 +378,39 @@ public class Utils {
      * @param context
      * @param tel
      */
-    public static void call(Context context, String tel) {
+    public static void call(final Context context, String tel) {
         if (TextUtils.isEmpty(tel)) {
             Global.Toast("号码为空");
             return;
         }
-        Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(sendIntent);
+
+        if (PackageManager.PERMISSION_GRANTED ==
+                context.getPackageManager().checkPermission("android.permission.CALL_PHONE", "com.loyo.oa.v2")) {
+            Intent sendIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
+            sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(sendIntent);
+        } else {
+            final GeneralPopView generalPopView = new GeneralPopView(context, true);
+            generalPopView.show();
+            generalPopView.setMessage("需要使用电话权限\n请在”设置”>“应用”>“权限”中配置权限");
+            generalPopView.setCanceledOnTouchOutside(true);
+            generalPopView.setSureOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+//                    ActivityCompat.requestPermissions(CustomerDetailInfoActivity.this,
+//                            new String[]{Manifest.permission.CALL_PHONE},
+//                            RESULT_OK);
+                    doSeting(context);
+                }
+            });
+            generalPopView.setCancelOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    generalPopView.dismiss();
+                }
+            });
+        }
     }
 
     /**
@@ -310,14 +421,14 @@ public class Utils {
      */
     public static String getTagItems(Customer customer) {
         if (null == customer || null == customer.tags || customer.tags.isEmpty()) {
-            return "";
+            return "无";
         }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < customer.tags.size(); i++) {
             String tag = !TextUtils.isEmpty(customer.tags.get(i).getItemName()) ? customer.tags.get(i).getItemName() : "";
             if (!TextUtils.isEmpty(tag)) {
                 if (i != customer.tags.size() - 1) {
-                    tag = tag.concat(",");
+                    tag = tag.concat("、");
                 }
                 builder.append(tag);
             }
@@ -332,16 +443,16 @@ public class Utils {
      * @param toLat
      * @param toLng
      */
-    public static void goWhere(final Context context, final double toLat, final double toLng) {
+    public static void goWhere(final Context context, final double toLat, final double toLng, final String addres) {
 
         new LocationUtilGD(context, new LocationUtilGD.AfterLocation() {
             @Override
             public void OnLocationGDSucessed(String address, double longitude, double latitude, String radius) {
                 Uri uri;
                 if (hasMapApp(context)) {
-                    uri = Uri.parse("geo: " + latitude + "," + longitude);
+                    uri = Uri.parse("geo: " + toLat + "," + toLng + "?q=" + addres);
                 } else {
-                    uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(from)&to=" + toLat + "," + toLng + "(to)");
+                    uri = Uri.parse("http://m.amap.com/?from=" + latitude + "," + longitude + "(" + address + ")&to=" + toLat + "," + toLng + "(" + addres + ")");
                 }
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1006,5 +1117,88 @@ public class Utils {
         }
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
         return (bitmap);
+    }
+
+    /**
+     * 到APP的设置页面去配置权限
+     *
+     * @param context
+     */
+    public static void doSeting(Context context) {
+        Uri packageURI = Uri.parse("package:" + "com.loyo.oa.v2");
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 科学计数法转换为 数字 小数只有两位
+     *
+     * @param obj
+     * @return
+     */
+    public static String setValueDouble(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+        Double d;
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
+        try {
+            d = Double.valueOf(obj + "");
+            BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
+            return bigDecimal.toPlainString() + "";
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "No Number";
+        }
+    }
+
+    /**
+     * 科学计数法转换为 数字 只显示整数部分
+     *
+     * @param obj
+     * @return
+     */
+    public static String setValueDouble2(Object obj) {
+        if (null == obj) {
+            return "没有内容";
+        }
+        Double d;
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#");
+        try {
+            d = Double.valueOf(obj + "");
+            BigDecimal bigDecimal = new BigDecimal(df.format(d) + "");
+            return bigDecimal.toPlainString() + "";
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "No Number";
+        }
+    }
+
+    /**
+     * 设置小数位数控制
+     * 限制输入小数的位数
+     *
+     * @param index
+     */
+    public static InputFilter decimalDigits(final int index) {
+        InputFilter lengthfilter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                // 删除等特殊字符，直接返回
+                if ("".equals(source.toString())) {
+                    return null;
+                }
+                String dValue = dest.toString();
+                String[] splitArray = dValue.split("\\.");
+                if (splitArray.length > 1) {
+                    String dotValue = splitArray[1];
+                    int diff = dotValue.length() + 1 - index;
+                    if (diff > 0) {
+                        return source.subSequence(start, end - diff);
+                    }
+                }
+                return null;
+            }
+        };
+        return lengthfilter;
     }
 }
