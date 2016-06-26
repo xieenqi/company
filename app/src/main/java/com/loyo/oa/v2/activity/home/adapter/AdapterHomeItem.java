@@ -182,8 +182,13 @@ public class AdapterHomeItem extends BaseAdapter {
                         Toast.makeText(mContext, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    mIntent.setClass(mContext, items.get(position).cls);
-                    mContext.startActivity(mIntent);
+                    try {
+                        mIntent.setClass(mContext, Class.forName(items.get(position).cls));
+                        mContext.startActivity(mIntent);
+                    }catch (ClassNotFoundException e){
+e.printStackTrace();
+                    }
+
                 }
             }
         });

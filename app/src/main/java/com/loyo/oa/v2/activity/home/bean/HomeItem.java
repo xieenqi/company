@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class HomeItem implements Serializable {
 
-    public HomeItem(final int _imageViewRes, final String _title, final Class<?> _cls, final String _code, final int _tag) {
+    public HomeItem(final int _imageViewRes, final String _title, final String _cls, final String _code, final int _tag) {
         imageViewRes = _imageViewRes;
         title = _title;
         cls = _cls;
@@ -20,5 +20,5 @@ public class HomeItem implements Serializable {
     public String code;
     public int tag;
 
-    public Class<?> cls;
+    public String cls;
 }
