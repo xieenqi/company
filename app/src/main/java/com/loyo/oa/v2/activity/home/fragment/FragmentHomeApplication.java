@@ -729,7 +729,18 @@ public class FragmentHomeApplication extends BaseFragment implements LocationUti
             initData();
         } else {
             Toast("请检查你的网络链接");
-            listView.onRefreshComplete();
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.onRefreshComplete();
+                        }
+                    });
+                }
+            }, 200);
         }
     }
 

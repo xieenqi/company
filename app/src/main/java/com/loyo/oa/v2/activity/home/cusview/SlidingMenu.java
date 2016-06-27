@@ -38,18 +38,21 @@ public class SlidingMenu extends RelativeLayout {
     private boolean mActionbarOverlay = false;
 
     /**
+     * 允许slidingmenu被打开在屏幕的边缘滑动手势
      * Constant value for use with setTouchModeAbove(). Allows the SlidingMenu to be opened with a swipe
      * gesture on the screen's margin
      */
     public static final int TOUCHMODE_MARGIN = 0;
 
     /**
+     * 手在屏幕任何位置
      * Constant value for use with setTouchModeAbove(). Allows the SlidingMenu to be opened with a swipe
      * gesture anywhere on the screen
      */
     public static final int TOUCHMODE_FULLSCREEN = 1;
 
     /**
+     * 不使用手势
      * Constant value for use with setTouchModeAbove(). Denies the SlidingMenu to be opened with a swipe
      * gesture
      */
@@ -680,7 +683,7 @@ public class SlidingMenu extends RelativeLayout {
         mViewBehind.setMarginThreshold(touchmodeMarginThreshold);
     }
 
-    /**
+    /**设置后面的滚动尺度。
      * Sets the behind scroll scale.
      *
      * @param f The scale of the parallax scroll (i.e. 1.0f scrolls 1 pixel for every
@@ -711,6 +714,7 @@ public class SlidingMenu extends RelativeLayout {
     }
 
     /**
+     * 手势模式
      * Controls whether the SlidingMenu can be opened with a swipe gesture.
      * Options are {@link #TOUCHMODE_MARGIN TOUCHMODE_MARGIN}, {@link #TOUCHMODE_FULLSCREEN TOUCHMODE_FULLSCREEN},
      * or {@link #TOUCHMODE_NONE TOUCHMODE_NONE}
