@@ -91,9 +91,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         layout_update = (ViewGroup) findViewById(R.id.layout_update);
         layout_feedback = (ViewGroup) findViewById(R.id.layout_feedback);
         layout_check_update = (ViewGroup) findViewById(R.id.layout_check_update);
-
         layout_profile.setOnTouchListener(Global.GetTouch());
-
         img_title_left.setOnClickListener(this);
         layout_exit.setOnClickListener(this);
         layout_update.setOnClickListener(this);
@@ -115,8 +113,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         img_title_left.setOnTouchListener(touch);
         layout_update.setOnTouchListener(touch);
         layout_check_update.setOnTouchListener(touch);
-
         tv_version = (TextView) findViewById(R.id.tv_version);
+
         try {
             PackageInfo pi = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
             tv_version.setText("当前版本" + pi.versionName);
