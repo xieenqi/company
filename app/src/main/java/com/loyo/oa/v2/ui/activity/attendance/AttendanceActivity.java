@@ -73,7 +73,6 @@ public class AttendanceActivity extends BaseFragmentActivity {
     void initViews() {
         setTouchView(-1);
         tv_title_1.setText("我的考勤");
-        imageArrow.setOnTouchListener(Global.GetTouch());
         img_title_left.setOnTouchListener(Global.GetTouch());
 //        findViewById(R.id.img_title_search_right).setVisibility(View.INVISIBLE);
 //        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);

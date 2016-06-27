@@ -154,6 +154,7 @@ public class AttendanceListFragment extends BaseFragment implements View.OnClick
                 }
             });
         }
+        btn_add.setVisibility(1==type?View.VISIBLE:View.GONE);
         return mView;
     }
 
