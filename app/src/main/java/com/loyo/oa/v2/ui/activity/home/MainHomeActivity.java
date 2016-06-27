@@ -86,6 +86,9 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         onInitSlideMenu();
     }
 
+    /**
+     * 初始化侧边栏
+     */
     private void onInitSlideMenu() {
         // 获取屏幕分辨率
         DisplayMetrics metric = new DisplayMetrics();
