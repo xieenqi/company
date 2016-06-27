@@ -222,7 +222,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
 //        LogUtil.d( "，，，，，，！！！！！！！！！！！，，，，，，，接设置数据受 、、、、、、、、@@@@@@@@@@@@@@@@@@@@@@@、、、、、、、、" );
         DBManager.Instance().deleteHomeItem();
 //        //此处缓存首页数据
-        DBManager.Instance().putHomeItem(MainApp.gson.toJson(mItemNumbers));
+        DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
         adapter.setItemData(items);
         adapter.setRedNumbreData(mItemNumbers);
         btn_add.setOnTouchListener(Global.GetTouch());
@@ -259,17 +259,17 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
      */
     void updateUser() {
 
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0", 0),
-                new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
-                new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0213", 0),
-                new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
-                new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
-                new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
-                new HomeItem(R.drawable.newmain_project, "项目管理", ProjectManageActivity_.class, "0201", 2),
-                new HomeItem(R.drawable.newmain_task, "任务计划", TasksManageActivity_.class, "0202", 2),
-                new HomeItem(R.drawable.newmain_report, "工作报告", WorkReportsManageActivity.class, "0203", 2),
-                new HomeItem(R.drawable.newmain_wfin, "审批流程", WfInstanceManageActivity.class, "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", AttendanceActivity_.class, "0211", 2)));
+        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activity.BulletinManagerActivity_", "0", 0),
+                new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss", "0", 0),
+                new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activity.contact.ContactsActivity", "0213", 0),
+                new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager", "0205", 1),
+                new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager", "0215", 1),
+                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activity.signin.SignInManagerActivity_", "0206", 1),
+                new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activity.project.ProjectManageActivity_", "0201", 2),
+                new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activity.tasks.TasksManageActivity_", "0202", 2),
+                new HomeItem(R.drawable.newmain_report, "工作报告", "com.loyo.oa.v2.activity.work.WorkReportsManageActivity", "0203", 2),
+                new HomeItem(R.drawable.newmain_wfin, "审批流程", "com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity", "0204", 2),
+                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activity.attendance.AttendanceActivity_", "0211", 2)));
 
 
         caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
