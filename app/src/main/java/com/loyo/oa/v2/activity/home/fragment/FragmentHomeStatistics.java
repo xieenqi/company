@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.activity.home.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ public class FragmentHomeStatistics extends BaseFragment {
     RadioButton rb_process_today, rb_process_week, rb_bulking_today, rb_bulking_week, rb_achieves_week, rb_achieves_month, rb_funnel_week, rb_funnel_month;
     private ImageView im_process_no, im_funnel_no, im_bulking_no, im_achieves_no;
     private boolean isRRefresh = false;
+    private SwipeRefreshLayout srl_refresh;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,7 @@ public class FragmentHomeStatistics extends BaseFragment {
         ll_bulking_yes = (LinearLayout) view.findViewById(R.id.ll_bulking_yes);
         im_achieves_no = (ImageView) view.findViewById(R.id.im_achieves_no);
         ll_achieves_yes = (LinearLayout) view.findViewById(R.id.ll_achieves_yes);
+        srl_refresh.setColorSchemeColors(Color.parseColor("#4db1fe"));
         getStatisticAllData();
     }
 
