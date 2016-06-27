@@ -23,7 +23,7 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <com.loyo.oa.v2.ui.customview.PagerSlidingTabStrip
+        <com.loyo.oa.v2.customview.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="46dp"
@@ -34,13 +34,13 @@
             app:pstsTabPaddingLeftRight="1dp"
             app:pstsUnderlineHeight="0.5dp"/>
 
-        <com.loyo.oa.v2.ui.customview.NoScrollViewpager
+        <com.loyo.oa.v2.customview.NoScrollViewpager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tabs">
 
-        </com.loyo.oa.v2.ui.customview.NoScrollViewpager>
+        </com.loyo.oa.v2.customview.NoScrollViewpager>
 
     </LinearLayout>
 </LinearLayout>

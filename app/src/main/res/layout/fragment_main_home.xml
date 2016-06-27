@@ -12,7 +12,7 @@
         android:gravity="center_vertical"
         >
 
-        <com.loyo.oa.v2.ui.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/newhome_heading_img"
             android:layout_width="35dp"
             android:layout_height="35dp"

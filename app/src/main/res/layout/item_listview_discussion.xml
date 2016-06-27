@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.loyo.oa.v2.ui.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/img_disscution_creator"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_side_edge"

@@ -21,7 +21,7 @@ import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.ui.fragment.CustomerCommonFragment;
+import com.loyo.oa.v2.ui.activity.customer.fragment.CustomerCommonFragment;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;

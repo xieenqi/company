@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.fragment.ProjectManageFragment;
+import com.loyo.oa.v2.ui.activity.project.fragment.ProjectManageFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 
 import org.androidannotations.annotations.AfterViews;

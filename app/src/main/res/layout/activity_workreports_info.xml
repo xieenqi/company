@@ -127,7 +127,7 @@
 
                     <include layout="@layout/include_dotted_line"/>
 
-                    <com.loyo.oa.v2.ui.customview.NoScroolGridView
+                    <com.loyo.oa.v2.customview.NoScroolGridView
                         android:id="@+id/info_gridview_workreports"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

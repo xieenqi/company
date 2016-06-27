@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
-import com.loyo.oa.v2.ui.fragment.WorkReportsManageFragment;
+import com.loyo.oa.v2.ui.activity.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.Config_project;

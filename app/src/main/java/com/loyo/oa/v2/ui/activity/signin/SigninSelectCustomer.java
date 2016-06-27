@@ -28,8 +28,8 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

@@ -19,7 +19,7 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import retrofit.RetrofitError;

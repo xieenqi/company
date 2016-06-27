@@ -24,7 +24,7 @@
         android:layout_marginTop="@dimen/dimen_10"
         android:orientation="horizontal">
 
-        <com.loyo.oa.v2.ui.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/iv_notice_publisher_avatar"
             android:layout_width="@dimen/dimen_50"
             android:layout_height="@dimen/dimen_50"
@@ -93,7 +93,7 @@
                     android:textColor="@color/text99"
                     android:textSize="@dimen/text_sp14"/>
 
-                <com.loyo.oa.v2.ui.customview.CusGridView
+                <com.loyo.oa.v2.customview.CusGridView
                     android:id="@+id/gv_notice_attachemnts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

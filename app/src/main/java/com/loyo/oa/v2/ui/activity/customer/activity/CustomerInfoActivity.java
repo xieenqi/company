@@ -39,8 +39,8 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.ui.customview.CustomerInfoExtraData;
-import com.loyo.oa.v2.ui.customview.SelectCityView;
+import com.loyo.oa.v2.customview.CustomerInfoExtraData;
+import com.loyo.oa.v2.customview.SelectCityView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

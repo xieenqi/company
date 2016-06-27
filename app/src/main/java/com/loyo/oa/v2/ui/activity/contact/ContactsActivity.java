@@ -15,11 +15,11 @@ import com.loyo.oa.v2.ui.activity.other.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.common.Common;
-import com.loyo.oa.v2.ui.fragment.ContactsDepartmentFragment;
-import com.loyo.oa.v2.ui.fragment.ContactsInMyDeptFragment;
+import com.loyo.oa.v2.ui.activity.contact.fragment.ContactsDepartmentFragment;
+import com.loyo.oa.v2.ui.activity.contact.fragment.ContactsInMyDeptFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.ui.customview.PagerSlidingTabStrip;
+import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 
 /**
  * 通讯录 联系人 页面

@@ -31,8 +31,8 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.ui.customview.HorizontalScrollListView;
-import com.loyo.oa.v2.ui.customview.RoundImageView;
+import com.loyo.oa.v2.customview.HorizontalScrollListView;
+import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

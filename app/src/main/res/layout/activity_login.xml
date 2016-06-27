@@ -98,7 +98,7 @@
         android:layout_marginRight="@dimen/dimen_30"
         android:layout_marginTop="@dimen/dimen_40">
 
-        <com.loyo.oa.v2.ui.customview.WaveView
+        <com.loyo.oa.v2.customview.WaveView
             android:id="@+id/layout_login"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"

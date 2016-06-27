@@ -22,7 +22,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.ui.customview.ContactAddforExtraData;
+import com.loyo.oa.v2.customview.ContactAddforExtraData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

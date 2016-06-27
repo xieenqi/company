@@ -61,7 +61,7 @@
                 android:layout_marginBottom="@dimen/dimen_5"
                 >
 
-                <com.loyo.oa.v2.ui.customview.CusGridView
+                <com.loyo.oa.v2.customview.CusGridView
                     android:id="@+id/gridView_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

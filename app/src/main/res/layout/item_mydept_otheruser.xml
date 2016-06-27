@@ -14,7 +14,7 @@
         android:paddingTop="10dp"
         >
 
-        <com.loyo.oa.v2.ui.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/contact_dept_img"
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"

@@ -40,7 +40,7 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
-import com.loyo.oa.v2.ui.customview.ListView_inScrollView;
+import com.loyo.oa.v2.customview.ListView_inScrollView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

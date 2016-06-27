@@ -27,9 +27,9 @@ import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.ui.customview.RoundImageView;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshRecycleView;
+import com.loyo.oa.v2.customview.RoundImageView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

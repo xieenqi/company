@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshExpandableListView
+                <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView
                     android:id="@+id/expandableListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -86,7 +86,7 @@
         </FrameLayout>
 
 
-        <com.loyo.oa.v2.ui.customview.filterview.DropDownMenu
+        <com.loyo.oa.v2.customview.filterview.DropDownMenu
             android:id="@+id/drop_menu"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_45"

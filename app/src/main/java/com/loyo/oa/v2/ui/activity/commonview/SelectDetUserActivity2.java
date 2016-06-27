@@ -27,7 +27,7 @@ import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.ui.customview.HorizontalScrollListView;
+import com.loyo.oa.v2.customview.HorizontalScrollListView;
 
 import java.util.ArrayList;
 import java.util.List;

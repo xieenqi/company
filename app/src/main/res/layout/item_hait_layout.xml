@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.loyo.oa.v2.ui.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/iv_avatar"
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"

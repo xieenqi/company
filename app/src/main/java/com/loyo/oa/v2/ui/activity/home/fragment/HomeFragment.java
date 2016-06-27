@@ -26,7 +26,7 @@ import com.loyo.oa.v2.ui.activity.setting.SettingActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.ui.customview.RoundImageView;
+import com.loyo.oa.v2.customview.RoundImageView;
 import java.util.ArrayList;
 
 /**

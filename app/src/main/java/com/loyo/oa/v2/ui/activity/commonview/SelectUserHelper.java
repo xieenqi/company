@@ -15,7 +15,7 @@ import com.loyo.oa.v2.beans.SelectDepData;
 import com.loyo.oa.v2.beans.SelectUserData;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.ui.customview.RoundImageView;
+import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

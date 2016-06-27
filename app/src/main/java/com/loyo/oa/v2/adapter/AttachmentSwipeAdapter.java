@@ -25,7 +25,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;

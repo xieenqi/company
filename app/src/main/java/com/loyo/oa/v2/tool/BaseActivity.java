@@ -33,8 +33,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.service.RushTokenService;
-import com.loyo.oa.v2.ui.customview.CustomProgressDialog;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.CustomProgressDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.util.Locale;
 

@@ -29,7 +29,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.ui.customview.ViewSaleDetailsExtra;
+import com.loyo.oa.v2.customview.ViewSaleDetailsExtra;
 
 import java.util.ArrayList;
 import java.util.Date;

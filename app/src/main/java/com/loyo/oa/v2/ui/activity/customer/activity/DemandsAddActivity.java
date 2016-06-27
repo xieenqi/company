@@ -25,7 +25,7 @@ import com.loyo.oa.v2.beans.SaleStage;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.ui.fragment.SaleStageDialogFragment;
+import com.loyo.oa.v2.ui.activity.sale.fragment.SaleStageDialogFragment;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.Config_project;

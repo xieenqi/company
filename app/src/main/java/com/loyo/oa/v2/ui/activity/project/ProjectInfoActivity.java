@@ -24,15 +24,15 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
-import com.loyo.oa.v2.ui.fragment.AttachmentFragment;
-import com.loyo.oa.v2.ui.fragment.DiscussionFragment;
+import com.loyo.oa.v2.ui.activity.project.fragment.AttachmentFragment;
+import com.loyo.oa.v2.ui.activity.project.fragment.DiscussionFragment;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.tool.BaseChildMainListFragmentX;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.OnLoadSuccessCallback;
 import com.loyo.oa.v2.tool.RCallback;
-import com.loyo.oa.v2.ui.customview.PagerSlidingTabStrip;
+import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

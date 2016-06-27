@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.tool.ExitActivity;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 
 /**
  * 机会详情 菜单弹出框

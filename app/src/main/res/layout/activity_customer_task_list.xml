@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshExpandableListView
+        <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView
             android:id="@+id/listView_tasks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

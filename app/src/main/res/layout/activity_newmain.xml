@@ -11,7 +11,7 @@
         android:layout_height="@dimen/dimen_60"
         android:background="@color/title_bg1">
 
-        <com.loyo.oa.v2.ui.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/newhome_heading_img"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -45,7 +45,7 @@
         android:layout_height="match_parent"
         >
 
-        <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView
+        <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/newhome_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

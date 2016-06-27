@@ -21,7 +21,7 @@ import com.loyo.oa.v2.tool.ListUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
-import com.loyo.oa.v2.ui.customview.swipelistview.SwipeListView;
+import com.loyo.oa.v2.customview.swipelistview.SwipeListView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;

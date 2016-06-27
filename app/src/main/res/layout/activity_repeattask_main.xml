@@ -28,34 +28,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.loyo.oa.v2.ui.wheel.WheelView
+        <com.loyo.oa.v2.customview.wheel.WheelView
             android:id="@+id/id_week"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             >
-        </com.loyo.oa.v2.ui.wheel.WheelView>
+        </com.loyo.oa.v2.customview.wheel.WheelView>
 
-        <com.loyo.oa.v2.ui.wheel.WheelView
+        <com.loyo.oa.v2.customview.wheel.WheelView
             android:id="@+id/id_day"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-        </com.loyo.oa.v2.ui.wheel.WheelView>
+        </com.loyo.oa.v2.customview.wheel.WheelView>
 
-        <com.loyo.oa.v2.ui.wheel.WheelView
+        <com.loyo.oa.v2.customview.wheel.WheelView
             android:id="@+id/id_hour"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-        </com.loyo.oa.v2.ui.wheel.WheelView>
+        </com.loyo.oa.v2.customview.wheel.WheelView>
 
-        <com.loyo.oa.v2.ui.wheel.WheelView
+        <com.loyo.oa.v2.customview.wheel.WheelView
             android:id="@+id/id_min"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-        </com.loyo.oa.v2.ui.wheel.WheelView>
+        </com.loyo.oa.v2.customview.wheel.WheelView>
 
     </LinearLayout>
 

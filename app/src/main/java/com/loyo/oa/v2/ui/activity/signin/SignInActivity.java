@@ -36,7 +36,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.ui.customview.CountTextWatcher;
+import com.loyo.oa.v2.customview.CountTextWatcher;
 
 import java.io.File;
 import java.io.IOException;

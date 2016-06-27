@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.ui.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;

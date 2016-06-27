@@ -24,8 +24,8 @@ import com.loyo.oa.v2.tool.BaseCommonMainListFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshExpandableListView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

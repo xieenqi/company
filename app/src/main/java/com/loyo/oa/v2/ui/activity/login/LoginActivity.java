@@ -25,7 +25,7 @@ import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.ViewUtil;
 import com.loyo.oa.v2.ui.activity.setting.VerifyAccountActivity_;
-import com.loyo.oa.v2.ui.customview.WaveView;
+import com.loyo.oa.v2.customview.WaveView;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;

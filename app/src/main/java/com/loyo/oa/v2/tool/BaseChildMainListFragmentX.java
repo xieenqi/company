@@ -32,7 +32,7 @@ import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;

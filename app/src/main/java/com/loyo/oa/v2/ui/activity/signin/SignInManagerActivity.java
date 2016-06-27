@@ -20,8 +20,8 @@ import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.ui.fragment.SignInOfTeamFragment;
-import com.loyo.oa.v2.ui.fragment.SignInOfUserFragment;
+import com.loyo.oa.v2.ui.activity.signin.fragment.SignInOfTeamFragment;
+import com.loyo.oa.v2.ui.activity.signin.fragment.SignInOfUserFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
 
 import org.androidannotations.annotations.AfterViews;

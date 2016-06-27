@@ -12,7 +12,7 @@
         android:id="@+id/actionbar"
         layout="@layout/include_common_title"></include>
 
-    <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshRecycleView
+    <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshRecycleView
         android:id="@+id/lv_myDiscuss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

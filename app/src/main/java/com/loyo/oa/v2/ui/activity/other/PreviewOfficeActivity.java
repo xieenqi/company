@@ -11,7 +11,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.StringUtil;
-import com.loyo.oa.v2.ui.customview.ProgressWebView;
+import com.loyo.oa.v2.customview.ProgressWebView;
 
 import java.net.URLEncoder;
 

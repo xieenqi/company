@@ -46,7 +46,7 @@ import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.beans.UserInfo;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.point.IAttachment;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

@@ -10,7 +10,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.ui.fragment.SignInOfUserFragment;
+import com.loyo.oa.v2.ui.activity.signin.fragment.SignInOfUserFragment;
 import com.loyo.oa.v2.tool.BaseFragment;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

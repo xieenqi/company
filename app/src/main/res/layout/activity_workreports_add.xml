@@ -173,7 +173,7 @@
                         android:orientation="horizontal"
                         android:visibility="gone">
 
-                        <com.loyo.oa.v2.ui.customview.NoScroolGridView
+                        <com.loyo.oa.v2.customview.NoScroolGridView
                             android:id="@+id/gv_workreports"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
@@ -267,7 +267,7 @@
                     android:background="@drawable/layout_bg1"
                     android:orientation="vertical">
 
-                    <com.loyo.oa.v2.ui.customview.CusGridView
+                    <com.loyo.oa.v2.customview.CusGridView
                         android:id="@+id/gridView_photo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -20,7 +20,7 @@ import com.loyo.oa.v2.ui.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.ui.customview.CustomTextView;
+import com.loyo.oa.v2.customview.CustomTextView;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ISale;
 import com.loyo.oa.v2.tool.BaseActivity;

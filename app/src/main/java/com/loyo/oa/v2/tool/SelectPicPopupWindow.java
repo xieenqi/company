@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.ui.customview.GeneralPopView;
-import com.loyo.oa.v2.ui.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -27,7 +27,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.ui.customview.PagerSlidingTabStrip;
+import com.loyo.oa.v2.customview.PagerSlidingTabStrip;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;

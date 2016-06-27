@@ -17,7 +17,7 @@ import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.ui.customview.HackyViewPager;
+import com.loyo.oa.v2.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.util.ArrayList;

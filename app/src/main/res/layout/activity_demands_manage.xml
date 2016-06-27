@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView
+        <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/listView_demands"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

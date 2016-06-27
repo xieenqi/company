@@ -48,8 +48,8 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.ui.customview.DateTimePickDialog;
-import com.loyo.oa.v2.ui.customview.RepeatTaskView;
+import com.loyo.oa.v2.customview.DateTimePickDialog;
+import com.loyo.oa.v2.customview.RepeatTaskView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;

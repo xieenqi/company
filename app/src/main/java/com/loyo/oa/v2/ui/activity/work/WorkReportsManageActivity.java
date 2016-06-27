@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.fragment.WorkReportsManageFragment;
+import com.loyo.oa.v2.ui.activity.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.ViewUtil;
 
