@@ -28,7 +28,7 @@
         />
 
 
-    <com.loyo.oa.v2.tool.customview.MyLetterListView
+    <com.loyo.oa.v2.customview.MyLetterListView
         android:id="@+id/letter_View"
         android:layout_width="30dp"
         android:layout_height="match_parent"

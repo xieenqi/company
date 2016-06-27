@@ -328,7 +328,7 @@
                         android:background="@color/lineCC"
                         />
 
-                    <com.loyo.oa.v2.tool.customview.ListView_inScrollView
+                    <com.loyo.oa.v2.customview.ListView_inScrollView
                         android:id="@+id/listView_workflowNodes"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

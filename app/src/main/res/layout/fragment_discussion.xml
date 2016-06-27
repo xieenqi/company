@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+        <com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView
             android:id="@+id/lv_discussion"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

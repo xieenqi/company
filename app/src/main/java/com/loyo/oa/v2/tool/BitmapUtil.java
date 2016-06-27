@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.loyo.oa.v2.activity.ActivityPreviewImageList;
+import com.loyo.oa.v2.ui.activity.other.PreviewImageListActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.FinalVariables;
@@ -509,7 +509,7 @@ public class BitmapUtil {
             bundle.putSerializable("data", newAttachment);
             bundle.putInt("position", newPosistion);
             bundle.putBoolean("isEdit", isEdit);
-            MainApp.getMainApp().startActivityForResult((Activity) mContext, ActivityPreviewImageList.class,
+            MainApp.getMainApp().startActivityForResult((Activity) mContext, PreviewImageListActivity.class,
                     MainApp.ENTER_TYPE_BUTTOM, FinalVariables.REQUEST_DEAL_ATTACHMENT, bundle);
 
         }

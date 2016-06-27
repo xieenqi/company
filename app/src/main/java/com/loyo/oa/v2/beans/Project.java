@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.v2.activity.project.ProjectAddActivity;
+import com.loyo.oa.v2.ui.activity.project.ProjectAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 
 import java.io.Serializable;

@@ -35,7 +35,7 @@
         android:layout_marginRight="74dp"
         android:orientation="horizontal">
 
-        <com.loyo.oa.v2.tool.customview.RoundImageView
+        <com.loyo.oa.v2.customview.RoundImageView
             android:id="@+id/iv_other_avatar"
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"

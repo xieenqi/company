@@ -2,10 +2,8 @@ package com.loyo.oa.v2.tool;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -24,9 +22,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.login.LoginActivity;
+import com.loyo.oa.v2.ui.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.common.DialogHelp;
@@ -35,9 +32,8 @@ import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
 import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.service.RushTokenService;
-import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
-
+import com.loyo.oa.v2.customview.CustomProgressDialog;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import java.util.Locale;
 
 /**
@@ -260,29 +256,6 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
         }
     }
 
-
-    /**
-     * 老版弹出框
-     */
-    protected void ConfirmDialog(String title, String message, final ConfirmDialogInterface confirm) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage(message);
-        builder.setTitle(title);
-        builder.setPositiveButton("确认", new android.content.DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                confirm.Confirm();
-            }
-        });
-        builder.setNegativeButton("取消", new android.content.DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
 
     protected interface ConfirmDialogInterface {
         void Confirm();

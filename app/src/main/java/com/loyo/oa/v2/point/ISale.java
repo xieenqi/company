@@ -1,13 +1,13 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.sale.bean.SaleDetails;
-import com.loyo.oa.v2.activity.sale.bean.SaleFild;
-import com.loyo.oa.v2.activity.sale.bean.SaleMyList;
-import com.loyo.oa.v2.activity.sale.bean.SaleOpportunityAdd;
-import com.loyo.oa.v2.activity.sale.bean.SaleProductEdit;
-import com.loyo.oa.v2.activity.sale.bean.SaleRecord;
-import com.loyo.oa.v2.activity.sale.bean.SaleStage;
-import com.loyo.oa.v2.activity.sale.bean.SaleTeamList;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleDetails;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleFild;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleMyList;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleOpportunityAdd;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleProductEdit;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleRecord;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleStage;
+import com.loyo.oa.v2.ui.activity.sale.bean.SaleTeamList;
 import com.loyo.oa.v2.beans.ContactLeftExtras;
 import com.loyo.oa.v2.beans.PaginationX;
 

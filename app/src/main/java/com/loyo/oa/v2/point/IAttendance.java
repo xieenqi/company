@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.activity.attendance.HttpAttendanceDetial;
-import com.loyo.oa.v2.activity.attendance.HttpAttendanceList;
+import com.loyo.oa.v2.ui.activity.attendance.HttpAttendanceDetial;
+import com.loyo.oa.v2.ui.activity.attendance.HttpAttendanceList;
 import com.loyo.oa.v2.beans.AttendanceList;
 import com.loyo.oa.v2.beans.AttendancePhoto;
 import com.loyo.oa.v2.beans.AttendanceRecord;

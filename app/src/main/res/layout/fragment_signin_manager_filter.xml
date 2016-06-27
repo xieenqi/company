@@ -70,7 +70,7 @@
         style="@style/view_split" />
 
 
-    <com.loyo.oa.v2.tool.customview.ExpandableListView_inScrollView
+    <com.loyo.oa.v2.customview.ExpandableListView_inScrollView
         android:scrollbars="none"
         android:divider="@color/activity_split"
         android:dividerHeight="0.5dp"
@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         style="@style/view_split" />
 
-    <com.loyo.oa.v2.tool.customview.ListView_inScrollView
+    <com.loyo.oa.v2.customview.ListView_inScrollView
         android:id="@+id/lv_subordinates"
         android:background="@color/white"
         android:divider="@color/activity_split"
@@ -132,7 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </com.loyo.oa.v2.tool.customview.ListView_inScrollView>
+    </com.loyo.oa.v2.customview.ListView_inScrollView>
     </LinearLayout>
 </LinearLayout>
     </ScrollView>

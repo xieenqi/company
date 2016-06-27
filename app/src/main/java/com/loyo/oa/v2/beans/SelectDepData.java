@@ -1,8 +1,6 @@
 package com.loyo.oa.v2.beans;
 
-import android.text.TextUtils;
-
-import com.loyo.oa.v2.activity.commonview.SelectUserHelper;
+import com.loyo.oa.v2.ui.activity.commonview.SelectUserHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.io.Serializable;

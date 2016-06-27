@@ -22,6 +22,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.GeneralPopView;
 import com.loyo.oa.v2.db.LDBManager;
 import com.loyo.oa.v2.point.ITrackLog;
 import com.loyo.oa.v2.tool.Config_project;
@@ -364,6 +365,7 @@ public class AMapService extends Service {
 
             @Override
             public void failure(RetrofitError error) {
+//                HttpErrorCheck.checkError(error);
                 LogUtil.d(TAG + " uploadLocation,轨迹上报失败");
                 LocateData data = buildLocateData(location);
                 ldbManager.addLocateData(data);
@@ -372,6 +374,11 @@ public class AMapService extends Service {
                 String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
 
                 Global.ProcException(new Exception(userName + " 轨迹上报失败:" + error.getMessage()));
+
+                GeneralPopView generalPopView = new GeneralPopView(getApplicationContext(), true);
+                generalPopView.show();
+                generalPopView.setMessage(error.getMessage());
+                generalPopView.setCanceledOnTouchOutside(true);
                 super.failure(error);
             }
         });
@@ -393,6 +400,12 @@ public class AMapService extends Service {
                         HttpErrorCheck.checkResponse("轨迹上传成功： ", response);
                         isCache = false;
                         ldbManager.clearAllLocateDatas();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+
                     }
                 });
             }

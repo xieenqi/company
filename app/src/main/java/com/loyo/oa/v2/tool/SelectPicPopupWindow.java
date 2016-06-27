@@ -2,7 +2,6 @@ package com.loyo.oa.v2.tool;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,10 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
-import com.loyo.oa.v2.tool.customview.multi_image_selector.MultiImageSelectorActivity;
+import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

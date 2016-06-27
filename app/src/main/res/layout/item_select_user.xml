@@ -7,7 +7,7 @@
     android:gravity="center"
     android:minHeight="50dp">
 
-    <com.loyo.oa.v2.tool.customview.RoundImageView
+    <com.loyo.oa.v2.customview.RoundImageView
         android:id="@+id/riv_head"
         android:layout_width="40dp"
         android:layout_height="40dp"
