@@ -82,7 +82,7 @@
         android:orientation="horizontal"
         >
 
-        <com.loyo.oa.v2.tool.customview.HorizontalScrollListView
+        <com.loyo.oa.v2.ui.customview.HorizontalScrollListView
             android:id="@+id/lv_selectUser"
             android:layout_width="wrap_content"
             android:layout_height="50dp"

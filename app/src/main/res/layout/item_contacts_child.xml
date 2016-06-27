@@ -14,7 +14,7 @@
         android:paddingBottom="@dimen/dimen_5"
         android:paddingTop="@dimen/dimen_5">
 
-        <com.loyo.oa.v2.tool.customview.RoundImageView
+        <com.loyo.oa.v2.ui.customview.RoundImageView
             android:id="@+id/img"
             android:layout_width="@dimen/dimen_50"
             android:layout_height="@dimen/dimen_50"

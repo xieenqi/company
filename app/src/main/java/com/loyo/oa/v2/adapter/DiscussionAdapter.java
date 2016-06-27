@@ -10,7 +10,7 @@ import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.TimeFormatUtil;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.adapter.commonadapter.CommonAdapter;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class DiscussionAdapter extends CommonAdapter<Discussion> {
     }
 
     @Override
-    public void convert(final com.loyo.oa.v2.tool.commonadapter.ViewHolder holder, final Discussion discussion) {
+    public void convert(final com.loyo.oa.v2.adapter.commonadapter.ViewHolder holder, final Discussion discussion) {
         LogUtil.d(MainApp.gson.toJson(discussion) + " 讨2论的名 " + discussion.getCreator().getRealname());
         holder.setText(R.id.tv_creator, discussion.getCreator().getRealname())
                 .setText(R.id.tv_create_time, TimeFormatUtil.toFormat(discussion.getCreatedAt())).setText(R.id.tv_comment, discussion.getContent())

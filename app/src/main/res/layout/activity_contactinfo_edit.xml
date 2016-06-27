@@ -43,7 +43,7 @@
                     android:orientation="horizontal"
                     >
 
-                    <com.loyo.oa.v2.tool.customview.RoundImageView
+                    <com.loyo.oa.v2.ui.customview.RoundImageView
                         android:id="@+id/img_title_user"
                         android:layout_width="@dimen/dimen_40"
                         android:layout_height="@dimen/dimen_40"

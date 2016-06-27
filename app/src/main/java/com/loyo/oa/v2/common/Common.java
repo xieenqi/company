@@ -3,7 +3,7 @@ package com.loyo.oa.v2.common;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.ui.activity.project.HttpProject;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;

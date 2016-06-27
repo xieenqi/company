@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.ActivityPreviewImageList;
-import com.loyo.oa.v2.activity.PreviewOfficeActivity;
+import com.loyo.oa.v2.ui.activity.other.PreviewImageListActivity;
+import com.loyo.oa.v2.ui.activity.other.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.User;
@@ -25,7 +25,7 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.tool.customview.GeneralPopView;
+import com.loyo.oa.v2.ui.customview.GeneralPopView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -158,7 +158,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     bundle.putSerializable("data", mAttachments);
                     bundle.putSerializable("position", position);
                     bundle.putBoolean("isEdit", false);
-                    MainApp.getMainApp().startActivity((Activity) mContext, ActivityPreviewImageList.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
+                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageListActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
 
                 } else if (attachment.getAttachmentType() == Attachment.AttachmentType.OFFICE) {
                     //预览文件

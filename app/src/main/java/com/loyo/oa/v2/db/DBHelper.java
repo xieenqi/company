@@ -3,7 +3,6 @@ package com.loyo.oa.v2.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -11,7 +10,6 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
-import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Config.SomeConfig;
@@ -26,6 +24,7 @@ import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.ui.activity.home.bean.HomeItem;
 
 import java.io.File;
 import java.lang.reflect.Type;

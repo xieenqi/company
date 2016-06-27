@@ -2,7 +2,7 @@ package com.loyo.oa.v2.beans;
 
 import android.text.TextUtils;
 
-import com.loyo.oa.v2.activity.project.HttpProject;
+import com.loyo.oa.v2.ui.activity.project.HttpProject;
 import com.loyo.oa.v2.tool.ListUtil;
 
 import java.util.ArrayList;

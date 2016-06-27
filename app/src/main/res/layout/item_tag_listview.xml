@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         style="@style/view_split" />
 
-    <com.loyo.oa.v2.tool.customview.GridView_inScrollView
+    <com.loyo.oa.v2.ui.customview.GridView_inScrollView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

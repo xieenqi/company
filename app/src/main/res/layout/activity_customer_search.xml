@@ -62,7 +62,7 @@
     <!--</LinearLayout>-->
     <include layout="@layout/include_search_title"/>
 
-    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/listView_customer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -11,7 +11,7 @@
 
     <include layout="@layout/include_common_title"/>
 
-    <com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView
+    <com.loyo.oa.v2.ui.customview.pullToRefresh.PullToRefreshListView
         android:id="@+id/listView_discussion"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -1,19 +1,15 @@
 package com.loyo.oa.v2.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.project.HttpProject;
-import com.loyo.oa.v2.activity.project.ProjectAddActivity;
-import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.tool.LogUtil;
-import com.loyo.oa.v2.tool.commonadapter.CommonAdapter;
-import com.loyo.oa.v2.tool.commonadapter.ViewHolder;
+import com.loyo.oa.v2.ui.activity.project.ProjectAddActivity;
+import com.loyo.oa.v2.adapter.commonadapter.CommonAdapter;
+import com.loyo.oa.v2.adapter.commonadapter.ViewHolder;
 
 import java.util.ArrayList;
 

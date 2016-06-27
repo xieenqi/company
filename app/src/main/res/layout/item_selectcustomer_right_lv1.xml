@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="49dp">
 
-        <com.loyo.oa.v2.tool.customview.RoundImageView
+        <com.loyo.oa.v2.ui.customview.RoundImageView
             android:id="@+id/img_title_left"
             android:layout_width="30dp"
             android:layout_height="30dp"

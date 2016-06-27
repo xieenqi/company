@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.customview.CustomProgressDialog;
 
 import java.io.Serializable;
 

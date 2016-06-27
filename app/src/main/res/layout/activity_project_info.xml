@@ -88,7 +88,7 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <com.loyo.oa.v2.tool.customview.PagerSlidingTabStrip
+        <com.loyo.oa.v2.ui.customview.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -99,7 +99,7 @@
             app:pstsTabPaddingLeftRight="1dp"
             app:pstsUnderlineHeight="0.5dp"/>
 
-        <com.loyo.oa.v2.tool.customview.NoScrollViewpager
+        <com.loyo.oa.v2.ui.customview.NoScrollViewpager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
