@@ -66,9 +66,7 @@ import retrofit.client.Response;
  */
 public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshBase.OnRefreshListener2{
 
-    private Intent mIntent;
     private View mView;
-    private Button btn_add;
     private ViewStub emptyView;
     private TextView screen;
     private ImageView tagImage1;
@@ -207,7 +205,6 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
             sortData.add(saleTeamScreen);
         }
 
-        btn_add = (Button) view.findViewById(R.id.btn_add);
         screen  = (TextView) view.findViewById(R.id.custeam_screen1_commy);
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
         nearTv = (TextView) view.findViewById(R.id.tv_near_customers);
@@ -228,8 +225,6 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
         screen1.setOnClickListener(click);
         screen2.setOnClickListener(click);
         screen3.setOnClickListener(click);
-        btn_add.setOnClickListener(click);
-        btn_add.setOnTouchListener(Global.GetTouch());
 
         mDeptSource = Common.getLstDepartment();
         deptSort();
@@ -426,13 +421,6 @@ public class FragmentTeamCustomer extends BaseFragment implements PullToRefreshB
        public void onClick(View v) {
 
            switch (v.getId()) {
-
-               //新建客户
-               case R.id.btn_add:
-                   mIntent = new Intent();
-                   mIntent.setClass(getActivity(), CustomerAddActivity_.class);
-                   startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
-                   break;
 
                //公司
                case R.id.custeam_screen1:

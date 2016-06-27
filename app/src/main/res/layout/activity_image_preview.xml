@@ -46,6 +46,7 @@
             android:textColor="@color/white"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_other_view"
+            android:visibility="gone"
            />
 
         </RelativeLayout>

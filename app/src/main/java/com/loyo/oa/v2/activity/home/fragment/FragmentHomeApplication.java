@@ -219,7 +219,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     }
 
     public void initView() {
-//        LogUtil.d( "，，，，，，！！！！！！！！！！！，，，，，，，接设置数据受 、、、、、、、、@@@@@@@@@@@@@@@@@@@@@@@、、、、、、、、" );
         DBManager.Instance().deleteHomeItem();
 //        //此处缓存首页数据
         DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
@@ -232,8 +231,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                 showMoreWindow(v);
             }
         });
-
-        ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
+        if (null != MainApp.user && null != MainApp.user.avatar) {
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
+        }
     }
 
     /**

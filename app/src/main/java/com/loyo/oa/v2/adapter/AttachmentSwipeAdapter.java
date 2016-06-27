@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.PreviewImageActivity;
+import com.loyo.oa.v2.activity.ActivityPreviewImageList;
 import com.loyo.oa.v2.activity.PreviewOfficeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
@@ -36,7 +36,9 @@ import java.util.HashMap;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-//【附件适配器】
+/**
+ * 【附件适配器】
+ * */
 public class AttachmentSwipeAdapter extends BaseAdapter {
 
     public static final int REQUEST_ATTACHMENT = 4000;
@@ -117,7 +119,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
             holder.tv_creator = (TextView) convertView.findViewById(R.id.tv_creator);
             holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tv_time = (TextView) convertView.findViewById(R.id.tv_createtime);
-//            holder.layout_action_update = (ViewGroup) convertView.findViewById(R.id.layout_action_update);
+//          holder.layout_action_update = (ViewGroup) convertView.findViewById(R.id.layout_action_update);
             holder.layout_action_delete = (ViewGroup) convertView.findViewById(R.id.layout_action_delete);
 
             convertView.setTag(holder);
@@ -156,7 +158,7 @@ public class AttachmentSwipeAdapter extends BaseAdapter {
                     bundle.putSerializable("data", mAttachments);
                     bundle.putSerializable("position", position);
                     bundle.putBoolean("isEdit", false);
-                    MainApp.getMainApp().startActivity((Activity) mContext, PreviewImageActivity.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
+                    MainApp.getMainApp().startActivity((Activity) mContext, ActivityPreviewImageList.class, MainApp.ENTER_TYPE_BUTTOM, false, bundle);
 
                 } else if (attachment.getAttachmentType() == Attachment.AttachmentType.OFFICE) {
                     //预览文件

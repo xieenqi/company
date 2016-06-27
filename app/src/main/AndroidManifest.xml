@@ -460,7 +460,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".activity.PreviewImageActivity"
+            android:name=".activity.ActivityPreviewImageList"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -748,7 +748,7 @@
             android:theme="@style/dialog_edit_delete_StyleBottom"
             />
         <activity
-            android:name=".activity.PreviewImageActivity2"
+            android:name=".activity.ActivityPreviewImageAdd"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -759,7 +759,7 @@
             android:value="56f0a2a367e58e2176002ad6"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="ukuaiqi"/>
+            android:value="应用宝"/>
 
 
     </application>

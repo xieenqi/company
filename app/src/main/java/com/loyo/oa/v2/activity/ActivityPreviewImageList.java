@@ -13,39 +13,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
-import com.loyo.oa.v2.tool.SelectPicPopupWindow;
+import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.customview.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import uk.co.senab.photoview.PhotoView;
 
 /**
- * 预览图片
+ * 【附件列表】预览图片
  */
-public class PreviewImageActivity2 extends BaseActivity {
+public class ActivityPreviewImageList extends BaseActivity {
 
     private ViewPager mViewPager;
-    private ArrayList<SelectPicPopupWindow.ImageInfo> mNewAttachments = null;
+    private ArrayList<Attachment> mNewAttachments = null;
     private ImageView delete;
-    private ImageView back_image;
-    private TextView show_tv;
+    private ImageView  back;
+    private TextView   showNum;
 
-    private int showPosition;
     private int mPosition;
     private int mNewPosition = 0;
+    private int showPosition;
     private boolean isEdit;
 
-
     private Handler mHandler = new Handler(){
+
         @Override
         public void handleMessage(Message msg){
             if(msg.what == 0x01){
                 showPosition = mPosition+1;
-                show_tv.setText(showPosition+"/"+mNewAttachments.size());
+                showNum.setText(showPosition+"/"+mNewAttachments.size());
             }
         }
     };
@@ -54,8 +54,6 @@ public class PreviewImageActivity2 extends BaseActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
-        back_image = (ImageView) findViewById(R.id.back_image);
-        show_tv    = (TextView) findViewById(R.id.show_tv);
         isEdit = getIntent() == null || !getIntent().hasExtra("isEdit") ? false : getIntent().getBooleanExtra("isEdit", false);
         if (isEdit) {
             delete = (ImageView) findViewById(R.id.delete_image);
@@ -69,7 +67,10 @@ public class PreviewImageActivity2 extends BaseActivity {
             });
         }
 
-        back_image.setOnClickListener(new View.OnClickListener() {
+        back = (ImageView) findViewById(R.id.back_image);
+        showNum = (TextView) findViewById(R.id.show_tv);
+
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -77,19 +78,21 @@ public class PreviewImageActivity2 extends BaseActivity {
         });
 
         if (getIntent().hasExtra("data")) {
-            ArrayList<SelectPicPopupWindow.ImageInfo> attachments = (ArrayList<SelectPicPopupWindow.ImageInfo>) getIntent().getSerializableExtra("data");
+            ArrayList<Attachment> attachments = (ArrayList<Attachment>) getIntent().getSerializableExtra("data");
             int position = getIntent().getIntExtra("position", 0);
 
-            for (SelectPicPopupWindow.ImageInfo imageInfo : attachments) {
+            for (Attachment attachment : attachments) {
+                if ((attachment.getAttachmentType() == Attachment.AttachmentType.IMAGE)) {
                     if (mNewAttachments == null) {
                         mNewAttachments = new ArrayList<>();
                     }
 
-                    mNewAttachments.add(imageInfo);
+                    mNewAttachments.add(attachment);
 
-                    if (imageInfo.equals(attachments.get(position))) {
+                    if (attachment.equals(attachments.get(position))) {
                         mNewPosition = position;
                     }
+                }
             }
 
             if (mNewAttachments == null || mNewAttachments.size() == 0) {
@@ -134,8 +137,8 @@ public class PreviewImageActivity2 extends BaseActivity {
             public void onClick(final View view) {
                 generalPopView.dismiss();
                 Intent intent = new Intent();
-                intent.putExtra("position",mPosition);
-                MainApp.getMainApp().finishActivity(PreviewImageActivity2.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
+                intent.putExtra("delAtm", mNewAttachments.get(mPosition));
+                MainApp.getMainApp().finishActivity(ActivityPreviewImageList.this, MainApp.ENTER_TYPE_TOP, RESULT_OK, intent);
             }
         });
 
@@ -146,6 +149,7 @@ public class PreviewImageActivity2 extends BaseActivity {
                 generalPopView.dismiss();
             }
         });
+
     }
 
     class SamplePagerAdapter extends PagerAdapter {
@@ -157,19 +161,17 @@ public class PreviewImageActivity2 extends BaseActivity {
 
         @Override
         public View instantiateItem(final ViewGroup container, final int position) {
-            File imgFile = null;
+
             PhotoView photoView = new PhotoView(container.getContext());
-            SelectPicPopupWindow.ImageInfo imageInfo = mNewAttachments.get(position);
-            Uri uri = Uri.parse(imageInfo.path);
-            try {
-                imgFile = Global.scal(mContext, uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Attachment attachment = mNewAttachments.get(position);
+            File imgFile = attachment.getFile();
+            LogUtil.d("预览图片的url：" + attachment.getUrl());
             if (imgFile != null) {
                 photoView.setImageURI(Uri.fromFile(imgFile));
             } else {
-                ImageLoader.getInstance().displayImage(imageInfo.path, photoView);
+
+                ImageLoader.getInstance().displayImage(attachment.getUrl(), photoView);
+
             }
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             return photoView;
@@ -184,5 +186,7 @@ public class PreviewImageActivity2 extends BaseActivity {
         public boolean isViewFromObject(final View view, final Object object) {
             return view == object;
         }
+
     }
+
 }
