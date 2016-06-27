@@ -404,9 +404,9 @@ public class BaseActivity extends Activity implements GestureDetector.OnGestureL
      */
     public GeneralPopView showGeneralDialog(boolean isOut, boolean isKind, String message) {
         generalPopView = new GeneralPopView(this, isKind);
-        generalPopView.show();
         generalPopView.setMessage(message);
         generalPopView.setCanceledOnTouchOutside(isOut);
+        generalPopView.show();
         return generalPopView;
     }
 
