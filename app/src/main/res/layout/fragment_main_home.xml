@@ -74,6 +74,26 @@
             android:visibility="invisible"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_network"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/redE8"
+        android:gravity="center"
+        android:minHeight="@dimen/dimen_25"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/icon_home_network_failure"
+            android:gravity="center"
+            android:text="无网络连接，请检查网络"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

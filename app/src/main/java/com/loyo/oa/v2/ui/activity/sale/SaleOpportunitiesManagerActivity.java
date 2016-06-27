@@ -45,13 +45,13 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
 
     /**
      * 销售阶段筛选Tag
-     * */
+     */
     public final static int SCREEN_STAGE = 101;
 
     /**
      * 排序筛选Tag
-     * */
-    public final static int SCREEN_SORT  = 102;
+     */
+    public final static int SCREEN_SORT = 102;
 
     private LinearLayout img_title_left, ll_category;
     private ImageView img_title_arrow;
@@ -76,7 +76,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
         init();
     }
 
-    public void getStageData(){
+    public void getStageData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).getSaleStges(new RCallback<ArrayList<SaleStage>>() {
             @Override
@@ -174,7 +174,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
      * @param index
      */
     private void changeChild(int index) {
-        if (index != mIndex) {
+        if (index != mIndex && fragments.size() > 0) {
             mIndex = index;
             fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(index)).commit();
         }
