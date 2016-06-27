@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
+
 import java.util.ArrayList;
 
 /**
@@ -32,20 +34,53 @@ public class AdapterHomeItem extends BaseAdapter {
     private boolean oaTi = false;
     private Intent mIntent = new Intent();
 
-    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
+    public AdapterHomeItem(Context context) {
         this.mContext = context;
-        this.items = items;
-        this.mItemNumbers = mItemNumbers;
-        try{
+        try {
             inflter = LayoutInflater.from(context);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
+    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
+//        this.mContext = context;
+//        this.items = items;
+//        this.mItemNumbers = mItemNumbers;
+//        try {
+//            inflter = LayoutInflater.from(context);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    /**
+     * 设置item数据
+     *
+     * @param items
+     */
+    public void setItemData(ArrayList<HomeItem> items) {
+        crmTi = false;
+        oaTi = false;
+        this.items = items;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 设置 红点数据
+     *
+     * @param mItemNumbers
+     */
+    public void setRedNumbreData(ArrayList<HttpMainRedDot> mItemNumbers) {
+        this.mItemNumbers = mItemNumbers;
+        crmTi = false;
+        oaTi = false;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return items.size();
+        return null == items ? 0 : items.size();
     }
 
     @Override
@@ -83,22 +118,22 @@ public class AdapterHomeItem extends BaseAdapter {
         }
 
         final HomeItem item = items.get(position);
-
-        for (HttpMainRedDot num : mItemNumbers) {//首页红点
-            String extra = "";
-            if ((item.title.equals("工作报告") && num.bizType == 1)) {
-                extra = num.bizNum + "个待点评(含抄送)";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
-                extra = num.bizNum + "个未完成";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
-                extra = num.bizNum + "个待审批";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
-                extra = num.bizNum + "个进行中";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            }
+        if (null != mItemNumbers) {//首页红点 有数据才加载
+            for (HttpMainRedDot num : mItemNumbers) {
+                String extra = "";
+                if ((item.title.equals("工作报告") && num.bizType == 1)) {
+                    extra = num.bizNum + "个待点评(含抄送)";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("任务计划") && num.bizType == 2)) {
+                    extra = num.bizNum + "个未完成";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("审批流程") && num.bizType == 12)) {
+                    extra = num.bizNum + "个待审批";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if ((item.title.equals("项目管理") && num.bizType == 5)) {
+                    extra = num.bizNum + "个进行中";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                }
 //            else if ((item.title.equals("客户管理") && num.bizType == 6)) {//crm 不做红点
 //                extra = num.bizNum + "个将掉公海";
 //                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
@@ -106,16 +141,17 @@ public class AdapterHomeItem extends BaseAdapter {
 //                extra = num.bizNum + "个需拜访";
 //                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
 //            }
-            else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
-                extra = num.bizNum + "个外勤";
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
-                holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
-            }
-            if (!TextUtils.isEmpty(extra)) {
-                holder.tv_extra.setText(extra);
+                else if ((item.title.equals("考勤管理") && num.bizType == 4)) {
+                    extra = num.bizNum + "个外勤";
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if (item.title.equals("公告通知") && num.bizType == 19) { //通知公告红点
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                } else if (item.title.equals("我的讨论") && num.bizType == 14) { //我的讨论红点
+                    holder.view_number.setVisibility(num.viewed ? View.GONE : View.VISIBLE);
+                }
+                if (!TextUtils.isEmpty(extra)) {
+                    holder.tv_extra.setText(extra);
+                }
             }
         }
 
@@ -128,10 +164,10 @@ public class AdapterHomeItem extends BaseAdapter {
             holder.item_newmain_topview.setVisibility(oaTi ? View.GONE : View.VISIBLE);
             holder.tv_title.setText("OA");
             oaTi = true;
-        } else {
+        } else if (item.tag == 0) {
             holder.item_newmain_topview.setVisibility(View.GONE);
         }
-        holder.img_item.setImageDrawable(mContext.getResources().getDrawable(item.imageViewRes));
+        holder.img_item.setImageResource(item.imageViewRes);
         holder.tv_item.setText(item.title);
 
         //跳转对应业务
@@ -146,8 +182,13 @@ public class AdapterHomeItem extends BaseAdapter {
                         Toast.makeText(mContext, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    mIntent.setClass(mContext, items.get(position).cls);
-                    mContext.startActivity(mIntent);
+                    try {
+                        mIntent.setClass(mContext, Class.forName(items.get(position).cls));
+                        mContext.startActivity(mIntent);
+                    }catch (ClassNotFoundException e){
+e.printStackTrace();
+                    }
+
                 }
             }
         });

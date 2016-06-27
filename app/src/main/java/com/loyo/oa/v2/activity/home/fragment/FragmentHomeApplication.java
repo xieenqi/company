@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,31 +16,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activity.contact.ContactsActivity;
-import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.activity.SaleActivitiesAddActivity;
-import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.activity.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activity.home.cusview.MoreWindowCase;
-import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
 import com.loyo.oa.v2.activity.sale.ActivityAddMySale;
-import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
-import com.loyo.oa.v2.activity.signin.SignInManagerActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
-import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
-import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
-import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
@@ -53,12 +43,14 @@ import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.point.IAttendance;
 import com.loyo.oa.v2.point.IMain;
 import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -71,6 +63,7 @@ import com.loyo.oa.v2.tool.customview.RoundImageView;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.tool.customview.pullToRefresh.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,6 +71,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import retrofit.RetrofitError;
@@ -86,17 +80,16 @@ import retrofit.client.Response;
 /**
  * 【首页应用】fragment
  */
-public class FragmentHomeApplication extends Fragment implements LocationUtilGD.AfterLocation,PullToRefreshBase.OnRefreshListener2{
+public class FragmentHomeApplication extends BaseFragment implements LocationUtilGD.AfterLocation, PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
-    private Fragment currentFragment = null;
-    private String changeEvent = "All"; // 全成All/身边Near
+    private String changeEvent = "All";
 
     private GeneralPopView generalPopView;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
     private ArrayList<HttpMainRedDot> mItemNumbers = new ArrayList<>();
     private HashMap<String, Object> map = new HashMap<>();
-    private ArrayList<HomeItem> items;
+    private ArrayList<HomeItem> items = new ArrayList<>();
     private ArrayList<MoreWindowItem> caseItems;
     private Set<String> companyTag;
     private AdapterHomeItem adapter;
@@ -111,7 +104,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     private MoreWindowCase mMoreWindowcase;
     private ValidateInfo validateInfo = new ValidateInfo();
 
-    public FragmentHomeApplication(RoundImageView heading){
+    public FragmentHomeApplication(RoundImageView heading) {
         this.heading = heading;
     }
 
@@ -138,7 +131,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             switch (msg.what) {
                 //新建任务
                 case BaseActivity.TASKS_ADD:
-                    startActivityForResult(new Intent(getActivity(),TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
+                    startActivityForResult(new Intent(getActivity(), TasksAddActivity_.class), Activity.RESULT_FIRST_USER);
                     break;
                 //申请审批
                 case BaseActivity.WFIN_ADD:
@@ -172,13 +165,14 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         }
     };
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            requestNumber();
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        LogUtil.d(requestCode + "，，，，，，！！！！！！！！！！！，，，，，，，接受 、、、、、、、、@@@@@@@@@@@@@@@@@@@@@@@、、、、、、、、" + resultCode);
+//        if (requestCode == 1) {
+//            requestNumber();
+//        }
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -191,21 +185,33 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home_application, container,
                 false);
-
         //注册拉去组织架构的广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter(FinalVariables.ACTION_DATA_CHANGE));
         //检查更新
         listView = (PullToRefreshListView) mView.findViewById(R.id.newhome_listview);
         btn_add = (Button) mView.findViewById(R.id.btn_add);
         getActivity().startService(new Intent(getActivity(), CheckUpdateService.class));
-        if(null != items){
+        if (null != items) {
             DialogHelp.showLoading(getActivity(), "", true);
         }
+        adapter = new AdapterHomeItem(getActivity());
+        listView.setAdapter(adapter);
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        listView.setOnRefreshListener(this);
+        items = DBManager.Instance().getHomeItem();
+        if (null != items && items.size() > 0) {
+            adapter.setItemData(items);
+        }
+        updateUser();
         return mView;
     }
 
-    public void initView(){
-        adapter = new AdapterHomeItem(getActivity(), items, mItemNumbers);
+    public void initView() {
+        DBManager.Instance().deleteHomeItem();
+//        //此处缓存首页数据
+        DBManager.Instance().putHomeItem(MainApp.gson.toJson(items));
+        adapter.setItemData(items);
+        adapter.setRedNumbreData(mItemNumbers);
         btn_add.setOnTouchListener(Global.GetTouch());
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,12 +219,8 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                 showMoreWindow(v);
             }
         });
-
-        listView.setAdapter(adapter);
-        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        listView.setOnRefreshListener(this);
-        if(null != MainApp.user && null != MainApp.user.avatar){
-            ImageLoader.getInstance().displayImage(MainApp.user.avatar,heading);
+        if (null != MainApp.user && null != MainApp.user.avatar) {
+            ImageLoader.getInstance().displayImage(MainApp.user.avatar, heading);
         }
     }
 
@@ -238,6 +240,35 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         setJpushAlias();
         requestNumber();
         startTrack();
+    }
+
+    /**
+     * 组装首页Item数据
+     */
+    void updateUser() {
+
+        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.activity.BulletinManagerActivity_", "0", 0),
+                new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss", "0", 0),
+                new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.activity.contact.ContactsActivity", "0213", 0),
+                new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager", "0205", 1),
+                new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager", "0215", 1),
+                new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.activity.signin.SignInManagerActivity_", "0206", 1),
+                new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.activity.project.ProjectManageActivity_", "0201", 2),
+                new HomeItem(R.drawable.newmain_task, "任务计划", "com.loyo.oa.v2.activity.tasks.TasksManageActivity_", "0202", 2),
+                new HomeItem(R.drawable.newmain_report, "工作报告", "com.loyo.oa.v2.activity.work.WorkReportsManageActivity", "0203", 2),
+                new HomeItem(R.drawable.newmain_wfin, "审批流程", "com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity", "0204", 2),
+                new HomeItem(R.drawable.newmain_attent, "考勤管理", "com.loyo.oa.v2.activity.attendance.AttendanceActivity_", "0211", 2)));
+
+
+        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务", "0202", R.drawable.newmain_post_task),
+                new MoreWindowItem("申请审批", "0204", R.drawable.newmain_post_wif),
+                new MoreWindowItem("提交报告", "0203", R.drawable.newmain_post_report),
+                new MoreWindowItem("新建客户", "0205", R.drawable.newmain_post_customer),
+                new MoreWindowItem("写跟进", "0205", R.drawable.newmain_post_follow),
+                new MoreWindowItem("新建机会", "0215", R.drawable.newmain_post_sale),
+                new MoreWindowItem("考勤打卡", "0000", R.drawable.newmain_post_att),
+                new MoreWindowItem("拜访签到", "0206", R.drawable.newmain_post_sign)));
+
     }
 
     /**
@@ -325,7 +356,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         }
 
         if (!Global.isConnected()) {
-            Toast.makeText(getActivity(),"没有网络连接，不能打卡",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "没有网络连接，不能打卡", Toast.LENGTH_SHORT).show();
             return;
         }
         /*工作日*/
@@ -339,9 +370,9 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
             }
             /*非工作日，下班状态*/
         } else if (!validateInfo.isWorkDay() && outEnable) {
-            if(validateInfo.isExtraTimeSwitch()){
+            if (validateInfo.isExtraTimeSwitch()) {
                 outKind = 2;
-            }else{
+            } else {
                 outKind = 1;
             }
             startAttanceLocation();
@@ -474,7 +505,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
      * 首页业务显示\隐藏权限 判断设置
      */
     public void testJurl() {
-        updateUser();
+
         //超级管理员判断
         if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             if (null == MainApp.user || null == MainApp.user.newpermission || null == MainApp.user.newpermission ||
@@ -510,17 +541,17 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                     }
                 }
 
-                for(int i = 0;i<caseItems.size();i++){
-                    if(caseItems.get(i).code.equals(permission.getCode())){
-                        if(!permission.isEnable()){
+                for (int i = 0; i < caseItems.size(); i++) {
+                    if (caseItems.get(i).code.equals(permission.getCode())) {
+                        if (!permission.isEnable()) {
                             caseItems.remove(i);
                         }
                     }
                 }
 
-                for(int i = 0;i<caseItems.size();i++){
-                    if(caseItems.get(i).code.equals(permission.getCode())){
-                        if(!permission.isEnable()){
+                for (int i = 0; i < caseItems.size(); i++) {
+                    if (caseItems.get(i).code.equals(permission.getCode())) {
+                        if (!permission.isEnable()) {
                             caseItems.remove(i);
                         }
                     }
@@ -530,34 +561,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
         initView();
     }
 
-    /**
-     * 组装首页Item数据
-     */
-    void updateUser() {
-
-        items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", BulletinManagerActivity_.class, "0", 0),
-                new HomeItem(R.drawable.newmain_discuss, "我的讨论", ActivityMyDiscuss.class, "0", 0),
-                new HomeItem(R.drawable.newmain_list, "通讯录", ContactsActivity.class, "0213", 0),
-                new HomeItem(R.drawable.newmain_customer, "客户管理", ActivityCustomerManager.class, "0205", 1),
-                new HomeItem(R.drawable.newmain_sale, "销售机会", ActivitySaleOpportunitiesManager.class, "0215", 1),
-                new HomeItem(R.drawable.newmain_sagin, "客户拜访", SignInManagerActivity_.class, "0206", 1),
-                new HomeItem(R.drawable.newmain_project, "项目管理", ProjectManageActivity_.class, "0201", 2),
-                new HomeItem(R.drawable.newmain_task, "任务计划", TasksManageActivity_.class, "0202", 2),
-                new HomeItem(R.drawable.newmain_report, "工作报告", WorkReportsManageActivity.class, "0203", 2),
-                new HomeItem(R.drawable.newmain_wfin, "审批流程", WfInstanceManageActivity.class, "0204", 2),
-                new HomeItem(R.drawable.newmain_attent, "考勤管理", AttendanceActivity_.class, "0211", 2)));
-
-
-        caseItems = new ArrayList<>(Arrays.asList(new MoreWindowItem("新建任务","0202",R.drawable.newmain_post_task),
-                new MoreWindowItem("申请审批","0204",R.drawable.newmain_post_wif),
-                new MoreWindowItem("提交报告","0203",R.drawable.newmain_post_report),
-                new MoreWindowItem("新建客户","0205",R.drawable.newmain_post_customer),
-                new MoreWindowItem("写跟进","0205",R.drawable.newmain_post_follow),
-                new MoreWindowItem("新建机会","0215",R.drawable.newmain_post_sale),
-                new MoreWindowItem("考勤打卡","0000",R.drawable.newmain_post_att),
-                new MoreWindowItem("拜访签到","0206",R.drawable.newmain_post_sign)));
-
-    }
 
     /**
      * 通用提示弹出框init
@@ -574,7 +577,7 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
      * 显示弹出菜单
      */
     void showMoreWindow(View view) {
-        mMoreWindowcase = new MoreWindowCase(getActivity(), mHandler,caseItems);
+        mMoreWindowcase = new MoreWindowCase(getActivity(), mHandler, caseItems);
         mMoreWindowcase.init();
         mMoreWindowcase.showMoreWindow(view);
     }
@@ -717,16 +720,33 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
     public void OnLocationGDFailed() {
         LocationUtilGD.sotpLocation();
         DialogHelp.cancelLoading();
-        Toast.makeText(getActivity(),"获取打卡位置失败",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "获取打卡位置失败", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        initData();
+        if (Utils.isNetworkAvailable(getActivity())) {
+            initData();
+        } else {
+            Toast("请检查你的网络链接");
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.onRefreshComplete();
+                        }
+                    });
+                }
+            }, 200);
+        }
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
     }
+
 }

@@ -13,13 +13,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.adapter.AdapterTagScreen;
 import com.loyo.oa.v2.beans.Tag;
 import com.loyo.oa.v2.beans.TagItem;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
 
@@ -31,12 +31,12 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
 
     /**
      * 选中数目刷新
-     * */
+     */
     private final int RUSH_STATE = 0x01;
 
     /**
      * 全部取消
-     * */
+     */
     private final int CANCEL_STATE = 0x02;
 
     private Context mContext;
@@ -60,16 +60,16 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
     private StringBuffer tagItemIds;
 
     private Handler vHandler;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
                 case RUSH_STATE:
-                    if(selectNum == 0){
+                    if (selectNum == 0) {
                         confirm.setText("确定");
-                    }else{
-                        confirm.setText("确定("+selectNum+")");
+                    } else {
+                        confirm.setText("确定(" + selectNum + ")");
                     }
                     break;
 
@@ -109,15 +109,15 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
         cancel.setOnTouchListener(Global.GetTouch());
         setRightData(0);
 
-        adater1 = new AdapterTagScreen(mContext,mData,1);
+        adater1 = new AdapterTagScreen(mContext, mData, 1);
         listView1.setAdapter(adater1);
-        adater2 = new AdapterTagScreen(mContext,mRightData,2);
+        adater2 = new AdapterTagScreen(mContext, mRightData, 2);
         listView2.setAdapter(adater2);
 
-        if(selectNum == 0){
+        if (selectNum == 0) {
             confirm.setText("确定");
-        }else{
-            confirm.setText("确定("+selectNum+")");
+        } else {
+            confirm.setText("确定(" + selectNum + ")");
         }
 
         /*左侧列表*/
@@ -144,10 +144,10 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
 
     /**
      * 设置右边列表数据
-     * */
-    public void setRightData(int position){
+     */
+    public void setRightData(int position) {
         mRightData.clear();
-        for(TagItem tagItem : mData.get(position).getItems()){
+        for (TagItem tagItem : mData.get(position).getItems()) {
             tag = new Tag();
             tag.setId(tagItem.getId());
             tag.setName(tagItem.getName());
@@ -158,28 +158,28 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
 
     /**
      * 记录点击位置
-     * */
-    public void dataReque(int position){
-        for(int i = 0;i<mRightData.size();i++){
-            if(position == i){
-                if(mRightData.get(i).isIndex()){
+     */
+    public void dataReque(int position) {
+        for (int i = 0; i < mRightData.size(); i++) {
+            if (position == i) {
+                if (mRightData.get(i).isIndex()) {
                     mRightData.get(i).setIndex(false);
-                }else{
+                } else {
                     mRightData.get(i).setIndex(true);
                 }
-            }else{
+            } else {
                 mRightData.get(i).setIndex(false);
             }
         }
         selectNum = 0;
         //数据源中，刷新勾选记录
-        for(Tag mtag : mData){
-            for(TagItem tagItem : mtag.getItems()){
-                for(Tag ztag : mRightData){
-                    if(ztag.getId().contains(tagItem.getId())){
-                        if(ztag.isIndex()){
+        for (Tag mtag : mData) {
+            for (TagItem tagItem : mtag.getItems()) {
+                for (Tag ztag : mRightData) {
+                    if (ztag.getId().contains(tagItem.getId())) {
+                        if (ztag.isIndex()) {
                             tagItem.setIsChecked(true);
-                        }else{
+                        } else {
                             tagItem.setIsChecked(false);
                         }
                     }
@@ -191,11 +191,11 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
 
     /**
      * 得到选中数量
-     * */
-    private void getSelectNum(){
-        for(Tag mtag : mData){
-            for(TagItem tagItem : mtag.getItems()){
-                if(tagItem.isChecked()){
+     */
+    private void getSelectNum() {
+        for (Tag mtag : mData) {
+            for (TagItem tagItem : mtag.getItems()) {
+                if (tagItem.isChecked()) {
                     selectNum++;
                 }
             }
@@ -204,10 +204,10 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
 
     /**
      * 全部取消数据重置
-     * */
-    private void canceAlldata(){
-        for(Tag mtag : mData){
-            for(TagItem tagItem : mtag.getItems()){
+     */
+    private void canceAlldata() {
+        for (Tag mtag : mData) {
+            for (TagItem tagItem : mtag.getItems()) {
                 tagItem.setIsChecked(false);
             }
         }
@@ -215,13 +215,13 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
 
     /**
      * 获取所有勾选ID
-     * */
-    private StringBuffer getAlldata(StringBuffer tagItemIds){
+     */
+    private StringBuffer getAlldata(StringBuffer tagItemIds) {
         tagItemIds = new StringBuffer();
-        for(Tag mtag : mData){
-            for(TagItem tagItem : mtag.getItems()){
-                if(tagItem.isChecked()){
-                    tagItemIds.append(tagItem.getId()+",");
+        for (Tag mtag : mData) {
+            for (TagItem tagItem : mtag.getItems()) {
+                if (tagItem.isChecked()) {
+                    tagItemIds.append(tagItem.getId() + ",");
                 }
             }
         }
@@ -232,19 +232,23 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
     public void onClick(View v) {
         String stringIds = "";
         mBundle = new Bundle();
-        msg     = new Message();
+        msg = new Message();
         switch (v.getId()) {
             //确定
             case R.id.custag_screentag1_confirm:
-                stringIds = getAlldata(tagItemIds).toString().substring(0,getAlldata(tagItemIds).toString().length()-1);
-                mBundle.putString("tagid",stringIds);
-                resultTag = ActivityCustomerManager.CUSTOMER_TAG;
+                try {
+                    stringIds = getAlldata(tagItemIds).toString().substring(0, getAlldata(tagItemIds).toString().length() - 1);
+                    mBundle.putString("tagid", stringIds);
+                    resultTag = ActivityCustomerManager.CUSTOMER_TAG;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             //全部取消
             case R.id.custag_screentag1_cancel:
                 canceAlldata();
                 stringIds = "";
-                mBundle.putString("tagid",stringIds);
+                mBundle.putString("tagid", stringIds);
                 resultTag = ActivityCustomerManager.CUSTOMER_CANCEL;
                 break;
 

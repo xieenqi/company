@@ -11,6 +11,7 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
+import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Config.SomeConfig;
@@ -22,6 +23,7 @@ import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.StringUtil;
 
@@ -33,7 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**数据库帮助类
+/**
+ * 数据库帮助类
  * Created by pj on 15/4/2.
  */
 public class DBHelper extends OrmLiteSqliteOpenHelper {
@@ -53,8 +56,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
-
 
 
     /**
@@ -186,7 +187,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
                             .where().eq("token", MainApp.getToken()).and().eq("t", t).and().eq("sid", sid)
                             .query();
 
-                    if (StringUtil.isEmpty(json)){
+                    if (StringUtil.isEmpty(json)) {
                         if (list != null && list.size() > 0) {
                             DBManager.Instance().getSomeConfigDao().delete(list.get(0));
                         }
@@ -231,7 +232,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public ArrayList<User> getSubordinates() {
 
-       Type type = new TypeToken<ArrayList<User>>(){}.getType();
+        Type type = new TypeToken<ArrayList<User>>() {
+        }.getType();
         String str = getStr("Subordinates");
 
         if (!StringUtil.isEmpty(str)) {
@@ -451,6 +453,34 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public void putCustomer(String json) {
         putStr("Customer", json);
+    }
+
+    /**
+     * 保存首页item数据
+     *
+     * @param json
+     */
+    public void putHomeItem(String json) {
+        putStr(ExtraAndResult.HOME_ITEM, json);
+    }
+
+    /**
+     * 获取保存 的首页item数据
+     * ArrayList<HttpMainRedDot>
+     *
+     * @return
+     */
+    public ArrayList<HomeItem> getHomeItem() {
+        String str = getStr(ExtraAndResult.HOME_ITEM);
+        if (!StringUtil.isEmpty(str)) {
+            return MainApp.gson.fromJson(str, new TypeToken<ArrayList<HomeItem>>() {
+            }.getType());
+        }
+        return null;
+    }
+
+    public void deleteHomeItem() {
+        delete(ExtraAndResult.HOME_ITEM, "");
     }
 
     public void deleteCustomer() {
