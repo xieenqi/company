@@ -415,7 +415,8 @@ public class AttendanceAddActivity extends BaseActivity implements LocationUtilG
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                onBackPressed();
+//                onBackPressed();
+                finish();
             }
         });
 

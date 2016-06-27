@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,30 +18,20 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.activity.BulletinManagerActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.activity.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.activity.contact.ContactsActivity;
-import com.loyo.oa.v2.activity.customer.activity.ActivityCustomerManager;
 import com.loyo.oa.v2.activity.customer.activity.CustomerAddActivity_;
 import com.loyo.oa.v2.activity.customer.activity.SaleActivitiesAddActivity;
-import com.loyo.oa.v2.activity.discuss.ActivityMyDiscuss;
 import com.loyo.oa.v2.activity.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.activity.home.bean.MoreWindowItem;
 import com.loyo.oa.v2.activity.home.cusview.MoreWindowCase;
-import com.loyo.oa.v2.activity.project.ProjectManageActivity_;
 import com.loyo.oa.v2.activity.sale.ActivityAddMySale;
-import com.loyo.oa.v2.activity.sale.ActivitySaleOpportunitiesManager;
 import com.loyo.oa.v2.activity.setting.ActivityEditUserMobile;
 import com.loyo.oa.v2.activity.signin.SignInActivity;
-import com.loyo.oa.v2.activity.signin.SignInManagerActivity_;
 import com.loyo.oa.v2.activity.tasks.TasksAddActivity_;
-import com.loyo.oa.v2.activity.tasks.TasksManageActivity_;
-import com.loyo.oa.v2.activity.wfinstance.WfInstanceManageActivity;
 import com.loyo.oa.v2.activity.wfinstance.activity.ActivityWfInTypeSelect;
 import com.loyo.oa.v2.activity.work.WorkReportAddActivity_;
-import com.loyo.oa.v2.activity.work.WorkReportsManageActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.AttendanceRecord;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
@@ -61,6 +50,7 @@ import com.loyo.oa.v2.service.AMapService;
 import com.loyo.oa.v2.service.CheckUpdateService;
 import com.loyo.oa.v2.service.InitDataService_;
 import com.loyo.oa.v2.tool.BaseActivity;
+import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
@@ -90,11 +80,10 @@ import retrofit.client.Response;
 /**
  * 【首页应用】fragment
  */
-public class FragmentHomeApplication extends Fragment implements LocationUtilGD.AfterLocation, PullToRefreshBase.OnRefreshListener2 {
+public class FragmentHomeApplication extends BaseFragment implements LocationUtilGD.AfterLocation, PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
-    private Fragment currentFragment = null;
-    private String changeEvent = "All"; // 全成All/身边Near
+    private String changeEvent = "All";
 
     private GeneralPopView generalPopView;
     private AttendanceRecord attendanceRecords = new AttendanceRecord();
@@ -131,7 +120,6 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
                     listView.onRefreshComplete();
                 }
                 launch();
-                LogUtil.d("接受广播、+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             }
         }
     };
@@ -737,11 +725,17 @@ public class FragmentHomeApplication extends Fragment implements LocationUtilGD.
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        initData();
+        if (Utils.isNetworkAvailable(getActivity())) {
+            initData();
+        } else {
+            Toast("请检查你的网络链接");
+            listView.onRefreshComplete();
+        }
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
     }
+
 }

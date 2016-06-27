@@ -37,7 +37,7 @@ import com.umeng.analytics.MobclickAgent;
 
 /**
  * 带侧滑的【主界面】
- *
+ * <p/>
  * Created by xeq on 16/6/15.
  */
 public class ActivityMainHome extends SlidingFragmentActivity {
@@ -78,7 +78,7 @@ public class ActivityMainHome extends SlidingFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
-        if(savedInstanceState!= null){
+        if (savedInstanceState != null) {
             String FRAGMENTS_TAG = "Android:support:fragments";
             savedInstanceState.remove(FRAGMENTS_TAG);
         }
@@ -185,6 +185,10 @@ public class ActivityMainHome extends SlidingFragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onNetworkChanged(boolean available) {
+        super.onNetworkChanged(available);
+    }
 
     /**
      * 检查定位权限是否打开

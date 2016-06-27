@@ -305,6 +305,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         return mIsBeingDragged;
     }
 
+    /**
+     * 刷新完成
+     */
     @Override
     public final void onRefreshComplete() {
         if (isRefreshing()) {
