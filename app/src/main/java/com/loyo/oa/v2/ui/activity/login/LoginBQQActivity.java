@@ -93,5 +93,4 @@ public class LoginBQQActivity extends BaseActivity {
         cookieManager.removeAllCookie();
         webView.loadUrl(FinalVariables.GetBQQLogin());
     }
-
 }
