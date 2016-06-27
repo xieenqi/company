@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.customer.activity.CustomerSearchActivity;
-import com.loyo.oa.v2.adapter.CommonCategoryAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Permission;

@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.SignInListAdapter;
+import com.loyo.oa.v2.ui.activity.signin.adapter.SignInListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.LegWork;

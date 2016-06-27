@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.signin.SignInActivity;
 import com.loyo.oa.v2.ui.activity.signin.SignInfoActivity;
-import com.loyo.oa.v2.adapter.SignInListAdapter;
+import com.loyo.oa.v2.ui.activity.signin.adapter.SignInListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.LegWork;
 import com.loyo.oa.v2.beans.PaginationX;

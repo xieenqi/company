@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.ProcessChooseAdapter;
+import com.loyo.oa.v2.ui.activity.wfinstance.adapter.ProcessChooseAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.WfTemplate;

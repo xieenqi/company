@@ -8,7 +8,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;

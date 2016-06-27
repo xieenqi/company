@@ -21,7 +21,7 @@ import com.loyo.oa.v2.ui.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.ui.activity.sale.SaleDetailsActivity;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleDetails;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleIntentionalProduct;
-import com.loyo.oa.v2.adapter.WorkflowNodesListViewAdapter;
+import com.loyo.oa.v2.ui.activity.work.adapter.WorkflowNodesListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.BizFormFields;

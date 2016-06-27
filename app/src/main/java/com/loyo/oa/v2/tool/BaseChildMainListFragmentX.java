@@ -19,7 +19,7 @@ import com.loyo.oa.v2.ui.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsInfoActivity_;
-import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
 import com.loyo.oa.v2.beans.Pagination;

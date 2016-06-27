@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.other.DepartmentUserActivity;
-import com.loyo.oa.v2.adapter.UserGroupExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.UserGroupExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserGroupData;

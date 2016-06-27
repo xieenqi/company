@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.adapter.ProjectMemberListViewAdapter;
+import com.loyo.oa.v2.ui.activity.project.adapter.ProjectMemberListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.Project;
@@ -40,7 +40,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 新建项目
+ * 【新建项目】
  */
 
 @EActivity(R.layout.activity_project_add)

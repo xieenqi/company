@@ -20,7 +20,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleIntentionalProduct;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleProductEdit;
-import com.loyo.oa.v2.adapter.ProductsRadioListViewAdapter;
+import com.loyo.oa.v2.ui.activity.sale.adapter.ProductsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Product;
 import com.loyo.oa.v2.common.ExtraAndResult;

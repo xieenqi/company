@@ -9,7 +9,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceSearchActivity;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfInTypeSelectActivity;
-import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.PaginationX;

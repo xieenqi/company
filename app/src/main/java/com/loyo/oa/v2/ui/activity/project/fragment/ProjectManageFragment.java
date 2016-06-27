@@ -8,7 +8,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.project.ProjectAddActivity_;
 import com.loyo.oa.v2.ui.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.ui.activity.project.ProjectSearchActivity;
-import com.loyo.oa.v2.adapter.ProjectExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.project.adapter.ProjectExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;

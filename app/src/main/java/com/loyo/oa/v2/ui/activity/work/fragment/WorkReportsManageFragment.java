@@ -9,7 +9,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsSearchActivity;
-import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;

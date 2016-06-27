@@ -18,8 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.SelectDetAdapter;
-import com.loyo.oa.v2.adapter.SelectUserAdapter;
+import com.loyo.oa.v2.ui.activity.sale.adapter.SelectDetAdapter;
+import com.loyo.oa.v2.ui.activity.sale.adapter.SelectUserAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Department;
 import com.loyo.oa.v2.beans.Members;

@@ -22,7 +22,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
@@ -35,7 +34,6 @@ import com.loyo.oa.v2.db.DBManager;
 import com.loyo.oa.v2.service.RushTokenService;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
 import com.loyo.oa.v2.customview.GeneralPopView;
-
 import java.util.Locale;
 
 /**

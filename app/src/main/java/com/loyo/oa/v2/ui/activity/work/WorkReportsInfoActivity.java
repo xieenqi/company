@@ -21,7 +21,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.ui.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.ui.activity.discuss.DiscussDetActivity;
-import com.loyo.oa.v2.adapter.workReportAddgridViewAdapter;
+import com.loyo.oa.v2.ui.activity.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Discussion;

@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.other.DepartmentUserActivity;
-import com.loyo.oa.v2.adapter.DepartmentListViewAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.DepartmentListViewAdapter;
 import com.loyo.oa.v2.common.Common;
 
 /**

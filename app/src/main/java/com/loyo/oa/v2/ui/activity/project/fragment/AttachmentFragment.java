@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.attachment.AttachmentRightActivity_;
 import com.loyo.oa.v2.ui.activity.project.HttpProject;
-import com.loyo.oa.v2.adapter.AttachmentSwipeAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.AttachmentSwipeAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Project;

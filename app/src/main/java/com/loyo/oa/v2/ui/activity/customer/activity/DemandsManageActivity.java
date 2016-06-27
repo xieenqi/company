@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.DemandsRadioListViewAdapter;
+import com.loyo.oa.v2.ui.activity.customer.adapter.DemandsRadioListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.PaginationX;

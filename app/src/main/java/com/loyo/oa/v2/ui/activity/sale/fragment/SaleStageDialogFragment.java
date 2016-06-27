@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.SalestagesRadioListViewAdapter;
+import com.loyo.oa.v2.ui.activity.sale.adapter.SalestagesRadioListViewAdapter;
 import com.loyo.oa.v2.beans.SaleStage;
 
 import java.util.ArrayList;

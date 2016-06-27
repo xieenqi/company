@@ -9,7 +9,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksSearchActivity;
-import com.loyo.oa.v2.adapter.CommonExpandableListAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.ITask;

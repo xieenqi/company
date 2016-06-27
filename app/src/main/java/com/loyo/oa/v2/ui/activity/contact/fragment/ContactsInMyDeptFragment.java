@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.contact.ContactInfoActivity_;
-import com.loyo.oa.v2.adapter.ContactsInMyDeptAdapter;
+import com.loyo.oa.v2.ui.activity.work.adapter.ContactsInMyDeptAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.User;
 import com.loyo.oa.v2.beans.UserInfo;

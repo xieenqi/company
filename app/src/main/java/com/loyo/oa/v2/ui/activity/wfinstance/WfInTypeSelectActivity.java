@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.WfInstanceTypeSelectListViewAdapter;
+import com.loyo.oa.v2.ui.activity.wfinstance.adapter.WfInstanceTypeSelectListViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BizForm;
 import com.loyo.oa.v2.beans.BizFormFields;

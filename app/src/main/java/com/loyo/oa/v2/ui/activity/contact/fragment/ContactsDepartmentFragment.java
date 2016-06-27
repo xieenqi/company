@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.ui.activity.contact.ContactsDepartmentActivity_;
-import com.loyo.oa.v2.adapter.ContactsMyDeptOtherAdapter;
+import com.loyo.oa.v2.ui.activity.work.adapter.ContactsMyDeptOtherAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.ContactsGroup;
 import com.loyo.oa.v2.beans.Department;

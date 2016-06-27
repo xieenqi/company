@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.DepartmentChooseAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.DepartmentChooseAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.BaseActivity;
 

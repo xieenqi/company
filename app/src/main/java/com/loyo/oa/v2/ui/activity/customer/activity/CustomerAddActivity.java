@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.customer.bean.HttpAddCustomer;
-import com.loyo.oa.v2.adapter.ImageGridViewAdapter;
+import com.loyo.oa.v2.ui.activity.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Attachment;
 import com.loyo.oa.v2.beans.Contact;

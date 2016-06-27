@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.adapter.DiscussionAdapter;
+import com.loyo.oa.v2.ui.activity.discuss.adapter.DiscussionAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
