@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.WfTemplate;
+import com.loyo.oa.v2.ui.activity.wfinstance.bean.WfTemplate;
 
 import java.util.ArrayList;
 

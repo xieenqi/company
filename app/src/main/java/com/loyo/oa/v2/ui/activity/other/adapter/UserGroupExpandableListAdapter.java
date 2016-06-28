@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.other.DepartmentUserActivity;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.beans.UserGroupData;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
+import com.loyo.oa.v2.ui.activity.other.bean.UserGroupData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

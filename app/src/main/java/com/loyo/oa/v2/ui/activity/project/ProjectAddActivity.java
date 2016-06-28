@@ -15,7 +15,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.Project;
 import com.loyo.oa.v2.beans.ProjectMember;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

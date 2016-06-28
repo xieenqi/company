@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.ui.activity.project.ProjectAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 
@@ -9,7 +11,7 @@ import java.util.Date;
 
 /**
  * com.loyo.oa.v2.beans
- * 描述 :
+ * 描述 : 项目
  * 作者 : ykb
  * 时间 : 15/9/8.
  */

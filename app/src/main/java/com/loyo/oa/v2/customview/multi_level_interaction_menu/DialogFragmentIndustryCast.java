@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Industry;
+import com.loyo.oa.v2.ui.activity.customer.bean.Industry;
 import com.loyo.oa.v2.tool.OnMenuSelectCallback;
 
 import java.util.ArrayList;

@@ -10,9 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.BizFormFields;
+import com.loyo.oa.v2.ui.activity.wfinstance.bean.BizFormFields;
 import com.loyo.oa.v2.common.Global;
-import com.loyo.oa.v2.ui.activity.wfinstance.adapter.BizFormFieldsListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

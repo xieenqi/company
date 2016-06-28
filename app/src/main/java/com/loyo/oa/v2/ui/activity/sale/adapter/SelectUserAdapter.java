@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

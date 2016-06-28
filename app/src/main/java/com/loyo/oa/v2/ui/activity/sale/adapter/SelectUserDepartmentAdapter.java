@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.SelectDepData;
+import com.loyo.oa.v2.ui.activity.other.bean.SelectDepData;
 
 import java.util.ArrayList;
 import java.util.List;

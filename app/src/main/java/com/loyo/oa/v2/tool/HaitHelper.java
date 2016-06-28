@@ -15,7 +15,7 @@ import android.widget.EditText;
 
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 

@@ -15,7 +15,7 @@ import com.loyo.oa.v2.ui.activity.commonview.DiscussionActivity;
 import com.loyo.oa.v2.ui.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
-import com.loyo.oa.v2.beans.DiscussCounter;
+import com.loyo.oa.v2.ui.activity.discuss.bean.DiscussCounter;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstanceRecord;

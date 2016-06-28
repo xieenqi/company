@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.customer.adapter.CustomerRepeatAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.CustomerRepeatList;
+import com.loyo.oa.v2.ui.activity.customer.bean.CustomerRepeatList;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.ICustomer;

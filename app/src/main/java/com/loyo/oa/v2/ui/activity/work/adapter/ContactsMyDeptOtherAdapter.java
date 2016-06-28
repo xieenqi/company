@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

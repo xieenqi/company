@@ -3,8 +3,8 @@ package com.loyo.oa.v2.point;
 import com.loyo.oa.v2.ui.activity.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
-import com.loyo.oa.v2.beans.WorkReportDyn;
-import com.loyo.oa.v2.beans.WorkReportTpl;
+import com.loyo.oa.v2.ui.activity.work.bean.WorkReportDyn;
+import com.loyo.oa.v2.ui.activity.work.bean.WorkReportTpl;
 import com.loyo.oa.v2.common.FinalVariables;
 
 import java.util.ArrayList;

@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.BizFormFields;
+import com.loyo.oa.v2.ui.activity.wfinstance.bean.BizFormFields;
 
 import java.util.ArrayList;
 import java.util.HashMap;

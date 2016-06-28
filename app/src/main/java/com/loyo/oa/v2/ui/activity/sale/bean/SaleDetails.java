@@ -1,7 +1,6 @@
 package com.loyo.oa.v2.ui.activity.sale.bean;
 
-import com.loyo.oa.v2.beans.CommonTag;
-import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
 
 import java.io.Serializable;
 import java.util.ArrayList;

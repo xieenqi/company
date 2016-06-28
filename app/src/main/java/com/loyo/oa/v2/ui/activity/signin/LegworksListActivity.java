@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.ui.activity.signin.fragment.SignInOfUserFragment;

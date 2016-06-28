@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Item_info_Group;
-import com.loyo.oa.v2.beans.Tag;
-import com.loyo.oa.v2.beans.TagItem;
+import com.loyo.oa.v2.ui.activity.customer.bean.Item_info_Group;
+import com.loyo.oa.v2.ui.activity.customer.bean.Tag;
+import com.loyo.oa.v2.ui.activity.customer.bean.TagItem;
 import com.loyo.oa.v2.point.ITag;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.RCallback;

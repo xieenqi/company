@@ -5,8 +5,8 @@ import android.view.View;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Discussion;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.discuss.bean.Discussion;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.tool.HaitHelper;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.TimeFormatUtil;

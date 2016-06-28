@@ -11,7 +11,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.ui.activity.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Bulletin;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;

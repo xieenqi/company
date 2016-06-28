@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.discuss.adapter.DiscussionAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Discussion;
+import com.loyo.oa.v2.ui.activity.discuss.bean.Discussion;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IDiscuss;

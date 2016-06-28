@@ -1,6 +1,10 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleDetails;
+import com.loyo.oa.v2.ui.activity.wfinstance.bean.BizForm;
+import com.loyo.oa.v2.ui.activity.wfinstance.bean.WfNodes;
 
 import java.io.Serializable;
 import java.util.ArrayList;

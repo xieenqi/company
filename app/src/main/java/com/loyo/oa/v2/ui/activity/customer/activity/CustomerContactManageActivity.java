@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.ui.activity.customer.bean.Contact;
+import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;

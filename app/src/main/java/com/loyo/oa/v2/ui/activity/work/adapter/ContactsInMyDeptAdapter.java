@@ -16,7 +16,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.tool.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

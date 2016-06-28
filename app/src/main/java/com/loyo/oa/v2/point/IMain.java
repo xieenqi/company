@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.HttpMainRedDot;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpMainRedDot;
 import com.loyo.oa.v2.beans.ServerTime;
 import com.loyo.oa.v2.service.CheckUpdateService;
 

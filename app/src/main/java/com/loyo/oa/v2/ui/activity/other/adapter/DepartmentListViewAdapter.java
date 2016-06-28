@@ -15,7 +15,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.other.DepartmentActivity;
 import com.loyo.oa.v2.ui.activity.other.DepartmentUserActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.ui.activity.customer.bean.Department;
 
 import java.util.ArrayList;
 

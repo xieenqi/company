@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.ui.activity.attendance;
 
-import com.loyo.oa.v2.beans.AttendanceList;
+import com.loyo.oa.v2.ui.activity.attendance.bean.AttendanceList;
 
 import java.io.Serializable;
 

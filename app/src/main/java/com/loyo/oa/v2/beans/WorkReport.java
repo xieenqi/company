@@ -1,6 +1,11 @@
 package com.loyo.oa.v2.beans;
 
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
+import com.loyo.oa.v2.ui.activity.discuss.bean.DiscussCounter;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
+import com.loyo.oa.v2.ui.activity.work.bean.Reviewer;
+import com.loyo.oa.v2.ui.activity.work.bean.WorkReportDyn;
 
 import java.util.ArrayList;
 

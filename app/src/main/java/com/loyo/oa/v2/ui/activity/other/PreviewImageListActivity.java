@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.LogUtil;

@@ -5,7 +5,7 @@ import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.CellInfo;
+import com.loyo.oa.v2.ui.activity.other.bean.CellInfo;
 
 import java.util.Date;
 

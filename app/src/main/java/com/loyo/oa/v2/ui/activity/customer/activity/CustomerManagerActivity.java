@@ -21,7 +21,7 @@ import com.loyo.oa.v2.ui.activity.customer.fragment.TeamCustomerFragment;
 import com.loyo.oa.v2.ui.activity.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.beans.Tag;
+import com.loyo.oa.v2.ui.activity.customer.bean.Tag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -135,7 +135,7 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     public void getStageData() {
         showLoading("");
         RestAdapterFactory.getInstance().build(Config_project.API_URL_CUSTOMER()).create(ICustomer.class).
-                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.beans.Tag>>() {
+                GetTags(new RCallback<ArrayList<com.loyo.oa.v2.ui.activity.customer.bean.Tag>>() {
                     @Override
                     public void success(ArrayList<Tag> tags, Response response) {
                         HttpErrorCheck.checkResponse("客户标签：", response);
@@ -166,9 +166,9 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
         mTags2 = new ArrayList<>(tags.size());
         mTags3 = new ArrayList<>(tags.size());
 
-        mTags1 = (ArrayList<com.loyo.oa.v2.beans.Tag>) Utils.deepCopyT(mTags);
-        mTags2 = (ArrayList<com.loyo.oa.v2.beans.Tag>) Utils.deepCopyT(mTags);
-        mTags3 = (ArrayList<com.loyo.oa.v2.beans.Tag>) Utils.deepCopyT(mTags);
+        mTags1 = (ArrayList<com.loyo.oa.v2.ui.activity.customer.bean.Tag>) Utils.deepCopyT(mTags);
+        mTags2 = (ArrayList<com.loyo.oa.v2.ui.activity.customer.bean.Tag>) Utils.deepCopyT(mTags);
+        mTags3 = (ArrayList<com.loyo.oa.v2.ui.activity.customer.bean.Tag>) Utils.deepCopyT(mTags);
     }
 
     private void initView() {
