@@ -24,7 +24,7 @@ import com.loyo.oa.v2.ui.activity.customer.activity.CustomerSearchActivity;
 import com.loyo.oa.v2.ui.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.ui.activity.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Attachment;
+import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.Members;
 import com.loyo.oa.v2.beans.NewUser;

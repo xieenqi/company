@@ -18,7 +18,7 @@ import com.loyo.oa.v2.ui.activity.commonview.FeedbackActivity_;
 import com.loyo.oa.v2.ui.activity.contact.ContactInfoEditActivity_;
 import com.loyo.oa.v2.ui.activity.login.LoginActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.User;
+import com.loyo.oa.v2.ui.activity.other.bean.User;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

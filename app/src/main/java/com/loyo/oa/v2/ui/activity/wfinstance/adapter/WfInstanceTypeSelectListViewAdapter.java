@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.BizForm;
+import com.loyo.oa.v2.ui.activity.wfinstance.bean.BizForm;
 
 import java.util.ArrayList;
 /** xnq

@@ -8,7 +8,7 @@ import com.loyo.oa.v2.ui.activity.sale.bean.SaleProductEdit;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleRecord;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleStage;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleTeamList;
-import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.ArrayList;

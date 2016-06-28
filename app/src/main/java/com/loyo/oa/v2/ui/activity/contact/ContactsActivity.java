@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.other.DepartmentUserSearchActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Department;
+import com.loyo.oa.v2.ui.activity.customer.bean.Department;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.ui.activity.contact.fragment.ContactsDepartmentFragment;
 import com.loyo.oa.v2.ui.activity.contact.fragment.ContactsInMyDeptFragment;

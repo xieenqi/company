@@ -9,14 +9,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.Department;
-import com.loyo.oa.v2.beans.SelectDepData;
-import com.loyo.oa.v2.beans.SelectUserData;
-import com.loyo.oa.v2.beans.User;
-import com.loyo.oa.v2.tool.LogUtil;
+import com.loyo.oa.v2.ui.activity.other.bean.SelectDepData;
+import com.loyo.oa.v2.ui.activity.other.bean.SelectUserData;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

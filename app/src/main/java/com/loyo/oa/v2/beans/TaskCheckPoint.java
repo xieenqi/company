@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.beans;
 
+import com.loyo.oa.v2.ui.activity.other.bean.User;
+
 import java.io.Serializable;
 
 /**

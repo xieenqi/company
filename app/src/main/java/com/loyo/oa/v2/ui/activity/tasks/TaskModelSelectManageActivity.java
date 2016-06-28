@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.TaskTpl;
+import com.loyo.oa.v2.ui.activity.tasks.bean.TaskTpl;
 import com.loyo.oa.v2.common.http.ServerAPI;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseAsyncHttpResponseHandler;

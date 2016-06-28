@@ -18,7 +18,7 @@ import com.loyo.oa.v2.ui.activity.customer.activity.CommonTagSelectActivity_;
 import com.loyo.oa.v2.ui.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleStage;
-import com.loyo.oa.v2.beans.CommonTag;
+import com.loyo.oa.v2.ui.activity.sale.bean.CommonTag;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;

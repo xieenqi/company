@@ -17,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.ExtraData;
-import com.loyo.oa.v2.beans.ExtraProperties;
+import com.loyo.oa.v2.ui.activity.customer.bean.ExtraData;
+import com.loyo.oa.v2.ui.activity.customer.bean.ExtraProperties;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.ClickTool;
 import com.loyo.oa.v2.tool.DateTool;

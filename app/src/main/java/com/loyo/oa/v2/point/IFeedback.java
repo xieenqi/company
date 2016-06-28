@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.FeedBackCommit;
-import com.loyo.oa.v2.beans.Feedback;
+import com.loyo.oa.v2.ui.activity.other.bean.Feedback;
 import com.loyo.oa.v2.beans.PaginationX;
 
 import java.util.HashMap;

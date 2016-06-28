@@ -14,8 +14,8 @@ import com.loyo.oa.v2.ui.activity.customer.activity.CustomerContactManageActivit
 import com.loyo.oa.v2.ui.activity.customer.activity.CustomerContractAddActivity;
 import com.loyo.oa.v2.ui.activity.customer.activity.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.Contact;
-import com.loyo.oa.v2.beans.ContactLeftExtras;
+import com.loyo.oa.v2.ui.activity.customer.bean.Contact;
+import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;

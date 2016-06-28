@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.beans.WorkReportDyn;
+import com.loyo.oa.v2.ui.activity.work.bean.WorkReportDyn;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;

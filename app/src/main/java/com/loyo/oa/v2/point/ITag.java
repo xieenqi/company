@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.beans.Tag;
+import com.loyo.oa.v2.ui.activity.customer.bean.Tag;
 
 import java.util.ArrayList;
 

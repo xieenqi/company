@@ -16,7 +16,7 @@ import com.loyo.oa.v2.ui.activity.customer.activity.DemandsAddActivity;
 import com.loyo.oa.v2.ui.activity.customer.activity.DemandsManageActivity;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.CommonTag;
+import com.loyo.oa.v2.ui.activity.sale.bean.CommonTag;
 import com.loyo.oa.v2.beans.Demand;
 import com.loyo.oa.v2.beans.WfInstance;
 import com.loyo.oa.v2.common.ExtraAndResult;

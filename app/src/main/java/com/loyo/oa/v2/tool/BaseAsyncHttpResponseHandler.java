@@ -6,10 +6,11 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.API_error;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.customview.CustomProgressDialog;
+import com.loyo.oa.v2.ui.activity.other.bean.API_error;
+
 import org.apache.http.Header;
 
 /**

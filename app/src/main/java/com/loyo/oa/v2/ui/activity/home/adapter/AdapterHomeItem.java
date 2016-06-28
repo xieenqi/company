@@ -16,7 +16,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.ui.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.HttpMainRedDot;
+import com.loyo.oa.v2.ui.activity.home.bean.HttpMainRedDot;
 
 import java.util.ArrayList;
 

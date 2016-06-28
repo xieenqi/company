@@ -2,7 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.beans.TaskTpl;
+import com.loyo.oa.v2.ui.activity.tasks.bean.TaskTpl;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.RCallback;
 
