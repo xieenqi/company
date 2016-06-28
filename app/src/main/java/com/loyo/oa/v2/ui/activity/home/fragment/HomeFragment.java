@@ -109,7 +109,6 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
      */
     protected void onNetworkChanged(boolean available) {
         ll_network.setVisibility(available ? View.GONE : View.VISIBLE);
-        LogUtil.d("是否？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？有网络   " + available);
     }
 
     @Override

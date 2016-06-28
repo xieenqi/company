@@ -106,7 +106,7 @@ public class HomeStatisticsFragment extends BaseFragment {
         im_achieves_no = (ImageView) view.findViewById(R.id.im_achieves_no);
         ll_achieves_yes = (LinearLayout) view.findViewById(R.id.ll_achieves_yes);
         srl_refresh = (SwipeRefreshLayout) view.findViewById(R.id.srl_refresh);
-        srl_refresh.setColorSchemeColors(Color.parseColor("#4db1fe"));
+        srl_refresh.setColorSchemeColors(Color.parseColor("#2c9dfc"));
         srl_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
