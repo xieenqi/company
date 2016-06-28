@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceInfoActivity_;
@@ -124,10 +125,10 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     }
 
 
-    public void initView(){
+    public void initView() {
 
         //超级管理员\权限判断
-        if (!MainApp.user.isSuperUser()) {
+        if (null != MainApp.user && !MainApp.user.isSuperUser()) {
             try {
                 permission = (Permission) MainApp.rootMap.get("0202");
                 if (!permission.isEnable()) {
@@ -224,8 +225,8 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     }
 
 
-    public void showPop(){
-        generalPopView = new GeneralPopView(getActivity(),false);
+    public void showPop() {
+        generalPopView = new GeneralPopView(getActivity(), false);
         generalPopView.show();
         generalPopView.setMessage("此功能权限已关闭，请联系管理员开启后再试！");
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
@@ -243,23 +244,23 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     public void addNewItem() {
         switch (type) {
             case 1:
-                if(!workPsn){
+                if (!workPsn) {
                     showPop();
-                }else{
+                } else {
                     goToCreatePage(WorkReportAddActivity_.class);
                 }
                 break;
             case 2:
-                if(!taskPsn){
+                if (!taskPsn) {
                     showPop();
-                }else{
+                } else {
                     goToCreatePage(TasksAddActivity_.class);
                 }
                 break;
             case 12:
-                if(!wiftPsn){
+                if (!wiftPsn) {
                     showPop();
-                }else{
+                } else {
                     goToCreatePage(WfInTypeSelectActivity.class);
                 }
                 break;

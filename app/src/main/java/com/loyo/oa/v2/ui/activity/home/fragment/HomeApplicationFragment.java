@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.ui.activity.attendance.AttendanceAddActivity_;
@@ -272,7 +273,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 给激光推送 设置别名
      */
     public void setJpushAlias() {
-        if (null == MainApp.user || isJPus) {
+        if (null == MainApp.user || !isJPus) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
