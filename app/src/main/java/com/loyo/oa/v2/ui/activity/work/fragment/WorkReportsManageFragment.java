@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsSearchActivity;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * 工作报告 界面  的 fragment
  */
-public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkReport> {
+public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkReportRecord> {
 
     private static final String FILTER_SEND_TYPE[] = new String[]{"全部类型", "提交给我的", "我提交的", "抄送给我的"};
     private static final String FILTER_STATUS[] = new String[]{"全部状态", "待点评", "已点评"};
@@ -85,12 +86,8 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         map.put("sendType", sendType);
         map.put("isReviewed", status);
 
-        //map.put("keyword", "");
-        //map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
-        //map.put("endAt", System.currentTimeMillis() / 1000);
-
         LogUtil.dll("客户端发送数据:" + MainApp.gson.toJson(map));
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReports(map, this);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReportsData(map, this);
     }
 
     @Override

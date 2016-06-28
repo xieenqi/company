@@ -89,10 +89,6 @@ public class WfInstanceManageFragment extends BaseCommonMainListFragment<WfInsta
         map.put("status", status);
         map.put("bizformId", bizFormId); //自定义筛选字段
 
-/*        RestAdapterFactory.getInstance().build(Config_project.API_URL() +
-                FinalVariables.wfinstance).create(IWfInstance.class).
-                getWfInstances(map, WfInstanceManageFragment.this);*/
-
         RestAdapterFactory.getInstance().build(Config_project.API_URL() +
                 FinalVariables.wfinstance).create(IWfInstance.class).
                 getWfInstancesData(map, WfInstanceManageFragment.this);

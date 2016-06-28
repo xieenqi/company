@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.point;
 
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.ui.activity.work.bean.HttpDefaultComment;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.WorkReport;
@@ -70,6 +71,15 @@ public interface IWorkReport {
      */
     @GET("/wreport/")
     void getWorkReports(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReport>> cb);
+
+    /**
+     * 根据筛选条件获取报告列表(v2.2 精简接口)
+     *
+     * @param map
+     * @param cb
+     */
+    @GET("/wreport/mobile/simplify")
+    void getWorkReportsData(@QueryMap HashMap<String, Object> map, Callback<PaginationX<WorkReportRecord>> cb);
 
     /**
      * 点评报告

@@ -11,21 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.TaskRecord;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.ui.activity.commonview.DiscussionActivity;
 import com.loyo.oa.v2.ui.activity.commonview.DiscussionActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.BaseBeans;
-import com.loyo.oa.v2.ui.activity.discuss.bean.DiscussCounter;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.beans.WfInstanceRecord;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.tool.DateTool;
-import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.ViewHolder;
 import com.loyo.oa.v2.ui.activity.project.adapter.BasePagingGroupDataAdapter_;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -74,13 +72,13 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
             ack.setVisibility(wfInstance.viewed ? View.GONE : View.VISIBLE);
 
             /**任务*/
-        } else if (obj instanceof Task) {
+        } else if (obj instanceof TaskRecord) {
             //layout_discuss.setVisibility(View.VISIBLE); //右侧讨论暂时隐藏
-            Task task = (Task) obj;
+            TaskRecord task = (TaskRecord) obj;
             /*任务超时判断*/
             try {
                 /**重复任务赋值*/
-                if (null != task.getCornBody() && task.getCornBody().getType() != 0) {
+                if (null != task.cornBody && task.cornBody.getType() != 0) {
                     isOk = true;
                     Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_repeattask);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -94,7 +92,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
                     String hour = "";
                     String mins = "";
-                    switch (task.getCornBody().getType()) {
+                    switch (task.cornBody.getType()) {
                         case 1:
                             caseName = "每天";
                             break;
@@ -107,8 +105,8 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                             caseName = "每月";
                             break;
                     }
-                    hour = task.getCornBody().getHour() + "";
-                    mins = task.getCornBody().getMinute() + "";
+                    hour = task.cornBody.getHour() + "";
+                    mins = task.cornBody.getMinute() + "";
 
             /*如果小时分钟为单数，则前面拼上0*/
                     if (hour.length() == 1) {
@@ -121,11 +119,11 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                     hourMins = hour + ":" + mins;
 
                     //每天
-                    if (task.getCornBody().getType() == 1) {
+                    if (task.cornBody.getType() == 1) {
                         time.setText(caseName + " " + hourMins + " 重复");
                         //每周
-                    } else if (task.getCornBody().getType() == 2) {
-                        switch (task.getCornBody().getWeekDay()) {
+                    } else if (task.cornBody.getType() == 2) {
+                        switch (task.cornBody.getWeekDay()) {
                             case 1:
                                 weekName = "日";
                                 break;
@@ -159,42 +157,40 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                         }
                         time.setText(caseName + weekName + " " + hourMins + " 重复");
                         //每月
-                    } else if (task.getCornBody().getType() == 3) {
-                        dayName = task.getCornBody().getDay() + "号";
+                    } else if (task.cornBody.getType() == 3) {
+                        dayName = task.cornBody.getDay() + "号";
                         time.setText(caseName + " " + dayName + " " + hourMins + " 重复");
                     }
                 } else {
                     isOk = false;
                     textColor = R.color.tasklist_gray;
                     Long nowTime = Long.parseLong(DateTool.getDataOne(DateTool.getNowTime(), "yyyy.MM.dd HH:mm"));
-                    if (nowTime > task.getPlanEndAt() && task.getStatus() == Task.STATUS_PROCESSING) {
+                    if (nowTime > task.planendAt && task.status == Task.STATUS_PROCESSING) {
                         timeOut.setVisibility(View.VISIBLE);
                     } else {
                         timeOut.setVisibility(View.GONE);
                     }
-                    time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.getPlanEndAt() * 1000)) + "");
+                    time.setText("任务截止时间: " + MainApp.getMainApp().df3.format(new Date(task.planendAt * 1000)) + "");
                 }
             } catch (Exception e) {
                 Global.ProcException(e);
             }
-            ack.setVisibility(task.isViewed() ? View.GONE : View.VISIBLE);
-            if (null != task.getResponsiblePerson() && !TextUtils.isEmpty(task.getResponsiblePerson().getRealname())) {
-                content.setText("负责人: " + task.getResponsiblePerson().getRealname());
+            ack.setVisibility(task.viewed ? View.GONE : View.VISIBLE);
+            if (null != task.responsibleName) {
+                content.setText("负责人: " + task.responsibleName);
             }
-            if (!TextUtils.isEmpty(task.getTitle())) {
-                title.setText(task.getTitle());
+            if (!TextUtils.isEmpty(task.title)) {
+                title.setText(task.title);
             }
             time.setTextColor(mContext.getResources().getColor(textColor));
             iv_repeattask.setVisibility(isOk ? View.VISIBLE : View.GONE);
 
             /**报告*/
-        } else if (obj instanceof WorkReport) {
+        } else if (obj instanceof WorkReportRecord) {
             //layout_discuss.setVisibility(View.VISIBLE);//右侧讨论暂时隐藏
-            final WorkReport workReport = (WorkReport) obj;
-            LogUtil.d(" 加载 报告 的数据： " + MainApp.gson.toJson(workReport));
-            DiscussCounter discussCounter = workReport.discuss;
             //iv_disscuss_status.setImageResource(discussCounter.isViewed() ? R.drawable.icon_discuss_reviewed : R.drawable.icon_disscuss_unreviewed);
             //tv_discuss_num.setText(discussCounter.getTotal() + "");
+            final WorkReportRecord workReport = (WorkReportRecord) obj;
             layout_discuss.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
@@ -202,20 +198,19 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
                 }
             });
 
-            if (null != workReport.reviewer && null != workReport.reviewer.user && !TextUtils.isEmpty(workReport.reviewer.user.getName())) {
-                content.setText("点评: " + workReport.reviewer.user.getName());
+            if (null != workReport.reviewerName) {
+                content.setText("点评: " + workReport.reviewerName);
             }
-            StringBuilder reportTitle = new StringBuilder(workReport.reviewer.name + "提交 ");
-            String reportDate = "";
+            StringBuilder reportTitle = new StringBuilder(workReport.title);
             String reportType = "";
             switch (workReport.type) {
-                case WorkReport.DAY:
+                case 1:
                     reportType = " 日报";
                     break;
-                case WorkReport.WEEK:
+                case 2:
                     reportType = " 周报";
                     break;
-                case WorkReport.MONTH:
+                case 3:
                     reportType = " 月报";
                     break;
                 default:
@@ -231,7 +226,7 @@ public class CommonExpandableListAdapter<T extends BaseBeans> extends BasePaging
 
             String end = "提交时间: " + app.df3.format(new Date(workReport.createdAt * 1000));
             time.setText(end);
-            ack.setVisibility(workReport.isViewed() ? View.GONE : View.VISIBLE);
+            ack.setVisibility(workReport.viewed ? View.GONE : View.VISIBLE);
 
         }
         return convertView;

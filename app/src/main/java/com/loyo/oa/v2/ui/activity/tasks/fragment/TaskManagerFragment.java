@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.ui.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksSearchActivity;
@@ -28,7 +29,7 @@ import java.util.List;
  * 【任务管理】 界面
  */
 
-public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
+public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> {
 
     private int mJoinType = 0, mStatus = 0;
     private static final String[] TYPE_TAG = new String[]{"全部类型", "我分派的", "我负责的", "我参与的"};
@@ -44,7 +45,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<Task> {
         map.put("status", mStatus);
         map.put("endAt", System.currentTimeMillis() / 1000);
         map.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(map, this);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasksData(map, this);
     }
 
     @Override

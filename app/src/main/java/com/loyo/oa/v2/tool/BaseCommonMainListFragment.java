@@ -243,20 +243,10 @@ public abstract class BaseCommonMainListFragment<T extends BaseBeans> extends Ba
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /*if (resultCode != Activity.RESULT_OK || data == null || data.getExtras() == null || data.getExtras().size() == 0) {
-            return;
-        }*/
-
         if (resultCode == 0x09) {
             GetData();
         }
 
-        /*switch (requestCode) {
-            case REQUEST_CREATE:
-            case REQUEST_REVIEW:
-                GetData();
-                break;
-        }*/
     }
 
     /**

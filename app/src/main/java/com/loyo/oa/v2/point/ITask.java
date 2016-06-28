@@ -2,6 +2,7 @@ package com.loyo.oa.v2.point;
 
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.ui.activity.tasks.bean.TaskTpl;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.tool.RCallback;
@@ -43,9 +44,17 @@ public interface ITask {
     @GET("/task/query")
     Observable<PaginationX<Task>> getList(@QueryMap HashMap<String, Object> body);
 
-    /*获取任务列表数据*/
+    /**
+     * 获取任务列表数据
+     * */
     @GET("/task/query")
     void getTasks(@QueryMap HashMap<String, Object> body, Callback<PaginationX<Task>> callback);
+
+    /**
+     * 获取任务列表数据(v2.2 精简接口)
+     * */
+    @GET("/task/query/mobile/simplify")
+    void getTasksData(@QueryMap HashMap<String, Object> body, Callback<PaginationX<TaskRecord>> callback);
 
     /*创建任务*/
     @POST("/task")

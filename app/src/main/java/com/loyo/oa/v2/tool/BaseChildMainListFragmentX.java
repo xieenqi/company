@@ -9,9 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import com.google.gson.reflect.TypeToken;
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.TaskRecord;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfInTypeSelectActivity;
 import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity;
@@ -27,19 +29,14 @@ import com.loyo.oa.v2.beans.Pagination;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.beans.Project;
-import com.loyo.oa.v2.beans.Task;
-import com.loyo.oa.v2.beans.WfInstance;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
 import com.loyo.oa.v2.point.IProject;
 import com.loyo.oa.v2.customview.GeneralPopView;
-
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -168,13 +165,10 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         map.put("pageIndex", pageIndex);
         map.put("pageSize", pageSize);
 
-        LogUtil.d("获取项目详情的任务，报告，审批：GetData,type : " + type + " projectId : "
-                + mProject.getId() + " pageIndex : " + pageIndex + " pageSize : " + pageSize);
-
-        app.getRestAdapter().create(IProject.class).getProjectSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
+        app.getRestAdapter().create(IProject.class).getProjectNewSubs(mProject.getId(), type, map, new RCallback<Pagination>() {
             @Override
             public void success(Pagination paginationx, Response response) {
-                LogUtil.d("获取项目详情的任务，报告，审批json: " + MainApp.gson.toJson(paginationx));
+                HttpErrorCheck.checkResponse("获取项目详情的任务，报告，审批json",response);
 
                 mExpandableListView.onRefreshComplete();
                 if (!Pagination.isEmpty(paginationx)) {
@@ -301,13 +295,13 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
     public void openItem(int groupPosition, int childPosition) {
         switch (type) {
             case 1:
-                goToReviewPage(WorkReportsInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WorkReport) adapter.getChild(groupPosition, childPosition)).getId());
+                goToReviewPage(WorkReportsInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WorkReportRecord) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 2:
-                goToReviewPage(TasksInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((Task) adapter.getChild(groupPosition, childPosition)).getId());
+                goToReviewPage(TasksInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((TaskRecord) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
             case 12:
-                goToReviewPage(WfinstanceInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WfInstance) adapter.getChild(groupPosition, childPosition)).getId());
+                goToReviewPage(WfinstanceInfoActivity_.class, ExtraAndResult.EXTRA_ID, ((WfInstanceRecord) adapter.getChild(groupPosition, childPosition)).getId());
                 break;
         }
     }
@@ -327,15 +321,15 @@ public class BaseChildMainListFragmentX extends BaseMainListFragmentX_ implement
         Type type = null;
         switch (this.type) {
             case 1:
-                type = new TypeToken<ArrayList<WorkReport>>() {
+                type = new TypeToken<ArrayList<WorkReportRecord>>() {
                 }.getType();
                 break;
             case 2:
-                type = new TypeToken<ArrayList<Task>>() {
+                type = new TypeToken<ArrayList<TaskRecord>>() {
                 }.getType();
                 break;
             case 12:
-                type = new TypeToken<ArrayList<WfInstance>>() {
+                type = new TypeToken<ArrayList<WfInstanceRecord>>() {
                 }.getType();
                 break;
         }

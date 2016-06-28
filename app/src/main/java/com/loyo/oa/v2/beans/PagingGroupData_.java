@@ -76,9 +76,9 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
 
             }
             /*任务*/
-            else if (item instanceof Task) {
-                Task task = (Task) item;
-                switch (task.getStatus()) {
+            else if (item instanceof TaskRecord) {
+                TaskRecord task = (TaskRecord) item;
+                switch (task.status) {
                     case 1:
                         order = "未完成";
                         break;
@@ -114,9 +114,9 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
                 }
             }
             /*报告*/
-            else if (item instanceof WorkReport) {
-                WorkReport workReport = (WorkReport) item;
-                if (workReport.isReviewed()) {
+            else if (item instanceof WorkReportRecord) {
+                WorkReportRecord workReport = (WorkReportRecord) item;
+                if (workReport.viewed) {
                     order = "已点评";
                 } else {
                     order = "待点评";
