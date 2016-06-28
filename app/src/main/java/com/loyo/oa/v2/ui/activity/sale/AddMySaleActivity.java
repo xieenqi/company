@@ -540,7 +540,7 @@ public class AddMySaleActivity extends BaseActivity {
         } else {
             return "";
         }
-        return productName.substring(0, productName.length() - 1);
+        return productName.length() > 0 ? productName.substring(0, productName.length() - 1) : "";
     }
 
     /**

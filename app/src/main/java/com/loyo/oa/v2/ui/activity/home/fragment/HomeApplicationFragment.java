@@ -95,6 +95,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
     private Boolean inEnable;
     private Boolean outEnable;
     private boolean isJPus = false;//别名是否设置成功
+    private int JpushCount = 0;//激光没有注册成功的次数
     private int outKind; //0上班  1下班  2加班
     private PullToRefreshListView listView;
     private Button btn_add;
@@ -273,13 +274,17 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 给激光推送 设置别名
      */
     public void setJpushAlias() {
-        if (null == MainApp.user || !isJPus) {
+        if (JpushCount > 15) {
+            return;//jpush达到最大注册次数
+        }
+        if (null == MainApp.user || isJPus) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     LogUtil.d(" Jpush user kongkong 空空");
                     setJpushAlias();
+                    JpushCount++;
                 }
             }, 5000);
             return;
@@ -294,7 +299,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if (i != 0) {
                     isJPus = true;
                     setJpushAlias();
+                } else {
+                    isJPus = false;
                 }
+                LogUtil.d("Jpush 注册的状态码：" + i);
                 isQQLogin();
             }
         });
