@@ -31,6 +31,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.SharedUtil;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.UMengTools;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -372,13 +373,15 @@ public class AMapService extends Service {
                 SharedUtil.put(app.getApplicationContext(), FinalVariables.LAST_TRACKLOG, "2|" + app.df1.format(new Date()));
                 //fixes bugly1043 空指针异常 v3.1.1 ykb 07-15
                 String userName = MainApp.user == null || StringUtil.isEmpty(MainApp.user.getRealname()) ? "" : MainApp.user.getRealname();
-
+                UMengTools.sendCustomErroInfo(getApplicationContext(), location);
                 Global.ProcException(new Exception(userName + " 轨迹上报失败:" + error.getMessage()));
 
-                GeneralPopView generalPopView = new GeneralPopView(getApplicationContext(), true);
-                generalPopView.show();
-                generalPopView.setMessage(error.getMessage());
-                generalPopView.setCanceledOnTouchOutside(true);
+                if (Config_project.is_developer_mode) {
+                    GeneralPopView generalPopView = new GeneralPopView(getApplicationContext(), true);
+                    generalPopView.setMessage(error.getMessage());
+                    generalPopView.setCanceledOnTouchOutside(true);
+                    generalPopView.show();
+                }
                 super.failure(error);
             }
         });
