@@ -273,7 +273,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
      * 给激光推送 设置别名
      */
     public void setJpushAlias() {
-        if (null == MainApp.user || !isJPus) {
+        if (null == MainApp.user || isJPus) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -294,7 +294,10 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
                 if (i != 0) {
                     isJPus = true;
                     setJpushAlias();
+                } else {
+                    isJPus = false;
                 }
+                LogUtil.d("Jpush 注册的状态码：" + i);
                 isQQLogin();
             }
         });
