@@ -105,8 +105,15 @@ public class HomeStatisticsFragment extends BaseFragment {
         ll_bulking_yes = (LinearLayout) view.findViewById(R.id.ll_bulking_yes);
         im_achieves_no = (ImageView) view.findViewById(R.id.im_achieves_no);
         ll_achieves_yes = (LinearLayout) view.findViewById(R.id.ll_achieves_yes);
-//        srl_refresh= (SwipeRefreshLayout) view.findViewById(R.id.srl_refresh);
-//        srl_refresh.setColorSchemeColors(Color.parseColor("#4db1fe"));
+        srl_refresh = (SwipeRefreshLayout) view.findViewById(R.id.srl_refresh);
+        srl_refresh.setColorSchemeColors(Color.parseColor("#4db1fe"));
+        srl_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srl_refresh.setRefreshing(true);
+                getStatisticAllData();
+            }
+        });
         getStatisticAllData();
     }
 
@@ -161,11 +168,13 @@ public class HomeStatisticsFragment extends BaseFragment {
                 setBulkingData(httpStatistics.bulking);
                 setFunnelData(httpStatistics.salechance);
                 setAchievesData(httpStatistics.achieves);
+                srl_refresh.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
+                srl_refresh.setRefreshing(false);
             }
         });
     }
