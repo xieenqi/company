@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.ui.activity.home.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,10 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.contact.ContactsActivity;
-import com.loyo.oa.v2.ui.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.HttpMainRedDot;
+import com.loyo.oa.v2.ui.activity.contact.ContactsActivity;
+import com.loyo.oa.v2.ui.activity.home.bean.HomeItem;
 
 import java.util.ArrayList;
 
@@ -27,23 +27,23 @@ import java.util.ArrayList;
 public class AdapterHomeItem extends BaseAdapter {
 
     private LayoutInflater inflter;
-    private Context mContext;
+    private Activity activity;
     private ArrayList<HomeItem> items;
     private ArrayList<HttpMainRedDot> mItemNumbers;
     private boolean crmTi = false;
     private boolean oaTi = false;
     private Intent mIntent = new Intent();
 
-    public AdapterHomeItem(Context context) {
-        this.mContext = context;
+    public AdapterHomeItem(Activity activity) {
+        this.activity = activity;
         try {
-            inflter = LayoutInflater.from(context);
+            inflter = LayoutInflater.from(activity);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
+//    public AdapterHomeItem(Context context, ArrayList<HomeItem> items, ArrayList<HttpMainRedDot> mItemNumbers) {
 //        this.mContext = context;
 //        this.items = items;
 //        this.mItemNumbers = mItemNumbers;
@@ -52,7 +52,7 @@ public class AdapterHomeItem extends BaseAdapter {
 //        } catch (NullPointerException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
 
     /**
      * 设置item数据
@@ -176,17 +176,18 @@ public class AdapterHomeItem extends BaseAdapter {
             public void onClick(View v) {
                 if (items.get(position).title.equals("通讯录")) {
                     if (null != MainApp.lstDepartment) {
-                        mIntent.setClass(mContext, ContactsActivity.class);
-                        mContext.startActivity(mIntent);
+                        mIntent.setClass(activity, ContactsActivity.class);
+                        activity.startActivity(mIntent);
                     } else {
-                        Toast.makeText(mContext, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     try {
-                        mIntent.setClass(mContext, Class.forName(items.get(position).cls));
-                        mContext.startActivity(mIntent);
-                    }catch (ClassNotFoundException e){
-e.printStackTrace();
+                        mIntent.setClass(activity, Class.forName(items.get(position).cls));
+                        activity.startActivity(mIntent);
+                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
 
                 }
