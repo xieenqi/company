@@ -272,7 +272,11 @@ public class CustomerManagerActivity extends BaseFragmentActivity implements Vie
     private void changeChild(int index) {
         if (index != mIndex) {
             mIndex = index;
-            fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(index)).commit();
+            try {
+                fragmentManager.beginTransaction().replace(R.id.layout_customer_container, fragments.get(index)).commit();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
     }
 
