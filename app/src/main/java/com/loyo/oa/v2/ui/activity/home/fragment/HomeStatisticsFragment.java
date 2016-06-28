@@ -1,6 +1,8 @@
 package com.loyo.oa.v2.ui.activity.home.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ public class HomeStatisticsFragment extends BaseFragment {
     RadioButton rb_process_today, rb_process_week, rb_bulking_today, rb_bulking_week, rb_achieves_week, rb_achieves_month, rb_funnel_week, rb_funnel_month;
     private ImageView im_process_no, im_funnel_no, im_bulking_no, im_achieves_no;
     private boolean isRRefresh = false;
+    private SwipeRefreshLayout srl_refresh;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,15 @@ public class HomeStatisticsFragment extends BaseFragment {
         ll_bulking_yes = (LinearLayout) view.findViewById(R.id.ll_bulking_yes);
         im_achieves_no = (ImageView) view.findViewById(R.id.im_achieves_no);
         ll_achieves_yes = (LinearLayout) view.findViewById(R.id.ll_achieves_yes);
+        srl_refresh = (SwipeRefreshLayout) view.findViewById(R.id.srl_refresh);
+        srl_refresh.setColorSchemeColors(Color.parseColor("#2c9dfc"));
+        srl_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srl_refresh.setRefreshing(true);
+                getStatisticAllData();
+            }
+        });
         getStatisticAllData();
     }
 
@@ -156,11 +168,13 @@ public class HomeStatisticsFragment extends BaseFragment {
                 setBulkingData(httpStatistics.bulking);
                 setFunnelData(httpStatistics.salechance);
                 setAchievesData(httpStatistics.achieves);
+                srl_refresh.setRefreshing(false);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 HttpErrorCheck.checkError(error);
+                srl_refresh.setRefreshing(false);
             }
         });
     }

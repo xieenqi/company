@@ -50,6 +50,19 @@ public class MainHomeActivity extends SlidingFragmentActivity {
     //主要保存当前显示的是第几个fragment的索引值
     public static int index = 0;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_home);
+        if (savedInstanceState != null) {
+            String FRAGMENTS_TAG = "Android:support:fragments";
+            savedInstanceState.remove(FRAGMENTS_TAG);
+        }
+        startService(new Intent(this, RushTokenService.class));
+        onInitSlideMenu();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -74,18 +87,9 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         MobclickAgent.onResume(this);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_home);
-        if (savedInstanceState != null) {
-            String FRAGMENTS_TAG = "Android:support:fragments";
-            savedInstanceState.remove(FRAGMENTS_TAG);
-        }
-        startService(new Intent(this, RushTokenService.class));
-        onInitSlideMenu();
-    }
-
+    /**
+     * 初始化侧边栏
+     */
     private void onInitSlideMenu() {
         // 获取屏幕分辨率
         DisplayMetrics metric = new DisplayMetrics();
@@ -121,7 +125,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
 
     //打开侧滑
     public void togggle() {
-//        sm.toggle();
+        sm.toggle();
     }
 
     //拦截侧滑

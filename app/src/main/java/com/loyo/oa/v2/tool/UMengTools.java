@@ -44,5 +44,10 @@ public class UMengTools {
         }
     }
 
+    /**
+     * 上传轨迹失败原因友盟收集
+     */
+    public static void sendCustomTrajectory() {
 
+    }
 }

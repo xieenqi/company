@@ -265,7 +265,10 @@
         <item name="android:background">#f5f5f5</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">@dimen/margin_other_view</item>
-        />
-
+    </style>
+    <!--去掉 activity上面的阴影-->
+    <style name="Theme.IOSched" parent="android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>

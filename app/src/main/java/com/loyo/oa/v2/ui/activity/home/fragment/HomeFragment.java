@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.home.MainHomeActivity;
 import com.loyo.oa.v2.ui.activity.setting.SettingActivity;
@@ -27,6 +28,7 @@ import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.customview.RoundImageView;
+
 import java.util.ArrayList;
 
 /**
@@ -46,7 +48,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_home, null, false);
         initView(view);
         registerBaseReceiver();
         return view;
@@ -107,7 +109,6 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
      */
     protected void onNetworkChanged(boolean available) {
         ll_network.setVisibility(available ? View.GONE : View.VISIBLE);
-        LogUtil.d("是否？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？有网络   " + available);
     }
 
     @Override
