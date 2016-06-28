@@ -490,6 +490,7 @@
             android:name=".ui.activity.home.MainHomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.IOSched"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
