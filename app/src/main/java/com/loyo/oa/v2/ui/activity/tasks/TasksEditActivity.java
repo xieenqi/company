@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.ui.activity.commonview.SwitchView;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerSearchActivity;
+import com.loyo.oa.v2.ui.activity.customer.CustomerSearchActivity;
 import com.loyo.oa.v2.ui.activity.project.ProjectSearchActivity;
 import com.loyo.oa.v2.ui.activity.signin.adapter.SignInGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;

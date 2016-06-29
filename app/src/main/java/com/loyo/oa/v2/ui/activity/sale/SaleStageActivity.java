@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.activity.CommonTagSelectActivity;
-import com.loyo.oa.v2.ui.activity.customer.activity.CommonTagSelectActivity_;
+import com.loyo.oa.v2.ui.activity.customer.CommonTagSelectActivity;
+import com.loyo.oa.v2.ui.activity.customer.CommonTagSelectActivity_;
 import com.loyo.oa.v2.ui.activity.sale.bean.ActionCode;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleFild;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleStage;

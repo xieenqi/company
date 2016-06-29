@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.attendance.AttendanceActivity_;
 import com.loyo.oa.v2.ui.activity.attendance.AttendanceAddActivity_;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerAddActivity_;
+import com.loyo.oa.v2.ui.activity.customer.CustomerAddActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksAddActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity_;
 import com.loyo.oa.v2.application.MainApp;
@@ -48,7 +48,7 @@ import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.ui.activity.customer.activity.SaleActivitiesAddActivity;
+import com.loyo.oa.v2.ui.activity.customer.SaleActivitiesAddActivity;
 import com.loyo.oa.v2.ui.activity.home.adapter.AdapterHomeItem;
 import com.loyo.oa.v2.ui.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.ui.activity.home.bean.MoreWindowItem;
@@ -249,7 +249,7 @@ public class HomeApplicationFragment extends BaseFragment implements LocationUti
         items = new ArrayList<>(Arrays.asList(new HomeItem(R.drawable.newmain_toast, "公告通知", "com.loyo.oa.v2.ui.activity.other.BulletinManagerActivity_", "0", 0),
                 new HomeItem(R.drawable.newmain_discuss, "我的讨论", "com.loyo.oa.v2.ui.activity.discuss.MyDiscussActivity", "0", 0),
                 new HomeItem(R.drawable.newmain_list, "通讯录", "com.loyo.oa.v2.ui.activity.contact.ContactsActivity", "0213", 0),
-                new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.ui.activity.customer.CustomerManageActivity_", "0205", 1),
+                new HomeItem(R.drawable.newmain_customer, "客户管理", "com.loyo.oa.v2.ui.activity.customer.CustomerManagerActivity", "0205", 1),
                 new HomeItem(R.drawable.newmain_sale, "销售机会", "com.loyo.oa.v2.ui.activity.sale.SaleOpportunitiesManagerActivity", "0215", 1),
                 new HomeItem(R.drawable.newmain_sagin, "客户拜访", "com.loyo.oa.v2.ui.activity.signin.SignInManagerActivity_", "0206", 1),
                 new HomeItem(R.drawable.newmain_project, "项目管理", "com.loyo.oa.v2.ui.activity.project.ProjectManageActivity_", "0201", 2),

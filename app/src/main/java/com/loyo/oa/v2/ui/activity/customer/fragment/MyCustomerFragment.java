@@ -21,10 +21,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerAddActivity_;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerManagerActivity;
-import com.loyo.oa.v2.ui.activity.customer.activity.NearByCustomersActivity_;
+import com.loyo.oa.v2.ui.activity.customer.CustomerAddActivity_;
+import com.loyo.oa.v2.ui.activity.customer.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.ui.activity.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.ui.activity.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.ui.activity.customer.adapter.MyCustomerAdapter;
 import com.loyo.oa.v2.ui.activity.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;

@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerDetailInfoActivity_;
+import com.loyo.oa.v2.ui.activity.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.ui.activity.discuss.hait.HaitActivity;
 import com.loyo.oa.v2.ui.activity.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.ui.activity.home.fragment.HomeFragment;

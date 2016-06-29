@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.ui.activity.customer.activity;
+package com.loyo.oa.v2.ui.activity.customer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.ui.activity.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.ui.activity.customer.bean.HttpAddCustomer;
 import com.loyo.oa.v2.ui.activity.other.adapter.ImageGridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
