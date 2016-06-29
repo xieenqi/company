@@ -86,7 +86,7 @@ public class TaskManagerFragment extends BaseCommonMainListFragment<TaskRecord> 
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((Task) mAdapter.getChild(groupPosition, childPosition)).getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((TaskRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, TasksInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }

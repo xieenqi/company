@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.ui.activity.work.WorkReportAddActivity_;
@@ -12,7 +11,6 @@ import com.loyo.oa.v2.ui.activity.work.WorkReportsInfoActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsSearchActivity;
 import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.beans.WorkReport;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.IWorkReport;
 import com.loyo.oa.v2.tool.BaseActivity;
@@ -21,7 +19,6 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.filterview.OnMenuSelectedListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,14 +63,12 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
      */
     @Override
     public void openSearch() {
-
         Intent intent = new Intent();
         Bundle mBundle = new Bundle();
         mBundle.putInt("from", BaseActivity.WORK_MANAGE);
         intent.putExtras(mBundle);
         intent.setClass(mActivity, WorkReportsSearchActivity.class);
         startActivityForResult(intent, REQUEST_REVIEW);
-
     }
 
     @Override
@@ -93,7 +88,7 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
     @Override
     public void openItem(int groupPosition, int childPosition) {
         Intent intent = new Intent();
-        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReport) mAdapter.getChild(groupPosition, childPosition)).getId());
+        intent.putExtra(ExtraAndResult.EXTRA_ID, ((WorkReportRecord) mAdapter.getChild(groupPosition, childPosition)).getId());
         intent.setClass(mActivity, WorkReportsInfoActivity_.class);
         startActivityForResult(intent, REQUEST_REVIEW);
     }
@@ -134,7 +129,6 @@ public class WorkReportsManageFragment extends BaseCommonMainListFragment<WorkRe
         items.add(FILTER_TYPE);
 
         mMenu.setmMenuItems(items);
-
         mMenu.setMenuSelectedListener(new OnMenuSelectedListener() {
             @Override
             //Menu展开的list点击事件  RowIndex：list的索引  ColumnIndex：menu的索引
