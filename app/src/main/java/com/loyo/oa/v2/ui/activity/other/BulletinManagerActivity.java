@@ -151,7 +151,8 @@ public class BulletinManagerActivity extends BaseActivity implements PullToRefre
 
     @Click(R.id.img_title_left)
     void onClick(final View v) {
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
+        onBackPressed();
+//        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
     }
 
 

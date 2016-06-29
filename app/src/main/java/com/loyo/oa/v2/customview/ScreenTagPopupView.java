@@ -13,12 +13,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.ui.activity.customer.adapter.TagScreenAdapter;
 import com.loyo.oa.v2.ui.activity.customer.bean.Tag;
 import com.loyo.oa.v2.ui.activity.customer.bean.TagItem;
 import com.loyo.oa.v2.common.Global;
+
 import java.util.ArrayList;
 
 /**
@@ -235,7 +237,9 @@ public class ScreenTagPopupView extends PopupWindow implements View.OnClickListe
             //确定
             case R.id.custag_screentag1_confirm:
                 try {
-                    stringIds = getAlldata(tagItemIds).toString().substring(0, getAlldata(tagItemIds).toString().length() - 1);
+                    String idInfo = getAlldata(tagItemIds).toString();
+                    stringIds = idInfo.length() > 0 ? idInfo.substring(0, idInfo.length() - 1) : "";
+//                    stringIds = getAlldata(tagItemIds).toString().substring(0, getAlldata(tagItemIds).toString().length() - 1);
                     mBundle.putString("tagid", stringIds);
                     resultTag = CustomerManagerActivity.CUSTOMER_TAG;
                 } catch (Exception e) {

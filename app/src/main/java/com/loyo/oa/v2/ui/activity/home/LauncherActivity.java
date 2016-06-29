@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.login.LoginActivity;
 import com.loyo.oa.v2.ui.activity.login.WelcomeActivity;
@@ -18,6 +19,7 @@ import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.SharedUtil;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -129,5 +131,6 @@ public class LauncherActivity extends Activity {
         }
         startActivity(intent);
         finish();
+//        overridePendingTransition(R.anim.exit_buttomtotop, R.anim.exit_toptobuttom);
     }
 }
