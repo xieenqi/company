@@ -198,7 +198,7 @@ public class SaleOpportunitiesManagerActivity extends BaseFragmentActivity imple
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
             case R.id.ll_category:
                 break;

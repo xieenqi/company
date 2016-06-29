@@ -78,6 +78,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     private ImageView iv_wfstatus;
     private boolean isDelete = true;
     private double totalMoney;//意向产品总金额
+    private boolean isTeam;//是否是团队的详情
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +154,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
     private void getIntenData() {
         mIntent = getIntent();
         selectId = mIntent.getStringExtra("id");
+        isTeam = mIntent.getBooleanExtra(ExtraAndResult.IS_TEAM, false);
         String fromPath = mIntent.getStringExtra("formPath");
         if (!TextUtils.isEmpty(fromPath) && fromPath.equals("审批")) {
             //审批过来不准编辑
@@ -219,7 +221,7 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
      */
     public void bindData() {
         //机会 是否 是创建者
-        if (MainApp.user.id.equals(mSaleDetails.creatorId) && mSaleDetails.prob != 100) {
+        if (MainApp.user.id.equals(mSaleDetails.creatorId) && mSaleDetails.prob != 100 && !isTeam) {
             img_title_right.setVisibility(View.VISIBLE);
             ll_stage.setEnabled(true);
             ll_product.setEnabled(true);
@@ -286,10 +288,12 @@ public class SaleDetailsActivity extends BaseActivity implements View.OnClickLis
                     break;
                 case 3:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status3);
-                    img_title_right.setVisibility(View.VISIBLE);
-                    ll_product.setEnabled(true);
-                    ll_stage.setEnabled(true);
-                    isDelete = false;
+                    if (!isTeam) {//非团队才有权限
+                        img_title_right.setVisibility(View.VISIBLE);
+                        ll_product.setEnabled(true);
+                        ll_stage.setEnabled(true);
+                        isDelete = false;
+                    }
                     break;
                 case 4:
                     iv_wfstatus.setImageResource(R.drawable.img_wfinstance_status4);

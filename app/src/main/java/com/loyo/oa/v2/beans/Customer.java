@@ -96,6 +96,6 @@ public class Customer extends BaseBeans {
     }
 
     public String getId() {
-        return id;
+        return null == id ? "" : id;
     }
 }

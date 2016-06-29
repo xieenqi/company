@@ -205,7 +205,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
 
         mDeptSource = Common.getLstDepartment();
         deptSort();
-        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler,0x02);
+        saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x02);
 
         /**
          * 列表监听
@@ -214,6 +214,7 @@ public class TeamSaleFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mIntent = new Intent();
+                mIntent.putExtra(ExtraAndResult.IS_TEAM, true);
                 mIntent.putExtra("id", adapterSaleTeam.getData().get(position - 1).getId());
                 mIntent.setClass(getActivity(), SaleDetailsActivity.class);
                 startActivityForResult(mIntent, getActivity().RESULT_FIRST_USER);
