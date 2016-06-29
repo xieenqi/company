@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.ui.activity.contact.ContactsActivity;
 import com.loyo.oa.v2.ui.activity.home.bean.HomeItem;
 import com.loyo.oa.v2.ui.activity.home.bean.HttpMainRedDot;
+
 import java.util.ArrayList;
 
 /**
@@ -176,6 +178,7 @@ public class AdapterHomeItem extends BaseAdapter {
                     if (null != MainApp.lstDepartment) {
                         mIntent.setClass(activity, ContactsActivity.class);
                         activity.startActivity(mIntent);
+                        activity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                     } else {
                         Toast.makeText(activity, "请重新拉去组织架构", Toast.LENGTH_SHORT).show();
                     }
