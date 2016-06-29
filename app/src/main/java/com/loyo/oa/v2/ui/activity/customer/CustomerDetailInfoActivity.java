@@ -15,16 +15,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.ui.activity.customer.CustomerContactManageActivity_;
-import com.loyo.oa.v2.ui.activity.customer.CustomerInfoActivity_;
-import com.loyo.oa.v2.ui.activity.signin.SignInListActivity_;
-import com.loyo.oa.v2.ui.activity.tasks.TaskListActivity_;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.activity.customer.bean.Contact;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.ui.activity.customer.bean.Member;
-import com.loyo.oa.v2.ui.activity.customer.bean.MembersRoot;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -38,6 +30,12 @@ import com.loyo.oa.v2.tool.Config_project;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.tool.Utils;
+import com.loyo.oa.v2.ui.activity.attachment.AttachmentActivity_;
+import com.loyo.oa.v2.ui.activity.customer.bean.Contact;
+import com.loyo.oa.v2.ui.activity.customer.bean.Member;
+import com.loyo.oa.v2.ui.activity.customer.bean.MembersRoot;
+import com.loyo.oa.v2.ui.activity.signin.SignInListActivity_;
+import com.loyo.oa.v2.ui.activity.tasks.TaskListActivity_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -211,7 +209,10 @@ public class CustomerDetailInfoActivity extends BaseActivity {
         if (null == mCustomer) {
             return;
         }
-
+        //推送过来的公海客户
+        if (1 == customerType && !mCustomer.lock) {
+            customerType = 3;
+        }
         /*超级管理员,我的客户,Web权限控制判断*/
         if (MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
