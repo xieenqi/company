@@ -97,7 +97,8 @@ public class ContactsActivity extends BaseFragmentActivity implements View.OnCli
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+//                app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
+                onBackPressed();
                 break;
             case R.id.img_title_right:
                 Bundle b = new Bundle();

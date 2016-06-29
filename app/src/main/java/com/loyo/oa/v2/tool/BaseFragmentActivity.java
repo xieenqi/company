@@ -153,6 +153,12 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, 0, null);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         switch (event.getAction()) {
