@@ -25,6 +25,7 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
     private LinearLayout layout;
     private Intent mIntent;
     private boolean isDelete = true;
+    private boolean isEdit = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
         ExitActivity.getInstance().addActivity(this);
         setContentView(R.layout.activity_saleedit_view);
         isDelete = getIntent().getBooleanExtra("isDelete", false);
+        isEdit = getIntent().getBooleanExtra("isEdit", false);
         getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         btn_delete = (Button) this.findViewById(R.id.btn_delete);
@@ -57,6 +59,12 @@ public class SaleEditViewActivity extends Activity implements OnClickListener {
         } else {
             btn_delete.setVisibility(View.GONE);
         }
+        if (isEdit) {
+            btn_edit.setVisibility(View.VISIBLE);
+        } else {
+            btn_edit.setVisibility(View.GONE);
+        }
+
 
     }
 
