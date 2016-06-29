@@ -22,12 +22,6 @@ import rx.Observable;
 
 public interface ITask {
 
-//    @GET("/discussions?bizType=2")
-//    void getDiscussions(@Query("bizId") String taskId, retrofit.Callback<PaginationX<Discussion>> cb);
-//
-//    @POST("/discussions")
-//    void createDiscussion(@Body HashMap<String, Object> body, retrofit.Callback<Discussion> cb);
-
     /*获取任务信息*/
     @GET("/task/{Id}")
     void getTask(@Path("Id") String Id, @Query("key") String key, retrofit.Callback<Task> cb);
@@ -43,6 +37,12 @@ public interface ITask {
 
     @GET("/task/query")
     Observable<PaginationX<Task>> getList(@QueryMap HashMap<String, Object> body);
+
+    /**
+     * 客户任务列表(v2.2精简接口)
+     * */
+    @GET("/task/query/mobile/simplify")
+    Observable<PaginationX<TaskRecord>> getListData(@QueryMap HashMap<String, Object> body);
 
     /**
      * 获取任务列表数据

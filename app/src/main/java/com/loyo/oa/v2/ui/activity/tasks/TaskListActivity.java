@@ -6,15 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.ui.activity.other.adapter.CommonExpandableListAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.PagingGroupData_;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.beans.Task;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
@@ -26,16 +25,13 @@ import com.loyo.oa.v2.tool.DateTool;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshExpandableListView;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -52,9 +48,9 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
     @Extra Customer mCustomer;
     @Extra boolean isMyUser;
 
-    private PaginationX<Task> taskPaginationX = new PaginationX<>(20);
-    private ArrayList<Task> tasks = new ArrayList<>();
-    protected ArrayList<PagingGroupData_<Task>> pagingGroupDatas = new ArrayList<>();
+    private PaginationX<TaskRecord> taskPaginationX = new PaginationX<>(20);
+    private ArrayList<TaskRecord> tasks = new ArrayList<>();
+    protected ArrayList<PagingGroupData_<TaskRecord>> pagingGroupDatas = new ArrayList<>();
     private CommonExpandableListAdapter adapter;
     private Permission permission;
     private boolean isTopAdd;
@@ -140,7 +136,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             lv.getRefreshableView().setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id) {
-                    Task task = (Task) adapter.getChild(groupPosition, childPosition);
+                    TaskRecord task = (TaskRecord) adapter.getChild(groupPosition, childPosition);
                     openTaskDetial(task);
                     return false;
                 }
@@ -172,8 +168,8 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
         map.put("pageIndex", taskPaginationX.getPageIndex());
         map.put("pageSize", isTopAdd ? tasks.size() >= 20 ? tasks.size() : 20 : 20);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getList(map).
-                observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<PaginationX<Task>>() {
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getListData(map).
+                observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<PaginationX<TaskRecord>>() {
             @Override
             public void onCompleted() {
                 lv.onRefreshComplete();
@@ -185,7 +181,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
             }
 
             @Override
-            public void onNext(final PaginationX<Task> paginationX) {
+            public void onNext(final PaginationX<TaskRecord> paginationX) {
                 lv.onRefreshComplete();
                 taskPaginationX = paginationX;
                 lv.onRefreshComplete();
@@ -204,7 +200,7 @@ public class TaskListActivity extends BaseActivity implements PullToRefreshBase.
      *
      * @param task
      */
-    private void openTaskDetial(final Task task) {
+    private void openTaskDetial(final TaskRecord task) {
         Intent intent = new Intent(this, TasksInfoActivity_.class);
         intent.putExtra(ExtraAndResult.EXTRA_ID, task.getId());
         //intent.putExtra("mCustomer", mCustomer);
