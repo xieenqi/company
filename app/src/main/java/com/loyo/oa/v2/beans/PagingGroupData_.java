@@ -116,7 +116,7 @@ public class PagingGroupData_<T extends BaseBeans> implements Serializable {
             /*报告*/
             else if (item instanceof WorkReportRecord) {
                 WorkReportRecord workReport = (WorkReportRecord) item;
-                if (workReport.viewed) {
+                if (workReport.status == 1) {
                     order = "已点评";
                 } else {
                     order = "待点评";
