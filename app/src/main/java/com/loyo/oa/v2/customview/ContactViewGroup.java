@@ -10,9 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerContactManageActivity;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerContractAddActivity;
-import com.loyo.oa.v2.ui.activity.customer.activity.CustomerInfoActivity;
+import com.loyo.oa.v2.ui.activity.customer.CustomerContactManageActivity;
+import com.loyo.oa.v2.ui.activity.customer.CustomerContractAddActivity;
+import com.loyo.oa.v2.ui.activity.customer.CustomerInfoActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.ui.activity.customer.bean.Contact;
 import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;

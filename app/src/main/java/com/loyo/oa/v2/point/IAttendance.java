@@ -28,9 +28,6 @@ import retrofit.http.QueryMap;
 public interface IAttendance {
 
 
-    @GET("/attendance")
-    void getAttendancePhoto(Callback<ArrayList<AttendancePhoto>> callback);
-
     /**
      * 验证是否能打卡
      * @param callback

@@ -109,17 +109,17 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.activity.CommonTagSelectActivity_"
+            android:name=".ui.activity.customer.CommonTagSelectActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.activity.NearByCustomersActivity_"
+            android:name=".ui.activity.customer.NearByCustomersActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.activity.NearByCustomersMapActivity"
+            android:name=".ui.activity.customer.NearByCustomersMapActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.signin.LegworksListActivity_"
@@ -132,12 +132,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerDetailInfoActivity_"
+            android:name=".ui.activity.customer.CustomerDetailInfoActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerContactManageActivity_"
+            android:name=".ui.activity.customer.CustomerContactManageActivity_"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -214,40 +214,35 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerBaseInfoEditActivity_"
+            android:name=".ui.activity.customer.CustomerBaseInfoEditActivity_"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.CustomerManageActivity_"
+            android:name=".ui.activity.customer.CustomerAddActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.activity.customer.CustomerInfoActivity_"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.activity.customer.CustomerLabelActivity_"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.activity.customer.SaleActivitiesManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerAddActivity_"
-            android:launchMode="singleTop"
+            android:name=".ui.activity.customer.DemandsManageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerInfoActivity_"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".ui.activity.customer.activity.CustomerLabelActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".ui.activity.customer.activity.SaleActivitiesManageActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".ui.activity.customer.activity.DemandsManageActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".ui.activity.customer.activity.DemandsAddActivity"
+            android:name=".ui.activity.customer.DemandsAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
@@ -354,11 +349,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerContractAddActivity"
+            android:name=".ui.activity.customer.CustomerContractAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
-            android:name=".ui.activity.customer.activity.SaleActivitiesAddActivity"
+            android:name=".ui.activity.customer.SaleActivitiesAddActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
@@ -384,7 +379,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerSearchActivity"
+            android:name=".ui.activity.customer.CustomerSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
@@ -469,7 +464,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.CustomerRepeat"
+            android:name=".ui.activity.customer.CustomerRepeat"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
@@ -494,7 +489,7 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             />
         <activity
-            android:name=".ui.activity.customer.activity.CustomerManagerActivity"
+            android:name=".ui.activity.customer.CustomerManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
@@ -701,12 +696,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.SaleManageActivity"
+            android:name=".ui.activity.customer.SaleManageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".ui.activity.customer.activity.FollowContactSelectActivity"
+            android:name=".ui.activity.customer.FollowContactSelectActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>

@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.activity.DemandsAddActivity;
-import com.loyo.oa.v2.ui.activity.customer.activity.DemandsManageActivity;
+import com.loyo.oa.v2.ui.activity.customer.DemandsAddActivity;
+import com.loyo.oa.v2.ui.activity.customer.DemandsManageActivity;
 import com.loyo.oa.v2.ui.activity.wfinstance.WfinstanceInfoActivity_;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.ui.activity.sale.bean.CommonTag;

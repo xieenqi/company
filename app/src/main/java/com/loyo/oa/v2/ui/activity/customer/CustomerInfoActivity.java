@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.ui.activity.customer.activity;
+package com.loyo.oa.v2.ui.activity.customer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
+import com.loyo.oa.v2.ui.activity.customer.CustomerLabelActivity_;
 import com.loyo.oa.v2.ui.activity.customer.bean.CustomerExtraData;
 import com.loyo.oa.v2.ui.activity.customer.bean.CustomerRegional;
 import com.loyo.oa.v2.ui.activity.customer.bean.ExtraData;

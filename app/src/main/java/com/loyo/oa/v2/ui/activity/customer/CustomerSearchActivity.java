@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.ui.activity.customer.activity;
+package com.loyo.oa.v2.ui.activity.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
+import com.loyo.oa.v2.ui.activity.customer.CustomerDetailInfoActivity_;
 
 import java.util.HashMap;
 
