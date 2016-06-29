@@ -2,7 +2,6 @@ package com.loyo.oa.v2.ui.activity.signin;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Permission;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.tool.BaseFragment;
+import com.loyo.oa.v2.tool.BaseFragmentActivity;
+import com.loyo.oa.v2.ui.activity.other.adapter.CommonCategoryAdapter;
 import com.loyo.oa.v2.ui.activity.signin.fragment.SignInOfTeamFragment;
 import com.loyo.oa.v2.ui.activity.signin.fragment.SignInOfUserFragment;
-import com.loyo.oa.v2.tool.BaseFragment;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -37,7 +37,7 @@ import java.util.List;
  * 【客户拜访】界面  activity xnq
  */
 @EActivity(R.layout.activity_sign_list_my)
-public class SignInManagerActivity extends FragmentActivity {
+public class SignInManagerActivity extends BaseFragmentActivity {
 
     private String[] LEGWORK_FILTER_STRS = new String[]{"我的拜访", "团队拜访"};
     @ViewById
@@ -70,20 +70,20 @@ public class SignInManagerActivity extends FragmentActivity {
 //        findViewById(R.id.img_title_right).setVisibility(View.INVISIBLE);
 
         /*超级管理员,Web权限判断*/
-        if(!MainApp.user.isSuperUser()){
-            try{
+        if (!MainApp.user.isSuperUser()) {
+            try {
                 permission = (Permission) MainApp.rootMap.get("0310");
-                if(!permission.isEnable()){
+                if (!permission.isEnable()) {
                     LEGWORK_FILTER_STRS = new String[]{"我的拜访"};
                     imageArrow.setVisibility(View.INVISIBLE);
-                }else{
+                } else {
                     imageArrow.setVisibility(View.VISIBLE);
                 }
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-                Toast.makeText(this,"团队拜访权限，code错误:0310",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "团队拜访权限，code错误:0310", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             imageArrow.setVisibility(View.VISIBLE);
         }
 
@@ -91,7 +91,7 @@ public class SignInManagerActivity extends FragmentActivity {
         initCategoryUI();
         initChildren();
 
-        if(LEGWORK_FILTER_STRS.length == 1){
+        if (LEGWORK_FILTER_STRS.length == 1) {
             layout_title_action.setEnabled(false);
         }
     }
@@ -100,7 +100,7 @@ public class SignInManagerActivity extends FragmentActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_title_action:
-                if(LEGWORK_FILTER_STRS.length != 1){
+                if (LEGWORK_FILTER_STRS.length != 1) {
                     changeCategoryView();
                 }
                 break;

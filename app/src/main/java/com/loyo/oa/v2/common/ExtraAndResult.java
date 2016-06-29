@@ -32,7 +32,8 @@ public class ExtraAndResult {
     public static final String WELCOM_KEY = "welcom_key";
 
     public static final String HOME_ITEM = "home_item";
-    public static final String HOME_RED_NUMBER = "home_red_number";
+
+    public static final String IS_TEAM = "is_team";
 
     public static final int TYPE_SELECT_SINGLE = 1;
     public static final int TYPE_SELECT_MULTUI = 0;
