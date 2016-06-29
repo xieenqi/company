@@ -3,6 +3,7 @@ package com.loyo.oa.v2.ui.activity.work;
 import android.content.Intent;
 
 import com.loyo.oa.v2.beans.WorkReport;
+import com.loyo.oa.v2.beans.WorkReportRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.ui.activity.work.fragment.WorkReportsManageFragment;
 import com.loyo.oa.v2.point.IWorkReport;
@@ -13,7 +14,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.HashMap;
 
 
-public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReport> {
+public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReportRecord> {
 
     private final int pageSize = 20;
 
@@ -36,6 +37,6 @@ public class WorkReportsSearchActivity extends BaseSearchActivity<WorkReport> {
         //params.put("startAt", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
         params.put("pageIndex", paginationX.getPageIndex());
         params.put("pageSize", isTopAdd?lstData.size()>=pageSize?lstData.size():pageSize:pageSize);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReports(params, this);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWorkReport.class).getWorkReportsData(params, this);
     }
 }

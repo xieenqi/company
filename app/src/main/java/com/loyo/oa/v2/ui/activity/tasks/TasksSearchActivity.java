@@ -3,6 +3,7 @@ package com.loyo.oa.v2.ui.activity.tasks;
 import android.content.Intent;
 
 import com.loyo.oa.v2.beans.Task;
+import com.loyo.oa.v2.beans.TaskRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.point.ITask;
 import com.loyo.oa.v2.tool.BaseSearchActivity;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 /**
  * 【任务 的搜索】 页面
  */
-public class TasksSearchActivity extends BaseSearchActivity<Task> {
+public class TasksSearchActivity extends BaseSearchActivity<TaskRecord> {
 
     @Override
     protected void openDetail(final int position) {
@@ -34,6 +35,6 @@ public class TasksSearchActivity extends BaseSearchActivity<Task> {
         params.put("pageSize", isTopAdd?lstData.size()>=20?lstData.size():20:20);
         params.put("joinType",0);
         params.put("status",0);
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasks(params, this);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(ITask.class).getTasksData(params, this);
     }
 }

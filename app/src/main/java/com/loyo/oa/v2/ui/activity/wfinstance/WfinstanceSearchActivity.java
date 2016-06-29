@@ -2,6 +2,7 @@ package com.loyo.oa.v2.ui.activity.wfinstance;
 
 import android.content.Intent;
 import com.loyo.oa.v2.beans.WfInstance;
+import com.loyo.oa.v2.beans.WfInstanceRecord;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.ui.activity.work.fragment.WorkReportsManageFragment;
@@ -12,7 +13,7 @@ import com.loyo.oa.v2.tool.RestAdapterFactory;
 import java.util.HashMap;
 
 
-public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstance> {
+public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstanceRecord> {
 
     @Override
     protected void openDetail(final int position) {
@@ -35,6 +36,6 @@ public class WfinstanceSearchActivity extends BaseSearchActivity<WfInstance> {
         //map.put("endTime", System.currentTimeMillis() / 1000);
        // map.put("beginTime", DateTool.getDateToTimestamp("2014-01-01", app.df5) / 1000);
 
-        RestAdapterFactory.getInstance().build(Config_project.API_URL()+ FinalVariables.wfinstance).create(IWfInstance.class).getWfInstances(map, this);
+        RestAdapterFactory.getInstance().build(Config_project.API_URL()+ FinalVariables.wfinstance).create(IWfInstance.class).getWfInstancesData(map, this);
     }
 }
