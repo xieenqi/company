@@ -210,9 +210,9 @@ public class CustomerDetailInfoActivity extends BaseActivity {
             return;
         }
         //推送过来的公海客户
-        if (1 == customerType && !mCustomer.lock) {
-            customerType = 3;
-        }
+//        if (1 == customerType && !mCustomer.lock) {
+//            customerType = 3;
+//        }
         /*超级管理员,我的客户,Web权限控制判断*/
         if (MainApp.user.isSuperUser() && customerType == 3) {
             img_public.setVisibility(View.VISIBLE);
