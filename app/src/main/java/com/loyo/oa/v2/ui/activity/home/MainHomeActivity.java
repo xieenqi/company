@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.customer.CustomerDetailInfoActivity_;
-import com.loyo.oa.v2.ui.activity.discuss.hait.HaitActivity;
+import com.loyo.oa.v2.ui.activity.discuss.HaitMyActivity;
 import com.loyo.oa.v2.ui.activity.home.cusview.SlidingMenu;
 import com.loyo.oa.v2.ui.activity.home.fragment.HomeFragment;
 import com.loyo.oa.v2.ui.activity.home.fragment.MenuFragment;
@@ -216,7 +216,7 @@ public class MainHomeActivity extends SlidingFragmentActivity {
         if (null != MainApp.jpushData) {
             Intent intent = new Intent();
             if ("discuss".equals(MainApp.jpushData.operationType)) {
-                intent.setClass(MainHomeActivity.this, HaitActivity.class);//推送讨论
+                intent.setClass(MainHomeActivity.this, HaitMyActivity.class);//推送讨论
                 startActivity(intent);
                 MainApp.jpushData = null;
                 return;

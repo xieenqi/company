@@ -18,9 +18,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.ui.activity.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.ui.activity.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.ui.activity.attachment.AttachmentActivity_;
-import com.loyo.oa.v2.ui.activity.discuss.DiscussDetActivity;
 import com.loyo.oa.v2.ui.activity.work.adapter.workReportAddgridViewAdapter;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
@@ -388,7 +388,7 @@ public class WorkReportsInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", isCreater());
         bundle.putInt("bizType", 1);
         int status = Integer.parseInt(mWorkReport.reviewer.status);
-        DiscussDetActivity.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
+        DiscussDetialActivity.startThisActivity(this, 1, mWorkReport.attachmentUUId, status, MSG_DISCUSSION);
     }
 
     /**

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.activity.discuss.hait.HaitActivity;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -134,12 +133,12 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                 onBackPressed();
                 break;
             case R.id.tv_edit:
-//                Intent intent = new Intent(this, HaitActivity.class);
+//                Intent intent = new Intent(this, HaitMyActivity.class);
 ////                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
 ////                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
 //                startActivity(intent);
 //                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
-                app.startActivity(this, HaitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
+                app.startActivity(this, HaitMyActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             default:
 
@@ -245,7 +244,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Intent intent = new Intent(MyDiscussActivity.this, DiscussDetActivity.class);
+                    Intent intent = new Intent(MyDiscussActivity.this, DiscussDetialActivity.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);

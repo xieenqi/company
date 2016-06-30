@@ -1,5 +1,7 @@
 package com.loyo.oa.v2.ui.activity.discuss;
 
+import com.loyo.oa.v2.ui.activity.discuss.bean.HttpCrecter;
+
 /**
  * Created by xeq on 16/3/17.
  */

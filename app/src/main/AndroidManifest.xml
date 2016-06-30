@@ -662,11 +662,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.discuss.hait.HaitActivity"
+            android:name=".ui.activity.discuss.HaitMyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.discuss.DiscussDetActivity"
+            android:name=".ui.activity.discuss.DiscussDetialActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!--销售机会 -->

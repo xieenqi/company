@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.ui.activity.discuss.hait;
+package com.loyo.oa.v2.ui.activity.discuss.bean;
 
 import java.io.Serializable;
 

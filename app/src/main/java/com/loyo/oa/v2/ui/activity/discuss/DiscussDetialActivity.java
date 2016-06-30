@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity;
+import com.loyo.oa.v2.ui.activity.discuss.bean.HttpCrecter;
 import com.loyo.oa.v2.ui.activity.project.ProjectInfoActivity_;
 import com.loyo.oa.v2.ui.activity.tasks.TasksInfoActivity_;
 import com.loyo.oa.v2.ui.activity.work.WorkReportsInfoActivity_;
@@ -60,7 +61,7 @@ import retrofit.client.Response;
  * create by libo 2016/03/10
  */
 
-public class DiscussDetActivity extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
+public class DiscussDetialActivity extends BaseActivity implements View.OnLayoutChangeListener, View.OnClickListener {
 
     private static final char SCANNER_HAIT_TRIM = '\u2005';
     private final List<HaitHelper.SelectUser> mHaitSelectUsers = new ArrayList<>(); // 选择用于艾特的用户列表
@@ -105,7 +106,7 @@ public class DiscussDetActivity extends BaseActivity implements View.OnLayoutCha
                                          final String mAttachmentUUId,
                                          final int status,
                                          final int requestCode) {
-        Intent intent = new Intent(act, DiscussDetActivity.class);
+        Intent intent = new Intent(act, DiscussDetialActivity.class);
         intent.putExtra(ExtraAndResult.EXTRA_TYPE, mBizType);
         intent.putExtra("status", status);
         intent.putExtra(ExtraAndResult.EXTRA_UUID, mAttachmentUUId);
@@ -264,19 +265,19 @@ public class DiscussDetActivity extends BaseActivity implements View.OnLayoutCha
                 Intent intent = new Intent();
                 switch (mBizType) {
                     case 1:
-                        intent.setClass(DiscussDetActivity.this, WorkReportsInfoActivity_.class);
+                        intent.setClass(DiscussDetialActivity.this, WorkReportsInfoActivity_.class);
                         intent.putExtra(ExtraAndResult.EXTRA_TYPE, "discuss");
                         intent.putExtra(ExtraAndResult.EXTRA_ID, bizTypeId);
                         startActivity(intent);
                         break;
                     case 2:
-                        intent.setClass(DiscussDetActivity.this, TasksInfoActivity_.class);
+                        intent.setClass(DiscussDetialActivity.this, TasksInfoActivity_.class);
                         intent.putExtra(ExtraAndResult.EXTRA_TYPE, "discuss");
                         intent.putExtra(ExtraAndResult.EXTRA_ID, bizTypeId);
                         startActivity(intent);
                         break;
                     case 5:
-                        intent.setClass(DiscussDetActivity.this, ProjectInfoActivity_.class);
+                        intent.setClass(DiscussDetialActivity.this, ProjectInfoActivity_.class);
                         intent.putExtra(ExtraAndResult.EXTRA_TYPE, "discuss");
                         intent.putExtra("projectId", bizTypeId);
                         startActivity(intent);
@@ -585,7 +586,7 @@ public class DiscussDetActivity extends BaseActivity implements View.OnLayoutCha
         private void toSelectUserByHait() {
             Bundle bundle = new Bundle();
             bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, ExtraAndResult.TYPE_SELECT_SINGLE);
-            app.startActivityForResult(DiscussDetActivity.this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
+            app.startActivityForResult(DiscussDetialActivity.this, SelectDetUserActivity.class, MainApp.ENTER_TYPE_RIGHT,
                     ExtraAndResult.REQUEST_CODE, bundle);
         }
 
@@ -669,11 +670,11 @@ public class DiscussDetActivity extends BaseActivity implements View.OnLayoutCha
             RecyclerView.ViewHolder holder = null;
             switch (viewType) {
                 case DiscussSendMode.mine:
-                    view = View.inflate(DiscussDetActivity.this, R.layout.item_discuss_det_mine, null);
+                    view = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_mine, null);
                     holder = new DiscussDetMineViewHolder(view);
                     return holder;
                 case DiscussSendMode.other:
-                    view = View.inflate(DiscussDetActivity.this, R.layout.item_discuss_det_other, null);
+                    view = View.inflate(DiscussDetialActivity.this, R.layout.item_discuss_det_other, null);
                     holder = new DiscussDetOtherViewHolder(view);
                     return holder;
             }

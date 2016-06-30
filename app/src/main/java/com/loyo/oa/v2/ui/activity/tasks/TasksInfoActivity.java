@@ -20,10 +20,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.ui.activity.discuss.DiscussDetialActivity;
 import com.loyo.oa.v2.ui.activity.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.ui.activity.attachment.AttachmentActivity_;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity2;
-import com.loyo.oa.v2.ui.activity.discuss.DiscussDetActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
 import com.loyo.oa.v2.ui.activity.customer.bean.Department;
@@ -974,7 +974,7 @@ public class TasksInfoActivity extends BaseActivity {
         bundle.putBoolean("isMyUser", IsCreator() || IsResponsiblePerson() ? true : false);
         bundle.putInt("status", mTask.getStatus());
         bundle.putInt("bizType", 2);
-        DiscussDetActivity.startThisActivity(this, 2, mTask.getAttachmentUUId(), mTask.getStatus(), MSG_DISCUSSION);
+        DiscussDetialActivity.startThisActivity(this, 2, mTask.getAttachmentUUId(), mTask.getStatus(), MSG_DISCUSSION);
     }
 
     /**

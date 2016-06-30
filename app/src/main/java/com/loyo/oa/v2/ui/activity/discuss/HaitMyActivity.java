@@ -1,4 +1,4 @@
-package com.loyo.oa.v2.ui.activity.discuss.hait;
+package com.loyo.oa.v2.ui.activity.discuss;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.discuss.DiscussDetActivity;
-import com.loyo.oa.v2.ui.activity.discuss.HttpMyDiscussItem;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.Global;
@@ -42,7 +40,7 @@ import retrofit.client.Response;
 /**
  * @我的界面 create by libo 2016/03/10
  */
-public class HaitActivity extends BaseActivity {
+public class HaitMyActivity extends BaseActivity {
 
     private PullToRefreshRecycleView lv_myDiscuss;
     private LinearLayout img_title_left;
@@ -160,7 +158,7 @@ public class HaitActivity extends BaseActivity {
 
         @Override
         public HaitViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            View view = View.inflate(HaitActivity.this, R.layout.item_hait_layout, null);
+            View view = View.inflate(HaitMyActivity.this, R.layout.item_hait_layout, null);
             return new HaitViewHolder(view);
         }
 
@@ -213,7 +211,7 @@ public class HaitActivity extends BaseActivity {
 //            itemView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(final View view) {
-//                    DiscussDetActivity.startThisActivity((Activity) view.getContext());
+//                    DiscussDetialActivity.startThisActivity((Activity) view.getContext());
 //                }
 //            });
         }
@@ -222,7 +220,7 @@ public class HaitActivity extends BaseActivity {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(HaitActivity.this, DiscussDetActivity.class);
+                    Intent intent = new Intent(HaitMyActivity.this, DiscussDetialActivity.class);
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, itemData.bizType);
                     intent.putExtra(ExtraAndResult.EXTRA_UUID, itemData.attachmentUUId);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, "");//@我界面不刷新红点
