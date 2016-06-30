@@ -255,7 +255,7 @@ public class DiscussDetActivity extends BaseActivity implements View.OnLayoutCha
     public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.layout_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.rl_scanner:
                 showKeyBoard(et_discuss);

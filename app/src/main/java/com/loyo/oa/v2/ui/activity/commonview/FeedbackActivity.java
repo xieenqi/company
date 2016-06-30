@@ -60,6 +60,7 @@ public class FeedbackActivity extends BaseActivity {
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private SignInGridViewAdapter signInGridViewAdapter;
     Handler han = new Handler();
+    private boolean isClick = false;//反馈成功过后是否点击确定了
 
     @AfterViews
     void init() {
@@ -138,12 +139,13 @@ public class FeedbackActivity extends BaseActivity {
     private void showSuccessDialog() {
         hideInputKeyboard(et_content);
 
-        String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快";
+        String message = "感谢您反馈的宝贵意见\n我们一定认真对待\n努力优化快启的产品与服务\n祝您生活愉快!!!";
         showGeneralDialog(false, false, message);
         generalPopView.setNoCancelOnclick(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                finish();
+                onBackPressed();
+                isClick = true;
             }
         });
 
@@ -154,7 +156,8 @@ public class FeedbackActivity extends BaseActivity {
                 han.post(new Runnable() {
                     @Override
                     public void run() {
-                        finish();
+                        if (!isClick)
+                            onBackPressed();
                     }
                 });
             }

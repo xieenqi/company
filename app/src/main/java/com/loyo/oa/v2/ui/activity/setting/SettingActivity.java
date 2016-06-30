@@ -285,7 +285,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
         });
         ExitActivity.getInstance().finishAllActivity();
-        app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
+        app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_LEFT, true, null);
     }
 
     public interface ExitAppCallback {

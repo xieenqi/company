@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.ui.activity.discuss.hait.HaitActivity;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.common.ExtraAndResult;
@@ -130,13 +131,15 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.tv_edit:
-                Intent intent = new Intent(this, HaitActivity.class);
-//                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
-//                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
-                startActivity(intent);
+//                Intent intent = new Intent(this, HaitActivity.class);
+////                intent.putExtra(ExtraAndResult.EXTRA_TYPE, "");
+////                intent.putExtra(ExtraAndResult.EXTRA_ID, "");
+//                startActivity(intent);
+//                overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
+                app.startActivity(this, HaitActivity.class, MainApp.ENTER_TYPE_RIGHT, false, null);
                 break;
             default:
 
@@ -248,6 +251,7 @@ public class MyDiscussActivity extends BaseActivity implements View.OnClickListe
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE_ID, itemData.bizId);
                     intent.putExtra(ExtraAndResult.EXTRA_ID, itemData.summaryId);
                     startActivityForResult(intent, ExtraAndResult.REQUEST_CODE);
+                    overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
             });
             switch (itemData.bizType) {

@@ -91,7 +91,7 @@ public class HaitActivity extends BaseActivity {
         layout_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                finish();
+                onBackPressed();
             }
         });
         lv_myDiscuss.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {

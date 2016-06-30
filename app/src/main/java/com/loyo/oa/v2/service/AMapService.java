@@ -378,7 +378,7 @@ public class AMapService extends Service {
 
                 if (Config_project.is_developer_mode) {
                     GeneralPopView generalPopView = new GeneralPopView(getApplicationContext(), true);
-                    generalPopView.setMessage(error.getMessage());
+                    generalPopView.setMessage(error.getMessage()+" 轨迹上传失败");
                     generalPopView.setCanceledOnTouchOutside(true);
                     generalPopView.show();
                 }
