@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import com.loopj.android.http.RequestParams;
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
@@ -47,6 +48,7 @@ import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.RoundImageView;
 import com.loyo.oa.v2.customview.multi_image_selector.MultiImageSelectorActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
@@ -54,6 +56,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -62,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -112,7 +116,6 @@ public class ContactInfoEditActivity extends BaseActivity {
     TextView name_title_user;
     @Extra
     User user;
-
 
 
     private int mobile_phone = 1;
@@ -186,11 +189,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                if (!isDataChange()) {
-                    showLeaveDialog();
-                } else {
-                    app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_TOP, RESULT_CANCELED, null);
-                }
+                onBackPressed();
                 break;
             /*设置头像*/
             case R.id.layout_set_avartar:
@@ -333,7 +332,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         path = user.getAvatar();
         Utils.setContent(tv_mobile, user.mobile);
         Utils.setContent(et_weixin, user.weixinId);
-        Utils.setContent(name_title_user,MainApp.user.getRealname());
+        Utils.setContent(name_title_user, MainApp.user.getRealname());
         if (user.gender == 2) {
             sex_male.setChecked(true);
         } else if (user.gender == 1) {
@@ -719,7 +718,7 @@ public class ContactInfoEditActivity extends BaseActivity {
         if (!isDataChange()) {
             showLeaveDialog();
         } else {
-            finish();
+            app.finishActivity(ContactInfoEditActivity.this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
         }
     }
 
@@ -727,7 +726,7 @@ public class ContactInfoEditActivity extends BaseActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(null == data){
+        if (null == data) {
             return;
         }
         if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {

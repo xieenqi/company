@@ -54,7 +54,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public ViewGroup img_title_left;
     public ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
     public ViewGroup layout_check_update;
-    public Intent    mIntentCheckUpdate;
+    public Intent mIntentCheckUpdate;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -128,16 +128,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        app.finishActivity(this, MainApp.ENTER_TYPE_LEFT, RESULT_CANCELED, null);
-    }
 
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.img_title_left:
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_setting_exit:
                 exit();

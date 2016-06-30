@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.customview.GeneralPopView;
+import com.loyo.oa.v2.tool.BaseFragmentActivity;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.Utils;
-import com.loyo.oa.v2.customview.GeneralPopView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * 多图选择
  * Created by Nereo on 2015/4/7.
  */
-public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback {
+public class MultiImageSelectorActivity extends BaseFragmentActivity implements MultiImageSelectorFragment.Callback {
 
     /**
      * 最大图片选择次数，int类型，默认9
@@ -75,7 +75,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
             @Override
             public void onClick(View view) {
                 setResult(RESULT_OK);
-                finish();
+                onBackPressed();
             }
         });
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -146,7 +146,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
                     Intent data = new Intent();
                     data.putStringArrayListExtra(EXTRA_RESULT, resultList);
                     setResult(RESULT_OK, data);
-                    finish();
+                    onBackPressed();
                 }
             }
         });
