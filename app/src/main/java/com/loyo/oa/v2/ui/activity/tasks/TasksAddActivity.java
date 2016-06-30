@@ -363,8 +363,9 @@ public class TasksAddActivity extends BaseActivity {
                 //没有附件
                 if(pickPhots.size() == 0){
                     requestCommitTask();
-                //有附件
+                    //有附件
                 }else{
+                    img_title_right.setEnabled(false);
                     newUploadAttachement();
                 }
                 break;
@@ -597,6 +598,7 @@ public class TasksAddActivity extends BaseActivity {
                                     public void failure(final RetrofitError error) {
                                         super.failure(error);
                                         HttpErrorCheck.checkError(error);
+                                        img_title_right.setEnabled(true);
                                     }
                                 });
                             }

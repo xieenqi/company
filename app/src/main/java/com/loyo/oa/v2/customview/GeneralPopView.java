@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 
 /**
@@ -67,8 +68,9 @@ public class GeneralPopView extends Dialog {
      *
      * @param listener
      */
-    public void setNoCancelOnclick(View.OnClickListener listener) {
+    public GeneralPopView setNoCancelOnclick(View.OnClickListener listener) {
         findViewById(R.id.dialog_nocancelpopview_sure).setOnClickListener(listener);
+        return this;
     }
 
     public void dismisDialog() {

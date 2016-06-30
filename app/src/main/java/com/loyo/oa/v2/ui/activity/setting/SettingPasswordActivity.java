@@ -1,13 +1,13 @@
 package com.loyo.oa.v2.ui.activity.setting;
 
 import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
@@ -54,7 +54,6 @@ public class SettingPasswordActivity extends BaseActivity {
         String oldPassword = getText(et_old_password);
         String newPassword = getText(et_new_password);
         String confirmNewPassword = getText(et_confirm_new_password);
-
         if (TextUtils.isEmpty(oldPassword)) {
             Toast("原密码不能为空");
             return;
@@ -73,7 +72,7 @@ public class SettingPasswordActivity extends BaseActivity {
             Toast("两次输入的新密码不一致");
             return;
         }
-
+        showLoading("");
         HashMap<String, Object> map = new HashMap<>();
         map.put("oldpasswd", oldPassword);
         map.put("newpasswd", confirmNewPassword);
@@ -81,14 +80,12 @@ public class SettingPasswordActivity extends BaseActivity {
             @Override
             public void success(final Object o, final Response response) {
                 HttpErrorCheck.checkResponse(response);
-                Toast("修改密码成功");
-                onBackPressed();
+                showChangPwdSuccess();
             }
 
             @Override
             public void failure(final RetrofitError error) {
                 HttpErrorCheck.checkError(error);
-                //Toast(error.getBody().toString());
                 super.failure(error);
             }
         });
@@ -104,8 +101,16 @@ public class SettingPasswordActivity extends BaseActivity {
         return editText.getText().toString().trim();
     }
 
-    @Override
-    public void onBackPressed() {
-        app.finishActivity(SettingPasswordActivity.this, MainApp.ENTER_TYPE_LEFT, 0, null);
+    /**
+     * 密码修改成功后强制退出到登录页面
+     */
+    private void showChangPwdSuccess() {
+        showGeneralDialog(false, false, "修改密码成功，你需要重新登录哦~").setNoCancelOnclick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingActivity.callback.onExit(SettingPasswordActivity.this);
+            }
+        }).setCancelable(false);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.loyo.oa.v2.ui.activity.setting;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public ViewGroup layout_setpassword, layout_update, layout_feedback, layout_profile;
     public ViewGroup layout_check_update;
     public Intent mIntentCheckUpdate;
+    public static ExitAppCallback callback;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -126,6 +128,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         if (app.hasNewVersion) {
             tv_new_version.setVisibility(View.VISIBLE);
         }
+        callback = new ExitAppCallback() {
+            @Override
+            public void onExit(Activity SettingActivity) {
+                exit();
+            }
+        };
     }
 
 
@@ -278,5 +286,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         });
         ExitActivity.getInstance().finishAllActivity();
         app.startActivity(this, LoginActivity.class, MainApp.ENTER_TYPE_BUTTOM, true, null);
+    }
+
+    public interface ExitAppCallback {
+        void onExit(Activity SettingActivity);
     }
 }
