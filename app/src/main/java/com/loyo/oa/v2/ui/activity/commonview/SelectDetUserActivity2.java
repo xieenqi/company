@@ -209,6 +209,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
         intent.putExtra(ExtraAndResult.STR_SELECT_TYPE, TYPE_ALL_SELECT);
         intent.putExtra(ExtraAndResult.STR_SUPER_ID, joinUserId);
         act.startActivityForResult(intent, REQUEST_ALL_SELECT);
+        act.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
     }
 
     @Override
@@ -454,7 +455,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.tv_add:
 //                if (mCurrentSelectCount == 0) {
@@ -473,7 +474,7 @@ public class SelectDetUserActivity2 extends BaseActivity implements View.OnClick
                 bundle.putInt(ExtraAndResult.STR_SELECT_TYPE, mSelectType);
                 app.startActivityForResult(SelectDetUserActivity2.this,
                         SelectDetUserSerach.class,
-                        MainApp.ENTER_TYPE_ZOOM_IN,
+                        MainApp.ENTER_TYPE_RIGHT,
                         ExtraAndResult.REQUEST_CODE, bundle);
                 break;
             default:

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.ui.activity.commonview.SelectDetUserActivity2;
 import com.loyo.oa.v2.ui.activity.signin.adapter.SignInGridViewAdapter;
@@ -29,14 +30,17 @@ import com.loyo.oa.v2.tool.SelectPicPopupWindow;
 import com.loyo.oa.v2.tool.StringUtil;
 import com.loyo.oa.v2.tool.Utils;
 import com.loyo.oa.v2.customview.CusGridView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -44,7 +48,7 @@ import retrofit.mime.TypedString;
 
 /**
  * 【通知公告】发布页面
- * */
+ */
 
 @EActivity(R.layout.activity_bulletin_add)
 public class BulletinAddActivity extends BaseActivity {
@@ -76,7 +80,7 @@ public class BulletinAddActivity extends BaseActivity {
     void init_gridView_photo() {
         mGridViewAdapter = new SignInGridViewAdapter(this, mAttachment, true, true, true, 0);
         SignInGridViewAdapter.setAdapter(gridView_photo, mGridViewAdapter);
-        if(uploadNum == uploadSize){
+        if (uploadNum == uploadSize) {
             cancelLoading();
         }
     }
@@ -91,7 +95,7 @@ public class BulletinAddActivity extends BaseActivity {
 
     @Click(R.id.img_title_left)
     void close() {
-        finish();
+        onBackPressed();
     }
 
     @Click(R.id.img_title_right)
@@ -178,9 +182,9 @@ public class BulletinAddActivity extends BaseActivity {
 
     /**
      * 批量上传附件
-     * */
-    private void newUploadAttachement(File file){
-        if(uploadSize == 0){
+     */
+    private void newUploadAttachement(File file) {
+        if (uploadSize == 0) {
             showLoading("正在上传");
         }
         uploadSize++;
