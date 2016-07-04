@@ -194,6 +194,9 @@ public class AMapService extends Service {
                 (!TextUtils.isEmpty(address)) + " 纬度 : " + aMapLocation.getLatitude() +
                 " 经度 : " + aMapLocation.getLongitude() + " 精度 : " + accuracy + " 缓存 : " + isCache +
                 " 定位信息：" + aMapLocation.getErrorInfo() + "--" + aMapLocation.getLocationDetail());
+        if (isCache) {//上传缓存的地址数据
+            uploadCacheLocation();
+        }
         if (isEmptyStr(address)) {//正常定位 没有获取到地址 就拼接一个地址
             StringBuilder addressBuilder = new StringBuilder();
             combineAddress(aMapLocation.getProvince(), addressBuilder);
@@ -213,7 +216,7 @@ public class AMapService extends Service {
             LogUtil.d("当前位置偏移量很大，直接return");
             return;
         }
-        if (Global.isConnected()) {
+        if (Global.isConnected()) {//检查是否有网络
             if (isEmptyStr(address)) {
                 aMapLocation.setAddress("未知地址");
             }
@@ -326,15 +329,12 @@ public class AMapService extends Service {
         }
         if (Global.isConnected()) {
             uploadLocation(aMapLocation);
-            if (isCache) {
-                uploadCacheLocation();
-            }
         } else {
             isCache = true;
             LocateData data = buildLocateData(aMapLocation);
             ldbManager.addLocateData(data);
         }
-//        uploadLocation(aMapLocation);
+//        uploadLocation(aMapLocation);、
     }
 
 
@@ -378,7 +378,7 @@ public class AMapService extends Service {
 
                 if (Config_project.is_developer_mode) {
                     GeneralPopView generalPopView = new GeneralPopView(getApplicationContext(), true);
-                    generalPopView.setMessage(error.getMessage()+" 轨迹上传失败");
+                    generalPopView.setMessage(error.getMessage() + " 轨迹上传失败");
                     generalPopView.setCanceledOnTouchOutside(true);
                     generalPopView.show();
                 }
@@ -400,7 +400,7 @@ public class AMapService extends Service {
                 app.getRestAdapter().create(ITrackLog.class).uploadTrackLogs(tracklogsMap, new RCallback<Object>() {
                     @Override
                     public void success(Object o, Response response) {
-                        HttpErrorCheck.checkResponse("轨迹上传成功： ", response);
+                        HttpErrorCheck.checkResponse("【缓存轨迹】上传成功： ", response);
                         isCache = false;
                         ldbManager.clearAllLocateDatas();
                     }

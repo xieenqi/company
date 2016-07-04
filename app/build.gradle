@@ -101,7 +101,7 @@ android {
         compile files('libs/android-async-http-1.4.6.jar')
         compile files('libs/universal-image-loader-1.9.3.jar')
         compile files('libs/android-viewbadger.jar')
-        compile files('libs/bugly_1.2.3.6_release.jar')
+        compile files('libs/bugly_1.2.3.6_release.jar')//崩溃统计搜集
         //高德地图
         compile files('libs/Android_Map_V2.5.0.jar')
         compile files('libs/MapApiServices.jar')
