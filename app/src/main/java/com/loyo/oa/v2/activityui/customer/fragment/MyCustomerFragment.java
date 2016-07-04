@@ -396,7 +396,7 @@ public class MyCustomerFragment extends BaseFragment implements PullToRefreshBas
                     bundle.putString("position", position);
                     bundle.putSerializable("nearCount", nearCount);
                     bundle.putInt("type", CustomerManagerActivity.NEARCUS_SELF);//团队2 个人1
-                    app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_ZOOM_IN, false, bundle);
+                    app.startActivity(mActivity, NearByCustomersActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, bundle);
                     break;
             }
         }

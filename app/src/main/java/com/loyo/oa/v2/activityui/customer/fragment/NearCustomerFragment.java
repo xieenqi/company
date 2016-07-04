@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
@@ -28,16 +29,18 @@ import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
 import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * 【附近客户】列表
+ * 【附近客户】列表 我的附近  我团队的附近
  * Created by yyy on 16/6/1.
  */
-public class NearCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2{
+public class NearCustomerFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
 
     private View mView;
     private ViewStub emptyView;
@@ -83,7 +86,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
         getData();
     }
 
-    public void initView(View view){
+    public void initView(View view) {
         customer_type = getArguments().getInt("type");
         position = getArguments().getString("position");
         emptyView = (ViewStub) view.findViewById(R.id.vs_nodata);
@@ -183,7 +186,7 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
     private void bindData() {
 
         if (null == adapter) {
-            adapter = new NearCustomerAdapter(getActivity(),mCustomers,customer_type);
+            adapter = new NearCustomerAdapter(getActivity(), mCustomers, customer_type);
             listView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
@@ -197,12 +200,13 @@ public class NearCustomerFragment extends BaseFragment implements PullToRefreshB
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 if (customer_type == Customer.CUSTOMER_TYPE_NEAR_COMPANY) {
                     Toast("你没有查看权限");
-                }else{
+                } else {
                     Intent intent = new Intent();
                     intent.putExtra("Id", mCustomers.get(position - 1).getId());
                     intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_MY);
                     intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                     startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                    mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
                 }
             }
         });

@@ -23,20 +23,25 @@ import com.loyo.oa.v2.activityui.customer.CustomerDetailInfoActivity_;
 import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
 import com.loyo.oa.v2.activityui.customer.NearByCustomersActivity_;
 import com.loyo.oa.v2.activityui.customer.adapter.TeamCustomerAdapter;
+import com.loyo.oa.v2.activityui.customer.bean.Department;
+import com.loyo.oa.v2.activityui.customer.bean.NearCount;
+import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.Customer;
-import com.loyo.oa.v2.activityui.customer.bean.Department;
-import com.loyo.oa.v2.activityui.customer.bean.NearCount;
 import com.loyo.oa.v2.beans.PaginationX;
 import com.loyo.oa.v2.beans.Permission;
-import com.loyo.oa.v2.activityui.customer.bean.Tag;
-import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.ExtraAndResult;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.http.HttpErrorCheck;
+import com.loyo.oa.v2.customview.SaleCommPopupView;
+import com.loyo.oa.v2.customview.ScreenDeptPopupView;
+import com.loyo.oa.v2.customview.ScreenTagPopupView;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 import com.loyo.oa.v2.point.ICustomer;
 import com.loyo.oa.v2.tool.BaseFragment;
 import com.loyo.oa.v2.tool.BaseMainListFragment;
@@ -44,17 +49,10 @@ import com.loyo.oa.v2.tool.LocationUtilGD;
 import com.loyo.oa.v2.tool.LogUtil;
 import com.loyo.oa.v2.tool.RCallback;
 import com.loyo.oa.v2.tool.RestAdapterFactory;
-import com.loyo.oa.v2.customview.SaleCommPopupView;
-import com.loyo.oa.v2.customview.ScreenDeptPopupView;
-import com.loyo.oa.v2.customview.ScreenTagPopupView;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshBase;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -227,10 +225,10 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(isOk){
-                    if(data.size() == 0){
+                while (isOk) {
+                    if (data.size() == 0) {
                         wersi();
-                    }else{
+                    } else {
                         isOk = false;
                         saleScreenPopupView = new ScreenDeptPopupView(getActivity(), data, mHandler, 0x01);
                         getData();
@@ -246,7 +244,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
         } else {
             deptSort();
         }
-        LogUtil.dee("size:"+data.size());
+        LogUtil.dee("size:" + data.size());
     }
 
     /**
@@ -375,6 +373,7 @@ public class TeamCustomerFragment extends BaseFragment implements PullToRefreshB
                 intent.putExtra(ExtraAndResult.EXTRA_TYPE, CustomerManagerActivity.CUSTOMER_TEAM);
                 intent.setClass(mActivity, CustomerDetailInfoActivity_.class);
                 startActivityForResult(intent, BaseMainListFragment.REQUEST_REVIEW);
+                mActivity.overridePendingTransition(R.anim.enter_righttoleft, R.anim.exit_righttoleft);
             }
         });
     }
