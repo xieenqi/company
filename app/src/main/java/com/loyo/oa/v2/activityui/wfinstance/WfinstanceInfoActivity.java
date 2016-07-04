@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.activityui.other.SelectEditDeleteActivity;
 import com.loyo.oa.v2.activityui.attachment.AttachmentActivity_;
@@ -62,7 +63,7 @@ import retrofit.client.Response;
  */
 
 @EActivity(R.layout.activity_wfinstance_info)
-public class  WfinstanceInfoActivity extends BaseActivity {
+public class WfinstanceInfoActivity extends BaseActivity {
 
     @ViewById
     ListView_inScrollView listView_workflowNodes;
@@ -404,7 +405,7 @@ public class  WfinstanceInfoActivity extends BaseActivity {
             }
         }
 
-        if(mWfInstance.status == WfInstance.STATUS_NEW || mWfInstance.status == WfInstance.STATUS_ABORT){
+        if (mWfInstance.status == WfInstance.STATUS_NEW || mWfInstance.status == WfInstance.STATUS_ABORT) {
             isPass = true;
         }
 
@@ -412,7 +413,7 @@ public class  WfinstanceInfoActivity extends BaseActivity {
         if (isPass && mWfInstance.creator != null
                 && mWfInstance.creator.isCurrentUser() && !("300".equals(mWfInstance.bizForm.bizCode + ""))) {
             img_title_right.setVisibility(View.VISIBLE);
-        }else if(mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")){
+        } else if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
             img_title_right.setVisibility(View.VISIBLE);
         }
     }
@@ -447,7 +448,7 @@ public class  WfinstanceInfoActivity extends BaseActivity {
         for (int i = 0; i < nodes.size(); i++) {
             if (null != nodes.get(i).getExecutorUser() && userId.equals(nodes.get(i).getExecutorUser().getId())) {
                 node = nodes.get(i);
-                if(node.getActive() == 2){
+                if (node.getActive() == 2) {
                     break;
                 }
             }
@@ -563,10 +564,10 @@ public class  WfinstanceInfoActivity extends BaseActivity {
             case R.id.img_title_right:
                 Intent intent = new Intent(mContext, SelectEditDeleteActivity.class);
                 //赢单未通过
-                if(mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")){
+                if (mWfInstance.status == WfInstance.STATUS_ABORT && "300".equals(mWfInstance.bizForm.bizCode + "")) {
                     intent.putExtra("delete", true);
-                }else{
-                    if(mWfInstance.status == WfInstance.STATUS_NEW){
+                } else {
+                    if (mWfInstance.status == WfInstance.STATUS_NEW) {
                         intent.putExtra("delete", true);
                     }
                     intent.putExtra("edit", true);
@@ -660,10 +661,10 @@ public class  WfinstanceInfoActivity extends BaseActivity {
         });
     }
 
-   /**
-    * 审批删除
-    * */
-    public void deleteWfin(){
+    /**
+     * 审批删除
+     */
+    public void deleteWfin() {
         RestAdapterFactory.getInstance().build(Config_project.API_URL()).create(IWfInstance.class).deleteWfinstance(mWfInstance.getId(), new RCallback<WfInstance>() {
             @Override
             public void success(final WfInstance wfInstance, final Response response) {
@@ -688,11 +689,11 @@ public class  WfinstanceInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         //编辑后 回调刷新
-        if(resultCode == WfInstanceManageActivity.WFIN_FINISH_RUSH){
+        if (resultCode == WfInstanceManageActivity.WFIN_FINISH_RUSH) {
             getWfinstanceData();
         }
 
-        if(null == data){
+        if (null == data) {
             return;
         }
 
@@ -700,13 +701,13 @@ public class  WfinstanceInfoActivity extends BaseActivity {
 
             case MSG_DELETE_WFINSTANCE:
                 //选择编辑回调
-                if(data.getBooleanExtra("edit", false)){
+                if (data.getBooleanExtra("edit", false)) {
                     mBundle = new Bundle();
-                    mBundle.putSerializable("data",mWfInstance);
-                    app.startActivityForResult(WfinstanceInfoActivity.this,WfInEditActivity.class,MainApp.ENTER_TYPE_RIGHT,0,mBundle);
+                    mBundle.putSerializable("data", mWfInstance);
+                    app.startActivityForResult(WfinstanceInfoActivity.this, WfInEditActivity.class, MainApp.ENTER_TYPE_RIGHT, 0, mBundle);
                 }
                 //选择删除回调
-                else if(data.getBooleanExtra("delete", false)){
+                else if (data.getBooleanExtra("delete", false)) {
                     deleteWfin();
                 }
                 break;
