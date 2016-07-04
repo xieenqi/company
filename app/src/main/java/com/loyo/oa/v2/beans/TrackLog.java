@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.v2.ui.activity.other.bean.User;
+import com.loyo.oa.v2.activityui.other.bean.User;
 
 /**
  * Created by Administrator on 2014/12/18 0018.

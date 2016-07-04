@@ -15,10 +15,10 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.CustomerManagerActivity;
-import com.loyo.oa.v2.ui.activity.customer.adapter.TagScreenAdapter;
-import com.loyo.oa.v2.ui.activity.customer.bean.Tag;
-import com.loyo.oa.v2.ui.activity.customer.bean.TagItem;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.customer.adapter.TagScreenAdapter;
+import com.loyo.oa.v2.activityui.customer.bean.Tag;
+import com.loyo.oa.v2.activityui.customer.bean.TagItem;
 import com.loyo.oa.v2.common.Global;
 
 import java.util.ArrayList;

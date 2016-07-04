@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.activity.customer.bean.ContactLeftExtras;
+import com.loyo.oa.v2.activityui.customer.bean.ContactLeftExtras;
 
 import java.util.Date;
 

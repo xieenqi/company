@@ -156,7 +156,7 @@
 
                 <include layout="@layout/include_solid_line_left"/>
 
-                <!--<com.loyo.oa.v2.ui.activity.home.cusview.incrementview.BarChartView-->
+                <!--<com.loyo.oa.v2.activity.home.cusview.incrementview.BarChartView-->
                 <!--android:id="@+id/bcv_view"-->
                 <!--xmlns:chart="http://schemas.android.com/apk/res-auto"-->
                 <!--android:layout_width="match_parent"-->
@@ -349,7 +349,7 @@
                             android:visibility="gone"
                             >
 
-                            <com.loyo.oa.v2.ui.activity.home.cusview.LoopView
+                            <com.loyo.oa.v2.activityui.home.cusview.LoopView
                                 android:id="@+id/lv_round1"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
@@ -383,7 +383,7 @@
                             android:visibility="gone"
                             >
 
-                            <com.loyo.oa.v2.ui.activity.home.cusview.LoopView
+                            <com.loyo.oa.v2.activityui.home.cusview.LoopView
                                 android:id="@+id/lv_round2"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"

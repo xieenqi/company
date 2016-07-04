@@ -13,11 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.CustomerManagerActivity;
-import com.loyo.oa.v2.ui.activity.sale.SaleOpportunitiesManagerActivity;
-import com.loyo.oa.v2.ui.activity.sale.adapter.AdapterSaleTeamScreenComm;
-import com.loyo.oa.v2.ui.activity.sale.fragment.TeamSaleFragment;
-import com.loyo.oa.v2.ui.activity.sale.bean.SaleTeamScreen;
+import com.loyo.oa.v2.activityui.customer.CustomerManagerActivity;
+import com.loyo.oa.v2.activityui.sale.SaleOpportunitiesManagerActivity;
+import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreenComm;
+import com.loyo.oa.v2.activityui.sale.fragment.TeamSaleFragment;
+import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import java.util.ArrayList;
 
 /**

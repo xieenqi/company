@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.loyo.oa.v2.R;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.activity.other.bean.User;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.common.Global;
 import com.loyo.oa.v2.common.SystemBarTintManager;
@@ -78,7 +78,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+         super.onCreate(savedInstanceState);
         app = (MainApp) getApplicationContext();
         mContext = this;
         registerBaseReceiver();

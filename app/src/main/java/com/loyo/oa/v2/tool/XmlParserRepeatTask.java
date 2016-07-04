@@ -1,7 +1,7 @@
 package com.loyo.oa.v2.tool;
 
-import com.loyo.oa.v2.ui.activity.tasks.bean.RepeatTaskCaseModel;
-import com.loyo.oa.v2.ui.activity.tasks.bean.RepeatTaskModel;
+import com.loyo.oa.v2.activityui.tasks.bean.RepeatTaskCaseModel;
+import com.loyo.oa.v2.activityui.tasks.bean.RepeatTaskModel;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

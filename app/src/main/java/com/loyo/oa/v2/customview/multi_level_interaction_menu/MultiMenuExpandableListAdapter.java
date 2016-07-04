@@ -9,7 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.customer.bean.City;
+import com.loyo.oa.v2.activityui.customer.bean.City;
 import com.loyo.oa.v2.beans.Province;
 
 import java.util.ArrayList;

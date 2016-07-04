@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.loyo.oa.v2.ui.activity.other.PreviewImageListActivity;
+import com.loyo.oa.v2.activityui.other.PreviewImageListActivity;
 import com.loyo.oa.v2.application.MainApp;
-import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.loyo.oa.v2.common.Global;
 import com.nostra13.universalimageloader.core.assist.FailReason;

@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.beans;
 
-import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 
 import java.io.Serializable;
 import java.util.ArrayList;

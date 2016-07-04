@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import com.loyo.oa.v2.ui.activity.other.PreviewImageAddActivity;
+import com.loyo.oa.v2.activityui.other.PreviewImageAddActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.FinalVariables;
 import com.nostra13.universalimageloader.core.assist.FailReason;

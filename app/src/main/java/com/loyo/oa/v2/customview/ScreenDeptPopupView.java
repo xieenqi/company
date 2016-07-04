@@ -15,9 +15,9 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.ui.activity.sale.adapter.AdapterSaleTeamScreen;
-import com.loyo.oa.v2.ui.activity.sale.bean.SaleTeamScreen;
-import com.loyo.oa.v2.ui.activity.other.bean.User;
+import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen;
+import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
+import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.tool.LogUtil;
 

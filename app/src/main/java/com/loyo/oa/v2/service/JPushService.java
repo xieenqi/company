@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.loyo.oa.v2.ui.activity.home.MainHomeActivity;
+import com.loyo.oa.v2.activityui.home.MainHomeActivity;
 import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.beans.TrackRule;
 import com.loyo.oa.v2.jpush.HttpJpushNotification;

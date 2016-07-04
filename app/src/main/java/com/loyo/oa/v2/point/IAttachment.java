@@ -1,6 +1,6 @@
 package com.loyo.oa.v2.point;
 
-import com.loyo.oa.v2.ui.activity.attachment.bean.Attachment;
+import com.loyo.oa.v2.activityui.attachment.bean.Attachment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import retrofit.Callback;
