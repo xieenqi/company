@@ -403,7 +403,6 @@ public final class Common {
     }
 
     public static ArrayList<User> getListUser(String DeptId) {
-
         ArrayList<User> users = new ArrayList<>();
 
         for (UserGroupData groupData : getLstUserGroupData()) {

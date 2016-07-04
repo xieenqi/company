@@ -19,6 +19,7 @@ import com.loyo.oa.v2.activityui.sale.adapter.AdapterSaleTeamScreen;
 import com.loyo.oa.v2.activityui.sale.bean.SaleTeamScreen;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.common.Common;
+import com.loyo.oa.v2.common.DialogHelp;
 import com.loyo.oa.v2.tool.LogUtil;
 
 import java.util.ArrayList;
@@ -97,9 +98,11 @@ public class ScreenDeptPopupView extends PopupWindow implements View.OnClickList
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DialogHelp.showLoading(mContext, "数据正在加载", true);
                 deptPosition = position;
                 getFirstDept(position);
                 adapter1.selectPosition(position);
+                DialogHelp.cancelLoading();
                 adapter1.notifyDataSetChanged();
                 adapter2.notifyDataSetChanged();
             }

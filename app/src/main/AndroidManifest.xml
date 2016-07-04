@@ -513,7 +513,75 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
             />
-        <activity android:name=".activityui.commonview.SelectDetUserActivity2"></activity>
+        <activity android:name=".activityui.commonview.SelectDetUserActivity2"/>
+        <activity
+            android:name=".activityui.discuss.MyDiscussActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activityui.discuss.hait.HaitActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activityui.discuss.DiscussDetActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <!--销售机会 -->
+        <activity
+            android:name=".activityui.sale.SaleOpportunitiesManagerActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.sale.AddMySaleActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activityui.sale.SaleStageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.sale.IntentionProductActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.sale.AddIntentionProductActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activityui.customer.SaleManageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.customer.FollowContactSelectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.sale.SaleDetailsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.sale.SaleEditViewActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/dialog_edit_delete_StyleBottom"
+            />
+        <activity
+            android:name=".activityui.other.PreviewImageAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activityui.discuss.DiscussDetialActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <service
             android:name=".service.InitDataService_"
@@ -657,70 +725,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="2d8b80512b2c5a6110c177828b56bc01"/>
         <!-- 我的讨论界面 -->
-        <activity
-            android:name=".activityui.discuss.MyDiscussActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activityui.discuss.hait.HaitActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activityui.discuss.DiscussDetActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <!--销售机会 -->
-        <activity
-            android:name=".activityui.sale.SaleOpportunitiesManagerActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.sale.AddMySaleActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity
-            android:name=".activityui.sale.SaleStageActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.sale.IntentionProductActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.sale.AddIntentionProductActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".activityui.customer.SaleManageActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.customer.FollowContactSelectActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.sale.SaleDetailsActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.sale.SaleEditViewActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/dialog_edit_delete_StyleBottom"
-            />
-        <activity
-            android:name=".activityui.other.PreviewImageAddActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -728,7 +732,5 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="应用宝"/>
-
-
     </application>
 </manifest>
