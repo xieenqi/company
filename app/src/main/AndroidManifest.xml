@@ -519,11 +519,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activityui.discuss.hait.HaitActivity"
+            android:name=".activityui.discuss.HaitMyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activityui.discuss.DiscussDetActivity"
+            android:name=".activityui.discuss.DiscussDetialActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!--销售机会 -->
@@ -574,11 +574,6 @@
             />
         <activity
             android:name=".activityui.other.PreviewImageAddActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activityui.discuss.DiscussDetialActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
@@ -724,7 +719,6 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2d8b80512b2c5a6110c177828b56bc01"/>
-        <!-- 我的讨论界面 -->
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_APPKEY"
