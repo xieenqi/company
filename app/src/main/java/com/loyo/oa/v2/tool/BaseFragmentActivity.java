@@ -78,7 +78,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         app = (MainApp) getApplicationContext();
         mContext = this;
         registerBaseReceiver();
