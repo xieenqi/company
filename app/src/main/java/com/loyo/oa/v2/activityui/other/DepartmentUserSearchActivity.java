@@ -1,6 +1,5 @@
 package com.loyo.oa.v2.activityui.other;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,24 +15,27 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
-import com.loyo.oa.v2.tool.ViewHolder;
-import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+
 import com.loyo.oa.v2.R;
-import com.loyo.oa.v2.application.MainApp;
+import com.loyo.oa.v2.activityui.contact.ContactInfoActivity_;
 import com.loyo.oa.v2.activityui.other.bean.User;
 import com.loyo.oa.v2.activityui.other.bean.UserGroupData;
+import com.loyo.oa.v2.application.MainApp;
 import com.loyo.oa.v2.common.Common;
 import com.loyo.oa.v2.common.Global;
+import com.loyo.oa.v2.customview.pullToRefresh.PullToRefreshListView;
+import com.loyo.oa.v2.tool.BaseActivity;
 import com.loyo.oa.v2.tool.StringUtil;
+import com.loyo.oa.v2.tool.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
 
 /**
- * 通讯录搜索
+ * 【通讯录搜索】
  */
 
-public class DepartmentUserSearchActivity extends Activity {
+public class DepartmentUserSearchActivity extends BaseActivity {
 
     private EditText edt_search;
     private PullToRefreshListView listView;
@@ -120,12 +122,6 @@ public class DepartmentUserSearchActivity extends Activity {
 //                onBackPressed();
 //            }
 //        });
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     String key;

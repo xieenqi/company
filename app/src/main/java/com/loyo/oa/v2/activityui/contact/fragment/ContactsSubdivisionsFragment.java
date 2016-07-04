@@ -87,7 +87,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
                     Bundle b = new Bundle();
                     b.putString("depId", d.getId());
                     b.putString("depName", d.getName());
-                    app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                    app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 }
             }
         });
@@ -111,7 +111,7 @@ public class ContactsSubdivisionsFragment extends BaseFragment implements View.O
                 LogUtil.d("User数据:" + MainApp.gson.toJson(user));
                 Bundle b = new Bundle();
                 b.putSerializable("user", user);
-                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
         });
     }

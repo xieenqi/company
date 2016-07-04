@@ -453,7 +453,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 Bundle b = new Bundle();
                 b.putString("depId", group.getDepartments().get(childPosition).getId());
                 b.putString("depName", group.getDepartments().get(childPosition).getName());
-                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
                 return true;
             }
         });
@@ -476,7 +476,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
                 Bundle b = new Bundle();
                 b.putString("depId", myDeptId);
                 b.putString("depName", myDeptName);
-                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                app.startActivity(getActivity(), ContactsDepartmentActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
         });
 
@@ -486,7 +486,7 @@ public class ContactsDepartmentFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Bundle b = new Bundle();
                 b.putSerializable("user", commyUsers.get(position));
-                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_ZOOM_OUT, false, b);
+                app.startActivity(getActivity(), ContactInfoActivity_.class, MainApp.ENTER_TYPE_RIGHT, false, b);
             }
         });
     }

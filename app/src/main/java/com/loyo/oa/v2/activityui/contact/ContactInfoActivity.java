@@ -94,7 +94,7 @@ public class ContactInfoActivity extends BaseActivity {
     void onClick(final View v) {
         switch (v.getId()) {
             case R.id.layout_back:
-                app.finishActivity(this, MainApp.ENTER_TYPE_ZOOM_IN, 0, null);
+                onBackPressed();
                 break;
             case R.id.tv_edit:
                 Bundle b = new Bundle();
